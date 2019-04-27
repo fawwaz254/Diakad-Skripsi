@@ -1,0 +1,44 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <!-- <h2>PASSWORD</h2> -->
+    </div>
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/password')}}">
+                    {{csrf_field()}}
+                    <div class="header bg-green">
+                        <h2>CHANGE PASSWORD</h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label>Old Password</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="password" class="form-control" name="old_password" minlength="4" required="" aria-required="true" autofocus >
+                                    </div>
+                                </div>
+                                <label>New Password</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input id="password" type="password" class="form-control" name="new_password" minlength="4" required="" aria-required="true">
+                                    </div>
+                                </div>
+                                <label>Re-type New Password</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="password" class="form-control" name="new_confirm_password" minlength="4" required="" aria-required="true" equalto="#password">
+                                    </div>
+                                </div>
+                                <br>
+                                    <button class="btn btn-block bg-green waves-effect" type="submit">Save Change Password</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@include('scriptjs')

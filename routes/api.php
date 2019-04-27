@@ -1,0 +1,26 @@
+<?php
+
+// use Illuminate\Http\Request;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
+Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function() {
+
+	Route::group(array('prefix' => 'guru'), function() {
+		Route::post('kelas-kbm/get', 'Apiv1Controller@actionGetKelasKBM');
+		Route::post('pertemuan-kelas-kbm/get', 'Apiv1Controller@actionGetPertemuanByJadwalKelasKBM');
+		Route::post('presensi-kbm/get', 'Apiv1Controller@actionGetPresensiKBM');
+		Route::post('presensi-kbm/submit', 'Apiv1Controller@actionAbsensiSiswa');
+		Route::post('jadwal/get', 'Apiv1Controller@actionGetJadwal');
+	});
+});

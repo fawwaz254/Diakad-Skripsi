@@ -1,0 +1,108 @@
+<style>
+    .card .card-inside-title {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/syarat-penerimaan/'.$penerimaan->id_penerimaan)}}"><i class="material-icons">keyboard_backspace</i><span>Kembali</span></a></h2>
+    </div>
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                    <div class="header bg-lime">
+                        <h2>SYARAT PENERIMAAN - TAMBAH SYARAT PENERIMAAN UMUM</h2>
+                    </div>
+
+                    <div class="body">
+                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/syarat-penerimaan/'.$penerimaan->id_penerimaan.'/add')}}">
+                            {{csrf_field()}}
+                            <input name="id_penerimaan" type="hidden" value="{{$penerimaan->id_penerimaan}}">
+                            <input name="type" type="hidden" value="{{$request->type}}">
+                            <h2 class="card-inside-title">
+                                Penerimaan
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" name="penerimaan"  aria-required="true" aria-invalid="true" value="{{$penerimaan->nm_penerimaan}}" disabled>
+                                </div>
+                            </div>
+                            @if($request->type == "khusus")
+                            <h2 class="card-inside-title">
+                                Jurusan
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <select class="form-control show-tick" name="id_jurusan" required="">
+                                        @foreach($jurusan as $jur)
+                                            <option value="{{$jur->id_jurusan}}">{{$jur->nm_jurusan}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
+
+                            <h2 class="card-inside-title">
+                                Syarat
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" name="nm_penerimaan_syarat"  aria-required="true" aria-invalid="true" value="" required="true">
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Keterangan
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <textarea name="keterangan_penerimaan_syarat" cols="30" rows="5" class="form-control no-resize" required="true" aria-required="true"></textarea>
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Status Wajib
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <select class="form-control show-tick" name="is_wajib" required="">
+                                        <option value="0">Tidak Wajib</option>
+                                        <option value="1">Wajib</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Upload File
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <select class="form-control show-tick" name="is_upload_file" >
+                                        <option value="0">Tidak</option>
+                                        <option value="1">Ya</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Urutan
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="number" min="0" class="form-control" name="urutan"  aria-required="true" aria-invalid="true" value="" required="true">
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <a class="btn bg-blue btn-block waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/syarat-penerimaan/'.$penerimaan->id_penerimaan)}}"><i class="material-icons">cancel</i><span>Cancel</span></a>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@include('scriptjs')

@@ -1,0 +1,306 @@
+<?php
+
+namespace App\Http\Controllers\Kesiswaan\Siswa;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Routing\Controller as BaseController;
+
+use Carbon\Carbon;
+use Yajra\Datatables\Datatables;
+
+use App\Libraries\Pendidikan\LibSiswa;
+
+use App\Models\Kota as Kota;
+use App\Models\Provinsi as Provinsi;
+use App\Models\PengambilanMp as PengambilanMp;
+use App\Models\Admisi as Admisi;
+use App\Models\Siswa as Siswa;
+use App\Models\PengambilanEkskul as PengambilanEkskul;
+use App\Models\PrestasiSiswa as PrestasiSiswa;
+use App\Models\BeasiswaSiswa as BeasiswaSiswa;
+
+use Auth;
+use DB;
+use Session;
+use Validator;
+
+class EvaluasiSiswaController extends BaseController
+{
+    public function viewEvaluasiSiswa(Request $request, $nis_nama_siswa = null)
+    {
+  	    # code..
+     $input = (object) $request->input();
+     $auth_data = $input->auth_data;
+
+     return view('kesiswaan/siswa/evaluasi-siswa/view-evaluasi-siswa',compact('auth_data','nis_nama_siswa'));
+    }
+
+    public function actionViewEvaluasiSiswa(Request $request){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'nis_nama_siswa' =>'required'
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+        else {
+            return [
+                      'status' => 204, // SUCCESS AND LOAD CONTENT
+                      'path' => 'siswa/evaluasi-siswa/view-detail/'.$input->nis_nama_siswa
+                  ];
+        }
+    }
+
+    public function viewDetailEvaluasiSiswa(Request $request, $nis_nama_siswa){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
+  
+        return view('kesiswaan/siswa/evaluasi-siswa/view-evaluasi-siswa',compact('auth_data','nis_nama_siswa'));
+    }
+
+    public function datatablesEvaluasiSiswa(Request $request, $nis_nama_siswa){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = Siswa::select('siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
+          ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
+          ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
+          ->join('status_pengguna','pengguna.id_status_pengguna','=','status_pengguna.id_status_pengguna')
+          ->join('jalur_siswa', function ($join) {
+                            $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+                        })
+          ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
+          ->where(function ($query) use ($nis_nama_siswa) {
+                    $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
+                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%')
+                    ->orWhere('siswa.nisn_siswa', 'like', '%'.$nis_nama_siswa.'%');
+             })
+          ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+          ->get();
+        return Datatables::of($siswa)
+                ->addColumn('action', function($item) use($nis_nama_siswa) {
+                    $data = array(
+                        'id' => $item->nis_siswa,
+                        'id_asli' => $nis_nama_siswa
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+    public function datatablesBeasiswa(Request $request, $nis_nama_siswa){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+
+        $list_data = BeasiswaSiswa::where('id_siswa','=',$siswa->id_siswa)->get();
+       
+        return Datatables::of($list_data)
+        ->addColumn('jenis_beasiswa_siswa', function($item){
+                  if($item->jenis_beasiswa_siswa == 1){
+                      return "Anak Berprestasi";
+                  }
+                  elseif($item->jenis_beasiswa_siswa == 2){
+                      return "Anak Miskin";
+                  }
+                  elseif($item->jenis_beasiswa_siswa == 3){
+                    return "Pendidikan";
+                  }elseif($item->jenis_beasiswa_siswa == 99){
+                    return "Lain-Lain";
+                  }elseif ($item->jenis_beasiswa_siswa == 4){
+                    return "Unggulan";
+                  }
+              })
+        ->make(true);
+    }
+
+    public function datatablesPrestasi(Request $request, $nis_nama_siswa){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+
+        $list_data = PrestasiSiswa::select('jenis_prestasi_siswa','nm_prestasi_siswa','lokasi_prestasi_siswa','penyelenggara_prestasi_siswa','peringkat_prestasi_siswa','tgl_prestasi_siswa','nm_semester','tahun_ajaran','nm_tingkat_prestasi_siswa','nm_pengguna','nm_ekskul')
+        ->join('semester','semester.id_semester','=','prestasi_siswa.id_semester')
+        ->join('tingkat_prestasi_siswa','prestasi_siswa.id_tingkat_prestasi_siswa','=','tingkat_prestasi_siswa.id_tingkat_prestasi_siswa')
+        ->leftJoin('guru','guru.id_guru','=','prestasi_siswa.id_guru_pendamping')
+        ->leftJoin('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')
+        ->leftJoin('ekskul','ekskul.id_ekskul','=','prestasi_siswa.id_ekskul')
+        ->where('prestasi_siswa.id_siswa','=',$siswa->id_siswa)->get();
+       
+        return Datatables::of($list_data)
+           ->addColumn('semester', function($item){
+                    return $item->nm_semester.' ('.$item->tahun_ajaran.')';
+            })
+           ->addColumn('lokasi_penyelenggara', function($item){
+                    return $item->lokasi_prestasi_siswa.' - '.$item->penyelenggara_prestasi_siswa;
+            })
+           ->addColumn('jenis_prestasi', function($item){
+                  if($item->jenis_prestasi_siswa == 1){
+                      return "Sains";
+                  }
+                  elseif($item->jenis_prestasi_siswa == 2){
+                      return "Seni";
+                  }
+                  elseif($item->jenis_prestasi_siswa == 3){
+                    return "Olahraga";
+                  }elseif($item->jenis_prestasi_siswa == 99){
+                    return "Lain-Lain";
+                  }
+              })
+           ->addColumn('tgl_prestasi_siswa', function($item){
+                  return strftime( "%d %B %Y", strtotime($item->tgl_prestasi_siswa));
+              })
+          ->make(true);
+    }
+
+    public function datatablesEkskul(Request $request, $nis_nama_siswa){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+
+        $list_data = PengambilanEkskul::select('nm_ekskul','nm_semester','tahun_ajaran','nilai_angka','nilai_huruf')
+        ->join('ekskul','ekskul.id_ekskul','=','pengambilan_ekskul.id_ekskul')
+        ->join('semester','semester.id_semester','=','pengambilan_ekskul.id_semester')
+        ->where('pengambilan_ekskul.id_siswa','=',$siswa->id_siswa)->get();
+       
+        return Datatables::of($list_data)
+        ->addColumn('semester', function($item){
+                    return $item->nm_semester.' ('.$item->tahun_ajaran.')';
+                })
+        ->make(true);
+    }
+
+    public function viewDetailSiswaEvaluasiSiswa(Request $request, $nis_siswa, $nis_nama_siswa_asli){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
+        
+        if($siswa->jenis_kelamin == "1"){
+          $jenis_kelamin = "Laki-Laki";
+        }elseif($siswa->jenis_kelamin == "2"){
+          $jenis_kelamin = "Perempuan";
+        }else{
+          $jenis_kelamin = " ";
+        }
+
+        if($siswa->id_kota_lahir == null){
+          $kota_lahir = " ";
+        }else{
+          $kota_lahir = Kota::select('nm_kota')->where('id_kota','=',$siswa->id_kota_lahir)->first();
+          $kota_lahir = $kota_lahir->nm_kota;
+        }
+        
+        if($siswa->alamat_jalan == null){
+          $alamat_jalan_siswa = '';
+        }else{
+          $alamat_jalan_siswa = "Jalan ".$siswa->alamat_jalan;
+        }
+
+        if($siswa->alamat_dusun == null){
+          $alamat_dusun_siswa = '';
+        }else{
+          $alamat_dusun_siswa = "Dusun ".$siswa->alamat_dusun;
+        }
+
+        if($siswa->alamat_kelurahan == null){
+          $alamat_kelurahan_siswa = '';
+        }else{
+          $alamat_kelurahan_siswa = "Kelurahan ".$siswa->alamat_kelurahan;
+        }
+
+        if($siswa->alamat_rt == null){
+          $alamat_rt_siswa = '';
+        }else{
+          $alamat_rt_siswa = "RT.".$siswa->alamat_rt;
+        }
+
+        if($siswa->alamat_rw == null){
+          $alamat_rw_siswa = '';
+        }else{
+          $alamat_rw_siswa = "RW.".$siswa->alamat_rw;
+        }
+
+        if($siswa->alamat_kecamatan == null){
+          $alamat_kecamatan_siswa = '';
+        }else{
+          $alamat_kecamatan_siswa = "Kecamatan ".$siswa->alamat_kecamatan;
+        }
+
+        if($siswa->alamat_kodepos == null){
+          $alamat_kodepos_siswa = '';
+        }else{
+          $alamat_kodepos_siswa = "Kodepos ".$siswa->alamat_kodepos;
+        }
+
+        if($siswa->alamat_jalan_ortu == null){
+          $alamat_jalan_ortu = '';
+        }else{
+          $alamat_jalan_ortu = "Jalan ".$siswa->alamat_ortu;
+        }
+
+        if($siswa->alamat_dusun_ortu == null){
+          $alamat_dusun_ortu = '';
+        }else{
+          $alamat_dusun_ortu = "Dusun ".$siswa->alamat_dusun_ortu;
+        }
+
+        if($siswa->alamat_kelurahan_ortu == null){
+          $alamat_kelurahan_ortu = '';
+        }else{
+          $alamat_kelurahan_ortu = "Kelurahan ".$siswa->alamat_kelurahan_ortu;
+        }
+
+        if($siswa->almat_rt_ortu == null){
+          $alamat_rt_ortu = '';
+        }else{
+          $alamat_rt_ortu = "RT.".$siswa->almat_rt_ortu;
+        }
+
+        if($siswa->alamat_rw_ortu == null){
+          $alamat_rw_ortu = '';
+        }else{
+          $alamat_rw_ortu = "RW.".$siswa->alamat_rw_ortu;
+        }
+
+        if($siswa->alamat_kecamatan_ortu == null){
+          $alamat_kecamatan_ortu = '';
+        }else{
+          $alamat_kecamatan_ortu = "Kecamatan ".$siswa->alamat_kecamatan_ortu;
+        }
+
+        if($siswa->alamat_kodepos_ortu == null){
+          $alamat_kodepos_ortu = '';
+        }else{
+          $alamat_kodepos_ortu = "Kodepos ".$siswa->alamat_kodepos_ortu;
+        }
+
+        if($siswa->alamat_kota_ortu == null){
+          $alamat_kota_ortu = "";
+        }else{
+          $alamat_kota_ortu = Kota::where('id_kota','=',$siswa->alamat_kota_ortu)->first();
+          $alamat_kota_ortu = $alamat_kota_ortu->nm_kota;
+        }
+
+        if($siswa->alamat_provinsi_ortu == null){
+          $alamat_provinsi_ortu = "";
+        }else{
+          $alamat_provinsi_ortu = Provinsi::where('id_provinsi','=',$siswa->alamat_provinsi_ortu)->first();
+          $alamat_provinsi_ortu = $alamat_provinsi_ortu->nm_provinsi;
+        }
+        return view('kesiswaan/siswa/evaluasi-siswa/view-detail-siswa-evaluasi-siswa',compact('auth_data','nis_siswa','nis_nama_siswa_asli','siswa','jenis_kelamin','kota_lahir','alamat_jalan_siswa','alamat_dusun_siswa','alamat_kelurahan_siswa','alamat_rt_siswa','alamat_rw_siswa','alamat_kecamatan_siswa','alamat_kodepos_siswa','alamat_jalan_ortu','alamat_dusun_ortu','alamat_kelurahan_ortu','alamat_rt_ortu','alamat_rw_ortu','alamat_kecamatan_ortu','alamat_kodepos_ortu','alamat_kota_ortu','alamat_provinsi_ortu','nis_siswa'));
+    }
+}

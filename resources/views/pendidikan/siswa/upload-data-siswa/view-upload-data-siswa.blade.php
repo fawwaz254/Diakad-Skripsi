@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header bg-green">
+                    <h2>
+                        UPLOAD DATA SISWA
+                    </h2>
+                </div>
+                <div class="body">
+                    <div class="row clearfix">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Upload File Excel
+                            </h2>
+                            <form action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-file-excel')}}" method="post" enctype="multipart/form-data">
+                                {{csrf_field()}}
+                                Pilih File Excel
+                                <input type="file" name="file-excel" id="file-excel" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <br>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <button class="btn btn-block bg-red waves-effect" type="submit">
+                                        <i class="material-icons">cloud_upload</i>
+                                        <span>Upload File Excel</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Petunjuk
+                            </h2>
+                            <h5>Format susunan file excel, sebagai berikut :</h5>
+                            <ul>
+                                <li>
+                                    NIS : Nomor Induk Siswa
+                                </li>
+                                <li>
+                                    NISN : Nomor Induk Siswa Nasional
+                                </li>
+                                <li>
+                                    Nama Lengkap : Nama Lengkap Siswa
+                                </li>
+                                <li>
+                                    Jenis Kelamin : Jenis Kelamin Siswa. Keterangan : Isi Dengan (Laki-laki atau Perempuan)
+                                </li>
+                                <li>
+                                    Status Siswa : Status Siswa, pastikan format penulisan benar sesuai dengan Nama Status. Contoh : Aktif. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Status Siswa
+                                </li>
+                                <li>
+                                    Kelas : Kelas Siswa, pastikan format penulisan benar sesuai dengan Nama Kelas. Contoh : 7-AK-1. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Setting Kelas -> Data Kelas
+                                </li>
+                                <li>
+                                    Tahun Masuk : tahun angkatan masuk 4 digit. Contoh : 2018. <br> <strong>Pastikan Sudah Dibuat</strong> Data Penerimaan dengan Jenis Penerimaan "Siswa Lama" pada Tahun tersebut melalui menu Pendaftaran -> Data Penerimaan.
+                                </li>
+                                <li>
+                                    Semester Masuk : semester ketika siswa masuk, pastikan format penulisan benar sesuai dengan Kode Semester. Contoh : 20151. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Nama Semester.
+                                </li>
+                                <li>
+                                    Jalur : Jalur Masuk Siswa, pastikan format penulisan benar sesuai dengan Nama Jalur. Contoh : Reguler. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Jalur
+                                </li>
+                            </ul>
+                            <a href="{{ route('siswa/download-file-excel') }}">
+                                <span>Download Template Excel</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@include('scriptjs')

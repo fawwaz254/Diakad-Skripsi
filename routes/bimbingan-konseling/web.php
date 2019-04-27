@@ -1,0 +1,42 @@
+<?php
+// ROLE BIMBINGAN KONSELING
+Route::group(array('middleware'=> ['token_staff']), function() {
+    Route::group(array('prefix' => 'bimbingan-konseling'), function() {
+        Route::get('welcome', 'BK\WelcomeController@indexWelcome');
+
+        /** ==== MODUL PENANGANAN SISWA ==== **/
+        Route::group(array('prefix' => 'penanganan-siswa'), function() {
+            // MENU Data Jenis Tindakan
+            Route::get('jenis-tindakan', 'BK\PenangananSiswa\JenisTindakanController@viewJenisTindakan');
+            Route::get('jenis-tindakan/datatables', 'BK\PenangananSiswa\JenisTindakanController@datatablesJenisTindakan');
+            Route::get('jenis-tindakan/add', 'BK\PenangananSiswa\JenisTindakanController@addJenisTindakan');
+            Route::get('jenis-tindakan/edit/{id}', 'BK\PenangananSiswa\JenisTindakanController@editJenisTindakan');
+
+            Route::post('action-jenis-tindakan/{mode}/{id}', 'BK\PenangananSiswa\JenisTindakanController@actionJenisTindakan');
+
+            // MENU Input Pelanggaran Siswa
+            Route::get('input-pelanggaran', 'BK\PenangananSiswa\InputPelanggaranController@viewInputPelanggaran');
+            Route::get('input-pelanggaran/datatables', 'BK\PenangananSiswa\InputPelanggaranController@datatablesInputPelanggaran');
+            Route::get('input-pelanggaran/add', 'BK\PenangananSiswa\InputPelanggaranController@addInputPelanggaran');
+            Route::get('input-pelanggaran/edit/{id}', 'BK\PenangananSiswa\InputPelanggaranController@editInputPelanggaran');
+
+            Route::post('action-input-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\InputPelanggaranController@actionInputPelanggaran');
+
+            // MENU Tindakan Pelanggaran
+            Route::get('tindakan-pelanggaran', 'BK\PenangananSiswa\TindakanPelanggaranController@viewTindakanPelanggaran');
+            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm', 'BK\PenangananSiswa\TindakanPelanggaranController@datatablesBelumTindakanNonKBM');
+            Route::get('tindakan-pelanggaran/datatables-belum-kbm', 'BK\PenangananSiswa\TindakanPelanggaranController@datatablesBelumTindakanKBM');
+            Route::get('tindakan-pelanggaran/datatables-sudah', 'BK\PenangananSiswa\TindakanPelanggaranController@datatablesSudahTindakan');
+            Route::get('tindakan-pelanggaran/add-nonkbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@addTindakanPelanggaranNonKBM');
+            Route::get('tindakan-pelanggaran/add-kbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@addTindakanPelanggaranKBM');
+            Route::get('tindakan-pelanggaran/edit/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@editTindakanPelanggaran');
+
+            Route::post('action-tindakan-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@actionTindakanPelanggaran');
+            
+            // AJAX GET SISWA BY KELAS
+            Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
+            
+        });
+
+    });
+});

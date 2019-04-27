@@ -1,0 +1,346 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Hash;
+
+use Carbon\Carbon;
+
+use App\Models\Guru;
+use App\Models\Pengguna;
+use App\Models\PresensiMp;
+use App\Models\PresensiMpSiswa;
+use App\Models\Semester;
+use App\Models\Siswa;
+
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\SumberDaya\LibGuru;
+
+use DB;
+use Validator;
+
+class Apiv1Controller extends BaseController{
+    public function actionSignIn(Request $request){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'username' =>'required',
+            'password' =>'required'
+        ]);
+  
+        if($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        if ($pengguna = Pengguna::where(['username' => $input->username])->first()) {
+            if (Hash::check($input->password, $pengguna->password)) {
+                $api_key = hash('sha256', uniqid());
+                $pengguna->api_key = $api_key;
+                $pengguna->save();
+
+                $data_pengguna = array(
+                    'id_pengguna' => $pengguna->id_pengguna,
+                    'id_status_pengguna' => $pengguna->id_status_pengguna,
+                    'id_sekolah' => $pengguna->id_sekolah,
+                    'nm_pengguna' => $pengguna->nm_pengguna,
+                    'username' => $pengguna->username,
+                    'actor' => $pengguna->status_join_to_text(),
+                    'gelar_depan' => $pengguna->gelar_depan,
+                    'gelar_belakang' => $pengguna->gelar_belakang,
+                    'api_key' => $pengguna->api_key
+                );
+                return response()->json([
+                    'status_code' 	=> 200,
+                    'status_text' 	=> 'Success',
+                    'message' 	=> 'Login success',
+                    'data' => array(
+                        'pengguna' => $data_pengguna
+                    )
+                ]);
+            }else{
+                return response()->json([
+                    'status_code' 	=> 300,
+                    'status_text' 	=> 'Failed',
+                    'message' 	=> 'Password invalid'
+                ]);
+            }
+        }else{
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' 	=> 'User cant found'
+            ]);
+        }
+    }
+
+    public function actionGetKelasKBM(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
+        
+        $data_kbm = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kelas_kbm' => $data_kbm
+            )
+        ]);
+    }
+
+    public function actionGetJadwal(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        if(!empty($input->type)){
+            switch($input->type){
+                case 'akademik': 
+                    $list_data = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $semester_aktif->id_semester);
+                    break;
+                case 'kbm': 
+                    $list_data = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                case 'uts': 
+                    $list_data = LibGuru::fetchDataJadwalUTS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                case 'uas': 
+                    $list_data = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                default:
+                    $list_data = null;
+                    break;
+            }
+        }
+
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'jadwal' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetPertemuanByJadwalKelasKBM(Request $request){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_jadwal_kelas_mp' =>'required'
+        ]);
+  
+        if($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
+
+        $data_pertemuan = array();
+        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp   )->get();
+
+        for ($i=1; $i <= 25; $i++) {     
+            $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
+            if ($presensiMp) {
+                $pertemuan = array(
+                    'text' => 'Pertemuan '.$i." (Sudah)",
+                    'value' => $i
+                );
+            }
+            else {
+                $pertemuan = array(
+                    'text' => 'Pertemuan '.$i,
+                    'value' => $i
+                );
+            }
+
+            $data_pertemuan[] = $pertemuan;
+        }
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'pertemuan' => $data_pertemuan
+            )
+        ]);
+    }
+
+    public function actionGetPresensiKBM(Request $request){
+        $input = (object) $request->input();
+        $validator = Validator::make($request->all(), [
+            'id_jadwal_kelas_mp' => 'required',
+            'pertemuan_ke' => 'required'
+        ]);
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
+
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$input->id_jadwal_kelas_mp)->where('pertemuan_ke','=',$input->pertemuan_ke)->first();
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
+        if($presensi_mp_aktif){
+            $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp','=',$presensi_mp_aktif->id_presensi_mp)->get();
+            $presensi_mp_aktif = $presensi_mp_aktif->only('id_presensi_mp', 'id_kelas_mp', 'id_jadwal_kelas_mp', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'id_guru_pengganti', 'alasan_tidak_hadir', 'tgl_entry', 'persentase_presensi_mp', 'keterangan');
+        }else{
+            $data_presensi_mp_siswa = null;
+            $presensi_mp_aktif = null;
+        }
+
+        foreach($data_siswa as $siswa){
+            $kehadiran = null;
+            if($data_presensi_mp_siswa && $presensi_mp_siswa = $data_presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa)){
+                $kehadiran = $presensi_mp_siswa->kehadiran;
+            }
+            $siswa->status_kehadiran = $kehadiran;
+            switch($kehadiran){
+                case 1: $text = 'Hadir'; break;
+                case 2: $text = 'Sakit'; break;
+                case 3: $text = 'Izin'; break;
+                case 4: $text = 'Alpa'; break;
+                default: $text = 'Belum diset'; break;
+            }
+            $siswa->status_text = $text;
+        }
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'presensi_mp' => $presensi_mp_aktif,
+                'siswa' => $data_siswa,
+            )
+        ]);
+    }
+
+    public function actionAbsensiSiswa(Request $request){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_jadwal_kelas_mp' => 'required',
+            'pertemuan_ke' => 'required',
+            'uraian_materi' => 'required',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
+            'tgl_presensi' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
+
+        $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp','=',$input->id_jadwal_kelas_mp)->where('pertemuan_ke','=',$input->pertemuan_ke)->first();
+        
+        DB::beginTransaction();
+        
+        try {
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            if($presensi_mp) {
+                $presensi_mp->updated_by         = $input->auth_data->pengguna->id_pengguna;
+            }else{
+                $presensi_mp                     = new PresensiMp;
+                $presensi_mp->id_presensi_mp     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $presensi_mp->id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
+                $presensi_mp->id_kelas_mp        = $data_kelas->id_kelas_mp;
+                $presensi_mp->pertemuan_ke       = $input->pertemuan_ke;
+                $presensi_mp->tgl_entry          = $now;
+                $presensi_mp->created_by         = $input->auth_data->pengguna->id_pengguna;
+            }
+            
+            $presensi_mp->uraian_materi      = $input->uraian_materi;
+            $presensi_mp->waktu_mulai        = $input->waktu_mulai;
+            $presensi_mp->waktu_selesai      = $input->waktu_selesai;
+            $presensi_mp->tgl_presensi       = $input->tgl_presensi;
+            $presensi_mp->save();
+            
+            foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
+                if(! empty($alasan)) {
+                    $kehadiran = $alasan;
+                }
+                else {
+                    $kehadiran = 1;
+                }
+
+                if($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp','=',$presensi_mp->id_presensi_mp)->where('id_siswa','=',$id_siswa)->first()){
+                    $presensi_mp_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                }else{
+                    if($siswa = Siswa::find($id_siswa)){
+                        $presensi_mp_siswa                            = new PresensiMpSiswa;
+                        $presensi_mp_siswa->id_presensi_mp_siswa      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $presensi_mp_siswa->id_presensi_mp            = $presensi_mp->id_presensi_mp;
+                        $presensi_mp_siswa->id_siswa                  = $id_siswa;   
+                        $presensi_mp_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
+                    }else{
+                        return response()->json([
+                            'status_code' 	=> 300,
+                            'status_text' 	=> 'Failed',
+                            'message' 	=> 'Error'
+                        ]);
+                    }
+                }
+
+                $presensi_mp_siswa->kehadiran     = $kehadiran;
+                $presensi_mp_siswa->save();   
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status_code' 	=> 200,
+                'status_text' 	=> 'Success',
+                'message' 	=> 'Absensi success'
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => 'Absensi gagal'
+            ]);
+        }    
+    }
+
+    public function actionSignOut(Request $request){
+        $input = (object) $request->input();
+
+        $pengguna = $input->auth_data->pengguna;
+        $pengguna->is_online = 0;
+        $pengguna->save();
+
+        Auth::logout();
+        return redirect('/');
+    }
+
+}
