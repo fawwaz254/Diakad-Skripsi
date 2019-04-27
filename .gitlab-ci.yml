@@ -24,7 +24,7 @@ deploy_to_demo:
 deploy_to_smpypm1sepanjang:
     stage: deploy
     only:
-        - lates-release
+        - latest-release
     environment: production
     script:
         - ssh -t root@$SMP_YPM_1_SEPANJANG_SERVER "cd /var/www/diakademik && git pull origin master
@@ -32,7 +32,7 @@ deploy_to_smpypm1sepanjang:
 deploy_to_smawh2taman:
     stage: deploy
     only:
-        - lates-release
+        - latest-release
     environment: production
     script:
         - ssh -t root@$SMA_WH_2_TAMAN_SERVER "cd /var/www/diakademik && git pull origin master
