@@ -1,13 +1,13 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pengeluaran-sekolah/input-pengeluaran/add')}}"><i class="material-icons">note_add</i><span>Tambah Pengeluaran</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pemasukan-sekolah/input-pemasukan/add')}}"><i class="material-icons">note_add</i><span>Tambah Pemasukan</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
                     <div class="header bg-amber">
-                        <h2>DATA PENGELUARAN</h2>
+                        <h2>DATA PEMASUKAN</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -18,8 +18,8 @@
                                         <th>Semester</th>
                                         <th>Nama Sub-Kategori</th>
                                         <th>Staff Input</th>
-                                        <th>Tanggal Pengeluaran</th>
-                                        <th>Besar Pengeluaran</th>
+                                        <th>Tanggal Pemasukan</th>
+                                        <th>Besar Pemasukan</th>
                                         <th>Upload File</th>
                                         <th>Action</th>
                                     </tr>
@@ -34,10 +34,10 @@
 </div>
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url       = 'pengeluaran-sekolah';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-pengeluaran/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'input-pengeluaran/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-input-pengeluaran/delete';
+    var modul_url       = 'pemasukan-sekolah';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-pemasukan/datatables';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'input-pemasukan/edit';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-input-pemasukan/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -50,10 +50,10 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'semester', name: 'semester.tahun_ajaran' },
-            { data: 'nm_pengeluaran_biaya_subkategori', name: 'pengeluaran_biaya_subkategori.nm_pengeluaran_biaya_subkategori' },
+            { data: 'nm_pemasukan_biaya_subkategori', name: 'pemasukan_biaya_subkategori.nm_pemasukan_biaya_subkategori' },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
-            { data: 'tgl_pengeluaran_biaya', name: 'pengeluaran_biaya.tgl_pengeluaran_biaya' },
-            { data: 'besar_pengeluaran_biaya', name: 'pengeluaran_biaya.besar_pengeluaran_biaya' },
+            { data: 'tgl_pemasukan_biaya', name: 'pemasukan_biaya.tgl_pemasukan_biaya' },
+            { data: 'besar_pemasukan_biaya', name: 'pemasukan_biaya.besar_pemasukan_biaya' },
             { data: 'is_upload_file', name: 'is_upload_file', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){

@@ -1,13 +1,13 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pengeluaran-sekolah/kategori-pengeluaran/add')}}"><i class="material-icons">note_add</i><span>Tambah Kategori Pengeluaran</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pemasukan-sekolah/kategori-pemasukan/add')}}"><i class="material-icons">note_add</i><span>Tambah Kategori Pemasukan</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
                     <div class="header bg-amber">
-                        <h2>DATA KATEGORI PENGELUARAN</h2>
+                        <h2>DATA KATEGORI PEMASUKAN</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -30,10 +30,10 @@
 </div>
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url       = 'pengeluaran-sekolah';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'kategori-pengeluaran/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'kategori-pengeluaran/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-kategori-pengeluaran/delete';
+    var modul_url       = 'pemasukan-sekolah';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'kategori-pemasukan/datatables';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'kategori-pemasukan/edit';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-kategori-pemasukan/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -45,8 +45,8 @@ responsive: true,
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_pengeluaran_biaya_kategori', name: 'nm_pengeluaran_biaya_kategori' },
-            { data: 'keterangan_pengeluaran_biaya_kategori', name: 'keterangan_pengeluaran_biaya_kategori' },
+            { data: 'nm_pemasukan_biaya_kategori', name: 'nm_pemasukan_biaya_kategori' },
+            { data: 'keterangan_pemasukan_biaya_kategori', name: 'keterangan_pemasukan_biaya_kategori' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

@@ -1,17 +1,17 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#pengeluaran-sekolah/input-pengeluaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#pemasukan-sekolah/input-pemasukan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header bg-amber">
                     <h2>
-                        EDIT PENGELUARAN
+                        EDIT PEMASUKAN
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-pengeluaran/edit/'.$data_pengeluaran->id_pengeluaran_biaya)}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-pemasukan/edit/'.$data_pemasukan->id_pemasukan_biaya)}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
                             Semester
@@ -21,7 +21,7 @@
                                 <select class="form-control show-tick" name="id_semester">
                                     <option value="" disabled selected >-- Pilih Semester --</option>
                                     @foreach($data_semester as $data)
-                                        @if($data->id_semester == $data_pengeluaran->id_semester)
+                                        @if($data->id_semester == $data_pemasukan->id_semester)
                                             @if($data->is_aktif_semester == 1)
                                                 <option value="{{$data->id_semester}}" selected >{{$data->tahun_ajaran}} {{$data->nm_semester}} (Aktif)</option>
                                             @else
@@ -43,32 +43,32 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_pengeluaran_biaya_subkategori">
+                                <select class="form-control show-tick" name="id_pemasukan_biaya_subkategori">
                                     <option value="" disabled selected >-- Pilih Sub-Kategori --</option>
-                                    @foreach($data_subkategori_pengeluaran as $data)
-                                        @if($data->id_pengeluaran_biaya_subkategori == $data_pengeluaran->id_pengeluaran_biaya_subkategori)
-                                            <option value="{{$data->id_pengeluaran_biaya_subkategori}}" selected >{{$data->nm_pengeluaran_biaya_subkategori}} - {{$data->nm_pengeluaran_biaya_kategori}}</option>
+                                    @foreach($data_subkategori_pemasukan as $data)
+                                        @if($data->id_pemasukan_biaya_subkategori == $data_pemasukan->id_pemasukan_biaya_subkategori)
+                                            <option value="{{$data->id_pemasukan_biaya_subkategori}}" selected >{{$data->nm_pemasukan_biaya_subkategori}} - {{$data->nm_pemasukan_biaya_kategori}}</option>
                                         @else
-                                            <option value="{{$data->id_pengeluaran_biaya_subkategori}}">{{$data->nm_pengeluaran_biaya_subkategori}} - {{$data->nm_pengeluaran_biaya_kategori}}</option>
+                                            <option value="{{$data->id_pemasukan_biaya_subkategori}}">{{$data->nm_pemasukan_biaya_subkategori}} - {{$data->nm_pemasukan_biaya_kategori}}</option>
                                         @endif
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Tanggal Pengeluaran
+                            Tanggal Pemasukan
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_pengeluaran_biaya" required="" aria-required="true" aria-invalid="true" value="{{$tgl_pengeluaran_biaya}}">
+                                <input type="text" class="datepicker form-control" name="tgl_pemasukan_biaya" required="" aria-required="true" aria-invalid="true" value="{{$tgl_pemasukan_biaya}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Besar Pengeluaran
+                            Besar Pemasukan
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="besar_pengeluaran_biaya" required="" aria-required="true" aria-invalid="true" value="{{$data_pengeluaran->besar_pengeluaran_biaya}}">
+                                <input type="number" class="form-control" name="besar_pemasukan_biaya" required="" aria-required="true" aria-invalid="true" value="{{$data_pemasukan->besar_pemasukan_biaya}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -76,7 +76,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="keterangan_pengeluaran_biaya" id="editor1" class="editor1" rows="10" cols="80">{{$data_pengeluaran->keterangan_pengeluaran_biaya}}</textarea>
+                                <textarea name="keterangan_pemasukan_biaya" id="editor1" class="editor1" rows="10" cols="80">{{$data_pemasukan->keterangan_pemasukan_biaya}}</textarea>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -85,7 +85,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="is_upload_file">
-                                    @if($data_pengeluaran->is_upload_file == 1)
+                                    @if($data_pemasukan->is_upload_file == 1)
                                         <option value="0">Tidak</option>
                                         <option value="1" selected >Ya</option>
                                     @else
