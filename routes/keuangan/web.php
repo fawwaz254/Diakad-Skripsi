@@ -103,6 +103,38 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 		});
 
+		/** ==== MODUL PEMASUKAN SEKOLAH ==== **/
+		// url: /keuangan/pemasukan-sekolah
+		Route::group(array('prefix' => 'pemasukan-sekolah'), function() {
+			// MENU Kategori Pemasukan
+			// url: /keuangan/pemasukan-sekolah/kategori-pemasukan
+			Route::get('kategori-pemasukan', 'Keuangan\PemasukanSekolah\KategoriPemasukanController@viewKategoriPemasukan');
+			Route::get('kategori-pemasukan/datatables', 'Keuangan\PemasukanSekolah\KategoriPemasukanController@datatablesKategoriPemasukan');
+			Route::get('kategori-pemasukan/add', 'Keuangan\PemasukanSekolah\KategoriPemasukanController@addKategoriPemasukan');
+			Route::get('kategori-pemasukan/edit/{id}', 'Keuangan\PemasukanSekolah\KategoriPemasukanController@editKategoriPemasukan');
+
+			Route::post('action-kategori-pemasukan/{mode}/{id}', 'Keuangan\PemasukanSekolah\KategoriPemasukanController@actionKategoriPemasukan');	
+
+			// MENU Sub-Kategori Pemasukan
+			// url: /keuangan/pemasukan-sekolah/subkategori-pemasukan
+			Route::get('subkategori-pemasukan', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@viewSubkategoriPemasukan');
+			Route::get('subkategori-pemasukan/datatables', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@datatablesSubkategoriPemasukan');
+			Route::get('subkategori-pemasukan/add', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@addSubkategoriPemasukan');
+			Route::get('subkategori-pemasukan/edit/{id}', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@editSubkategoriPemasukan');
+
+			Route::post('action-subkategori-pemasukan/{mode}/{id}', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@actionSubkategoriPemasukan');	
+					
+			// MENU Input Pemasukan
+			// url: /keuangan/pemasukan-sekolah/input-pemasukan
+			Route::get('input-pemasukan', 'Keuangan\PemasukanSekolah\InputPemasukanController@viewInputPemasukan');
+			Route::get('input-pemasukan/datatables', 'Keuangan\PemasukanSekolah\InputPemasukanController@datatablesInputPemasukan');
+			Route::get('input-pemasukan/add', 'Keuangan\PemasukanSekolah\InputPemasukanController@addInputPemasukan');
+			Route::get('input-pemasukan/edit/{id}', 'Keuangan\PemasukanSekolah\InputPemasukanController@editInputPemasukan');
+
+			Route::post('action-input-pemasukan/{mode}/{id}', 'Keuangan\PemasukanSekolah\InputPemasukanController@actionInputPemasukan');	
+
+		});
+
 		/** ==== MODUL PENGELUARAN SEKOLAH ==== **/
 		// url: /keuangan/pengeluaran-sekolah
 		Route::group(array('prefix' => 'pengeluaran-sekolah'), function() {
