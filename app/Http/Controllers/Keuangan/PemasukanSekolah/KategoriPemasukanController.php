@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Keuangan\PengeluaranSekolah;
+namespace App\Http\Controllers\Keuangan\PemasukanSekolah;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
-use App\Models\PengeluaranBiayaKategori as PengeluaranBiayaKategori;
-use App\Models\PengeluaranBiayaSubkategori as PengeluaranBiayaSubkategori;
+use App\Models\PemasukanBiayaKategori as PemasukanBiayaKategori;
+use App\Models\PemasukanBiayaSubkategori as PemasukanBiayaSubkategori;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -17,18 +17,18 @@ use DB;
 use Session;
 use Validator;
 
-class KategoriPengeluaranController extends BaseController{
+class KategoriPemasukanController extends BaseController{
 
-    public function viewKategoriPengeluaran(Request $request){
+    public function viewKategoriPemasukan(Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/pengeluaran-sekolah/kategori-pengeluaran/view-kategori-pengeluaran',compact('auth_data'));
+    	return view('keuangan/pemasukan-sekolah/kategori-pemasukan/view-kategori-pemasukan',compact('auth_data'));
 
     }
 
-    public function addKategoriPengeluaran(Request $request){
+    public function addKategoriPemasukan(Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -36,32 +36,32 @@ class KategoriPengeluaranController extends BaseController{
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $id_pengeluaran_biaya_kategori = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_pemasukan_biaya_kategori = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('keuangan/pengeluaran-sekolah/kategori-pengeluaran/add-kategori-pengeluaran',compact('auth_data','id_pengeluaran_biaya_kategori'));
+        return view('keuangan/pemasukan-sekolah/kategori-pemasukan/add-kategori-pemasukan',compact('auth_data','id_pemasukan_biaya_kategori'));
 
     }
 
-    public function editKategoriPengeluaran($id, Request $request){
+    public function editKategoriPemasukan($id, Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kategori_pengeluaran = LibDataKeuangan::fetchDataKategoriPengeluaran($auth_data, $id);
+        $data_kategori_pemasukan = LibDataKeuangan::fetchDataKategoriPemasukan($auth_data, $id);
 
-        return view('keuangan/pengeluaran-sekolah/kategori-pengeluaran/edit-kategori-pengeluaran',compact('auth_data','data_kategori_pengeluaran'));
+        return view('keuangan/pemasukan-sekolah/kategori-pemasukan/edit-kategori-pemasukan',compact('auth_data','data_kategori_pemasukan'));
 
     }
 
-    public function datatablesKategoriPengeluaran(Request $request){
+    public function datatablesKategoriPemasukan(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataKategoriPengeluaran($auth_data);
+    	$list_data = LibDataKeuangan::fetchDataKategoriPemasukan($auth_data);
 
         return Datatables::of($list_data)
                 ->addColumn('action', function($item){
                     $data = array(
-                        'id' => $item->id_pengeluaran_biaya_kategori
+                        'id' => $item->id_pemasukan_biaya_kategori
                     );
                     return $data;
                 })
@@ -69,13 +69,13 @@ class KategoriPengeluaranController extends BaseController{
     }
 
     // Action POST
-    public function actionKategoriPengeluaran(Request $request, $mode, $id = null){
+    public function actionKategoriPemasukan(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'nm_pengeluaran_biaya_kategori' => 'required',
-            'keterangan_pengeluaran_biaya_kategori' => 'required'
+            'nm_pemasukan_biaya_kategori' => 'required',
+            'keterangan_pemasukan_biaya_kategori' => 'required'
         ]);
         
         if($validator->fails() && $mode != 'delete') {
@@ -91,53 +91,53 @@ class KategoriPengeluaranController extends BaseController{
             if($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $kategoriPengeluaran                                            = new PengeluaranBiayaKategori;
-                $kategoriPengeluaran->id_pengeluaran_biaya_kategori             = $id;
-                $kategoriPengeluaran->nm_pengeluaran_biaya_kategori             = $input->nm_pengeluaran_biaya_kategori;
-                $kategoriPengeluaran->keterangan_pengeluaran_biaya_kategori     = $input->keterangan_pengeluaran_biaya_kategori;
-                $kategoriPengeluaran->id_sekolah                                = $input->auth_data->pengguna->id_sekolah;
-                $kategoriPengeluaran->created_by                                = $input->auth_data->pengguna->id_pengguna;
-                $kategoriPengeluaran->save();
+                $kategoriPemasukan                                            = new PemasukanBiayaKategori;
+                $kategoriPemasukan->id_pemasukan_biaya_kategori             = $id;
+                $kategoriPemasukan->nm_pemasukan_biaya_kategori             = $input->nm_pemasukan_biaya_kategori;
+                $kategoriPemasukan->keterangan_pemasukan_biaya_kategori     = $input->keterangan_pemasukan_biaya_kategori;
+                $kategoriPemasukan->id_sekolah                                = $input->auth_data->pengguna->id_sekolah;
+                $kategoriPemasukan->created_by                                = $input->auth_data->pengguna->id_pengguna;
+                $kategoriPemasukan->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'pengeluaran-sekolah/kategori-pengeluaran',
-                    'message' => 'Save Kategori Pengeluaran successfully'
+                    'path' => 'pemasukan-sekolah/kategori-pemasukan',
+                    'message' => 'Save Kategori Pemasukan successfully'
                 ];
             }
             elseif($mode == 'edit'){
                 // make object to find id
-                $kategoriPengeluaran                                            = PengeluaranBiayaKategori::find($id);
-                $kategoriPengeluaran->nm_pengeluaran_biaya_kategori             = $input->nm_pengeluaran_biaya_kategori;
-                $kategoriPengeluaran->keterangan_pengeluaran_biaya_kategori     = $input->keterangan_pengeluaran_biaya_kategori;
-                $kategoriPengeluaran->updated_by                                = $input->auth_data->pengguna->id_pengguna;
-                $kategoriPengeluaran->updated_at                                = $now;
-                $kategoriPengeluaran->save();
+                $kategoriPemasukan                                            = PemasukanBiayaKategori::find($id);
+                $kategoriPemasukan->nm_pemasukan_biaya_kategori             = $input->nm_pemasukan_biaya_kategori;
+                $kategoriPemasukan->keterangan_pemasukan_biaya_kategori     = $input->keterangan_pemasukan_biaya_kategori;
+                $kategoriPemasukan->updated_by                                = $input->auth_data->pengguna->id_pengguna;
+                $kategoriPemasukan->updated_at                                = $now;
+                $kategoriPemasukan->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'pengeluaran-sekolah/kategori-pengeluaran',
-                    'message' => 'Update Kategori Pengeluaran successfully'
+                    'path' => 'pemasukan-sekolah/kategori-pemasukan',
+                    'message' => 'Update Kategori Pemasukan successfully'
                 ];
             }
             elseif($mode == 'delete'){
-                if($subkategoriPengeluaran = PengeluaranBiayaSubkategori::where('id_pengeluaran_biaya_kategori',$id)->first()){
+                if($subkategoriPemasukan = PemasukanBiayaSubkategori::where('id_pemasukan_biaya_kategori',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Kategori Pengeluaran'
+                        'message' => 'Failed To Delete Kategori Pemasukan'
                     ]; 
                 }
                 else{
                     // make object to find id
-                    $kategoriPengeluaran               = PengeluaranBiayaKategori::find($id);
-                    $kategoriPengeluaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                    $kategoriPengeluaran->save();
+                    $kategoriPemasukan               = PemasukanBiayaKategori::find($id);
+                    $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $kategoriPemasukan->save();
 
-                    $kategoriPengeluaran->delete();
+                    $kategoriPemasukan->delete();
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pengeluaran successfully'
+                        'message' => 'Delete Kategori Pemasukan successfully'
                     ];
                 }
             }

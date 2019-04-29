@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Keuangan\PengeluaranSekolah;
+namespace App\Http\Controllers\Keuangan\PemasukanSekolah;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
-use App\Models\PengeluaranBiaya as PengeluaranBiaya;
+use App\Models\PemasukanBiaya as PemasukanBiaya;
 use App\Models\Staff as Staff;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -18,18 +18,18 @@ use DB;
 use Session;
 use Validator;
 
-class InputPengeluaranController extends BaseController{
+class InputPemasukanController extends BaseController{
 
-    public function viewInputPengeluaran(Request $request){
+    public function viewInputPemasukan(Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/pengeluaran-sekolah/input-pengeluaran/view-input-pengeluaran',compact('auth_data'));
+    	return view('keuangan/pemasukan-sekolah/input-pemasukan/view-input-pemasukan',compact('auth_data'));
 
     }
 
-    public function addInputPengeluaran(Request $request){
+    public function addInputPemasukan(Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -37,45 +37,45 @@ class InputPengeluaranController extends BaseController{
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $data_subkategori_pengeluaran = LibDataKeuangan::fetchDataSubkategoriPengeluaran($auth_data);
+        $data_subkategori_pemasukan = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data);
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
-        $id_pengeluaran_biaya = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_pemasukan_biaya = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('keuangan/pengeluaran-sekolah/input-pengeluaran/add-input-pengeluaran',compact('auth_data','data_subkategori_pengeluaran','data_semester','id_pengeluaran_biaya'));
+        return view('keuangan/pemasukan-sekolah/input-pemasukan/add-input-pemasukan',compact('auth_data','data_subkategori_pemasukan','data_semester','id_pemasukan_biaya'));
 
     }
 
-    public function editInputPengeluaran($id, Request $request){
+    public function editInputPemasukan($id, Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_subkategori_pengeluaran = LibDataKeuangan::fetchDataSubkategoriPengeluaran($auth_data);
+        $data_subkategori_pemasukan = LibDataKeuangan::fetchDataSubkategoriPemasukan($auth_data);
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
-        $data_pengeluaran = LibDataKeuangan::fetchDataPengeluaran($auth_data, $id);
+        $data_pemasukan = LibDataKeuangan::fetchDataPemasukan($auth_data, $id);
 
         // convert format date
-        $tgl_pengeluaran_biaya = strftime( "%A, %d %B %Y", strtotime($data_pengeluaran->tgl_pengeluaran_biaya));
+        $tgl_pemasukan_biaya = strftime( "%A, %d %B %Y", strtotime($data_pemasukan->tgl_pemasukan_biaya));
 
-        return view('keuangan/pengeluaran-sekolah/input-pengeluaran/edit-input-pengeluaran',compact('auth_data','data_subkategori_pengeluaran','data_semester','data_pengeluaran', 'tgl_pengeluaran_biaya'));
+        return view('keuangan/pemasukan-sekolah/input-pemasukan/edit-input-pemasukan',compact('auth_data','data_subkategori_pemasukan','data_semester','data_pemasukan', 'tgl_pemasukan_biaya'));
 
     }
 
-    public function datatablesInputPengeluaran(Request $request){
+    public function datatablesInputPemasukan(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataPengeluaran($auth_data, null, "1");
+    	$list_data = LibDataKeuangan::fetchDataPemasukan($auth_data, null, "1");
 
         return Datatables::of($list_data)
                 ->addColumn('semester', function($item){
                     return $item->tahun_ajaran." ".$item->nm_semester;
                 })
-                ->addColumn('nm_pengeluaran_biaya_subkategori', function($item){
-                    return $item->nm_pengeluaran_biaya_subkategori." - ".$item->nm_pengeluaran_biaya_kategori;
+                ->addColumn('nm_pemasukan_biaya_subkategori', function($item){
+                    return $item->nm_pemasukan_biaya_subkategori." - ".$item->nm_pemasukan_biaya_kategori;
                 })
                 ->addColumn('nm_pengguna', function($item){
                     if( ! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
@@ -91,11 +91,11 @@ class InputPengeluaranController extends BaseController{
                         return $item->nm_pengguna; 
                     }
                 })
-                ->addColumn('tgl_pengeluaran_biaya', function($item){
-                    return strftime( "%A, %d %B %Y", strtotime($item->tgl_pengeluaran_biaya));
+                ->addColumn('tgl_pemasukan_biaya', function($item){
+                    return strftime( "%A, %d %B %Y", strtotime($item->tgl_pemasukan_biaya));
                 })
-                ->addColumn('besar_pengeluaran_biaya', function($item){
-                    return "Rp".number_format($item->besar_pengeluaran_biaya);
+                ->addColumn('besar_pemasukan_biaya', function($item){
+                    return "Rp".number_format($item->besar_pemasukan_biaya);
                 })
                 ->addColumn('is_upload_file', function($item){
                     if($item->is_upload_file == 1) {
@@ -107,7 +107,7 @@ class InputPengeluaranController extends BaseController{
                 })
                 ->addColumn('action', function($item){
                     $data = array(
-                        'id' => $item->id_pengeluaran_biaya
+                        'id' => $item->id_pemasukan_biaya
                     );
                     return $data;
                 })
@@ -115,16 +115,16 @@ class InputPengeluaranController extends BaseController{
     }
 
     // Action POST
-    public function actionInputPengeluaran(Request $request, $mode, $id = null){
+    public function actionInputPemasukan(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'id_semester'                       => 'required',
-            'id_pengeluaran_biaya_subkategori'  => 'required',
-            'tgl_pengeluaran_biaya'             => 'required',
-            'besar_pengeluaran_biaya'           => 'required',
-            'keterangan_pengeluaran_biaya'      => 'required',
+            'id_pemasukan_biaya_subkategori'    => 'required',
+            'tgl_pemasukan_biaya'               => 'required',
+            'besar_pemasukan_biaya'             => 'required',
+            'keterangan_pemasukan_biaya'        => 'required',
             'is_upload_file'                    => 'required'
         ]);
         
@@ -153,56 +153,57 @@ class InputPengeluaranController extends BaseController{
 
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $pengeluaran                                    = new PengeluaranBiaya;
-                $pengeluaran->id_pengeluaran_biaya              = $id;
-                $pengeluaran->id_pengeluaran_biaya_subkategori  = $input->id_pengeluaran_biaya_subkategori;
-                $pengeluaran->id_semester                       = $input->id_semester;
-                $pengeluaran->id_staff                          = $id_staff;
+                $pemasukan                                  = new PemasukanBiaya;
+                $pemasukan->id_pemasukan_biaya              = $id;
+                $pemasukan->id_pemasukan_biaya_subkategori  = $input->id_pemasukan_biaya_subkategori;
+                $pemasukan->id_semester                     = $input->id_semester;
+                $pemasukan->id_staff                        = $id_staff;
                 // convert format date
-                $pengeluaran->tgl_pengeluaran_biaya             = date_format(date_create($input->tgl_pengeluaran_biaya),"Y-m-d H:i:s");
-                $pengeluaran->besar_pengeluaran_biaya           = $input->besar_pengeluaran_biaya;
-                $pengeluaran->keterangan_pengeluaran_biaya      = $input->keterangan_pengeluaran_biaya;
-                $pengeluaran->is_upload_file                    = $input->is_upload_file;
-                $pengeluaran->created_by                        = $input->auth_data->pengguna->id_pengguna;
-                $pengeluaran->save();
+                $pemasukan->tgl_pemasukan_biaya             = date_format(date_create($input->tgl_pemasukan_biaya),"Y-m-d H:i:s");
+                $pemasukan->besar_pemasukan_biaya           = $input->besar_pemasukan_biaya;
+                $pemasukan->keterangan_pemasukan_biaya      = $input->keterangan_pemasukan_biaya;
+                $pemasukan->is_upload_file                  = $input->is_upload_file;
+                $pemasukan->created_by                      = $input->auth_data->pengguna->id_pengguna;
+                $pemasukan->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'pengeluaran-sekolah/input-pengeluaran',
-                    'message' => 'Save Pengeluaran successfully'
+                    'path' => 'pemasukan-sekolah/input-pemasukan',
+                    'message' => 'Save Pemasukan successfully'
                 ];
             }
             elseif($mode == 'edit'){
                 // make object to find id
-                $pengeluaran                                    = PengeluaranBiaya::find($id);
-                $pengeluaran->id_pengeluaran_biaya_subkategori  = $input->id_pengeluaran_biaya_subkategori;
-                $pengeluaran->id_semester                       = $input->id_semester;
+                $pemasukan                                    = PemasukanBiaya::find($id);
+                $pemasukan->id_pemasukan_biaya_subkategori  = $input->id_pemasukan_biaya_subkategori;
+                $pemasukan->id_semester                     = $input->id_semester;
+                $pemasukan->id_staff                        = $id_staff;
                 // convert format date
-                $pengeluaran->tgl_pengeluaran_biaya             = date_format(date_create($input->tgl_pengeluaran_biaya),"Y-m-d H:i:s");
-                $pengeluaran->besar_pengeluaran_biaya           = $input->besar_pengeluaran_biaya;
-                $pengeluaran->keterangan_pengeluaran_biaya      = $input->keterangan_pengeluaran_biaya;
-                $pengeluaran->is_upload_file                    = $input->is_upload_file;                
-                $pengeluaran->updated_by                        = $input->auth_data->pengguna->id_pengguna;
-                $pengeluaran->updated_at                        = $now;
-                $pengeluaran->save();
+                $pemasukan->tgl_pemasukan_biaya             = date_format(date_create($input->tgl_pemasukan_biaya),"Y-m-d H:i:s");
+                $pemasukan->besar_pemasukan_biaya           = $input->besar_pemasukan_biaya;
+                $pemasukan->keterangan_pemasukan_biaya      = $input->keterangan_pemasukan_biaya;
+                $pemasukan->is_upload_file                  = $input->is_upload_file;            
+                $pemasukan->updated_by                      = $input->auth_data->pengguna->id_pengguna;
+                $pemasukan->updated_at                      = $now;
+                $pemasukan->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'pengeluaran-sekolah/input-pengeluaran',
-                    'message' => 'Update Pengeluaran successfully'
+                    'path' => 'pemasukan-sekolah/input-pemasukan',
+                    'message' => 'Update Pemasukan successfully'
                 ];
             }
             elseif($mode == 'delete'){
                 // make object to find id
-                $pengeluaran               = PengeluaranBiaya::find($id);
-                $pengeluaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                $pengeluaran->save();
+                $pemasukan               = PemasukanBiaya::find($id);
+                $pemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $pemasukan->save();
 
-                $pengeluaran->delete();
+                $pemasukan->delete();
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Pengeluaran successfully'
+                    'message' => 'Delete Pemasukan successfully'
                 ];
             }
         }

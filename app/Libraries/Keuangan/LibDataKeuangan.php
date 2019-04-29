@@ -13,6 +13,9 @@ use App\Models\BiayaSekolah as BiayaSekolah;
 use App\Models\DetailBiaya as DetailBiaya;
 use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\Siswa as Siswa;
+use App\Models\PemasukanBiayaKategori as PemasukanBiayaKategori;
+use App\Models\PemasukanBiayaSubkategori as PemasukanBiayaSubkategori;
+use App\Models\PemasukanBiaya as PemasukanBiaya;
 use App\Models\PengeluaranBiayaKategori as PengeluaranBiayaKategori;
 use App\Models\PengeluaranBiayaSubkategori as PengeluaranBiayaSubkategori;
 use App\Models\PengeluaranBiaya as PengeluaranBiaya;
@@ -275,6 +278,72 @@ class LibDataKeuangan
                             }
 
         return $siswa;
+    }
+    /** ========== **/
+
+    /** KATEGORI PEMASUKAN **/
+    static function fetchDataKategoriPemasukan($auth_data, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $kategoriPemasukan = PemasukanBiayaKategori::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('nm_pemasukan_biaya_kategori', 'asc')->get();
+        }
+        // get mode edit
+        else{
+            $kategoriPemasukan = PemasukanBiayaKategori::where('id_pemasukan_biaya_kategori','=',$id)->first();
+        }
+
+        return $kategoriPemasukan;
+    }
+    /** ========== **/
+
+    /** SUBKATEGORI PEMASUKAN **/
+    static function fetchDataSubkategoriPemasukan($auth_data, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $subkategoriPemasukan = PemasukanBiayaSubkategori::select('pemasukan_biaya_kategori.id_pemasukan_biaya_kategori', 'pemasukan_biaya_subkategori.id_pemasukan_biaya_subkategori', 'pemasukan_biaya_subkategori.nm_pemasukan_biaya_subkategori', 'pemasukan_biaya_kategori.nm_pemasukan_biaya_kategori', 'pemasukan_biaya_kategori.keterangan_pemasukan_biaya_kategori', 'pemasukan_biaya_subkategori.keterangan_pemasukan_biaya_subkategori')
+                                ->join('pemasukan_biaya_kategori','pemasukan_biaya_kategori.id_pemasukan_biaya_kategori','=','pemasukan_biaya_subkategori.id_pemasukan_biaya_kategori')
+                                ->where('pemasukan_biaya_kategori.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                                ->orderBy('pemasukan_biaya_kategori.nm_pemasukan_biaya_kategori', 'asc')
+                                ->orderBy('pemasukan_biaya_subkategori.nm_pemasukan_biaya_subkategori', 'asc')
+                                ->get();
+        }
+        // get mode edit
+        else{
+            $subkategoriPemasukan = PemasukanBiayaSubkategori::where('id_pemasukan_biaya_subkategori','=',$id)->first();
+        }
+
+        return $subkategoriPemasukan;
+    }
+    /** ========== **/
+
+    /** PEMASUKAN **/
+    static function fetchDataPemasukan($auth_data, $id = null, $is_datatable = null){
+
+        // get mode view
+        if ($id == null){
+            $pemasukan = PemasukanBiaya::select('pemasukan_biaya.id_pemasukan_biaya', 'pemasukan_biaya_kategori.id_pemasukan_biaya_kategori', 'pemasukan_biaya_subkategori.id_pemasukan_biaya_subkategori', 'pemasukan_biaya_subkategori.nm_pemasukan_biaya_subkategori', 'pemasukan_biaya_kategori.nm_pemasukan_biaya_kategori', 'semester.tahun_ajaran', 'semester.nm_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pemasukan_biaya.tgl_pemasukan_biaya', 'pemasukan_biaya.besar_pemasukan_biaya', 'pemasukan_biaya.keterangan_pemasukan_biaya', 'pemasukan_biaya.is_upload_file')
+                                ->join('pemasukan_biaya_subkategori','pemasukan_biaya_subkategori.id_pemasukan_biaya_subkategori','=','pemasukan_biaya.id_pemasukan_biaya_subkategori')
+                                ->join('pemasukan_biaya_kategori','pemasukan_biaya_kategori.id_pemasukan_biaya_kategori','=','pemasukan_biaya_subkategori.id_pemasukan_biaya_kategori')
+                                ->join('semester','semester.id_semester','=','pemasukan_biaya.id_semester')
+                                ->leftJoin('pengguna','pengguna.id_pengguna','=','pemasukan_biaya.created_by')
+                                ->where('pemasukan_biaya_kategori.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                                ->orderBy('semester.tahun_ajaran', 'desc')
+                                ->orderBy('semester.nm_semester', 'desc')
+                                ->orderBy('pemasukan_biaya_kategori.nm_pemasukan_biaya_kategori', 'asc')
+                                ->orderBy('pemasukan_biaya_subkategori.nm_pemasukan_biaya_subkategori', 'asc');
+
+                                if ( $is_datatable == null ) {
+                                    $pemasukan = $pemasukan->get();
+                                }
+        }
+        // get mode edit
+        else{
+            $pemasukan = PemasukanBiaya::where('id_pemasukan_biaya','=',$id)->first();
+        }
+
+        return $pemasukan;
     }
     /** ========== **/
     
