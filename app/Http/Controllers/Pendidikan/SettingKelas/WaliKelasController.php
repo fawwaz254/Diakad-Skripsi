@@ -60,7 +60,7 @@ class WaliKelasController extends BaseController{
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
+        // dd($id_kelas);
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
     	return view('pendidikan/setting-kelas/wali-kelas/view-kelas-wali-kelas',compact('auth_data', 'data_kelas'));
@@ -94,8 +94,10 @@ class WaliKelasController extends BaseController{
         $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
+        // dd($id_kelas);
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+        // dd($data_semester);
 
         // ambil data guru melalui role sumber daya
         $data_guru = LibGuru::fetchDataAllGuru($auth_data);
@@ -125,7 +127,9 @@ class WaliKelasController extends BaseController{
                 })
                 ->addColumn('action', function($item){
                     $data = array(
-                        'id' => $item->id_wali_kelas
+                        'id'            => $item->id_wali_kelas,
+                        'id_kelas'      => $item->id_kelas,
+                        'id_semester'   => $item->id_semester
                     );
                     return $data;
                 })
