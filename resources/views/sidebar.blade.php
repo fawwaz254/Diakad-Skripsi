@@ -10,9 +10,9 @@
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
-        <div class="user-info" style="background: url('{{asset('media/user-img-background.jpeg')}}') no-repeat no-repeat;">
+        <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
-                <img src="{{asset('media/user.png')}}" alt="User" height="100" />
+                <img src="https://ui-avatars.com/api/?size=100&name={{$auth_data->pengguna->nm_pengguna}}" height="50" />
             </div>
             <div class="info-container">
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$auth_data->pengguna->nm_pengguna}}</div>
