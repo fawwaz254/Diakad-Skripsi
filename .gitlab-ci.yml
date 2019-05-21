@@ -48,4 +48,4 @@ deploy_to_smkypm1taman:
     environment: production
     script:
         - ssh -t root@$SMK_YPM_1_TAMAN_SERVER "cd /var/www/diakademik && git pull origin latest-release"
-        - ssh -t root@$SMK_YPM_1_TAMAN_SERVER "cd /var/www/diakademik && php artisan migrate"
+        - ssh -t root@$SMK_YPM_1_TAMAN_SERVER "cd /var/www/diakademik && php artisan migrate && yes"
