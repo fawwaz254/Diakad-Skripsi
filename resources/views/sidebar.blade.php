@@ -10,7 +10,7 @@
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
-        <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
+        <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah_data->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
                 <img src="https://ui-avatars.com/api/?size=100&name={{$auth_data->pengguna->nm_pengguna}}" height="50" />
             </div>
