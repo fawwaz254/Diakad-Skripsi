@@ -42,7 +42,8 @@
                                     Nama Lengkap : Nama Lengkap Siswa
                                 </li>
                                 <li>
-                                    Jenis Kelamin : Jenis Kelamin Siswa. Keterangan : Isi Dengan (Laki-laki atau Perempuan)
+                                    Jenis Kelamin : Jenis Kelamin Siswa. 
+                                    <br>Keterangan : Isi Dengan (<strong>Laki-laki</strong> atau <strong>Perempuan</strong>)
                                 </li>
                                 <li>
                                     Status Siswa : Status Siswa, pastikan format penulisan benar sesuai dengan Nama Status. Contoh : Aktif. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Status Siswa
@@ -61,7 +62,11 @@
                                 </li>
                             </ul>
                             <a href="{{ route('siswa/download-file-excel') }}">
-                                <span>Download Template Excel</span>
+                                <button class="btn btn-block bg-blue waves-effect" type="submit">
+                                        <i class="material-icons">cloud_upload</i>
+                                        <span>Download Template Excel</span>
+                                        
+                                </button>
                             </a>
                         </div>
                     </div>

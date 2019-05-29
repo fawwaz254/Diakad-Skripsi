@@ -132,9 +132,6 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('ruangan-kelas/edit/{id_kelas}/{id_semester}/{id}', 'Pendidikan\SettingKelas\RuanganKelasController@editRuanganKelas');
 
 			Route::post('action-ruangan-kelas/{mode}/{id}', 'Pendidikan\SettingKelas\RuanganKelasController@actionRuanganKelas');
-
-
-
 		});
 
 		/** ==== MODUL PENDAFTARAN ==== **/
@@ -156,6 +153,14 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('post-view-data-siswa', 'Pendidikan\Siswa\DataSiswaController@actionViewDataSiswa');
 			Route::get('data-siswa/view-detail-data-siswa/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\DataSiswaController@viewDetailDataSiswa');
 			Route::get('data-siswa/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\DataSiswaController@datatablesDataSiswa');
+
+			//MENU UPDATE FOTO
+			Route::get('update-foto', 'Pendidikan\Siswa\UpdateFotoController@viewUpdateFoto');
+			Route::post('post-view-update-foto', 'Pendidikan\Siswa\UpdateFotoController@actionViewUpdateFoto');
+			Route::get('update-foto/view-detail-update-foto/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewDetailUpdateFoto');
+			Route::get('update-foto/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@datatablesUpdateFoto');
+			Route::get('update-foto/upload/{id_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewUpload');
+			Route::post('action-update-foto/{mode}/{id}', 'Pendidikan\Siswa\UpdateFotoController@actionUpdateFoto');
 
 			//MENU UPLOAD DATA SISWA
 			Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');

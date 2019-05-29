@@ -55,20 +55,22 @@ class UploadDataSiswaController extends BaseController
             $data = Excel::load($path)->get();
        		if($data->count()){
                 foreach ($data as $key => $value) {
-                	$siswa = Siswa::where('nis_siswa','=',(int)$value->nis)->orWhere('nisn_siswa','=',(int)$value->nisn)->first();
+                	$siswa = Siswa::where('nis_siswa','=',(string)$value->nis)->orWhere('nisn_siswa','=',(string)$value->nisn)->first();
+                	// dd((string)$value->nis);
+                	
                 	if($siswa == null){
                 		//find id_status_pengguna
                 		$status 		= StatusPengguna::select('id_status_pengguna')
 			                			->where('nm_status_pengguna','=',$value->status_siswa)
 			                			->where('status_join_table','=','3')
 			                			->first();
-
+			           
                 		// find id_kelas
                 		$kelas 			= Kelas::where('nm_kelas','=',$value->kelas)->first();
-
+                		
                 		//find id_jalur
                 		$jalur 			= Jalur::where('nm_jalur','=',$value->jalur)->first();
-
+                		
                 		//find jenis_kelamin
                 		if($value->jenis_kelamin == "Laki-laki"){
                 			$jenis_kelamin = 1;
@@ -77,13 +79,13 @@ class UploadDataSiswaController extends BaseController
                 		}else{
                 			$jenis_kelamin = null;
                 		}
-
+                		
                 		//find id_semester
                 		$semester_masuk 	= Semester::where('kode_semester','=',$value->semester_masuk)->first();
-
+                		
                 		//find id_penerimaan
                 		$id_penerimaan 		= Penerimaan::where('jenis_penerimaan','=','2')->where('tahun_penerimaan','=',(int)$value->tahun_masuk)->first(); 
-
+                		
                 		if($id_penerimaan == null || $semester_masuk == null || $jenis_kelamin == null || $jalur == null || $kelas == null || $status == null){
                 			$arr[] = [];
                 		}else{
@@ -93,8 +95,6 @@ class UploadDataSiswaController extends BaseController
 	                		$id_c_siswa 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_admisi 			= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_jalur_siswa 	= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
-
 	                		$arr[]= [
 	                				'id_siswa' 			=> $id_siswa,
 	                				'id_pengguna' 		=> $id_pengguna,
@@ -102,8 +102,8 @@ class UploadDataSiswaController extends BaseController
 	                				'id_admisi' 		=> $id_admisi,
 	                				'id_jalur_siswa' 	=> $id_jalur_siswa,
 	                				'id_penerimaan' 	=> $id_penerimaan->id_penerimaan,
-	                    			'nis' 				=> (int)$value->nis, 
-	                    		  	'nisn' 				=> (int)$value->nisn, 
+	                    			'nis' 				=> (string)$value->nis, 
+	                    		  	'nisn' 				=> (string)$value->nisn, 
 	                    		  	'nama_lengkap' 		=> $value->nama_lengkap,
 	                    		  	'status_siswa' 		=> $status->id_status_pengguna,
 	                    		  	'kelas' 			=> $kelas->id_kelas,
@@ -117,10 +117,9 @@ class UploadDataSiswaController extends BaseController
                 		}
                 	}
                 }
+              
                 if(!empty($arr)){
-                   DB::beginTransaction();
-                	try {
-                		foreach ($arr as $data_siswa) {
+                   foreach ($arr as $data_siswa) {
                 			DB::table('calon_siswa_baru')->insert(
 							    [
 							    	'id_c_siswa' 	=> $data_siswa['id_c_siswa'], 
@@ -224,20 +223,6 @@ class UploadDataSiswaController extends BaseController
 							);
 
                 		}
-                		DB::commit();
-                		return [
-                                'status' => 203, // SUCCESS AND LOAD TABLE
-                                'message' => 'Upload Data Siswa Berhasil!'
-                        ];
-                	}
-                	catch (\Exception $e) {
-	                    DB::rollback();
-	                    // something went wrong
-	                    return [
-	                                'status' 	=> 203, // GAGAL
-	                                'message'	=> 'Upload Data Siswa Gagal'
-	                            ];
-	                } 
                 }else{
                 	return [
 	                	'status' 	=> 300, // FAILED
