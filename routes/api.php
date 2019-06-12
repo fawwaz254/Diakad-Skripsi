@@ -21,6 +21,18 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function()
 		Route::post('pertemuan-kelas-kbm/get', 'Apiv1Controller@actionGetPertemuanByJadwalKelasKBM');
 		Route::post('presensi-kbm/get', 'Apiv1Controller@actionGetPresensiKBM');
 		Route::post('presensi-kbm/submit', 'Apiv1Controller@actionAbsensiSiswa');
+
 		Route::post('jadwal/get', 'Apiv1Controller@actionGetJadwal');
+
+		Route::post('ruangan/get', 'Apiv1Controller@actionGetRuangan');
+		Route::post('inventaris-ruangan/get', 'Apiv1Controller@actionGetInventarisRuangan');
+		Route::post('buku-alat/get', 'Apiv1Controller@actionGetBukuAlat');
+
+		Route::group(array('prefix' => 'komplain-sarpras'), function() {
+			Route::post('ruangan/detail', 'Apiv1Controller@actionGetKomplainRuangan');
+			Route::post('buku-alat/detail', 'Apiv1Controller@actionGetKomplainBukuAlat');
+
+			Route::post('{mode}/submit', 'Apiv1Controller@actionKomplainSarpras');
+		});
 	});
 });

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 use App\Models\Guru;
+use App\Models\KomplainSarpras;
 use App\Models\Pengguna;
 use App\Models\PresensiMp;
 use App\Models\PresensiMpSiswa;
@@ -17,6 +18,7 @@ use App\Models\Siswa;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 
 use DB;
@@ -330,6 +332,266 @@ class Apiv1Controller extends BaseController{
                 'message' => 'Absensi gagal'
             ]);
         }    
+    }
+
+    public function actionGetKomplainRuangan(Request $request){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_ruangan' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $input->id_ruangan);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'komplain-ruangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetKomplainBukuAlat(Request $request){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_buku_alat' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $input->id_buku_alat);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'komplain-ruangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionKomplainSarpras(Request $request, $mode){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            /*'id_ruangan' => 'required',
+            'id_buku_alat' => 'required',*/
+            'keterangan_komplain' => 'required',
+            'is_urgent' => 'required'
+        ]);
+
+        $mode_delete = array("delete-ruangan", "delete-bukualat");
+
+        if($validator->fails() && !in_array($mode, $mode_delete)) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        else {
+            DB::beginTransaction();
+        
+            try {
+                // mengambil waktu sekarang
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+                // get id_guru
+                $guru = Guru::where('id_pengguna','=',$input->auth_data->pengguna->id_pengguna)->first();
+                $id_guru = $guru->id_guru;
+
+                //** MODE UNTUK RUANGAN
+                if($mode == 'add-ruangan') {
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                    $komplainSarpras                            = new KomplainSarpras;
+                    $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
+                    $komplainSarpras->id_ruangan                = $input->id_ruangan;
+                    if(! empty($input->id_inventaris_ruangan)) {
+                        $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
+                    }
+                    else {
+                        $komplainSarpras->id_inventaris_ruangan     = null;
+                    }
+                    $komplainSarpras->id_guru_komplain          = $id_guru;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->is_sudah_perbaikan        = 0;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $message = 'Save Komplain Sarpras successfully';
+                }
+                elseif($mode == 'edit-ruangan') {
+                    // make object to find id
+                    $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->id_ruangan                = $input->id_ruangan;
+                    if(! empty($input->id_inventaris_ruangan)) {
+                        $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
+                    }
+                    else {
+                        $komplainSarpras->id_inventaris_ruangan     = null;
+                    }
+                    $komplainSarpras->id_guru_komplain          = $id_guru;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->updated_at                = $now;
+                    $komplainSarpras->save();
+
+                    $message = 'Update Komplain Sarpras successfully';
+                }
+                elseif($mode == 'delete-ruangan') {
+                    // make object to find id
+                    $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $komplainSarpras->delete();
+
+                    $message = 'Delete Komplain Sarpras successfully';
+                }
+                //** MODE UNTUK BUKU/ALAT
+                elseif($mode == 'add-bukualat') {
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    
+                    $komplainSarpras                            = new KomplainSarpras;
+                    $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
+                    $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
+                    $komplainSarpras->id_guru_komplain          = $id_guru;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->is_sudah_perbaikan        = 0;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $message = 'Save Komplain Sarpras successfully';
+                }
+                elseif($mode == 'edit-bukualat') {
+                    // make object to find id
+                    $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
+                    $komplainSarpras->id_guru_komplain          = $id_guru;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->updated_at                = $now;
+                    $komplainSarpras->save();
+
+                    $message = 'Update Komplain Sarpras successfully';
+                }
+                elseif($mode == 'delete-bukualat') {
+                    // make object to find id
+                    $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $komplainSarpras->delete();
+
+                    $message = 'Delete Komplain Sarpras successfully';
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'status_code' 	=> 200,
+                    'status_text' 	=> 'Success',
+                    'message' 	=> $message
+                ]);
+
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code' 	=> 300,
+                    'status_text' 	=> 'Failed',
+                    'message' => 'Terdapat error'
+                ]);
+            }   
+        }
+    }
+
+    public function actionGetRuangan(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'ruangan' => $data_ruangan
+            )
+        ]);
+    }
+
+    public function actionGetInventarisRuangan(Request $request){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_ruangan' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data, $input->id_ruangan);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'inventaris_ruangan' => $data_inventaris_ruangan
+            )
+        ]);
+    }
+
+    public function actionGetBukuAlat(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_buku_alat = LibDataSarpras::fetchDataBukuAlat($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'buku_alat' => $data_buku_alat
+            )
+        ]);
     }
 
     public function actionSignOut(Request $request){
