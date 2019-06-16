@@ -13,6 +13,7 @@ use App\Models\Jurusan as Jurusan;
 use App\Models\Jalur as Jalur;
 use App\Models\StatusPengguna as StatusPengguna;
 use App\Models\Siswa as Siswa;
+use App\Models\Pengguna as Pengguna;
 use App\Models\Kelas as Kelas;
 
 use App\Libraries\Pendidikan\LibSiswa;
@@ -143,6 +144,10 @@ class UpdateFotoController extends BaseController
                 $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/siswa/'.$id, request()->file, 'public');
                 
                 //save file name to database
+                $siswa                          = Pengguna::find($id);
+                $siswa->path_foto_pengguna      = $file;
+                $siswa->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                $siswa->save();
 
                 return redirect('pendidikan#siswa/update-foto/upload/'.$id);
             }
