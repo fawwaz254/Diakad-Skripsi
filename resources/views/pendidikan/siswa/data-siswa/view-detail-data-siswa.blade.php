@@ -179,6 +179,10 @@
         processing: true,
         serverSide: true,
         responsive: true,
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
         ajax: {
             url: datatable_url,
             type: 'GET'
