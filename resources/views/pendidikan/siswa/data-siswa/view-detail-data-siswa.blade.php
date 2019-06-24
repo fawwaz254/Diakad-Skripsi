@@ -135,7 +135,7 @@
                     </form>
 
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                        <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table">
                             <thead>
                                 <tr>
                                     <th>No. </th>
@@ -178,17 +178,44 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        // responsive: true,
         dom: 'Bfrtip',
+        lengthMenu: [
+            [ 10, 25, 50, 100, -1 ],
+            [ '10 rows', '25 rows', '50 rows', '100 rows', 'Show all' ]
+        ],
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'pageLength',
+            {
+                extend: 'print',
+                text: 'PDF',
+                orientation: 'landscape',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                customize: function ( win ) {
+                    $(win.document.body)
+                        .css( 'font-size', '10pt' );
+ 
+                    $(win.document.body).find( 'table' )
+                        .addClass( 'compact' )
+                        .css( 'font-size', 'inherit' );
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            'colvis'
         ],
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_column', defaultContent: '', searchable: false, orderable: false },
             { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
             { data: 'nis_siswa', name: 'nis_siswa' },
             { data: 'nisn_siswa', name: 'nisn_siswa' },
@@ -209,8 +236,12 @@
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * 10;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
+
+    primary_table.buttons().container()
+            .appendTo( $('.col-sm-6:eq(0)', primary_table.table().container() ) );
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
