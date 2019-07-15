@@ -79,13 +79,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		Route::group(array('prefix' => 'pelanggaran-siswa'), function() {
 			// MENU Input Pelanggaran Siswa
 			Route::get('input-pelanggaran-mp', 'Guru\PelanggaranSiswa\InputPelanggaranController@viewInputPelanggaran');
-
+			
 			Route::post('post-input-pelanggaran-mp', 'Guru\PelanggaranSiswa\InputPelanggaranController@actionViewKBMInputPelanggaran');
-			Route::get('input-pelanggaran-mp/view-kbm/{id_kelas_mp}/{pertemuan_ke}', 'Guru\PelanggaranSiswa\InputPelanggaranController@viewKBMInputPelanggaran');
-			Route::get('input-pelanggaran-mp/datatables', 'Guru\PelanggaranSiswa\InputPelanggaranController@datatablesInputPelanggaran');
+			Route::get('input-pelanggaran-mp/view-kbm/{id_jadwal_kelas_mp}/{pertemuan_ke}', 'Guru\PelanggaranSiswa\InputPelanggaranController@viewKBMInputPelanggaran');
+			Route::get('input-pelanggaran-mp/datatables/{id_presensi_mp}', 'Guru\PelanggaranSiswa\InputPelanggaranController@datatablesInputPelanggaran');
+			Route::get('input-pelanggaran-mp/add/{id_presensi_mp}/{id_siswa}', 'Guru\PelanggaranSiswa\InputPelanggaranController@addInputPelanggaran');
 			Route::get('input-pelanggaran-mp/edit/{id}', 'Guru\PelanggaranSiswa\InputPelanggaranController@editInputPelanggaran');
-
+			
 			Route::post('action-input-pelanggaran-mp/{mode}/{id}', 'Guru\PelanggaranSiswa\InputPelanggaranController@actionInputPelanggaran');
+			Route::post('pertemuan-byjadwalkelasmp', 'Guru\PelanggaranSiswa\InputPelanggaranController@ajaxGetPertemuanByJadwalKelasMp');
+
+			Route::get('rekap-input-pelanggaran-mp', 'Guru\PelanggaranSiswa\InputPelanggaranController@viewRekapInputPelanggaran');
+			Route::get('rekap-input-pelanggaran-mp/datatables', 'Guru\PelanggaranSiswa\InputPelanggaranController@datatablesRekapInputPelanggaran');
 		});
 
 		/** ==== MODUL SARANA PRASARANA ==== **/

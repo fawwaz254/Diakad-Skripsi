@@ -79,7 +79,7 @@ class LibSiswa
         }
         // get mode edit
         else{
-            $siswa = Siswa::where('id_siswa','=',$id)->first();
+            $siswa = Siswa::join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')->where('id_siswa','=',$id)->first();
         }
 
         return $siswa;

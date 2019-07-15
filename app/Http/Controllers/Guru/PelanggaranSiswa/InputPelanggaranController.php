@@ -8,13 +8,13 @@ use Illuminate\Routing\Controller as BaseController;
 use Yajra\Datatables\Datatables;
 
 use App\Models\PresensiMp as PresensiMp;
-use App\Models\PresensiMpSiswa as PresensiMpSiswa;
-use App\Models\UjianMpPresensi as UjianMpPresensi;
+use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
 
@@ -26,7 +26,7 @@ use Validator;
 class InputPelanggaranController extends BaseController{
 
 
-    public function viewAbsensiSiswa(Request $request){
+    public function viewInputPelanggaran(Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -35,19 +35,52 @@ class InputPelanggaranController extends BaseController{
 
         $data_kbm = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
-    	return view('guru/presensi/absensi-siswa/view-absensi-siswa',compact('auth_data','semester_aktif','data_kbm','data_uts','data_uas'));
+    	return view('guru/pelanggaran-siswa/input-pelanggaran/view-input-pelanggaran-mp',compact('auth_data','data_kbm'));
 
     }
 
+    public function viewRekapInputPelanggaran(Request $request){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('guru/pelanggaran-siswa/input-pelanggaran/rekap-input-pelanggaran-mp',compact('auth_data'));
+    }
+
+    public function ajaxGetPertemuanByJadwalKelasMp(Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
+
+        $data_pertemuan = array();
+        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp)->get();
+
+        for ($i=1; $i < $data_presensiMp->count(); $i++) {     
+            $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
+            if ($presensiMp) {
+                $pertemuan = array(
+                    'text' => $i." (Sudah Absensi)",
+                    'value' => $i
+                );
+            }
+
+            $data_pertemuan[] = $pertemuan;
+        }
+
+        return $data_pertemuan;
+    }
+
     // ==== ACTION PRESENSI KBM ====
-    public function actionViewKBMAbsensiSiswa(Request $request){
+    public function actionViewKBMInputPelanggaran(Request $request){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_kelas_mp' => 'required',
-            'pertemuan_ke' => 'required'
+            'id_jadwal_kelas_mp' => 'required',
+            'pertemuan_ke' => 'required',
         ]);
 
         if($validator->fails()) {
@@ -58,62 +91,128 @@ class InputPelanggaranController extends BaseController{
         }
         else{
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'presensi/absensi-siswa/view-kbm/'.$input->id_kelas_mp.'/'.$input->pertemuan_ke
-                    ];   
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'pelanggaran-siswa/input-pelanggaran-mp/view-kbm/'.$input->id_jadwal_kelas_mp.'/'.$input->pertemuan_ke
+            ];   
         }
     }
 
-    public function viewKBMAbsensiSiswa(Request $request, $id_kelas_mp, $pertemuan_ke){
+    public function viewKBMInputPelanggaran(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, $id_kelas_mp);
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
-        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa',compact('auth_data','semester_aktif','data_kelas', 'id_kelas_mp', 'pertemuan_ke'));
-
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp)->where('pertemuan_ke','=',$pertemuan_ke)->first();
+        
+        return view('guru/pelanggaran-siswa/input-pelanggaran/view-kbm-input-pelanggaran-mp',compact('auth_data','semester_aktif', 'data_kelas', 'presensi_mp_aktif'));
+        
     }
-
-    public function datatablesKBMAbsensiSiswa(Request $request, $id_kelas_mp, $pertemuan_ke){
+    
+    public function datatablesInputPelanggaran(Request $request, $id_presensi_mp){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_kelas_mp, $pertemuan_ke);
+        $presensi_mp_aktif = PresensiMp::where('id_presensi_mp','=',$id_presensi_mp)->first();
+
+        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $presensi_mp_aktif->id_kelas_mp, $presensi_mp_aktif->pertemuan_ke);
 
         return Datatables::of($list_data)
-            ->addColumn('checkbox', function($item){
+            ->addColumn('action', function($item){
                 $data = array(
-                    'id_siswa' => $item->id_siswa
-                );
-                return $data;
-            })
-            ->addColumn('alasan', function($item){
-                $data = array(
-                    'hadir' => "Hadir",
-                    'alasan_2' => "Sakit",
-                    'alasan_3' => "Izin",
-                    'alasan_4' => "Alpa"
+                    'id' => $item->id_siswa
                 );
                 return $data;
             })
             ->make(true);
     }
 
+    public function datatablesRekapInputPelanggaran(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data);
+
+        return Datatables::of($list_data)
+                ->addColumn('nm_siswa', function($item){
+                    return $item->nm_pengguna;
+                })
+                ->addColumn('is_sudah_tindakan', function($item){
+                    if ($item->is_sudah_tindakan == 0) {
+                        return "Belum";
+                    }
+                    elseif ($item->is_sudah_tindakan == 1) {
+                        return "Sudah";
+                    }
+                })
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_presensi_mp_pelanggaran,
+                        'is_sudah_tindakan' => $item->is_sudah_tindakan
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+    public function addInputPelanggaran(Request $request, $id_presensi_mp, $id_siswa) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        
+        $presensi_mp_aktif = PresensiMp::where('id_presensi_mp','=',$id_presensi_mp)->first();
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $presensi_mp_aktif->id_jadwal_kelas_mp);
+        
+        // ambil data siswa
+        $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $id_siswa);
+
+        $id_presensi_mp_pelanggaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        return view('guru/pelanggaran-siswa/input-pelanggaran/add-input-pelanggaran-mp',compact('auth_data','data_kelas', 'data_siswa','presensi_mp_aktif','id_presensi_mp_pelanggaran'));
+
+    }
+
+    public function editInputPelanggaran($id, Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, $id);
+
+        $presensi_mp_aktif = PresensiMp::where('id_presensi_mp','=',$data_pelanggaran_siswa->id_presensi_mp)->first();
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $presensi_mp_aktif->id_jadwal_kelas_mp);
+        
+        // ambil data siswa
+        $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $data_pelanggaran_siswa->id_siswa);
+
+        return view('guru/pelanggaran-siswa/input-pelanggaran/edit-input-pelanggaran-mp',compact('auth_data','data_kelas', 'data_siswa', 'presensi_mp_aktif', 'data_pelanggaran_siswa'));
+
+    }
+
         // Action POST
-    public function actionAbsensiSiswa(Request $request, $mode, $id = null, $pertemuan_ke = null){
+    public function actionInputPelanggaran(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'uraian_materi' => 'required',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required'
+            'id_presensi_mp'              => 'required',
+            'id_siswa'              => 'required',
+            'catatan_pelanggaran'   => 'required',
         ]);
-
-        if($validator->fails() && $mode == 'add-kbm') {
+        
+        if($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -122,190 +221,61 @@ class InputPelanggaranController extends BaseController{
         else{
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            
-            $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-            // ACTION ADD
-            if($mode == 'add-kbm') {
-                $id_kelas_mp = $id;
+            if($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $presensiMpSet = PresensiMp::where('id_kelas_mp','=',$id_kelas_mp)->where('pertemuan_ke','=',$pertemuan_ke)->first();
+                $presensiMpPelanggaran                               = new PresensiMpPelanggaran;
+                $presensiMpPelanggaran->id_presensi_mp_pelanggaran   = $id;
+                $presensiMpPelanggaran->id_presensi_mp               = $input->id_presensi_mp;
+                $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                // convert format date
+                $presensiMpPelanggaran->is_sudah_tindakan            = 0;
+                $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $presensiMpPelanggaran->save();
 
-                if($presensiMpSet) {
-                    DB::beginTransaction();
-
-                    try {
-                        $presensiMp                     = PresensiMp::find($presensiMpSet->id_presensi_mp);
-                        $presensiMp->uraian_materi      = $input->uraian_materi;
-                        $presensiMp->waktu_mulai        = $input->waktu_mulai;
-                        $presensiMp->waktu_selesai      = $input->waktu_selesai;
-                        $presensiMp->save();
-
-                        // PresensiMpSiswa
-                        foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                            $presensiMpSiswaSet = PresensiMpSiswa::where('id_presensi_mp','=',$presensiMpSet->id_presensi_mp)->where('id_siswa','=',$id_siswa)->first();
-
-                            $presensiMpSiswa                = PresensiMpSiswa::find($presensiMpSiswaSet->id_presensi_mp_siswa);
-                            if(! empty($alasan)) {
-                                $kehadiran = $alasan;
-                            }
-                            else {
-                                $kehadiran = 1;
-                            }
-                            $presensiMpSiswa->kehadiran     = $kehadiran;
-                            $presensiMpSiswa->save();
-                        }
-
-                        DB::commit();
-                        // all good
-
-                        return [
-                            'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'path' => 'presensi/absensi-siswa/view-kbm/'.$id_kelas_mp.'/'.$pertemuan_ke,
-                            'message' => 'Save Absensi KBM Siswa successfully'
-                        ];
-
-                    } catch (\Exception $e) {
-                        DB::rollback();
-                        // something went wrong
-
-                        return [
-                                    'status' => 203, // GAGAL
-                                    'message' => 'Absensi KBM Gagal!'
-                                ];
-                    }
-                    
-                }
-                else {
-                    DB::beginTransaction();
-
-                    try {
-                        // make id
-                        $id_presensi_mp = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
-                        $presensiMp                     = new PresensiMp;
-                        $presensiMp->id_presensi_mp     = $id_presensi_mp;
-                        $presensiMp->id_kelas_mp        = $id_kelas_mp;
-                        $presensiMp->pertemuan_ke       = $pertemuan_ke;
-                        $presensiMp->uraian_materi      = $input->uraian_materi;
-                        $presensiMp->waktu_mulai        = $input->waktu_mulai;
-                        $presensiMp->waktu_selesai      = $input->waktu_selesai;
-                        $presensiMp->tgl_entry          = $now;
-                        $presensiMp->save();
-
-                        // PresensiMpSiswa
-                        foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                            $presensiMpSiswa                    = new PresensiMpSiswa;
-                            $presensiMpSiswa->id_presensi_mp    = $id_presensi_mp;
-                            $presensiMpSiswa->id_siswa          = $id_siswa;   
-                            if(! empty($alasan)) {
-                                $kehadiran = $alasan;
-                            }
-                            else {
-                                $kehadiran = 1;
-                            }
-                            $presensiMpSiswa->kehadiran     = $kehadiran;
-                            $presensiMpSiswa->save();   
-                        }
-
-                        DB::commit();
-                        // all good
-
-                        return [
-                            'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'path' => 'presensi/absensi-siswa/view-kbm/'.$id_kelas_mp.'/'.$pertemuan_ke,
-                            'message' => 'Save Absensi KBM Siswa successfully'
-                        ];
-
-                    } catch (\Exception $e) {
-                        DB::rollback();
-                        // something went wrong
-
-                        return [
-                                    'status' => 203, // GAGAL
-                                    'message' => 'Absensi KBM Gagal!'
-                                ];
-                    }
-                }
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'pelanggaran-siswa/rekap-input-pelanggaran-mp',
+                    'message' => 'Save Pelanggaran Siswa successfully'
+                ];
             }
-            elseif($mode == 'add-uts') {
-                $id_ujian_mp = $id;
+            elseif($mode == 'edit'){
+                // make object to find id
+                $presensiMpPelanggaran                               = PresensiMpPelanggaran::find($id);
+                $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                // convert format date
+                $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $presensiMpPelanggaran->updated_at                   = $now;
+                $presensiMpPelanggaran->save();
 
-                DB::beginTransaction();
-
-                try {
-                    // UjianMpPresensi
-                    foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        $ujianMpPresensiSet = UjianMpPresensi::where('id_ujian_mp','=',$id_ujian_mp)->where('id_siswa','=',$id_siswa)->first();
-
-                        $ujianMpPresensi                = UjianMpPresensi::find($ujianMpPresensiSet->id_ujian_mp_presensi);
-                        if(! empty($alasan)) {
-                            $kehadiran = $alasan;
-                        }
-                        else {
-                            $kehadiran = 1;
-                        }
-                        $ujianMpPresensi->kehadiran     = $kehadiran;
-                        $ujianMpPresensi->save();
-                    }
-
-                    DB::commit();
-                    // all good
-
-                    return [
-                            'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'path' => 'presensi/absensi-siswa/view-uts/'.$id_ujian_mp,
-                            'message' => 'Save Absensi UTS Siswa successfully'
-                    ];
-
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    // something went wrong
-
-                    return [
-                                'status' => 203, // GAGAL
-                                'message' => 'Absensi UTS Gagal!'
-                            ];
-                }      
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'pelanggaran-siswa/rekap-input-pelanggaran-mp',
+                    'message' => 'Update Pelanggaran Siswa successfully'
+                ];
             }
-            elseif($mode == 'add-uas') {
-                $id_ujian_mp = $id;
+            elseif($mode == 'delete'){
+                if($tindakanPelanggaran = TindakanPelanggaran::where('id_presensi_mp_pelanggaran',$id)->first()){
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Failed To Delete Pelanggaran Siswa'
+                    ]; 
+                }
+                else{
+                    // make object to find id
+                    $presensiMpPelanggaran               = PresensiMpPelanggaran::find($id);
+                    $presensiMpPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $presensiMpPelanggaran->save();
 
-                DB::beginTransaction();
-
-                try {
-                    // UjianMpPresensi
-                    foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        $ujianMpPresensiSet = UjianMpPresensi::where('id_ujian_mp','=',$id_ujian_mp)->where('id_siswa','=',$id_siswa)->first();
-
-                        $ujianMpPresensi                = UjianMpPresensi::find($ujianMpPresensiSet->id_ujian_mp_presensi);
-                        if(! empty($alasan)) {
-                            $kehadiran = $alasan;
-                        }
-                        else {
-                            $kehadiran = 1;
-                        }
-                        $ujianMpPresensi->kehadiran     = $kehadiran;
-                        $ujianMpPresensi->save();
-                    }
-
-                    DB::commit();
-                    // all good
+                    $presensiMpPelanggaran->delete();
 
                     return [
-                            'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'path' => 'presensi/absensi-siswa/view-uas/'.$id_ujian_mp,
-                            'message' => 'Save Absensi UAS Siswa successfully'
+                        'status' => 203, // SUCCESS AND LOAD TABLE
+                        'message' => 'Delete Pelanggaran Siswa successfully'
                     ];
-                    
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    // something went wrong
-
-                    return [
-                                'status' => 203, // GAGAL
-                                'message' => 'Absensi UAS Gagal!'
-                            ];
                 }
             }
         }

@@ -90,7 +90,7 @@ class LibDataPelanggaran
 
         // get mode view
         if ($id == null){
-            $presensiMpPelanggaran = PresensiMpPelanggaran::select('presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_siswa', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'presensi_mp_pelanggaran.catatan_pelanggaran', 'presensi_mp_pelanggaran.created_at')
+            $presensiMpPelanggaran = PresensiMpPelanggaran::select('presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_siswa', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'presensi_mp_pelanggaran.catatan_pelanggaran', 'presensi_mp_pelanggaran.created_at', 'presensi_mp.pertemuan_ke', 'presensi_mp_pelanggaran.id_presensi_mp')
                         ->join('siswa','siswa.id_siswa','=','presensi_mp_pelanggaran.id_siswa')
                         ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
                         ->join('pengguna as p_guru','p_guru.id_pengguna','=','presensi_mp_pelanggaran.created_by')
@@ -107,7 +107,7 @@ class LibDataPelanggaran
         }
         // get mode edit
         else{
-            $presensiMpPelanggaran = PresensiMpPelanggaran::select('presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_siswa', 'pengguna.nm_pengguna as nm_siswa', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'presensi_mp_pelanggaran.catatan_pelanggaran', 'presensi_mp_pelanggaran.created_at')
+            $presensiMpPelanggaran = PresensiMpPelanggaran::select('presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_siswa', 'pengguna.nm_pengguna as nm_siswa', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'presensi_mp_pelanggaran.catatan_pelanggaran', 'presensi_mp_pelanggaran.created_at', 'presensi_mp.pertemuan_ke', 'presensi_mp_pelanggaran.id_presensi_mp')
                         ->join('siswa','siswa.id_siswa','=','presensi_mp_pelanggaran.id_siswa')
                         ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
                         ->join('pengguna as p_guru','p_guru.id_pengguna','=','presensi_mp_pelanggaran.created_by')
