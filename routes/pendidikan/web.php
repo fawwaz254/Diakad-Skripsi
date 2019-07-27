@@ -332,5 +332,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 		});
 
+		/** ==== MODUL LAPORAN AKADEMIK ==== **/
+		Route::group(array('prefix' => 'laporan-akademik'), function() {
+
+			//MENU ABSENSI SISWA
+			Route::get('absensi-siswa', 'Pendidikan\LaporanAkademik\AbsensiSiswaController@viewAbsensiSiswa');
+			Route::post('post-view-absensi-siswa', 'Pendidikan\LaporanAkademik\AbsensiSiswaController@actionViewAbsensiSiswa');
+			Route::get('absensi-siswa/absensi-kelas/{id_semester}/{id_jurusan}/{id_kelas}/{tgl_mulai}/{tgl_selesai}', 'Pendidikan\LaporanAkademik\AbsensiSiswaController@viewAbsensiSiswa');
+						
+
+		});
+
 	});
 });
