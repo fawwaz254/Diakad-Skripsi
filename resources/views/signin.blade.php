@@ -11,13 +11,22 @@
             <a href="javascript:void(0);">Welcome to DIAKAD</b></a>
             <small>Digital Akademik</small>
         </div> -->
-        <div class="card" style="background: rgba(255, 255, 255, 0.5);">
-            <img src="{{asset('media/logo-diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
-            <div class="body">
+        <div class="card">
+            <div class="row">
+                <div class="col-lg-6">
+                    <img src="{{asset('media/logo-diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                </div>
+                <div class="col-lg-6">
+            <div class="body" id="khusus-login" style="padding:50px">
                 <form class="form-validation" method="POST" action="{{url('signin')}}">
                 {{csrf_field()}}
-                    <div class="msg"><strong>{{$sekolah->nm_sekolah}}</strong>&nbsp;&nbsp;
-                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="width:64px;" /></div>
+                    <div class="msg" style="font-size:1.5em;line-height:50px">
+                    
+                        <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="width:75px;" />
+                        <br>
+                        <strong>{{$sekolah->nm_sekolah}}</strong>
+
+                </div>
                     <div class="row clearfix">
                         <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                             <div class="input-group">
@@ -54,18 +63,20 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <button class="btn btn-block bg-pink waves-effect" type="submit">LOGIN</button>
+                            <button class="btn btn-block waves-effect" style="background-color:#235789;color:#fff;padding:10px" type="submit">LOGIN</button>
                         </div>
                     </div>
-                    <div class="row m-t-15 m-b--20">
-                        <div class="col-xs-12 align-center">
-                            Official Website : <a href="https://www.diakad.id" target="_blank">DIAKAD</a>
-                        </div>
-                        <div class="col-xs-12 align-center">
-                            Powered By <a href="https://www.solusimaster.com" target="_blank">Solusi Master</a>
-                        </div>
-                    </div>
+                    
                 </form>
+            </div>
+            </div>
+            </div>
+            <div class="row" style="background-color:#f7f7f7;margin-right:0;margin-left:0;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;padding-top:25px;padding-bottom:25px ">
+                    <div class="row">
+                            <div class="col-xs-12 align-center">
+                                <span style="color:#a7a7a7">Official Website : <a href="https://www.diakad.id" target="_blank">DIAKAD</a></span><br class="visible-xs-block"><span style="color:#a7a7a7" id="khusus-footer">Powered By <a href="https://www.solusimaster.com" target="_blank">Solusi Master</a></span>
+                            </div>
+                        </div>
             </div>
         </div>
     </div>
