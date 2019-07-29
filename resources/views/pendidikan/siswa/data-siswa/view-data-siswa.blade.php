@@ -11,7 +11,7 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-data-siswa')}}">
                             {{csrf_field()}}
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Jurusan
                                 </h2>
@@ -24,7 +24,7 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
                             </div>
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Kelas
                                 </h2>
@@ -34,7 +34,7 @@
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Tahun Masuk
                                 </h2>
@@ -45,7 +45,7 @@
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Jalur
                                 </h2>
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Status Siswa
                                 </h2>
