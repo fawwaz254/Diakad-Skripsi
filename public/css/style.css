@@ -2845,13 +2845,9 @@ section.content {
 .card {
   background: #fff;
   /* min-height: 50px; */
-  max-width: 75%;
-  max-height: 75%;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   position: relative;
   margin: auto;
-  margin-top: 5%;
-  margin-bottom: 5%;
   top: 0;
   right: 0;
   bottom: 0;
@@ -2860,7 +2856,14 @@ section.content {
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   -ms-border-radius: 2px;
-  border-radius: 5px; }
+  border-radius: 5px; 
+}
+.card.is-login{
+  max-width: 75%;
+  max-height: 75%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
   .card .card-inside-title {
     margin-top: 25px;
     margin-bottom: 15px;
@@ -2984,7 +2987,9 @@ section.content {
     color: #555;
     padding: 20px;
     position: relative;
-    border-bottom: 1px solid rgba(204, 204, 204, 0.35); }
+    border-bottom: 1px solid rgba(204, 204, 204, 0.35); 
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;}
     .card .header .header-dropdown {
       position: absolute;
       top: 20px;

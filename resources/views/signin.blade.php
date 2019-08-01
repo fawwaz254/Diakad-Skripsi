@@ -11,7 +11,7 @@
             <a href="javascript:void(0);">Welcome to DIAKAD</b></a>
             <small>Digital Akademik</small>
         </div> -->
-        <div class="card">
+        <div class="card is-login">
             <div class="row">
                 <div class="col-lg-6">
                     <img src="{{asset('media/logo-diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
