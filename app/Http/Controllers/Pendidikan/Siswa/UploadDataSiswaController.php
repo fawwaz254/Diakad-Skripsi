@@ -117,9 +117,11 @@ class UploadDataSiswaController extends BaseController
                 		}
                 	}
                 }
-              
-                if(!empty($arr)){
-                   foreach ($arr as $data_siswa) {
+			  
+				if(!empty($arr)){
+					DB::beginTransaction();
+					try {
+						foreach ($arr as $data_siswa) {
                 			DB::table('calon_siswa_baru')->insert(
 							    [
 							    	'id_c_siswa' 	=> $data_siswa['id_c_siswa'], 
@@ -223,12 +225,27 @@ class UploadDataSiswaController extends BaseController
 							);
 
                 		}
-                }else{
-                	return [
-	                	'status' 	=> 300, // FAILED
-	                	'message' 	=> "File Excel Anda Kosong"
-                	];
-                }
+						DB::commit();
+						return [
+							'status' => 202, // SUCCESS AND LOAD CONTENT
+							'path' => 'siswa/data-siswa',
+							'message' => 'Save Siswa successfully'
+						];
+					}
+					catch (\Exception $e) {
+						DB::rollback();
+						// something went wrong
+						return [
+							'status' 	=> 203, // GAGAL
+							'message'	=> 'Upload Data Siswa Gagal'
+						];
+					} 
+				}else{
+					return [
+						'status' 	=> 300, // FAILED
+						'message' 	=> "File Excel Anda Kosong"
+					];
+				}
             }
         }else{
 			return [
