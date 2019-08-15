@@ -86,7 +86,7 @@
                     url: form.action,
                     type: form.method,
                     enctype: 'multipart/form-data',
-                    data: new FormData($('#form-manage-item')[0]),
+                    data: new FormData($('#form-upload')[0]),
                     cache: false,
                     contentType: false,
                     processData: false,
