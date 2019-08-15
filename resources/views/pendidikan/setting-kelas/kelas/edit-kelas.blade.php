@@ -21,7 +21,9 @@
                                 <select class="form-control show-tick" name="id_jurusan">
                                     @foreach($data_jurusan as $data)
                                     @if($data->id_jurusan == $data_kelas->id_jurusan)
-                                    <option value="{{$data->id_jurusan}}" readonly>{{$data->nm_jurusan}}</option>
+                                    <option value="{{$data->id_jurusan}}" selected>{{$data->nm_jurusan}}</option>
+                                    @else
+                                    <option value="{{$data->id_jurusan}}">{{$data->nm_jurusan}}</option>
                                     @endif
                                     @endforeach
                                 </select>
