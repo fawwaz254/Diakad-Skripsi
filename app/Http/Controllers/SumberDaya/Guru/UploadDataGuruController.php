@@ -164,6 +164,11 @@ class UploadDataGuruController extends BaseController
                 	];
                 }
             }
-        }      
+        }else{
+			return [
+				'status' 	=> 300, // FAILED
+				'message' 	=> "File Excel tidak ditemukan"
+			];
+		} 
     } 
 }
