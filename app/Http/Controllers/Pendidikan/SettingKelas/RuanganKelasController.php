@@ -185,7 +185,7 @@ class RuanganKelasController extends BaseController{
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
                     if($input->is_aktif == 1) {
-                        $data_ruangan_kelas  = RuanganKelas::where('id_ruangan_kelas', "<>", $id)->get();
+                        $data_ruangan_kelas  = RuanganKelas::where('id_kelas', $input->id_kelas)->where('id_ruangan_kelas', "<>", $id)->get();
 
                         foreach ($data_ruangan_kelas as $ruanganKelas) {
                             $ruanganKelas->is_aktif    = 0;
@@ -215,7 +215,7 @@ class RuanganKelasController extends BaseController{
 
                 // cek jika update status aktif = 1, maka yg lain status aktif = 0
                 if($input->is_aktif == 1) {
-                    $data_ruangan_kelas  = RuanganKelas::where('id_ruangan_kelas', "<>", $id)->get();
+                    $data_ruangan_kelas  = RuanganKelas::where('id_kelas', $input->id_kelas)->where('id_ruangan_kelas', "<>", $id)->get();
 
                     foreach ($data_ruangan_kelas as $ruanganKelas) {
                         $ruanganKelas->is_aktif    = 0;
