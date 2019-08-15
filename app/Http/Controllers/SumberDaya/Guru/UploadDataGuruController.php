@@ -66,9 +66,9 @@ class UploadDataGuruController extends BaseController
 			                			->first();
 
                 		//find jenis_kelamin
-                		if($value->jenis_kelamin == "Laki-laki"){
+                		if($value->jenis_kelamin == "L"){
                 			$jenis_kelamin = 1;
-                		}elseif($value->jenis_kelamin == "Perempuan"){
+                		}elseif($value->jenis_kelamin == "P"){
                 			$jenis_kelamin = 2;
                 		}else{
                 			$jenis_kelamin = null;

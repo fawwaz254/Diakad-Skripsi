@@ -41,7 +41,7 @@
                                 </li>
 
                                 <li>
-                                    Jenis Kelamin : Jenis Kelamin Siswa. Keterangan : Isi Dengan (Laki-laki atau Perempuan)
+                                    Jenis Kelamin : Jenis Kelamin Siswa. Keterangan : Isi Dengan  (<b>L</b> atau <b>P</b>)
                                 </li>
 
                                 <li>

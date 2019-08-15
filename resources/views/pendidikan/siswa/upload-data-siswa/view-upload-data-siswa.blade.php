@@ -43,7 +43,7 @@
                                 </li>
                                 <li>
                                     Jenis Kelamin : Jenis Kelamin Siswa. 
-                                    <br>Keterangan : Isi Dengan (<strong>Laki-laki</strong> atau <strong>Perempuan</strong>)
+                                    <br>Keterangan : Isi Dengan  (<b>L</b> atau <b>P</b>)
                                 </li>
                                 <li>
                                     Status Siswa : Status Siswa, pastikan format penulisan benar sesuai dengan Nama Status. Contoh : Aktif. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Status Siswa
