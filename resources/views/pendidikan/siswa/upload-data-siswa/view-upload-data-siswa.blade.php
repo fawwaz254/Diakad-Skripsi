@@ -13,7 +13,7 @@
                             <h2 class="card-inside-title">
                                 Upload File Excel
                             </h2>
-                            <form action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-file-excel')}}" method="post" enctype="multipart/form-data">
+                            <form id="form-upload" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-file-excel')}}" method="post" enctype="multipart/form-data">
                                 {{csrf_field()}}
                                 Pilih File Excel
                                 <input type="file" name="file-excel" id="file-excel" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -75,4 +75,57 @@
         </div>
     </div>
 </div>
-@include('scriptjs')
+
+<script>
+    $('#form-upload').submit(function(e) {
+        e.preventDefault();
+    }).validate({
+        highlight: function (input) {
+            $(input).addClass('is-danger');
+        },
+        unhighlight: function (input) {
+            $(input).removeClass('is-danger');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $('input').attr('readonly', 'readonly');
+            
+            setTimeout(() => {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    enctype: 'multipart/form-data',
+                    data: new FormData($('#form-upload')[0]),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        }else if(response.status == 204){
+                            loadURI(response.path);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+                
+            }, 1000);
+        }
+    });
+</script>
