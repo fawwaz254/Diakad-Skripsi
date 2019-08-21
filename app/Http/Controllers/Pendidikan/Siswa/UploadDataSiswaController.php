@@ -55,22 +55,55 @@ class UploadDataSiswaController extends BaseController
             $data = Excel::load($path)->get();
        		if($data->count()){
                 foreach ($data as $key => $value) {
-                	$siswa = Siswa::where('nis_siswa','=',(string)$value->nis)->orWhere('nisn_siswa','=',(string)$value->nisn)->first();
-                	// dd((string)$value->nis);
+					if(empty($value->nis)){
+						return [
+							'status' 	=> 203, // GAGAL
+							'message'	=> 'Upload Data Siswa Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
+						];
+					}
+					$check_nis_siswa = Siswa::where('nis_siswa', (string) $value->nis)->first();
+                	$check_nisn_siswa = Siswa::where('nisn_siswa', (string) $value->nisn)->first();
                 	
-                	if($siswa == null){
+                	if($check_nis_siswa){
+						return [
+							'status' 	=> 203, // GAGAL
+							'message'	=> 'Upload Data Siswa Gagal, ditemukan NIS siswa yang sama di dalam sistem'
+						];
+					}else if($check_nisn_siswa){
+						return [
+							'status' 	=> 203, // GAGAL
+							'message'	=> 'Upload Data Siswa Gagal, ditemukan NISN siswa yang sama di dalam sistem'
+						];
+					}else{
                 		//find id_status_pengguna
                 		$status 		= StatusPengguna::select('id_status_pengguna')
 			                			->where('nm_status_pengguna','=',$value->status_siswa)
 			                			->where('status_join_table','=','3')
-			                			->first();
-			           
+										->first();
+						if(empty($status)){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, status '.$value->status_siswa.' tidak ditemukan di dalam sistem'
+							];
+						}
                 		// find id_kelas
                 		$kelas 			= Kelas::where('nm_kelas','=',$value->kelas)->first();
-                		
+						
+						if(empty($kelas)){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, kelas '.$value->kelas.' tidak ditemukan di dalam sistem'
+							];
+						}
                 		//find id_jalur
                 		$jalur 			= Jalur::where('nm_jalur','=',$value->jalur)->first();
-                		
+						
+						if(empty($jalur)){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, jalur '.$value->jalur.' tidak ditemukan di dalam sistem'
+							];
+						}
                 		//find jenis_kelamin
                 		if($value->jenis_kelamin == "L"){
                 			$jenis_kelamin = 1;
@@ -82,10 +115,24 @@ class UploadDataSiswaController extends BaseController
                 		
                 		//find id_semester
                 		$semester_masuk 	= Semester::where('kode_semester','=',$value->semester_masuk)->first();
-                		
+						
+						if(empty($semester_masuk)){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, semester masuk '.$value->semester_masuk.' tidak ditemukan di dalam sistem'
+							];
+						}
+
                 		//find id_penerimaan
                 		$id_penerimaan 		= Penerimaan::where('jenis_penerimaan','=','2')->where('tahun_penerimaan','=',(int)$value->tahun_masuk)->first(); 
-                		
+						
+						if(empty($id_penerimaan)){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, tahun masuk '.$value->tahun_masuk.' tidak ditemukan di dalam sistem'
+							];
+						}
+
                 		if($id_penerimaan == null || $semester_masuk == null || $jenis_kelamin == null || $jalur == null || $kelas == null || $status == null){
                 			$arr[] = [];
                 		}else{
@@ -119,6 +166,33 @@ class UploadDataSiswaController extends BaseController
                 }
 			  
 				if(!empty($arr)){
+					foreach ($arr as $data_siswa_1) {
+						$jumlah_nis = 0;
+						$jumlah_nisn = 0;
+						foreach ($arr as $data_siswa_2) {
+							if($data_siswa_1['nis'] == $data_siswa_2['nis']){
+								$jumlah_nis++;
+							}
+
+							if($data_siswa_1['nisn'] == $data_siswa_2['nisn']){
+								$jumlah_nisn++;
+							}
+						}
+
+						if($jumlah_nis > 1){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, ditemukan NIS siswa yang sama di dalam file yang diupload'
+							];
+						}
+
+						if($jumlah_nisn > 1){
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, ditemukan NISN siswa yang sama di dalam file yang diupload'
+							];
+						}
+					}
 					DB::beginTransaction();
 					try {
 						foreach ($arr as $data_siswa) {

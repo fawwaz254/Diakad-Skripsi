@@ -58,7 +58,9 @@
         <div class="search-icon">
             <i class="material-icons">search</i>
         </div>
-        <input type="text" placeholder="START TYPING...">
+        <form id="form-search">
+            <input type="text" name="q" placeholder="Ketikkan nama menu di sini...">
+        </form>
         <div class="close-search">
             <i class="material-icons">close</i>
         </div>

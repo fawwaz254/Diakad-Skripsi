@@ -43,7 +43,7 @@
                     }
                 },
                 complete: function() {
-                    $('button').removeAttr('disabled', 'disabled');
+                    $('button').removeAttr('disabled');
                 }
             });
         }

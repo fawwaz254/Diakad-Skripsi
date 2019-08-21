@@ -30,7 +30,7 @@ class TokenStaffMiddleware
             $roles_pengguna = $pengguna->role_pengguna;
             $role_aktif = $roles_pengguna->where('is_aktif', 1)->first();
             $moduls = Modul::where(['id_role' => $role_aktif->id_role, 'akses' => 1])->orderBy('urutan', 'asc')->get();
-            $menus = Menu::whereIn('id_modul', $moduls->pluck('id_modul'))->where('akses', 1)->orderBy('urutan', 'asc')->get();
+            $menus = Menu::with('modul')->whereIn('id_modul', $moduls->pluck('id_modul'))->where('akses', 1)->orderBy('urutan', 'asc')->get();
 
             if(request()->segment(1) != 'pendidikan' && $role_aktif->id_role == 1){
                 // return redirect('pendidikan/'.request()->segment(2));

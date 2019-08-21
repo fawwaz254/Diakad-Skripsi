@@ -45,6 +45,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 	//
 	Route::group(array('prefix' => '{global}'), function() {
 		Route::get('/', 'AuthGlobalController@indexDashboard');
+		Route::get('search', 'AuthGlobalController@indexSearch');
 		Route::get('profile', 'AuthGlobalController@indexProfile');
 		Route::post('profile', 'AuthGlobalController@actionSaveProfile');
 		Route::get('password', 'AuthGlobalController@indexPassword');

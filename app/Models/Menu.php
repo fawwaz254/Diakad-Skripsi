@@ -33,9 +33,9 @@ class Menu extends Model
 
     protected $guarded = [];
 
-
-
-
+    public function modul(){
+        return $this->belongsTo('App\Models\Modul', 'id_modul');
+    }
 
 
 }

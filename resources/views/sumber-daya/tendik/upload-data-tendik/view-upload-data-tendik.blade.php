@@ -79,7 +79,6 @@
         },
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
-            $('input').attr('readonly', 'readonly');
             
             setTimeout(() => {
                 $.ajax({
@@ -109,7 +108,7 @@
                         }
                     },
                     complete: function() {
-                        $('button').removeAttr('disabled', 'disabled');
+                        $('button').removeAttr('disabled');
                     }
                 });
                 

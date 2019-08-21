@@ -36,6 +36,14 @@ class AuthGlobalController extends BaseController{
         return view('password', compact('auth_data'));
     }
 
+    public function indexSearch(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $search = $input->q;
+
+        return view('search-result', compact('auth_data', 'search'));
+    }
+
     public function actionChangePassword(Request $request){
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
