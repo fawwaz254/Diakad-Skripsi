@@ -26,6 +26,7 @@ class KomplainSarpras extends Model
         'id_buku_alat',
         'id_siswa_komplain',
         'id_guru_komplain',
+        'id_semester',
         'keterangan_komplain',
         'is_urgent',
         'is_sudah_perbaikan',
