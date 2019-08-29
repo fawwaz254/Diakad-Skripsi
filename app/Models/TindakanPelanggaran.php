@@ -24,7 +24,6 @@ class TindakanPelanggaran extends Model
         'id_pelanggaran_siswa',
         'id_presensi_mp_pelanggaran',
         'id_jenis_tindakan',
-        'id_semester',
         'catatan_tindakan_pelanggaran',
         'catatan_tindakan_pelanggaran_khusus',
         'tgl_tindakan_pelanggaran',
