@@ -11,6 +11,7 @@ use App\Models\Guru as Guru;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
