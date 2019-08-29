@@ -17,6 +17,7 @@
                                         <th>No</th>
                                         <th>Nama Siswa</th>
                                         <th>Nama Guru Input</th>
+                                        <th>Semester</th>
                                         <th>Catatan Pelanggaran</th>
                                         <th>Tanggal Pelanggaran</th>
                                         <th>Aktor Input Pelanggaran</th>
@@ -49,7 +50,8 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
-            { data: 'nm_input', name: 'nm_input' },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
+            { data: 'semester', name: 'semester.tahun_ajaran' },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },
             { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran' },

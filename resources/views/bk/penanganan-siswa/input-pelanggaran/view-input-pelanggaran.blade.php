@@ -17,6 +17,7 @@
                                         <th>No</th>
                                         <th>Nama Siswa</th>
                                         <th>Nama Guru Input</th>
+                                        <th>Semester</th>
                                         <th>Catatan Pelanggaran</th>
                                         <th>Catatan Khusus</th>
                                         <th>Tanggal Pelanggaran</th>
@@ -51,6 +52,7 @@ responsive: true,
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
+            { data: 'semester', name: 'semester.tahun_ajaran' },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
             { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },

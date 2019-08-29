@@ -14,6 +14,31 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-pelanggaran/edit/'.$data_pelanggaran_siswa->id_pelanggaran_siswa)}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
+                            Semester
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_semester">
+                                  <option value="" disabled selected >-- Pilih Semester --</option>
+                                    @foreach($data_semester as $data)
+                                        @if($data->is_aktif_semester == 1)
+                                            @if($data->id_semester == $data_pelanggaran_siswa->id_semester)
+                                                <option value="{{$data->id_semester}}" selected>{{$data->tahun_ajaran}} {{$data->nm_semester}} (Aktif)</option>
+                                            @else
+                                                <option value="{{$data->id_semester}}">{{$data->tahun_ajaran}} {{$data->nm_semester}} (Aktif)</option>
+                                            @endif
+                                        @else
+                                            @if($data->id_semester == $data_pelanggaran_siswa->id_semester)
+                                                <option value="{{$data->id_semester}}" selected >{{$data->tahun_ajaran}} {{$data->nm_semester}}</option>
+                                            @else
+                                                <option value="{{$data->id_semester}}">{{$data->tahun_ajaran}} {{$data->nm_semester}}</option>
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Kelas
                         </h2>
                         <div class="row clearfix">
