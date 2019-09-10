@@ -11,6 +11,7 @@ use App\Models\Guru as Guru;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
@@ -39,12 +40,14 @@ class InputPelanggaranController extends BaseController{
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+
         // ambil data all kelas
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
         $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('kesiswaan/penanganan-siswa/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_kelas','id_pelanggaran_siswa'));
+        return view('kesiswaan/penanganan-siswa/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_semester','data_kelas','id_pelanggaran_siswa'));
 
     }
 
@@ -52,6 +55,8 @@ class InputPelanggaranController extends BaseController{
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
         // ambil data all kelas
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
@@ -73,7 +78,7 @@ class InputPelanggaranController extends BaseController{
             $is_khusus = 1;
         }
 
-        return view('kesiswaan/penanganan-siswa/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','data_kelas','data_siswa','data_siswa_sekelas','data_pelanggaran_siswa', 'tgl_pelanggaran', 'is_khusus'));
+        return view('kesiswaan/penanganan-siswa/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','data_semester','data_kelas','data_siswa','data_siswa_sekelas','data_pelanggaran_siswa', 'tgl_pelanggaran', 'is_khusus'));
 
     }
 
@@ -137,6 +142,9 @@ class InputPelanggaranController extends BaseController{
                             return $item->nm_staff_input." (Tendik)"; 
                         }
                     }
+                })
+                ->addColumn('semester', function($item){
+                    return $item->tahun_ajaran." ".$item->nm_semester;
                 })
                 ->addColumn('catatan_pelanggaran_khusus', function($item) use($auth_data){
                     if ($item->created_by == $auth_data->pengguna->id_pengguna) {
@@ -208,6 +216,7 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
                 $pelanggaranSiswa->id_guru_input                = $id_guru_input;
+                $pelanggaranSiswa->id_semester                  = $input->id_semester;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran_khusus   = $input->catatan_pelanggaran_khusus;
                 // convert format date
@@ -227,6 +236,7 @@ class InputPelanggaranController extends BaseController{
                 // make object to find id
                 $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
+                $pelanggaranSiswa->id_semester                  = $input->id_semester;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 if(! empty($input->catatan_pelanggaran_khusus)) {
                     $pelanggaranSiswa->catatan_pelanggaran_khusus   = $input->catatan_pelanggaran_khusus;
