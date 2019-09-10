@@ -40,9 +40,8 @@ class PresensiMp extends Model
 
     protected $guarded = [];
 
-
-
-
-
+    public function jadwal_kelas_mp(){
+        return $this->belongsTo('App\Models\Sekolah', 'id_sekolah');
+    }
 
 }

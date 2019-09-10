@@ -13,7 +13,7 @@
                         SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2>
                     </div>
                     <div class="body">
-                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-siswa/add-kbm/'.$presensi_mp_aktif->id_jadwal_kelas_mp.'/'.$pertemuan_ke)}}">
+                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-siswa/add-kbm/'.$id_jadwal_kelas_mp.'/'.$pertemuan_ke)}}">
                             {{csrf_field()}}
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">

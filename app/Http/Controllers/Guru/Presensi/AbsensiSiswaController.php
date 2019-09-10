@@ -110,7 +110,7 @@ class AbsensiSiswaController extends BaseController{
 
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp)->where('pertemuan_ke','=',$pertemuan_ke)->first();
 
-        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa',compact('auth_data','semester_aktif','data_kelas', 'pertemuan_ke', 'presensi_mp_aktif'));
+        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa',compact('auth_data','semester_aktif','data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp'));
 
     }
 
