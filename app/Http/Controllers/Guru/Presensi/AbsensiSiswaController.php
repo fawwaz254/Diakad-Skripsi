@@ -126,9 +126,10 @@ class AbsensiSiswaController extends BaseController{
             $data_presensi_mp_siswa = null;
         }
         return Datatables::of($list_data)
-            ->addColumn('checkbox', function($item){
+            ->editColumn('nis_siswa', function($item){
                 $data = array(
-                    'id_siswa' => $item->id_siswa
+                    'id_siswa' => $item->id_siswa,
+                    'nis_siswa' => $item->nis_siswa
                 );
                 return $data;
             })
@@ -389,7 +390,7 @@ class AbsensiSiswaController extends BaseController{
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'presensi/absensi-siswa/view-kbm/'.$id_kelas_mp.'/'.$pertemuan_ke,
+                        'path' => 'presensi/absensi-siswa/view-kbm/'.$id_jadwal_kelas_mp.'/'.$pertemuan_ke,
                         'message' => 'Save Absensi KBM Siswa successfully'
                     ];
 
