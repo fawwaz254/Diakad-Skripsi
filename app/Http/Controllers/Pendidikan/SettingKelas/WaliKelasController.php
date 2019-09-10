@@ -211,54 +211,33 @@ class WaliKelasController extends BaseController{
                 }
             }
             elseif($mode == 'edit'){
-                // cek apabila ada record kelas dan semester yg sama
-                $waliKelas = WaliKelas::join('semester','semester.id_semester','=','wali_kelas.id_semester')
-                                ->where('wali_kelas.id_kelas','=',$input->id_kelas)
-                                ->where('wali_kelas.id_semester','=',$input->id_semester)
-                                ->where('semester.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-                                ->first();
+                // make object to find id
+                $waliKelas                   = WaliKelas::find($id);
+                $waliKelas->id_kelas         = $input->id_kelas;
+                $waliKelas->id_semester      = $input->id_semester;
+                $waliKelas->id_guru          = $input->id_guru;
+                $waliKelas->is_aktif         = $input->is_aktif;
+                $waliKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
+                $waliKelas->updated_at       = $now;
+                $waliKelas->save();
 
-                $waliKelasGuru = WaliKelas::join('semester','semester.id_semester','=','wali_kelas.id_semester')
-                                ->where('wali_kelas.id_guru','=',$input->id_guru)
-                                ->where('wali_kelas.id_semester','=',$input->id_semester)
-                                ->where('semester.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-                                ->first();
+                // cek jika update status aktif = 1, maka yg lain status aktif = 0
+                if($input->is_aktif == 1) {
+                    $data_wali_kelas  = WaliKelas::where('id_wali_kelas', "<>", $id)->where('id_kelas', $input->id_kelas)->get();
 
-                if($waliKelas || $waliKelasGuru){
-                    return [
-                        'status' => 300, // FAILED
-                        'message' => 'Failed To Save Wali Kelas!'
-                    ];
-                }
-                else {
-                    // make object to find id
-                    $waliKelas                   = WaliKelas::find($id);
-                    $waliKelas->id_kelas         = $input->id_kelas;
-                    $waliKelas->id_semester      = $input->id_semester;
-                    $waliKelas->id_guru          = $input->id_guru;
-                    $waliKelas->is_aktif         = $input->is_aktif;
-                    $waliKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
-                    $waliKelas->updated_at       = $now;
-                    $waliKelas->save();
-
-                    // cek jika update status aktif = 1, maka yg lain status aktif = 0
-                    if($input->is_aktif == 1) {
-                        $data_wali_kelas  = WaliKelas::where('id_wali_kelas', "<>", $id)->where('id_kelas', $input->id_kelas)->get();
-
-                        foreach ($data_wali_kelas as $waliKelas) {
-                            $waliKelas->is_aktif    = 0;
-                            $waliKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
-                            $waliKelas->updated_at  = $now;
-                            $waliKelas->save();
-                        }
+                    foreach ($data_wali_kelas as $waliKelas) {
+                        $waliKelas->is_aktif    = 0;
+                        $waliKelas->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                        $waliKelas->updated_at  = $now;
+                        $waliKelas->save();
                     }
-
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas,
-                        'message' => 'Update Wali Kelas successfully'
-                    ];
                 }
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas,
+                    'message' => 'Update Wali Kelas successfully'
+                ];
             }
             elseif($mode == 'delete'){
                 // make object to find id
