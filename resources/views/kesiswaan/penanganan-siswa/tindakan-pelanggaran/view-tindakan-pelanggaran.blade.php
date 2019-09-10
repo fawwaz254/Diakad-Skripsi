@@ -33,6 +33,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
+                                                <th>Kelas</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Catatan Pelanggaran</th>
                                                 <th>Catatan Khusus</th>
@@ -53,6 +54,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
+                                                <th>Kelas</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Mapel</th>
                                                 <th>Catatan Pelanggaran</th>
@@ -73,6 +75,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
+                                                <th>Kelas</th>
                                                 <th>Nama Siswa Presensi</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Catatan Pelanggaran</th>
@@ -119,6 +122,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
             { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
@@ -152,6 +156,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'nm_mapel', name: 'mata_pelajaran.nm_mata_pelajaran' },
             { data: 'catatan_pelanggaran', name: 'presensi_mp_pelanggaran.catatan_pelanggaran' },
@@ -185,6 +190,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_siswa_presensi', name: 'p_siswa_presensi.nm_pengguna' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'catatan_pelanggaran', name: 'catatan_pelanggaran', searchable: false, orderable: false },
