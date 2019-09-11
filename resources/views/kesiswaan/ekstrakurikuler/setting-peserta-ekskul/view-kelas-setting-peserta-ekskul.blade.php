@@ -112,7 +112,7 @@
         }
     },
     { data: 'nis_siswa', name: 'nis_siswa' },
-    { data: 'nm_pengguna', name: 'nm_pengguna' }
+    { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' }
     ]
 });
 
