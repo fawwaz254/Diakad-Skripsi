@@ -52,6 +52,7 @@ class LibKelas
                 ->leftJoin('pengguna as p2','p2.id_pengguna','=','guru.id_pengguna')
                 ->where('jurusan.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                 ->orderBy('jurusan.nm_jurusan', 'asc')
+                ->orderBy('kelas.tingkat', 'asc')
                 ->orderBy('kelas.nm_kelas', 'asc')
                 ->get();
         }

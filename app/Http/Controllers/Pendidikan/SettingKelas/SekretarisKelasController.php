@@ -208,7 +208,7 @@ class SekretarisKelasController extends BaseController{
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
                     if($input->is_aktif == 1) {
-                        $data_sekretaris_kelas  = SekretarisKelas::where('id_sekretaris_kelas', "<>", $id)->get();
+                        $data_sekretaris_kelas  = SekretarisKelas::where('id_sekretaris_kelas', "<>", $id)->where('id_kelas', $input->id_kelas)->get();
 
                         foreach ($data_sekretaris_kelas as $sekretarisKelas) {
                             $sekretarisKelas->is_aktif    = 0;
@@ -238,7 +238,7 @@ class SekretarisKelasController extends BaseController{
 
                 // cek jika update status aktif = 1, maka yg lain status aktif = 0
                 if($input->is_aktif == 1) {
-                    $data_sekretaris_kelas  = SekretarisKelas::where('id_sekretaris_kelas', "<>", $id)->get();
+                    $data_sekretaris_kelas  = SekretarisKelas::where('id_sekretaris_kelas', "<>", $id)->where('id_kelas', $input->id_kelas)->get();
 
                     foreach ($data_sekretaris_kelas as $sekretarisKelas) {
                         $sekretarisKelas->is_aktif    = 0;

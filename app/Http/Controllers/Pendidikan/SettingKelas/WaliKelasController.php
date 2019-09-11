@@ -173,7 +173,7 @@ class WaliKelasController extends BaseController{
                                 ->where('semester.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
                                 ->first();
 
-                if($waliKelas or $waliKelasGuru){
+                if($waliKelas || $waliKelasGuru){
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Failed To Save Wali Kelas!'
@@ -193,7 +193,7 @@ class WaliKelasController extends BaseController{
 
                     // cek jika update status aktif = 1, maka yg lain status aktif = 0
                     if($input->is_aktif == 1) {
-                        $data_wali_kelas  = WaliKelas::where('id_wali_kelas', "<>", $id)->get();
+                        $data_wali_kelas  = WaliKelas::where('id_wali_kelas', "<>", $id)->where('id_kelas', $input->id_kelas)->get();
 
                         foreach ($data_wali_kelas as $waliKelas) {
                             $waliKelas->is_aktif    = 0;
@@ -223,7 +223,7 @@ class WaliKelasController extends BaseController{
 
                 // cek jika update status aktif = 1, maka yg lain status aktif = 0
                 if($input->is_aktif == 1) {
-                    $data_wali_kelas  = WaliKelas::where('id_wali_kelas', "<>", $id)->get();
+                    $data_wali_kelas  = WaliKelas::where('id_wali_kelas', "<>", $id)->where('id_kelas', $input->id_kelas)->get();
 
                     foreach ($data_wali_kelas as $waliKelas) {
                         $waliKelas->is_aktif    = 0;

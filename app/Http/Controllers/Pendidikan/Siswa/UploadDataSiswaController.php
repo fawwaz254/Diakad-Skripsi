@@ -67,12 +67,12 @@ class UploadDataSiswaController extends BaseController
                 	if($check_nis_siswa){
 						return [
 							'status' 	=> 203, // GAGAL
-							'message'	=> 'Upload Data Siswa Gagal, ditemukan NIS siswa yang sama di dalam sistem'
+							'message'	=> 'Upload Data Siswa Gagal, NIS '.$value->nis.' ditemukan sama di dalam sistem'
 						];
-					}else if($check_nisn_siswa){
+					}else if(!empty($value->nisn) && $check_nisn_siswa){
 						return [
 							'status' 	=> 203, // GAGAL
-							'message'	=> 'Upload Data Siswa Gagal, ditemukan NISN siswa yang sama di dalam sistem'
+							'message'	=> 'Upload Data Siswa Gagal, NISN '.$value->nisn.' ditemukan sama di dalam sistem'
 						];
 					}else{
                 		//find id_status_pengguna
@@ -182,14 +182,14 @@ class UploadDataSiswaController extends BaseController
 						if($jumlah_nis > 1){
 							return [
 								'status' 	=> 203, // GAGAL
-								'message'	=> 'Upload Data Siswa Gagal, ditemukan NIS siswa yang sama di dalam file yang diupload'
+								'message'	=> 'Upload Data Siswa Gagal, ditemukan NIS '.$data_siswa_1['nis'].' yang sama di dalam file yang diupload'
 							];
 						}
 
-						if($jumlah_nisn > 1){
+						if(!empty($data_siswa_1['nisn']) && $jumlah_nisn > 1){
 							return [
 								'status' 	=> 203, // GAGAL
-								'message'	=> 'Upload Data Siswa Gagal, ditemukan NISN siswa yang sama di dalam file yang diupload'
+								'message'	=> 'Upload Data Siswa Gagal, ditemukan NISN '.$data_siswa_1['nisn'].' yang sama di dalam file yang diupload'
 							];
 						}
 					}

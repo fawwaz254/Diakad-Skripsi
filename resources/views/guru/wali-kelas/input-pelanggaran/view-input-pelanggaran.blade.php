@@ -16,6 +16,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Siswa</th>
+                                        <th>Kelas</th>
                                         <th>Nama Guru Input</th>
                                         <th>Semester</th>
                                         <th>Catatan Pelanggaran</th>
@@ -50,6 +51,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'semester', name: 'semester.tahun_ajaran' },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },

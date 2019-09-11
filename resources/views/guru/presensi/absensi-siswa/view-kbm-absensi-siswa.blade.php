@@ -13,16 +13,15 @@
                         SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2>
                     </div>
                     <div class="body">
-                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-siswa/add-kbm/'.$presensi_mp_aktif->id_jadwal_kelas_mp.'/'.$pertemuan_ke)}}">
+                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-siswa/add-kbm/'.$id_jadwal_kelas_mp.'/'.$pertemuan_ke)}}">
                             {{csrf_field()}}
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <table class="table table-bordered table-striped table-hover dataTable display nowrap" id="primary_table" style="overflow-x: scroll;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
                                             <th>NIS</th>
                                             <th>Nama</th>
-                                            <th></th>
                                             <th>Alasan</th>
                                         </tr>
                                     </thead>
@@ -112,27 +111,18 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nis_siswa', name: 'nis_siswa' },
-            { data: 'nm_pengguna', name: 'nm_pengguna' },
-            { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
+            { data: 'nis_siswa', name: 'nis_siswa',
                 render: function(data){
-                    return '<input type="hidden" name="id_siswa[]" value="'+ data.id_siswa + '" >';
-
-                    /*return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';*/
+                    return data.nis_siswa+'<br><input type="hidden" name="id_siswa[]" value="'+ data.id_siswa + '" >';
                 }
             },
+            { data: 'nm_pengguna', name: 'nm_pengguna' },
             { data: 'alasan', name: 'alasan', searchable: false, orderable: false,
                 render: function(data){
                     var html = '';
@@ -146,13 +136,6 @@
                     return '<select class="form-control show-tick" name="alasan[]">'+
                     html +
                     '</select>';
-
-                    /*return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';*/
                 }
             }
         ]
