@@ -15,6 +15,15 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-kategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KategoriPelanggaranController@actionKategoriPelanggaran');
 
+            // MENU Sub-Kategori Pelanggaran
+            // url: /bimbingan-konseling/data-pelanggaran/subkategori-pelanggaran
+            Route::get('subkategori-pelanggaran', 'BK\DataPelanggaran\SubKategoriPelanggaranController@viewSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/datatables', 'BK\DataPelanggaran\SubKategoriPelanggaranController@datatablesSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/add', 'BK\DataPelanggaran\SubKategoriPelanggaranController@addSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@editSubkategoriPelanggaran');
+
+            Route::post('action-subkategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@actionSubkategoriPelanggaran');
+
         });
 
         /** ==== MODUL PENANGANAN SISWA ==== **/

@@ -23,6 +23,7 @@ class PelanggaranSiswa extends Model
     protected $fillable = [
         'id_siswa',
         'id_guru_input',
+        'id_subkategori_pelanggaran',
         'id_semester',
         'catatan_pelanggaran',
         'catatan_pelanggaran_khusus',
