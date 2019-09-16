@@ -573,3 +573,14 @@
     </div>
 </div>
 @include('scriptjs')
+<script>
+    $(function(){
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'DD MMMM YYYY',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
+    });
+</script>

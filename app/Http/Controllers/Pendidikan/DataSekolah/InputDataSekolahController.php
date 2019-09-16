@@ -64,11 +64,11 @@ class InputDataSekolahController extends BaseController
 		          $sekolah->npsn_sekolah				= $input->npsn_sekolah;
 		          $sekolah->id_bentuk_pendidikan		= $input->id_bentuk_pendidikan;
 		          $sekolah->nomor_sk_pendirian_sekolah	= $input->nomor_sk_pendirian_sekolah;
-		          $sekolah->tgl_sk_pendirian_sekolah	= $input->tgl_sk_pendirian_sekolah;
+		          $sekolah->tgl_sk_pendirian_sekolah	= date_format(date_create($input->tgl_sk_pendirian_sekolah),"Y-m-d");
 		          $sekolah->status_kepemilikan			= $input->status_kepemilikan;
 		          $sekolah->nm_yayasan_sekolah			= $input->nm_yayasan_sekolah;
 		          $sekolah->nomor_sk_izin_operasional	= $input->nomor_sk_izin_operasional;
-		          $sekolah->tgl_sk_izin_operasional		= $input->tgl_sk_izin_operasional;
+		          $sekolah->tgl_sk_izin_operasional		= date_format(date_create($input->tgl_sk_izin_operasional),"Y-m-d");
 		          $sekolah->is_mbs						= $input->is_mbs;
 		          $sekolah->luas_tanah_milik_sekolah	= $input->luas_tanah_milik_sekolah;
 		          $sekolah->luas_tanah_non_milik_sekolah = $input->luas_tanah_non_milik_sekolah;

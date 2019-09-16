@@ -82,12 +82,27 @@
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">notifications</i>
-                            <span class="label-count">7</span>
+                            <span class="label-count">0</span>
                         </a>
+                        @php
+                            $count_notification = 0;
+                        @endphp
                         <ul class="dropdown-menu">
                             <li class="header">NOTIFICATIONS</li>
                             <li class="body">
                                 <ul class="menu">
+                                @if($count_notification <= 0)
+                                    <li>
+                                        <a href="javascript:void(0);">
+                                            <div class="icon-circle bg-light-green">
+                                                <i class="material-icons">mood</i>
+                                            </div>
+                                            <div class="menu-info">
+                                                <h4>Tidak ada notifikasi baru</h4>
+                                            </div>
+                                        </a>
+                                    </li>
+                                @else
                                     <li>
                                         <a href="javascript:void(0);">
                                             <div class="icon-circle bg-light-green">
@@ -179,11 +194,14 @@
                                             </div>
                                         </a>
                                     </li>
+                                @endif
                                 </ul>
                             </li>
+                            @if($count_notification > 0)
                             <li class="footer">
                                 <a href="javascript:void(0);">View All Notifications</a>
                             </li>
+                            @endif
                         </ul>
                     </li>
                     <!-- #END# Notifications -->

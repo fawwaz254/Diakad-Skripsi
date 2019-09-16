@@ -73,7 +73,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_sk_pendirian_sekolah" aria-required="true"aria-invalid="true" value="{{$sekolah->tgl_sk_pendirian_sekolah}}">
+                                <input type="text" class="datepicker form-control" name="tgl_sk_pendirian_sekolah" aria-required="true"aria-invalid="true" value="{{strftime('%d %B %Y', strtotime($sekolah->tgl_sk_pendirian_sekolah))}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -121,7 +121,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_sk_izin_operasional" aria-required="true"aria-invalid="true" value="{{$sekolah->tgl_sk_izin_operasional}}">
+                                <input type="text" class="datepicker form-control" name="tgl_sk_izin_operasional" aria-required="true"aria-invalid="true" value="{{strftime('%d %B %Y', strtotime($sekolah->tgl_sk_izin_operasional))}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
