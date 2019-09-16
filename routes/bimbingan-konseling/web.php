@@ -4,6 +4,19 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'bimbingan-konseling'), function() {
         Route::get('welcome', 'BK\WelcomeController@indexWelcome');
 
+        /** ==== MODUL DATA PELANGGARAN ==== **/
+        Route::group(array('prefix' => 'data-pelanggaran'), function() {
+            // MENU Kategori Pelanggaran
+            // url: /bimbingan-konseling/data-pelanggaran/kategori-pelanggaran
+            Route::get('kategori-pelanggaran', 'BK\DataPelanggaran\KategoriPelanggaranController@viewKategoriPelanggaran');
+            Route::get('kategori-pelanggaran/datatables', 'BK\DataPelanggaran\KategoriPelanggaranController@datatablesKategoriPelanggaran');
+            Route::get('kategori-pelanggaran/add', 'BK\DataPelanggaran\KategoriPelanggaranController@addKategoriPelanggaran');
+            Route::get('kategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\KategoriPelanggaranController@editKategoriPelanggaran');
+
+            Route::post('action-kategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KategoriPelanggaranController@actionKategoriPelanggaran');
+
+        });
+
         /** ==== MODUL PENANGANAN SISWA ==== **/
         Route::group(array('prefix' => 'penanganan-siswa'), function() {
             // MENU Data Jenis Tindakan

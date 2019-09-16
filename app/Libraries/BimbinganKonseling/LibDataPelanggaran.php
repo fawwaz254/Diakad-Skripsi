@@ -2,6 +2,9 @@
 
 namespace App\Libraries\BimbinganKonseling;
 
+use App\Models\KategoriPelanggaran as KategoriPelanggaran;
+use App\Models\SubkategoriPelanggaran as SubkategoriPelanggaran;
+use App\Models\KesimpulanPelanggaran as KesimpulanPelanggaran;
 use App\Models\JenisTindakan as JenisTindakan;
 use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
@@ -16,6 +19,59 @@ use DB;
 
 class LibDataPelanggaran
 {
+    /** KATEGORI PELANGGARAN **/
+    static function fetchDataKategoriPelanggaran($auth_data, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $kategoriPelanggaran = KategoriPelanggaran::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('tingkat_kategori_pelanggaran', 'asc')->get();
+        }
+        // get mode edit
+        else{
+            $kategoriPelanggaran = KategoriPelanggaran::where('id_kategori_pelanggaran','=',$id)->first();
+        }
+
+        return $kategoriPelanggaran;
+    }
+    /** ========== **/
+
+    /** SUBKATEGORI PELANGGARAN **/
+    static function fetchDataSubkategoriPelanggaran($auth_data, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $subkategoriPelanggaran = SubkategoriPelanggaran::select('kategori_pelanggaran.id_kategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran')
+                                ->join('kategori_pelanggaran','kategori_pelanggaran.id_kategori_pelanggaran','=','subkategori_pelanggaran.id_kategori_pelanggaran')
+                                ->where('kategori_pelanggaran.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                                ->orderBy('kategori_pelanggaran.tingkat_kategori_pelanggaran', 'asc')
+                                ->orderBy('subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'asc')
+                                ->get();
+        }
+        // get mode edit
+        else{
+            $subkategoriPelanggaran = SubkategoriPelanggaran::where('id_subkategori_pelanggaran','=',$id)->first();
+        }
+
+        return $subkategoriPelanggaran;
+    }
+    /** ========== **/
+
+    /** KESIMPULAN PELANGGARAN **/
+    static function fetchDataKesimpulanPelanggaran($auth_data, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $kesimpulanPelanggaran = KesimpulanPelanggaran::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('poin_bawah_kesimpulan_pelanggaran', 'asc')->get();
+        }
+        // get mode edit
+        else{
+            $kesimpulanPelanggaran = KesimpulanPelanggaran::where('id_kesimpulan_pelanggaran','=',$id)->first();
+        }
+
+        return $kesimpulanPelanggaran;
+    }
+    /** ========== **/
+
     /** AMBIL DATA JENIS TINDAKAN **/
     static function fetchDataJenisTindakan($auth_data, $id = null){
 
