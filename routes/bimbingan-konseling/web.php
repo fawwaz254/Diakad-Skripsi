@@ -24,6 +24,15 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-subkategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@actionSubkategoriPelanggaran');
 
+            // MENU Kesimpulan Pelanggaran
+            // url: /bimbingan-konseling/data-pelanggaran/kesimpulan-pelanggaran
+            Route::get('kesimpulan-pelanggaran', 'BK\DataPelanggaran\KesimpulanPelanggaranController@viewKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran/datatables', 'BK\DataPelanggaran\KesimpulanPelanggaranController@datatablesKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran/add', 'BK\DataPelanggaran\KesimpulanPelanggaranController@addKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran/edit/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@editKesimpulanPelanggaran');
+
+            Route::post('action-kesimpulan-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@actionKesimpulanPelanggaran');
+
         });
 
         /** ==== MODUL PENANGANAN SISWA ==== **/
