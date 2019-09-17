@@ -120,7 +120,7 @@ function changeKategori(el){
             $('select[name=id_subkategori_pelanggaran]').html('');
             var html = '<option value="">-- Pilih Sub-Kategori --</option>';
             $.each(result, function( key, item ) {
-                html += '<option value="'+item.id_subkategori_pelanggaran+'">'+item.tingkat_kategori_pelanggaran+'.'+item.tingkat_subkategori_pelanggaran+' '+keterangan_subkategori_pelanggaran'</option>'
+                html += '<option value="'+item.id_subkategori_pelanggaran+'">'+item.tingkat_kategori_pelanggaran+'.'+item.tingkat_subkategori_pelanggaran+' '+item.keterangan_subkategori_pelanggaran+'</option>'
             });
             $('select[name=id_subkategori_pelanggaran]').html(html);
         }
