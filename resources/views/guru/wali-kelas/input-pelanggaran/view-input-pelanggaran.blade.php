@@ -19,6 +19,8 @@
                                         <th>Kelas</th>
                                         <th>Nama Guru Input</th>
                                         <th>Semester</th>
+                                        <th>Tingkat Pelanggaran</th>
+                                        <th>Keterangan Sub-Kategori</th>
                                         <th>Catatan Pelanggaran</th>
                                         <th>Tanggal Pelanggaran</th>
                                         <th>Aktor Input Pelanggaran</th>
@@ -54,6 +56,8 @@ responsive: true,
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'semester', name: 'semester.tahun_ajaran' },
+            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
+            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },
             { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran' },

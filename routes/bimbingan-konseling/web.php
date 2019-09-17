@@ -15,6 +15,24 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-kategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KategoriPelanggaranController@actionKategoriPelanggaran');
 
+            // MENU Sub-Kategori Pelanggaran
+            // url: /bimbingan-konseling/data-pelanggaran/subkategori-pelanggaran
+            Route::get('subkategori-pelanggaran', 'BK\DataPelanggaran\SubKategoriPelanggaranController@viewSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/datatables', 'BK\DataPelanggaran\SubKategoriPelanggaranController@datatablesSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/add', 'BK\DataPelanggaran\SubKategoriPelanggaranController@addSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@editSubkategoriPelanggaran');
+
+            Route::post('action-subkategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@actionSubkategoriPelanggaran');
+
+            // MENU Kesimpulan Pelanggaran
+            // url: /bimbingan-konseling/data-pelanggaran/kesimpulan-pelanggaran
+            Route::get('kesimpulan-pelanggaran', 'BK\DataPelanggaran\KesimpulanPelanggaranController@viewKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran/datatables', 'BK\DataPelanggaran\KesimpulanPelanggaranController@datatablesKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran/add', 'BK\DataPelanggaran\KesimpulanPelanggaranController@addKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran/edit/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@editKesimpulanPelanggaran');
+
+            Route::post('action-kesimpulan-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@actionKesimpulanPelanggaran');
+
         });
 
         /** ==== MODUL PENANGANAN SISWA ==== **/
@@ -48,6 +66,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
+
+            // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
+            Route::post('subkategori-bykategori', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
             
         });
 

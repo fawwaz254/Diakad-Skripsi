@@ -54,6 +54,18 @@ class LibDataPelanggaran
 
         return $subkategoriPelanggaran;
     }
+    // fetch subkategori pelanggaran by kategori
+    static function fetchDataSubkategoriPelanggaranByKategori($auth_data, $id_kategori_pelanggaran){
+
+        $subkategoriPelanggaran = SubkategoriPelanggaran::select('kategori_pelanggaran.id_kategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran')
+                            ->join('kategori_pelanggaran','kategori_pelanggaran.id_kategori_pelanggaran','=','subkategori_pelanggaran.id_kategori_pelanggaran')
+                            ->where('kategori_pelanggaran.id_kategori_pelanggaran','=',$id_kategori_pelanggaran)
+                            ->orderBy('kategori_pelanggaran.tingkat_kategori_pelanggaran', 'asc')
+                            ->orderBy('subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'asc')
+                            ->get();
+
+        return $subkategoriPelanggaran;
+    }
     /** ========== **/
 
     /** KESIMPULAN PELANGGARAN **/
@@ -95,11 +107,13 @@ class LibDataPelanggaran
         if ($id == null){
             // khusus wali kelas
             if(! empty($id_kelas)) {
-                $pelanggaranSiswa = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_semester', 'pelanggaran_siswa.id_guru_input', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'semester.tahun_ajaran', 'semester.nm_semester', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
+                $pelanggaranSiswa = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_semester', 'pelanggaran_siswa.id_guru_input', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'semester.tahun_ajaran', 'semester.nm_semester', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
                     ->join('siswa','siswa.id_siswa','=','pelanggaran_siswa.id_siswa')
                     ->join('kelas','siswa.id_kelas','=','kelas.id_kelas')
                     ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
                     ->join('semester','semester.id_semester','=','pelanggaran_siswa.id_semester')
+                    ->leftJoin('subkategori_pelanggaran','subkategori_pelanggaran.id_subkategori_pelanggaran','=','pelanggaran_siswa.id_subkategori_pelanggaran')
+                    ->leftJoin('kategori_pelanggaran','kategori_pelanggaran.id_kategori_pelanggaran','=','subkategori_pelanggaran.id_kategori_pelanggaran')
                     ->leftJoin('guru','guru.id_guru','=','pelanggaran_siswa.id_guru_input')
                     ->leftJoin('pengguna as p_guru','p_guru.id_pengguna','=','guru.id_pengguna')
                     ->leftJoin('pengguna as p_staff','p_staff.id_pengguna','=','pelanggaran_siswa.created_by')
@@ -113,11 +127,13 @@ class LibDataPelanggaran
                     }
             }
             else { 
-                $pelanggaranSiswa = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_semester', 'pelanggaran_siswa.id_guru_input', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'semester.tahun_ajaran', 'semester.nm_semester', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran_khusus', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
+                $pelanggaranSiswa = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_semester', 'pelanggaran_siswa.id_guru_input', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'semester.tahun_ajaran', 'semester.nm_semester', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran_khusus', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
                     ->join('siswa','siswa.id_siswa','=','pelanggaran_siswa.id_siswa')
                     ->join('kelas','siswa.id_kelas','=','kelas.id_kelas')
                     ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
                     ->join('semester','semester.id_semester','=','pelanggaran_siswa.id_semester')
+                    ->leftJoin('subkategori_pelanggaran','subkategori_pelanggaran.id_subkategori_pelanggaran','=','pelanggaran_siswa.id_subkategori_pelanggaran')
+                    ->leftJoin('kategori_pelanggaran','kategori_pelanggaran.id_kategori_pelanggaran','=','subkategori_pelanggaran.id_kategori_pelanggaran')
                     ->leftJoin('guru','guru.id_guru','=','pelanggaran_siswa.id_guru_input')
                     ->leftJoin('pengguna as p_guru','p_guru.id_pengguna','=','guru.id_pengguna')
                     ->leftJoin('pengguna as p_staff','p_staff.id_pengguna','=','pelanggaran_siswa.created_by')
@@ -131,11 +147,13 @@ class LibDataPelanggaran
         }
         // get mode edit
         else{
-            $pelanggaranSiswa = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_semester', 'pelanggaran_siswa.id_guru_input', 'pengguna.nm_pengguna as nm_siswa', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'semester.tahun_ajaran', 'semester.nm_semester', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran_khusus', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
+            $pelanggaranSiswa = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_semester', 'pelanggaran_siswa.id_guru_input', 'pengguna.nm_pengguna as nm_siswa', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'semester.tahun_ajaran', 'semester.nm_semester', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran_khusus', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
                                     ->join('siswa','siswa.id_siswa','=','pelanggaran_siswa.id_siswa')
                                     ->join('kelas','siswa.id_kelas','=','kelas.id_kelas')
                                     ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
                                     ->join('semester','semester.id_semester','=','pelanggaran_siswa.id_semester')
+                                    ->leftJoin('subkategori_pelanggaran','subkategori_pelanggaran.id_subkategori_pelanggaran','=','pelanggaran_siswa.id_subkategori_pelanggaran')
+                                    ->leftJoin('kategori_pelanggaran','kategori_pelanggaran.id_kategori_pelanggaran','=','subkategori_pelanggaran.id_kategori_pelanggaran')
                                     ->leftJoin('guru','guru.id_guru','=','pelanggaran_siswa.id_guru_input')
                                     ->leftJoin('pengguna as p_guru','p_guru.id_pengguna','=','guru.id_pengguna')
                                     ->leftJoin('pengguna as p_staff','p_staff.id_pengguna','=','pelanggaran_siswa.created_by')

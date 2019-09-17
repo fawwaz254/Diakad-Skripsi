@@ -63,9 +63,12 @@ class InputPelanggaranController extends BaseController{
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas);
 
+        // ambil data all kategori
+        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+
         $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('guru/wali-kelas/input-pelanggaran/add-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','id_pelanggaran_siswa'));
+        return view('guru/wali-kelas/input-pelanggaran/add-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_kategori','id_pelanggaran_siswa'));
 
     }
 
@@ -88,13 +91,27 @@ class InputPelanggaranController extends BaseController{
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas);
 
+        // ambil data all kategori
+        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
 
         // convert format date
         $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
 
-        return view('guru/wali-kelas/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_pelanggaran_siswa','tgl_pelanggaran'));
+        return view('guru/wali-kelas/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','tgl_pelanggaran'));
 
+    }
+
+    public function ajaxGetSubkategoriByKategori(Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // ambil data subkategori by kategori
+        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->kategori);
+
+        return $data_subkategori;
     }
 
     public function datatablesInputPelanggaran(Request $request) {
@@ -138,6 +155,9 @@ class InputPelanggaranController extends BaseController{
                 ->addColumn('semester', function($item){
                     return $item->tahun_ajaran." ".$item->nm_semester;
                 })
+                ->addColumn('tingkat_pelanggaran', function($item){
+                    return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
+                })
                 ->addColumn('tgl_pelanggaran', function($item){
                     return strftime( "%d %B %Y %H:%M:%S", strtotime($item->tgl_pelanggaran));
                 })
@@ -166,6 +186,7 @@ class InputPelanggaranController extends BaseController{
 
         $validator = Validator::make($request->all(), [
             'id_siswa'              => 'required',
+            'id_subkategori_pelanggaran'    => 'required',
             'catatan_pelanggaran'   => 'required',
             'tgl_pelanggaran'       => 'required'
         ]);
@@ -200,6 +221,7 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
                 $pelanggaranSiswa->id_guru_input                = $id_guru_input;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
                 $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran),"Y-m-d H:i:s");
@@ -219,6 +241,7 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
                 $pelanggaranSiswa->tgl_pelanggaran              = date_format(date_create($input->tgl_pelanggaran),"Y-m-d H:i:s");
