@@ -17,12 +17,12 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             // MENU Sub-Kategori Pelanggaran
             // url: /bimbingan-konseling/data-pelanggaran/subkategori-pelanggaran
-            Route::get('subkategori-pelanggaran', 'BK\DataPelanggaran\SubKategoriPelanggaranController@viewSubkategoriPelanggaran');
-            Route::get('subkategori-pelanggaran/datatables', 'BK\DataPelanggaran\SubKategoriPelanggaranController@datatablesSubkategoriPelanggaran');
-            Route::get('subkategori-pelanggaran/add', 'BK\DataPelanggaran\SubKategoriPelanggaranController@addSubkategoriPelanggaran');
-            Route::get('subkategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@editSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran', 'BK\DataPelanggaran\SubkategoriPelanggaranController@viewSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/datatables', 'BK\DataPelanggaran\SubkategoriPelanggaranController@datatablesSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/add', 'BK\DataPelanggaran\SubkategoriPelanggaranController@addSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\SubkategoriPelanggaranController@editSubkategoriPelanggaran');
 
-            Route::post('action-subkategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\SubKategoriPelanggaranController@actionSubkategoriPelanggaran');
+            Route::post('action-subkategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\SubkategoriPelanggaranController@actionSubkategoriPelanggaran');
 
             // MENU Kesimpulan Pelanggaran
             // url: /bimbingan-konseling/data-pelanggaran/kesimpulan-pelanggaran
