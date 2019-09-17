@@ -4,6 +4,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 	Route::group(array('prefix' => 'guru'), function() {
 		Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
 
+		/** ==== MODUL BIDATA ==== **/
+		Route::group(array('prefix' => 'biodata'), function() {
+			// MENU Data Pribadi
+			Route::get('data-pribadi', 'Guru\Biodata\DataPribadiController@viewDataPribadi');
+
+		});
+
 		/** ==== MODUL JADWAL ==== **/
 		Route::group(array('prefix' => 'jadwal'), function() {
 			// MENU Kalender Akademik
