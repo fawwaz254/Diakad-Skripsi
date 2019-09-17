@@ -75,6 +75,9 @@ class InputPelanggaranController extends BaseController{
         // ambil data siswa sekelas
         $data_siswa_sekelas = LibSiswa::fetchDataSiswa($auth_data, $data_siswa->id_kelas);
 
+        // ambil data subkategori by kategori
+        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $data_pelanggaran_siswa->id_kategori_pelanggaran);
+
         // convert format date
         $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
 
@@ -84,7 +87,7 @@ class InputPelanggaranController extends BaseController{
             $is_khusus = 1;
         }
 
-        return view('kesiswaan/penanganan-siswa/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','data_semester','data_kelas','data_kategori','data_siswa','data_siswa_sekelas','data_pelanggaran_siswa', 'tgl_pelanggaran', 'is_khusus'));
+        return view('kesiswaan/penanganan-siswa/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','data_semester','data_kelas','data_kategori','data_siswa','data_siswa_sekelas','data_pelanggaran_siswa', 'data_subkategori', 'tgl_pelanggaran', 'is_khusus'));
 
     }
 

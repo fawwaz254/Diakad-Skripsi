@@ -96,10 +96,13 @@ class InputPelanggaranController extends BaseController{
 
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
 
+        // ambil data subkategori by kategori
+        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $data_pelanggaran_siswa->id_kategori_pelanggaran);
+
         // convert format date
         $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
 
-        return view('guru/wali-kelas/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','tgl_pelanggaran'));
+        return view('guru/wali-kelas/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','data_subkategori','tgl_pelanggaran'));
 
     }
 
