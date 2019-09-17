@@ -134,6 +134,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('home-visit/edit/{id}', 'Guru\WaliKelas\HomeVisitController@editHomeVisit');
 
 			Route::post('action-home-visit/{mode}/{id}', 'Guru\WaliKelas\HomeVisitController@actionHomeVisit');
+
+            // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
+            Route::post('subkategori-bykategori', 'Guru\WaliKelas\InputPelanggaranController@ajaxGetSubkategoriByKategori');
 		});
 
 

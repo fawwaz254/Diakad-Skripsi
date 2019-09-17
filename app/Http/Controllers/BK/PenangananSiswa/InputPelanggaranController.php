@@ -45,9 +45,12 @@ class InputPelanggaranController extends BaseController{
         // ambil data all kelas
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
+        // ambil data all kategori
+        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+
         $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('bk/penanganan-siswa/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_semester','data_kelas','id_pelanggaran_siswa'));
+        return view('bk/penanganan-siswa/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_semester','data_kelas','data_kategori','id_pelanggaran_siswa'));
 
     }
 
@@ -60,6 +63,9 @@ class InputPelanggaranController extends BaseController{
 
         // ambil data all kelas
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
+
+        // ambil data all kategori
+        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
 
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
 
@@ -78,7 +84,7 @@ class InputPelanggaranController extends BaseController{
             $is_khusus = 1;
         }
 
-        return view('bk/penanganan-siswa/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','data_semester','data_kelas','data_siswa','data_siswa_sekelas','data_pelanggaran_siswa', 'tgl_pelanggaran', 'is_khusus'));
+        return view('bk/penanganan-siswa/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','data_semester','data_kelas','data_kategori','data_siswa','data_siswa_sekelas','data_pelanggaran_siswa', 'tgl_pelanggaran', 'is_khusus'));
 
     }
 
@@ -91,6 +97,17 @@ class InputPelanggaranController extends BaseController{
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
 
         return $data_siswa;
+    }
+
+    public function ajaxGetSubkategoriByKategori(Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // ambil data subkategori by kategori
+        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->kategori);
+
+        return $data_subkategori;
     }
 
     public function datatablesInputPelanggaran(Request $request) {
@@ -146,6 +163,9 @@ class InputPelanggaranController extends BaseController{
                 ->addColumn('semester', function($item){
                     return $item->tahun_ajaran." ".$item->nm_semester;
                 })
+                ->addColumn('tingkat_pelanggaran', function($item){
+                    return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
+                })
                 ->addColumn('catatan_pelanggaran_khusus', function($item) use($auth_data){
                     if ($item->created_by == $auth_data->pengguna->id_pengguna) {
                         return "Klik Action Untuk Melihat/Mengedit";
@@ -182,6 +202,7 @@ class InputPelanggaranController extends BaseController{
 
         $validator = Validator::make($request->all(), [
             'id_siswa'                      => 'required',
+            'id_subkategori_pelanggaran'    => 'required',
             'catatan_pelanggaran'           => 'required',
             /*'catatan_pelanggaran_khusus'    => 'required',*/
             'tgl_pelanggaran'               => 'required'
@@ -217,6 +238,7 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
                 $pelanggaranSiswa->id_guru_input                = $id_guru_input;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran_khusus   = $input->catatan_pelanggaran_khusus;
                 // convert format date
@@ -237,6 +259,7 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
+                $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 if(! empty($input->catatan_pelanggaran_khusus)) {
                     $pelanggaranSiswa->catatan_pelanggaran_khusus   = $input->catatan_pelanggaran_khusus;

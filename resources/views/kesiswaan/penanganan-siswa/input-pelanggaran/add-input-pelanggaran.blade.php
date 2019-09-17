@@ -54,6 +54,29 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Kategori Pelanggaran
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="kategori" onchange="changeKategori(this)">
+                                    <option value="">-- Pilih Kategori --</option>
+                                    @foreach($data_kategori as $data)
+                                        <option value="{{$data->id_kategori_pelanggaran}}">{{$data->tingkat_kategori_pelanggaran}} - {{$data->nm_kategori_pelanggaran}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Sub-Kategori Pelanggaran
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_subkategori_pelanggaran">
+                                    <option value="">-- Pilih Sub-Kategori --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Catatan Pelanggaran
                         </h2>
                         <div class="row clearfix">
@@ -133,6 +156,24 @@ function changeKelas(el){
                 html += '<option value="'+item.id_siswa+'">'+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
             });
             $('select[name=id_siswa]').html(html);
+        }
+    });
+}
+
+function changeKategori(el){
+    $.ajax({
+        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/subkategori-bykategori')}}',
+        type: 'POST',
+        data: {
+            kategori: $('select[name=kategori]').val()
+        },
+        success: function(result) {
+            $('select[name=id_subkategori_pelanggaran]').html('');
+            var html = '<option value="">-- Pilih Sub-Kategori --</option>';
+            $.each(result, function( key, item ) {
+                html += '<option value="'+item.id_subkategori_pelanggaran+'">'+item.tingkat_kategori_pelanggaran+'.'+item.tingkat_subkategori_pelanggaran+' '+keterangan_subkategori_pelanggaran'</option>'
+            });
+            $('select[name=id_subkategori_pelanggaran]').html(html);
         }
     });
 }

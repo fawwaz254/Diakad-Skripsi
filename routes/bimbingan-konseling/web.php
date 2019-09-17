@@ -66,6 +66,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
+
+            // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
+            Route::post('subkategori-bykategori', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
             
         });
 
