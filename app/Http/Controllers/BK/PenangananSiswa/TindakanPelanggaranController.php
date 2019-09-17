@@ -150,6 +150,9 @@ class TindakanPelanggaranController extends BaseController{
                         }
                     }
                 })
+                ->addColumn('tingkat_pelanggaran', function($item){
+                    return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
+                })
                 ->addColumn('catatan_pelanggaran_khusus', function($item) use($auth_data){
                     if ($item->created_by == $auth_data->pengguna->id_pengguna) {
                         return "Klik Action Untuk Melihat/Mengedit";
@@ -278,6 +281,9 @@ class TindakanPelanggaranController extends BaseController{
                             return $item->nm_guru_input_presensi." (Guru)"; 
                         }
                     }
+                })
+                ->addColumn('tingkat_pelanggaran', function($item){
+                    return $item->tingkat_kategori_pelanggaran.".".$item->tingkat_subkategori_pelanggaran;
                 })
                 ->addColumn('catatan_pelanggaran', function($item) {
                     if( ! empty($item->id_pelanggaran_siswa)) {

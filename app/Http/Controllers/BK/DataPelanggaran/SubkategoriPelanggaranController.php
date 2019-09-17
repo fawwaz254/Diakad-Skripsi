@@ -15,7 +15,7 @@ use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use Auth;
 use DB;
 use Session;
-use Validator;
+use Validator; 
 
 class SubkategoriPelanggaranController extends BaseController{
 

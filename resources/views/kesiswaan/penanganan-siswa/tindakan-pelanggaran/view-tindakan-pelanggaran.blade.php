@@ -35,6 +35,8 @@
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Nama Guru Input</th>
+                                                <th>Tingkat Pelanggaran</th>
+                                                <th>Keterangan Sub-Kategori</th>
                                                 <th>Catatan Pelanggaran</th>
                                                 <th>Catatan Khusus</th>
                                                 <th>Tanggal Pelanggaran</th>
@@ -78,6 +80,8 @@
                                                 <th>Kelas</th>
                                                 <th>Nama Siswa Presensi</th>
                                                 <th>Nama Guru Input</th>
+                                                <th>Tingkat Pelanggaran</th>
+                                                <th>Keterangan Sub-Kategori</th>
                                                 <th>Catatan Pelanggaran</th>
                                                 <th>Catatan Khusus</th>
                                                 <th>Tanggal Pelanggaran</th>
@@ -124,6 +128,8 @@ responsive: true,
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
+            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
+            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
             { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },
@@ -193,6 +199,8 @@ responsive: true,
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_siswa_presensi', name: 'p_siswa_presensi.nm_pengguna' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
+            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
+            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
             { data: 'catatan_pelanggaran', name: 'catatan_pelanggaran', searchable: false, orderable: false },
             { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
             { data: 'tgl_pelanggaran', name: 'tgl_pelanggaran', searchable: false, orderable: false },
