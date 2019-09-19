@@ -18,7 +18,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_semester">
+                                <select class="form-control show-tick" name="id_semester" required="">
                                   <option value="" disabled selected >-- Pilih Semester --</option>
                                     @foreach($data_semester as $data)
                                         @if($data->is_aktif_semester == 1)
@@ -35,7 +35,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_siswa">
+                                <select class="form-control show-tick" name="id_siswa" required="">
                                     <option value="">-- Pilih Siswa --</option>
                                     @foreach($data_siswa as $data)
                                         <option value="{{$data->id_siswa}}">{{$data->nm_pengguna}} - {{$data->nis_siswa}}</option>

@@ -206,6 +206,7 @@ class InputPelanggaranController extends BaseController{
         $validator = Validator::make($request->all(), [
             'id_siswa'                      => 'required',
             'id_subkategori_pelanggaran'    => 'required',
+            'id_semester'                   => 'required',
             'catatan_pelanggaran'           => 'required',
             /*'catatan_pelanggaran_khusus'    => 'required',*/
             'tgl_pelanggaran'               => 'required'
