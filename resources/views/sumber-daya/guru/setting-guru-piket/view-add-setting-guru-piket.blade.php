@@ -48,7 +48,7 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        serverSide: true,
+        // serverSide: true,
         responsive: true,
         ajax: {
             url: datatable_url,
@@ -81,9 +81,9 @@
         /* Select All Checkbox */
         $('input[name="select_all"]').change(function() {
             var select_all_checked = this.checked;
-            $('input[name="id_guru[]"]').each(function() {
-                this.checked = select_all_checked;
-            });
+            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
         });
     });
 </script>

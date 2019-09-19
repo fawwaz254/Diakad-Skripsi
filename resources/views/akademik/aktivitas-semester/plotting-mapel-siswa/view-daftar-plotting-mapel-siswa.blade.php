@@ -86,10 +86,10 @@
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>No</th>
                                         <th>
-                                            <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
-                                            <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                            <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
+                                            <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
                                         </th>
                                         <th>Kode Mapel</th>
                                         <th>Mata Pelajaran</th>
@@ -117,10 +117,10 @@
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_siswa" style="width: 100%">
                                 <thead>
                                     <tr>
-                                        <th></th>
+                                        <th>No</th>
                                         <th>
-                                            <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
-                                            <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                            <input id="checkbox_select_all_primary_table_siswa" type="checkbox" name="select_all" class="filled-in">
+                                            <label for="checkbox_select_all_primary_table_siswa" style="margin-bottom: -10px;"></label>
                                         </th>
                                         <th>NISN</th>
                                         <th>NIS</th>
@@ -169,14 +169,14 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        serverSide: true,
+        // serverSide: true,
         responsive: true,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { },
+            { data: null, searchable: false, orderable: false },
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data, type, full, meta){
                     return '<input id="checkbox-' + data.id_kelas_mp + '" type="checkbox" name="id_kelas_mp[]" class="filled-in" value="' + data.id_kelas_mp + '">'+
@@ -198,6 +198,7 @@
     primary_table.on( 'draw', function () {
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * 10;
+            cell.innerHTML = start + i + 1;
         } );
     } ).draw();
 
@@ -205,14 +206,14 @@
 
     var primary_table_siswa = $('#primary_table_siswa').DataTable({
         processing: true,
-        serverSide: true,
+        // serverSide: true,
         responsive: true,
         ajax: {
             url: datatable_url_siswa,
             type: 'GET'
         },
         columns: [
-            { },
+            { data: null, searchable: false, orderable: false },
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data, type, full, meta){
                     return '<input id="checkbox-' + data.id_siswa + '" type="checkbox" name="id_siswa[]" class="filled-in" value="' + data.id_siswa + '">'+
@@ -231,6 +232,7 @@
     primary_table_siswa.on( 'draw', function () {
         primary_table_siswa.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * 10;
+            cell.innerHTML = start + i + 1;
         } );
     } ).draw();
 
@@ -273,4 +275,23 @@
         document.getElementById("daftar-mata-pelajaran").style.display = "block";
         document.getElementById("spaceButtonLanjut").style.display = "block";
     }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {        
+        /* Select All Checkbox */
+        $('#checkbox_select_all_primary_table').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+
+        $('#checkbox_select_all_primary_table_siswa').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table_siswa.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
 </script>
