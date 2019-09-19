@@ -63,7 +63,7 @@ class UploadDataTendikController extends BaseController
                 		//find id_status_pengguna
                 		$status 		= StatusPengguna::select('id_status_pengguna')
 			                			->where('nm_status_pengguna','=',$value->status_guru)
-			                			->where('status_join_table','=','2')
+			                			->where('status_join_table','=','1')
 			                			->first();
 
                 		//find jenis_kelamin
@@ -113,7 +113,7 @@ class UploadDataTendikController extends BaseController
 							    	'username' 				=> $data['nip'],
 							    	'password'				=> Hash::make($data['nip']),
 							    	'must_change_password' 	=> 1,
-									'status_join_table' 	=> 2,
+									'status_join_table' 	=> 1,
 									'created_at'			=> $now,
 							    	'created_by' 			=> $data['created_by']
 								]
@@ -134,7 +134,7 @@ class UploadDataTendikController extends BaseController
 							DB::table('role_pengguna')->insert(
 							    [	
 							    	'id_pengguna' 				=> $data['id_pengguna'],
-							    	'id_role' 					=> 1,
+							    	'id_role' 					=> 15,
 							    	'keterangan_role_pengguna' 	=> "Input Sumber Daya",
 									'is_aktif'					=> 1,
 									'created_at'				=> $now,
