@@ -1,4 +1,40 @@
 <style>
+    .tdbg-1{
+        background:aquamarine;
+    }
+    .tdbg-2{
+        background:yellowgreen;
+    }
+    .tdbg-3{
+        background:yellow;
+    }
+    .tdbg-4{
+        background:chartreuse;
+    }
+    .tdbg-5{
+        background:cadetblue;
+    }
+    .tdbg-6{
+        background:chocolate;
+    }
+    .tdbg-7{
+        background:darkgray;
+    }
+    .tdbg-8{
+        background:red;
+    }
+    .tdbg-9{
+        background:plum;
+    }
+    .tdbg-10{
+        background:olivedrab;
+    }
+    .tdbg-11{
+        background:blue;
+    }
+    .tdbg-12{
+        background:hotpink;
+    }
 </style>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -63,7 +99,7 @@
                                     <th>NISN</th>
                                     <th>Nama</th>
                                     @foreach($data_bulan_tagihan as $bulan)
-                                    <th>{{$bulan->nm_bulan}}</th>
+                                    <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
                                     @endforeach
                                 </tr>
                             </thead>
@@ -84,7 +120,7 @@
                                     @endphp
                                     <td><button class="btn btn-block bg-black waves-effect" onclick="lunasAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button></td>
                                     @elseif($tagihan->is_tagih == 0)
-                                    <td>{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}</td>
+                                    <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}</td>
                                     @endif
                                     @endforeach
                                 </tr>
