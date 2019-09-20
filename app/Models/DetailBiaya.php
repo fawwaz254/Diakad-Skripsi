@@ -36,9 +36,7 @@ class DetailBiaya extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function biaya_sekolah(){
+        return $this->belongsTo('App\Models\BiayaSekolah', 'id_biaya_sekolah');
+    }
 }

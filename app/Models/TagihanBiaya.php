@@ -34,9 +34,7 @@ class TagihanBiaya extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function detail_biaya(){
+        return $this->belongsTo('App\Models\DetailBiaya', 'id_detail_biaya');
+    }
 }

@@ -101,6 +101,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::post('action-pembayaran-siswa/{mode}/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionPembayaranSiswa');
 
+			//MENU Pembayaran By Kelas
+			// url: /keuangan/utility/pembayaran-by-kelas
+			Route::get('pembayaran-by-kelas', 'Keuangan\Utility\PembayaranByKelasController@viewPembayaranByKelas');
+			Route::post('post-view-pembayaran-by-kelas', 'Keuangan\Utility\PembayaranByKelasController@actionViewPembayaranByKelas');
+			Route::get('pembayaran-by-kelas/view-detail/{id_semester}/{id_kelas}', 'Keuangan\Utility\PembayaranByKelasController@viewDetailPembayaranByKelas');
 		});
 
 		/** ==== MODUL PEMASUKAN SEKOLAH ==== **/
