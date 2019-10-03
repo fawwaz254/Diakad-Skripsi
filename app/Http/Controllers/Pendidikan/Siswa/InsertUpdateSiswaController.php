@@ -23,7 +23,7 @@ use App\Models\Sekolah as Sekolah;
 use App\Models\StatusPengguna as StatusPengguna;
 use App\Models\Penerimaan as Penerimaan;
 use App\Models\JenisPendidikan as JenisPendidikan;
-use App\Models\JenisPekerjaan as JenissPekerjaan;
+use App\Models\JenisPekerjaan as JenisPekerjaan;
 use App\Models\JenisPenghasilan as JenisPenghasilan;
 use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 use App\Models\Kota as Kota;
@@ -56,33 +56,47 @@ class InsertUpdateSiswaController extends BaseController
 
 	}
 	public function actionViewUpdateSiswa(Request $request){
-      # code...
-	      $input = (object) $request->input();
-	      $auth_data = $input->auth_data;
+		# code...
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
 
-	      $validator = Validator::make($request->all(), [
-	          'nis_nama_siswa' =>'required'
-	      ]);
+		$validator = Validator::make($request->all(), [
+			'nis_nama_siswa' =>'required'
+		]);
 
-	      if($validator->fails()) {
-	          return [
-	              'status' => 300, // FAILED
-	              'message' => $validator->errors()->first()
-	          ];
-	      }
-	      else {
-	          return [
-	                    'status' => 204, // SUCCESS AND LOAD CONTENT
-	                    'path' => 'siswa/insert-update-siswa/view-detail/'.$input->nis_nama_siswa
-	                ];
-	      }
+		if($validator->fails()) {
+			return [
+				'status' => 300, // FAILED
+				'message' => $validator->errors()->first()
+			];
+		}
+		else {
+			if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $input->nis_nama_siswa)) {
+				return [
+					'status' => 204, // SUCCESS AND LOAD CONTENT
+					'path' => 'siswa/insert-update-siswa/view-detail/'.$input->nis_nama_siswa
+				];
+			} else {
+				return [
+					'status' => 300, // FAILED
+					'message' => 'NIS tidak ditemukan'
+				];
+			}
+		}
 	}
 	public function viewDetailUpdateSiswa(Request $request, $nis_nama_siswa){
         # code...
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+		if($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa)){
+
+		}else{
+			return [
+				'status' => 300, // FAILED
+				'message' => 'NIS tidak ditemukan'
+			];
+		}
 		$agama = Agama::get();
 		$kebutuhanKhusus = KebutuhanKhusus::get();
 		$jenisTinggal = JenisTinggal::get();
