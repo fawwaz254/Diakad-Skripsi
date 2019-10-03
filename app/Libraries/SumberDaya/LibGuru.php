@@ -96,10 +96,15 @@ class LibGuru
                     ->join('kelas','kelas.id_kelas','=','kelas_mp.id_kelas')
                     ->leftJoin('presensi_mp', function ($join) use ($pertemuan_ke) {
                             $join->on('presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                                 ->where('presensi_mp.pertemuan_ke', '=', $pertemuan_ke);
+                                 ->where('presensi_mp.pertemuan_ke', '=', $pertemuan_ke)
+                                 ->whereNull('presensi_mp.deleted_at');
                         })
                     ->where('pengampu_mp.id_guru','=',$id_guru)
                     ->where('kelas_mp.id_kelas_mp','=',$id_kelas_mp)
+                    ->whereNull('pengampu_mp.deleted_at')
+                    ->whereNull('kelas_mp.deleted_at')
+                    ->whereNull('mata_pelajaran.deleted_at')
+                    ->whereNull('kelas.deleted_at')
                     ->orderBy('presensi_mp.pertemuan_ke', 'desc')
                     ->first();
         }
@@ -114,6 +119,15 @@ class LibGuru
                     ->join('ruangan','ruangan.id_ruangan','=','jadwal_kelas_mp.id_ruangan')
                     ->join('jadwal_hari','jadwal_hari.id_jadwal_hari','=','jadwal_kelas_mp.id_jadwal_hari')
                     ->join('jadwal_jam','jadwal_jam.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam')
+                    ->whereNull('pengampu_mp.deleted_at')
+                    ->whereNull('kelas_mp.deleted_at')
+                    ->whereNull('semester.deleted_at')
+                    ->whereNull('mata_pelajaran.deleted_at')
+                    ->whereNull('kelas.deleted_at')
+                    ->whereNull('jadwal_kelas_mp.deleted_at')
+                    ->whereNull('ruangan.deleted_at')
+                    ->whereNull('jadwal_hari.deleted_at')
+                    ->whereNull('jadwal_jam.deleted_at')
                     ->where('pengampu_mp.id_guru','=',$id_guru);
 
             if (! empty($id_kelas_mp)) {

@@ -14,13 +14,13 @@
                         <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-pembina-ekskul/assign/0')}}">
                             {{csrf_field()}}
                             <h2 class="card-inside-title">
-                                Nama Guru
+                                Nama Pembina
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     @if($id == "0")
                                         <select class="form-control show-tick" name="id_guru">
-                                            <option value="">-- Pilih Guru  --</option>
+                                            <option value="">-- Pilih Pembina  --</option>
                                             @foreach($data_guru as $data)
                                                 <option value="{{$data->id_guru}}">
                                                    {{$data->gelar_depan}}{{$data->nm_pengguna}},{{$data->gelar_belakang}}
