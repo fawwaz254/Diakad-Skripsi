@@ -33,9 +33,8 @@ class KelasMp extends Model
 
     protected $guarded = [];
 
-
-
-
-
+    public function kelas(){
+        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+    }
 
 }

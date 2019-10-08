@@ -105,7 +105,7 @@ class UsulanMataAjarController extends BaseController
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
-        $kelas_mp   = KelasMp::where('id_kelas_mp','=',$id_kelas_mp)->first();
+        $kelas_mp   = KelasMp::with('kelas')->where('id_kelas_mp','=',$id_kelas_mp)->first();
 
         $mapel      = MataPelajaran::join('jurusan','jurusan.id_jurusan','=','mata_pelajaran.id_jurusan')
                             ->where('mata_pelajaran.id_mata_pelajaran','=',$kelas_mp->id_mata_pelajaran)
@@ -123,6 +123,7 @@ class UsulanMataAjarController extends BaseController
                                       ->whereRaw('kelas_mp.id_semester = "'.$id_semester.'"')
                                       ->whereRaw('kelas_mp.id_mata_pelajaran = "'.$id_mata_pelajaran.'"');
                             })
+                            ->orderBy('kelas.tingkat')
                             ->get();
 
         $semester   = Semester::where('id_semester','=',$kelas_mp->id_semester)->first();
@@ -272,22 +273,24 @@ class UsulanMataAjarController extends BaseController
                 ];
             }
             elseif($mode == 'copy') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
-                $kelas                              = Kelas::where('id_kelas','=',$input->id_kelas)->first();
-                $mapel                              = MataPelajaran::where('id_mata_pelajaran','=',$input->id_mata_pelajaran)->first();
-                $nm_kelas_mp                        = $mapel->nm_mata_pelajaran.'-'.$kelas->nm_kelas;
-                
-                $kelas_mp                           = new KelasMp;
-                $kelas_mp->id_kelas_mp              = $id;
-                $kelas_mp->id_semester              = $input->id_semester;
-                $kelas_mp->id_kelas                 = $input->id_kelas;
-                $kelas_mp->id_mata_pelajaran        = $input->id_mata_pelajaran;
-                $kelas_mp->nm_kelas_mp              = $nm_kelas_mp;
-                $kelas_mp->jml_pertemuan_kelas_mp   = $input->jml_pertemuan_kelas_mp;
-                $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
-                $kelas_mp->created_at               = $now;
-                $kelas_mp->save();
+                foreach($input->id_kelas as $id_kelas){
+                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    
+                    $kelas                              = Kelas::where('id_kelas','=',$input->id_kelas)->first();
+                    $mapel                              = MataPelajaran::where('id_mata_pelajaran','=',$input->id_mata_pelajaran)->first();
+                    $nm_kelas_mp                        = $mapel->nm_mata_pelajaran.'-'.$kelas->nm_kelas;
+                    
+                    $kelas_mp                           = new KelasMp;
+                    $kelas_mp->id_kelas_mp              = $id;
+                    $kelas_mp->id_semester              = $input->id_semester;
+                    $kelas_mp->id_kelas                 = $id_kelas;
+                    $kelas_mp->id_mata_pelajaran        = $input->id_mata_pelajaran;
+                    $kelas_mp->nm_kelas_mp              = $nm_kelas_mp;
+                    $kelas_mp->jml_pertemuan_kelas_mp   = $input->jml_pertemuan_kelas_mp;
+                    $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
+                    $kelas_mp->created_at               = $now;
+                    $kelas_mp->save();
+                }
 
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
