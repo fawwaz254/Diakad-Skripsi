@@ -14,7 +14,7 @@ class AddIdJadwalJamSelesaiInJadwalKelasMp extends Migration
     public function up()
     {
         //
-        Schema::table('jadwaL_kelas_mp', function (Blueprint $table) {
+        Schema::table('jadwal_kelas_mp', function (Blueprint $table) {
             $table->string('id_jadwal_jam_selesai', 40)->after('id_jadwal_jam')->comment('FK: jadwal_jam.id_jadwal_jam, ini jadwal jam mapel terakhir');
         });
     }
