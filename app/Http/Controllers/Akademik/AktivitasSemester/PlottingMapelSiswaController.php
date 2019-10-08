@@ -225,7 +225,8 @@ class PlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-        	'id_semester' => 'required'
+        	'id_semester' => 'required',
+        	'angkatan' => 'required'
         ]);
 
         if($validator->fails() && $mode != 'delete') {
@@ -267,8 +268,8 @@ class PlottingMapelSiswaController extends BaseController
                     DB::commit();
                     return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
-				    		'message' => 'KRS Manual Berhasil Dilakukan',
-                        	'path' => 'aktivitas-semester/plotting-mapel-siswa'
+                            'message' => 'KRS Manual Berhasil Dilakukan',
+                        	'path' => 'aktivitas-semester/plotting-mapel-siswa/view-mapel-plotting/'.$input->id_semester.''.$input->angkatan
                     ];
                     
                 } catch (\Exception $e) {

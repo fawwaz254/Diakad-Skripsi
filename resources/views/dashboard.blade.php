@@ -20,9 +20,9 @@
         var original_title = location.hash;
         var target_url = original_title.replace('#','');
         if (target_url == '' || target_url == '/' || target_url == 'undefined') {
-            loadURI('welcome');
+            loadContent('welcome');
         }else{
-            loadURI(target_url);
+            loadContent(target_url);
 
             $('#modul-item-' + target_url.split('/')[0]).addClass('active');
             $('#modul-item-' + target_url.split('/')[0] +' a').addClass('toggled');
@@ -77,14 +77,18 @@
             var original_title = location.hash;
             var target_url = original_title.replace('#','');
             if (target_url == '' || target_url == '/' || target_url == 'undefined') {
-                loadURI('welcome');
+                loadContent('welcome');
             }else{
-                loadURI(target_url);
+                loadContent(target_url);
             }
         // }
     }
 
     function loadURI(target_url, content) {
+        location.hash = target_url;
+    }
+
+    function loadContent(target_url, content) {
         content = typeof content !== 'undefined' ? content : 'content';
         NProgress.start();
         $.ajax({
@@ -96,7 +100,6 @@
             },
             success: function (data) {
                 $("#" + content).html(data);
-                location.hash = target_url;
                 NProgress.done();
                 
                 $('.menu-item').removeClass('active');

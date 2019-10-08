@@ -25,7 +25,7 @@
                                         @endif
                                     </option>
                                     @endforeach
-                                    <input type="hidden" name="id_semester1SS" value="{{$id_semester}}">
+                                    <input type="hidden" name="id_semester" value="{{$id_semester}}">
                                 </select>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -80,7 +80,7 @@
                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         </div>
                     </div>
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-plotting-mapel-siswa/add-krs')}}">
+                    <form id="form-validation-2" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-plotting-mapel-siswa/add-krs')}}">
                     {{csrf_field()}}
                         <div class="table-responsive" id="table-mapel">
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
@@ -103,7 +103,8 @@
                                 </thead>
                             </table>
                         </div>
-                        <input type="hidden" class="form-control" name="id_semester" value="{{$id_semester}}" aria-required="true" aria-invalid="true">
+                        <input type="hidden" name="id_semester" value="{{$id_semester}}">
+                        <input type="hidden" name="angkatan" value="{{$angkatan}}">
                         <div class="row clearfix" id="spaceButtonLanjut">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             </div>
@@ -158,6 +159,55 @@
     </div>
 </div>
 @include('scriptjs')
+<script>    
+    $('#form-validation-2').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
+    });
+</script>
 <script type="text/javascript">
     var id_semester = {!! json_encode($id_semester) !!};
     var angkatan    = {!! json_encode($angkatan) !!};
