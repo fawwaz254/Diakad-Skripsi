@@ -134,7 +134,11 @@ class UploadDataSiswaController extends BaseController
 						}
 
                 		if($id_penerimaan == null || $semester_masuk == null || $jenis_kelamin == null || $jalur == null || $kelas == null || $status == null){
-                			$arr[] = [];
+							// $arr[] = [];
+							return [
+								'status' 	=> 203, // GAGAL
+								'message'	=> 'Upload Data Siswa Gagal, Data Tidak Valid pada Siswa "'.$value->nama_lengkap.'"'
+							];
                 		}else{
                 			//generate id
 	                		$id_siswa 			= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -142,7 +146,7 @@ class UploadDataSiswaController extends BaseController
 	                		$id_c_siswa 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_admisi 			= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_jalur_siswa 	= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-	                		$arr[]= [
+	                		$arr[]= array(
 	                				'id_siswa' 			=> $id_siswa,
 	                				'id_pengguna' 		=> $id_pengguna,
 	                				'id_c_siswa' 		=> $id_c_siswa,
@@ -160,12 +164,12 @@ class UploadDataSiswaController extends BaseController
 	                    		  	'semester_masuk' 	=> $semester_masuk['id_semester'],
 	                    		  	'id_sekolah' 		=> $input->auth_data->pengguna->id_sekolah,
 	                    		  	'created_by'		=> $input->auth_data->pengguna->id_pengguna
-	                    		];
+							);
                 		}
-                	}
+					}
                 }
 			  
-				if(!empty($arr)){
+				if(count($arr) != 0){
 					foreach ($arr as $data_siswa_1) {
 						$jumlah_nis = 0;
 						$jumlah_nisn = 0;
