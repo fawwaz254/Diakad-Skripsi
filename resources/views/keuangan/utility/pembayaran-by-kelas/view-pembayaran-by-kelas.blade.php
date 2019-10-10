@@ -164,7 +164,7 @@
                     url: lunas_url + '/' + item.attr('data-id'),
                     success: function (response) {
                         vex.dialog.alert(response.message);
-                        loadURI('utility/pembayaran-by-kelas/view-detail/{{$id_semester}}/{{$id_kelas}}');
+                        loadContent('utility/pembayaran-by-kelas/view-detail/{{$id_semester}}/{{$id_kelas}}');
                     },
                     complete: function() {
                         $('button').removeAttr('disabled', 'disabled');

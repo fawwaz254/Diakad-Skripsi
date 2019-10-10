@@ -87,7 +87,7 @@
     <script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script>
 
     <!-- Slimscroll Plugin Js -->
-    <script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
+    <script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 
     <!-- Bootstrap Notify Plugin Js -->
     <script src="{{asset('plugins/bootstrap-notify/bootstrap-notify.js')}}"></script>
