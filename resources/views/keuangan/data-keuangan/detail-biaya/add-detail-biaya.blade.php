@@ -97,13 +97,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_bulan">
-                                    <option value="" >-- Pilih Bulan --</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div id="div_bulan">
+                                </div>
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -127,12 +122,22 @@ function changeJenis(el){
             id_jenis_detail_biaya: $('select[name=id_jenis_detail_biaya]').val()
         },
         success: function(result) {
-            $('select[name=id_bulan]').html('');
-            var html = '<option value="">-- Pilih Bulan --</option>';
+            // $('select[name=id_bulan]').html('');
+            // var html = '<option value="">-- Pilih Bulan --</option>';
+            // $.each(result, function( key, item ) {
+            //     html += '<option value="'+item.id_bulan+'">'+item.nm_bulan+'</option>'
+            // });
+            // $('select[name=id_bulan]').html(html);
+
+            $('#div_bulan').html('');
+            var html = '';
             $.each(result, function( key, item ) {
-                html += '<option value="'+item.id_bulan+'">'+item.nm_bulan+'</option>'
+                html += '<div class="row clearfix" style="margin-left:0;">'+
+                    '<input type="checkbox" id="checkbox-'+item.id_bulan+'" name="id_bulan[]" class="filled-in" value="'+item.id_bulan+'">'+
+                    '<label for="checkbox-'+item.id_bulan+'">'+item.nm_bulan+'</label>'+
+                '</div>';
             });
-            $('select[name=id_bulan]').html(html);
+            $('#div_bulan').html(html);
         }
     });
 }

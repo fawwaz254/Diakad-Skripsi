@@ -16,12 +16,12 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Biaya Sekolah</th>
+                                        <th>Jenis Biaya</th>
                                         <th>Nama Biaya</th>
                                         <th>Nama Biaya Internal</th>
-                                        <th>Validasi</th>
                                         <th>Besar Biaya</th>
+                                        <th>Validasi</th>
                                         <th>Keterangan</th>
-                                        <th>Jenis Biaya</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -51,12 +51,12 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'biaya_sekolah', name: 'kelompok_biaya.nm_kelompok_biaya' },
+            { data: 'jenis_biaya', name: 'jenis_detail_biaya.nm_jenis_detail_biaya' },
             { data: 'nm_biaya', name: 'biaya.nm_biaya' },
             { data: 'nm_biaya_internal', name: 'kelompok_biaya_internal.nm_kelompok_biaya_internal' },
-            { data: 'validasi_biaya', name: 'validasi_biaya', searchable: false, orderable: false },
             { data: 'besar_biaya', name: 'detail_biaya.besar_biaya' },
+            { data: 'validasi_biaya', name: 'validasi_biaya', searchable: false, orderable: false },
             { data: 'keterangan_biaya', name: 'detail_biaya.keterangan_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_detail_biaya.nm_jenis_detail_biaya' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
