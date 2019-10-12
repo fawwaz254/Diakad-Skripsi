@@ -197,7 +197,7 @@ class LibDataKeuangan
     /** ========== **/
 
     /** KELOMPOK BIAYA SISWA **/
-    static function fetchDataBiayaSiswa($auth_data, $ada = null, $id = null, $is_datatable = null){
+    static function fetchDataBiayaSiswa($auth_data, $ada = null, $id = null, $id_kelas = null, $is_datatable = null){
 
         // get mode view
         if ($id == null){
@@ -215,13 +215,17 @@ class LibDataKeuangan
                 $siswa = $siswa->whereNotNull('siswa.id_kelompok_biaya');
             }
             $siswa = $siswa->orderBy('kelas.nm_kelas', 'asc')
-                                ->orderBy('siswa.nis_siswa', 'asc')
-                                ->orderBy('pengguna.nm_pengguna', 'asc')
-                                ->orderBy('kelompok_biaya.nm_kelompok_biaya', 'asc');
+                        ->orderBy('siswa.nis_siswa', 'asc')
+                        ->orderBy('pengguna.nm_pengguna', 'asc')
+                        ->orderBy('kelompok_biaya.nm_kelompok_biaya', 'asc');
 
-                                if ( $is_datatable == null ) {
-                                    $siswa = $siswa->get();
-                                }
+            if ( !empty($id_kelas) && $id_kelas != false ) {
+                $siswa = $siswa->where('siswa.id_kelas', $id_kelas);
+            }
+
+            if ( $is_datatable == null ) {
+                $siswa = $siswa->get();
+            }
         }
         // get mode edit
         else{

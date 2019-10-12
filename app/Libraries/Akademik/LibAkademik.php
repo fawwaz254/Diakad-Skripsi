@@ -26,6 +26,8 @@ class LibAkademik
                             ->where('jurusan.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                             ->orderBy('kurikulum.tahun_kurikulum', 'asc')
                             ->orderBy('kurikulum.is_aktif', 'desc')
+                            ->whereNull('jurusan.deleted_at')
+                            ->whereNull('semester.deleted_at')
                             ->get();
         }
         // get mode edit

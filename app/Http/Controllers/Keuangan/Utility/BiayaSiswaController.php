@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
+use App\Libraries\Pendidikan\LibKelas;
 
 use Auth;
 use DB;
@@ -24,6 +25,19 @@ class BiayaSiswaController extends BaseController{
         $auth_data = $input->auth_data;
 
     	return view('keuangan/utility/biaya-siswa/view-biaya-siswa',compact('auth_data'));
+
+    }
+
+    public function viewBiayaSiswaByKelas(Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+
+        $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
+
+    	return view('keuangan/utility/biaya-siswa-by-kelas/view-biaya-siswa-by-kelas',compact('auth_data', 'data_kelas', 'data_kelompok_biaya'));
 
     }
 
@@ -60,9 +74,24 @@ class BiayaSiswaController extends BaseController{
     public function datatablesBiayaSiswaBelum(Request $request) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataBiayaSiswa($auth_data, 0, null, "1");
+
+        if(!empty($input->id_kelas)){
+            if($input->id_kelas == 'notset'){
+                $list_data = array();
+            }else{
+                $list_data = LibDataKeuangan::fetchDataBiayaSiswa($auth_data, 0, null, $input->id_kelas, "1");
+            }
+        }else{
+            $list_data = LibDataKeuangan::fetchDataBiayaSiswa($auth_data, 0, null, null, "1");
+        }
 
         return Datatables::of($list_data)
+                ->addColumn('checkbox', function($item){
+                    $data = array(
+                        'id_siswa' => $item->id_siswa
+                    );
+                    return $data;
+                })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_siswa
@@ -75,7 +104,16 @@ class BiayaSiswaController extends BaseController{
     public function datatablesBiayaSiswaSudah(Request $request) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibDataKeuangan::fetchDataBiayaSiswa($auth_data, 1, null, "1");
+
+        if(!empty($input->id_kelas)){
+            if($input->id_kelas == 'notset'){
+                $list_data = array();
+            }else{
+                $list_data = LibDataKeuangan::fetchDataBiayaSiswa($auth_data, 1, null, $input->id_kelas, "1");
+            }
+        }else{
+            $list_data = LibDataKeuangan::fetchDataBiayaSiswa($auth_data, 1, null, null, "1");
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('kelompok_biaya', function($item){
@@ -93,6 +131,37 @@ class BiayaSiswaController extends BaseController{
                     return $data;
                 })
                 ->make(true);
+    }
+
+    public function actionMultipleSetBiayaSiswa(Request $request) {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_kelompok_biaya'     => 'required'
+        ]);
+        
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+        else{
+            $id_siswa_collection = collect($input->id_siswa);
+            // make object to find id
+            foreach($id_siswa_collection->chunk(25) as $chunk_id_siswa){
+                foreach($chunk_id_siswa as $id_siswa){
+                    $siswa                          = Siswa::find($id_siswa);
+                    $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                    $siswa->save();
+                }
+            }
+
+            return [
+                'status' => 200, // SUCCESS AND LOAD CONTENT
+                'message' => 'Save Biaya Siswa successfully'
+            ];
+        }
     }
 
     // Action POST

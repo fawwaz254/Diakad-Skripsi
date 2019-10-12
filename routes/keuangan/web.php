@@ -72,12 +72,14 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			// MENU Setting Biaya Siswa
 			// url: /keuangan/utility/biaya-siswa
             Route::get('biaya-siswa', 'Keuangan\Utility\BiayaSiswaController@viewBiayaSiswa');
+            Route::get('biaya-siswa-by-kelas', 'Keuangan\Utility\BiayaSiswaController@viewBiayaSiswaByKelas');
             Route::get('biaya-siswa/datatables-belum', 'Keuangan\Utility\BiayaSiswaController@datatablesBiayaSiswaBelum');
             Route::get('biaya-siswa/datatables-sudah', 'Keuangan\Utility\BiayaSiswaController@datatablesBiayaSiswaSudah');
             Route::get('biaya-siswa/set/{id}', 'Keuangan\Utility\BiayaSiswaController@setBiayaSiswa');
             Route::get('biaya-siswa/edit/{id}', 'Keuangan\Utility\BiayaSiswaController@editBiayaSiswa');
 
             Route::post('action-biaya-siswa/{mode}/{id}', 'Keuangan\Utility\BiayaSiswaController@actionBiayaSiswa');
+            Route::post('action-biaya-siswa/multiple', 'Keuangan\Utility\BiayaSiswaController@actionMultipleSetBiayaSiswa');
 
             // MENU Generate Tagihan Siswa
 			// url: /keuangan/utility/tagihan-siswa
