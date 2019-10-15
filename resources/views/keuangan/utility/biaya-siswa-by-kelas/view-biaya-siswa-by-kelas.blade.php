@@ -49,7 +49,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="belum">
                             <div class="body">
-                            <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-biaya-siswa/multiple')}}">
+                            <form id="primary_form" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-batch-biaya-siswa/set')}}">
                                     {{csrf_field()}}
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
@@ -57,8 +57,8 @@
                                                 <tr>
                                                     <th>No</th>
                                                     <th>
-                                                        <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
-                                                        <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
+                                                        <input id="primary_checkbox_all" type="checkbox" name="select_all" class="filled-in">
+                                                        <label for="primary_checkbox_all" style="margin-bottom: -10px;"></label>
                                                     </th>
                                                     <th>NIS Siswa</th>
                                                     <th>NISN Siswa</th>
@@ -93,21 +93,52 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
                             <div class="body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="secondary_table" style="width:100%;">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>NIS Siswa</th>
-                                                <th>NISN Siswa</th>
-                                                <th>Nama Siswa</th>
-                                                <th>Kelas</th>
-                                                <th>Kelompok Biaya</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
+                                <form id="secondary_form" method="POST" action="">
+                                    {{csrf_field()}}
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="secondary_table" style="width:100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>
+                                                        <input id="secondary_checkbox_all" type="checkbox" name="select_all" class="filled-in">
+                                                        <label for="secondary_checkbox_all" style="margin-bottom: -10px;"></label>
+                                                    </th>
+                                                    <th>NIS Siswa</th>
+                                                    <th>NISN Siswa</th>
+                                                    <th>Nama Siswa</th>
+                                                    <th>Kelas</th>
+                                                    <th>Kelompok Biaya</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <h2 class="card-inside-title">
+                                        Edit Kelompok Biaya
+                                    </h2>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <select class="form-control show-tick" name="id_kelompok_biaya">
+                                                <option value="" disabled selected >-- Pilih Kelompok Biaya --</option>
+                                                @foreach($data_kelompok_biaya as $data)
+                                                    @if($data->status_kelompok_biaya == 1)
+                                                        <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} (Reguler)</option>
+                                                    @else
+                                                        <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} (Khusus)</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <button class="btn btn-block bg-blue waves-effect" type="button" onclick="submitSecondaryForm(this)" data-mode="edit"><i class="material-icons">edit</i><span>Simpan Edit</span></button>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <button class="btn btn-block bg-red waves-effect" type="button" onclick="submitSecondaryForm(this)" data-mode="delete"><i class="material-icons">delete_forever</i><span>Hapus</span></button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>    
                         </div>
                     </div>
@@ -118,17 +149,19 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {        
-        /* Select All Checkbox */
-        $('input[name="select_all"]').change(function() {
-            var select_all_checked = this.checked;
-            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+    $('#primary_checkbox_all').change(function() {
+        var rows = primary_table.rows({ 'search': 'applied' }).nodes();
 
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
-        });
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
     });
 
-    $('#form-validation').validate({
+    $('#secondary_checkbox_all').change(function() {
+        var rows = secondary_table.rows({ 'search': 'applied' }).nodes();
+
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
+    });
+
+    $('#primary_form').validate({
         rules: {
             'checkbox': {
                 required: true
@@ -178,6 +211,64 @@
             });
         }
     });
+
+    $('#secondary_form').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                        secondary_table.ajax.reload(null, false);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
+    });
+
+    function submitSecondaryForm(el){
+        var action_url = "{{url(Request::segment(1).'/'.Request::segment(2).'/action-batch-biaya-siswa')}}";
+        var mode = $(el).attr('data-mode');
+        $('#secondary_form').attr('action', action_url + '/' + mode);
+        $('#secondary_form').submit();
+    }
 </script>
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
@@ -237,21 +328,18 @@
         },
         columns: [
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
+            { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
+                render: function (data, type, full, meta){
+                    return '<input id="checkbox-' + data.id_siswa + '" type="checkbox" name="id_siswa[]" class="filled-in" value="' + data.id_siswa + '">'+
+                    '<label for="checkbox-' + data.id_siswa + '"></label>'; 
+
+                }
+            },
             { data: 'nis_siswa', name: 'siswa.nis_siswa' },
             { data: 'nisn_siswa', name: 'siswa.nisn_siswa' },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'kelompok_biaya', name: 'kelompok_biaya.nm_kelompok_biaya' },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionBiaya(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
-                }
-            }
+            { data: 'kelompok_biaya', name: 'kelompok_biaya.nm_kelompok_biaya' }
         ]
     });
 

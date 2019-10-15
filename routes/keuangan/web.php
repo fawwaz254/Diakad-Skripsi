@@ -79,7 +79,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('biaya-siswa/edit/{id}', 'Keuangan\Utility\BiayaSiswaController@editBiayaSiswa');
 
             Route::post('action-biaya-siswa/{mode}/{id}', 'Keuangan\Utility\BiayaSiswaController@actionBiayaSiswa');
-            Route::post('action-biaya-siswa/multiple', 'Keuangan\Utility\BiayaSiswaController@actionMultipleSetBiayaSiswa');
+            Route::post('action-batch-biaya-siswa/{mode}', 'Keuangan\Utility\BiayaSiswaController@actionBatchBiayaSiswa');
 
             // MENU Generate Tagihan Siswa
 			// url: /keuangan/utility/tagihan-siswa

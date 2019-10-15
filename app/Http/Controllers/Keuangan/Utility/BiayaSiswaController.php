@@ -116,6 +116,12 @@ class BiayaSiswaController extends BaseController{
         }
 
         return Datatables::of($list_data)
+                ->addColumn('checkbox', function($item){
+                    $data = array(
+                        'id_siswa' => $item->id_siswa
+                    );
+                    return $data;
+                })
                 ->addColumn('kelompok_biaya', function($item){
                     if($item->status_kelompok_biaya == 1){
                         return $item->nm_kelompok_biaya." (Reguler)";
@@ -133,34 +139,69 @@ class BiayaSiswaController extends BaseController{
                 ->make(true);
     }
 
-    public function actionMultipleSetBiayaSiswa(Request $request) {
+    public function actionBatchBiayaSiswa(Request $request, $mode) {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'id_kelompok_biaya'     => 'required'
         ]);
-        
-        if($validator->fails()) {
+            
+        if($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
         }
         else{
-            $id_siswa_collection = collect($input->id_siswa);
-            // make object to find id
-            foreach($id_siswa_collection->chunk(25) as $chunk_id_siswa){
-                foreach($chunk_id_siswa as $id_siswa){
-                    $siswa                          = Siswa::find($id_siswa);
-                    $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
-                    $siswa->save();
-                }
-            }
+            if($mode == 'set') {
+                $id_siswa_collection = collect($input->id_siswa);
 
-            return [
-                'status' => 200, // SUCCESS AND LOAD CONTENT
-                'message' => 'Save Biaya Siswa successfully'
-            ];
+                foreach($id_siswa_collection->chunk(25) as $chunk_id_siswa){
+                    foreach($chunk_id_siswa as $id_siswa){
+                        $siswa                          = Siswa::find($id_siswa);
+                        $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                        $siswa->save();
+                    }
+                }
+
+                return [
+                    'status' => 200, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Save Biaya Siswa successfully'
+                ];
+            }
+            elseif($mode == 'edit'){
+                $id_siswa_collection = collect($input->id_siswa);
+                
+                foreach($id_siswa_collection->chunk(25) as $chunk_id_siswa){
+                    foreach($chunk_id_siswa as $id_siswa){
+                        $siswa                          = Siswa::find($id_siswa);
+                        $siswa->id_kelompok_biaya       = $input->id_kelompok_biaya;
+                        $siswa->save();
+                    }
+                }
+
+                return [
+                    'status' => 200, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Update Biaya Siswa successfully'
+                ];
+            }
+            elseif($mode == 'delete'){
+                $id_siswa_collection = collect($input->id_siswa);
+                
+                foreach($id_siswa_collection->chunk(25) as $chunk_id_siswa){
+                    foreach($chunk_id_siswa as $id_siswa){
+                        $siswa                          = Siswa::find($id_siswa);
+                        $siswa->id_kelompok_biaya       = null;
+                        $siswa->save();
+                    }
+                }
+
+                return [
+                    'status' => 200, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Delete Biaya Siswa successfully'
+                ];
+            }
+            
         }
     }
 
