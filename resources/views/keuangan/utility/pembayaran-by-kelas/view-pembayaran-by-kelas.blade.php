@@ -113,14 +113,26 @@
                                     <td>{{$siswa->nis_siswa}}</td>
                                     <td>{{$siswa->nisn_siswa}}</td>
                                     <td>{{$siswa->pengguna->nm_pengguna}}</td>
-                                    @foreach($data_tagihan->where('id_siswa', $siswa->id_siswa)->unique('nm_bulan')->sortBy('id_bulan')->values()->all() as $tagihan)
-                                    @if($tagihan->is_tagih == 1)
+                                    @foreach($data_bulan_tagihan as $bulan)
                                     @php
-                                        $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                        $tagihan = $data_tagihan->where('id_siswa', $siswa->id_siswa)->where('id_bulan', $bulan->id_bulan)->first();
                                     @endphp
-                                    <td><button class="btn btn-block bg-black waves-effect" onclick="lunasAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button></td>
-                                    @elseif($tagihan->is_tagih == 0)
-                                    <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}</td>
+                                    @if(!empty($tagihan) > 0)
+                                        @if($tagihan->is_tagih == 1)
+                                        @php
+                                            $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                        @endphp
+                                        <td><button class="btn btn-block bg-black waves-effect" onclick="lunasAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button></td>
+                                        @elseif($tagihan->is_tagih == 0)
+                                        <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                            <br>
+                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
+                                                <i class="material-icons">close</i>
+                                            </button>
+                                        </td>
+                                        @endif
+                                    @else
+                                    <td></td>
                                     @endif
                                     @endforeach
                                 </tr>
@@ -140,6 +152,7 @@
     var modul_url                   = 'utility';
     var lunas_url                   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
     var detail_tagihan_siswa_url    = base_url + '/' + role_url + '#' + modul_url + '/' + 'pembayaran-siswa/view-detail-tagihan-siswa';
+    var delete_pembayaran_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/delete';
 
     function lunasAction(element){
         var item = $(element);
@@ -162,6 +175,39 @@
                 $.ajax({
                     type: "POST",
                     url: lunas_url + '/' + item.attr('data-id'),
+                    success: function (response) {
+                        vex.dialog.alert(response.message);
+                        loadContent('utility/pembayaran-by-kelas/view-detail/{{$id_semester}}/{{$id_kelas}}');
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+    function deleteActionKhusus(element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to delete this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: delete_pembayaran_url + '/' + item.attr('data-id'),
                     success: function (response) {
                         vex.dialog.alert(response.message);
                         loadContent('utility/pembayaran-by-kelas/view-detail/{{$id_semester}}/{{$id_kelas}}');
