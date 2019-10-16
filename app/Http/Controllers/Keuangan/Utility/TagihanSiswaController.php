@@ -167,10 +167,11 @@ class TagihanSiswaController extends BaseController
 
                       if ($input->is_insert_replace == "1") {
                         if ($tagihan_set) {
-                          return [
-                                  'status' => 203, // GAGAL
-                                  'message' => 'Generate Tagihan Siswa Gagal, Detail Biaya Sudah Ada!'
-                              ];
+                            continue;
+                        //   return [
+                        //           'status' => 203, // GAGAL
+                        //           'message' => 'Generate Tagihan Siswa Gagal, Detail Biaya Sudah Ada!'
+                        //       ];
                         }
                       }
                       // delete tagihan lama
