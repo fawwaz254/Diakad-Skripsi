@@ -70,6 +70,11 @@
             table.table.dataTable{
                 width: 100%;
             }
+
+            .bg-btn-submit{
+                background-color: #235789;
+                color: #fff !important;
+            }
         </style>
     </head>
 

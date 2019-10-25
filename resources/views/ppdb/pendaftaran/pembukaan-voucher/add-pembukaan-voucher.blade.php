@@ -71,7 +71,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <textarea name="deskripsi" cols="30" rows="5" class="form-control no-resize" aria-required="true"></textarea>
+                                    <textarea name="deskripsi" cols="30" rows="5" class="form-control" aria-required="true"></textarea>
                                 </div>
                             </div>
                             

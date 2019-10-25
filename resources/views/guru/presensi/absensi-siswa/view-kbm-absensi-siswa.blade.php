@@ -53,9 +53,9 @@
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     @if($presensi_mp_aktif)
-                                    <textarea name="uraian_materi" rows="4" cols="100">{{$presensi_mp_aktif->uraian_materi}}</textarea>
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{$presensi_mp_aktif->uraian_materi}}</textarea>
                                     @else
-                                    <textarea name="uraian_materi" rows="4" cols="100">{{$data_kelas->uraian_materi}}</textarea>
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{$data_kelas->uraian_materi}}</textarea>
                                     @endif
                                 </div>
                             </div>
@@ -111,6 +111,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 100,
         ajax: {
             url: datatable_url,
             type: 'GET'

@@ -102,7 +102,7 @@
                                 <tr>
                                     <td style="width: 50%">Keterangan</td>
                                     <td style="width: 50%">
-                                        <textarea style="width: 100%; height: 250px" name="keterangan_admisi" id="keterangan_admisi"></textarea>
+                                        <textarea class="form-control" style="width: 100%; height: 250px" name="keterangan_admisi" id="keterangan_admisi"></textarea>
                                     </td>
                                 </tr>
                                 <tr>
