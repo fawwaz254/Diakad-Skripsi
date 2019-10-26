@@ -87,6 +87,19 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
 		});
+
+		/** ==== MODUL REPORT ==== **/
+		Route::group(array('prefix' => 'report'), function() {
+			
+			// MENU Report Pembayaran
+			Route::get('report-pembayaran', 'PPDB\Report\ReportPembayaranController@viewReportPembayaran');
+
+			Route::post('report-pembayaran', 'PPDB\Report\ReportPembayaranController@findPembayaran');
+			/*Route::post('pembayaran-formulir/reset-voucher/{kode_voucher}', 'PPDB\Peserta\PembayaranFormulirController@deletePembayaranFormulir');*/
+			Route::get('report-pembayaran/{id_pembayaran}', 'PPDB\Report\ReportPembayaranController@showPembayaran');
+			Route::post('report-pembayaran/{id_pembayaran}/pembayaran', 'PPDB\Report\ReportPembayaranController@reportPembayaran');
+		});
+
 		
 	});
   
