@@ -13,9 +13,12 @@ use App\Models\KomplainSarpras;
 use App\Models\Pengguna;
 use App\Models\PresensiMp;
 use App\Models\PresensiMpSiswa;
+use App\Models\PresensiMpPelanggaran;
+use App\Models\TindakanPelanggaran;
 use App\Models\Semester;
 use App\Models\Siswa;
 
+use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SaranaPrasarana\LibDataSarpras;
@@ -160,19 +163,27 @@ class Apiv1Controller extends BaseController{
         for ($i=1; $i <= 25; $i++) {     
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
-                $pertemuan = array(
-                    'text' => 'Pertemuan '.$i." (Sudah)",
-                    'value' => $i
-                );
-            }
-            else {
-                $pertemuan = array(
-                    'text' => 'Pertemuan '.$i,
-                    'value' => $i
-                );
+                if(!empty($input->query) && $input->query == 'absensi_is_null'){
+                    
+                }else{
+                    $pertemuan = array(
+                        'text' => 'Pertemuan '.$i." (Sudah)",
+                        'value' => $i
+                    );
+                    $data_pertemuan[] = $pertemuan;
+                }
+            } else {
+                if(!empty($input->query) && $input->query == 'absensi_is_not_null'){
+
+                }else{
+                    $pertemuan = array(
+                        'text' => 'Pertemuan '.$i,
+                        'value' => $i
+                    );
+                    $data_pertemuan[] = $pertemuan;
+                }
             }
 
-            $data_pertemuan[] = $pertemuan;
         }
 
         return response()->json([
@@ -181,6 +192,33 @@ class Apiv1Controller extends BaseController{
             'message' 	=> '',
             'data' => array(
                 'pertemuan' => $data_pertemuan
+            )
+        ]);
+    }
+
+    public function actionGetSiswaByJadwalKelasKBM(Request $request){
+        $input = (object) $request->input();
+        $validator = Validator::make($request->all(), [
+            'id_jadwal_kelas_mp' => 'required',
+            'pertemuan_ke' => 'required'
+        ]);
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
+
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$input->id_jadwal_kelas_mp)->where('pertemuan_ke','=',$input->pertemuan_ke)->first();
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'presensi_mp' => $presensi_mp_aktif,
+                'siswa' => $data_siswa,
             )
         ]);
     }
@@ -592,6 +630,123 @@ class Apiv1Controller extends BaseController{
                 'buku_alat' => $data_buku_alat
             )
         ]);
+    }
+
+    public function actionGetPelanggaranSiswa(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'pelanggaran_siswa' => $data_pelanggaran_siswa
+            )
+        ]);
+    }
+
+    public function actionPelanggaranSiswa(Request $request, $mode){
+
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_presensi_mp'              => 'required',
+            'id_siswa'              => 'required',
+            'catatan_pelanggaran'   => 'required',
+        ]);
+        
+        if($validator->fails() && $mode != 'delete') {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        else{
+            DB::beginTransaction();
+        
+            try {
+                // mengambil waktu sekarang
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+                if($mode == 'add') {
+                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                    $presensiMpPelanggaran                               = new PresensiMpPelanggaran;
+                    $presensiMpPelanggaran->id_presensi_mp_pelanggaran   = $id;
+                    $presensiMpPelanggaran->id_presensi_mp               = $input->id_presensi_mp;
+                    $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                    $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                    // convert format date
+                    $presensiMpPelanggaran->is_sudah_tindakan            = 0;
+                    $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $presensiMpPelanggaran->save();
+
+                    $return_array = [
+                        'status_code' 	=> 200,
+                        'status_text' 	=> 'Success',
+                        'message' 	=> 'Save Pelanggaran Siswa successfully'
+                    ];
+                }
+                elseif($mode == 'edit'){
+                    $id = $input->id;
+                    
+                    // make object to find id
+                    $presensiMpPelanggaran                               = PresensiMpPelanggaran::find($id);
+                    $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                    $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                    // convert format date
+                    $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $presensiMpPelanggaran->updated_at                   = $now;
+                    $presensiMpPelanggaran->save();
+
+                    $return_array = [
+                        'status_code' 	=> 200,
+                        'status_text' 	=> 'Success',
+                        'message' 	=> 'Update Pelanggaran Siswa successfully'
+                    ];
+                }
+                elseif($mode == 'delete'){
+                    $id = $input->id;
+
+                    if($tindakanPelanggaran = TindakanPelanggaran::where('id_presensi_mp_pelanggaran',$id)->first()){
+                        $return_array = [
+                            'status_code' 	=> 300,
+                            'status_text' 	=> 'Failed',
+                            'message' 	=> 'Failed To Delete, sudah diambil tindakan atas Pelanggaran siswa'
+                        ];
+                    }else{
+                        // make object to find id
+                        $presensiMpPelanggaran               = PresensiMpPelanggaran::find($id);
+                        $presensiMpPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                        $presensiMpPelanggaran->save();
+
+                        $presensiMpPelanggaran->delete();
+
+                        $return_array = [
+                            'status_code' 	=> 200,
+                            'status_text' 	=> 'Success',
+                            'message' 	=> 'Delete Pelanggaran Siswa successfully'
+                        ];
+                    }
+                }
+                DB::commit();
+
+                return response()->json($return_array);
+
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code' 	=> 300,
+                    'status_text' 	=> 'Failed',
+                    'message' => 'Terdapat error'
+                ]);
+            }   
+        }
     }
 
     public function actionSignOut(Request $request){

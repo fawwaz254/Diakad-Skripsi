@@ -11,7 +11,7 @@
     @else
     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-nilai/kbm/0')}}">
         {{csrf_field()}}
-        <input type="hidden" name="id_kelas_mp" id="id_kelas_mp" value="{{$pengambilan_mp->id_kelas_mp}}" />
+        <input type="hidden" name="id_kelas_mp" id="id_kelas_mp" value="{{$id_kelas_mp}}" />
         <div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
@@ -81,7 +81,9 @@
 <script type="text/javascript">
     let show_url = "{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-nilai/tampil')}}";
     $(document).ready(function() {
-        var table = $('#primary_table').DataTable();
+        var table = $('#primary_table').DataTable({
+            pageLength: 100
+        });
     } );
 
     function showAction(element){

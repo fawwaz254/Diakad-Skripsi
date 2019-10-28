@@ -81,9 +81,8 @@ class InputNilaiController extends BaseController
             ->join('siswa','siswa.id_siswa','=','pengambilan_mp.id_siswa')
             ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
             ->where('pengambilan_mp.id_kelas_mp','=',$id_kelas_mp)->get();
-        $pengambilan_mp = PengambilanMp::where('pengambilan_mp.id_kelas_mp','=',$id_kelas_mp)->first();
 
-        return view('guru/penilaian/input-nilai/view-kelas-input-nilai',compact('auth_data','data_kelas','list_data','jumlah_komponen','list_siswa','pengambilan_mp'));
+        return view('guru/penilaian/input-nilai/view-kelas-input-nilai',compact('auth_data','data_kelas','list_data','jumlah_komponen','list_siswa','id_kelas_mp'));
 
     }
 
