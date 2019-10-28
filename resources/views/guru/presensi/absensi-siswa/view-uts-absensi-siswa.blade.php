@@ -51,8 +51,7 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        serverSide: true,
-responsive: true,
+        // serverSide: true,
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -60,7 +59,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nis_siswa', name: 'nis_siswa' },
-            { data: 'nm_pengguna', name: 'nm_pengguna' },
+            { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function(data){
                     return '<input type="checkbox" class="mycheckbox" name="id_siswa[]" value="'+ data.id_siswa + '" checked >';
