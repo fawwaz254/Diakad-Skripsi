@@ -53,9 +53,9 @@
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     @if($presensi_mp_aktif)
-                                    <textarea name="uraian_materi" rows="4" cols="100">{{$presensi_mp_aktif->uraian_materi}}</textarea>
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{$presensi_mp_aktif->uraian_materi}}</textarea>
                                     @else
-                                    <textarea name="uraian_materi" rows="4" cols="100">{{$data_kelas->uraian_materi}}</textarea>
+                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100">{{$data_kelas->uraian_materi}}</textarea>
                                     @endif
                                 </div>
                             </div>
@@ -110,19 +110,20 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        serverSide: true,
+        // serverSide: true,
+        pageLength: 100,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nis_siswa', name: 'nis_siswa',
+            { data: 'nis_siswa', name: 'siswa.nis_siswa',
                 render: function(data){
                     return data.nis_siswa+'<br><input type="hidden" name="id_siswa[]" value="'+ data.id_siswa + '" >';
                 }
             },
-            { data: 'nm_pengguna', name: 'nm_pengguna' },
+            { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
             { data: 'alasan', name: 'alasan', searchable: false, orderable: false,
                 render: function(data){
                     var html = '';

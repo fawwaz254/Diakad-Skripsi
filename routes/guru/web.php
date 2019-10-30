@@ -66,17 +66,17 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('action-komponen-nilai/{mode}/{id}', 'Guru\Penilaian\KomponenNilaiController@actionKomponenNilai');
 
 			// MENU Input Nilai KBM/Try Out
-			/*Route::get('input-nilai', 'Guru\Penilaian\InputNilaiController@viewInputNilai');
-
+			Route::get('input-nilai', 'Guru\Penilaian\InputNilaiController@viewInputNilai');
 			Route::post('post-view-input-nilai', 'Guru\Penilaian\InputNilaiController@actionViewKelasInputNilai');
 			Route::get('input-nilai/view-kelas/{id_kelas_mp}', 'Guru\Penilaian\InputNilaiController@viewKelasInputNilai');
 			Route::get('input-nilai/datatables/{id_kelas_mp}', 'Guru\Penilaian\InputNilaiController@datatablesInputNilai');
-
+			/*
 			Route::post('post-view-input-tryout', 'Guru\Penilaian\InputNilaiController@actionViewKelasInputTryOut');
 			Route::get('input-tryout/view-kelas/{id_kelas_mp}', 'Guru\Penilaian\InputNilaiController@viewKelasInputTryOut');
 			Route::get('input-tryout/datatables/{id_kelas_mp}', 'Guru\Penilaian\InputNilaiController@datatablesInputTryOut');
+			*/
 
-			Route::post('action-input-nilai/{mode}/{id}', 'Guru\Penilaian\InputNilaiController@actionInputNilai');*/
+			Route::post('action-input-nilai/{mode}/{id}', 'Guru\Penilaian\InputNilaiController@actionInputNilai');
 
 		});
 
@@ -118,6 +118,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('komplain-sarpras/bukualat-sarpras/edit/{id_buku_alat}/{id}', 'Guru\Sarpras\KomplainSarprasController@editBukualatKomplainSarpras');
 
 			Route::post('action-komplain-sarpras/{mode}/{id}', 'Guru\Sarpras\KomplainSarprasController@actionKomplainSarpras');
+		});
+
+		/** ==== MODUL GURU PIKET ==== **/
+		Route::group(array('prefix' => 'guru-piket'), function() {
+			// MENU Monitoring kelas kosong
+			Route::get('monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewMonitoringKelasKosong');
+			Route::get('monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesMonitoringKelasKosong');
 		});
 
 		/** ==== MODUL WALI KELAS ==== **/

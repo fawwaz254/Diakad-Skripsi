@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#siswa/admisi-siswa/generate')}}"><i class="material-icons">note_add</i><span>GENERATE ADMISI</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-kesiswaan/admisi-siswa/generate')}}"><i class="material-icons">note_add</i><span>GENERATE ADMISI</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -102,7 +102,7 @@
                                 <tr>
                                     <td style="width: 50%">Keterangan</td>
                                     <td style="width: 50%">
-                                        <textarea style="width: 100%; height: 250px" name="keterangan_admisi" id="keterangan_admisi"></textarea>
+                                        <textarea class="form-control" style="width: 100%; height: 250px" name="keterangan_admisi" id="keterangan_admisi"></textarea>
                                     </td>
                                 </tr>
                                 <tr>

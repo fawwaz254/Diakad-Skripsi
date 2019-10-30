@@ -91,7 +91,7 @@
                             </div>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <textarea id="simulasi" name="simulasi" cols="30" rows="5" class="form-control no-resize" aria-required="true" disabled style="background-color:#EEE;"></textarea>
+                                    <textarea id="simulasi" name="simulasi" cols="30" rows="5" class="form-control" aria-required="true" disabled style="background-color:#EEE;"></textarea>
                                 </div>
                             </div>
 

@@ -55,7 +55,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <textarea name="keterangan_penerimaan_syarat" cols="30" rows="5" class="form-control no-resize" required="true" aria-required="true">{{$penerimaan_syarat->keterangan_penerimaan_syarat}}</textarea>
+                                    <textarea name="keterangan_penerimaan_syarat" cols="30" rows="5" class="form-control" required="true" aria-required="true">{{$penerimaan_syarat->keterangan_penerimaan_syarat}}</textarea>
                                 </div>
                             </div>
                             <h2 class="card-inside-title">

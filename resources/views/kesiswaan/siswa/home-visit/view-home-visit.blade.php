@@ -77,7 +77,7 @@
 </div>
 @include('scriptjs')
 <script>
-    var modul_url                   = 'siswa';
+    var modul_url                   = 'data-kesiswaan';
     var datatable_belum_lengkap     = base_url + '/' + role_url + '/' + modul_url + '/' + 'home-visit/datatables/0';
     var datatable_sudah_lengkap     = base_url + '/' + role_url + '/' + modul_url + '/' + 'home-visit/datatables/1';
     var detail_url        = role_url + '#' + modul_url + '/' + 'home-visit/edit';

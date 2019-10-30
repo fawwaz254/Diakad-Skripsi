@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#siswa/admisi-siswa')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#data-kesiswaan/admisi-siswa')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -86,7 +86,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <a class="btn btn-block bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#siswa/admisi-siswa/generate/laporan')}}"><i class="material-icons">description</i><span>Laporan Admisi Per Kelas</span></a>
+                                        <a class="btn btn-block bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#data-kesiswaan/admisi-siswa/generate/laporan')}}"><i class="material-icons">description</i><span>Laporan Admisi Per Kelas</span></a>
                                     </td>
                                 </tr>
                             </table>

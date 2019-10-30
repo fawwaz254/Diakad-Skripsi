@@ -55,7 +55,7 @@ class AdmisiSiswaController extends BaseController
       else {
           return [
                     'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/admisi-siswa/view-detail/'.$input->nis_nama_siswa
+                    'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa
                 ];
       }
   	}
@@ -134,7 +134,7 @@ class AdmisiSiswaController extends BaseController
 
                 return [
                       'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
-                      'path' => 'siswa/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
+                      'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
                       'message' => 'Update Admisi successfully'
                   ];
               }              
@@ -201,7 +201,7 @@ class AdmisiSiswaController extends BaseController
 
                   return [
                           'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
-                          'path' => 'siswa/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
+                          'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
                           'message' => 'Insert Admisi successfully'
                       ];
                 }
@@ -381,7 +381,7 @@ class AdmisiSiswaController extends BaseController
           return [
                   'status' => 202, // SUCCESS AND LOAD CONTENT
                   'message' => 'Generate Admisi Berhasil',
-                  'path' => 'siswa/admisi-siswa/generate'
+                  'path' => 'data-kesiswaan/admisi-siswa/generate'
           ];
           
         } catch (\Exception $e) {
@@ -428,7 +428,7 @@ class AdmisiSiswaController extends BaseController
       else {
           return [
                     'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/admisi-siswa/view-laporan/'.$input->id_semester.'/'.$input->id_kelas
+                    'path' => 'data-kesiswaan/admisi-siswa/view-laporan/'.$input->id_semester.'/'.$input->id_kelas
                 ];
       }
     }

@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#siswa/tingkat-prestasi-siswa/add')}}"><i class="material-icons">note_add</i><span>Tambah Tingkat Prestasi</span></a>
+            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-kesiswaan/tingkat-prestasi-siswa/add')}}"><i class="material-icons">note_add</i><span>Tambah Tingkat Prestasi</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -32,7 +32,7 @@
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url       = 'siswa';
+    var modul_url       = 'data-kesiswaan';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'tingkat-prestasi-siswa/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'tingkat-prestasi-siswa/edit';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tingkat-prestasi-siswa/delete';

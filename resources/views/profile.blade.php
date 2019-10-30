@@ -7,7 +7,7 @@
             <div class="card">
                 <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/profile')}}">
                     {{csrf_field()}}
-                    <div class="header bg-green">
+                    <div class="header">
                         <h2>
                             EDIT PROFILE 
                         </h2>
@@ -47,8 +47,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <br>
-                                    <button class="btn btn-block bg-green waves-effect" type="submit">Save Profile</button>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 align-center">
+                                <button class="btn btn-block bg-teal waves-effect" type="submit">Save Profile</button>
                             </div>
                         </div>
                     </div>

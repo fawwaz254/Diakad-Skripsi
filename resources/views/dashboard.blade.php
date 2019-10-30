@@ -85,7 +85,14 @@
     }
 
     function loadURI(target_url, content) {
-        location.hash = target_url;
+        var original_title = location.hash;
+        var current_url = original_title.replace('#','');
+        
+        if(current_url == target_url){
+            loadContent(target_url);
+        }else{
+            location.hash = target_url;
+        }
     }
 
     function loadContent(target_url, content) {
