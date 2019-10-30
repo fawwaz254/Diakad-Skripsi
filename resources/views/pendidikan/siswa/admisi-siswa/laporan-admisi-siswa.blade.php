@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#siswa/admisi-siswa/generate')}}"><i class="material-icons">backspace</i><span>GENERATE ADMISI</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#data-kesiswaan/admisi-siswa/generate')}}"><i class="material-icons">backspace</i><span>GENERATE ADMISI</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -109,7 +109,7 @@
     var id_semester = {!! json_encode($id_semester) !!};
     var id_kelas    = {!! json_encode($id_kelas) !!};
 
-    var modul_url       = 'siswa';
+    var modul_url       = 'data-kesiswaan';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'admisi-siswa/datatables/' + id_semester + '/' + id_kelas ;
     var admisi_url      = role_url + '#' + modul_url + '/' + 'admisi-siswa/view-detail';
 

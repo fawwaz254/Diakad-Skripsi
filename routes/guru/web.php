@@ -120,6 +120,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('action-komplain-sarpras/{mode}/{id}', 'Guru\Sarpras\KomplainSarprasController@actionKomplainSarpras');
 		});
 
+		/** ==== MODUL GURU PIKET ==== **/
+		Route::group(array('prefix' => 'guru-piket'), function() {
+			// MENU Monitoring kelas kosong
+			Route::get('monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewMonitoringKelasKosong');
+			Route::get('monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesMonitoringKelasKosong');
+		});
+
 		/** ==== MODUL WALI KELAS ==== **/
 		Route::group(array('prefix' => 'wali-kelas'), function() {
 			// MENU Data Inventaris Kelas/Sarana

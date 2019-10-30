@@ -195,7 +195,7 @@ class PrestasiSiswaController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/prestasi-siswa',
+                    'path' => 'data-kesiswaan/prestasi-siswa',
                     'message' => 'Save Data Prestasi Siswa successfully'
                 ];
             }
@@ -219,7 +219,7 @@ class PrestasiSiswaController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/prestasi-siswa',
+                    'path' => 'data-kesiswaan/prestasi-siswa',
                     'message' => 'Save Data Prestasi Siswa successfully'
                 ];
             }

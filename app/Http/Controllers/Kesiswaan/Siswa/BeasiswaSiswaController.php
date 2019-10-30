@@ -150,7 +150,7 @@ class BeasiswaSiswaController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/beasiswa-siswa',
+                    'path' => 'data-kesiswaan/beasiswa-siswa',
                     'message' => 'Save Data Beasiswa Siswa successfully'
                 ];
             }
@@ -167,7 +167,7 @@ class BeasiswaSiswaController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/beasiswa-siswa',
+                    'path' => 'data-kesiswaan/beasiswa-siswa',
                     'message' => 'Save Data Beasiswa Siswa successfully'
                 ];
             }

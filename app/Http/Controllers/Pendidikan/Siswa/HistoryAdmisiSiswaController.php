@@ -51,7 +51,7 @@ class HistoryAdmisiSiswaController extends BaseController
       else {
       	return [
                     'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/histori-admisi-siswa/view-detail/'.$input->nis_nama_siswa
+                    'path' => 'data-kesiswaan/histori-admisi-siswa/view-detail/'.$input->nis_nama_siswa
                 ];
             }
         }

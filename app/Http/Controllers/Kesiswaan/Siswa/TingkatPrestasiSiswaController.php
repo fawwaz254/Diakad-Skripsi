@@ -103,7 +103,7 @@ class TingkatPrestasiSiswaController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/tingkat-prestasi-siswa',
+                    'path' => 'data-kesiswaan/tingkat-prestasi-siswa',
                     'message' => 'Save Data Tingkat Prestasi Siswa successfully'
                 ];
             }
@@ -116,7 +116,7 @@ class TingkatPrestasiSiswaController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'siswa/tingkat-prestasi-siswa',
+                    'path' => 'data-kesiswaan/tingkat-prestasi-siswa',
                     'message' => 'Save Data Tingkat Prestasi Siswa successfully'
                 ];
             }
