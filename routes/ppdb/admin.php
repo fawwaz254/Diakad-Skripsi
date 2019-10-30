@@ -91,14 +91,30 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		/** ==== MODUL REPORT ==== **/
 		Route::group(array('prefix' => 'report'), function() {
 			
-			// MENU Report Pembayaran
-			Route::get('report-pembayaran', 'PPDB\Report\ReportPembayaranController@viewReportPembayaran');
+			// MENU Report pendaftaran
+			Route::get('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@viewReportPendaftaran');
 
-			Route::post('report-pembayaran', 'PPDB\Report\ReportPembayaranController@findPembayaran');
+
+
+			Route::post('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@findPendaftaran');
 			/*Route::post('pembayaran-formulir/reset-voucher/{kode_voucher}', 'PPDB\Peserta\PembayaranFormulirController@deletePembayaranFormulir');*/
-			Route::get('report-pembayaran/{id_pembayaran}', 'PPDB\Report\ReportPembayaranController@showPembayaran');
-			Route::post('report-pembayaran/{id_pembayaran}/pembayaran', 'PPDB\Report\ReportPembayaranController@reportPembayaran');
+			Route::get('report-pendaftaran/{id_pendaftaran}', 'PPDB\Report\ReportPendaftaranController@showPendaftaran');
+			Route::post('report-pendaftaran/{id_pendaftaran}/pendaftaran', 'PPDB\Report\ReportPendaftaranController@reportPendaftaran');
 		});
+
+		/** ==== MODUL PENETAPAN ==== **/
+		Route::group(array('prefix' => 'penetapan'), function() {
+			
+			// MENU penetapan
+			Route::get('data-penetapan', 'PPDB\Penetapan\PenetapanController@viewPenetapan');
+			Route::get('data-penetapan/datatables', 'PPDB\Penetapan\PenetapanController@datatablesPenetapan');
+			Route::get('data-penetapan/add', 'PPDB\Penetapan\PenetapanController@addPenetapan');
+			Route::get('data-penetapan/edit/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapan');
+			Route::post('action-penetapan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapan');
+			
+		});
+
+
 
 		
 	});
