@@ -14,7 +14,7 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-penetapan/edit/'.$data_penetapan->id_penetapan)}}">
                         {{csrf_field()}}
 
-                        <!-- Mulai Isian untuk Tabel Penetapan -->
+                        <!-- Mulai Edit Isian untuk Tabel Penetapan -->
                         
                         <h2 class="card-inside-title">
                             Detail Info Penetapan
@@ -32,7 +32,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nomor_sk_penetapan" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_sk_penetapan" required="" aria-required="true" aria-invalid="true" value="{{$data_penetapan->nomor_sk_penetapan}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -40,7 +40,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_penetapan" required="" aria-required="true" aria-invalid="true" value="{{$tgl_penetapan}}">
+                                <input type="text" class="datepicker form-control" name="tgl_penetapan" required="" aria-required="true" aria-invalid="true" value="{{$data_penetapan->tgl_penetapan}}">
                             </div>
                         </div>
 
@@ -50,7 +50,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="periode" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="periode" required="" aria-required="true" aria-invalid="true" value="{{$data_penetapan->periode}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -59,12 +59,12 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="is_aktif">]
-                                    @if($data_penerimaan->is_aktif == 0)
+                                    @if($data_penetapan->is_aktif == 0)
                                         <option value="0" selected >Tidak Aktif</option>
                                     @else
                                         <option value="0">Tidak Aktif</option>
                                     @endif
-                                    @if($data_penerimaan->is_aktif == 1)
+                                    @if($data_penetapan->is_aktif == 1)
                                         <option value="1" selected >Aktif</option>
                                     @else
                                         <option value="1">Aktif</option>

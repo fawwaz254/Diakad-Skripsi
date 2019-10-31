@@ -111,6 +111,12 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('data-penetapan/add', 'PPDB\Penetapan\PenetapanController@addPenetapan');
 			Route::get('data-penetapan/edit/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapan');
 			Route::post('action-penetapan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapan');
+
+			// MENU PERSIDANGAN
+			Route::get('persidangan', 'PPDB\Penetapan\PersidanganController@viewPersidangan');
+			Route::get('persidangan/datatables', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
+
+
 			
 		});
 
