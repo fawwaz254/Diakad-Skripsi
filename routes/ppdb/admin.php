@@ -93,13 +93,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			
 			// MENU Report pendaftaran
 			Route::get('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@viewReportPendaftaran');
+			Route::get('report-pendaftaran/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesReportPendaftaran');
 
+			Route::get('report-pendaftaran/rekap/{id}', 'PPDB\Report\ReportPendaftaranController@rekapReportPendaftaran');
+			Route::get('report-pendaftaran/rekap/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesRekapReportPendaftaran');
 
-
-			Route::post('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@findPendaftaran');
-			/*Route::post('pembayaran-formulir/reset-voucher/{kode_voucher}', 'PPDB\Peserta\PembayaranFormulirController@deletePembayaranFormulir');*/
-			Route::get('report-pendaftaran/{id_pendaftaran}', 'PPDB\Report\ReportPendaftaranController@showPendaftaran');
-			Route::post('report-pendaftaran/{id_pendaftaran}/pendaftaran', 'PPDB\Report\ReportPendaftaranController@reportPendaftaran');
+			Route::get('report-pendaftaran/detail/{id}', 'PPDB\Report\ReportPendaftaranController@detailReportPendaftaran');
+			Route::get('report-pendaftaran/detail/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
 		});
 
 		/** ==== MODUL PENETAPAN ==== **/

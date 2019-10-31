@@ -97,5 +97,30 @@ class LibPenerimaan
 
         return $penerimaan;
     }
+
+    /** 
+     * Get data report penerimaan
+     * @param 
+     * @return Object penerimaan
+     */
+    static function fetchDataReportPendaftaran($auth_data)
+    {
+        /** get all data penerimaan */
+        $penerimaan = Penerimaan::select('id_penerimaan', 'tahun_penerimaan', 'id_jalur', 'nm_penerimaan', 'gelombang_penerimaan')
+                ->selectRaw("(SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan.id_penerimaan AND tgl_submit_form IS NOT NULL) AS jumlah_submit_form,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan.id_penerimaan AND tgl_proses_verifikasi IS NOT NULL AND status_verifikasi = 2) AS jumlah_antri_verifikasi,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan.id_penerimaan AND tgl_submit_verifikasi IS NOT NULL AND status_verifikasi = 3) AS jumlah_verifikasi_kembali,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan.id_penerimaan AND tgl_verifikasi_dokumen IS NOT NULL AND status_verifikasi = 1) AS jumlah_verifikasi,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru JOIN voucher ON voucher.kode_voucher = calon_siswa_baru.kode_voucher AND voucher.id_penerimaan = calon_siswa_baru.id_penerimaan WHERE calon_siswa_baru.id_penerimaan = penerimaan.id_penerimaan AND voucher.tgl_bayar IS NOT NULL) AS jumlah_bayar")
+                ->where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                ->orderBy('tahun_penerimaan', 'desc')
+                ->orderBy('nm_semester_penerimaan', 'asc')
+                ->orderBy('gelombang_penerimaan', 'asc')
+                ->orderBy('id_jalur', 'asc')
+                ->orderBy('nm_penerimaan', 'asc')
+                ->get();
+
+        return $penerimaan;
+    }
   
 }
