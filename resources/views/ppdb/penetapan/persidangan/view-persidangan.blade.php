@@ -1,14 +1,26 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penetapan/data-penetapan/add/')}}"><i class="material-icons">note_add</i><span>Tambah Penetapan</span></a></h2>
-    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
                     <div class="header bg-lime">
-                        <h2>DATA PENETAPAN</h2>
+                        <h2>JADWAL PERSIDANGAN</h2>
                     </div>
+                    <h2 class="card-inside-title">
+                            Tahun <small><b>* Tahun Penetapan</b></small>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="tahun_penetapan">
+                                @foreach($data_semester_tahun as $data)
+                                    <option value="{{$data->thn_akademik_semester}}">{{$data->thn_akademik_semester}}</option>
+                                @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        
+                        
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">

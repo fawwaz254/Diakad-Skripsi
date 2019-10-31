@@ -21,22 +21,20 @@ use DB;
 use Session;
 use Validator;
 
-class PenetapanController extends BaseController {
+class PersidanganController extends BaseController {
 
-    /**
-     * Instantiate a new PenerimaanController instance.
-     */
-    /*public function __construct()
-    {
-        setlocale(LC_ALL, 'id_ID.UTF8', 'id_ID.UTF-8', 'id_ID.8859-1', 'id_ID', 'IND.UTF8', 'IND.UTF-8', 'IND.8859-1', 'IND', 'Indonesian.UTF8', 'Indonesian.UTF-8', 'Indonesian.8859-1', 'Indonesian', 'Indonesia', 'id', 'ID', 'en_US.UTF8', 'en_US.UTF-8', 'en_US.8859-1', 'en_US', 'American', 'ENG', 'English');
-    }*/
-
-    public function viewPenetapan(Request $request) {
+    public function viewPersidangan(Request $request) {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $data_semester_tahun = LibDataAkademik::fetchDataTahunSemester($auth_data);
+        $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
+        //dd($penerimaan);
+        /*$grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
+            return $item->groupBy('nm_semester_penerimaan');
+        });; */
 
-    	return view('ppdb/penetapan/data-penetapan/view-penetapan',compact('auth_data'));
+    	return view('ppdb/penetapan/persidangan/view-persidangan',compact('auth_data','data_semester_tahun','penerimaan'));
     }
 
     public function addPenetapan(Request $request) {
