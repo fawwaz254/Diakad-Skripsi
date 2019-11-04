@@ -35,9 +35,19 @@ class PresensiHarian extends Model
 
     protected $guarded = [];
 
+    public function jadwal_hari(){
+        return $this->belongsTo('App\Models\JadwalHari', 'id_jadwal_hari');
+    }
 
+    public function siswa_entry(){
+        return $this->belongsTo('App\Models\Pengguna', 'id_siswa_entry', 'id_pengguna');
+    }
 
+    public function guru_entry(){
+        return $this->belongsTo('App\Models\Pengguna', 'id_guru_entry', 'id_pengguna');
+    }
 
-
-
+    public function convertDateFormat($label, $format){
+        return date_format(date_create($this->$label), $format);
+    }
 }

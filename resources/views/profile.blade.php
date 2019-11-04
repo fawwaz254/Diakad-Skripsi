@@ -48,8 +48,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 align-center">
-                                <button class="btn btn-block bg-teal waves-effect" type="submit">Save Profile</button>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-btn-submit waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </div>

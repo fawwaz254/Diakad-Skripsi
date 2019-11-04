@@ -82,9 +82,8 @@ class Guru extends Model
 
     protected $guarded = [];
 
-
-
-
-
+    public function pengguna(){
+        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
+    }
 
 }

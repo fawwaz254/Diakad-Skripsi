@@ -28,7 +28,7 @@ class MonitoringKelasKosongController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('guru/guru-piket/monitoring-kelas-kosong/view-monitoring-kelas-kosong',compact('auth_data', 'wali_kelas'));
+    	return view('guru/guru-piket/monitoring-kelas-kosong/view-monitoring-kelas-kosong',compact('auth_data'));
 
     }
 
