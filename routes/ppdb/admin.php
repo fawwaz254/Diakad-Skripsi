@@ -87,6 +87,41 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
 		});
+
+		/** ==== MODUL REPORT ==== **/
+		Route::group(array('prefix' => 'report'), function() {
+			
+			// MENU Report pendaftaran
+			Route::get('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@viewReportPendaftaran');
+			Route::get('report-pendaftaran/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesReportPendaftaran');
+
+			Route::get('report-pendaftaran/rekap/{id}', 'PPDB\Report\ReportPendaftaranController@rekapReportPendaftaran');
+			Route::get('report-pendaftaran/rekap/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesRekapReportPendaftaran');
+
+			Route::get('report-pendaftaran/detail/{id}', 'PPDB\Report\ReportPendaftaranController@detailReportPendaftaran');
+			Route::get('report-pendaftaran/detail/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
+		});
+
+		/** ==== MODUL PENETAPAN ==== **/
+		Route::group(array('prefix' => 'penetapan'), function() {
+			
+			// MENU penetapan
+			Route::get('data-penetapan', 'PPDB\Penetapan\PenetapanController@viewPenetapan');
+			Route::get('data-penetapan/datatables', 'PPDB\Penetapan\PenetapanController@datatablesPenetapan');
+			Route::get('data-penetapan/add', 'PPDB\Penetapan\PenetapanController@addPenetapan');
+			Route::get('data-penetapan/edit/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapan');
+			Route::post('action-penetapan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapan');
+
+			// MENU PERSIDANGAN
+			Route::get('persidangan', 'PPDB\Penetapan\PersidanganController@viewPersidangan');
+			Route::get('persidangan/datatables', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
+
+
+			
+		});
+
+
+
 		
 	});
   
