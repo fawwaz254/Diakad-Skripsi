@@ -36,7 +36,8 @@ class MonitoringKelasKosongController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now();
+        // $now = Carbon::now();
+        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2019-11-06 06:31:00');
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
@@ -49,12 +50,12 @@ class MonitoringKelasKosongController extends BaseController{
                                     JOIN kelas k ON k.id_kelas = kmp.id_kelas
                                     JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
                                     JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
+                                    JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                         AND DATE(pmp.tgl_entry) = DATE(NOW()) 
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
                                     WHERE jkm.id_jadwal_hari = '.$hari.' 
-                                    AND HOUR("'.$now.'") BETWEEN jj.jam_mulai and jj.jam_selesai
-                                    AND MINUTE("'.$now.'") BETWEEN jj.menit_mulai and jj.menit_selesai');
+                                    AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))');
                                     
         return Datatables::of($list_data)
                 ->addColumn('status', function($item){
