@@ -12,7 +12,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header bg-lime">
-                        <h2>PEMBUKAAN VOUCHER - TAMBAH TARIF</h2>
+                        <h2>PEMBUKAAN NOMOR PENDAFTARAN - TAMBAH TARIF</h2>
                     </div>
 
                     <div class="body">

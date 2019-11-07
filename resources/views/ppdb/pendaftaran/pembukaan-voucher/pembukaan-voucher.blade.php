@@ -13,7 +13,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header bg-lime">
-                        <h2>PEMBUKAAN VOUCHER - DAFTAR TARIF & VOUCHER</h2>
+                        <h2>PEMBUKAAN NOMOR PENDAFTARAN - DAFTAR TARIF & NOMOR PEMDAFTARAN</h2>
                     </div>
 
                     <div class="body" style="padding-bottom:50px;">
@@ -72,7 +72,7 @@
                         <h2><a class="btn bg-green waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/pembukaan-voucher/'.$penerimaan->id_penerimaan.'/add')}}"><i class="material-icons">note_add</i><span>Tambah Tarif</span></a></h2>
 
                         <!-- separator -->
-                        <br><br><h4>Voucher</h4>
+                        <br><br><h4>Nomor Pendaftaran</h4>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="tabel-voucher">
                                 <thead>
@@ -109,7 +109,7 @@
                             </table>
                         </div>
 
-                        <h2><a class="btn bg-green waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/pembukaan-voucher/'.$penerimaan->id_penerimaan.'/generate-voucher')}}"><i class="material-icons">note_add</i><span>Tambah Voucher</span></a></h2>
+                        <h2><a class="btn bg-green waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/pembukaan-voucher/'.$penerimaan->id_penerimaan.'/generate-voucher')}}"><i class="material-icons">note_add</i><span>Tambah Nomor Pendaftaran</span></a></h2>
                     </div>
                 </div>
             </div>

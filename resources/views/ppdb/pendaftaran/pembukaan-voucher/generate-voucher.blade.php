@@ -12,7 +12,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header bg-lime">
-                        <h2>PEMBUKAAN VOUCHER - TAMBAH TARIF</h2>
+                        <h2>PEMBUKAAN NOMOR PENDAFTARAN - TAMBAH TARIF</h2>
                     </div>
 
                     <div class="body">
@@ -22,7 +22,7 @@
                             <input name="id_semester" type="hidden" value="{{$penerimaan->id_semester}}">
 
                             <div class="card-inside-title">
-                                Tarif Voucher
+                                Tarif Nomor Pendaftaran
                             </div>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -36,7 +36,7 @@
                             </div>
 
                             <div class="card-inside-title">
-                                Kode Prefix Voucher
+                                Kode Prefix Nomor Pendaftaran
                                 <small class="form-text text-muted">
                                     *prefix awal kode voucher, misal: ABC001 maka prefix kode voucher:ABC
                                 </small>
@@ -48,7 +48,7 @@
                             </div>
                             
                             <div class="card-inside-title">
-                                Nomor Seri Voucher Awal
+                                Nomor Seri Nomor Pendaftaran Awal
                                 <small class="form-text text-muted">
                                     *nomor seri awal kode voucher, misal: ABC001 nomor awal: 1
                                 </small>
@@ -60,7 +60,7 @@
                             </div>
 
                             <div class="card-inside-title">
-                                Banyak Voucher
+                                Banyak Nomor Pendaftaran
                                 <small class="form-text text-muted">
                                     *berapa banyak voucher yang ingin di generate (minimal 1, maksimal 999)
                                 </small>
@@ -84,7 +84,7 @@
                             </div>
 
                             <div class="card-inside-title">
-                                Simulasi Kode Voucher
+                                Simulasi Kode Nomor Pendaftaran
                                 <small class="form-text text-muted">
                                     *hasil simulasi voucher yang akan di generate sistem
                                 </small>
@@ -100,7 +100,7 @@
                                     <a class="btn bg-blue btn-block waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/pembukaan-voucher/'.$penerimaan->id_penerimaan)}}"><i class="material-icons">cancel</i><span>Cancel</span></a>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Generate Voucher</span></button>
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Generate Nomor Pendaftaran</span></button>
                                 </div>
                             </div>
                         </form>

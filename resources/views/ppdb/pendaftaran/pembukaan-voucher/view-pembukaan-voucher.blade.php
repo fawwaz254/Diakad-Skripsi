@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header bg-lime">
-                        <h2>PEMBUKAAN VOUCHER</h2>
+                        <h2>PEMBUKAAN NOMOR PENDAFTARAN</h2>
                     </div>
                     <div class="body">
                         <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/post-view-pembukaan-voucher')}}">
@@ -24,7 +24,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary waves-effect" ><i class="material-icons">save</i><span>Edit Pembukaan Voucher</span></button>
+                            <button type="submit" class="btn btn-primary waves-effect" ><i class="material-icons">save</i><span>Edit Pembukaan Nomor Pendaftaran</span></button>
                         </form>
                     </div>
                 </div>
