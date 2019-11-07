@@ -96,10 +96,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('report-pendaftaran/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesReportPendaftaran');
 
 			Route::get('report-pendaftaran/rekap/{id}', 'PPDB\Report\ReportPendaftaranController@rekapReportPendaftaran');
-			Route::get('report-pendaftaran/rekap/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesRekapReportPendaftaran');
 
 			Route::get('report-pendaftaran/detail/{id}', 'PPDB\Report\ReportPendaftaranController@detailReportPendaftaran');
-			Route::get('report-pendaftaran/detail/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
+			Route::get('report-pendaftaran/detail/datatables/{id}', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
 		});
 
 		/** ==== MODUL PENETAPAN ==== **/

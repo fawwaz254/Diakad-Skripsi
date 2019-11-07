@@ -28,7 +28,9 @@ class ReportPendaftaranController extends Controller
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
-        return view('ppdb/report/registrasi/view-report-pendaftaran',compact('auth_data'));
+        $mode = 'view';
+
+        return view('ppdb/report/registrasi/view-report-pendaftaran',compact('auth_data', 'mode'));
     }
 
     public function datatablesReportPendaftaran(Request $request) {
@@ -53,17 +55,11 @@ class ReportPendaftaranController extends Controller
 
         $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
-        return view('ppdb/report/registrasi/rekap-report-pendaftaran',compact('auth_data','data_penerimaan'));
-    }
+        $data_rekap = LibPenerimaan::fetchDataRekapPendaftaran($auth_data, $id);
 
-    public function datatablesRekapReportPendaftaran(Request $request) {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        //$list_data = LibPenerimaan::fetchDataReportPendaftaran($auth_data);   
+        $mode = 'rekap'; 
 
-        return Datatables::of($list_data)
-                
-                ->make(true);
+        return view('ppdb/report/registrasi/view-report-pendaftaran',compact('auth_data','data_penerimaan', 'data_rekap', 'mode'));
     }
 
     public function detailReportPendaftaran($id, Request $request) {
@@ -73,16 +69,20 @@ class ReportPendaftaranController extends Controller
 
         $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
-        return view('ppdb/report/registrasi/detail-report-pendaftaran',compact('auth_data','data_penerimaan'));
+        $data_jurusan = LibPenerimaan::fetchDataJurusanDetailPendaftaran($auth_data, $id);
+
+        $mode = 'detail';
+
+        return view('ppdb/report/registrasi/view-report-pendaftaran',compact('auth_data','data_penerimaan', 'data_jurusan', 'mode'));
     }
 
-    public function datatablesDetailReportPendaftaran(Request $request) {
+    public function datatablesDetailReportPendaftaran(Request $request, $id) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        //$list_data = LibPenerimaan::fetchDataReportPendaftaran($auth_data);   
+        $list_data = LibPenerimaan::fetchDataDetailPendaftaran($auth_data, $id);   
 
         return Datatables::of($list_data)
-                
+
                 ->make(true);
     }
 
