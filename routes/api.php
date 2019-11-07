@@ -43,5 +43,9 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function()
 			Route::post('get', 'Apiv1Controller@actionGetPelanggaranSiswa');
 			Route::post('{mode}/submit', 'Apiv1Controller@actionPelanggaranSiswa');
 		});
+
+		Route::group(array('prefix' => 'monitoring-kelas-kosong'), function() {
+			Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
+		});
 	});
 });

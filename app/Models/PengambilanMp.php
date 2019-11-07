@@ -42,9 +42,7 @@ class PengambilanMp extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function nilai_mp(){
+        return $this->hasMany('App\Models\NilaiMp', 'id_pengambilan_mp', 'id_pengambilan_mp');
+    }
 }
