@@ -36,8 +36,7 @@ class MonitoringKelasKosongController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $now = Carbon::now();
-        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2019-11-06 06:31:00');
+        $now = Carbon::now();
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;

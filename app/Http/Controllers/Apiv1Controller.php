@@ -103,6 +103,40 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
+    public function actionGetMonitoringKelasKosong(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $now = Carbon::now();
+        $tgl = $now->toDateString();
+        $hari = $now->dayOfWeekIso;
+        $jam = $now->hour;
+        $menit = $now->minute;
+
+        $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp
+                                    FROM jadwal_kelas_mp jkm
+                                    JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
+                                    JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
+                                    JOIN kelas k ON k.id_kelas = kmp.id_kelas
+                                    JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
+                                    JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
+                                    JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
+                                    LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
+                                        AND DATE(pmp.tgl_entry) = DATE(NOW()) 
+                                        AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
+                                    WHERE jkm.id_jadwal_hari = '.$hari.' 
+                                    AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))');
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kelas_kosong' => $data_kelas_kosong
+            )
+        ]);
+    }
+
     public function actionGetJadwal(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
