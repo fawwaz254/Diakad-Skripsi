@@ -137,9 +137,27 @@ class LibPenerimaan
                 ->selectRaw("(SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_1 = jurusan.id_jurusan) AS jumlah_p1,
                                 (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_2 = jurusan.id_jurusan) AS jumlah_p2,
                                 (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_3 = jurusan.id_jurusan) AS jumlah_p3,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan_jurusan.id_penerimaan AND penerimaan_jurusan.id_jurusan = jurusan.id_jurusan AND tgl_proses_verifikasi IS NOT NULL AND status_verifikasi = 2) AS jumlah_antri_verifikasi,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan_jurusan.id_penerimaan AND penerimaan_jurusan.id_jurusan = jurusan.id_jurusan AND tgl_verifikasi_dokumen IS NOT NULL AND status_verifikasi = 1) AS jumlah_verifikasi,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru JOIN voucher ON voucher.kode_voucher = calon_siswa_baru.kode_voucher AND voucher.id_penerimaan = calon_siswa_baru.id_penerimaan WHERE calon_siswa_baru.id_penerimaan = penerimaan_jurusan.id_penerimaan AND penerimaan_jurusan.id_jurusan = jurusan.id_jurusan AND voucher.tgl_bayar IS NOT NULL) AS jumlah_bayar")
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_1 = jurusan.id_jurusan AND tgl_submit_form IS NOT NULL) AS jumlah_submit_form,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_1 = jurusan.id_jurusan AND tgl_proses_verifikasi IS NOT NULL AND status_verifikasi = 2) AS jumlah_antri_verifikasi,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_1 = jurusan.id_jurusan AND tgl_verifikasi_dokumen IS NOT NULL AND status_verifikasi = 1) AS jumlah_verifikasi,
+                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru JOIN voucher ON voucher.kode_voucher = calon_siswa_baru.kode_voucher AND voucher.id_penerimaan = calon_siswa_baru.id_penerimaan WHERE calon_siswa_baru.id_pilihan_jurusan_1 = jurusan.id_jurusan AND voucher.tgl_bayar IS NOT NULL) AS jumlah_bayar")
+                ->join('penerimaan_jurusan','penerimaan_jurusan.id_jurusan','=','jurusan.id_jurusan')
+                ->where('penerimaan_jurusan.id_penerimaan','=',$id_penerimaan)
+                ->orderBy('jurusan.nm_jurusan', 'asc')
+                ->get();
+
+        return $jurusan;
+    }
+
+    /** 
+     * Get data jurusan detail pendaftaran
+     * @param String id_penerimaan
+     * @return Object jurusan
+     */
+    static function fetchDataJurusanDetailPendaftaran($auth_data, $id_penerimaan)
+    {
+        /** get all data penerimaan */
+        $jurusan = Jurusan::select('jurusan.id_jurusan', 'jurusan.nm_jurusan')
                 ->join('penerimaan_jurusan','penerimaan_jurusan.id_jurusan','=','jurusan.id_jurusan')
                 ->where('penerimaan_jurusan.id_penerimaan','=',$id_penerimaan)
                 ->orderBy('jurusan.nm_jurusan', 'asc')
@@ -153,20 +171,15 @@ class LibPenerimaan
      * @param String id_penerimaan
      * @return Object calon_siswa_baru
      */
-    static function fetchDataDetailPendaftaran($auth_data, $id_penerimaan)
+    static function fetchDataDetailPendaftaran($auth_data, $id_jurusan)
     {
         /** get all data penerimaan */
-        $calon_siswa_baru = CalonSiswaBaru::select('jurusan.id_jurusan', 'jurusan.nm_jurusan')
-                ->selectRaw("(SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_1 = jurusan.id_jurusan) AS jumlah_p1,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_2 = jurusan.id_jurusan) AS jumlah_p2,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_pilihan_jurusan_3 = jurusan.id_jurusan) AS jumlah_p3,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan_jurusan.id_penerimaan AND penerimaan_jurusan.id_jurusan = jurusan.id_jurusan AND tgl_proses_verifikasi IS NOT NULL AND status_verifikasi = 2) AS jumlah_antri_verifikasi,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru WHERE calon_siswa_baru.id_penerimaan = penerimaan_jurusan.id_penerimaan AND penerimaan_jurusan.id_jurusan = jurusan.id_jurusan AND tgl_verifikasi_dokumen IS NOT NULL AND status_verifikasi = 1) AS jumlah_verifikasi,
-                                (SELECT COUNT(id_c_siswa) FROM calon_siswa_baru JOIN voucher ON voucher.kode_voucher = calon_siswa_baru.kode_voucher AND voucher.id_penerimaan = calon_siswa_baru.id_penerimaan WHERE calon_siswa_baru.id_penerimaan = penerimaan_jurusan.id_penerimaan AND penerimaan_jurusan.id_jurusan = jurusan.id_jurusan AND voucher.tgl_bayar IS NOT NULL) AS jumlah_bayar")
-                ->join('penerimaan_jurusan','penerimaan_jurusan.id_jurusan','=','jurusan.id_jurusan')
-                ->where('penerimaan_jurusan.id_penerimaan','=',$id_penerimaan)
-                ->orderBy('jurusan.nm_jurusan', 'asc')
-                ->get();
+        $calon_siswa_baru = CalonSiswaBaru::select('calon_siswa_baru.id_c_siswa', 'jurusan.id_jurusan', 'calon_siswa_baru.nomor_ujian', 'calon_siswa_baru.kode_voucher', 'calon_siswa_baru.nm_c_siswa', 'calon_siswa_baru.nomor_hp', 'calon_siswa_sekolah.nm_sekolah_asal', 'calon_siswa_ortu.nm_ayah', 'calon_siswa_ortu.nm_ibu', 'calon_siswa_ortu.nomor_telp_ortu', 'calon_siswa_ortu.nomor_hp_ortu')
+                ->join('jurusan','jurusan.id_jurusan','=','calon_siswa_baru.id_pilihan_jurusan_1')
+                ->join('calon_siswa_sekolah','calon_siswa_sekolah.id_c_siswa','=','calon_siswa_baru.id_c_siswa')
+                ->join('calon_siswa_ortu','calon_siswa_ortu.id_c_siswa','=','calon_siswa_baru.id_c_siswa')
+                ->where('calon_siswa_baru.id_pilihan_jurusan_1','=',$id_jurusan)
+                ->orderBy('calon_siswa_baru.nm_c_siswa', 'asc');
 
         return $calon_siswa_baru;
     }
