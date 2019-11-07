@@ -9,6 +9,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\KomponenMp as KomponenMp;
 use App\Models\NilaiMp as NilaiMp;
+use App\Models\PengambilanMp;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -140,6 +141,15 @@ class KomponenNilaiController extends BaseController{
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
+            if($pengambilan_mp = PengambilanMp::with('nilai_mp')->where('id_kelas_mp', $input->id_kelas_mp)->first()){
+                if($check_nilai_mp = $pengambilan_mp->nilai_mp->first()){
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Failed To Save Komponen Nilai (Nilai mata pelajaran sudah diinput)!'
+                    ];
+                }
+            }
+
             // ACTION ADD
             if($mode == 'add') {
                 $komponenMp = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->where('urutan_komponen_mp','=',$input->urutan_komponen_mp)->first();
@@ -151,6 +161,16 @@ class KomponenNilaiController extends BaseController{
                     ];
                 }
                 else{
+                    $jumlah_total_persentase_komponen = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->sum('persentase_komponen_mp');
+                    $jumlah_total_persentase_komponen += $input->persentase_komponen_mp;
+
+                    if($jumlah_total_persentase_komponen > 100){
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Failed To Save Komponen Nilai (Persentase lebih besar dari 100%)!'
+                        ];
+                    }
+
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                     
                     $komponenMp                             = new KomponenMp;
@@ -170,7 +190,7 @@ class KomponenNilaiController extends BaseController{
                 }
             }
             elseif($mode == 'edit') {
-                $komponenMp = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->where('urutan_komponen_mp','=',$input->urutan_komponen_mp)->first();
+                $komponenMp = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->where('urutan_komponen_mp','=',$input->urutan_komponen_mp)->where('id_komponen_mp', '<>', $id)->first();
 
                 if($komponenMp){
                     return [
@@ -179,6 +199,15 @@ class KomponenNilaiController extends BaseController{
                     ];
                 }
                 else{
+                    $jumlah_total_persentase_komponen = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->where('id_komponen_mp', '<>', $id)->sum('persentase_komponen_mp');
+                    $jumlah_total_persentase_komponen += $input->persentase_komponen_mp;
+
+                    if($jumlah_total_persentase_komponen > 100){
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Failed To Save Komponen Nilai (Persentase lebih besar dari 100%)!'
+                        ];
+                    }
                     // make object to find id
                     $komponenMp                             = KomponenMp::find($id);
                     $komponenMp->nm_komponen_mp             = $input->nm_komponen_mp;
