@@ -109,7 +109,7 @@ class LibGuru
                     ->first();
         }
         else {
-            $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'semester.tahun_ajaran', 'semester.nm_semester', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.jam_mulai', 'jadwal_jam.menit_mulai', 'jadwal_jam.jam_selesai', 'jadwal_jam.menit_selesai', 'kelas.nm_kelas', 'ruangan.nm_ruangan', 'pengampu_mp.pjmp_pengampu_mp')
+            $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'semester.tahun_ajaran', 'semester.nm_semester', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'jadwal_hari.nm_jadwal_hari', 'jj.jam_mulai', 'jj.menit_mulai', 'jjs.jam_selesai', 'jjs.menit_selesai', 'kelas.nm_kelas', 'ruangan.nm_ruangan', 'pengampu_mp.pjmp_pengampu_mp')
                     ->join('pengampu_mp','pengampu_mp.id_guru','=','guru.id_guru')
                     ->join('kelas_mp','kelas_mp.id_kelas_mp','=','pengampu_mp.id_kelas_mp')
                     ->join('semester','semester.id_semester','=','kelas_mp.id_semester')
@@ -118,7 +118,8 @@ class LibGuru
                     ->join('jadwal_kelas_mp','jadwal_kelas_mp.id_kelas_mp','=','kelas_mp.id_kelas_mp')
                     ->join('ruangan','ruangan.id_ruangan','=','jadwal_kelas_mp.id_ruangan')
                     ->join('jadwal_hari','jadwal_hari.id_jadwal_hari','=','jadwal_kelas_mp.id_jadwal_hari')
-                    ->join('jadwal_jam','jadwal_jam.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam')
+                    ->join('jadwal_jam AS jj','jj.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam')
+                    ->join('jadwal_jam AS jjs','jjs.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam_selesai')
                     ->whereNull('pengampu_mp.deleted_at')
                     ->whereNull('kelas_mp.deleted_at')
                     ->whereNull('semester.deleted_at')
@@ -127,7 +128,8 @@ class LibGuru
                     ->whereNull('jadwal_kelas_mp.deleted_at')
                     ->whereNull('ruangan.deleted_at')
                     ->whereNull('jadwal_hari.deleted_at')
-                    ->whereNull('jadwal_jam.deleted_at')
+                    ->whereNull('jj.deleted_at')
+                    ->whereNull('jjs.deleted_at')
                     ->where('pengampu_mp.id_guru','=',$id_guru);
 
             if (! empty($id_kelas_mp)) {
@@ -141,8 +143,8 @@ class LibGuru
             elseif (! empty($id_semester)) {
                 $jadwalKBM = $jadwalKBM->where('kelas_mp.id_semester','=',$id_semester)
                             ->orderBy('jadwal_hari.kode_jadwal_hari', 'asc')
-                            ->orderBy('jadwal_jam.jam_mulai', 'asc')
-                            ->orderBy('jadwal_jam.menit_mulai', 'asc')
+                            ->orderBy('jj.jam_mulai', 'asc')
+                            ->orderBy('jj.menit_mulai', 'asc')
                             ->orderBy('kelas.nm_kelas', 'asc')
                             ->orderBy('kelas.tingkat', 'asc')
                             ->get();
@@ -151,8 +153,8 @@ class LibGuru
                 $jadwalKBM = $jadwalKBM->orderBy('kelas.nm_kelas', 'asc')
                             ->orderBy('kelas.tingkat', 'asc')
                             ->orderBy('jadwal_hari.kode_jadwal_hari', 'asc')
-                            ->orderBy('jadwal_jam.jam_mulai', 'asc')
-                            ->orderBy('jadwal_jam.menit_mulai', 'asc')
+                            ->orderBy('jj.jam_mulai', 'asc')
+                            ->orderBy('jj.menit_mulai', 'asc')
                             ->orderBy('semester.thn_akademik_semester', 'desc')
                             ->orderBy('semester.nm_semester', 'desc')
                             ->get();

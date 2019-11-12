@@ -47,8 +47,18 @@
                                         <td>{{++$no}}</td>
                                         <td>{{$siswa->nis_siswa}} - {{$siswa->nm_pengguna}}</td>
                                         @foreach($list_data as $nilai)
+                                            @if($siswa->nilai_mp->firstWhere('id_komponen_mp', $nilai->id_komponen_mp))
+                                                @php
+                                                    $nilai_mp_komponen = $siswa->nilai_mp->firstWhere('id_komponen_mp', $nilai->id_komponen_mp);
+                                                    $nilai_komponen = $nilai_mp_komponen->besar_nilai_mp;
+                                                @endphp
+                                            @else
+                                                @php
+                                                    $nilai_komponen = 0;
+                                                @endphp
+                                            @endif
                                             <td>
-                                                <input type="text" name="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" style="width: 50%;  margin:0px auto;">
+                                                <input type="text" name="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" value="{{$nilai_komponen}}" id="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" style="width: 50%;  margin:0px auto;">
                                             </td>
                                         @endforeach
                                         <td>

@@ -105,7 +105,7 @@ responsive: true,
 
     primary_table_belum.on( 'draw', function () {
         primary_table_belum.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * 10;
+            var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
@@ -141,7 +141,7 @@ responsive: true,
 
     primary_table_sudah.on( 'draw', function () {
         primary_table_sudah.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * 10;
+            var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();

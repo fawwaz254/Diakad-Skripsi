@@ -207,7 +207,7 @@
 
     primary_table_beasiswa.on( 'draw', function () {
         primary_table_beasiswa.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * 10;
+            var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
@@ -236,7 +236,7 @@
 
     primary_table_prestasi.on( 'draw', function () {
         primary_table_prestasi.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * 10;
+            var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
@@ -260,7 +260,7 @@
 
     primary_table_ekskul.on( 'draw', function () {
         primary_table_ekskul.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * 10;
+            var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();

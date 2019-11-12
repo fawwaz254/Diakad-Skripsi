@@ -78,6 +78,7 @@ class InputNilaiController extends BaseController
 
         $jumlah_komponen = KomponenMp::select('komponen_mp.persentase_komponen_mp')->where('komponen_mp.id_kelas_mp','=',$id_kelas_mp)->sum('komponen_mp.persentase_komponen_mp');
         $list_siswa = PengambilanMp::select('siswa.nis_siswa','pengguna.nm_pengguna','pengambilan_mp.nilai_angka','pengambilan_mp.nilai_huruf','siswa.id_siswa','pengambilan_mp.id_pengambilan_mp')
+            ->with('nilai_mp')
             ->join('siswa','siswa.id_siswa','=','pengambilan_mp.id_siswa')
             ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
             ->where('pengambilan_mp.id_kelas_mp','=',$id_kelas_mp)->get();
@@ -143,7 +144,8 @@ class InputNilaiController extends BaseController
                         foreach($list_data as $dataKomponen => $data){
                             $nameInput = 'nilai'.$data->id_komponen_mp.'-'.$siswa->id_siswa;                    
                             $nilaiCount = ($input->$nameInput*($data->persentase_komponen_mp/100));
-                            $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]=$nilaiCount;
+                            $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]['raw']=$input->$nameInput;
+                            $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]['partial']=$nilaiCount;
 
                         }
 
@@ -156,8 +158,8 @@ class InputNilaiController extends BaseController
                                 ->first();
                             if($pengambilanMp){
                                 if($pengambilanMp->nilai_angka == null){
-                                    
-                                    foreach ($nilai_akhir_final['nilai_angka'.$idSiswa] as $key => $value) {
+                                    $nilai_angka = 0;
+                                    foreach ($nilai_akhir_final['nilai_angka'.$idSiswa] as $key => $item) {
                                         $nameInput                              = 'nilai'.$key.'-'.$idSiswa;                    
                                         $nilaiMp                                = new NilaiMp;
                                         $nilaiMp->id_nilai_mp                   = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -166,17 +168,17 @@ class InputNilaiController extends BaseController
                                         if($input->$nameInput == null){
                                             $nilaiMp->besar_nilai_mp    = 0;
                                         }else{
-                                            $nilaiMp->besar_nilai_mp            = $value;
+                                            $nilaiMp->besar_nilai_mp            = $item['raw'];
+                                            $nilai_angka                        = $nilai_angka + $item['partial'];
                                         }
                                         $nilaiMp->created_by                    = $input->auth_data->pengguna->id_pengguna;
                                         $nilaiMp->created_at                    = $now;
                                         $nilaiMp->save();
                                     }
-                                    $nilaiMp                                    = NilaiMp::select('besar_nilai_mp')->where('id_pengambilan_mp','=',$pengambilanMp->id_pengambilan_mp)->sum('besar_nilai_mp');
                                     $nilai_huruf = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
                                         ->where('peraturan_nilai.is_mata_pelajaran','=','1')
-                                        ->where('peraturan_nilai.nilai_min_peraturan_nilai','<',$nilaiMp)
-                                        ->where('peraturan_nilai.nilai_max_peraturan_nilai','>',$nilaiMp)
+                                        ->where('peraturan_nilai.nilai_min_peraturan_nilai','<',$nilai_angka)
+                                        ->where('peraturan_nilai.nilai_max_peraturan_nilai','>',$nilai_angka)
                                         ->first();
                                     if($nilai_huruf){
                                         $nilai_huruf = $nilai_huruf['nm_standar_nilai'];
@@ -184,7 +186,7 @@ class InputNilaiController extends BaseController
                                         $nilai_huruf = "-";
                                     }
                                     $nilai_pengambilanMp                        = PengambilanMp::find($siswa->id_pengambilan_mp);
-                                    $nilai_pengambilanMp->nilai_angka           = $nilaiMp;
+                                    $nilai_pengambilanMp->nilai_angka           = $nilai_angka;
                                     $nilai_pengambilanMp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                     $nilai_pengambilanMp->updated_at            = $now;
                                     $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
@@ -192,20 +194,36 @@ class InputNilaiController extends BaseController
                                     
                                 }
                                 else{
-
-                                    foreach ($nilai_akhir_final['nilai_angka'.$idSiswa] as $key => $value){
+                                    $nilai_angka = 0;
+                                    foreach ($nilai_akhir_final['nilai_angka'.$idSiswa] as $key => $item){
                                         $nameInput                              = 'nilai'.$key.'-'.$idSiswa;                    
                                         $nilaiMp                                = NilaiMp::where('id_pengambilan_mp','=',$pengambilanMp->id_pengambilan_mp)->where('id_komponen_mp','=',$key)->first();
-                                        $nilaiMp->besar_nilai_mp                = $value;
+                                        $nilaiMp->id_komponen_mp                = $key;
+                                        if($input->$nameInput == null){
+                                            $nilaiMp->besar_nilai_mp    = 0;
+                                        }else{
+                                            $nilaiMp->besar_nilai_mp            = $item['raw'];
+                                            $nilai_angka                        = $nilai_angka + $item['partial'];
+                                        }
                                         $nilaiMp->updated_by                    = $input->auth_data->pengguna->id_pengguna;
                                         $nilaiMp->updated_at                    = $now;
                                         $nilaiMp->save();
                                     }
-                                    $nilaiMp                                    = NilaiMp::select('besar_nilai_mp')->where('id_pengambilan_mp','=',$pengambilanMp->id_pengambilan_mp)->sum('besar_nilai_mp');
+                                    $nilai_huruf = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
+                                        ->where('peraturan_nilai.is_mata_pelajaran','=','1')
+                                        ->where('peraturan_nilai.nilai_min_peraturan_nilai','<',$nilai_angka)
+                                        ->where('peraturan_nilai.nilai_max_peraturan_nilai','>',$nilai_angka)
+                                        ->first();
+                                    if($nilai_huruf){
+                                        $nilai_huruf = $nilai_huruf['nm_standar_nilai'];
+                                    }else{
+                                        $nilai_huruf = "-";
+                                    }
                                     $nilai_pengambilanMp                        = PengambilanMp::find($siswa->id_pengambilan_mp);
-                                    $nilai_pengambilanMp->nilai_angka           = $nilaiMp;
+                                    $nilai_pengambilanMp->nilai_angka           = $nilai_angka;
                                     $nilai_pengambilanMp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                                     $nilai_pengambilanMp->updated_at            = $now;
+                                    $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                     $nilai_pengambilanMp->save();
 
                                 }

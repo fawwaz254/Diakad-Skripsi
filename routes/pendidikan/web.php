@@ -154,74 +154,74 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('data-siswa/view-detail-data-siswa/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\DataSiswaController@viewDetailDataSiswa');
 			Route::get('data-siswa/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\DataSiswaController@datatablesDataSiswa');
 
-			//MENU UPDATE FOTO
-			Route::get('update-foto', 'Pendidikan\Siswa\UpdateFotoController@viewUpdateFoto');
-			Route::post('post-view-update-foto', 'Pendidikan\Siswa\UpdateFotoController@actionViewUpdateFoto');
-			Route::get('update-foto/view-detail-update-foto/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewDetailUpdateFoto');
-			Route::get('update-foto/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@datatablesUpdateFoto');
-			Route::get('update-foto/upload/{id_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewUpload');
-			Route::post('action-update-foto/{mode}/{id}', 'Pendidikan\Siswa\UpdateFotoController@actionUpdateFoto');
-
-			//MENU UPLOAD DATA SISWA
-			Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');
-			Route::get('/download-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@downloadFileExcel')->name('siswa/download-file-excel');
-			Route::post('post-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@uploadFileExcel');
-
 			//MENU CARI SISWA
 			Route::get('cari-siswa', 'Pendidikan\Siswa\CariSiswaController@viewCariSiswa');
 			Route::post('post-view-cari-siswa', 'Pendidikan\Siswa\CariSiswaController@actionViewCariSiswa');
 			Route::get('cari-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\CariSiswaController@viewDetailCariSiswa');
 			Route::get('cari-siswa/datatables/{nis_nama_siswa}', 'Pendidikan\Siswa\CariSiswaController@datatablesCariSiswa');
 			Route::get('cari-siswa/view-detail-siswa/{nis_siswa}/{nis_nama_siswa_asli}', 'Pendidikan\Siswa\CariSiswaController@viewDetailSiswaCariSiswa');
+			
+			//MENU UPDATE FOTO
+			// Route::get('update-foto', 'Pendidikan\Siswa\UpdateFotoController@viewUpdateFoto');
+			// Route::post('post-view-update-foto', 'Pendidikan\Siswa\UpdateFotoController@actionViewUpdateFoto');
+			// Route::get('update-foto/view-detail-update-foto/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewDetailUpdateFoto');
+			// Route::get('update-foto/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@datatablesUpdateFoto');
+			// Route::get('update-foto/upload/{id_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewUpload');
+			// Route::post('action-update-foto/{mode}/{id}', 'Pendidikan\Siswa\UpdateFotoController@actionUpdateFoto');
+
+			//MENU UPLOAD DATA SISWA
+			// Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');
+			// Route::get('/download-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@downloadFileExcel')->name('siswa/download-file-excel');
+			// Route::post('post-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@uploadFileExcel');
 
 			//MENU ADMISI SISWA
-			Route::get('admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@viewAdmisiSiswa');
-			Route::post('post-view-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionViewAdmisiSiswa');
-			Route::get('admisi-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\AdmisiSiswaController@viewDetailAdmisiSiswa');
-			Route::post('action-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionAdmisiSiswa');
-			Route::get('admisi-siswa/generate', 'Pendidikan\Siswa\AdmisiSiswaController@generateAdmisiSiswa');
-			Route::post('action-generate-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionGenerateAdmisiSiswa');
-			Route::get('admisi-siswa/generate/laporan', 'Pendidikan\Siswa\AdmisiSiswaController@laporanGenerateAdmisiSiswa');
-			Route::post('post-view-laporan-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionViewLaporanAdmisiSiswa');
-			Route::get('admisi-siswa/view-laporan/{id_semester}/{id_kelas}', 'Pendidikan\Siswa\AdmisiSiswaController@viewLaporanAdmisiSiswa');
-			Route::get('admisi-siswa/datatables/{id_semester}/{id_kelas}', 'Pendidikan\Siswa\AdmisiSiswaController@datatablesAdmisiSiswa');
+			// Route::get('admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@viewAdmisiSiswa');
+			// Route::post('post-view-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionViewAdmisiSiswa');
+			// Route::get('admisi-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\AdmisiSiswaController@viewDetailAdmisiSiswa');
+			// Route::post('action-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionAdmisiSiswa');
+			// Route::get('admisi-siswa/generate', 'Pendidikan\Siswa\AdmisiSiswaController@generateAdmisiSiswa');
+			// Route::post('action-generate-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionGenerateAdmisiSiswa');
+			// Route::get('admisi-siswa/generate/laporan', 'Pendidikan\Siswa\AdmisiSiswaController@laporanGenerateAdmisiSiswa');
+			// Route::post('post-view-laporan-admisi-siswa', 'Pendidikan\Siswa\AdmisiSiswaController@actionViewLaporanAdmisiSiswa');
+			// Route::get('admisi-siswa/view-laporan/{id_semester}/{id_kelas}', 'Pendidikan\Siswa\AdmisiSiswaController@viewLaporanAdmisiSiswa');
+			// Route::get('admisi-siswa/datatables/{id_semester}/{id_kelas}', 'Pendidikan\Siswa\AdmisiSiswaController@datatablesAdmisiSiswa');
 
 
 			//MENU HISTORY ADMISI SISWA
-			Route::get('histori-admisi-siswa', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@viewHistoryAdmisiSiswa');
-			Route::post('post-view-histori-admisi-siswa', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@actionViewHistoryAdmisiSiswa');
-			Route::get('histori-admisi-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@viewDetailHistoryAdmisiSiswa');
-			Route::get('histori-admisi-siswa/datatables/{nis_siswa}', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@datatablesHistoryAdmisiSiswa');
-			Route::post('action-histori-admisi-siswa/{mode}/{id}', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@actionHistoryAdmisiSiswa');
+			// Route::get('histori-admisi-siswa', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@viewHistoryAdmisiSiswa');
+			// Route::post('post-view-histori-admisi-siswa', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@actionViewHistoryAdmisiSiswa');
+			// Route::get('histori-admisi-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@viewDetailHistoryAdmisiSiswa');
+			// Route::get('histori-admisi-siswa/datatables/{nis_siswa}', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@datatablesHistoryAdmisiSiswa');
+			// Route::post('action-histori-admisi-siswa/{mode}/{id}', 'Pendidikan\Siswa\HistoryAdmisiSiswaController@actionHistoryAdmisiSiswa');
 
 			//MENU SISWA AKTIF
 			// Route::get('siswa-aktif', 'Pendidikan\Siswa\SiswaAktifController@viewSiswaAktif');
 
 			//MENU INSERT-UPDATE SISWA
-			Route::get('insert-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewInsertUpdateSiswa');
-			Route::post('post-view-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@actionViewUpdateSiswa');
-			Route::get('insert-update-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewDetailUpdateSiswa');
+			// Route::get('insert-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewInsertUpdateSiswa');
+			// Route::post('post-view-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@actionViewUpdateSiswa');
+			// Route::get('insert-update-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewDetailUpdateSiswa');
 
-			Route::post('action-insert-update-siswa/{mode}/{id}', 'Pendidikan\Siswa\InsertUpdateSiswaController@actionInsertUpdateSiswa');
+			// Route::post('action-insert-update-siswa/{mode}/{id}', 'Pendidikan\Siswa\InsertUpdateSiswaController@actionInsertUpdateSiswa');
 
 			//MENU Setting Wali Murid
-			Route::get('setting-wali-murid', 'Pendidikan\Siswa\SettingWaliMuridController@viewSettingWaliMurid');
-			Route::post('post-view-setting-wali-murid', 'Pendidikan\Siswa\SettingWaliMuridController@actionViewSettingWaliMurid');
-			Route::get('setting-wali-murid/view-kelas/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewKelasWaliMurid');
-			Route::get('setting-wali-murid/datatables/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@datatablesWaliMurid');
-			Route::get('setting-wali-murid/edit/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@editWaliMurid');
+			// Route::get('setting-wali-murid', 'Pendidikan\Siswa\SettingWaliMuridController@viewSettingWaliMurid');
+			// Route::post('post-view-setting-wali-murid', 'Pendidikan\Siswa\SettingWaliMuridController@actionViewSettingWaliMurid');
+			// Route::get('setting-wali-murid/view-kelas/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewKelasWaliMurid');
+			// Route::get('setting-wali-murid/datatables/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@datatablesWaliMurid');
+			// Route::get('setting-wali-murid/edit/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@editWaliMurid');
 
-			Route::post('action-setting-wali-murid/{mode}/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@actionSettingWaliMurid');
+			// Route::post('action-setting-wali-murid/{mode}/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@actionSettingWaliMurid');
 
 			//MENU Setting Kelas Siswa
-			Route::get('setting-kelas-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@viewSettingKelasSiswa');
-			Route::post('post-view-setting-kelas-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@actionViewSettingKelasSiswa');
-			Route::get('setting-kelas-siswa/view-kelas/{id_kelas}', 'Pendidikan\Siswa\SettingKelasSiswaController@viewKelasSettingKelas');
-			Route::get('setting-kelas-siswa/datatables/{id_kelas}', 'Pendidikan\Siswa\SettingKelasSiswaController@datatablesKelasSiswa');
-			Route::get('setting-kelas-siswa/datatables-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@datatablesSiswa');
-			Route::get('setting-kelas-siswa/edit/{id}', 'Pendidikan\Siswa\SettingKelasSiswaController@tambahKelasSiswa');
+			// Route::get('setting-kelas-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@viewSettingKelasSiswa');
+			// Route::post('post-view-setting-kelas-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@actionViewSettingKelasSiswa');
+			// Route::get('setting-kelas-siswa/view-kelas/{id_kelas}', 'Pendidikan\Siswa\SettingKelasSiswaController@viewKelasSettingKelas');
+			// Route::get('setting-kelas-siswa/datatables/{id_kelas}', 'Pendidikan\Siswa\SettingKelasSiswaController@datatablesKelasSiswa');
+			// Route::get('setting-kelas-siswa/datatables-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@datatablesSiswa');
+			// Route::get('setting-kelas-siswa/edit/{id}', 'Pendidikan\Siswa\SettingKelasSiswaController@tambahKelasSiswa');
 
-			Route::post('action-setting-kelas-siswa/{mode}/{id}', 'Pendidikan\Siswa\SettingKelasSiswaController@actionSettingKelasSiswa');
+			// Route::post('action-setting-kelas-siswa/{mode}/{id}', 'Pendidikan\Siswa\SettingKelasSiswaController@actionSettingKelasSiswa');
 		});
 		/** === MODUL MAGANG SISWA === **/
 		Route::group(array('prefix' => 'magang-siswa'), function() {
