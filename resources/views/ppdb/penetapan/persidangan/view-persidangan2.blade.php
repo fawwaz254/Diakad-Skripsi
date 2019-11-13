@@ -1,27 +1,15 @@
 <div class="container-fluid">
+    <!-- <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penetapan/data-penetapan/add/')}}"><i class="material-icons">note_add</i><span>Tambah Penetapan</span></a></h2>
+    </div> -->
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/post-view-persidangan')}}">
-                    {{csrf_field()}}
+                    {{csrf_field()}}                   
                     <div class="header bg-lime">
-                        <h2>JADWAL PERSIDANGAN</h2>
-                    </div>
-                    <h2 class="card-inside-title">
-                            Tahun <small><b>* Tahun Penetapan</b></small>
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="tahun_penetapan">
-                                @foreach($data_tahun_penetapan as $data)
-                                    <option value="{{$data->tgl_penetapan}}">{{$data->tgl_penetapan}}</option>
-                                @endforeach
-                                </select>
-                            </div>
-                        </div>  
+                        <h2>JADWAL PERSIDANGAN TAHUN {{$tahun}}</h2>
 
-                    <button type="submit" class="btn btn-primary waves-effect" ><i class="material-icons"></i><span>View</span></button>
-                </form>                     
+                    </div>
                     <div class="body">
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
@@ -44,9 +32,9 @@
 <script>
 
     var modul_url       = 'penetapan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-penetapan/datatables';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'persidangan/datatables/{{$tahun}}';
     var edit_url        = role_url + '#' + modul_url + '/' + 'persidangan/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-penetapan/delete';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-persidangan/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -63,7 +51,7 @@
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">lihat</i>'+
+                    '    <i class="material-icons">edit</i>'+
                     '</a> '+
                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">delete_forever</i>'+

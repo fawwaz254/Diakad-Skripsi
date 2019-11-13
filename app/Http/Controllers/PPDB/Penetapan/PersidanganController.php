@@ -57,6 +57,13 @@ class PersidanganController extends BaseController {
         $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
        // dd($data_penetapan);
         return view('ppdb/penetapan/persidangan/edit-persidangan',compact('auth_data','data_penetapan'));
+    }
+    public function editPersidangan2($tahun, Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($data_penetapan);
+        return view('ppdb/penetapan/persidangan/view-persidangan2',compact('auth_data','tahun'));
 
     }
 
@@ -88,7 +95,9 @@ class PersidanganController extends BaseController {
         else{
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
-                'path'      => 'penetapan/persidangan/view-persidangan2/'.$input->tahun_penetapan
+                // mecocokkan dengan route yang namanya tahun 
+                // di PersidanganController@editPersidangan2
+                'path'      => 'penetapan/persidangan/tahun/'.$input->tahun_penetapan
             ];
         }
     }
@@ -98,6 +107,41 @@ class PersidanganController extends BaseController {
         $auth_data = $input->auth_data;
         //$list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
         $list_data = Penetapan::orderBy('id_penetapan','desc')->get();
+
+        /*$list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%$tahun%')->get();*/
+
+        return Datatables::of($list_data)
+                ->addColumn('nm_penetapan', function($item) {
+                    if( ! empty($item->nm_penetapan)){
+                        return $item->nm_penetapan;
+                    }
+                    else{
+                        return "-";
+                    }
+                })
+                ->addColumn('periode', function($item) {
+                    if( ! empty($item->periode)){
+                        return $item->periode;
+                    }
+                    else{
+                        return "-";
+                    }
+                })                
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_penetapan
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+    public function datatablesPersidangan(Request $request, $tahun) {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        //$list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
+        //$list_data = Penetapan::orderBy('id_penetapan','desc')->get();
+        $list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%'.$tahun.'%')->get();
 
         return Datatables::of($list_data)
                 ->addColumn('nm_penetapan', function($item) {
