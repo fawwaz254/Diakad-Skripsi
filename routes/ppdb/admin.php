@@ -113,7 +113,17 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			// MENU PERSIDANGAN
 			Route::get('persidangan', 'PPDB\Penetapan\PersidanganController@viewPersidangan');
-			Route::get('persidangan/datatables', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
+			Route::post('persidangan/post-view-persidangan', 'PPDB\Penetapan\PersidanganController@actionViewPersidangan');
+			Route::get('persidangan/tahun/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan2');
+			
+			Route::get('persidangan/datatables/{tahun}', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
+			
+			Route::get('persidangan/edit/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan');
+
+
+
+			/*Route::get('persidangan/view-sidang-penetapan/{id}', 'PPDB\Penetapan\PenetapanController@viewSidangPenetapan');*/
+
 
 
 			

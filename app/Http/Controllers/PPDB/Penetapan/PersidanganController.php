@@ -28,13 +28,11 @@ class PersidanganController extends BaseController {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_semester_tahun = LibDataAkademik::fetchDataTahunSemester($auth_data);
-        $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
-        //dd($penerimaan);
-        /*$grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
-            return $item->groupBy('nm_semester_penerimaan');
-        });; */
 
-    	return view('ppdb/penetapan/persidangan/view-persidangan',compact('auth_data','data_semester_tahun','penerimaan'));
+        $data_tahun_penetapan = DB::table('penetapan') ->distinct()->get([DB::raw('YEAR(tgl_penetapan) as tgl_penetapan')]); 
+        //dd($data_tahun_penetapan);
+
+    	return view('ppdb/penetapan/persidangan/view-persidangan',compact('auth_data','data_tahun_penetapan'));
     }
 
     public function addPenetapan(Request $request) {
@@ -42,11 +40,7 @@ class PersidanganController extends BaseController {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 /*
-        $data_jalur = LibDataAkademik::fetchDataJalur($auth_data);
-
-        $data_semester_tahun = LibDataAkademik::fetchDataTahunSemester($auth_data);
-
-        $data_semester_nama = LibDataAkademik::fetchDataNmSemester($auth_data);
+       
 */
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -56,14 +50,56 @@ class PersidanganController extends BaseController {
         return view('ppdb/penetapan/data-penetapan/add-penetapan',compact('auth_data','id_penetapan'));
     }
 
-    public function editPenetapan($id, Request $request) {
+    public function editPersidangan($id, Request $request) {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
        // dd($data_penetapan);
-        return view('ppdb/penetapan/data-penetapan/edit-penetapan',compact('auth_data','data_penetapan'));
+        return view('ppdb/penetapan/persidangan/edit-persidangan',compact('auth_data','data_penetapan'));
+    }
+    public function editPersidangan2($tahun, Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($data_penetapan);
+        return view('ppdb/penetapan/persidangan/view-persidangan2',compact('auth_data','tahun'));
 
+    }
+
+    public function viewSidangPenetapan($id, Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+       // dd($data_penetapan);
+        return view('ppdb/penetapan/persidangan/view-sidang-penetapan',compact('auth_data','data_penetapan'));
+
+    }
+
+    public function actionViewPersidangan(Request $request)
+    {
+        $input      = (object) $request->input();
+        $auth_data  = $input->auth_data;
+
+        $validator  = Validator::make($request->all(), [
+            'tahun_penetapan' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status'    => 300, // FAILED
+                'message'   => $validator->errors()->first()
+            ];
+        }
+        else{
+            return [
+                'status'    => 204, // SUCCESS AND LOAD CONTENT
+                // mecocokkan dengan route yang namanya tahun 
+                // di PersidanganController@editPersidangan2
+                'path'      => 'penetapan/persidangan/tahun/'.$input->tahun_penetapan
+            ];
+        }
     }
 
     public function datatablesPenetapan(Request $request) {
@@ -71,6 +107,41 @@ class PersidanganController extends BaseController {
         $auth_data = $input->auth_data;
         //$list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
         $list_data = Penetapan::orderBy('id_penetapan','desc')->get();
+
+        /*$list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%$tahun%')->get();*/
+
+        return Datatables::of($list_data)
+                ->addColumn('nm_penetapan', function($item) {
+                    if( ! empty($item->nm_penetapan)){
+                        return $item->nm_penetapan;
+                    }
+                    else{
+                        return "-";
+                    }
+                })
+                ->addColumn('periode', function($item) {
+                    if( ! empty($item->periode)){
+                        return $item->periode;
+                    }
+                    else{
+                        return "-";
+                    }
+                })                
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_penetapan
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+    public function datatablesPersidangan(Request $request, $tahun) {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        //$list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
+        //$list_data = Penetapan::orderBy('id_penetapan','desc')->get();
+        $list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%'.$tahun.'%')->get();
 
         return Datatables::of($list_data)
                 ->addColumn('nm_penetapan', function($item) {
@@ -121,25 +192,6 @@ class PersidanganController extends BaseController {
         else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-            /*if($mode != 'delete') {
-                // get id_semester from tahun and nama semester
-                $semester = Semester::select('id_semester')
-                                    ->where('thn_akademik_semester','=',$input->tahun_penerimaan)
-                                    ->where('nm_semester','=',$input->nm_semester_penerimaan)
-                                    ->where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-                                    ->first();
-
-                // apabila jenis penerimaan untuk siswa lama sebelum siakad
-                if($input->jenis_penerimaan == 2) {
-                    $id_semester = 0;
-                    $id_jalur = 0;
-                }
-                elseif($input->jenis_penerimaan == 1) {
-                    $id_semester = $semester->id_semester;
-                    $id_jalur = $input->id_jalur;
-                }
-            }*/
 
             // ACTION ADD
             if($mode == 'add') {
