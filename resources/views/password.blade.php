@@ -7,7 +7,7 @@
             <div class="card">
                 <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/password')}}">
                     {{csrf_field()}}
-                    <div class="header bg-green">
+                    <div class="header">
                         <h2>CHANGE PASSWORD</h2>
                     </div>
                     <div class="body">
@@ -31,8 +31,9 @@
                                     <input type="password" class="form-control" name="new_confirm_password" minlength="4" required="" aria-required="true" equalto="#password">
                                     </div>
                                 </div>
-                                <br>
-                                    <button class="btn btn-block bg-green waves-effect" type="submit">Save Change Password</button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-btn-submit waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </div>

@@ -107,7 +107,8 @@ class Apiv1Controller extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now();
+        // $now = Carbon::now();
+        $now = Carbon::createfromformat('Y-m-d H:i', '2019-11-06 09:00');
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
