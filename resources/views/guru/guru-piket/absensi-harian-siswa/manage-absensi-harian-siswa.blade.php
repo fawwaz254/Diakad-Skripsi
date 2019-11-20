@@ -90,6 +90,7 @@
             { data: 'alasan', name: 'alasan', searchable: false, orderable: false,
                 render: function(data){
                     let html = '';
+                    console.log(data.kehadiran);
                     $.each(data.options, function(index, item){
                         if(data.kehadiran == item.id){
                             html += '<option value="'+item.id+'" selected>'+ item.text + '</option>';

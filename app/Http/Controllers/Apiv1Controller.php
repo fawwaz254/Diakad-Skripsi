@@ -7,10 +7,13 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
 
 use Carbon\Carbon;
+use Yajra\Datatables\Datatables;
 
 use App\Models\Guru;
 use App\Models\KomplainSarpras;
 use App\Models\Pengguna;
+use App\Models\PresensiHarian;
+use App\Models\PresensiHarianSiswa;
 use App\Models\PresensiMp;
 use App\Models\PresensiMpSiswa;
 use App\Models\PresensiMpPelanggaran;
@@ -21,14 +24,17 @@ use App\Models\Siswa;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 
 use DB;
 use Validator;
 
-class Apiv1Controller extends BaseController{
-    public function actionSignIn(Request $request){
+class Apiv1Controller extends BaseController
+{
+    public function actionSignIn(Request $request)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
@@ -36,7 +42,7 @@ class Apiv1Controller extends BaseController{
             'password' =>'required'
         ]);
   
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -69,14 +75,14 @@ class Apiv1Controller extends BaseController{
                         'pengguna' => $data_pengguna
                     )
                 ]);
-            }else{
+            } else {
                 return response()->json([
                     'status_code' 	=> 300,
                     'status_text' 	=> 'Failed',
                     'message' 	=> 'Password invalid'
                 ]);
             }
-        }else{
+        } else {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -85,7 +91,8 @@ class Apiv1Controller extends BaseController{
         }
     }
 
-    public function actionGetKelasKBM(Request $request){
+    public function actionGetKelasKBM(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -103,7 +110,291 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetMonitoringKelasKosong(Request $request){
+    public function actionGetKelasAll(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kelas' => $data_kelas
+            )
+        ]);
+    }
+
+    public function actionGetSemester(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'semester' => $data_semester
+            )
+        ]);
+    }
+
+    public function actionGetAbsensiHarianKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_kelas' =>'required',
+            'id_semester' =>'required'
+        ]);
+  
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $id_semester = $input->id_semester;
+        $id_kelas = $input->id_kelas;
+        
+        $list_data = PresensiHarian::with('jadwal_hari', 'guru_entry', 'siswa_entry')
+                                        ->where('id_semester', $id_semester)
+                                        ->where('id_kelas', $id_kelas);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'absensi_harian' =>
+                    Datatables::of($list_data)
+                        ->addColumn('tanggal', function ($item) {
+                            return $item->convertDateFormat('tgl_entry', 'd M Y H:i');
+                        })
+                        ->addColumn('petugas', function ($item) {
+                            if (!empty($item->id_guru_entry)) {
+                                return $item->guru_entry->nm_pengguna.' (Guru Piket)';
+                            } elseif (!empty($item->id_siswa_entry)) {
+                                return $item->siswa_entry->nm_pengguna.' (Siswa)';
+                            }
+                        })
+                        ->addColumn('action', function ($item) {
+                            $data = array(
+                                'id' => $item->id_presensi_harian
+                            );
+                            return $data;
+                        })
+                        ->toArray()['data']
+            )
+        ]);
+    }
+
+    public function actionGetAbsensiHarianSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_kelas' =>'required',
+            'id_semester' =>'required'
+        ]);
+  
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $id_semester = $input->id_semester;
+        $id_kelas = $input->id_kelas;
+        
+        $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
+        
+        if (!empty($input->presensi_harian)) {
+            $presensi_harian = PresensiHarian::find($input->presensi_harian);
+            $presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->get();
+        } else {
+            $presensi_harian = null;
+            $presensi_harian_siswa = null;
+        }
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'tgl_entry' => (!empty($presensi_harian))? $presensi_harian->tgl_entry : null,
+                'siswa' =>
+                    Datatables::of($list_data)
+                        ->addColumn('kehadiran', function ($item) use ($presensi_harian_siswa) {
+                            $kehadiran = null;
+                            if ($presensi_harian_siswa && $selected_presensi_harian_siswa = $presensi_harian_siswa->firstWhere('id_siswa', $item->id_siswa)) {
+                                $kehadiran = $selected_presensi_harian_siswa->kehadiran;
+                            }
+                            return $kehadiran;
+                        })
+                        ->toArray()['data']
+            )
+        ]);
+    }
+
+    public function actionGetAbsensiHarianSave(Request $request, $mode)
+    {
+        $input = (object) $request->input();
+
+        switch ($mode) {
+            case 'add':
+                $required_params = [
+                    'id_kelas' => 'required',
+                    'id_semester' => 'required',
+                    'tgl_entry' => 'required',
+                ]; break;
+            case 'edit':
+                $required_params = [
+                    'id_kelas' => 'required',
+                    'id_semester' => 'required',
+                    'tgl_entry' => 'required',
+                    'id_presensi_harian' => 'required',
+                ]; break;
+            case 'delete':
+                $required_params = [
+                    'id_presensi_harian' => 'required',
+                ]; break;
+            default:
+                $required_params = [];
+        }
+
+        $validator = Validator::make($request->all(), $required_params);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        } else {
+            // mengambil waktu sekarang
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            
+            // ACTION ADD
+            if ($mode == 'add' || $mode == 'edit') {
+                $tgl_entry = Carbon::parse($input->tgl_entry);
+                DB::beginTransaction();
+                try {
+                    if (!empty($input->id_presensi_harian)) {
+                        $presensi_harian = PresensiHarian::find($input->id_presensi_harian);
+                    } else {
+                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $presensi_harian = new PresensiHarian;
+                        $presensi_harian->id_presensi_harian = $id;
+                        $presensi_harian->id_guru_entry = $input->auth_data->pengguna->id_pengguna;
+                        $presensi_harian->id_kelas = $input->id_kelas;
+                        $presensi_harian->id_semester = $input->id_semester;
+                    }
+                    $presensi_harian->id_jadwal_hari = $tgl_entry->dayOfWeek;
+                    $presensi_harian->tgl_entry = $tgl_entry;
+                    $presensi_harian->save();
+
+                    $total_siswa = 0;
+                    $total_siswa_masuk = 0;
+                    
+                    // presensi_harian_siswa
+                    foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
+                        if (! empty($alasan)) {
+                            $kehadiran = $alasan;
+                        } else {
+                            $kehadiran = 1;
+                        }
+                        
+                        if ($presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->where('id_siswa', '=', $id_siswa)->first()) {
+                            $presensi_harian_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                        } else {
+                            // make id
+                            $id_presensi_harian_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                            $presensi_harian_siswa                            = new PresensiHarianSiswa;
+                            $presensi_harian_siswa->id_presensi_harian        = $presensi_harian->id_presensi_harian;
+                            $presensi_harian_siswa->id_presensi_harian_siswa  = $id_presensi_harian_siswa;
+                            $presensi_harian_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
+                        }
+
+                        $presensi_harian_siswa->id_siswa                    = $id_siswa;
+                        $presensi_harian_siswa->kehadiran                   = $kehadiran;
+                        $presensi_harian_siswa->save();
+
+                        if ($kehadiran == 1) {
+                            $total_siswa++;
+                            $total_siswa_masuk++;
+                        } else {
+                            $total_siswa++;
+                        }
+                    }
+
+                    $presensi_harian->persentase_presensi_harian = ($total_siswa_masuk / $total_siswa);
+                    $presensi_harian->save();
+
+                    DB::commit();
+                    // all good
+
+                    return response()->json([
+                        'status_code' 	=> 200,
+                        'status_text' 	=> 'Success',
+                        'message' => 'Save Absensi Harian Siswa successfully'
+                    ]);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+
+                    return response()->json([
+                        'status_code' 	=> 300,
+                        'status_text' 	=> 'Failed',
+                        'message' => 'Absensi Harian Gagal!'
+                    ]);
+                }
+            } elseif ($mode == 'delete') {
+                DB::beginTransaction();
+                try {
+                    $presensi_harian = PresensiHarian::where('id_presensi_harian', $input->id_presensi_harian)->delete();
+                    $presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', $input->id_presensi_harian)->delete();
+
+                    DB::commit();
+                    // all good
+
+                    return response()->json([
+                        'status_code' 	=> 200,
+                        'status_text' 	=> 'Success',
+                        'message' => 'Delete Absensi Harian Siswa successfully'
+                    ]);
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+
+                    return response()->json([
+                        'status_code' 	=> 300,
+                        'status_text' 	=> 'Failed',
+                        'message' => 'Absensi Harian Gagal!'
+                    ]);
+                }
+            }
+        }
+    }
+
+    public function actionGetMonitoringKelasKosong(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -138,24 +429,25 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetJadwal(Request $request){
+    public function actionGetJadwal(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        if(!empty($input->type)){
-            switch($input->type){
-                case 'akademik': 
+        if (!empty($input->type)) {
+            switch ($input->type) {
+                case 'akademik':
                     $list_data = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $semester_aktif->id_semester);
                     break;
-                case 'kbm': 
+                case 'kbm':
                     $list_data = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
                     break;
-                case 'uts': 
+                case 'uts':
                     $list_data = LibGuru::fetchDataJadwalUTS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
                     break;
-                case 'uas': 
+                case 'uas':
                     $list_data = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
                     break;
                 default:
@@ -175,14 +467,15 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetPertemuanByJadwalKelasKBM(Request $request){
+    public function actionGetPertemuanByJadwalKelasKBM(Request $request)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' =>'required'
         ]);
   
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -193,14 +486,13 @@ class Apiv1Controller extends BaseController{
         $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
 
         $data_pertemuan = array();
-        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp   )->get();
+        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
 
-        for ($i=1; $i <= 25; $i++) {     
+        for ($i=1; $i <= 25; $i++) {
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
-                if(!empty($input->query) && $input->query == 'absensi_is_null'){
-                    
-                }else{
+                if (!empty($input->query) && $input->query == 'absensi_is_null') {
+                } else {
                     $pertemuan = array(
                         'text' => 'Pertemuan '.$i." (Sudah)",
                         'value' => $i
@@ -208,9 +500,8 @@ class Apiv1Controller extends BaseController{
                     $data_pertemuan[] = $pertemuan;
                 }
             } else {
-                if(!empty($input->query) && $input->query == 'absensi_is_not_null'){
-
-                }else{
+                if (!empty($input->query) && $input->query == 'absensi_is_not_null') {
+                } else {
                     $pertemuan = array(
                         'text' => 'Pertemuan '.$i,
                         'value' => $i
@@ -218,7 +509,6 @@ class Apiv1Controller extends BaseController{
                     $data_pertemuan[] = $pertemuan;
                 }
             }
-
         }
 
         return response()->json([
@@ -231,7 +521,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetSiswaByJadwalKelasKBM(Request $request){
+    public function actionGetSiswaByJadwalKelasKBM(Request $request)
+    {
         $input = (object) $request->input();
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required',
@@ -243,7 +534,7 @@ class Apiv1Controller extends BaseController{
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
 
-        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$input->id_jadwal_kelas_mp)->where('pertemuan_ke','=',$input->pertemuan_ke)->first();
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
 
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
 
@@ -258,7 +549,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetPresensiKBM(Request $request){
+    public function actionGetPresensiKBM(Request $request)
+    {
         $input = (object) $request->input();
         $validator = Validator::make($request->all(), [
             'id_jadwal_kelas_mp' => 'required',
@@ -270,24 +562,24 @@ class Apiv1Controller extends BaseController{
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
 
-        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$input->id_jadwal_kelas_mp)->where('pertemuan_ke','=',$input->pertemuan_ke)->first();
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
 
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
-        if($presensi_mp_aktif){
-            $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp','=',$presensi_mp_aktif->id_presensi_mp)->get();
+        if ($presensi_mp_aktif) {
+            $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp_aktif->id_presensi_mp)->get();
             $presensi_mp_aktif = $presensi_mp_aktif->only('id_presensi_mp', 'id_kelas_mp', 'id_jadwal_kelas_mp', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'id_guru_pengganti', 'alasan_tidak_hadir', 'tgl_entry', 'persentase_presensi_mp', 'keterangan');
-        }else{
+        } else {
             $data_presensi_mp_siswa = null;
             $presensi_mp_aktif = null;
         }
 
-        foreach($data_siswa as $siswa){
+        foreach ($data_siswa as $siswa) {
             $kehadiran = null;
-            if($data_presensi_mp_siswa && $presensi_mp_siswa = $data_presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa)){
+            if ($data_presensi_mp_siswa && $presensi_mp_siswa = $data_presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa)) {
                 $kehadiran = $presensi_mp_siswa->kehadiran;
             }
             $siswa->status_kehadiran = $kehadiran;
-            switch($kehadiran){
+            switch ($kehadiran) {
                 case 1: $text = 'Hadir'; break;
                 case 2: $text = 'Sakit'; break;
                 case 3: $text = 'Izin'; break;
@@ -308,7 +600,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionAbsensiSiswa(Request $request){
+    public function actionAbsensiSiswa(Request $request)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
@@ -320,7 +613,7 @@ class Apiv1Controller extends BaseController{
             'tgl_presensi' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -334,15 +627,15 @@ class Apiv1Controller extends BaseController{
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
 
-        $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp','=',$input->id_jadwal_kelas_mp)->where('pertemuan_ke','=',$input->pertemuan_ke)->first();
+        $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
         
         DB::beginTransaction();
         
         try {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            if($presensi_mp) {
+            if ($presensi_mp) {
                 $presensi_mp->updated_by         = $input->auth_data->pengguna->id_pengguna;
-            }else{
+            } else {
                 $presensi_mp                     = new PresensiMp;
                 $presensi_mp->id_presensi_mp     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 $presensi_mp->id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
@@ -359,23 +652,22 @@ class Apiv1Controller extends BaseController{
             $presensi_mp->save();
             
             foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                if(! empty($alasan)) {
+                if (! empty($alasan)) {
                     $kehadiran = $alasan;
-                }
-                else {
+                } else {
                     $kehadiran = 1;
                 }
 
-                if($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp','=',$presensi_mp->id_presensi_mp)->where('id_siswa','=',$id_siswa)->first()){
+                if ($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp->id_presensi_mp)->where('id_siswa', '=', $id_siswa)->first()) {
                     $presensi_mp_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
-                }else{
-                    if($siswa = Siswa::find($id_siswa)){
+                } else {
+                    if ($siswa = Siswa::find($id_siswa)) {
                         $presensi_mp_siswa                            = new PresensiMpSiswa;
                         $presensi_mp_siswa->id_presensi_mp_siswa      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                         $presensi_mp_siswa->id_presensi_mp            = $presensi_mp->id_presensi_mp;
-                        $presensi_mp_siswa->id_siswa                  = $id_siswa;   
+                        $presensi_mp_siswa->id_siswa                  = $id_siswa;
                         $presensi_mp_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
-                    }else{
+                    } else {
                         return response()->json([
                             'status_code' 	=> 300,
                             'status_text' 	=> 'Failed',
@@ -385,7 +677,7 @@ class Apiv1Controller extends BaseController{
                 }
 
                 $presensi_mp_siswa->kehadiran     = $kehadiran;
-                $presensi_mp_siswa->save();   
+                $presensi_mp_siswa->save();
             }
 
             DB::commit();
@@ -395,7 +687,6 @@ class Apiv1Controller extends BaseController{
                 'status_text' 	=> 'Success',
                 'message' 	=> 'Absensi success'
             ]);
-
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -404,17 +695,18 @@ class Apiv1Controller extends BaseController{
                 'status_text' 	=> 'Failed',
                 'message' => 'Absensi gagal'
             ]);
-        }    
+        }
     }
 
-    public function actionGetKomplainRuangan(Request $request){
+    public function actionGetKomplainRuangan(Request $request)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'id_ruangan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -436,14 +728,15 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetKomplainBukuAlat(Request $request){
+    public function actionGetKomplainBukuAlat(Request $request)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'id_buku_alat' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -465,7 +758,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionKomplainSarpras(Request $request, $mode){
+    public function actionKomplainSarpras(Request $request, $mode)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
@@ -477,14 +771,13 @@ class Apiv1Controller extends BaseController{
 
         $mode_delete = array("delete-ruangan", "delete-bukualat");
 
-        if($validator->fails() && !in_array($mode, $mode_delete)) {
+        if ($validator->fails() && !in_array($mode, $mode_delete)) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
                 'message' => $validator->errors()->first()
             ]);
-        }
-        else {
+        } else {
             DB::beginTransaction();
         
             try {
@@ -492,20 +785,19 @@ class Apiv1Controller extends BaseController{
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
 
                 // get id_guru
-                $guru = Guru::where('id_pengguna','=',$input->auth_data->pengguna->id_pengguna)->first();
+                $guru = Guru::where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)->first();
                 $id_guru = $guru->id_guru;
 
                 //** MODE UNTUK RUANGAN
-                if($mode == 'add-ruangan') {
+                if ($mode == 'add-ruangan') {
                     $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                     $komplainSarpras                            = new KomplainSarpras;
                     $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
                     $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                    if(! empty($input->id_inventaris_ruangan)) {
+                    if (! empty($input->id_inventaris_ruangan)) {
                         $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
-                    }
-                    else {
+                    } else {
                         $komplainSarpras->id_inventaris_ruangan     = null;
                     }
                     $komplainSarpras->id_guru_komplain          = $id_guru;
@@ -516,15 +808,13 @@ class Apiv1Controller extends BaseController{
                     $komplainSarpras->save();
 
                     $message = 'Save Komplain Sarpras successfully';
-                }
-                elseif($mode == 'edit-ruangan') {
+                } elseif ($mode == 'edit-ruangan') {
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
                     $komplainSarpras->id_ruangan                = $input->id_ruangan;
-                    if(! empty($input->id_inventaris_ruangan)) {
+                    if (! empty($input->id_inventaris_ruangan)) {
                         $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
-                    }
-                    else {
+                    } else {
                         $komplainSarpras->id_inventaris_ruangan     = null;
                     }
                     $komplainSarpras->id_guru_komplain          = $id_guru;
@@ -535,8 +825,7 @@ class Apiv1Controller extends BaseController{
                     $komplainSarpras->save();
 
                     $message = 'Update Komplain Sarpras successfully';
-                }
-                elseif($mode == 'delete-ruangan') {
+                } elseif ($mode == 'delete-ruangan') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
                     $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -547,7 +836,7 @@ class Apiv1Controller extends BaseController{
                     $message = 'Delete Komplain Sarpras successfully';
                 }
                 //** MODE UNTUK BUKU/ALAT
-                elseif($mode == 'add-bukualat') {
+                elseif ($mode == 'add-bukualat') {
                     $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                     
                     $komplainSarpras                            = new KomplainSarpras;
@@ -561,8 +850,7 @@ class Apiv1Controller extends BaseController{
                     $komplainSarpras->save();
 
                     $message = 'Save Komplain Sarpras successfully';
-                }
-                elseif($mode == 'edit-bukualat') {
+                } elseif ($mode == 'edit-bukualat') {
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
                     $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
@@ -574,8 +862,7 @@ class Apiv1Controller extends BaseController{
                     $komplainSarpras->save();
 
                     $message = 'Update Komplain Sarpras successfully';
-                }
-                elseif($mode == 'delete-bukualat') {
+                } elseif ($mode == 'delete-bukualat') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
                     $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -593,7 +880,6 @@ class Apiv1Controller extends BaseController{
                     'status_text' 	=> 'Success',
                     'message' 	=> $message
                 ]);
-
             } catch (\Exception $e) {
                 DB::rollback();
 
@@ -602,11 +888,12 @@ class Apiv1Controller extends BaseController{
                     'status_text' 	=> 'Failed',
                     'message' => 'Terdapat error'
                 ]);
-            }   
+            }
         }
     }
 
-    public function actionGetRuangan(Request $request){
+    public function actionGetRuangan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -622,14 +909,15 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetInventarisRuangan(Request $request){
+    public function actionGetInventarisRuangan(Request $request)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
             'id_ruangan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
@@ -651,7 +939,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetBukuAlat(Request $request){
+    public function actionGetBukuAlat(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -667,7 +956,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionGetPelanggaranSiswa(Request $request){
+    public function actionGetPelanggaranSiswa(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -683,8 +973,8 @@ class Apiv1Controller extends BaseController{
         ]);
     }
 
-    public function actionPelanggaranSiswa(Request $request, $mode){
-
+    public function actionPelanggaranSiswa(Request $request, $mode)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
@@ -693,21 +983,20 @@ class Apiv1Controller extends BaseController{
             'catatan_pelanggaran'   => 'required',
         ]);
         
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
                 'message' => $validator->errors()->first()
             ]);
-        }
-        else{
+        } else {
             DB::beginTransaction();
         
             try {
                 // mengambil waktu sekarang
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-                if($mode == 'add') {
+                if ($mode == 'add') {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                     $presensiMpPelanggaran                               = new PresensiMpPelanggaran;
@@ -725,8 +1014,7 @@ class Apiv1Controller extends BaseController{
                         'status_text' 	=> 'Success',
                         'message' 	=> 'Save Pelanggaran Siswa successfully'
                     ];
-                }
-                elseif($mode == 'edit'){
+                } elseif ($mode == 'edit') {
                     $id = $input->id;
                     
                     // make object to find id
@@ -743,17 +1031,16 @@ class Apiv1Controller extends BaseController{
                         'status_text' 	=> 'Success',
                         'message' 	=> 'Update Pelanggaran Siswa successfully'
                     ];
-                }
-                elseif($mode == 'delete'){
+                } elseif ($mode == 'delete') {
                     $id = $input->id;
 
-                    if($tindakanPelanggaran = TindakanPelanggaran::where('id_presensi_mp_pelanggaran',$id)->first()){
+                    if ($tindakanPelanggaran = TindakanPelanggaran::where('id_presensi_mp_pelanggaran', $id)->first()) {
                         $return_array = [
                             'status_code' 	=> 300,
                             'status_text' 	=> 'Failed',
                             'message' 	=> 'Failed To Delete, sudah diambil tindakan atas Pelanggaran siswa'
                         ];
-                    }else{
+                    } else {
                         // make object to find id
                         $presensiMpPelanggaran               = PresensiMpPelanggaran::find($id);
                         $presensiMpPelanggaran->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -771,7 +1058,6 @@ class Apiv1Controller extends BaseController{
                 DB::commit();
 
                 return response()->json($return_array);
-
             } catch (\Exception $e) {
                 DB::rollback();
 
@@ -780,19 +1066,7 @@ class Apiv1Controller extends BaseController{
                     'status_text' 	=> 'Failed',
                     'message' => 'Terdapat error'
                 ]);
-            }   
+            }
         }
     }
-
-    public function actionSignOut(Request $request){
-        $input = (object) $request->input();
-
-        $pengguna = $input->auth_data->pengguna;
-        $pengguna->is_online = 0;
-        $pengguna->save();
-
-        Auth::logout();
-        return redirect('/');
-    }
-
 }
