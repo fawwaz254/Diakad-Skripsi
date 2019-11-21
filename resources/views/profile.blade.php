@@ -59,3 +59,6 @@
     </div>
 </div>
 @include('scriptjs')
+<script>
+    $('select:not(.ms)').selectpicker();
+</script>

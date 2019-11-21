@@ -12,7 +12,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header bg-lime">
-                        <h2>SYARAT PENERIMAAN - TAMBAH SYARAT PENERIMAAN UMUM</h2>
+                        <h2>SYARAT PENERIMAAN - TAMBAH SYARAT PENERIMAAN {{strtoupper($request->type)}}</h2>
                     </div>
 
                     <div class="body">
