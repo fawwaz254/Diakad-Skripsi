@@ -7,7 +7,7 @@
             <div class="card">
                     {{csrf_field()}}                   
                     <div class="header bg-lime">
-                        <h2>JADWAL PERSIDANGAN TAHUN {{$tahun}}</h2>
+                        <h2>PENETAPAN PPDB</h2>
 
                     </div>
                     <div class="body">
@@ -16,8 +16,11 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Persidangan Penetapan</th>
-                                        <th>Sidang ke</th>                    
+                                        <th>Jurusan</th>
+                                        <th>Peserta</th>
+                                        <!-- <th>Kuota</th>
+                                        <th>Diterima</th> -->
+                                                   
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -32,7 +35,7 @@
 <script>
 
     var modul_url       = 'penetapan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'persidangan/datatables/{{$tahun}}';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'persidangan/datatablesviewgelombang';
     var edit_url        = role_url + '#' + modul_url + '/' + 'persidangan/view-persidangan-gelombang';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-persidangan/delete';
 
@@ -50,9 +53,12 @@
             { data: 'periode', name: 'periode'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn " href="'+ edit_url + '/' + data.id +'">'+
-                    '    <th>lihat</th>'+
-                    '';
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> '+
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    '    <i class="material-icons">delete_forever</i>'+
+                    '</button>';
                 }
             }
         ]

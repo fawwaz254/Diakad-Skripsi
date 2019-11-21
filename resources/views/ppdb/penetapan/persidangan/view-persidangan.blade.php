@@ -10,7 +10,7 @@
                             {{csrf_field()}}
                             <div class="form-group">
                                 <div class="form-line">
-                                <div class="row clearfix">
+                                
                                 <h6>JADWAL PERSIDANGAN</h6>   
                                         <select class="form-control show-tick" name="tahun_penetapan">
                                         <option value="">- Pilih Tahun -</option>
@@ -19,7 +19,7 @@
                                         @endforeach
                                         </select>
                                     
-                                </div>  
+                                
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary waves-effect" ><i class="material-icons"></i><span>View</span></button>
