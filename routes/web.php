@@ -40,7 +40,6 @@ Route::post('upload', function(Request $request) {
 
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
-
 Route::group(array('middleware'=> ['token_staff']), function () {
     //
     Route::group(array('prefix' => '{global}'), function () {
