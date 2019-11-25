@@ -58,6 +58,15 @@ class PersidanganController extends BaseController {
        // dd($data_penetapan);
         return view('ppdb/penetapan/persidangan/edit-persidangan',compact('auth_data','data_penetapan'));
     }
+    public function viewPersidanganGelombang($id, Request $request) {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+        //dd($data_penetapan);
+        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan'));
+    }
+
     public function editPersidangan2($tahun, Request $request) {
         # code...
         $input = (object) $request->input();
@@ -102,47 +111,41 @@ class PersidanganController extends BaseController {
         }
     }
 
-    public function datatablesPenetapan(Request $request) {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        //$list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
-        $list_data = Penetapan::orderBy('id_penetapan','desc')->get();
-
-        /*$list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%$tahun%')->get();*/
-
-        return Datatables::of($list_data)
-                ->addColumn('nm_penetapan', function($item) {
-                    if( ! empty($item->nm_penetapan)){
-                        return $item->nm_penetapan;
-                    }
-                    else{
-                        return "-";
-                    }
-                })
-                ->addColumn('periode', function($item) {
-                    if( ! empty($item->periode)){
-                        return $item->periode;
-                    }
-                    else{
-                        return "-";
-                    }
-                })                
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_penetapan
-                    );
-                    return $data;
-                })
-                ->make(true);
-    }
-
     public function datatablesPersidangan(Request $request, $tahun) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        //$list_data = LibPenerimaan::fetchDataPenerimaanAllJenisPenerimaan($auth_data);
-        //$list_data = Penetapan::orderBy('id_penetapan','desc')->get();
         $list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%'.$tahun.'%')->get();
-
+        return Datatables::of($list_data)
+                ->addColumn('nm_penetapan', function($item) {
+                    if( ! empty($item->nm_penetapan)){
+                        return $item->nm_penetapan;
+                    }
+                    else{
+                        return "-";
+                    }
+                })
+                ->addColumn('periode', function($item) {
+                    if( ! empty($item->periode)){
+                        return $item->periode;
+                    }
+                    else{
+                        return "-";
+                    }
+                })                
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_penetapan
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+    // datatable View Gelombang
+    public function datatablesPersidanganViewGelombang(Request $request, $tahun) {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%'.$tahun.'%')->get();
+        dd($list_data);
         return Datatables::of($list_data)
                 ->addColumn('nm_penetapan', function($item) {
                     if( ! empty($item->nm_penetapan)){
@@ -169,12 +172,9 @@ class PersidanganController extends BaseController {
                 ->make(true);
     }
 
-
     // Action POST
     public function actionPenetapan(Request $request, $mode, $id = null){
-
         $input = (object) $request->input();
-
         $validator = Validator::make($request->all(), [
             'nm_penetapan'          => 'required',
             'nomor_sk_penetapan'    => 'required',

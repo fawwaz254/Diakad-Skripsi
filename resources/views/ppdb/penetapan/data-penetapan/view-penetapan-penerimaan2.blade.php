@@ -1,14 +1,13 @@
 <div class="container-fluid">
-    <!-- <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penetapan/data-penetapan/add/')}}"><i class="material-icons">note_add</i><span>Tambah Penetapan</span></a></h2>
-    </div> -->
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penetapan/data-penetapan/add-penetapan-penerimaan/')}}"><i class="material-icons">note_add</i><span>Tambah Penetapan Penerimaan</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                    {{csrf_field()}}                   
+                    {{csrf_field()}}
                     <div class="header bg-lime">
-                        <h2>JADWAL PERSIDANGAN TAHUN {{$tahun}}</h2>
-
+                        <h2>DATA PENETAPAN PENERIMAAN</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -32,9 +31,10 @@
 <script>
 
     var modul_url       = 'penetapan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'persidangan/datatables/{{$tahun}}';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'persidangan/view-persidangan-gelombang';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-persidangan/delete';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-penetapan/datatables-penetapan-penerimaan';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'data-penetapan/edit-penetapan-penerimaan';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-penetapan-penerimaan/delete';
+    var penetapan_penerimaan_url        = role_url + '#' + modul_url + '/' + 'data-penetapan/penetapan_penerimaan';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -50,9 +50,17 @@
             { data: 'periode', name: 'periode'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn " href="'+ edit_url + '/' + data.id +'">'+
-                    '    <th>lihat</th>'+
-                    '';
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> '
+                    +
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    '    <i class="material-icons">delete_forever</i>'+
+                    '</button>'
+                    +
+                    '<a class="" href="'+ penetapan_penerimaan_url + '/' '">'+
+                    '    <h7>penetapan penerimaan</h7>'+
+                    '</a> ';
                 }
             }
         ]
