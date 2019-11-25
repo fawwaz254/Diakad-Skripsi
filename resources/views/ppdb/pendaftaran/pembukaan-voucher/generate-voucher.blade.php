@@ -38,7 +38,7 @@
                             <div class="card-inside-title">
                                 Kode Prefix Nomor Pendaftaran
                                 <small class="form-text text-muted">
-                                    *prefix awal kode voucher, misal: ABC001 maka prefix kode voucher:ABC
+                                    *prefix awal nomor pendaftaran, misal: ABC001 maka prefix nomor pendaftaran:ABC
                                 </small>
                             </div>
                             <div class="row clearfix">
@@ -50,7 +50,7 @@
                             <div class="card-inside-title">
                                 Nomor Seri Nomor Pendaftaran Awal
                                 <small class="form-text text-muted">
-                                    *nomor seri awal kode voucher, misal: ABC001 nomor awal: 1
+                                    *nomor seri awal nomor pendaftaran, misal: ABC001 nomor awal: 1
                                 </small>
                             </div>
                             <div class="row clearfix">

@@ -79,7 +79,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nominal</th>
-                                        <th>Kode Voucher</th>
+                                        <th>Nomor Pendaftaran</th>
                                         <th>Pin Password</th>
                                         <th>Tanggal Ambil</th>
                                         <th>Tanggal Bayar</th>
