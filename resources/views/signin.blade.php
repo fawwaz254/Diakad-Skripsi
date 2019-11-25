@@ -14,7 +14,7 @@
         <div class="card is-login">
             <div class="row">
                 <div class="col-md-6 hidden-sm hidden-xs">
-                    <img src="{{asset('media/logo-diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                    <img src="https://diakad.sgp1.cdn.digitaloceanspaces.com/signin-logo.png" alt="Logo Diakad" style="width: 100%;" />
                 </div>
                 <div class="col-md-6">
                     <div class="body" id="khusus-login" style="padding:50px">
