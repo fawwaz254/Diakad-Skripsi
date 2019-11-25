@@ -28,9 +28,9 @@ Route::get('delete', function() {
     return redirect()->back();
 });
 Route::post('upload', function(Request $request) {
-	$validator = Validator::make($request->all(), [
-		'file' => 'file|required|max:2048|mimes:jpeg,bmp,png'
-	]);
+    $validator = Validator::make($request->all(), [
+        'file' => 'file|required|max:2048|mimes:jpeg,bmp,png'
+    ]);
 
     $file = Storage::disk('spaces')->putFile('smawh2/calon_siswa', request()->file, 'public');
 
@@ -41,15 +41,15 @@ Route::post('upload', function(Request $request) {
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
 
-Route::group(array('middleware'=> ['token_staff']), function() {
-	//
-	Route::group(array('prefix' => '{global}'), function() {
-		Route::get('/', 'AuthGlobalController@indexDashboard');
-		Route::get('search', 'AuthGlobalController@indexSearch');
-		Route::get('profile', 'AuthGlobalController@indexProfile');
-		Route::post('profile', 'AuthGlobalController@actionSaveProfile');
-		Route::get('password', 'AuthGlobalController@indexPassword');
-		Route::post('password', 'AuthGlobalController@actionChangePassword');
-		Route::get('signout', 'AuthGlobalController@actionSignOut');
-	});
+Route::group(array('middleware'=> ['token_staff']), function () {
+    //
+    Route::group(array('prefix' => '{global}'), function () {
+        Route::get('/', 'AuthGlobalController@indexDashboard');
+        Route::get('search', 'AuthGlobalController@indexSearch');
+        Route::get('profile', 'AuthGlobalController@indexProfile');
+        Route::post('profile', 'AuthGlobalController@actionSaveProfile');
+        Route::get('password', 'AuthGlobalController@indexPassword');
+        Route::post('password', 'AuthGlobalController@actionChangePassword');
+        Route::get('signout', 'AuthGlobalController@actionSignOut');
+    });
 });
