@@ -123,6 +123,10 @@ class TokenStaffMiddleware
             $tambahan_modul = [];
             if ($role_aktif->id_role == 2) {
                 if ($guru = Guru::where('id_pengguna', $pengguna->id_pengguna)->first()) {
+                    if ($guru_piket = GuruPiket::where('id_pengguna', $pengguna->id_pengguna)->where('is_aktif', 1)->first()) {
+                        $tambahan_modul[] = 35;
+                    }
+
                     if ($wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first()) {
                         $tambahan_modul[] = 36;
                     }
