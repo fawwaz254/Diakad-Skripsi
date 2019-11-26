@@ -76,10 +76,10 @@ class ReportPendaftaranController extends Controller
         return view('ppdb/report/registrasi/view-report-pendaftaran',compact('auth_data','data_penerimaan', 'data_jurusan', 'mode'));
     }
 
-    public function datatablesDetailReportPendaftaran(Request $request, $id) {
+    public function datatablesDetailReportPendaftaran(Request $request, $id_penerimaan, $id_jurusan) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibPenerimaan::fetchDataDetailPendaftaran($auth_data, $id);   
+        $list_data = LibPenerimaan::fetchDataDetailPendaftaran($auth_data, $id_penerimaan, $id_jurusan);   
 
         return Datatables::of($list_data)
 

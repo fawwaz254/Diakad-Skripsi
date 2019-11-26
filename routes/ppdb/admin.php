@@ -79,6 +79,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('pembayaran-formulir/{id_voucher}', 'PPDB\Peserta\PembayaranFormulirController@showVoucher');
 			Route::post('pembayaran-formulir/{id_voucher}/bayar-voucher', 'PPDB\Peserta\PembayaranFormulirController@bayarVoucher');
 
+			// MENU proses penetapan
+			Route::get('proses-penetapan', 'PPDB\Peserta\ProsesPenetapanController@viewProsesPenetapan');
+			Route::post('proses-penetapan/post-view-proses-penetapan', 'PPDB\Peserta\ProsesPenetapanController@actionViewProsesPenetapan');
+			Route::get('proses-penetapan/{id_penerimaan}', 'PPDB\Peserta\ProsesPenetapanController@showPeserta');
+			Route::get('proses-penetapan/datatables/{id_penerimaan}', 'PPDB\Peserta\ProsesPenetapanController@datatablesProsesPenetapan');
+			Route::post('proses-penetapan/penetapan', 'PPDB\Peserta\ProsesPenetapanController@actionPenetapan');
+
 			// MENU pindah penerimaan
 			Route::get('pindah-penerimaan', 'PPDB\Peserta\PindahPenerimaanController@viewPindahPenerimaan');
 			Route::post('pindah-penerimaan', 'PPDB\Peserta\PindahPenerimaanController@findVoucher');
@@ -98,7 +105,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('report-pendaftaran/rekap/{id}', 'PPDB\Report\ReportPendaftaranController@rekapReportPendaftaran');
 
 			Route::get('report-pendaftaran/detail/{id}', 'PPDB\Report\ReportPendaftaranController@detailReportPendaftaran');
-			Route::get('report-pendaftaran/detail/datatables/{id}', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
+			Route::get('report-pendaftaran/detail/datatables/{id_penerimaan}/{id_jurusan}', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
 		});
 
 		/** ==== MODUL PENETAPAN ==== **/

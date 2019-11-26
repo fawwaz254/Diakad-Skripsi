@@ -280,7 +280,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_unit_kerja" required="">
+                                <select class="form-control show-tick" name="id_unit_kerja" required="" readonly >
                                     <option value="">-- Pilih Unit Kerja --</option>
                                     @foreach($data_unit_kerja as $data)
                                     <option value="{{$data->id_unit_kerja}}" @if($guru->id_unit_kerja == $data->id_unit_kerja) selected @endif>{{$data->nm_unit_kerja}}</option>
