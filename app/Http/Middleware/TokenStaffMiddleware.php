@@ -140,7 +140,7 @@ class TokenStaffMiddleware
             }
 
             if (!empty($tambahan_modul)) {
-                $moduls_2 = Modul::whereIn('id_modul', $tambahan_modul)->where('is_aktif', 1)->get();
+                $moduls_2 = Modul::whereIn('id_modul', $tambahan_modul)->where('akses', 1)->get();
                 $menus_2 = Menu::whereIn('id_modul', $tambahan_modul)->where('is_aktif', 1)->get();
 
                 $moduls = collect($moduls->merge($moduls_2)->all());
