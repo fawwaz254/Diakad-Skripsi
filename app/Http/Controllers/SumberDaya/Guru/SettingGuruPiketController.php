@@ -52,7 +52,12 @@ class SettingGuruPiketController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $guru = GuruPiket::select('guru.nip_guru', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')->join('guru', 'guru.id_guru', '=', 'guru_piket.id_guru')->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->where('guru_piket.id_guru_piket', '=', $id)->first();
+        $guru = GuruPiket::select('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->leftjoin('guru', 'guru.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->leftjoin('staff', 'staff.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+        ->where('guru_piket.id_guru_piket', '=', $id)->first();
 
         return view('sumber-daya/guru/setting-guru-piket/view-edit-setting-guru-piket', compact('auth_data', 'guru'));
     }
@@ -62,9 +67,30 @@ class SettingGuruPiketController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = GuruPiket::select('guru.nip_guru', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'unit_kerja.nm_unit_kerja', 'guru_piket.is_aktif')->join('guru', 'guru.id_guru', '=', 'guru_piket.id_guru')->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        $list_data = GuruPiket::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
+        ->addSelect('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->leftjoin('guru', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+        ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+        ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
+        ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
+        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
+                ->addColumn('nip_pengguna', function ($item) {
+                    if (!empty($item->nip_guru)) {
+                        return $item->nip_guru;
+                    } else {
+                        return $item->nip_staff;
+                    }
+                })
+                ->addColumn('nm_unit_kerja', function ($item) {
+                    if (!empty($item->unit_kerja_guru)) {
+                        return $item->unit_kerja_guru;
+                    } else {
+                        return $item->unit_kerja_staff;
+                    }
+                })
                 ->addColumn('is_aktif', function ($item) {
                     if ($item->is_aktif == 1) {
                         return "Aktif";
@@ -86,18 +112,35 @@ class SettingGuruPiketController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = Guru::select('pengguna.nm_pengguna', 'guru.nip_guru', 'unit_kerja.nm_unit_kerja', 'guru.id_guru', 'pengguna.id_pengguna')
-        ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-        ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')
+        $list_data = Pengguna::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
+        ->addSelect('pengguna.nm_pengguna', 'guru.nip_guru', 'staff.nip_staff', 'pengguna.id_pengguna')
+        ->leftjoin('guru', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+        ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+        ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
+        ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
            ->whereNotExists(function ($query) {
                $query->select(DB::raw(1))
                       ->from('guru_piket')
-                      ->whereRaw('guru_piket.id_guru = guru.id_guru');
+                      ->whereRaw('guru_piket.id_pengguna = pengguna.id_pengguna');
            })
         ->get();
 
         return Datatables::of($list_data)
+                ->addColumn('nip_pengguna', function ($item) {
+                    if (!empty($item->nip_guru)) {
+                        return $item->nip_guru;
+                    } else {
+                        return $item->nip_staff;
+                    }
+                })
+                ->addColumn('nm_unit_kerja', function ($item) {
+                    if (!empty($item->unit_kerja_guru)) {
+                        return $item->unit_kerja_guru;
+                    } else {
+                        return $item->unit_kerja_staff;
+                    }
+                })
                 ->addColumn('is_aktif', function ($item) {
                     if ($item->is_aktif == "1") {
                         return "Aktif";

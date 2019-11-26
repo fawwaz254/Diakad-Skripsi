@@ -27,8 +27,13 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="nip_guru" required="" aria-required="true"
+                                @if(!empty($guru->nip_guru))
+                                    <input type="text" class="form-control" name="nip_pengguna" required="" aria-required="true"
                                         aria-invalid="true" readonly="" value="{{$guru->nip_guru}}">
+                                @else
+                                    <input type="text" class="form-control" name="nip_pengguna" required="" aria-required="true"
+                                        aria-invalid="true" readonly="" value="{{$guru->nip_staff}}">
+                                @endif
                                 </div>
                             </div>
                             <h2 class="card-inside-title">

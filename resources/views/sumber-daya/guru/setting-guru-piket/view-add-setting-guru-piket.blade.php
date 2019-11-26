@@ -26,7 +26,7 @@
                                                 <input id="checkbox_select_all" type="checkbox" name="select_all" class="filled-in">
                                                 <label for="checkbox_select_all" style="margin-bottom: -10px;"></label>
                                             </th>
-                                            <th>Nama Guru</th>
+                                            <th>Nama</th>
                                             <th>NIP</th>
                                             <th>Unit Kerja</th>
                                         </tr>
@@ -64,8 +64,8 @@
                 }
             },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
-            { data: 'nip_guru', name: 'guru.nip_guru' },
-            { data: 'nm_unit_kerja', name: 'unit_kerja.nm_unit_kerja' }
+            { data: 'nip_pengguna', name: 'nip_pengguna', searchable: false, orderable: false },
+            { data: 'nm_unit_kerja', name: 'unit_kerja.nm_unit_kerja', searchable: false, orderable: false  }
         ]
     });
 
