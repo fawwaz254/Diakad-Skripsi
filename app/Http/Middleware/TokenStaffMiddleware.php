@@ -123,25 +123,25 @@ class TokenStaffMiddleware
             $tambahan_modul = [];
             if ($role_aktif->id_role == 2) {
                 if ($guru = Guru::where('id_pengguna', $pengguna->id_pengguna)->first()) {
-                    if ($wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->first()) {
+                    if ($wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first()) {
                         $tambahan_modul[] = 36;
                     }
 
-                    if ($pembina_ekskul_set = PembinaEkskulSet::where('id_guru', $guru->id_guru)->first()) {
+                    if ($pembina_ekskul_set = PembinaEkskulSet::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first()) {
                         $tambahan_modul[] = 37;
                     }
                 }
             }
 
             if ($role_aktif->id_role == 15) {
-                if ($guru_piket = GuruPiket::where('id_pengguna', $pengguna->id_pengguna)->first()) {
+                if ($guru_piket = GuruPiket::where('id_pengguna', $pengguna->id_pengguna)->where('is_aktif', 1)->first()) {
                     $tambahan_modul[] = 35;
                 }
             }
 
             if (!empty($tambahan_modul)) {
                 $moduls_2 = Modul::whereIn('id_modul', $tambahan_modul)->get();
-                $menus_2 = Menu::whereIn('id_modul', $tambahan_modul)->where('is_aktif', 1)->get();
+                $menus_2 = Menu::whereIn('id_modul', $tambahan_modul)->where('akses', 1)->get();
 
                 $moduls = collect($moduls->merge($moduls_2)->all());
                 $menus = collect($menus->merge($menus_2)->all());
