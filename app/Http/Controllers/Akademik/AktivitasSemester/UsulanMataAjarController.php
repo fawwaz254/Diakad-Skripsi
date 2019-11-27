@@ -95,6 +95,10 @@ class UsulanMataAjarController extends BaseController
         $auth_data  = $input->auth_data;
 
         $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+                            ->join('jenis_mata_pelajaran', function ($join) {
+                                $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+                                     ->whereNull('jenis_mata_pelajaran.deleted_at');
+                            })
                             ->where('mata_pelajaran.id_mata_pelajaran', '=', $id_mata_pelajaran)
                             ->first();
         $kelas      = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -112,7 +116,10 @@ class UsulanMataAjarController extends BaseController
         $kelas_mp   = KelasMp::with('kelas')->where('id_kelas_mp', '=', $id_kelas_mp)->first();
 
         $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
-                            ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+                            ->join('jenis_mata_pelajaran', function ($join) {
+                                $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+                                    ->whereNull('jenis_mata_pelajaran.deleted_at');
+                            })
                             ->where('mata_pelajaran.id_mata_pelajaran', '=', $kelas_mp->id_mata_pelajaran)
                             ->first();
 
