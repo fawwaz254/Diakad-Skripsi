@@ -18,6 +18,7 @@ use App\Models\JadwalHari as JadwalHari;
 use App\Models\Ruangan as Ruangan;
 use App\Models\JadwalJam as JadwalJam;
 use App\Models\JadwalKelasMp as JadwalKelasMp;
+use App\Models\PengambilanMp;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -520,18 +521,21 @@ class UsulanMataAjarController extends BaseController
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
             } elseif ($mode == 'delete') {
-                if ($kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id)->first()) {
+                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Mata Ajar'
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
                     ];
                 } else {
                     // make object to find id
                     $kelas_mp                           = KelasMp::find($id);
                     $kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kelas_mp->save();
-
                     $kelas_mp->delete();
+
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
