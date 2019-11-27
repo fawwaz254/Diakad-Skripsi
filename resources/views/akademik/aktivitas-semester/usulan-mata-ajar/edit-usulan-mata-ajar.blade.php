@@ -172,7 +172,7 @@
                         </h3>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="ruangan1" required >
+                                <select class="form-control show-tick select2" name="ruangan1" required >
                                     <option value="">-- Pilih Ruangan Kelas --</option>
                                     @foreach($ruangan as $data)
                                         @if($jml_jadwal < 1)
@@ -259,7 +259,7 @@
                         </h3>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="ruangan2">
+                                <select class="form-control show-tick select2" name="ruangan2">
                                     <option value="">-- Pilih Ruangan Kelas --</option>
                                     @foreach($ruangan as $data)
                                         @if($jml_jadwal < 2)
@@ -344,7 +344,7 @@
                         </h3>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="ruangan3">
+                                <select class="form-control show-tick select2" name="ruangan3">
                                     <option value="">-- Pilih Ruangan Kelas --</option>
                                      @foreach($ruangan as $data)
                                         @if($jml_jadwal < 3)
@@ -429,7 +429,7 @@
                         </h3>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="ruangan4">
+                                <select class="form-control show-tick select2" name="ruangan4">
                                     <option value="">-- Pilih Ruangan Kelas --</option>
                                      @foreach($ruangan as $data)
                                         @if($jml_jadwal < 4)
