@@ -112,6 +112,7 @@ class UsulanMataAjarController extends BaseController
         $kelas_mp   = KelasMp::with('kelas')->where('id_kelas_mp', '=', $id_kelas_mp)->first();
 
         $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+                            ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                             ->where('mata_pelajaran.id_mata_pelajaran', '=', $kelas_mp->id_mata_pelajaran)
                             ->first();
 
@@ -168,7 +169,7 @@ class UsulanMataAjarController extends BaseController
 
         $hari       = JadwalHari::get();
         $jam        = JadwalJam::get();
-        $pjma       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $pjma       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return view('akademik/aktivitas-semester/usulan-mata-ajar/edit-usulan-mata-ajar', compact('auth_data', 'id', 'pjma', 'hari', 'ruangan', 'jam', 'kelas_mp', 'jadwal', 'jml_jadwal', 'pengampu_mp_pj', 'anggota', 'jml_anggota'));

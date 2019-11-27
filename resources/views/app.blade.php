@@ -61,6 +61,9 @@
         <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
         <link href="{{asset('css/themes/all-themes.css')}}" rel="stylesheet" />
 
+        <!-- Select2 Css -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+
         <script>
             var base_url = document.getElementsByTagName('base')[0].getAttribute('href');
             var role_url = document.getElementsByTagName('meta')[2].getAttribute('content');
@@ -140,6 +143,9 @@
     <script src="{{asset('js/admin.js?v0')}}"></script>
     <script src="{{asset('js/pages/ui/dialogs.js')}}"></script>
     <script src="{{asset('js/demo.js')}}"></script>
+
+    <!-- Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     <script>
         $(function () {

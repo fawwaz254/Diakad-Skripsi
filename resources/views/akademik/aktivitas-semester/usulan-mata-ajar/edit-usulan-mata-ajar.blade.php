@@ -453,7 +453,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="pjma" required >
+                                <select class="form-control show-tick select2" name="pjma" required >
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
                                         @if($pengampu_mp_pj == null)
@@ -474,7 +474,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="pjma_tim1">
+                                <select class="form-control show-tick select2" name="pjma_tim1">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
                                         @if($jml_anggota < 1)
@@ -496,7 +496,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="pjma_tim2">
+                                <select class="form-control show-tick select2" name="pjma_tim2">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
                                         @if($jml_anggota < 2)
@@ -528,3 +528,7 @@
     </div>
 </div>
 @include('scriptjs')
+
+<script>
+    $('.select2').select2();
+</script>

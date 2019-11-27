@@ -22,6 +22,12 @@
                             <label>{{$mapel->kd_mata_pelajaran}} - {{$mapel->nm_mata_pelajaran}}</label>
                         </div>
                         <h2 class="card-inside-title">
+                            Jenis Mapel
+                        </h2>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <label>{{$mapel->nm_jenis_mata_pelajaran}}</label>
+                        </div>
+                        <h2 class="card-inside-title">
                             Jurusan
                         </h2>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
