@@ -23,7 +23,7 @@
                                         <th>Kode</th>
                                         <th>Nama Mata Ajar</th>
                                         <th>Jenis Mapel</th>
-                                        <th>Tingkat Semester</th>
+                                        <th>Tingkat</th>
                                         <th>Kelas</th>
                                         <th>Jadwal</th>
                                         <th>Pengampu</th>

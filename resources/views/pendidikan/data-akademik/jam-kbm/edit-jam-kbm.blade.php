@@ -23,6 +23,15 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Jam Ke
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="jam_ke" required="" aria-required="true" aria-invalid="true"
+                                    value="{{$data_jadwal_jam->jam_ke}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Jam Mulai
                         </h2>
                         <div class="row clearfix">
