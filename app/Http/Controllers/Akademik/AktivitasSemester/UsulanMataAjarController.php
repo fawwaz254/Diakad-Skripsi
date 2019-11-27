@@ -185,7 +185,8 @@ class UsulanMataAjarController extends BaseController
                 $query->select(DB::raw(1))
                       ->from('kelas_mp')
                       ->whereRaw('kelas_mp.id_mata_pelajaran = mata_pelajaran.id_mata_pelajaran')
-                      ->whereRaw('kelas_mp.id_semester = "'.$id_semester.'"');
+                      ->whereRaw('kelas_mp.id_semester = "'.$id_semester.'"')
+                      ->whereNull('kelas_mp.deleted_at');
             })
             ->where('jenis_mata_pelajaran.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
