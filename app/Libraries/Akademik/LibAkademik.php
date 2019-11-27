@@ -119,6 +119,7 @@ class LibAkademik
         $cekRuangan = JadwalKelasMp::join('jadwal_jam AS jj','jj.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam')
                                     ->join('jadwal_jam AS jjs','jjs.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam_selesai')
                                     ->where('id_ruangan','=',$id_ruangan)
+                                    ->where('id_jadwal_hari','=',$id_jadwal_hari)
                                     ->where(function ($query) use ($jam_ke_mulai, $jam_ke_selesai) {
                                         $query->whereBetween('jj.jam_ke', [$jam_ke_mulai, $jam_ke_selesai])
                                                 ->orWhereBetween('jjs.jam_ke', [$jam_ke_mulai, $jam_ke_selesai]);
