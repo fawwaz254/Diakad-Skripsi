@@ -17,9 +17,9 @@ select[id="penerimaan_awal"]:disabled {
                         <form id="form-validation" method="POST" enctype="multipart/form-data" action="{{url(Request::segment(1).'/'.Request::segment(2).'/pindah-penerimaan')}}">
                             {{csrf_field()}}
                             <div class="card-inside-title">
-                                No. Formulir / Kode Voucher
+                                No. Formulir / Nomor Pendaftaran
                                 <small class="form-text text-muted">
-                                    *masukkan kode voucher yang ingin dipindah
+                                    *masukkan nomor pendaftaran yang ingin dipindah
                                 </small>
                             </div>
                             <div class="row clearfix">
@@ -28,7 +28,7 @@ select[id="penerimaan_awal"]:disabled {
                                 </div>
                             </div>
 
-                            <h2><button class="btn bg-green waves-effect" type="submit"><i class="material-icons">search</i><span>Cari Voucher</span></button></h2>
+                            <h2><button class="btn bg-green waves-effect" type="submit"><i class="material-icons">search</i><span>Cari Nomor Pendaftaran</span></button></h2>
                         </form>
 
                         <!-- detail voucher -->
@@ -39,20 +39,20 @@ select[id="penerimaan_awal"]:disabled {
                                     <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                         <thead>
                                             <tr>
-                                                <th colspan="2">Detail Voucher</th>
+                                                <th colspan="2">Detail Pendaftaran</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>Kode Voucher</td>
+                                                <td>Nomor Pendaftaran</td>
                                                 <td>{{ $voucher->kode_voucher }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Pin Voucher</td>
+                                                <td>Pin Pendaftaran</td>
                                                 <td>{{ $voucher->pin_password }}</td>
                                             </tr>
                                             <tr>
-                                                <td>Tarif Voucher</td>
+                                                <td>Tarif Formulir</td>
                                                 <td class="tarif">{{ $voucher->tarif }}</td>
                                             </tr>
                                             <tr>

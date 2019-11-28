@@ -35,7 +35,7 @@
             <div class="card">
                 {{csrf_field()}}
                 <div class="header bg-lime">
-                    <h2>REKAP JURUSAN PER PILIHAN ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }})</h2>
+                    <h2>REKAP JURUSAN PER PILIHAN ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -86,7 +86,7 @@
             <div class="card">
                 {{csrf_field()}}
                 <div class="header bg-lime">
-                    <h2>REKAP JURUSAN PER STATUS ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }})</h2>
+                    <h2>REKAP JURUSAN PER STATUS ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -141,12 +141,12 @@
             @elseif($mode == "detail")
             <div class="card">
                 {{csrf_field()}}
-                @foreach ($data_jurusan as $jurusan)
                 <div class="block-header">
                     <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#report/report-pendaftaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
                 </div>
+                @foreach ($data_jurusan as $jurusan)
                 <div class="header bg-lime">
-                    <h2>{{ $jurusan->nm_jurusan }} ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }})</h2>
+                    <h2>{{ $jurusan->nm_jurusan }} ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -179,10 +179,11 @@
 @if($mode == "detail")
     @foreach($data_jurusan as $jurusan)
     <script>
+        var id_penerimaan   = {!! json_encode($data_penerimaan->id_penerimaan) !!};
         var id_jurusan      = {!! json_encode($jurusan->id_jurusan) !!};
 
         var modul_url               = 'report';
-        var datatable_detail_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'report-pendaftaran/detail/datatables/' + id_jurusan;
+        var datatable_detail_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'report-pendaftaran/detail/datatables/' + id_penerimaan + '/' + id_jurusan;
 
         var primary_table_{{ $jurusan->id_jurusan }} = $('#primary_table_'+id_jurusan).DataTable({
             processing: true,

@@ -19,7 +19,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Guru</th>
+                                        <th>Nama</th>
                                         <th>NIP</th>
                                         <th>Unit Kerja</th>
                                         <th>Status Aktif</th>
@@ -54,9 +54,9 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_pengguna', name: 'nm_pengguna' },
-            { data: 'nip_guru', name: 'nip_guru' },
+            { data: 'nip_pengguna', name: 'nip_pengguna', searchable: false, orderable: false },
             /*{ data: 'nm_jabatan_pegawai', name: 'nm_jabatan_pegawai' },*/
-            { data: 'nm_unit_kerja', name: 'nm_unit_kerja' },
+            { data: 'nm_unit_kerja', name: 'nm_unit_kerja', searchable: false, orderable: false },
             { data: 'is_aktif', name: 'is_aktif' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){

@@ -8,7 +8,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <!-- <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-guru/edit/'.$guru->id_guru)}}"> -->
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-data-pribadi')}}">
                         {{csrf_field()}}
                         <div class="header bg-orange">
                             <h2>
@@ -64,7 +64,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_kota_lahir">
+                               <select class="form-control show-tick select2" name="id_kota_lahir">
                                     <option value="">-- Pilih Kota Lahir --</option>
                                     @foreach($kota as $data)
                                     <option value="{{$data->id_kota}}" @if($data->id_kota == $guru->id_kota_lahir) selected @endif>{{$data->nm_kota}}</option>
@@ -155,7 +155,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="alamat_provinsi">
+                               <select class="form-control show-tick select2" name="alamat_provinsi">
                                     <option value="">-- Pilih Alamat Provinsi --</option>
                                     @foreach($provinsi as $data)
                                     <option value="{{$data->id_provinsi}}" @if($data->id_provinsi == $guru->alamat_provinsi) selected @endif>{{$data->nm_provinsi}}</option>
@@ -168,7 +168,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="alamat_kota">
+                               <select class="form-control show-tick select2" name="alamat_kota">
                                     <option value="">-- Pilih Alamat Kota --</option>
                                     @foreach($kota as $data)
                                     <option value="{{$data->id_kota}}" @if($guru->alamat_kota == $data->id_kota) selected @endif>{{$data->nm_kota}}</option>
@@ -280,8 +280,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_unit_kerja" required="">
-                                    <option value="">-- Pilih Unit Kerja --</option>
+                                <select class="form-control show-tick" disabled="" >
                                     @foreach($data_unit_kerja as $data)
                                     <option value="{{$data->id_unit_kerja}}" @if($guru->id_unit_kerja == $data->id_unit_kerja) selected @endif>{{$data->nm_unit_kerja}}</option>
                                     @endforeach
@@ -311,7 +310,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nip_guru" required="" aria-invalid="true" value="{{$guru->nip_guru}}">
+                                <input type="text" class="form-control" disabled="" value="{{$guru->nip_guru}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -545,8 +544,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_status_pengguna" required="">
-                                    <option value="">-- Pilih Status Aktif --</option>
+                                <select class="form-control show-tick" disabled="">
                                     @foreach($data_status_aktif_guru as $data)
                                     <option value="{{$data->id_status_pengguna}}" @if($guru->id_status_pengguna == $data->id_status_pengguna) selected @endif>{{$data->nm_status_pengguna}} -
                                         @if($data->aktif_status_pengguna == 0) Keluar/Non-Aktif @else Aktif @endif</option>
@@ -563,7 +561,7 @@
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
-                    <!-- </form> -->
+                    </form>
                 </div>
             </div>
         </div>
@@ -579,5 +577,6 @@
             weekStart: 1,
             time: false
         });
+        $('.select2').select2();
     });
 </script>

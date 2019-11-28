@@ -26,51 +26,79 @@ use DB;
 use Session;
 use Validator;
 
-
 class SettingGuruPiketController extends BaseController
 {
-   	public function viewSettingGuruPiket(Request $request){
+    public function viewSettingGuruPiket(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('sumber-daya/guru/setting-guru-piket/view-setting-guru-piket',compact('auth_data'));
+        return view('sumber-daya/guru/setting-guru-piket/view-setting-guru-piket', compact('auth_data'));
     }
 
-    public function addSettingGuruPiket(Request $request){
+    public function addSettingGuruPiket(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('sumber-daya/guru/setting-guru-piket/view-add-setting-guru-piket',compact('auth_data'));
+        return view('sumber-daya/guru/setting-guru-piket/view-add-setting-guru-piket', compact('auth_data'));
     }
 
-    public function editSettingGuruPiket(Request $request, $id){
+    public function editSettingGuruPiket(Request $request, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $guru = GuruPiket::select('guru.nip_guru','pengguna.nm_pengguna','guru_piket.id_guru_piket','guru_piket.is_aktif')->join('guru','guru.id_guru','=','guru_piket.id_guru')->join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')->where('pengguna.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->where('guru_piket.id_guru_piket','=',$id)->first();
+        $guru = GuruPiket::select('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->leftjoin('guru', 'guru.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->leftjoin('staff', 'staff.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+        ->where('guru_piket.id_guru_piket', '=', $id)->first();
 
-        return view('sumber-daya/guru/setting-guru-piket/view-edit-setting-guru-piket',compact('auth_data','guru'));
+        return view('sumber-daya/guru/setting-guru-piket/view-edit-setting-guru-piket', compact('auth_data', 'guru'));
     }
 
-    public function datatablesSettingGuruPiket(Request $request){
+    public function datatablesSettingGuruPiket(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = GuruPiket::select('guru.nip_guru','pengguna.nm_pengguna','guru_piket.id_guru_piket','unit_kerja.nm_unit_kerja','guru_piket.is_aktif')->join('guru','guru.id_guru','=','guru_piket.id_guru')->join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')->join('unit_kerja','unit_kerja.id_unit_kerja','=','guru.id_unit_kerja')->where('pengguna.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
+        $list_data = GuruPiket::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
+        ->addSelect('guru.nip_guru', 'staff.nip_staff', 'pengguna.nm_pengguna', 'guru_piket.id_guru_piket', 'guru_piket.is_aktif')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru_piket.id_pengguna')
+        ->leftjoin('guru', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+        ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+        ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
+        ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
+        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
-        		->addColumn('is_aktif', function($item){
-                    if($item->is_aktif == 1) {
-                        return "Aktif";
+                ->addColumn('nip_pengguna', function ($item) {
+                    if (!empty($item->nip_guru)) {
+                        return $item->nip_guru;
+                    } else {
+                        return $item->nip_staff;
                     }
-                    else {
+                })
+                ->addColumn('nm_unit_kerja', function ($item) {
+                    if (!empty($item->unit_kerja_guru)) {
+                        return $item->unit_kerja_guru;
+                    } else {
+                        return $item->unit_kerja_staff;
+                    }
+                })
+                ->addColumn('is_aktif', function ($item) {
+                    if ($item->is_aktif == 1) {
+                        return "Aktif";
+                    } else {
                         return "Non-Aktif";
                     }
                 })
-                ->addColumn('action', function($item){
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_guru_piket
                     );
@@ -79,41 +107,58 @@ class SettingGuruPiketController extends BaseController
                 ->make(true);
     }
 
-    public function datatablesAddGuruPiket(Request $request){
+    public function datatablesAddGuruPiket(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = Guru::select('pengguna.nm_pengguna','guru.nip_guru','unit_kerja.nm_unit_kerja','guru.id_guru')
-        ->join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')
-        ->join('unit_kerja','unit_kerja.id_unit_kerja','=','guru.id_unit_kerja')
-        ->where('pengguna.id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-       	->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
+        $list_data = Pengguna::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
+        ->addSelect('pengguna.nm_pengguna', 'guru.nip_guru', 'staff.nip_staff', 'pengguna.id_pengguna')
+        ->leftjoin('guru', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+        ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+        ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
+        ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
+        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+           ->whereNotExists(function ($query) {
+               $query->select(DB::raw(1))
                       ->from('guru_piket')
-                      ->whereRaw('guru_piket.id_guru = guru.id_guru');
-            })
+                      ->whereRaw('guru_piket.id_pengguna = pengguna.id_pengguna');
+           })
         ->get();
 
         return Datatables::of($list_data)
-        		->addColumn('is_aktif', function($item){
-                    if($item->is_aktif == "1") {
-                        return "Aktif";
+                ->addColumn('nip_pengguna', function ($item) {
+                    if (!empty($item->nip_guru)) {
+                        return $item->nip_guru;
+                    } else {
+                        return $item->nip_staff;
                     }
-                    else {
+                })
+                ->addColumn('nm_unit_kerja', function ($item) {
+                    if (!empty($item->unit_kerja_guru)) {
+                        return $item->unit_kerja_guru;
+                    } else {
+                        return $item->unit_kerja_staff;
+                    }
+                })
+                ->addColumn('is_aktif', function ($item) {
+                    if ($item->is_aktif == "1") {
+                        return "Aktif";
+                    } else {
                         return "Tidak aktif";
                     }
                 })
-                ->addColumn('checkbox', function($item){
+                ->addColumn('checkbox', function ($item) {
                     $data = array(
-                        'id' => $item->id_guru
+                        'id' => $item->id_pengguna
                     );
                     return $data;
                 })
                 ->make(true);
     }
 
-    public function actionSettingGuruPiket(Request $request, $mode, $id = null){
-
+    public function actionSettingGuruPiket(Request $request, $mode, $id = null)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -122,21 +167,20 @@ class SettingGuruPiketController extends BaseController
             
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
-            if($mode == 'add'){
+        } else {
+            if ($mode == 'add') {
                 DB::beginTransaction();
 
                 try {
-                    foreach ($input->id_guru as $id_guru) {
+                    foreach ($input->id_pengguna as $id_pengguna) {
                         $guru                        	= new GuruPiket;
                         $guru->id_guru_piket	        = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                        $guru->id_guru 	            	= $id_guru;
+                        $guru->id_pengguna 	            = $id_pengguna;
                         $guru->created_by            	= $input->auth_data->pengguna->id_pengguna;
                         $guru->created_at            	= $now;
                         $guru->is_aktif 				= 1;
@@ -148,7 +192,6 @@ class SettingGuruPiketController extends BaseController
                             'message' => 'Tambah Guru Piket Berhasil',
                             'path' => 'guru/setting-guru-piket/'
                     ];
-                    
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
@@ -158,28 +201,26 @@ class SettingGuruPiketController extends BaseController
                                 'message' => 'Tambah Guru Piket Gagal'
                             ];
                 }
-        	}
-        	elseif($mode == "edit"){
-        		$guru 		= GuruPiket::find($id);
-        		$guru->is_aktif	= $input->is_aktif;
-        		$guru->updated_at	= $now;
-        		$guru->updated_by	= $input->auth_data->pengguna->id_pengguna;
-        		$guru->save();
+            } elseif ($mode == "edit") {
+                $guru 		= GuruPiket::find($id);
+                $guru->is_aktif	= $input->is_aktif;
+                $guru->updated_at	= $now;
+                $guru->updated_by	= $input->auth_data->pengguna->id_pengguna;
+                $guru->save();
 
-        		return [
+                return [
                             'status' => 204, // SUCCESS AND LOAD CONTENT
                             'message' => 'Edit Guru Piket Berhasil',
                             'path' => 'guru/setting-guru-piket/'
                     ];
-        	}
-        	elseif($mode == "delete"){
-        		$guru 	= GuruPiket::find($id);
-        		$guru->forceDelete();
+            } elseif ($mode == "delete") {
+                $guru 	= GuruPiket::find($id);
+                $guru->forceDelete();
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
                     'message' => 'Guru Piket Berhasil Dihapus'
                 ];
-        	}
+            }
         }
     }
 }

@@ -14,14 +14,14 @@
         <div class="card is-login">
             <div class="row">
                 <div class="col-md-6 hidden-sm hidden-xs">
-                    <img src="{{asset('media/logo-diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                    <img src="https://diakad.sgp1.cdn.digitaloceanspaces.com/signin-logo.png" alt="Logo Diakad" style="width: 100%;" />
                 </div>
                 <div class="col-md-6">
-                    <div class="body" id="khusus-login" style="padding:50px">
+                    <div class="body" id="khusus-login">
                         <form class="form-validation" method="POST" action="{{url('signin')}}">
                             {{csrf_field()}}
                             <div class="msg" style="font-size:1.5em;line-height:50px">
-                                <img class="hidden-md hidden-lg" src="{{asset('media/logo-diakad.png')}}" alt="Logo Diakad" style="height: 90px;" />
+                                <img class="hidden-md hidden-lg" src="https://diakad.sgp1.cdn.digitaloceanspaces.com/signin-logo.png" alt="Logo Diakad" style="height: 90px;" />
                                 <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" />
                                 <br>
                                 <strong>{{$sekolah->nm_sekolah}}</strong>
