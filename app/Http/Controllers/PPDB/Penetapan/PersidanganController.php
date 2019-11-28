@@ -31,7 +31,6 @@ class PersidanganController extends BaseController {
 
         $data_tahun_penetapan = DB::table('penetapan') ->distinct()->get([DB::raw('YEAR(tgl_penetapan) as tgl_penetapan')]); 
         //dd($data_tahun_penetapan);
-
     	return view('ppdb/penetapan/persidangan/view-persidangan',compact('auth_data','data_tahun_penetapan'));
     }
 
@@ -39,14 +38,9 @@ class PersidanganController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-/*
-       
-*/
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-
         $id_penetapan = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
         return view('ppdb/penetapan/data-penetapan/add-penetapan',compact('auth_data','id_penetapan'));
     }
 
@@ -62,16 +56,17 @@ class PersidanganController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $data_penerimaan = DB::table('penerimaan')->where('id_penerimaan',$id)->first();
         $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
         //dd($data_penetapan);
-        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan'));
+        dd($data_penerimaan);
+        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan', 'data_penerimaan'));
     }
 
     public function editPersidangan2($tahun, Request $request) {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        // dd($data_penetapan);
         return view('ppdb/penetapan/persidangan/view-persidangan2',compact('auth_data','tahun'));
 
     }
@@ -81,7 +76,6 @@ class PersidanganController extends BaseController {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
-       // dd($data_penetapan);
         return view('ppdb/penetapan/persidangan/view-sidang-penetapan',compact('auth_data','data_penetapan'));
 
     }
@@ -141,11 +135,17 @@ class PersidanganController extends BaseController {
                 ->make(true);
     }
     // datatable View Gelombang
-    public function datatablesPersidanganViewGelombang(Request $request, $tahun) {
+    public function datatablesPersidanganViewGelombang(Request $request, $id) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = Penetapan::orderBy('id_penetapan','desc')->where('tgl_penetapan','like','%'.$tahun.'%')->get();
-        dd($list_data);
+        $list_data  = PenetapanPenerimaan::select('penetapan_penerimaan.id_penetapan_penerimaan', 
+            'penerimaan.nm_penerimaan', 'penerimaan.gelombang_penerimaan',
+            'penerimaan.nm_semester_penerimaan','penerimaan.tahun_penerimaan')
+                ->join('penerimaan','penerimaan.id_penerimaan','=','penetapan_penerimaan.id_penerimaan')
+                ->join('penetapan','penetapan.id_penetapan','=','penetapan_penerimaan.id_penetapan')
+                ->where('penetapan.id_penetapan','=',$id)
+                ->orderBy('penerimaan.nm_penerimaan', 'asc')
+                ->get();        
         return Datatables::of($list_data)
                 ->addColumn('nm_penetapan', function($item) {
                     if( ! empty($item->nm_penetapan)){

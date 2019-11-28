@@ -2,12 +2,16 @@
     <!-- <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penetapan/data-penetapan/add/')}}"><i class="material-icons">note_add</i><span>Tambah Penetapan</span></a></h2>
     </div> -->
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#penetapan/persidangan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}                   
                     <div class="header bg-lime">
-                        <h2>PENETAPAN PPDB</h2>
+                        
+                        <h2>Data '{{$data_penetapan->nm_penetapan}}'</h2>
 
                     </div>
                     <div class="body">
@@ -18,8 +22,8 @@
                                         <th>No</th>
                                         <th>Jurusan</th>
                                         <th>Peserta</th>
-                                        <!-- <th>Kuota</th>
-                                        <th>Diterima</th> -->
+                                        <th>Kuota</th>
+                                        <th>Diterima</th>
                                                    
                                         <th>Action</th>
                                     </tr>
@@ -51,6 +55,8 @@
             { data: null, searchable: false, orderable: false }, 
             { data: 'nm_penetapan', name: 'nm_penetapan' },
             { data: 'periode', name: 'periode'},
+            { data: 'kuota', name: 'kuota' },
+            { data: 'diterima', name: 'diterima'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

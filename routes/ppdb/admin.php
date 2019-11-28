@@ -127,7 +127,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::get('persidangan/view-persidangan-gelombang/{id}', 'PPDB\Penetapan\PersidanganController@viewPersidanganGelombang');
 
-			Route::get('persidangan/datatablesviewgelombang', 'PPDB\Penetapan\PersidanganController@datatablesPersidanganViewGelombang');
+			Route::get('persidangan/datatablesviewgelombang/{id}', 'PPDB\Penetapan\PersidanganController@datatablesPersidanganViewGelombang');
 
 
 		});		
