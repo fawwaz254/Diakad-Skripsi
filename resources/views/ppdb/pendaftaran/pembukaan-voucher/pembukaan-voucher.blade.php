@@ -13,7 +13,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header bg-lime">
-                        <h2>PEMBUKAAN NOMOR PENDAFTARAN - DAFTAR TARIF & NOMOR PEMDAFTARAN</h2>
+                        <h2>PEMBUKAAN NOMOR PENDAFTARAN - DAFTAR TARIF & NOMOR PENDAFTARAN</h2>
                     </div>
 
                     <div class="body" style="padding-bottom:50px;">

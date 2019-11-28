@@ -15,15 +15,15 @@ use App\Models\VoucherTarif as VoucherTarif;
 use Validator;
 use Carbon\Carbon;
 
-/** 
+/**
  * Pembukaan Voucher Controller
  * @author irianto
  */
 class PembukaanVoucherController extends Controller
 {
-    /** 
-     * View page awal pembukaan voucher, show list data penerimaan 
-     * @param Request 
+    /**
+     * View page awal pembukaan voucher, show list data penerimaan
+     * @param Request
      * @return View
      */
     public function viewPembukaanVoucher(Request $request)
@@ -35,14 +35,15 @@ class PembukaanVoucherController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
 
         /** groupping by year and semester */
-        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
+        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
             return $item->groupBy('nm_semester_penerimaan');
-        });; 
+        });
+        ;
 
-        return view('ppdb/pendaftaran/pembukaan-voucher/view-pembukaan-voucher',compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
+        return view('ppdb/pendaftaran/pembukaan-voucher/view-pembukaan-voucher', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun'));
     }
 
-    /** 
+    /**
      * Action post view for editing pembuatan voucher
      * @param String id_penerimaan
      * @return Code 300 fail, 204 success
@@ -56,13 +57,12 @@ class PembukaanVoucherController extends Controller
             'id_penerimaan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
                 'path'      => 'pendaftaran/pembukaan-voucher/'.$input->id_penerimaan
@@ -70,7 +70,7 @@ class PembukaanVoucherController extends Controller
         }
     }
 
-    /** 
+    /**
      * View detail pembuatan voucher, to show voucher at spesific gelombang penerimaan
      * @param String id_penerimaan
      * @return View
@@ -84,7 +84,9 @@ class PembukaanVoucherController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) {
+            abort(404);
+        }
 
         /** retrieve voucher tarif by id_semester */
         $voucher_tarif = LibVoucherTarif::getVoucherTarifBySemester($penerimaan->id_semester);
@@ -95,10 +97,10 @@ class PembukaanVoucherController extends Controller
                         ->leftJoin('voucher_tarif', 'voucher.id_voucher_tarif', 'voucher_tarif.id_voucher_tarif')
                         ->get();
 
-        return view('ppdb/pendaftaran/pembukaan-voucher/pembukaan-voucher',compact('auth_data', 'penerimaan', 'voucher_tarif', 'vouchers'));
+        return view('ppdb/pendaftaran/pembukaan-voucher/pembukaan-voucher', compact('auth_data', 'penerimaan', 'voucher_tarif', 'vouchers'));
     }
 
-    /** 
+    /**
      * View when admin ppdb adding tarif at spesific gelombang penerimaan
      * @param String id_penerimaan
      * @return View
@@ -112,16 +114,18 @@ class PembukaanVoucherController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) {
+            abort(404);
+        }
 
         /** get all data jurusan */
-        $jurusan = Jurusan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
+        $jurusan = Jurusan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->orderBy('nm_jurusan', 'asc')->get();
 
-        return view('ppdb/pendaftaran/pembukaan-voucher/add-pembukaan-voucher',compact('auth_data', 'penerimaan', 'jurusan'));
+        return view('ppdb/pendaftaran/pembukaan-voucher/add-pembukaan-voucher', compact('auth_data', 'penerimaan', 'jurusan'));
     }
     
-    /** 
+    /**
      * action for add pembukaan voucher (add)
      * @param String id_penerimaan
      * @return Bool true for success / false for fail
@@ -139,13 +143,12 @@ class PembukaanVoucherController extends Controller
             'tarif'             => 'required|numeric',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             /** take time now attribute */
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
@@ -153,18 +156,22 @@ class PembukaanVoucherController extends Controller
             $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
             /** data (id_penerimaan) tidak ditemukan */
-            if(!$penerimaan) return [
+            if (!$penerimaan) {
+                return [
                 'status'    => 300, // FAILED
                 'message'   => 'Id data penerimaan tidak valid'
             ];
+            }
 
             /** get semester by id semester */
             $semester = Semester::where('id_semester', $input->id_semester)->first();
 
-            if(!$semester) return [
+            if (!$semester) {
+                return [
                 'status'    => 300, // FAILED
                 'message'   => 'Id semester tidak valid'
             ];
+            }
 
             /** generate id voucher tarif */
             $id_voucher_tarif = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -187,7 +194,7 @@ class PembukaanVoucherController extends Controller
         }
     }
 
-    /** 
+    /**
      * Action for deleting voucher tarif
      * @param String id_penerimaan,id_voucher_tarif
      * @return Bool true for success / false for fail
@@ -197,8 +204,8 @@ class PembukaanVoucherController extends Controller
         $input          = (object) $request->input();
         $VoucherTarif   = VoucherTarif::find($id_voucher_tarif);
 
-        /** validasi (check voucher tarif is exist) */ 
-        if($VoucherTarif == null) {
+        /** validasi (check voucher tarif is exist) */
+        if ($VoucherTarif == null) {
             return [
                 'status' => 300, // VOUCHER TARIF NOT EXIST
                 'message' => 'Failed To Delete Voucher Tarif'
@@ -206,11 +213,11 @@ class PembukaanVoucherController extends Controller
         }
 
         $kode_voucher_exist = Voucher::select('id_voucher')
-                                    ->where('id_voucher_tarif','=',$id_voucher_tarif)
-                                    ->where('deleted_at','=',null)
+                                    ->where('id_voucher_tarif', '=', $id_voucher_tarif)
+                                    ->where('deleted_at', '=', null)
                                     ->first();
         
-        if($kode_voucher_exist != null) {
+        if ($kode_voucher_exist != null) {
             return [
                 'status' => 300,
                 'message' => "Tarif tidak dapat dihapus karena tarif telah digunakan pada voucher"
@@ -229,7 +236,7 @@ class PembukaanVoucherController extends Controller
         ];
     }
 
-    /** 
+    /**
      * Generate voucher form view
      * @param $id_penerimaan
      * @return view
@@ -243,12 +250,14 @@ class PembukaanVoucherController extends Controller
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id_penerimaan);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) {
+            abort(404);
+        }
         
         /** retrieve voucher tarif by id_semester */
         $voucher_tarif = LibVoucherTarif::getVoucherTarifBySemester($penerimaan->id_semester);
 
-        return view('ppdb/pendaftaran/pembukaan-voucher/generate-voucher',compact('auth_data', 'penerimaan', 'voucher_tarif'));
+        return view('ppdb/pendaftaran/pembukaan-voucher/generate-voucher', compact('auth_data', 'penerimaan', 'voucher_tarif'));
     }
 
 
@@ -271,7 +280,7 @@ class PembukaanVoucherController extends Controller
             'n_digit'           => 'required|numeric|max:25',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
@@ -287,7 +296,7 @@ class PembukaanVoucherController extends Controller
         $vouchers = [];
         
         // generate voucher
-        for ($i=0; $i < $n_voucher; $i++) { 
+        for ($i=0; $i < $n_voucher; $i++) {
             $no_seri = $seri_awal + $i;
 
             /** take time now attribute */
@@ -298,7 +307,7 @@ class PembukaanVoucherController extends Controller
 
             /** cek kode voucher is available */
             $kode_voucher_exist = Voucher::select('id_voucher', 'kode_voucher')
-                                    ->where('kode_voucher','=',$kode_voucher)
+                                    ->where('kode_voucher', '=', $kode_voucher)
                                     ->first();
 
             if ($kode_voucher_exist) {
@@ -314,7 +323,7 @@ class PembukaanVoucherController extends Controller
                 'id_penerimaan'     => $input->id_penerimaan,
                 'kode_voucher'      => $kode_voucher,
                 'pin_password'      => strtoupper(str_random(6)), // uppercase string random
-                'is_aktif'          => 0,
+                'is_aktif'          => 1,
                 'created_at'        => new \DateTime(),
                 'created_by'        => $input->auth_data->pengguna->id_pengguna
             ];
@@ -329,7 +338,7 @@ class PembukaanVoucherController extends Controller
         ];
     }
 
-    /** 
+    /**
      * Action for deleting voucher
      * @param String id_voucher
      * @return json success or fail
@@ -339,8 +348,8 @@ class PembukaanVoucherController extends Controller
         $input     = (object) $request->input();
         $voucher   = Voucher::find($id_voucher);
 
-        /** validasi (check voucher tarif is exist) */ 
-        if($voucher == null) {
+        /** validasi (check voucher tarif is exist) */
+        if ($voucher == null) {
             return [
                 'status' => 300, // VOUCHER NOT EXIST
                 'message' => 'Failed To Delete Voucher'
