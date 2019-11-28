@@ -29,7 +29,7 @@ class LibPenerimaan
     {
         if($id != null) {
             /** get data penerimaan by id_penerimaan */
-            $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.nm_penerimaan', 'penerimaan.gelombang_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.is_aktif', 'penerimaan.tgl_pengumuman', 'penerimaan.jenis_penerimaan', 'penerimaan.is_pendaftaran_online')
+            $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.gelombang_penerimaan', 'penerimaan.tahun_penerimaan', 'penerimaan.nm_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.jml_pilihan_jurusan', 'penerimaan.tgl_awal_registrasi', 'penerimaan.tgl_akhir_registrasi', 'penerimaan.tgl_awal_verifikasi', 'penerimaan.tgl_akhir_verifikasi', 'penerimaan.tgl_penetapan', 'penerimaan.tgl_pengumuman', 'penerimaan.tgl_awal_voucher', 'penerimaan.tgl_akhir_voucher', 'penerimaan.is_pendaftaran_online', 'penerimaan.is_verifikasi', 'penerimaan.is_bayar_voucher', 'penerimaan.nomor_rekening_transfer', 'penerimaan.biaya_daftar_ulang', 'penerimaan.jenis_penerimaan', 'penerimaan.is_aktif')
                     ->leftJoin('jalur','jalur.id_jalur','=','penerimaan.id_jalur')
                     ->leftJoin('semester','semester.id_semester','=','penerimaan.id_semester')
                     ->where('penerimaan.id_penerimaan','=',$id)
@@ -37,7 +37,7 @@ class LibPenerimaan
                     ->first();
         } else {
             /** get all data penerimaan */
-            $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.nm_penerimaan', 'penerimaan.gelombang_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.is_aktif', 'penerimaan.tgl_pengumuman', 'penerimaan.jenis_penerimaan', 'penerimaan.is_pendaftaran_online')
+            $penerimaan = Penerimaan::select('penerimaan.id_penerimaan', 'penerimaan.id_jalur', 'penerimaan.id_semester', 'penerimaan.tahun_penerimaan', 'jalur.nm_jalur', 'penerimaan.gelombang_penerimaan', 'penerimaan.tahun_penerimaan', 'penerimaan.nm_penerimaan', 'penerimaan.nm_semester_penerimaan', 'penerimaan.jml_pilihan_jurusan', 'penerimaan.tgl_awal_registrasi', 'penerimaan.tgl_akhir_registrasi', 'penerimaan.tgl_awal_verifikasi', 'penerimaan.tgl_akhir_verifikasi', 'penerimaan.tgl_penetapan', 'penerimaan.tgl_pengumuman', 'penerimaan.tgl_awal_voucher', 'penerimaan.tgl_akhir_voucher', 'penerimaan.is_pendaftaran_online', 'penerimaan.is_verifikasi', 'penerimaan.is_bayar_voucher', 'penerimaan.nomor_rekening_transfer', 'penerimaan.biaya_daftar_ulang', 'penerimaan.jenis_penerimaan', 'penerimaan.is_aktif')
                     ->leftJoin('jalur','jalur.id_jalur','=','penerimaan.id_jalur')
                     ->leftJoin('semester','semester.id_semester','=','penerimaan.id_semester')
                     ->where('penerimaan.id_sekolah','=',$auth_data->pengguna->id_sekolah)
