@@ -64,7 +64,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_kota_lahir">
+                               <select class="form-control show-tick select2" name="id_kota_lahir">
                                     <option value="">-- Pilih Kota Lahir --</option>
                                     @foreach($kota as $data)
                                     <option value="{{$data->id_kota}}" @if($data->id_kota == $guru->id_kota_lahir) selected @endif>{{$data->nm_kota}}</option>
@@ -155,7 +155,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="alamat_provinsi">
+                               <select class="form-control show-tick select2" name="alamat_provinsi">
                                     <option value="">-- Pilih Alamat Provinsi --</option>
                                     @foreach($provinsi as $data)
                                     <option value="{{$data->id_provinsi}}" @if($data->id_provinsi == $guru->alamat_provinsi) selected @endif>{{$data->nm_provinsi}}</option>
@@ -168,7 +168,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="alamat_kota">
+                               <select class="form-control show-tick select2" name="alamat_kota">
                                     <option value="">-- Pilih Alamat Kota --</option>
                                     @foreach($kota as $data)
                                     <option value="{{$data->id_kota}}" @if($guru->alamat_kota == $data->id_kota) selected @endif>{{$data->nm_kota}}</option>
@@ -577,5 +577,6 @@
             weekStart: 1,
             time: false
         });
+        $('.select2').select2();
     });
 </script>

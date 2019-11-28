@@ -45,8 +45,8 @@ class DataPribadiController extends BaseController
 
         $guru = LibGuru::fetchDataAllGuru($auth_data, $temp_guru->id_guru);
 
-        $kota = Kota::where('kota.is_aktif', '=', 1)->get();
-        $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
+        $kota = Kota::where('kota.is_aktif', '=', 1)->orderBy('nm_kota', 'asc')->get();
+        $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->orderBy('nm_provinsi', 'asc')->get();
         $agama = Agama::get();
         $pegawai = JenisKepegawaian::get();
         $pekerjaan = JenisPekerjaan::get();
