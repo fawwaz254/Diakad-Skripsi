@@ -239,6 +239,13 @@ class UsulanMataAjarController extends BaseController
             ->orderBy('mata_pelajaran.tingkat_semester', 'asc');
 
         return Datatables::of($list_data)
+                ->editColumn('jml_jadwal_jam', function ($item) {
+                    if (!empty($item->jml_jadwal_jam)) {
+                        return $item->jml_jadwal_jam;
+                    } else {
+                        return '0';
+                    }
+                })
                 ->addColumn('jadwal_ruangan', function ($item) {
                     return $item->nm_jadwal_hari.",".$item->nm_jadwal_jam."(".$item->nm_ruangan." ".$item->nm_gedung.")";
                 })
@@ -327,8 +334,7 @@ class UsulanMataAjarController extends BaseController
                         'status' => 300, // FAILED
                         'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 1'
                     ];
-                }
-                elseif ($cek_jadwal['ruangan'] == 0) {
+                } elseif ($cek_jadwal['ruangan'] == 0) {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Ruangan Pada Jadwal 1 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
@@ -343,8 +349,7 @@ class UsulanMataAjarController extends BaseController
                             'status' => 300, // FAILED
                             'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 2'
                         ];
-                    }
-                    elseif ($cek_jadwal2['ruangan'] == 0) {
+                    } elseif ($cek_jadwal2['ruangan'] == 0) {
                         return [
                             'status' => 300, // FAILED
                             'message' => 'Ruangan Pada Jadwal 2 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
@@ -360,8 +365,7 @@ class UsulanMataAjarController extends BaseController
                             'status' => 300, // FAILED
                             'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 3'
                         ];
-                    }
-                    elseif ($cek_jadwal3['ruangan'] == 0) {
+                    } elseif ($cek_jadwal3['ruangan'] == 0) {
                         return [
                             'status' => 300, // FAILED
                             'message' => 'Ruangan Pada Jadwal 3 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
@@ -377,8 +381,7 @@ class UsulanMataAjarController extends BaseController
                             'status' => 300, // FAILED
                             'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 4'
                         ];
-                    }
-                    elseif ($cek_jadwal4['ruangan'] == 0) {
+                    } elseif ($cek_jadwal4['ruangan'] == 0) {
                         return [
                             'status' => 300, // FAILED
                             'message' => 'Ruangan Pada Jadwal 4 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
@@ -616,7 +619,6 @@ class UsulanMataAjarController extends BaseController
                                 'message' => 'Edit Usulan Mata Ajar Gagal!'
                             ];
                 }
-
             } elseif ($mode == 'delete') {
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [

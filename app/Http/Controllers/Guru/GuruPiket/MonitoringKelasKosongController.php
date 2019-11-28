@@ -21,18 +21,19 @@ use DB;
 use Session;
 use Validator;
 
-class MonitoringKelasKosongController extends BaseController{
-
-    public function viewMonitoringKelasKosong(Request $request){
+class MonitoringKelasKosongController extends BaseController
+{
+    public function viewMonitoringKelasKosong(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('guru/guru-piket/monitoring-kelas-kosong/view-monitoring-kelas-kosong',compact('auth_data'));
-
+        return view('guru/guru-piket/monitoring-kelas-kosong/view-monitoring-kelas-kosong', compact('auth_data'));
     }
 
-    public function datatablesMonitoringKelasKosong(Request $request){
+    public function datatablesMonitoringKelasKosong(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -42,7 +43,7 @@ class MonitoringKelasKosongController extends BaseController{
         $jam = $now->hour;
         $menit = $now->minute;
 
-        $list_data = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp
+        $list_data = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
                                     FROM jadwal_kelas_mp jkm
                                     JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
                                     JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
@@ -50,6 +51,9 @@ class MonitoringKelasKosongController extends BaseController{
                                     JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
                                     JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
                                     JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
+                                    LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1
+                                    JOIN guru g ON g.id_guru = pm.id_guru
+                                    JOIN pengguna p ON p.id_pengguna = g.id_pengguna
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                         AND DATE(pmp.tgl_entry) = DATE(NOW()) 
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
@@ -57,14 +61,24 @@ class MonitoringKelasKosongController extends BaseController{
                                     AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))');
                                     
         return Datatables::of($list_data)
-                ->addColumn('status', function($item){
-                    if(!empty($item->id_presensi_mp)){
+                ->addColumn('nm_pengguna', function ($item) {
+                    if (! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
+                        return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
+                    } elseif (! empty($item->gelar_depan)) {
+                        return $item->gelar_depan." ".$item->nm_pengguna;
+                    } elseif (! empty($item->gelar_belakang)) {
+                        return $item->nm_pengguna.", ".$item->gelar_belakang;
+                    } else {
+                        return $item->nm_pengguna;
+                    }
+                })
+                ->addColumn('status', function ($item) {
+                    if (!empty($item->id_presensi_mp)) {
                         return 'Sudah absensi kelas';
-                    }else{
+                    } else {
                         return 'Kelas kosong';
                     }
                 })
                 ->make(true);
     }
-
 }

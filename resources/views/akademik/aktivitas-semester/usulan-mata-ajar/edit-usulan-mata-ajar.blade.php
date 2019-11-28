@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="header bg-light-green">
                     <h2>
-                        Update Usulan Mata Ajar {{$kelas_mp->nm_kelas_mp}}
+                        Update Usulan Mata Ajar
                     </h2>
                 </div>
                 <div class="body">

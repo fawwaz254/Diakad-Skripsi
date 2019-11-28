@@ -57,6 +57,7 @@
 
         <!-- Custom Css -->
         <link href="{{asset('css/style.css?v=5')}}" rel="stylesheet">
+        <link href="{{asset('css/loadertemp.css?v=3')}}" rel="stylesheet">
 
         <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
         <link href="{{asset('css/themes/all-themes.css')}}" rel="stylesheet" />
@@ -149,7 +150,14 @@
 
     <script>
         $(function () {
+            var loadingdt = '<div class="progressbar"><div class="stylization"></div><br><p style="font-size:9px;">Loading, mohon rehat sejenak...</p></div>';
+
             vex.defaultOptions.className = 'vex-theme-flat-attack';
+            $.extend( $.fn.dataTable.defaults, {
+                language: {
+                    "processing": "" +loadingdt+""
+                },
+            });
 
             @if(session()->has('toast'))
                 $(window).load(function(){
