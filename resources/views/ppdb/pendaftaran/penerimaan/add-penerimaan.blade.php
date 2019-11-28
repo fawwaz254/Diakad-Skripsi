@@ -116,7 +116,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Pembukaan Voucher
+                            Pembukaan Nomor Pendaftaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -124,7 +124,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Penutupan Voucher
+                            Penutupan Nomor Pendaftaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -154,7 +154,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="is_pendaftaran_online">
                                     <option value="">-</option>
-                                    <option value="0">Manual Voucher</option>
+                                    <option value="0">Manual Nomor Pendaftaran</option>
                                     <option value="1">Pendaftaran Online</option>
                                 </select>
                             </div>
