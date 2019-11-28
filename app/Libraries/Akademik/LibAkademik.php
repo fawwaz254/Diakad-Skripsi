@@ -5,6 +5,8 @@ namespace App\Libraries\Akademik;
 use App\Models\Kurikulum as Kurikulum;
 use App\Models\KelasMp as KelasMp;
 use App\Models\MataPelajaran as MataPelajaran;
+use App\Models\JadwalJam as JadwalJam;
+use App\Models\JadwalKelasMp as JadwalKelasMp;
 
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -82,6 +84,57 @@ class LibAkademik
         }
 
         return $mataPelajaran;
+    }
+    /** ========== **/
+
+    /** CEK JADWAL KRES **/
+    static function cekJadwalKelas($auth_data, $id_guru, $id_ruangan, $id_jadwal_hari, $id_jadwal_jam, $id_jadwal_jam_selesai) {
+        $cek = array();
+        $cek['guru'] = 1;
+        $cek['ruangan'] = 1;
+
+        $jadwalJamMulai = JadwalJam::where('id_jadwal_jam','=',$id_jadwal_jam)->first();
+        $jam_ke_mulai = $jadwalJamMulai->jam_ke;
+
+        $jadwalJamSelesai = JadwalJam::where('id_jadwal_jam','=',$id_jadwal_jam_selesai)->first();
+        $jam_ke_selesai = $jadwalJamSelesai->jam_ke;
+
+        // cek by guru
+        $cekGuru = KelasMp::join('pengampu_mp', function ($join) {
+                                $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                                     ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1);
+                            })
+                            ->join('jadwal_kelas_mp','jadwal_kelas_mp.id_kelas_mp','=','kelas_mp.id_kelas_mp')
+                            ->join('jadwal_jam AS jj','jj.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam')
+                            ->join('jadwal_jam AS jjs','jjs.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam_selesai')
+                            ->where('pengampu_mp.id_guru','=',$id_guru)
+                            ->where('jadwal_kelas_mp.id_jadwal_hari','=',$id_jadwal_hari)
+                            ->where(function ($query) use ($jam_ke_mulai, $jam_ke_selesai) {
+                                $query->whereBetween('jj.jam_ke', [$jam_ke_mulai, $jam_ke_selesai])
+                                        ->orWhereBetween('jjs.jam_ke', [$jam_ke_mulai, $jam_ke_selesai]);
+                            })
+                            ->first();
+
+        // cek by ruangan
+        $cekRuangan = JadwalKelasMp::join('jadwal_jam AS jj','jj.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam')
+                                    ->join('jadwal_jam AS jjs','jjs.id_jadwal_jam','=','jadwal_kelas_mp.id_jadwal_jam_selesai')
+                                    ->where('id_ruangan','=',$id_ruangan)
+                                    ->where('id_jadwal_hari','=',$id_jadwal_hari)
+                                    ->where(function ($query) use ($jam_ke_mulai, $jam_ke_selesai) {
+                                        $query->whereBetween('jj.jam_ke', [$jam_ke_mulai, $jam_ke_selesai])
+                                                ->orWhereBetween('jjs.jam_ke', [$jam_ke_mulai, $jam_ke_selesai]);
+                                    })
+                                    ->first();
+
+        if ($cekGuru) {
+            $cek['guru'] = 0;
+        }
+
+        if ($cekRuangan) {
+            $cek['ruangan'] = 0;
+        }
+
+        return $cek;
     }
     /** ========== **/
 

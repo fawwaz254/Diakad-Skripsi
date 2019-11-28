@@ -76,7 +76,7 @@ class JamKBMController extends BaseController{
 
         // get mode view
         if ($id == null){
-            $jadwalJam = JadwalJam::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('nm_jadwaL_jam', 'asc')->get();
+            $jadwalJam = JadwalJam::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('jam_ke', 'asc')->get();
         }
         // get mode edit
         else{
@@ -93,6 +93,7 @@ class JamKBMController extends BaseController{
 
         $validator = Validator::make($request->all(), [
             'nm_jadwal_jam' => 'required',
+            'jam_ke' => 'required',
             'jam_menit_mulai' => 'required',
             'jam_menit_selesai' => 'required',
         ]);
@@ -113,6 +114,7 @@ class JamKBMController extends BaseController{
                 $jadwalJam                      = new JadwalJam;
                 $jadwalJam->id_jadwal_jam       = $id;
                 $jadwalJam->nm_jadwal_jam       = $input->nm_jadwal_jam;
+                $jadwalJam->jam_ke              = $input->jam_ke;
                 $jadwalJam->jam_mulai           = substr($input->jam_menit_mulai,0,2);
                 $jadwalJam->menit_mulai         = substr($input->jam_menit_mulai,3,4);
                 $jadwalJam->jam_selesai         = substr($input->jam_menit_selesai,0,2);
@@ -131,6 +133,7 @@ class JamKBMController extends BaseController{
                 // make object to find id
                 $jadwalJam                      = JadwalJam::find($id);
                 $jadwalJam->nm_jadwal_jam       = $input->nm_jadwal_jam;
+                $jadwalJam->jam_ke              = $input->jam_ke;
                 $jadwalJam->jam_mulai           = substr($input->jam_menit_mulai,0,2);
                 $jadwalJam->menit_mulai         = substr($input->jam_menit_mulai,3,4);
                 $jadwalJam->jam_selesai         = substr($input->jam_menit_selesai,0,2);

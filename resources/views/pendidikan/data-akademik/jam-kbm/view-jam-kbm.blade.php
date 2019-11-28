@@ -16,6 +16,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Jam KBM</th>
+                                        <th>Jam Ke</th>
                                         <th>Jam Mulai</th>
                                         <th>Jam Selesai</th>
                                         <th>Action</th>
@@ -47,6 +48,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_jadwal_jam', name: 'nm_jadwal_jam' },
+            { data: 'jam_ke', name: 'jam_ke' },
             { data: 'jam_mulai', name: 'jam_mulai'},
             { data: 'jam_selesai', name: 'jam_selesai'},
             { data: 'action', name: 'action', searchable: false, orderable: false,

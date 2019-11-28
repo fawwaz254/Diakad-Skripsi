@@ -28,6 +28,15 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Jenis Mapel
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="nm_mata_pelajaran" readonly="" aria-required="true"
+                                aria-invalid="true" value="{{$kelas_mp->nm_jenis_mata_pelajaran}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Kelas
                         </h2>
                         <div class="row clearfix">

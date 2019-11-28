@@ -22,6 +22,7 @@ class JadwalJam extends Model
     
     protected $fillable = [
         'nm_jadwal_jam',
+        'jam_ke',
         'jam_mulai',
         'menit_mulai',
         'jam_selesai',
