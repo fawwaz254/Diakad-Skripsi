@@ -5,7 +5,7 @@
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
-                    <div class="header bg-black">
+                    <div class="header">
                         <h2>
                             MENU UPLOAD DOKUMEN {{$dokumen->nm_arsip_dokumen}} - {{$dokumen->kode_katalog}}
                         </h2>
@@ -32,10 +32,8 @@
                         </div>
                     </form>
 
-                    <div class="header bg-black">
-                        <h2>
-                            FILE DOKUMEN {{$dokumen->nm_arsip_dokumen}}
-                        </h2>
+                    <div class="demo-color-box bg-success">
+                        FILE DOKUMEN {{$dokumen->nm_arsip_dokumen}}
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -70,10 +68,8 @@
                         @endforelse
                     </form>
 
-                    <div class="header bg-black">
-                        <h2>
-                            Detail Data Dokumen
-                        </h2>
+                    <div class="demo-color-box bg-success">
+                        Detail Data Dokumen
                     </div>
                     <h2 class="card-inside-title">
                         Nama Arsip Dokumen

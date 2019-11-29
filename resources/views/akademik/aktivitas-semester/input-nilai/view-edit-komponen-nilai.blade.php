@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-light-green">
+                <div class="header">
                     <h2>
                         EDIT KOMPONEN NILAI MAPEL {{strtoupper($data_kelas->nm_mata_pelajaran) . " (" . strtoupper($data_kelas->kd_mata_pelajaran) . ") Kelas " . strtoupper($data_kelas->nm_kelas)}}
                     </h2>

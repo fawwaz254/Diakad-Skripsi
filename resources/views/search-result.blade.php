@@ -2,7 +2,7 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                <div class="header bg-green">
+                <div class="header">
                     <h2>Hasil Search</h2>
                 </div>
                 <div class="body">

@@ -1,17 +1,17 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-sarpras-ruangan/ruangan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#data-sarpras-ruangan/ruangan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-purple">
+                <div class="header">
                     <h2>
-                        TAMBAH RUANGAN
+                        EDIT RUANGAN
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-ruangan/add/'.$id_ruangan)}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-ruangan/edit/'.$data_ruangan->id_ruangan)}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
                             Jenis Ruangan
@@ -20,7 +20,11 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_jenis_ruangan">
                                     @foreach($data_jenis_ruangan as $data)
+                                    @if($data->id_jenis_ruangan == $data_ruangan->id_jenis_ruangan)
+                                    <option value="{{$data->id_jenis_ruangan}}" selected>{{$data->nm_jenis_ruangan}}</option>
+                                    @else
                                     <option value="{{$data->id_jenis_ruangan}}">{{$data->nm_jenis_ruangan}}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -32,7 +36,11 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_gedung">
                                     @foreach($data_gedung as $data)
+                                    @if($data->id_gedung == $data_ruangan->id_gedung)
+                                    <option value="{{$data->id_gedung}}" selected>{{$data->nm_gedung}}</option>
+                                    @else
                                     <option value="{{$data->id_gedung}}">{{$data->nm_gedung}}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -44,7 +52,11 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_pemilik_sarpras">
                                     @foreach($data_pemilik_sarpras as $data)
+                                    @if($data->id_pemilik_sarpras == $data_ruangan->id_pemilik_sarpras)
+                                    <option value="{{$data->id_pemilik_sarpras}}" selected>{{$data->nm_pemilik_sarpras}}</option>
+                                    @else
                                     <option value="{{$data->id_pemilik_sarpras}}">{{$data->nm_pemilik_sarpras}}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -54,7 +66,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_ruangan" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nm_ruangan" required="" aria-required="true" aria-invalid="true"
+                                    value="{{$data_ruangan->nm_ruangan}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -63,7 +76,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" name="kapasitas_ruangan" required="" aria-required="true"
-                                    aria-invalid="true">
+                                    aria-invalid="true" value="{{$data_ruangan->kapasitas_ruangan}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -72,7 +85,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" name="kapasitas_ujian" required="" aria-required="true"
-                                    aria-invalid="true">
+                                    aria-invalid="true" value="{{$data_ruangan->kapasitas_ujian}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -81,7 +94,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <textarea rows="4" cols="50" class="form-control" name="deskripsi_ruangan" required="" aria-required="true"
-                                    aria-invalid="true"></textarea>
+                                    aria-invalid="true">{{$data_ruangan->deskripsi_ruangan}}</textarea>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -90,8 +103,13 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="is_aktif">
-                                    <option value="1">Aktif</option>
+                                    @if($data_ruangan->is_aktif == 1)
+                                    <option value="1" selected>Aktif</option>
                                     <option value="0">Non-Aktif</option>
+                                    @else
+                                    <option value="1">Aktif</option>
+                                    <option value="0" selected>Non-Aktif</option>
+                                    @endif
                                 </select>
                             </div>
                         </div>

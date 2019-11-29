@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-indigo">
+                <div class="header">
                     <h2>
                         Edit Siswa {{$data_peserta->nm_pengguna}} di {{$data_peserta->nm_ekskul}}
                     </h2>

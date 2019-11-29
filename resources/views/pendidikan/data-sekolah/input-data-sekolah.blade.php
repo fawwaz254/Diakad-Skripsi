@@ -2,7 +2,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-green">
+                <div class="header">
                     <h2>
                         Input Data Sekolah
                     </h2>
@@ -10,10 +10,8 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-data-sekolah/edit/'.$sekolah->id_sekolah)}}">
                         {{csrf_field()}}
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 DATA SEKOLAH
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Nama Sekolah
@@ -55,10 +53,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 KEPEMILIKAN SEKOLAH
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             No. SK Pendirian Sekolah
@@ -173,10 +169,8 @@
                                 <input type="text" class="form-control" name="npwp_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->npwp_sekolah}}">
                             </div>
                         </div>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 ALAMAT SEKOLAH
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Alamat Jalan
@@ -302,10 +296,8 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
                         </div>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 KONTAK SEKOLAH
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Nomor Telepon Sekolah

@@ -2,13 +2,13 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-cyan">
+                <div class="header">
                     <h2>
-                        AKUN TENDIK
+                        SETTING DASHBOARD
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-tendik')}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-setting-dashboard')}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
                             Filter Role
@@ -20,12 +20,12 @@
                                     @foreach($data_role as $data)
                                         @if($id_role != null)
                                             @if($data->id_role == $id_role)
-                                                <option value="{{$data->id_role}}" selected >{{$data->nm_role}} ({{$data->total_role}})</option>
+                                                <option value="{{$data->id_role}}" selected >{{$data->nm_role}}</option>
                                             @else
-                                                <option value="{{$data->id_role}}">{{$data->nm_role}} ({{$data->total_role}})</option>
+                                                <option value="{{$data->id_role}}">{{$data->nm_role}}</option>
                                             @endif
                                         @else
-                                            <option value="{{$data->id_role}}">{{$data->nm_role}} ({{$data->total_role}})</option>
+                                            <option value="{{$data->id_role}}">{{$data->nm_role}}</option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -42,61 +42,96 @@
                         </div>
                     </form>
                 </div>
-
-                @if($id_role != null)
+                
                 <div class="body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
-                            <thead>
-                                <tr>
-                                    <th>No. </th>
-                                    <th>NIP</th>
-                                    <th>Username</th>
-                                    <th>Nama</th>
-                                    <th>Role</th>
-                                    <th>Unit Kerja</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                    <form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/setting-dashboard')}}">
+                        <h2 class="card-inside-title">
+                            Isi Dashboard Role {{$nm_role}}
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                {{csrf_field()}}
+                                <input type="hidden" class="form-control" name="id_role" required="" aria-required="true" aria-invalid="true" value="{{$id_role}}">
+                                <textarea name="isi_dashboard" id="editor1" class="editor1" rows="10" cols="80">{{$isi_dashboard}}</textarea>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-green waves-effect" type="submit"><i class="material-icons">save</i><span>Simpan Data Dashboard</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                @endif
 
             </div>
         </div>
     </div>
 </div>
+
 @include('scriptjs')
+
+<!-- CKeditor Plugin Js -->
+<script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+
 <script>
-    // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_role = {!! json_encode($id_role) !!};
+CKEDITOR.replace( 'editor1' );
 
-    var modul_url       = 'pengelolaan-akun';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'tendik/datatables/' + id_role ;
+// custom code to key binding ckeditor
+timer = setInterval(updateDiv,100);
+function updateDiv(){
+    var editorText = CKEDITOR.instances.editor1.getData();
+    $('#editor1').val(editorText);
+}
+</script>
 
 
-    var primary_table = $('#primary_table').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        ajax: {
-            url: datatable_url,
-            type: 'GET'
+<script> 
+    $('#form-validation1').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nip_staff', name: 'nip_staff' },
-            { data: 'username', name: 'username' },
-            { data: 'nm_pengguna', name: 'nm_pengguna' },
-            { data: 'nm_role', name: 'nm_role' },
-            { data: 'nm_unit_kerja' , name:'nm_unit_kerja'}
-        ]
+        highlight: function (input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+            });
+        }
     });
-
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
 </script>

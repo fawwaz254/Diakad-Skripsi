@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-green">
+                <div class="header">
                     <h2>
                         UPDATE DATA SISWA
                     </h2>
@@ -14,10 +14,8 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-insert-update-siswa/update/'.$siswa->nis_siswa)}}">
                         {{csrf_field()}}
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 DATA PRIBADI
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -497,10 +495,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 DATA AYAH KANDUNG
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -596,10 +592,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 DATA IBU KANDUNG
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -695,10 +689,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 DATA WALI
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -794,10 +786,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 KONTAK
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -836,10 +826,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 DATA PRIODIK
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -903,10 +891,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 PRESTASI
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">
@@ -984,10 +970,8 @@
                             </div>
                         </div>
                         <br>
-                        <div class="header bg-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 BEASISWA
-                            </h2>
                         </div>
                         <br>
                         <div class="row clearfix">

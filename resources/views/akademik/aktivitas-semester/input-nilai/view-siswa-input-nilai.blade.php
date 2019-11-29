@@ -3,7 +3,7 @@
         <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#aktivitas-semester/input-nilai/view-guru-input-nilai/'.$id_pengguna.'/'.$id_semester)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     @if($jumlah_komponen < 100)
-        <div class="header bg-red" style="height: 350px">
+        <div class="demo-color-box bg-red" style="height: 350px">
             <h2>Tidak dapat meng-input nilai. Presentase Komponen Kurang dari 100%</h2>
         </div>
     @else
@@ -20,7 +20,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                             {{csrf_field()}}
-                            <div class="header bg-light-green">
+                            <div class="header">
                                 <h2>Input Nilai </h2>
                             </div>
                             <div class="body">

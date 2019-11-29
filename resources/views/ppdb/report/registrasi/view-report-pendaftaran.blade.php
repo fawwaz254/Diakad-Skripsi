@@ -4,7 +4,7 @@
             @if($mode == "view")
             <div class="card">
                 {{csrf_field()}}
-                <div class="header bg-lime">
+                <div class="header">
                     <h2>DATA REPORT PENDAFTARAN</h2>
                 </div>
                 <div class="body">
@@ -34,7 +34,7 @@
             </div>
             <div class="card">
                 {{csrf_field()}}
-                <div class="header bg-lime">
+                <div class="header">
                     <h2>REKAP JURUSAN PER PILIHAN ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
                 <div class="body">
@@ -85,7 +85,7 @@
 
             <div class="card">
                 {{csrf_field()}}
-                <div class="header bg-lime">
+                <div class="header">
                     <h2>REKAP JURUSAN PER STATUS ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
                 <div class="body">
@@ -145,7 +145,7 @@
                     <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#report/report-pendaftaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
                 </div>
                 @foreach ($data_jurusan as $jurusan)
-                <div class="header bg-lime">
+                <div class="header">
                     <h2>{{ $jurusan->nm_jurusan }} ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
                 <div class="body">

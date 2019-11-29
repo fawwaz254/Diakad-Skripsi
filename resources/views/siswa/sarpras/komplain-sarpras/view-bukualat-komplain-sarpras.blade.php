@@ -9,7 +9,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-blue">
+                    <div class="header">
                         <h2>KOMPLAIN SARPRAS BUKU/ALAT ({{$data_buku_alat->nm_buku_alat}} - {{$data_buku_alat->nm_jenis_buku_alat}})</h2>
                     </div>
                     <div class="body">

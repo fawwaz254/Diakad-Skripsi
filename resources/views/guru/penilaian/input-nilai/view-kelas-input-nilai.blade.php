@@ -3,10 +3,8 @@
         <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#penilaian/input-nilai')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     @if($jumlah_komponen < 100)
-    <div class="card">
-        <div class="header bg-red">
-            <h2>Tidak dapat meng-input nilai. Presentase Komponen Kurang dari 100%</h2>
-        </div>
+    <div class="demo-color-box bg-red">
+        Tidak dapat meng-input nilai. Presentase Komponen Kurang dari 100%
     </div>
     @else
     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-nilai/kbm/0')}}">

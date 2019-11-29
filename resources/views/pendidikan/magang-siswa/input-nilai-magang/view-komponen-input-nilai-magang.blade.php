@@ -14,7 +14,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-green">
+                    <div class="header">
                         <h2>INPUT NILAI MAGANG Periode {{$periodeMagang->nm_periode_magang}}</h2>
                     </div>
                     <div class="body">

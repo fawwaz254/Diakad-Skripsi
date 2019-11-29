@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-blue">
+                    <div class="header">
                         <h2>KALENDER AKADEMIK SEMESTER {{$semester_aktif->tahun_ajaran}} {{strtoupper($semester_aktif->nm_semester)}}</h2>
                     </div>
                     <div class="body">

@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-orange">
+                <div class="header">
                     <h2>
                         EDIT KOMPLAIN SARPRAS BUKU/ALAT ({{$data_buku_alat->nm_buku_alat}} - {{$data_buku_alat->nm_jenis_buku_alat}})
                     </h2>

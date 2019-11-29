@@ -2,7 +2,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-orange">
+                <div class="header">
                     <h2>
                         DATA PRIBADI
                     </h2>
@@ -10,10 +10,8 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-data-pribadi')}}">
                         {{csrf_field()}}
-                        <div class="header bg-orange">
-                            <h2>
-                                Identitas Pendidik dan Tenaga Pendidik
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Identitas Pendidik dan Tenaga Pendidik
                         </div>
                         <h2 class="card-inside-title">
                             Nama Guru
@@ -89,10 +87,8 @@
                                 <input type="text" class="form-control" name="nm_ibu_kandung" aria-invalid="true" value="{{$guru->nm_ibu_kandung}}">
                             </div>
                         </div>
-                        <div class="header bg-orange">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Data Pribadi
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Alamat Jalan
@@ -287,10 +283,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-orange">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kepegawaian
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Jenis Kepegawaian
@@ -426,10 +420,8 @@
                                 <input type="text" class="form-control" name="nomor_kartu_pasangan" aria-invalid="true" value="{{$guru->nomor_kartu_pasangan}}">
                             </div>
                         </div>
-                        <div class="header bg-orange">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kompetensi Khusus
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Punya Lisensi Kepala Sekolah
@@ -477,10 +469,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-orange">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kontak
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Nomor Telepon
@@ -506,10 +496,8 @@
                                 <input type="email" class="form-control" name="email" aria-invalid="true" value="{{$guru->email}}">
                             </div>
                         </div>
-                        <div class="header bg-orange">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Penugasan
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Nomor SK Penugasan

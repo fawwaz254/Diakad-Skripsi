@@ -1,73 +1,50 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/'.$data_ruangan->id_ruangan)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pelanggaran-siswa/rekap-input-pelanggaran-mp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-orange">
+                <div class="header">
                     <h2>
-                        EDIT KOMPLAIN SARPRAS RUANGAN ({{$data_ruangan->nm_ruangan}} - {{$data_ruangan->nm_jenis_ruangan}})
+                        INPUT PELANGGARAN
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-komplain-sarpras/edit-ruangan/'.$data_komplain_sarpras->id_komplain_sarpras)}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-pelanggaran-mp/edit/'.$data_pelanggaran_siswa->id_presensi_mp_pelanggaran)}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
-                            Ruangan
+                            Data Siswa
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_ruangan">
-                                    <option value="{{$data_ruangan->id_ruangan}}">{{$data_ruangan->nm_ruangan}} - {{$data_ruangan->nm_jenis_ruangan}}</option>
-                                </select>
+                                <input type="hidden" name="id_presensi_mp" required="" value="{{$presensi_mp_aktif->id_presensi_mp}}">
+                                <input type="hidden" name="id_siswa" required="" value="{{$data_siswa->id_siswa}}">
+                                <input type="text" class="form-control" disabled="" value="{{$data_siswa->nm_pengguna}} - {{$data_siswa->nis_siswa}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Inventaris Ruangan <small><b>* Kosongkan Apabila Komplain Kepada Ruangan</b></small>
+                            Terjadi di
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_inventaris_ruangan">
-                                    <option value="">--</option>
-                                    @foreach($data_inventaris_ruangan as $data)
-                                        @if($data->id_inventaris_ruangan == $data_komplain_sarpras->id_inventaris_ruangan)
-                                            <option value="{{$data->id_inventaris_ruangan}}" selected >{{$data->nm_inventaris_ruangan}}</option>
-                                        @else
-                                            <option value="{{$data->id_inventaris_ruangan}}" >{{$data->nm_inventaris_ruangan}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" disabled="" value="KELAS {{$data_kelas->nm_kelas}} MAPEL {{$data_kelas->nm_mata_pelajaran}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Keterangan Komplain
+                            Pada pertemuan ke
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="keterangan_komplain" required="" aria-required="true" aria-invalid="true" value="{{$data_komplain_sarpras->keterangan_komplain}}">
+                                <input type="text" class="form-control" disabled="" value="{{$presensi_mp_aktif->pertemuan_ke}}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Status Urgent
+                            Catatan Pelanggaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="is_urgent">
-                                    @if($data_komplain_sarpras->is_urgent == 0)
-                                        <option value="0" selected >Tidak Urgent</option>
-                                        <option value="1">Urgent</option>
-                                        <option value="2">Sangat Urgent</option>
-                                    @elseif($data_komplain_sarpras->is_urgent == 1) 
-                                        <option value="0">Tidak Urgent</option>
-                                        <option value="1" selected >Urgent</option>
-                                        <option value="2">Sangat Urgent</option>
-                                    @elseif($data_komplain_sarpras->is_urgent == 2)
-                                        <option value="0">Tidak Urgent</option>
-                                        <option value="1">Urgent</option>
-                                        <option value="2" selected >Sangat Urgent</option>
-                                    @endif
-                                </select>
+                                <input type="text" class="form-control" name="catatan_pelanggaran" value="{{$data_pelanggaran_siswa->catatan_pelanggaran}}" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <div class="row clearfix">

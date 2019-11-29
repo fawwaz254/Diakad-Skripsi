@@ -7,7 +7,7 @@ select[id="penerimaan_awal"]:disabled {
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                    <div class="header bg-lime">
+                    <div class="header">
                         <h2>Pindah Penerimaan</h2>
                     </div>
 

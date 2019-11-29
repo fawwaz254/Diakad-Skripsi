@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-light-green">
+                <div class="header">
                     <h2>
                         Update Usulan Mata Ajar
                     </h2>
@@ -13,10 +13,8 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-usulan-mata-ajar/edit/'.$kelas_mp->id_kelas_mp)}}">
                         {{csrf_field()}}
-                        <div class="header bg-light-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Informasi Kelas dan Mata Pelajaran
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Mata Pelajaran
@@ -75,10 +73,8 @@
                                 aria-invalid="true" value="{{$kelas_mp->kapasitas_ruangan}}">
                             </div>
                         </div>  -->
-                        <div class="header bg-light-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Informasi Jadwal dan Ruangan
-                            </h2>
                         </div>
                         <br><br>
                         @php
@@ -108,10 +104,8 @@
                         @endforeach
                         
 
-                        <div class="header bg-light-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Jadwal 1
-                            </h2>
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -197,10 +191,8 @@
                                 </select>
                             </div>
                         </div>
-                       <div class="header bg-light-green">
-                            <h2>
+                       <div class="demo-color-box bg-success">
                                 Jadwal 2
-                            </h2>
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -282,10 +274,8 @@
                                 </select>
                             </div>
                         </div>
-                       <div class="header bg-light-green">
-                            <h2>
+                       <div class="demo-color-box bg-success">
                                 Jadwal 3
-                            </h2>
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -367,10 +357,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-light-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Jadwal 4
-                            </h2>
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -452,10 +440,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-light-green">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Informasi Penanggungjawab Mata Pelajaran 
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Penanggungjawab Mata Ajar

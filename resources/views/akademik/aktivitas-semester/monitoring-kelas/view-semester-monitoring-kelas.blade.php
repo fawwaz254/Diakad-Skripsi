@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#aktivitas-semester/monitoring-kelas')}}">
+            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas/'.$data_semester->id_semester)}}">
                 <i class="material-icons">backspace</i><span>Kembali</span>
             </a>
         </h2>
@@ -10,8 +10,8 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-light-5green">
-                        <h2>Monitoring Kapasitas Kelas</h2>
+                    <div class="header">
+                        <h2>Daftar Siswa Kelas</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -19,15 +19,10 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode</th>
-                                        <th>Nama Mata Ajar</th>
-                                        <th>Jam KBM</th>
+                                        <th>NISN</th>
+                                        <th>NIS</th>
+                                        <th>Nama Siswa</th>
                                         <th>Kelas</th>
-                                        <th>Hari</th>
-                                        <th>Jam</th>
-                                        <th>Kapasitas</th>
-                                        <th>Terisi</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -41,12 +36,11 @@
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_semester= {!! json_encode($id) !!};
+    var id_kelas_mp= {!! json_encode($id) !!};
 
     var modul_url       = 'aktivitas-semester';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'monitoring-kelas/datatables/' + id_semester;
-    var detail_url        = role_url + '#' + modul_url + '/' + 'monitoring-kelas/view-daftar-siswa';
-    
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'monitoring-kelas/datatables-daftar-siswa/' + id_kelas_mp;
+
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -57,20 +51,10 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'kd_mata_pelajaran', name: 'kd_mata_pelajaran' },
-            { data: 'nm_mata_pelajaran', name: 'nm_mata_pelajaran' },
-            { data: 'kredit_semester', name: 'kredit_semester' },
-            { data: 'nm_kelas', name: 'nm_kelas' },
-            { data: 'nm_jadwal_hari', name: 'nm_jadwal_hari' },
-            { data: 'nm_jadwal_jam', name: 'nm_jadwal_jam' },
-            { data: 'kapasitas_ruangan', name: 'kapasitas_ruangan' },
-            { data: 'jml_siswa', name: 'jml_siswa' },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">remove_red_eye</i>';
-                }
-            }
+            { data: 'nisn_siswa', name: 'nisn_siswa' },
+            { data: 'nis_siswa', name: 'nis_siswa' },
+            { data: 'nm_pengguna', name: 'nm_pengguna' },
+            { data: 'nm_kelas_mp', name: 'nm_kelas_mp' }
         ]
     });
 
