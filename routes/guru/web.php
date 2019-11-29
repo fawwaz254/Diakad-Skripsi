@@ -25,6 +25,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('jadwal-ujian', 'Guru\Jadwal\JadwalUjianController@viewJadwalUjian');
             Route::get('jadwal-ujian/datatables-uts', 'Guru\Jadwal\JadwalUjianController@datatablesJadwalUTS');
             Route::get('jadwal-ujian/datatables-uas', 'Guru\Jadwal\JadwalUjianController@datatablesJadwalUAS');
+
+
+
+            /*Route::get('usulan-mata-ajar/view-semester-usulan-mata-ajar/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@viewSemesterUsulanMataAjar');
+            Route::get('usulan-mata-ajar/datatables/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@datatablesUsulanMataAjar');
+            Route::get('usulan-mata-ajar/edit/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@editUsulanMataAjar');
+
+            Route::post('action-usulan-mata-ajar/{mode}/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionUsulanMataAjar');*/
+            // MENU Input Jadwal
+            Route::get('input-jadwal', 'Guru\Jadwal\InputJadwalController@viewInputJadwal');
+            Route::get('input-jadwal/datatables/{id}', 'Guru\Jadwal\InputJadwalController@datatablesInputJadwal');
+            Route::get('input-jadwal/edit/{id}', 'Guru\Jadwal\InputJadwalController@editInputJadwal');
+
+            Route::post('action-input-jadwal/{mode}/{id}', 'Guru\Jadwal\InputJadwalController@actionInputJadwal');
+
         });
 
         /** ==== MODUL PRESENSI ==== **/
