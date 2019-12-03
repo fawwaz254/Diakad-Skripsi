@@ -76,8 +76,10 @@ class UsulanMataAjarController extends BaseController
         $auth_data = $input->auth_data;
 
         $semester   = Semester::where('id_semester', '=', $id)->first();
+
+        $kelas_mp = LibAkademik::FetchDataUsulanMataAjar($auth_data, $semester->id_semester);
        
-        return view('akademik/aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar', compact('auth_data', 'semester', 'id'));
+        return view('akademik/aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar', compact('auth_data', 'semester', 'id', 'kelas_mp'));
     }
 
     public function viewTambahMataAjar(Request $request, $id)
@@ -212,31 +214,7 @@ class UsulanMataAjarController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = KelasMp::select(
-            'mata_pelajaran.nm_mata_pelajaran',
-            'mata_pelajaran.kd_mata_pelajaran',
-            'kelas.nm_kelas',
-            DB::raw("(SELECT COUNT(*) FROM jadwal_kelas_mp WHERE jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND jadwal_kelas_mp.deleted_at IS NULL) AS jml_jadwal"),
-            DB::raw("(SELECT SUM(jjs.jam_ke - jj.jam_ke + 1) 
-                        FROM jadwal_kelas_mp 
-                        JOIN jadwal_jam AS jj ON jj.id_jadwal_jam = jadwal_kelas_mp.id_jadwal_jam
-                        JOIN jadwal_jam AS jjs ON jjs.id_jadwal_jam = jadwal_kelas_mp.id_jadwal_jam_selesai 
-                        WHERE jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND jadwal_kelas_mp.deleted_at IS NULL) AS jml_jadwal_jam"),
-            DB::raw("(SELECT COUNT(*) FROM pengampu_mp WHERE pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengampu_mp.deleted_at IS NULL) AS jml_pengampu"),
-            DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"),
-            'kelas_mp.id_kelas_mp',
-            'mata_pelajaran.kredit_semester',
-            'mata_pelajaran.tingkat_semester',
-            'kelas_mp.nm_kelas_mp',
-            'jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
-        )
-            ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-            ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-            ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
-            ->where('kelas_mp.id_semester', '=', $id)
-            ->orderBy('mata_pelajaran.nm_mata_pelajaran', 'asc')
-            ->orderBy('kelas.nm_kelas', 'asc')
-            ->orderBy('mata_pelajaran.tingkat_semester', 'asc');
+        $list_data = LibAkademik::FetchDataUsulanMataAjar($auth_data, $id, 1);
 
         return Datatables::of($list_data)
                 ->editColumn('jml_jadwal_jam', function ($item) {
@@ -259,6 +237,30 @@ class UsulanMataAjarController extends BaseController
                     return $data;
                 })
                 ->make(true);
+    }
+
+    public function copyJadwalSemesterLain(Request $request, $id_semester)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester   = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+
+        $now = (int) $semester->thn_akademik_semester + 1;
+
+        /*$tahun_sebelum = Carbon::now()->subYears(3)->year;*/
+
+        $tahun_sebelum = (int) $semester->thn_akademik_semester - 2;
+
+        $data_semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                            ->where('id_semester','<>',$semester->id_semester)
+                            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
+                            ->orderBy('thn_akademik_semester', 'asc')
+                            ->orderBy('nm_semester', 'asc')
+                            ->get();
+
+        return view('akademik/aktivitas-semester/usulan-mata-ajar/copy-semester-usulan-mata-ajar', compact('auth_data', 'id_semester', 'semester', 'data_semester'));
     }
 
     public function actionUsulanMataAjar(Request $request, $mode, $id = null)
@@ -326,6 +328,109 @@ class UsulanMataAjarController extends BaseController
                     'message'   =>  'Save Usulan Mata Ajar successfully',
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
+            } elseif ($mode == 'copy-jadwal-semester') {
+                // semester paste
+                $id_semester = $id;
+                
+                // semester copy
+                $id_semester_copy = $input->id_semester_copy;
+
+                DB::beginTransaction();
+
+                try {
+
+                    // proses tabel kelas_mp
+                    $kelas_mp_set = KelasMp::where('id_semester','=',$id_semester_copy)->get();
+
+                    foreach($kelas_mp_set as $kelas_mp){
+                        $id_kelas_mp                = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id_kelas                   = $kelas_mp->id_kelas;
+                        $id_mata_pelajaran          = $kelas_mp->id_mata_pelajaran;
+                        $nm_kelas_mp                = $kelas_mp->nm_kelas_mp;
+                        $jml_pertemuan_kelas_mp     = $kelas_mp->jml_pertemuan_kelas_mp;
+
+                        KelasMp::insert(array(
+                            'id_kelas_mp'               => $id_kelas_mp,
+                            'id_semester'               => $id_semester,
+                            'id_kelas'                  => $id_kelas,
+                            'id_mata_pelajaran'         => $id_mata_pelajaran,
+                            'nm_kelas_mp'               => $nm_kelas_mp,
+                            'jml_pertemuan_kelas_mp'    => $jml_pertemuan_kelas_mp,
+                            'created_by'                => $input->auth_data->pengguna->id_pengguna,
+                            'created_at'                => $now
+                        ));
+
+                        // proses tabel jadwal_kelas_mp
+                        $jadwal_kelas_mp_set = JadwalKelasMp::where('id_kelas_mp','=',$kelas_mp->id_kelas_mp)
+                                                ->get();
+
+                        foreach($jadwal_kelas_mp_set as $jadwal_kelas_mp){
+                            $id_jadwal_kelas_mp         = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id_ruangan                 = $jadwal_kelas_mp->id_ruangan;
+                            $id_jadwal_hari             = $jadwal_kelas_mp->id_jadwal_hari;
+                            $id_jadwal_jam              = $jadwal_kelas_mp->id_jadwal_jam;
+                            $id_jadwal_jam_selesai      = $jadwal_kelas_mp->id_jadwal_jam_selesai;
+
+                            JadwalKelasMp::insert(array(
+                                'id_jadwal_kelas_mp'        => $id_jadwal_kelas_mp,
+                                'id_kelas_mp'               => $id_kelas_mp,
+                                'id_ruangan'                => $id_ruangan,
+                                'id_jadwal_hari'            => $id_jadwal_hari,
+                                'id_jadwal_jam'             => $id_jadwal_jam,
+                                'id_jadwal_jam_selesai'     => $id_jadwal_jam_selesai,
+                                'created_by'                => $input->auth_data->pengguna->id_pengguna,
+                                'created_at'                => $now
+                            ));
+                        }
+
+                        // proses tabel pengampu_mp
+                        $pengampu_mp_set = PengampuMp::where('id_kelas_mp','=',$kelas_mp->id_kelas_mp)
+                                                ->where('pjmp_pengampu_mp','=', 1)
+                                                ->get();
+
+                        foreach($pengampu_mp_set as $pengampu_mp){
+                            $id_pengampu_mp             = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $id_guru                    = $pengampu_mp->id_guru;
+                            $pjmp_pengampu_mp           = $pengampu_mp->pjmp_pengampu_mp;
+                            $pjmp_uts                   = $pengampu_mp->pjmp_uts;
+                            $pjmp_uas                   = $pengampu_mp->pjmp_uas;
+                            $nomor_sk_mengajar          = $pengampu_mp->nomor_sk_mengajar;
+                            $tgl_sk_mengajar            = $pengampu_mp->tgl_sk_mengajar;
+
+                            PengampuMp::insert(array(
+                                'id_pengampu_mp'            => $id_pengampu_mp,
+                                'id_kelas_mp'               => $id_kelas_mp,
+                                'id_guru'                   => $id_guru,
+                                'pjmp_pengampu_mp'          => $pjmp_pengampu_mp,
+                                'pjmp_uts'                  => $pjmp_uts,
+                                'pjmp_uas'                  => $pjmp_uas,                                
+                                'nomor_sk_mengajar'         => $nomor_sk_mengajar,
+                                'tgl_sk_mengajar'           => $tgl_sk_mengajar,
+                                'created_by'                => $input->auth_data->pengguna->id_pengguna,
+                                'created_at'                => $now
+                            ));
+                        }
+                    }
+
+                    DB::commit();
+                    // all good
+
+                    return [
+                        'status'    =>  202, // SUCCESS AND LOAD CONTENT
+                        'message'   =>  'Save Copy Usulan Mata Ajar successfully',
+                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$id_semester
+                    ];
+
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+
+                    return [
+                                'status' => 300, // GAGAL
+                                'message' => 'Edit Usulan Mata Ajar Gagal! '.$e->getMessage()
+                            ];
+                }
+
             } elseif ($mode == 'edit') {
                 $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1);
 
@@ -615,7 +720,7 @@ class UsulanMataAjarController extends BaseController
                     // something went wrong
 
                     return [
-                                'status' => 203, // GAGAL
+                                'status' => 300, // GAGAL
                                 'message' => 'Edit Usulan Mata Ajar Gagal!'
                             ];
                 }

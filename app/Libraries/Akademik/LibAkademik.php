@@ -87,6 +87,42 @@ class LibAkademik
     }
     /** ========== **/
 
+    /** Usulan Mata Ajar **/
+    static function FetchDataUsulanMataAjar($auth_data, $id_semester, $is_datatable = null)
+    {
+        $kelas_mp = KelasMp::select(
+            'mata_pelajaran.nm_mata_pelajaran',
+            'mata_pelajaran.kd_mata_pelajaran',
+            'kelas.nm_kelas',
+            DB::raw("(SELECT COUNT(*) FROM jadwal_kelas_mp WHERE jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND jadwal_kelas_mp.deleted_at IS NULL) AS jml_jadwal"),
+            DB::raw("(SELECT SUM(jjs.jam_ke - jj.jam_ke + 1) 
+                        FROM jadwal_kelas_mp 
+                        JOIN jadwal_jam AS jj ON jj.id_jadwal_jam = jadwal_kelas_mp.id_jadwal_jam
+                        JOIN jadwal_jam AS jjs ON jjs.id_jadwal_jam = jadwal_kelas_mp.id_jadwal_jam_selesai 
+                        WHERE jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND jadwal_kelas_mp.deleted_at IS NULL) AS jml_jadwal_jam"),
+            DB::raw("(SELECT COUNT(*) FROM pengampu_mp WHERE pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengampu_mp.deleted_at IS NULL) AS jml_pengampu"),
+            DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"),
+            'kelas_mp.id_kelas_mp',
+            'mata_pelajaran.kredit_semester',
+            'mata_pelajaran.tingkat_semester',
+            'kelas_mp.nm_kelas_mp',
+            'jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
+        )
+            ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+            ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+            ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+            ->where('kelas_mp.id_semester', '=', $id_semester)
+            ->orderBy('mata_pelajaran.nm_mata_pelajaran', 'asc')
+            ->orderBy('kelas.nm_kelas', 'asc')
+            ->orderBy('mata_pelajaran.tingkat_semester', 'asc');
+
+            if ( $is_datatable == null ) {
+                $kelas_mp = $kelas_mp->first();
+            }
+
+        return $kelas_mp;
+    }
+
     /** CEK JADWAL KRES **/
     static function cekJadwalKelas($auth_data, $id_guru, $id_ruangan, $id_jadwal_hari, $id_jadwal_jam, $id_jadwal_jam_selesai) {
         $cek = array();

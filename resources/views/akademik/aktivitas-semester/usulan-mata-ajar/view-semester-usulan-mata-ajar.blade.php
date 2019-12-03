@@ -34,6 +34,13 @@
                                 </thead>
                             </table>
                         </div>
+                        @if(empty($kelas_mp->id_kelas_mp))
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <a class="target-link btn btn-block bg-blue waves-effect" href="{{url(Request::segment(1).'#aktivitas-semester/usulan-mata-ajar/copy-semester-lain/'.$id)}}"><i class="material-icons">file_copy</i><span>Copy Jadwal Dari Semester Lain</span></a>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -41,6 +48,8 @@
     </div>
 </div>
 @include('scriptjs')
+
+@if(! empty($kelas_mp->id_kelas_mp))
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var id_semester= {!! json_encode($id) !!};
@@ -93,3 +102,4 @@
         } );
     } ).draw();
 </script>
+@endif

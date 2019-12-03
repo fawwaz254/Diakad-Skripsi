@@ -63,6 +63,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('usulan-mata-ajar/add/{id_semester}/{id_mata_pelajaran}', 'Akademik\AktivitasSemester\UsulanMataAjarController@addUsulanMataAjar');
             Route::get('usulan-mata-ajar/edit/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@editUsulanMataAjar');
             Route::get('usulan-mata-ajar/copy/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyUsulanMataAjar');
+            Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyJadwalSemesterLain');
 
             Route::post('action-usulan-mata-ajar/{mode}/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionUsulanMataAjar');
 
