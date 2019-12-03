@@ -92,3 +92,24 @@
         background-position: 400px 0;
     }
 }
+
+.loading-html {
+    top: 50%;
+    position: absolute;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+    text-align: center;
+}
+
+@media (max-width: 1169px) {
+    .loading-html {
+        left: 50%;
+    }
+}
+
+@media (min-width: 1170px) {
+    .loading-html {
+        left: 62.5%;
+    }
+}

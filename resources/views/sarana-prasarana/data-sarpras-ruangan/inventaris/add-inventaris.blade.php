@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH KONDISI RUANGAN
+                        TAMBAH INVENTARIS
                     </h2>
                 </div>
                 <div class="body">
