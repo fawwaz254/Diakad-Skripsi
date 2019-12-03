@@ -2,6 +2,9 @@
 	<div class="block-header">
 		<h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#siswa/setting-wali-murid')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
 	</div>
+    <div class="block-header">
+		<h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#siswa/upload-setting-wali-murid/'.$id_kelas)}}"><i class="material-icons">cloud_upload</i><span>Upload Wali Murid</span></a></h2>
+	</div>
 	<div class="row clearfix">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="card">
@@ -79,7 +82,7 @@
         { data: null, searchable: false, orderable: false },
         { data: 'nis_siswa', name: 'nis_siswa' },
         { data: 'nisn_siswa', name: 'nisn_siswa'},
-        { data: 'nm_pengguna', name: 'nm_pengguna' },
+        { data: 'nm_siswa', name: 'nm_pengguna' },
         { data: 'nm_wali_murid', name: 'nm_wali_murid'},
         { data: 'action', name: 'action', searchable: false, orderable: false,
         render: function(data){
