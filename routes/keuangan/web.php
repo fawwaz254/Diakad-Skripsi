@@ -49,6 +49,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('biaya-sekolah/datatables', 'Keuangan\DataKeuangan\BiayaSekolahController@datatablesBiayaSekolah');
 			Route::get('biaya-sekolah/add', 'Keuangan\DataKeuangan\BiayaSekolahController@addBiayaSekolah');
 			Route::get('biaya-sekolah/edit/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@editBiayaSekolah');
+			Route::get('biaya-sekolah/copy', 'Keuangan\DataKeuangan\BiayaSekolahController@copyBiayaSekolah');
 
 			Route::post('action-biaya-sekolah/{mode}/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@actionBiayaSekolah');
 
