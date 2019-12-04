@@ -117,26 +117,20 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('data-penetapan/add', 'PPDB\Penetapan\PenetapanController@addPenetapan');
 			Route::get('data-penetapan/edit/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapan');
 			Route::post('action-penetapan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapan');
-
 			Route::get('data-penetapan/view-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@viewPenetapanPenerimaan');
 			Route::get('data-penetapan/datatables-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@datatablesPenetapanPenerimaan');
 			Route::get('data-penetapan/add-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@addPenetapanPenerimaan');
 			Route::get('data-penetapan/edit-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapanPenerimaan');
 			Route::post('action-penetapan-penerimaan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapanPenerimaan');
-
-
+			
 			// MENU PERSIDANGAN
 			Route::get('persidangan', 'PPDB\Penetapan\PersidanganController@viewPersidangan');
 			Route::post('persidangan/post-view-persidangan', 'PPDB\Penetapan\PersidanganController@actionViewPersidangan');
-			Route::get('persidangan/tahun/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan2');		
-			Route::get('persidangan/datatables/{tahun}', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');		
+			Route::get('persidangan/tahun/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan2');	
+			Route::get('persidangan/datatables/{tahun}', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
 			Route::get('persidangan/edit/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan');
-
 			Route::get('persidangan/view-persidangan-gelombang/{id}', 'PPDB\Penetapan\PersidanganController@viewPersidanganGelombang');
-
 			Route::get('persidangan/datatablesviewgelombang/{id}', 'PPDB\Penetapan\PersidanganController@datatablesPersidanganViewGelombang');
-
-
 		});		
 	});
   

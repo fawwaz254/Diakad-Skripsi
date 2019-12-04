@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Yajra\Datatables\Datatables;
 
 use App\Models\Penetapan as Penetapan;
+use App\Models\Penerimaan as Penerimaan;
+use App\Models\PenetapanPenerimaan as PenetapanPenerimaan;
 use App\Models\CalonSiswaBaru as CalonSiswaBaru;
 use App\Models\Semester as Semester;
 use Carbon\Carbon;
@@ -29,7 +31,7 @@ class PersidanganController extends BaseController {
         $auth_data = $input->auth_data;
         $data_semester_tahun = LibDataAkademik::fetchDataTahunSemester($auth_data);
 
-        $data_tahun_penetapan = DB::table('penetapan') ->distinct()->get([DB::raw('YEAR(tgl_penetapan) as tgl_penetapan')]); 
+        $data_tahun_penetapan = Penetapan::distinct()->get([DB::raw('YEAR(tgl_penetapan) as tgl_penetapan')]); 
         //dd($data_tahun_penetapan);
     	return view('ppdb/penetapan/persidangan/view-persidangan',compact('auth_data','data_tahun_penetapan'));
     }
@@ -48,7 +50,7 @@ class PersidanganController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+        $data_penetapan = Penetapan::where('id_penetapan',$id)->first();
        // dd($data_penetapan);
         return view('ppdb/penetapan/persidangan/edit-persidangan',compact('auth_data','data_penetapan'));
     }
@@ -56,11 +58,12 @@ class PersidanganController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penerimaan = DB::table('penerimaan')->where('id_penerimaan',$id)->first();
-        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
-        //dd($data_penetapan);
-        dd($data_penerimaan);
-        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan', 'data_penerimaan'));
+        $data_penerimaan = Penerimaan::where('id_penerimaan',$id)->first();
+        $data_penetapan = Penetapan::where('id_penetapan',$id)->first();
+        //$data_jurusan = LibPenerimaan::fetchDataJurusanDetailPendaftaran($auth_data, $id);
+        //dd('data_jurusan');
+        
+        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan', 'data_penerimaan', 'data_jurusan'));
     }
 
     public function editPersidangan2($tahun, Request $request) {
@@ -75,7 +78,7 @@ class PersidanganController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+        $data_penetapan = Penetapan::where('id_penetapan',$id)->first();
         return view('ppdb/penetapan/persidangan/view-sidang-penetapan',compact('auth_data','data_penetapan'));
 
     }
@@ -143,21 +146,22 @@ class PersidanganController extends BaseController {
             'penerimaan.nm_semester_penerimaan','penerimaan.tahun_penerimaan')
                 ->join('penerimaan','penerimaan.id_penerimaan','=','penetapan_penerimaan.id_penerimaan')
                 ->join('penetapan','penetapan.id_penetapan','=','penetapan_penerimaan.id_penetapan')
-                ->where('penetapan.id_penetapan','=',$id)
+                ->where('penetapan_penerimaan.id_penetapan','=',$id)
                 ->orderBy('penerimaan.nm_penerimaan', 'asc')
-                ->get();        
+                ->get();  
+        //dd($list_data);      
         return Datatables::of($list_data)
-                ->addColumn('nm_penetapan', function($item) {
-                    if( ! empty($item->nm_penetapan)){
-                        return $item->nm_penetapan;
+                ->addColumn('gelombang_penerimaan', function($item) {
+                    if( ! empty($item->gelombang_penerimaan)){
+                        return $item->gelombang_penerimaan;
                     }
                     else{
                         return "-";
                     }
                 })
-                ->addColumn('periode', function($item) {
-                    if( ! empty($item->periode)){
-                        return $item->periode;
+                ->addColumn('nm_semester_penerimaan', function($item) {
+                    if( ! empty($item->nm_semester_penerimaan)){
+                        return $item->nm_semester_penerimaan;
                     }
                     else{
                         return "-";

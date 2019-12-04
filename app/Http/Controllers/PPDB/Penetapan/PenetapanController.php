@@ -37,7 +37,7 @@ class PenetapanController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penetapan_penerimaan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+        $data_penetapan_penerimaan = Penetapan::where('id_penetapan',$id)->first();
         return view('ppdb/penetapan/data-penetapan/view-penetapan-penerimaan',compact('auth_data','data_penetapan_penerimaan'));
     }
 
@@ -67,14 +67,14 @@ class PenetapanController extends BaseController {
     public function editPenetapan($id, Request $request) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+        $data_penetapan = Penetapan::where('id_penetapan',$id)->first();
         return view('ppdb/penetapan/data-penetapan/edit-penetapan',compact('auth_data','data_penetapan'));
     }
 
     public function editPenetapanPenerimaan($id, Request $request) {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penetapan = DB::table('penetapan')->where('id_penetapan',$id)->first();
+        $data_penetapan = Penetapan::where('id_penetapan',$id)->first();
         return view('ppdb/penetapan/data-penetapan/edit-penetapan-penerimaan',compact('auth_data','data_penetapan'));
     }
 
