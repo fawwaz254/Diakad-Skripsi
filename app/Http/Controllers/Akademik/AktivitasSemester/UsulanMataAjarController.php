@@ -427,7 +427,7 @@ class UsulanMataAjarController extends BaseController
 
                     return [
                                 'status' => 300, // GAGAL
-                                'message' => 'Edit Usulan Mata Ajar Gagal! '.$e->getMessage()
+                                'message' => 'Edit Usulan Mata Ajar Gagal! '
                             ];
                 }
 

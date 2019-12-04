@@ -27,6 +27,15 @@
                                 </thead>
                             </table>
                         </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <a class="target-link btn btn-block bg-blue waves-effect" href="{{url(Request::segment(1).'#setting-kelas/kelas/copy')}}"><i class="material-icons">file_copy</i><span>Copy Sekretaris, Ruangan, Wali Kelas</span></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
