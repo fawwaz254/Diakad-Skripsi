@@ -16,7 +16,7 @@ class PembayaranBiaya extends Model
 
     protected $primaryKey = 'id_pembayaran_biaya';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -38,9 +38,8 @@ class PembayaranBiaya extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function tagihan_biaya()
+    {
+        return $this->belongsTo('App\Models\TagihanBiaya', 'id_tagihan_biaya');
+    }
 }

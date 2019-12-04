@@ -23,13 +23,13 @@ use Validator;
 
 class ProsesPenetapanController extends BaseController
 {
-    /** 
-     * View page awal proses penetapan, show list data penerimaan 
-     * @param Request 
+    /**
+     * View page awal proses penetapan, show list data penerimaan
+     * @param Request
      * @return View
      */
     public function viewProsesPenetapan(Request $request)
-    {        
+    {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
@@ -37,16 +37,16 @@ class ProsesPenetapanController extends BaseController
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
 
         /** groupping by year and semester */
-        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
+        $grup_penerimaan_tahun = $penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
             return $item->groupBy('nm_semester_penerimaan');
-        }); 
+        });
 
         $mode = 'view';
 
-        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan',compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun', 'mode'));
+        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'penerimaan', 'grup_penerimaan_tahun', 'mode'));
     }
 
-    /** 
+    /**
      * Action post view for editing proses penetapan
      * @param String id_penerimaan
      * @return Code 300 fail, 204 success
@@ -60,13 +60,12 @@ class ProsesPenetapanController extends BaseController
             'id_penerimaan' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status'    => 300, // FAILED
                 'message'   => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status'    => 204, // SUCCESS AND LOAD CONTENT
                 'path'      => 'peserta/proses-penetapan/'.$input->id_penerimaan
@@ -74,7 +73,7 @@ class ProsesPenetapanController extends BaseController
         }
     }
 
-    /** 
+    /**
      * View detail proses penetapan, to show list calon siswa at spesific gelombang penerimaan
      * @param String id_penerimaan
      * @return View
@@ -88,19 +87,21 @@ class ProsesPenetapanController extends BaseController
         $data_penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data);
 
         /** groupping by year and semester */
-        $grup_penerimaan_tahun = $data_penerimaan->groupBy('tahun_penerimaan')->transform(function($item, $k) {
+        $grup_penerimaan_tahun = $data_penerimaan->groupBy('tahun_penerimaan')->transform(function ($item, $k) {
             return $item->groupBy('nm_semester_penerimaan');
-        }); 
+        });
 
         /** get penerimaan by id */
         $penerimaan = LibPenerimaan::fetchDataPenerimaan($auth_data, $id);
 
         /** data (id_penerimaan) tidak ditemukan */
-        if(!$penerimaan) abort(404);
+        if (!$penerimaan) {
+            abort(404);
+        }
 
         $mode = 'show';
 
-        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan',compact('auth_data', 'grup_penerimaan_tahun', 'penerimaan', 'mode'));
+        return view('ppdb/peserta/proses-penetapan/view-proses-penetapan', compact('auth_data', 'grup_penerimaan_tahun', 'penerimaan', 'mode'));
     }
 
     public function datatablesProsesPenetapan($id, Request $request)
@@ -141,7 +142,7 @@ class ProsesPenetapanController extends BaseController
             try {
                 foreach ($input->id_c_siswa as $id_c_siswa) {
                     $c_siswa                = CalonSiswaBaru::find($id_c_siswa);
-                    $c_siswa->nomor_ujian   = 'U-'.$c_siswa->kode_voucher; 
+                    $c_siswa->nomor_ujian   = 'U-'.$c_siswa->kode_voucher;
                     $c_siswa->updated_at    = $now;
                     $c_siswa->updated_by    = $input->auth_data->pengguna->id_pengguna;
                     $c_siswa->save();
@@ -158,7 +159,7 @@ class ProsesPenetapanController extends BaseController
 
                 return [
                             'status' => 203, // GAGAL
-                            'message' => 'Proses Penetapan Gagal'.$e->getMessage()
+                            'message' => 'Proses Penetapan Gagal'
                         ];
             }
         }
