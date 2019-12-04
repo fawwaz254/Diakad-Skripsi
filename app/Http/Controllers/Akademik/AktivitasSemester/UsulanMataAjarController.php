@@ -426,7 +426,7 @@ class UsulanMataAjarController extends BaseController
 
                     return [
                                 'status' => 300, // GAGAL
-                                'message' => 'Edit Usulan Mata Ajar Gagal!'
+                                'message' => 'Edit Usulan Mata Ajar Gagal! '
                             ];
                 }
             } elseif ($mode == 'edit') {
