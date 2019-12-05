@@ -41,7 +41,7 @@
                                 </li>
                             </ul>
                             <h5>Catatan: Hanya ubah kolom yang terkait dengan wali murid</h5>
-                            <a class="btn btn-block bg-blue waves-effect" target="_blank" href="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/download/'.$kelas->id_kelas)}}">
+                            <a class="btn btn-block bg-blue waves-effect" target="_blank" href="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.Request::segment(4).'/download/'.$kelas->id_kelas)}}">
                                 <i class="material-icons">cloud_upload</i>
                                 <span>Download File Excel</span>
                             </a>

@@ -161,8 +161,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('setting-wali-murid/datatables/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@datatablesWaliMurid');
             Route::get('setting-wali-murid/edit/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@editWaliMurid');
 
-            Route::get('upload-setting-wali-murid/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewUploadSettingWaliMurid');
-            Route::get('upload-setting-wali-murid/download/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewDownloadSettingWaliMurid');
+            Route::get('setting-wali-murid/upload-setting-wali-murid/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewUploadSettingWaliMurid');
+            Route::get('setting-wali-murid/upload-setting-wali-murid/download/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewDownloadSettingWaliMurid');
             Route::post('upload-setting-wali-murid/upload/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@uploadFileExcel');
 
             Route::post('action-setting-wali-murid/{mode}/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@actionSettingWaliMurid');

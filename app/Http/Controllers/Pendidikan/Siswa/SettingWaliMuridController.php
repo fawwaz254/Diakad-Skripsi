@@ -51,7 +51,6 @@ class SettingWaliMuridController extends BaseController
                 ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                 ->get();
 
-
         $kelas = Kelas::where('id_kelas', '=', $id_kelas)->first();
 
         return view('pendidikan/siswa/setting-wali-murid/upload-setting-wali-murid', compact('auth_data', 'data_kelas', 'kelas', 'id_kelas'));
