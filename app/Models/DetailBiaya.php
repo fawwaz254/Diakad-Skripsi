@@ -16,7 +16,7 @@ class DetailBiaya extends Model
 
     protected $primaryKey = 'id_detail_biaya';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -36,7 +36,13 @@ class DetailBiaya extends Model
 
     protected $guarded = [];
 
-    public function biaya_sekolah(){
+    public function biaya_sekolah()
+    {
         return $this->belongsTo('App\Models\BiayaSekolah', 'id_biaya_sekolah');
+    }
+
+    public function biaya()
+    {
+        return $this->belongsTo('App\Models\Biaya', 'id_biaya');
     }
 }

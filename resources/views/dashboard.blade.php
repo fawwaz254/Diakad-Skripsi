@@ -27,7 +27,7 @@
             $('#modul-item-' + target_url.split('/')[0]).addClass('active');
             $('#modul-item-' + target_url.split('/')[0] +' a').addClass('toggled');
             $('#modul-item-' + target_url.split('/')[0] +' .ml-menu').css('display', 'block');
-            $('#menu-item-' + target_url.split('/')[1]).addClass('active');
+            $('#menu-item-' + target_url.split('/')[0] + '-' + target_url.split('/')[1]).addClass('active');
         }
     });
 
@@ -110,7 +110,7 @@
                 NProgress.done();
                 
                 $('.menu-item').removeClass('active');
-                $('#menu-item-' + target_url.split('/')[1]).addClass('active');
+                $('#menu-item-' + target_url.split('/')[0] + '-' + target_url.split('/')[1]).addClass('active');
             },
             error: function (xhr, status, error) {
                 // alert(xhr.responseText);

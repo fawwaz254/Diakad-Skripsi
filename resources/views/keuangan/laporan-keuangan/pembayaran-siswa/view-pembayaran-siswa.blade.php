@@ -50,11 +50,13 @@
                                     <th>Tanggal Bayar</th>
                                     <th>NIS Siswa</th>
                                     <th>Nama Siswa</th>
+                                    <th>Keterangan</th>
                                     <th>Jumlah Bayar</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -101,6 +103,7 @@
             { data: 'tanggal_bayar', name:'tgl_pembayaran', searchable: false },
             { data: 'tagihan_biaya.siswa.nis_siswa' },
             { data: 'tagihan_biaya.siswa.pengguna.nm_pengguna' },
+            { data: 'keterangan_bayar', searchable: false, orderable: false },
             { data: 'besar_pembayaran',
                 render: function(data){
                     return 'Rp' +numeral(data).format('0,0');
@@ -110,10 +113,10 @@
         fnDrawCallback: function ( row, data, start, end, display ) {
             var api = this.api();
             var json = api.ajax.json();
-            $( api.column( 3 ).footer() ).html(
+            $( api.column( 4 ).footer() ).html(
                 'Total Pembayaran'
             );
-            $( api.column( 4 ).footer() ).html(
+            $( api.column( 5 ).footer() ).html(
                 'Rp'+numeral(json.total).format('0,0')
             );
         }
