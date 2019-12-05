@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 use App\Models\Guru as Guru;
+use App\Models\Siswa as Siswa;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -237,9 +238,12 @@ class InputPelanggaranController extends BaseController{
 
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
+                $siswa = Siswa::where('id_siswa','=',$input->id_siswa)->first();
+
                 $pelanggaranSiswa                               = new PelanggaranSiswa;
                 $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
+                $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
                 $pelanggaranSiswa->id_guru_input                = $id_guru_input;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
                 $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
@@ -259,9 +263,13 @@ class InputPelanggaranController extends BaseController{
                 ];
             }
             elseif($mode == 'edit'){
+
+                $siswa = Siswa::where('id_siswa','=',$input->id_siswa)->first();
+                
                 // make object to find id
                 $pelanggaranSiswa                               = PelanggaranSiswa::find($id);
                 $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
+                $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;
                 $pelanggaranSiswa->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                 $pelanggaranSiswa->catatan_pelanggaran          = $input->catatan_pelanggaran;
