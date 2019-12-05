@@ -97,10 +97,10 @@
 
                             <div class="row clearfix">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <a class="btn bg-blue btn-block waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/pembukaan-voucher/'.$penerimaan->id_penerimaan)}}"><i class="material-icons">cancel</i><span>Cancel</span></a>
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Generate Nomor Pendaftaran</span></button>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Generate Nomor Pendaftaran</span></button>
+                                    <a class="btn bg-blue btn-block waves-effect target-link" href="{{url(Request::segment(1).'#pendaftaran/pembukaan-voucher/'.$penerimaan->id_penerimaan)}}"><i class="material-icons">cancel</i><span>Cancel</span></a>
                                 </div>
                             </div>
                         </form>
