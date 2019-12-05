@@ -9,6 +9,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\PresensiMp as PresensiMp;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
+use App\Models\Siswa as Siswa;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -225,10 +226,13 @@ class InputPelanggaranController extends BaseController{
             if($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
+                $siswa = Siswa::where('id_siswa','=',$input->id_siswa)->first();
+
                 $presensiMpPelanggaran                               = new PresensiMpPelanggaran;
                 $presensiMpPelanggaran->id_presensi_mp_pelanggaran   = $id;
                 $presensiMpPelanggaran->id_presensi_mp               = $input->id_presensi_mp;
                 $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                $presensiMpPelanggaran->id_kelas                     = $input->id_kelas;
                 $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
                 $presensiMpPelanggaran->is_sudah_tindakan            = 0;
@@ -242,9 +246,12 @@ class InputPelanggaranController extends BaseController{
                 ];
             }
             elseif($mode == 'edit'){
+                $siswa = Siswa::where('id_siswa','=',$input->id_siswa)->first();
+
                 // make object to find id
                 $presensiMpPelanggaran                               = PresensiMpPelanggaran::find($id);
                 $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                $presensiMpPelanggaran->id_kelas                     = $input->id_kelas;
                 $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                 // convert format date
                 $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
