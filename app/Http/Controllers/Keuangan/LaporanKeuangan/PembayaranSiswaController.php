@@ -27,7 +27,9 @@ class PembayaranSiswaController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya');
+        $list_data = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->with(['tagihan_biaya.detail_biaya' => function ($q) {
+            $q->where('id_jenis_detail_biaya', 4)->with('biaya');
+        }]);
 
         if (!empty($input->start_date) && !empty($input->end_date)) {
             $list_data = $list_data->whereBetween('tgl_pembayaran', [$input->start_date.' 00:00:00', $input->end_date.' 23:59:59']);
