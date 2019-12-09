@@ -237,7 +237,8 @@ class Apiv1Controller extends BaseController
             'status_text' 	=> 'Success',
             'message' 	=> '',
             'data' => array(
-                'tgl_entry' => (!empty($presensi_harian))? $presensi_harian->tgl_entry : null,
+                'tgl_entry' => (!empty($presensi_harian))? date_format(date_create($presensi_harian->tgl_entry), "Y-m-d") : null,
+                'time_entry' => (!empty($presensi_harian))? date_format(date_create($presensi_harian->tgl_entry), "H:i:s") : null,
                 'siswa' =>
                     Datatables::of($list_data)
                         ->addColumn('kehadiran', function ($item) use ($presensi_harian_siswa) {
@@ -262,12 +263,14 @@ class Apiv1Controller extends BaseController
                     'id_kelas' => 'required',
                     'id_semester' => 'required',
                     'tgl_entry' => 'required',
+                    'time_entry' => 'required',
                 ]; break;
-            case 'edit':
+                case 'edit':
                 $required_params = [
                     'id_kelas' => 'required',
                     'id_semester' => 'required',
                     'tgl_entry' => 'required',
+                    'time_entry' => 'required',
                     'id_presensi_harian' => 'required',
                 ]; break;
             case 'delete':
@@ -292,7 +295,7 @@ class Apiv1Controller extends BaseController
             
             // ACTION ADD
             if ($mode == 'add' || $mode == 'edit') {
-                $tgl_entry = Carbon::parse($input->tgl_entry);
+                $tgl_entry = Carbon::parse($input->tgl_entry.' '.$input->time_entry);
                 DB::beginTransaction();
                 try {
                     if (!empty($input->id_presensi_harian)) {
