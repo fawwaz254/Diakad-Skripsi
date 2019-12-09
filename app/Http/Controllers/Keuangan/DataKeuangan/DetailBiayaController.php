@@ -162,9 +162,27 @@ class DetailBiayaController extends BaseController{
 
             if($mode == 'add') {
 
-                foreach($input->id_bulan as $id_bulan){
+                if (! empty($input->id_bulan)) {
+                    foreach($input->id_bulan as $id_bulan){
+                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        
+                        $detailBiaya                                = new DetailBiaya;
+                        $detailBiaya->id_detail_biaya               = $id;
+                        $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
+                        $detailBiaya->id_biaya                      = $input->id_biaya;
+                        $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
+                        $detailBiaya->validasi_biaya                = $input->validasi_biaya;
+                        $detailBiaya->besar_biaya                   = $input->besar_biaya;
+                        $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
+                        $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
+                        $detailBiaya->id_bulan                      = $id_bulan;
+                        $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                        $detailBiaya->save();
+                    }
+                }
+                else {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-    
+        
                     $detailBiaya                                = new DetailBiaya;
                     $detailBiaya->id_detail_biaya               = $id;
                     $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
@@ -174,7 +192,6 @@ class DetailBiayaController extends BaseController{
                     $detailBiaya->besar_biaya                   = $input->besar_biaya;
                     $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                     $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
-                    $detailBiaya->id_bulan                      = $id_bulan;
                     $detailBiaya->created_by                    = $input->auth_data->pengguna->id_pengguna;
                     $detailBiaya->save();
                 }
@@ -195,7 +212,9 @@ class DetailBiayaController extends BaseController{
                 $detailBiaya->besar_biaya                   = $input->besar_biaya;
                 $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
                 $detailBiaya->id_jenis_detail_biaya         = $input->id_jenis_detail_biaya;
-                $detailBiaya->id_bulan                      = $input->id_bulan;
+                if (! empty($input->id_bulan)) {
+                    $detailBiaya->id_bulan                      = $input->id_bulan;
+                }
                 $detailBiaya->updated_by                    = $input->auth_data->pengguna->id_pengguna;
                 $detailBiaya->updated_at                    = $now;
                 $detailBiaya->save();
