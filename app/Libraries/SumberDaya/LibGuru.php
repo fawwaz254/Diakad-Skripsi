@@ -23,7 +23,7 @@ class LibGuru
 
         // get all guru
         if ($id == null) {
-            $guru = Guru::select('guru.id_guru', 'guru.id_pengguna', 'pengguna.id_status_pengguna', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'guru.nip_guru', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna', 
+            $guru = Guru::select('guru.id_guru', 'guru.id_pengguna', 'pengguna.id_status_pengguna', 'guru.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'guru.nip_guru', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna', 
                 DB::raw("(SELECT COUNT(*) FROM pengampu_mp 
                             JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengampu_mp.id_kelas_mp 
                             JOIN semester ON semester.id_semester = kelas_mp.id_semester 

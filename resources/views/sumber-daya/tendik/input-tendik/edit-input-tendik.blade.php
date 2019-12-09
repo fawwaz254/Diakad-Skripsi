@@ -287,6 +287,51 @@
                                 </select>
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Jenis Jabatan Internal
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                               <select class="form-control show-tick" name="jenis_jabatan" required >
+                                    <option value="" disabled selected >-- Pilih Jenis Jabatan  --</option>
+                                    @if($tendik->jenis_jabatan == 1)
+                                        <option value="1" selected >Kepala Unit Sarana & Prasarana</option>
+                                    @else
+                                        <option value="1">Kepala Unit Sarana & Prasarana</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 2)
+                                        <option value="2" selected >Kepala Unit Keuangan</option>
+                                    @else
+                                        <option value="2">Kepala Unit Keuangan</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 3)
+                                        <option value="3" selected >Staf Unit Sarana & Prasarana</option>
+                                    @else
+                                        <option value="3">Staf Unit Sarana & Prasarana</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 4)
+                                        <option value="4" selected >Staf Unit Keuangan</option>
+                                    @else
+                                        <option value="4">Staf Unit Keuangan</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 5)
+                                        <option value="5" selected >Staf Unit Sumber Daya</option>
+                                    @else
+                                        <option value="5">Staf Unit Sumber Daya</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 98)
+                                        <option value="98" selected >Kepala Unit</option>
+                                    @else
+                                        <option value="98">Kepala Unit</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 99)
+                                        <option value="99" selected >Staf Unit</option>
+                                    @else
+                                        <option value="99">Staf Unit</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
                         <div class="demo-color-box bg-success">
                                 Kepegawaian
                         </div>

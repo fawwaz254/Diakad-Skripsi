@@ -19,6 +19,7 @@ use App\Models\JenisPtk as JenisPtk;
 use App\Models\JenisKeahlianLab as JenisKeahlianLab;
 use App\Models\JenisSumberGaji as JenisSumberGaji;
 use App\Models\JenisLembagaPengangkat as JenisLembagaPengangkat;
+use App\Models\GuruPiket as GuruPiket;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -147,7 +148,8 @@ class InputTendikController extends BaseController{
             'nip_staff'              => 'required',
             /*'id_jabatan_pegawai'    => 'required',*/
             'id_unit_kerja'         => 'required',
-            'id_status_pengguna'    => 'required',
+            'jenis_jabatan'         => 'required',
+            'id_status_pengguna'    => 'required'
         ]);
 
         if($validator->fails() && $mode != 'delete') {
@@ -186,6 +188,7 @@ class InputTendikController extends BaseController{
                 $staff->id_pengguna              = $pengguna->id_pengguna;
                 /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $staff->id_unit_kerja            = $input->id_unit_kerja;
+                $staff->jenis_jabatan            = $input->jenis_jabatan;
                 $staff->nik_ptk                  = $input->nik_ptk;
                 $staff->jenis_kelamin            = $input->jenis_kelamin;
                 $staff->id_kota_lahir            = $input->id_kota_lahir;
@@ -293,6 +296,7 @@ class InputTendikController extends BaseController{
                 $staff                           = Staff::find($id);
                 /*$staff->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $staff->id_unit_kerja            = $input->id_unit_kerja;
+                $staff->jenis_jabatan            = $input->jenis_jabatan;
                 $staff->nip_staff                = $input->nip_staff;
                 $staff->nik_ptk                  = $input->nik_ptk;
                 $staff->jenis_kelamin            = $input->jenis_kelamin;
@@ -366,10 +370,19 @@ class InputTendikController extends BaseController{
             elseif($mode == 'delete') {
                     // make object to find id
                     $staff               = Staff::find($id);
-                    $staff->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                    $staff->save();
 
-                    $staff->delete();
+                    if($guruPiket = GuruPiket::where('id_pengguna',$staff->id_pengguna)->first()) {
+                        return [
+                            'status' => 300, // SUCCESS AND LOAD TABLE
+                            'message' => 'Tendik Sudah Di Plot Guru Piket'
+                        ]; 
+                    }
+                    else {
+                        $staff->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                        $staff->save();
+
+                        $staff->delete();
+                    }
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE

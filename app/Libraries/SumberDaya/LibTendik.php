@@ -18,7 +18,7 @@ class LibTendik
 
         // get all tendik
         if ($id == null) {
-            $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna', 'pengguna.id_status_pengguna', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
+            $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
                     ->join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
                     ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
                     ->join('unit_kerja','unit_kerja.id_unit_kerja','=','staff.id_unit_kerja')
@@ -29,7 +29,7 @@ class LibTendik
         }
         // get mode edit
         else {
-            $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna', 'pengguna.id_status_pengguna', 'pengguna.nm_pengguna', 'staff.nip_staff', 'staff.id_unit_kerja', 'pengguna.id_status_pengguna')
+            $tendik = Staff::select('staff.*','pengguna.id_status_pengguna', 'pengguna.nm_pengguna','pengguna.id_status_pengguna','pengguna.gelar_depan','pengguna.gelar_belakang')
                     ->join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
                     ->where('staff.id_staff','=',$id)
                     ->first();
