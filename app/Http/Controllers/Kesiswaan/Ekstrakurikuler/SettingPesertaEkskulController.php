@@ -26,6 +26,7 @@ use App\Models\Semester as Semester;
 
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 use Auth;
 use DB;
@@ -130,6 +131,31 @@ class SettingPesertaEkskulController extends BaseController
                 ->where('peserta_ekskul_set.id_peserta_ekskul_set','=',$id_peserta_ekskul_set)->first();
 
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/edit-setting-peserta-ekskul',compact('auth_data','id_ekskul','data_peserta'));
+    }
+
+    public function setSettingPesertaEkskul(Request $request, $id_ekskul){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $ekskul = Ekskul::where('id_ekskul','=',$id_ekskul)->first();
+
+        $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $now = (int) $semester->thn_akademik_semester + 1;
+
+        $tahun_sebelum = (int) $semester->thn_akademik_semester - 2;
+
+        $data_semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
+                            ->orderBy('thn_akademik_semester', 'asc')
+                            ->orderBy('nm_semester', 'asc')
+                            ->get();
+
+        $jumlah_pengambilan = PengambilanEkskul::where('id_ekskul', '=', $ekskul->id_ekskul)
+                                            ->where('id_semester', '=', $semester->id_semester)
+                                            ->count();
+
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/set-setting-peserta-ekskul',compact('auth_data','id_ekskul','ekskul','semester','data_semester', 'jumlah_pengambilan'));
     }
 
     public function datatablesSettingPesertaEkskul(Request $request,$id_ekskul){
@@ -306,6 +332,53 @@ class SettingPesertaEkskulController extends BaseController
                             'message' => 'Edit Data Peserta Ekskul Berhasil Dilakukan',
                             'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-ekskul/'.$id_ekskul
                     ]; 
+            }
+            elseif($mode == "setting") {
+                $id_ekskul = $input->id_ekskul;
+                $id_semester = $input->id_semester;
+
+                DB::beginTransaction();
+
+                try {
+
+                    // proses tabel pengambilan_ekskul
+                    $peserta_ekskul_set = PesertaEkskulSet::where('id_ekskul','=',$id_ekskul)->where('is_aktif','=',1)->get();
+
+                    foreach($peserta_ekskul_set as $peserta_ekskul) {
+                        $id_pengambilan_ekskul      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $id_siswa                   = $peserta_ekskul->id_siswa;
+
+                        $siswa                      = Siswa::where('id_siswa', '=', $id_siswa)->first();
+                        $id_kelas                   = $siswa->id_kelas;
+
+                        PengambilanEkskul::insert(array(
+                            'id_pengambilan_ekskul'     => $id_pengambilan_ekskul,
+                            'id_ekskul'                 => $id_ekskul,
+                            'id_siswa'                  => $id_siswa,
+                            'id_kelas'                  => $id_kelas,
+                            'id_semester'               => $id_semester,
+                            'is_tampil'                 => 0,
+                            'created_by'                => $input->auth_data->pengguna->id_pengguna,
+                            'created_at'                => $now
+                        ));
+                    }
+
+                    DB::commit();
+                    return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'message' => 'Setting Pengambilan Ekskul Berhasil',
+                            'path' => 'ekstrakurikuler/setting-peserta-ekskul/setting/'.$id_ekskul
+                    ];
+
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+
+                    return [
+                                'status' => 300, // GAGAL
+                                'message' => 'Setting Pengambilan Ekskul Gagal! '.$e->getMessage()
+                            ];
+                }
             }
         }
     }

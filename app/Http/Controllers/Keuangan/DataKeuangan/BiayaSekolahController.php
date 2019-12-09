@@ -265,7 +265,7 @@ class BiayaSekolahController extends BaseController{
 
                     return [
                                 'status' => 300, // GAGAL
-                                'message' => 'Copy Biaya Sekolah Gagal! '.$e->getMessage()
+                                'message' => 'Copy Biaya Sekolah Gagal! '
                             ];
                 } 
             }

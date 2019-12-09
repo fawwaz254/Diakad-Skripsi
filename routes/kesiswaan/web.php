@@ -52,6 +52,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('post-add-setting-peserta-ekskul', 'Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController@actionAddSettingPesertaEkskul');
             Route::get('setting-peserta-ekskul/view-kelas/{id_ekskul}/{id_kelas}', 'Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController@viewKelasSettingPesertaEkskul');
             Route::get('setting-peserta-ekskul/edit/{id}', 'Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController@editSettingPesertaEkskul');
+            Route::get('setting-peserta-ekskul/setting/{id_ekskul}', 'Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController@setSettingPesertaEkskul');
 
 
             Route::post('action-setting-peserta-ekskul/{mode}/{id}', 'Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController@actionSettingPesertaEkskul');

@@ -15,6 +15,7 @@
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
                             Copy Jadwal Dari Semester
+                            <small><strong>Semester Asal Data</strong></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -30,6 +31,7 @@
                         </div>
                         <h2 class="card-inside-title">
                             Paste Jadwal Untuk Semester
+                            <small><strong>Semester Tujuan Data</strong></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
