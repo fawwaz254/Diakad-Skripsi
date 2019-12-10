@@ -17,20 +17,23 @@ use Auth;
 use DB;
 use Session;
 
-class SignInController extends BaseController{
-    public function indexSignin(Request $request){
-        if(Auth::check()){
+class SignInController extends BaseController
+{
+    public function indexSignin(Request $request)
+    {
+        if (Auth::check()) {
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
             $role = Role::find($role_aktif->id_role);
             return redirect($role->path);
-        }else{
+        } else {
             $sekolah = Sekolah::orderBy('id_sekolah')->first();
             return view('signin', compact('sekolah'));
         }
     }
 
-    public function actionSignIn(Request $request){
+    public function actionSignIn(Request $request)
+    {
         $input = (object) $request->input();
 
         /*$http_host = env('APP_URL', '');
@@ -54,7 +57,7 @@ class SignInController extends BaseController{
             $pengguna->save();
 
             return redirect($role->path);
-        }else{
+        } else {
             return back()->with('toast', 'Sign in failed')->withInput();
         }
     }
