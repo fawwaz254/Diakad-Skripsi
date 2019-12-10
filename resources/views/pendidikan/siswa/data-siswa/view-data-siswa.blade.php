@@ -87,7 +87,7 @@
         $('select').select();
     });
 
-    var modul_url       = 'data-kesiswaan';
+    var modul_url       = 'siswa';
 
     $('#jurusan').on('change', function(e){
     console.log(e);

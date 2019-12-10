@@ -105,7 +105,7 @@
             { data: 'tanggal', searchable: false, orderable: false },
             { data: 'persentase_presensi_harian', 
                 render: function(data){
-                    return data * 100 + '%';
+                    return Math.round(data * 100) + '%';
                 }
             },
             { data: 'petugas', searchable: false, orderable: false },

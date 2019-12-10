@@ -13,7 +13,7 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-jadwal/edit/'.$kelas_mp->id_kelas_mp)}}">
                         {{csrf_field()}}
-                        <div class="header bg-light-green">
+                        <div class="header">
                             <h2>
                                 Informasi Kelas dan Mata Pelajaran
                             </h2>
@@ -75,7 +75,7 @@
                                 aria-invalid="true" value="{{$kelas_mp->kapasitas_ruangan}}">
                             </div>
                         </div>  -->
-                        <div class="header bg-light-green">
+                        <div class="header">
                             <h2>
                                 Informasi Jadwal dan Ruangan
                             </h2>
@@ -97,7 +97,7 @@
                         @endif
                         
 
-                        <div class="header bg-light-green">
+                        <div class="header">
                             <h2>
                                 Jadwal 1
                             </h2>
@@ -186,7 +186,7 @@
                                 </select>
                             </div>
                         </div>
-                       <div class="header bg-light-green">
+                       <div class="header">
                             <h2>
                                 Jadwal 2
                             </h2>
@@ -271,7 +271,7 @@
                                 </select>
                             </div>
                         </div>
-                       <div class="header bg-light-green">
+                       <div class="header">
                             <h2>
                                 Jadwal 3
                             </h2>
@@ -356,7 +356,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-light-green">
+                        <div class="header">
                             <h2>
                                 Jadwal 4
                             </h2>

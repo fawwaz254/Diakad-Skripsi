@@ -181,7 +181,7 @@ class AbsensiHarianSiswaController extends BaseController
                         $presensi_harian->id_kelas = $input->id_kelas;
                         $presensi_harian->id_semester = $input->id_semester;
                     }
-                    $presensi_harian->id_jadwal_hari = $tgl_entry->dayOfWeek;
+                    $presensi_harian->id_jadwal_hari = ($tgl_entry->dayOfWeek == 0)? 7 : $tgl_entry->dayOfWeek;
                     $presensi_harian->tgl_entry = $tgl_entry;
                     $presensi_harian->save();
 
