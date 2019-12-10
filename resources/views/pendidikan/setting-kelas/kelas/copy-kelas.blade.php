@@ -36,7 +36,11 @@
                                 <select class="form-control show-tick" name="id_semester_paste" required >
                                     <option value="" disabled selected >-- Pilih Semester --</option>
                                     @foreach($data_semester as $data)
-                                        <option value="{{$data->id_semester}}">{{$data->tahun_ajaran}} ({{$data->nm_semester}})</option>
+                                        @if($data->is_aktif_semester == 1)
+                                            <option value="{{$data->id_semester}}" selected >{{$data->tahun_ajaran}} ({{$data->nm_semester}}) (Aktif)</option>
+                                        @else
+                                            <option value="{{$data->id_semester}}">{{$data->tahun_ajaran}} ({{$data->nm_semester}})</option>    
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
