@@ -192,6 +192,8 @@ class BiayaSekolahController extends BaseController
                 DB::beginTransaction();
 
                 try {
+                    $semester_paste = Semester::find($input->id_semester_paste);
+                    $semester_copy = Semester::find($input->id_semester_copy);
 
                     // proses tabel biaya_sekolah
                     $biaya_sekolah_set = BiayaSekolah::where('id_semester', '=', $input->id_semester_copy)->get();
@@ -230,9 +232,13 @@ class BiayaSekolahController extends BaseController
                             $besar_biaya                = $detail_biaya->besar_biaya;
                             $keterangan_biaya           = $detail_biaya->keterangan_biaya;
                             $id_jenis_detail_biaya      = $detail_biaya->id_jenis_detail_biaya;
-                            $id_bulan                   = $detail_biaya->id_bulan + 6;
-                            if ($id_bulan > 12) {
-                                $id_bulan = $id_bulan - 12;
+                            if ($semester_copy->nm_semester == $semester_paste->nm_semester) {
+                                $id_bulan                   = $detail_biaya->id_bulan;
+                            } else {
+                                $id_bulan                   = $detail_biaya->id_bulan + 6;
+                                if ($id_bulan > 12) {
+                                    $id_bulan = $id_bulan - 12;
+                                }
                             }
 
                             $batch_insert_detail_biaya[] = array(
