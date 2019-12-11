@@ -1,11 +1,11 @@
-<?php 
+<?php
 // ROLE AKADEMIK
-Route::group(array('middleware'=> ['token_staff']), function() {
-    Route::group(array('prefix' => 'akademik'), function() {
+Route::group(array('middleware'=> ['token_staff']), function () {
+    Route::group(array('prefix' => 'akademik'), function () {
         Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
 
         /** ==== MODUL DATA AKADEMIK ==== **/
-        Route::group(array('prefix' => 'data-akademik'), function() {
+        Route::group(array('prefix' => 'data-akademik'), function () {
             // MENU Kurikulum
             Route::get('kurikulum', 'Akademik\DataAkademik\KurikulumController@viewKurikulum');
             Route::get('kurikulum/datatables', 'Akademik\DataAkademik\KurikulumController@datatablesKurikulum');
@@ -52,7 +52,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
         // MODUL AKTIVITAS SEMESTER
-        Route::group(array('prefix' => 'aktivitas-semester'), function() {
+        Route::group(array('prefix' => 'aktivitas-semester'), function () {
             // MENU Usulan Mata Ajar
             Route::get('usulan-mata-ajar', 'Akademik\AktivitasSemester\UsulanMataAjarController@viewUsulanMataAjar');
             Route::post('post-usulan-mata-ajar', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionViewUsulanMataAjar');
@@ -80,7 +80,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::post('post-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/view-kelas-plotting/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewKelasPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/datatables/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewMapelPlottingMapelSiswa');
+            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewMapelPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesMataPelajaran');
             Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesSiswa');
             Route::post('post-daftar-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewDaftarPlottingMapelSiswa');
@@ -109,10 +109,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
             Route::post('action-komponen-nilai/{mode}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@actionKomponenNilai');
-
         });
         
-        Route::group(array('prefix' => 'ujian'), function() {
+        Route::group(array('prefix' => 'ujian'), function () {
             //UTS
             Route::get('ujian-uts-reguler-online', 'Akademik\Ujian\UjianUTSController@viewUjianUts');
             Route::get('ujian-uts-reguler-online/datatables/{online}', 'Akademik\Ujian\UjianUTSController@datatablesUjianUts');
@@ -148,7 +147,6 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('try-out-reguler-online/assign/{id}', 'Akademik\Ujian\TryOutController@assignTryOut');
 
             Route::post('action-try-out/{mode}/{id}', 'Akademik\Ujian\TryOutController@actionTryOut');
-            
         });
-    });	
-});	
+    });
+});

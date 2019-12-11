@@ -4,7 +4,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>DATA PELANGGARAN SISWA MP</h2>
+                        <h2>JADWAL KBM SEMESTER {{$semester_aktif->tahun_ajaran}} {{strtoupper($semester_aktif->nm_semester)}}</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -12,12 +12,12 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Siswa</th>
-                                        <th>MAPEL</th>
-                                        <th>Pertemuan ke</th>
-                                        <th>Catatan Pelanggaran</th>
-                                        <th>Sudah ditindaklanjuti</th>
-                                        <th>Action</th>
+                                        <th>Mata Pelajaran</th>
+                                        <th>Hari</th>
+                                        <th>Jam KBM</th>
+                                        <th>Kelas</th>
+                                        <th>Ruangan</th>
+                                        <th>Status PJMP</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -29,11 +29,9 @@
     </div>
 </div>
 <script>
-    // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url       = 'pelanggaran-siswa';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'rekap-input-pelanggaran-mp/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'input-pelanggaran-mp/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-input-pelanggaran-mp/delete';
+
+    var modul_url       = 'jadwal';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kbm/datatables';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -45,26 +43,12 @@ responsive: true,
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
-            { data: 'nm_mata_pelajaran', name: 'nm_mata_pelajaran', searchable: false, orderable: false },
-            { data: 'pertemuan_ke', name: 'pertemuan_ke', searchable: false, orderable: false },
-            { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
-            { data: 'is_sudah_tindakan', searchable: false, orderable: false },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    if(data.is_sudah_tindakan == 1) {
-                        return '<a>Sudah Ada Tindakan</a>';
-                    }
-                    else {
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                        '    <i class="material-icons">edit</i>'+
-                        '</a>'+
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                        '    <i class="material-icons">delete_forever</i>'+
-                        '</button>';
-                    }
-                }
-            }
+            { data: 'mata_pelajaran', name: 'mata_pelajaran' },
+            { data: 'nm_jadwal_hari', name: 'nm_jadwal_hari' },
+            { data: 'jadwal_jam', name: 'jadwal_jam'},
+            { data: 'nm_kelas', name: 'nm_kelas'},
+            { data: 'nm_ruangan', name: 'nm_ruangan'},
+            { data: 'status_pjmp', name: 'status_pjmp'}
         ]
     });
 
