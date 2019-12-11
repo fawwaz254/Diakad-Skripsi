@@ -97,6 +97,7 @@
                         </div>
                         <input type="hidden" name="id_semester" value="{{$id_semester}}">
                         <input type="hidden" name="angkatan" value="{{$angkatan}}">
+                        <input type="hidden" name="id_kelas" value="{{$id_kelas}}">
                         <div class="row clearfix" id="spaceButtonLanjut">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             </div>

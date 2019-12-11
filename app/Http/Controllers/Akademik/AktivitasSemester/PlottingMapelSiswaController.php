@@ -238,7 +238,8 @@ class PlottingMapelSiswaController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'id_semester' => 'required',
-            'angkatan' => 'required'
+            'angkatan' => 'required',
+            'id_kelas' => 'required'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -255,32 +256,45 @@ class PlottingMapelSiswaController extends BaseController
                 DB::beginTransaction();
 
                 try {
+                    $pengambilan_mp_insert = array();
                     foreach ($input->id_kelas_mp as $id_kelas_mp) {
                         foreach ($input->id_siswa as $id_siswa) {
                             $cekSiswa = PengambilanMp::where('pengambilan_mp.id_siswa', '=', $id_siswa)->where('pengambilan_mp.id_kelas_mp', '=', $id_kelas_mp)->first();
                             if ($cekSiswa) {
-                                DB::rollback();
-                                return [
-                                                'status' => 203, // GAGAL
-                                                'message' => 'KRS Gagal Dilakukan'
-                                            ];
+                                // DB::rollback();
+                                // return [
+                                //                 'status' => 203, // GAGAL
+                                //                 'message' => 'KRS Gagal Dilakukan'
+                                //             ];
+                            } else {
+                                $id = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+    
+                                $pengambilan_mp_insert[] = [
+                                    'id_pengambilan_mp' => $id,
+                                    'id_kelas_mp' => $id_kelas_mp,
+                                    'id_siswa' => $id_siswa,
+                                    'id_semester' => $input->id_semester,
+                                    'status_apv_pengambilan_mp' => '1'
+                                ];
                             }
-                            $id = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
-                            $pengambilan_mp						= new PengambilanMp;
-                            $pengambilan_mp->id_pengambilan_mp	= $id;
-                            $pengambilan_mp->id_kelas_mp		= $id_kelas_mp;
-                            $pengambilan_mp->id_siswa			= $id_siswa;
-                            $pengambilan_mp->id_semester		= $input->id_semester;
-                            $pengambilan_mp->status_apv_pengambilan_mp = '1';
-                            $pengambilan_mp->save();
+                            // $pengambilan_mp						= new PengambilanMp;
+                            // $pengambilan_mp->id_pengambilan_mp	= $id;
+                            // $pengambilan_mp->id_kelas_mp		= $id_kelas_mp;
+                            // $pengambilan_mp->id_siswa			= $id_siswa;
+                            // $pengambilan_mp->id_semester		= $input->id_semester;
+                            // $pengambilan_mp->status_apv_pengambilan_mp = '1';
+                            // $pengambilan_mp->save();
                         }
+                    }
+
+                    if (!empty($pengambilan_mp_insert)) {
+                        PengambilanMp::insert($pengambilan_mp_insert);
                     }
                     DB::commit();
                     return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
                             'message' => 'KRS Manual Berhasil Dilakukan',
-                            'path' => 'aktivitas-semester/plotting-mapel-siswa/view-mapel-plotting/'.$input->id_semester.''.$input->angkatan
+                            'path' => 'aktivitas-semester/plotting-mapel-siswa/view-daftar-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_kelas
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

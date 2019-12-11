@@ -13,10 +13,8 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-jadwal/edit/'.$kelas_mp->id_kelas_mp)}}">
                         {{csrf_field()}}
-                        <div class="header">
-                            <h2>
-                                Informasi Kelas dan Mata Pelajaran
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Informasi Kelas dan Mata Pelajaran
                         </div>
                         <h2 class="card-inside-title">
                             Mata Pelajaran
@@ -75,10 +73,8 @@
                                 aria-invalid="true" value="{{$kelas_mp->kapasitas_ruangan}}">
                             </div>
                         </div>  -->
-                        <div class="header">
-                            <h2>
-                                Informasi Jadwal dan Ruangan
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Informasi Jadwal dan Ruangan
                         </div>
                         <br><br>
                         @php
@@ -97,10 +93,8 @@
                         @endif
                         
 
-                        <div class="header">
-                            <h2>
-                                Jadwal 1
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Jadwal 1
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -186,10 +180,8 @@
                                 </select>
                             </div>
                         </div>
-                       <div class="header">
-                            <h2>
-                                Jadwal 2
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Jadwal 2
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -271,10 +263,8 @@
                                 </select>
                             </div>
                         </div>
-                       <div class="header">
-                            <h2>
-                                Jadwal 3
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Jadwal 3
                         </div>
                         <h3 class="card-inside-title">
                             Hari
@@ -356,10 +346,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header">
-                            <h2>
-                                Jadwal 4
-                            </h2>
+                        <div class="demo-color-box bg-success">
+                            Jadwal 4
                         </div>
                         <h3 class="card-inside-title">
                             Hari
