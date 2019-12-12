@@ -110,6 +110,41 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-by-kelas/view-detail/{id_semester}/{id_kelas}', 'Keuangan\Utility\PembayaranByKelasController@viewDetailPembayaranByKelas');
         });
 
+        /** ==== MODUL RAPB ==== **/
+        // url: /keuangan/rapb
+        Route::group(array('prefix' => 'rapb'), function () {
+            // MENU Kategori Penerimaan
+            // url: /keuangan/rapb/kategori-penerimaan
+            Route::get('kategori-penerimaan', 'Keuangan\Rapb\KategoriPenerimaanController@viewKategoriPenerimaan');
+            Route::get('kategori-penerimaan/datatables', 'Keuangan\Rapb\KategoriPenerimaanController@datatablesKategoriPenerimaan');
+            Route::get('kategori-penerimaan/add', 'Keuangan\Rapb\KategoriPenerimaanController@addKategoriPenerimaan');
+            Route::get('kategori-penerimaan/edit/{id}', 'Keuangan\Rapb\KategoriPenerimaanController@editKategoriPenerimaan');
+
+            Route::get('kategori-penerimaan/sub/{id_kategori}', 'Keuangan\Rapb\KategoriPenerimaanController@viewSubkategoriPenerimaan');
+            Route::get('kategori-penerimaan/sub/datatables/{id_kategori}', 'Keuangan\Rapb\KategoriPenerimaanController@datatablesSubkategoriPenerimaan');
+            Route::get('kategori-penerimaan/sub/add/{id_kategori}', 'Keuangan\Rapb\KategoriPenerimaanController@addSubkategoriPenerimaan');
+            Route::get('kategori-penerimaan/sub/edit/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPenerimaanController@editSubkategoriPenerimaan');
+
+            Route::post('action-kategori-penerimaan/{mode}/{id}', 'Keuangan\Rapb\KategoriPenerimaanController@actionKategoriPenerimaan');
+
+            // MENU Kategori Pengeluaran
+            // url: /keuangan/rapb/kategori-pengeluaran
+            Route::get('kategori-pengeluaran', 'Keuangan\Rapb\KategoriPengeluaranController@viewKategoriPengeluaran');
+            Route::get('kategori-pengeluaran/datatables', 'Keuangan\Rapb\KategoriPengeluaranController@datatablesKategoriPengeluaran');
+            Route::get('kategori-pengeluaran/add', 'Keuangan\Rapb\KategoriPengeluaranController@addKategoriPengeluaran');
+            Route::get('kategori-pengeluaran/edit/{id}', 'Keuangan\Rapb\KategoriPengeluaranController@editKategoriPengeluaran');
+
+            Route::get('kategori-pengeluaran/sub/{id_kategori}', 'Keuangan\Rapb\KategoriPengeluaranController@viewSubkategoriPengeluaran');
+            Route::get('kategori-pengeluaran/sub/datatables/{id_kategori}', 'Keuangan\Rapb\KategoriPengeluaranController@datatablesSubkategoriPengeluaran');
+            Route::get('kategori-pengeluaran/sub/add/{id_kategori}', 'Keuangan\Rapb\KategoriPengeluaranController@addSubkategoriPengeluaran');
+            Route::get('kategori-pengeluaran/sub/edit/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPengeluaranController@editSubkategoriPengeluaran');
+
+            Route::post('action-kategori-pengeluaran/{mode}/{id}', 'Keuangan\Rapb\KategoriPengeluaranController@actionKategoriPengeluaran');
+
+
+
+        });
+
         /** ==== MODUL PEMASUKAN SEKOLAH ==== **/
         // url: /keuangan/pemasukan-sekolah
         Route::group(array('prefix' => 'pemasukan-sekolah'), function () {

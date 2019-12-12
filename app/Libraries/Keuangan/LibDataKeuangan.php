@@ -19,6 +19,8 @@ use App\Models\PemasukanBiaya as PemasukanBiaya;
 use App\Models\PengeluaranBiayaKategori as PengeluaranBiayaKategori;
 use App\Models\PengeluaranBiayaSubkategori as PengeluaranBiayaSubkategori;
 use App\Models\PengeluaranBiaya as PengeluaranBiaya;
+use App\Models\KategoriRapb as KategoriRapb;
+use App\Models\SubkategoriRapb as SubkategoriRapb;
 
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -414,6 +416,53 @@ class LibDataKeuangan
         }
 
         return $pengeluaran;
+    }
+    /** ========== **/
+
+    /** KATEGORI RAPB **/
+    static function fetchDataKategoriRapb($auth_data, $jenis = null, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $kategoriRapb = KategoriRapb::where('id_sekolah','=',$auth_data->pengguna->id_sekolah);
+                                if($jenis == 1) {
+                                    $kategoriRapb = $kategoriRapb->where('tipe_kategori_rapb','=',1);
+                                }
+                                elseif($jenis == 2) {
+                                    $kategoriRapb = $kategoriRapb->where('tipe_kategori_rapb','=',2);
+                                }
+                                
+                                $kategoriRapb = $kategoriRapb->orderBy('kode_kategori_rapb', 'asc')
+                                                    ->orderBy('nm_kategori_rapb', 'asc')
+                                                    ->get();
+        }
+        // get mode edit
+        else{
+            $kategoriRapb = KategoriRapb::where('id_kategori_rapb','=',$id)->first();
+        }
+
+        return $kategoriRapb;
+    }
+    /** ========== **/
+
+    /** SUBKATEGORI PEMASUKAN **/
+    static function fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $subkategoriRapb = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'subkategori_rapb.id_subkategori_rapb', 'kategori_rapb.nm_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'subkategori_rapb.deskripsi_subkategori_rapb')
+                                ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                                ->where('kategori_rapb.id_kategori_rapb','=',$id_kategori_rapb)
+                                ->orderBy('subkategori_rapb.kode_subkategori_rapb', 'asc')
+                                ->orderBy('subkategori_rapb.nm_subkategori_rapb', 'asc')
+                                ->get();
+        }
+        // get mode edit
+        else{
+            $subkategoriRapb = SubkategoriRapb::where('id_subkategori_rapb','=',$id)->first();
+        }
+
+        return $subkategoriRapb;
     }
     /** ========== **/
 }
