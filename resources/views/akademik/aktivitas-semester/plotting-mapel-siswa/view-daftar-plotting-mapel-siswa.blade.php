@@ -173,11 +173,16 @@
         },
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
+            NProgress.start();
+            window.onbeforeunload = function() {
+                return "Data will be lost if you leave the page, are you sure?";
+            };
             $.ajax({
                 url: form.action,
                 type: form.method,
                 data: $(form).serialize(),
                 success: function(response) {
+                    NProgress.done();
                     if(response.status == 200){
                         vex.dialog.alert(response.message);
                     }else if(response.status == 201){
@@ -196,6 +201,7 @@
                 },
                 complete: function() {
                     $('button').removeAttr('disabled');
+                    window.onbeforeunload = function() {};
                 }
             });
         }

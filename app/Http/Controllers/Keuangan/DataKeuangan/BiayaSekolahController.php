@@ -13,6 +13,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Jobs\CopyBiayaSekolah;
 
 use Auth;
 use DB;
@@ -257,8 +258,7 @@ class BiayaSekolahController extends BaseController
                         }
                     }
 
-                    BiayaSekolah::insert($batch_insert_biaya_sekolah);
-                    DetailBiaya::insert($batch_insert_detail_biaya);
+                    CopyBiayaSekolah::dispatch($batch_insert_biaya_sekolah, $batch_insert_detail_biaya);
 
                     DB::commit();
                     // all good
@@ -274,7 +274,7 @@ class BiayaSekolahController extends BaseController
 
                     return [
                                 'status' => 300, // GAGAL
-                                'message' => 'Copy Biaya Sekolah Gagal! '
+                                'message' => 'Copy Biaya Sekolah Gagal! '.$e->getMessage()
                             ];
                 }
             } elseif ($mode == 'delete') {

@@ -14,25 +14,27 @@
 // CONTOH UPLOAD DO
 /*use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ContohLaravelJob;
 
-Route::get('upload', function() {
-    $files = Storage::disk('spaces')->files('smawh2/calon_siswa');
+Route::get('upload', function () {
+    $files = Storage::disk('spaces')->files('demo/global');
 
     return view('contoh-upload', compact('files'));
 });
-Route::get('delete', function() {
+Route::get('delete', function () {
     $file = request()->input('id');
 
     $files = Storage::disk('spaces')->delete($file);
 
     return redirect()->back();
 });
-Route::post('upload', function(Request $request) {
+Route::post('upload', function (Request $request) {
     $validator = Validator::make($request->all(), [
         'file' => 'file|required|max:2048|mimes:jpeg,bmp,png'
     ]);
 
-    $file = Storage::disk('spaces')->putFile('smawh2/calon_siswa', request()->file, 'public');
+    $file = Storage::disk('spaces')->putFile('demo/global', request()->file, 'public');
+    ContohLaravelJob::dispatch($file)->delay(now()->addMinutes(2));
 
     return redirect()->back();
 });*/

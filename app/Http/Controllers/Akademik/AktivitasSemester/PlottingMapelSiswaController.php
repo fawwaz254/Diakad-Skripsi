@@ -16,6 +16,8 @@ use App\Models\Semester as Semester;
 use App\Models\PengambilanMp as PengambilanMp;
 use App\Models\MataPelajaran as MataPelajaran;
 
+use App\Jobs\PlottingMapelSiswa;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
@@ -183,20 +185,50 @@ class PlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
         if ($tingkat == "0") {
             $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
-            ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-            ->join('guru', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
-            ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-            ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+            ->join('kelas_mp', function ($q) {
+                $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                ->whereNull('kelas_mp.deleted_at');
+            })
+            ->join('pengampu_mp', function ($q) {
+                $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                ->whereNull('pengampu_mp.deleted_at');
+            })
+            ->join('guru', function ($q) {
+                $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
+                ->whereNull('guru.deleted_at');
+            })
+            ->join('pengguna', function ($q) {
+                $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                ->whereNull('pengguna.deleted_at');
+            })
+            ->join('kelas', function ($q) {
+                $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                ->whereNull('kelas.deleted_at');
+            })
             ->where('kelas_mp.id_semester', '=', $id)
             ->get();
         } else {
             $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
-            ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-            ->join('guru', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
-            ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-            ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+            ->join('kelas_mp', function ($q) {
+                $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                ->whereNull('kelas_mp.deleted_at');
+            })
+            ->join('pengampu_mp', function ($q) {
+                $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                ->whereNull('pengampu_mp.deleted_at');
+            })
+            ->join('guru', function ($q) {
+                $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
+                ->whereNull('guru.deleted_at');
+            })
+            ->join('pengguna', function ($q) {
+                $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                ->whereNull('pengguna.deleted_at');
+            })
+            ->join('kelas', function ($q) {
+                $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                ->whereNull('kelas.deleted_at');
+            })
             ->where('kelas_mp.id_semester', '=', $id)
             ->where('kelas.id_kelas', '=', $tingkat)
             ->get();
@@ -256,8 +288,9 @@ class PlottingMapelSiswaController extends BaseController
                 DB::beginTransaction();
 
                 try {
-                    $pengambilan_mp_insert = array();
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
                     foreach ($input->id_kelas_mp as $id_kelas_mp) {
+                        $pengambilan_mp_insert = array();
                         foreach ($input->id_siswa as $id_siswa) {
                             $cekSiswa = PengambilanMp::where('pengambilan_mp.id_siswa', '=', $id_siswa)->where('pengambilan_mp.id_kelas_mp', '=', $id_kelas_mp)->first();
                             if ($cekSiswa) {
@@ -274,7 +307,11 @@ class PlottingMapelSiswaController extends BaseController
                                     'id_kelas_mp' => $id_kelas_mp,
                                     'id_siswa' => $id_siswa,
                                     'id_semester' => $input->id_semester,
-                                    'status_apv_pengambilan_mp' => '1'
+                                    'status_apv_pengambilan_mp' => '1',
+                                    'created_at' => $now,
+                                    'created_by' =>$auth_data->pengguna->id_pengguna,
+                                    'updated_at' => $now,
+                                    'updated_by' =>$auth_data->pengguna->id_pengguna,
                                 ];
                             }
                             // $pengambilan_mp						= new PengambilanMp;
@@ -285,11 +322,12 @@ class PlottingMapelSiswaController extends BaseController
                             // $pengambilan_mp->status_apv_pengambilan_mp = '1';
                             // $pengambilan_mp->save();
                         }
+                        if (!empty($pengambilan_mp_insert)) {
+                            PlottingMapelSiswa::dispatch($pengambilan_mp_insert);
+                            // PengambilanMp::insert($pengambilan_mp_insert);
+                        }
                     }
 
-                    if (!empty($pengambilan_mp_insert)) {
-                        PengambilanMp::insert($pengambilan_mp_insert);
-                    }
                     DB::commit();
                     return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -302,7 +340,7 @@ class PlottingMapelSiswaController extends BaseController
 
                     return [
                                 'status' => 203, // GAGAL
-                                'message' => 'KRS Gagal Dilakukan'
+                                'message' => 'KRS Gagal Dilakukan '
                             ];
                 }
             }
