@@ -35,7 +35,11 @@ class CopyBiayaSekolah implements ShouldQueue
      */
     public function handle()
     {
-        BiayaSekolah::insert($this->batch_insert_biaya_sekolah);
-        DetailBiaya::insert($this->batch_insert_detail_biaya);
+        if (sizeof($this->batch_insert_biaya_sekolah) > 0) {
+            BiayaSekolah::insert($this->batch_insert_biaya_sekolah);
+        }
+        if (sizeof($this->batch_insert_detail_biaya) > 0) {
+            DetailBiaya::insert($this->batch_insert_detail_biaya);
+        }
     }
 }

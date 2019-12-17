@@ -304,6 +304,7 @@ class UsulanMataAjarController extends BaseController
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
             } elseif ($mode == 'copy') {
+                $batch_insert_kelas_mp = [];
                 foreach ($input->id_kelas as $id_kelas) {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                     
@@ -311,17 +312,21 @@ class UsulanMataAjarController extends BaseController
                     $mapel                              = MataPelajaran::where('id_mata_pelajaran', '=', $input->id_mata_pelajaran)->first();
                     $nm_kelas_mp                        = $mapel->nm_mata_pelajaran.'-'.$kelas->nm_kelas;
                     
-                    $kelas_mp                           = new KelasMp;
-                    $kelas_mp->id_kelas_mp              = $id;
-                    $kelas_mp->id_semester              = $input->id_semester;
-                    $kelas_mp->id_kelas                 = $id_kelas;
-                    $kelas_mp->id_mata_pelajaran        = $input->id_mata_pelajaran;
-                    $kelas_mp->nm_kelas_mp              = $nm_kelas_mp;
-                    $kelas_mp->jml_pertemuan_kelas_mp   = $input->jml_pertemuan_kelas_mp;
-                    $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
-                    $kelas_mp->created_at               = $now;
-                    $kelas_mp->save();
+                    $batch_insert_kelas_mp[] = array(
+                        'id_kelas_mp'              => $id,
+                        'id_semester'              => $input->id_semester,
+                        'id_kelas'                 => $id_kelas,
+                        'id_mata_pelajaran'        => $input->id_mata_pelajaran,
+                        'nm_kelas_mp'              => $nm_kelas_mp,
+                        'jml_pertemuan_kelas_mp'   => $input->jml_pertemuan_kelas_mp,
+                        'created_by'               => $input->auth_data->pengguna->id_pengguna,
+                        'created_at'               => $now,
+                        'updated_by'               => $input->auth_data->pengguna->id_pengguna,
+                        'updated_at'               => $now,
+                    );
                 }
+
+                \App\Jobs\CopyUsulanMataAjar::dispatch($batch_insert_kelas_mp);
 
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
@@ -342,6 +347,9 @@ class UsulanMataAjarController extends BaseController
                     // proses tabel kelas_mp
                     $kelas_mp_set = KelasMp::where('id_semester', '=', $id_semester_copy)->get();
 
+                    $batch_insert_kelas_mp = [];
+                    $batch_insert_jadwal_kelas_mp = [];
+                    $batch_insert_pengampu_mp = [];
                     foreach ($kelas_mp_set as $kelas_mp) {
                         $id_kelas_mp                = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                         $id_kelas                   = $kelas_mp->id_kelas;
@@ -349,7 +357,7 @@ class UsulanMataAjarController extends BaseController
                         $nm_kelas_mp                = $kelas_mp->nm_kelas_mp;
                         $jml_pertemuan_kelas_mp     = $kelas_mp->jml_pertemuan_kelas_mp;
 
-                        KelasMp::insert(array(
+                        $batch_insert_kelas_mp[] = array(
                             'id_kelas_mp'               => $id_kelas_mp,
                             'id_semester'               => $id_semester,
                             'id_kelas'                  => $id_kelas,
@@ -358,7 +366,7 @@ class UsulanMataAjarController extends BaseController
                             'jml_pertemuan_kelas_mp'    => $jml_pertemuan_kelas_mp,
                             'created_by'                => $input->auth_data->pengguna->id_pengguna,
                             'created_at'                => $now
-                        ));
+                        );
 
                         // proses tabel jadwal_kelas_mp
                         $jadwal_kelas_mp_set = JadwalKelasMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)
@@ -371,7 +379,7 @@ class UsulanMataAjarController extends BaseController
                             $id_jadwal_jam              = $jadwal_kelas_mp->id_jadwal_jam;
                             $id_jadwal_jam_selesai      = $jadwal_kelas_mp->id_jadwal_jam_selesai;
 
-                            JadwalKelasMp::insert(array(
+                            $batch_insert_jadwal_kelas_mp[] = array(
                                 'id_jadwal_kelas_mp'        => $id_jadwal_kelas_mp,
                                 'id_kelas_mp'               => $id_kelas_mp,
                                 'id_ruangan'                => $id_ruangan,
@@ -380,7 +388,7 @@ class UsulanMataAjarController extends BaseController
                                 'id_jadwal_jam_selesai'     => $id_jadwal_jam_selesai,
                                 'created_by'                => $input->auth_data->pengguna->id_pengguna,
                                 'created_at'                => $now
-                            ));
+                            );
                         }
 
                         // proses tabel pengampu_mp
@@ -397,7 +405,7 @@ class UsulanMataAjarController extends BaseController
                             $nomor_sk_mengajar          = $pengampu_mp->nomor_sk_mengajar;
                             $tgl_sk_mengajar            = $pengampu_mp->tgl_sk_mengajar;
 
-                            PengampuMp::insert(array(
+                            $batch_insert_pengampu_mp[] = array(
                                 'id_pengampu_mp'            => $id_pengampu_mp,
                                 'id_kelas_mp'               => $id_kelas_mp,
                                 'id_guru'                   => $id_guru,
@@ -408,8 +416,20 @@ class UsulanMataAjarController extends BaseController
                                 'tgl_sk_mengajar'           => $tgl_sk_mengajar,
                                 'created_by'                => $input->auth_data->pengguna->id_pengguna,
                                 'created_at'                => $now
-                            ));
+                            );
                         }
+                    }
+
+                    if (sizeof($batch_insert_kelas_mp) > 0) {
+                        KelasMp::insert($batch_insert_kelas_mp);
+                    }
+
+                    if (sizeof($batch_insert_jadwal_kelas_mp) > 0) {
+                        JadwalKelasMp::insert($batch_insert_jadwal_kelas_mp);
+                    }
+
+                    if (sizeof($batch_insert_pengampu_mp) > 0) {
+                        PengampuMp::insert($batch_insert_pengampu_mp);
                     }
 
                     DB::commit();

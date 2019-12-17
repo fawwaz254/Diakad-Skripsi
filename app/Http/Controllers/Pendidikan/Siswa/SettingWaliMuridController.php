@@ -481,7 +481,7 @@ class SettingWaliMuridController extends BaseController
                         }
                     }
 
-                    if (!empty($batch_insert_data)) {
+                    if (sizeof($batch_insert_data) > 0) {
                         Pengguna::insert($batch_insert_data['pengguna']);
                         WaliMurid::insert($batch_insert_data['wali_murid']);
                         RolePengguna::insert($batch_insert_data['role_pengguna']);
