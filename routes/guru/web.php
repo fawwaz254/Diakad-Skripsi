@@ -39,7 +39,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('input-jadwal/edit/{id}', 'Guru\Jadwal\InputJadwalController@editInputJadwal');
 
             Route::post('action-input-jadwal/{mode}/{id}', 'Guru\Jadwal\InputJadwalController@actionInputJadwal');
-
         });
 
         /** ==== MODUL PRESENSI ==== **/
@@ -64,6 +63,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             // AJAX GET PERTEMUAN BY KELAS_MP
             Route::post('pertemuan-byjadwalkelasmp', 'Guru\Presensi\AbsensiSiswaController@ajaxGetPertemuanByJadwalKelasMp');
+
+            // MENU Rekap Absen
+            Route::get('rekap-absen', 'Guru\Presensi\RekapAbsenController@viewRekapAbsen');
+            Route::post('post-kbm-rekap-absen', 'Guru\Presensi\RekapAbsenController@actionViewKBMRekapAbsen');
+            Route::get('rekap-absen/view-kbm/{id_kelas_mp}', 'Guru\Presensi\RekapAbsenController@viewKBMRekapAbsen');
         });
 
         /** ==== MODUL PENILAIAN ==== **/

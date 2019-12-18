@@ -16,7 +16,7 @@ class PresensiMp extends Model
 
     protected $primaryKey = 'id_presensi_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -40,8 +40,13 @@ class PresensiMp extends Model
 
     protected $guarded = [];
 
-    public function jadwal_kelas_mp(){
-        return $this->belongsTo('App\Models\Sekolah', 'id_sekolah');
+    public function jadwal_kelas_mp()
+    {
+        return $this->belongsTo('App\Models\JadwalKelasMp', 'id_jadwal_kelas_mp');
     }
 
+    public function presensi_mp_siswa()
+    {
+        return $this->hasMany('App\Models\PresensiMpSiswa', 'id_presensi_mp');
+    }
 }
