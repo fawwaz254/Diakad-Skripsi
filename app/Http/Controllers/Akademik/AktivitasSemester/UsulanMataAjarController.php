@@ -620,7 +620,7 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                             $jadwal_kelas_mp->save();
-                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai2 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
+                        } elseif ($input->jam_jadwal4 != null or $input->jam_jadwal_selesai4 != null or $input->hari_jadwal4 != null or $input->ruangan4 != null) {
                         } else {
                             // make object to find id
                             $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
@@ -643,7 +643,111 @@ class UsulanMataAjarController extends BaseController
                             $jadwal_kelas_mp->save();
                         }
                     }
+
+                    //input jadwal 5
+                    if (! empty($input->id_jadwal_kelas_mp_5)) {
+                        if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
+                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
+                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai5;
+                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
+                            $jadwal_kelas_mp->updated_at            = $now;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai5 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
+                        } else {
+                            // make object to find id
+                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+
+                            $jadwal_kelas_mp->delete();
+                        }
+                    } else {
+                        if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
+                            $jadwal_kelas_mp                        = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp           = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
+                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai4;
+                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
+                            $jadwal_kelas_mp->created_at            = $now;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+                        }
+                    }
                     
+                    //input jadwal 5
+                    if (! empty($input->id_jadwal_kelas_mp_5)) {
+                        if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
+                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
+                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai5;
+                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
+                            $jadwal_kelas_mp->updated_at            = $now;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+                        } elseif ($input->jam_jadwal5 != null or $input->jam_jadwal_selesai5 != null or $input->hari_jadwal5 != null or $input->ruangan5 != null) {
+                        } else {
+                            // make object to find id
+                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+
+                            $jadwal_kelas_mp->delete();
+                        }
+                    } else {
+                        if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
+                            $jadwal_kelas_mp                        = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp           = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai5;
+                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
+                            $jadwal_kelas_mp->created_at            = $now;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+                        }
+                    }
+
+                    //input jadwal 5
+                    if (! empty($input->id_jadwal_kelas_mp_6)) {
+                        if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
+                            $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
+                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
+                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai6;
+                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
+                            $jadwal_kelas_mp->updated_at            = $now;
+                            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+                        } elseif ($input->jam_jadwal6 != null or $input->jam_jadwal_selesai6 != null or $input->hari_jadwal6 != null or $input->ruangan6 != null) {
+                        } else {
+                            // make object to find id
+                            $jadwal_kelas_mp               = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
+                            $jadwal_kelas_mp->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+
+                            $jadwal_kelas_mp->delete();
+                        }
+                    } else {
+                        if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
+                            $jadwal_kelas_mp                        = new JadwalKelasMp;
+                            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $jadwal_kelas_mp->id_kelas_mp           = $id;
+                            $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
+                            $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai6;
+                            $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
+                            $jadwal_kelas_mp->created_at            = $now;
+                            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $jadwal_kelas_mp->save();
+                        }
+                    }
 
                     //input pjma
                     if (! empty($input->id_pengampu_mp_pj)) {
