@@ -10,9 +10,9 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        REKAP ABSEN KELAS {{$data_kelas->nm_kelas}} <br>
-                        HARI {{$data_kelas->nm_jadwal_hari}} <br>
-                        MAPEL {{$data_kelas->nm_mata_pelajaran}} <br>
+                        REKAP ABSEN KELAS {{$data_kelas->kelas_mp->kelas->nm_kelas}} <br>
+                        HARI {{$data_kelas->jadwal_hari->nm_jadwal_hari}} <br>
+                        MAPEL {{$data_kelas->kelas_mp->mata_pelajaran->nm_mata_pelajaran}} <br>
                         SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2>
                     </h2>
                 </div>
