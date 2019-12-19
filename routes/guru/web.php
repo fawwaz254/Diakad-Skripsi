@@ -67,7 +67,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Rekap Absen
             Route::get('rekap-absen', 'Guru\Presensi\RekapAbsenController@viewRekapAbsen');
             Route::post('post-kbm-rekap-absen', 'Guru\Presensi\RekapAbsenController@actionViewKBMRekapAbsen');
-            Route::get('rekap-absen/view-kbm/{id_kelas_mp}', 'Guru\Presensi\RekapAbsenController@viewKBMRekapAbsen');
+            Route::get('rekap-absen/view-kbm/{id_jadwal_kelas_mp}', 'Guru\Presensi\RekapAbsenController@viewKBMRekapAbsen');
         });
 
         /** ==== MODUL PENILAIAN ==== **/
@@ -168,6 +168,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('input-pelanggaran/edit/{id}', 'Guru\WaliKelas\InputPelanggaranController@editInputPelanggaran');
 
             Route::post('action-input-pelanggaran/{mode}/{id}', 'Guru\WaliKelas\InputPelanggaranController@actionInputPelanggaran');
+
+            // MENU Rekap Absensi Kelas
+            Route::get('rekap-absensi-kelas', 'Guru\WaliKelas\RekapAbsensiKelasController@viewRekapAbsensiKelas');
+            Route::post('post-rekap-absensi-kelas', 'Guru\WaliKelas\RekapAbsensiKelasController@actionViewRekapAbsensiKelas');
+            Route::get('rekap-absensi-kelas/rekap-absensi-kelas-siswa/{id_jadwal_kelas_mp}', 'Guru\WaliKelas\RekapAbsensiKelasController@viewRekapAbsensiKelasSiswa');
 
             // MENU Home Visit
             Route::get('home-visit', 'Guru\WaliKelas\HomeVisitController@viewHomeVisit');

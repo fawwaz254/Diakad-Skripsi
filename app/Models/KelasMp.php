@@ -16,7 +16,7 @@ class KelasMp extends Model
 
     protected $primaryKey = 'id_kelas_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -33,8 +33,18 @@ class KelasMp extends Model
 
     protected $guarded = [];
 
-    public function kelas(){
+    public function kelas()
+    {
         return $this->belongsTo('App\Models\Kelas', 'id_kelas');
     }
 
+    public function semester()
+    {
+        return $this->belongsTo('App\Models\Semester', 'id_semester');
+    }
+
+    public function mata_pelajaran()
+    {
+        return $this->belongsTo('App\Models\MataPelajaran', 'id_mata_pelajaran');
+    }
 }
