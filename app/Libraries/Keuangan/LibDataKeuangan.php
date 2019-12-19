@@ -21,6 +21,8 @@ use App\Models\PengeluaranBiayaSubkategori as PengeluaranBiayaSubkategori;
 use App\Models\PengeluaranBiaya as PengeluaranBiaya;
 use App\Models\KategoriRapb as KategoriRapb;
 use App\Models\SubkategoriRapb as SubkategoriRapb;
+use App\Models\Semester as Semester;
+use App\Models\Rapb as Rapb;
 
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -463,6 +465,44 @@ class LibDataKeuangan
         }
 
         return $subkategoriRapb;
+    }
+    /** ========== **/
+
+    /** RAPB **/
+    static function fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id = null, $is_datatable = null){
+
+        $semester_mulai = Semester::where('id_semester', '=', $id_semester_mulai)->first();
+        $semester_selesai = Semester::where('id_semester', '=', $id_semester_selesai)->first();
+
+        $kode_semester_mulai = $semester_mulai->kode_semester;
+        $kode_semester_selesai = $semester_selesai->kode_semester;
+
+        // get mode view
+        if ($id == null){
+            $rapb = Rapb::select('rapb.id_rapb', 'rapb.id_semester_mulai', 'rapb.id_semester_selesai', 'rapb.id_subkategori_rapb', 'rapb.id_unit_kerja', 's_mulai.tahun_ajaran AS tahun_ajaran_mulai', 's_mulai.nm_semester AS nm_semester_mulai', 's_selesai.tahun_ajaran AS tahun_ajaran_selesai', 's_selesai.nm_semester AS nm_semester_selesai', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'unit_kerja.nm_unit_kerja', 'rapb.dana_perkiraan_rapb', 'rapb.tgl_rapb', 'rapb.prioritas_rapb', 'p_unit.nm_pengguna AS nm_kepala_unit', 'p_keuangan.nm_pengguna AS nm_kepala_keuangan')
+                                ->join('semester AS s_mulai','s_mulai.id_semester','=','rapb.id_semester_mulai')
+                                ->join('semester AS s_selesai','s_selesai.id_semester','=','rapb.id_semester_selesai')
+                                ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
+                                ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                                ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rapb.id_unit_kerja')
+                                ->join('pengguna AS p_unit','p_unit.id_pengguna','=','rapb.id_pengguna_kepala_unit')
+                                ->join('pengguna AS p_keuangan','p_keuangan.id_pengguna','=','rapb.id_pengguna_kepala_keuangan')
+                                ->where('s_mulai.kode_semester','>=',$kode_semester_mulai)
+                                ->where('s_selesai.kode_semester','<=',$kode_semester_selesai)
+                                ->orderBy('unit_kerja.nm_unit_kerja', 'asc')
+                                ->orderBy('rapb.prioritas_rapb', 'desc')
+                                ->orderBy('rapb.tgl_rapb', 'desc');
+                                
+                                if ( $is_datatable == null ) {
+                                    $rapb = $rapb->get();
+                                }
+        }
+        // get mode edit
+        else{
+            $rapb = Rapb::where('id_rapb','=',$id)->first();
+        }
+
+        return $rapb;
     }
     /** ========== **/
 }
