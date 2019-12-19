@@ -114,6 +114,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::get('rekap-input-pelanggaran-mp', 'Guru\PelanggaranSiswa\InputPelanggaranController@viewRekapInputPelanggaran');
             Route::get('rekap-input-pelanggaran-mp/datatables', 'Guru\PelanggaranSiswa\InputPelanggaranController@datatablesRekapInputPelanggaran');
+
+            Route::post('subkategori-bykategori', 'Guru\PelanggaranSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
         });
 
         /** ==== MODUL SARANA PRASARANA ==== **/
