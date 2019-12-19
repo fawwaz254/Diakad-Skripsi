@@ -141,6 +141,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-kategori-pengeluaran/{mode}/{id}', 'Keuangan\Rapb\KategoriPengeluaranController@actionKategoriPengeluaran');
 
+            // MENU Input RAPB
+            // url: /keuangan/rapb/input-rapb
+            Route::get('input-rapb', 'Keuangan\Rapb\InputRapbController@viewInputRapb');
+            Route::post('post-view-input-rapb', 'Keuangan\Rapb\InputRapbController@actionViewInputRapb');
+            Route::get('input-rapb/view-detail-input-rapb/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\InputRapbController@viewDetailInputRapb');
+            Route::get('input-rapb/datatables/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\InputRapbController@datatablesInputRapb');
+
+            Route::post('action-input-rapb/{mode}/{id}', 'Keuangan\Rapb\InputRapbController@actionInputRapb');
+
 
 
         });
