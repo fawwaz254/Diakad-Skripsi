@@ -121,8 +121,8 @@
             { data: 'dana_perkiraan_rapb', name: 'rapb.dana_perkiraan_rapb' },
             { data: 'tgl_rapb', name: 'rapb.tgl_rapb' },
             { data: 'prioritas_rapb', name: 'prioritas_rapb' },
-            { data: 'prioritas_rapb', name: 'prioritas_rapb' },
-            { data: 'prioritas_rapb', name: 'prioritas_rapb' },
+            { data: 'nm_kepala_unit', name: 'nm_kepala_unit' },
+            { data: 'nm_kepala_keuangan', name: 'nm_kepala_keuangan' },
             { data: 'prioritas_rapb', name: 'prioritas_rapb' }
         ]
     });

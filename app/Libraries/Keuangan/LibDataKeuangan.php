@@ -426,7 +426,14 @@ class LibDataKeuangan
 
         // get mode view
         if ($id == null){
-            $kategoriRapb = KategoriRapb::where('id_sekolah','=',$auth_data->pengguna->id_sekolah);
+            $kategoriRapb = KategoriRapb::select('*')
+                                ->addSelect(
+                                    DB::raw("(SELECT COUNT(*) FROM subkategori_rapb 
+                                            WHERE subkategori_rapb.id_kategori_rapb = kategori_rapb.id_kategori_rapb 
+                                            AND subkategori_rapb.deleted_at IS NULL) 
+                                            AS jml_subkategori_rapb"))
+                                ->where('id_sekolah','=',$auth_data->pengguna->id_sekolah);
+
                                 if($jenis == 1) {
                                     $kategoriRapb = $kategoriRapb->where('tipe_kategori_rapb','=',1);
                                 }
@@ -485,8 +492,8 @@ class LibDataKeuangan
                                 ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
                                 ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
                                 ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rapb.id_unit_kerja')
-                                ->join('pengguna AS p_unit','p_unit.id_pengguna','=','rapb.id_pengguna_kepala_unit')
-                                ->join('pengguna AS p_keuangan','p_keuangan.id_pengguna','=','rapb.id_pengguna_kepala_keuangan')
+                                ->leftJoin('pengguna AS p_unit','p_unit.id_pengguna','=','rapb.id_pengguna_kepala_unit')
+                                ->leftJoin('pengguna AS p_keuangan','p_keuangan.id_pengguna','=','rapb.id_pengguna_kepala_keuangan')
                                 ->where('s_mulai.kode_semester','>=',$kode_semester_mulai)
                                 ->where('s_selesai.kode_semester','<=',$kode_semester_selesai)
                                 ->orderBy('unit_kerja.nm_unit_kerja', 'asc')

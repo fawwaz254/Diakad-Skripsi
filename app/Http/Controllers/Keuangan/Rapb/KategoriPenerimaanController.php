@@ -62,6 +62,7 @@ class KategoriPenerimaanController extends BaseController{
         return Datatables::of($list_data)
                 ->addColumn('subkategori', function($item){
                     $data = array(
+                        'jml_subkategori_rapb' => $item->jml_subkategori_rapb,
                         'id' => $item->id_kategori_rapb
                     );
                     return $data;
