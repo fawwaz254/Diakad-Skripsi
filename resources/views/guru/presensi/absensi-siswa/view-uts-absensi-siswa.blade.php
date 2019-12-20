@@ -82,7 +82,7 @@
                             html += '<option value="'+item.id+'">'+ item.text + '</option>';
                         }
                     })
-                    return '<select class="form-control show-tick" name="alasan[]">'+
+                    return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
                     html +
                     '</select>';
                     /*return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
