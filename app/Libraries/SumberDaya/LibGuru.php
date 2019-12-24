@@ -97,8 +97,10 @@ class LibGuru
     public static function fetchDataJadwalKBM($auth_data, $id_pengguna, $id_semester = null, $id_kelas_mp = null, $id_jadwal_kelas_mp = null, $pertemuan_ke = null)
     {
         // get id_guru
-        $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
-        $id_guru = $guru->id_guru;
+        if(!empty($id_pengguna)){
+            $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
+            $id_guru = $guru->id_guru;
+        }
 
         if (! empty($id_kelas_mp) && ! empty($pertemuan_ke)) {
             $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'pengampu_mp.pjmp_pengampu_mp', 'presensi_mp.pertemuan_ke', 'presensi_mp.uraian_materi', 'presensi_mp.waktu_mulai', 'presensi_mp.waktu_selesai')
@@ -140,8 +142,11 @@ class LibGuru
                     ->whereNull('ruangan.deleted_at')
                     ->whereNull('jadwal_hari.deleted_at')
                     ->whereNull('jj.deleted_at')
-                    ->whereNull('jjs.deleted_at')
-                    ->where('pengampu_mp.id_guru', '=', $id_guru);
+                    ->whereNull('jjs.deleted_at');
+
+            if (! empty($id_pengguna)) {
+                $jadwalKBM = $jadwalKBM->where('pengampu_mp.id_guru', '=', $id_guru);
+            }
 
             if (! empty($id_kelas_mp)) {
                 $jadwalKBM = $jadwalKBM->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
