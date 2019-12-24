@@ -67,7 +67,13 @@
                             </div>
                         </div>
                     </form>
-
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        </div>
+                    </div>
+                    <div class="block-header">
+                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/input-rapb/add/'.$id_semester_mulai.'/'.$id_semester_selesai)}}"><i class="material-icons">note_add</i><span>INPUT RAPB</span></a></h2>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                             <thead>
@@ -102,6 +108,10 @@
 
     var modul_url       = 'rapb';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-rapb/datatables/' + id_semester_mulai + '/' + id_semester_selesai;
+    var kepala_unit_url         = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-unit';
+    var kepala_keuangan_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-keuangan';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'input-rapb/edit';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-input-rapb/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -118,12 +128,48 @@
             { data: 'kode_subkategori_rapb', name: 'subkategori_rapb.kode_subkategori_rapb' },
             { data: 'nm_subkategori_rapb', name: 'subkategori_rapb.nm_subkategori_rapb' },
             { data: 'nm_unit_kerja', name: 'unit_kerja.nm_unit_kerja' },
-            { data: 'dana_perkiraan_rapb', name: 'rapb.dana_perkiraan_rapb' },
-            { data: 'tgl_rapb', name: 'rapb.tgl_rapb' },
+            { data: 'dana_perkiraan_rapb', name: 'dana_perkiraan_rapb' },
+            { data: 'tgl_rapb', name: 'tgl_rapb' },
             { data: 'prioritas_rapb', name: 'prioritas_rapb' },
-            { data: 'nm_kepala_unit', name: 'nm_kepala_unit' },
-            { data: 'nm_kepala_keuangan', name: 'nm_kepala_keuangan' },
-            { data: 'prioritas_rapb', name: 'prioritas_rapb' }
+            { data: 'nm_kepala_unit', name: 'nm_kepala_unit', searchable: false, orderable: false,
+                render: function(data){
+                    if(data.nm_kepala_unit == null) {
+                        return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="kepalaUnitAction(\''+ kepala_unit_url +'\', this)" data-idunitkerja="'+  data.id_unit_kerja +'" data-idrapb="'+  data.id_rapb +'">'+
+                        '    <i class="material-icons">verified_user</i>'+
+                        '</button>';
+                    }
+                    else {
+                        return '<a>'+ data.nm_kepala_unit +'</a>';
+                    }
+                }
+            },
+            { data: 'nm_kepala_keuangan', name: 'nm_kepala_keuangan', searchable: false, orderable: false,
+                render: function(data){
+                    if(data.nm_kepala_keuangan == null) {
+                        return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="kepalaKeuanganAction(\''+ kepala_keuangan_url +'\', this)" data-idrapb="'+  data.id_rapb +'">'+
+                        '    <i class="material-icons">verified_user</i>'+
+                        '</button>';
+                    }
+                    else {
+                        return '<a>'+ data.nm_kepala_keuangan +'</a>';
+                    }
+                }
+            },
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function(data){
+                    if(data.jenis_jabatan == 2) {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                        '    <i class="material-icons">edit</i>'+
+                        '</a> '+
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                        '    <i class="material-icons">delete_forever</i>'+
+                        '</button>';
+                    }
+                    else {
+                        return '<a>Hanya Kepala Keuangan yang Berhak Edit dan Hapus</a>';
+                    }
+                }
+            }
         ]
     });
 
@@ -133,67 +179,95 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
-</script>
-<script type="text/javascript">
-    $(document).ready(function() {        
-        /* Select All Checkbox */
-        $('input[name="select_all"]').change(function() {
-            var select_all_checked = this.checked;
-            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
 
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
-        });
-    });
-</script>
 
-<script>    
-    
-    $('#form-validation1').validate({
-        rules: {
-            'checkbox': {
-                required: true
-            },
-            'gender': {
-                required: true
-            }
-        },
-        highlight: function (input) {
-            $(input).parents('.form-line').addClass('error');
-        },
-        unhighlight: function (input) {
-            $(input).parents('.form-line').removeClass('error');
-        },
-        errorPlacement: function (error, element) {
-            $(element).parents('.form-group').append(error);
-        },
-        submitHandler: function(form) {
-            $('button').attr('disabled', 'disabled');
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    if(response.status == 200){
-                        vex.dialog.alert(response.message);
-                    }else if(response.status == 201){
-                        vex.dialog.alert(response.message);
-                        window.location.href = response.link;
-                    }else if(response.status == 202){
-                        vex.dialog.alert(response.message);
-                        loadURI(response.path);
-                    }else if(response.status == 203){
-                        vex.dialog.alert(response.message);
-                        primary_table.ajax.reload(null, false);
-                    }else if(response.status == 204){
-                        loadURI(response.path);
-                    }else if(response.status == 300){
-                        vex.dialog.alert(response.message);
+    function kepalaUnitAction(kepala_unit_url, element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Apakah Anda Yakin?",
+            text: "Aksi Ini Akan Otomatis Melakukan Approve Kepala Unit!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Saya Yakin!",
+            cancelButtonText: "Tidak, Batalkan!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: kepala_unit_url + '/' + item.attr('data-idrapb') + '/' + item.attr('data-idunitkerja'),
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
                     }
-                },
-                complete: function() {
-                    $('button').removeAttr('disabled', 'disabled');
-                }
-            });
-        }
-    });
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+    function kepalaKeuanganAction(kepala_keuangan_url, element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Apakah Anda Yakin?",
+            text: "Aksi Ini Akan Otomatis Melakukan Approve Kepala Keuangan!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya, Saya Yakin!",
+            cancelButtonText: "Tidak, Batalkan!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: kepala_keuangan_url + '/' + item.attr('data-idrapb') + '/1',
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
 </script>
