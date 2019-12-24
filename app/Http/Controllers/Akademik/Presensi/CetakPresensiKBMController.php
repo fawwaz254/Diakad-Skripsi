@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Akademik\AktivitasSemester;
+namespace App\Http\Controllers\Akademik\Presensi;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -9,36 +9,46 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Kurikulum as Kurikulum;
 use App\Models\MataPelajaran as MataPelajaran;
+use App\Models\Semester as Semester;
 use App\Models\KelasMp as KelasMp;
+use App\Models\Guru as Guru;
+use App\Models\Kelas as Kelas;
+use App\Models\PengampuMp as PengampuMp;
+use App\Models\JadwalHari as JadwalHari;
+use App\Models\Ruangan as Ruangan;
+use App\Models\JadwalJam as JadwalJam;
 use App\Models\JadwalKelasMp as JadwalKelasMp;
-use App\Models\PengambilanMp as PengambilanMp;
+use App\Models\PengambilanMp;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Akademik\LibAkademik;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\SumberDaya\LibGuru;
 
 use Auth;
 use DB;
+use PDF;
 use Session;
 use Validator;
 
-class MonitoringKelasController extends BaseController
+class CetakPresensiKBMController extends BaseController
 {
-    public function viewMonitoringKelas(Request $request)
+    //
+    public function viewCetakPresensiKBM(Request $request)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-        // dd($data_semester);
 
-        return view('akademik/aktivitas-semester/monitoring-kelas/view-monitoring-kelas', compact('auth_data', 'data_semester'));
+        return view('akademik/presensi/cetak-presensi-kbm/view-cetak-presensi-kbm', compact('auth_data', 'data_semester'));
     }
 
-    public function actionViewMonitoringKelas(Request $request)
+    public function actionViewCetakPresensiKBM(Request $request)
     {
         # code...
         $input = (object) $request->input();
@@ -50,44 +60,35 @@ class MonitoringKelasController extends BaseController
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas/'.$input->id_semester
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'presensi/cetak-presensi-kbm/view-semester-cetak-presensi-kbm/'.$input->id_semester
+            ];
         }
     }
 
-    public function viewSemesterMonitoringKelas(Request $request, $id)
+    public function viewSemesterCetakPresensiKBM(Request $request, $id)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $semester   = Semester::where('id_semester', '=', $id)->first();
 
-        return view('akademik/aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas', compact('auth_data', 'data_semester', 'id'));
+        $kelas_mp = LibAkademik::FetchDataUsulanMataAjar($auth_data, $semester->id_semester);
+       
+        return view('akademik/presensi/cetak-presensi-kbm/view-semester-cetak-presensi-kbm', compact('auth_data', 'semester', 'id', 'kelas_mp'));
     }
 
-    public function viewDaftarSiswa(Request $request, $id)
-    {
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $data_semester = PengambilanMp::where('id_kelas_mp', '=', $id)->first();
-
-        return view('akademik/aktivitas-semester/monitoring-kelas/view-daftar-siswa', compact('auth_data', 'data_semester', 'id'));
-    }
-
-    public function datatablesMonitoringKelas(Request $request, $id)
+    public function datatablesCetakPresensiKBM(Request $request, $id)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = JadwalKelasMp::select('mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'ruangan.kapasitas_ruangan')
+        $list_data = JadwalKelasMp::select('jadwal_kelas_mp.id_jadwal_kelas_mp', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'ruangan.kapasitas_ruangan')
             ->join('kelas_mp', function ($q) {
                 $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
                     ->whereNull('kelas_mp.deleted_at');
@@ -121,25 +122,28 @@ class MonitoringKelasController extends BaseController
         return Datatables::of($list_data)
                 ->addColumn('action', function ($item) {
                     $data = array(
-                        'id' => $item->id_kelas_mp
+                        'id' => $item->id_jadwal_kelas_mp
                     );
                     return $data;
                 })
                 ->make(true);
     }
 
-    public function datatablesDaftarSiswa(Request $request, $id)
+    public function printCetakPresensiKBM(Request $request, $id_jadwal_kelas_mp)
     {
+        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PengambilanMp::join('siswa', 'siswa.id_siswa', '=', 'pengambilan_mp.id_siswa')
-            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-            ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'pengambilan_mp.id_kelas_mp')
-            ->where('pengambilan_mp.id_kelas_mp', '=', $id)
-            ->where('pengambilan_mp.status_apv_pengambilan_mp', '=', '1')
-            ->orderBy('siswa.nis_siswa', 'ASC')
-            ->get();
 
-        return Datatables::of($list_data)->make(true);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, null, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
+
+        $jadwal_kelas_mp = JadwalKelasMp::find($id_jadwal_kelas_mp);
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $jadwal_kelas_mp->id_kelas_mp);
+
+        $pdf = PDF::loadView('akademik/presensi/cetak-presensi-kbm/download-cetak-presensi-kbm', compact('data_siswa', 'auth_data', 'semester_aktif', 'data_kelas'))->setPaper('a4', 'landscape');
+        return $pdf->stream();
     }
 }

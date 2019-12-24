@@ -148,5 +148,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-try-out/{mode}/{id}', 'Akademik\Ujian\TryOutController@actionTryOut');
         });
+
+        // MODUL PRESENSI
+        Route::group(array('prefix' => 'presensi'), function () {
+            // MENU Cetak Presensi KBM
+            Route::get('cetak-presensi-kbm', 'Akademik\Presensi\CetakPresensiKBMController@viewCetakPresensiKBM');
+            Route::post('post-cetak-presensi-kbm', 'Akademik\Presensi\CetakPresensiKBMController@actionviewCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm/view-semester-cetak-presensi-kbm/{id}', 'Akademik\Presensi\CetakPresensiKBMController@viewSemesterCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm/datatables/{id}', 'Akademik\Presensi\CetakPresensiKBMController@datatablesCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm/print/{id}', 'Akademik\Presensi\CetakPresensiKBMController@printCetakPresensiKBM');
+        });
     });
 });
