@@ -23,15 +23,17 @@ use Validator;
 
 class BeasiswaSiswaController extends BaseController
 {
-    public function viewBeasiswaSiswa(Request $request, $id_kelas = null){
+    public function viewBeasiswaSiswa(Request $request, $id_kelas = null)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('kesiswaan/siswa/beasiswa-siswa/view-beasiswa-siswa',compact('auth_data','data_kelas','id_kelas'));
+        return view('kesiswaan/siswa/beasiswa-siswa/view-beasiswa-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
     }
 
-    public function addBeasiswaSiswa(Request $request){
+    public function addBeasiswaSiswa(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -42,11 +44,11 @@ class BeasiswaSiswaController extends BaseController
 
         // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('kesiswaan/siswa/beasiswa-siswa/add-beasiswa-siswa',compact('auth_data','data_kelas'));
-
+        return view('kesiswaan/siswa/beasiswa-siswa/add-beasiswa-siswa', compact('auth_data', 'data_kelas'));
     }
 
-    public function editBeasiswaSiswa(Request $request, $id_beasiswa_siswa){
+    public function editBeasiswaSiswa(Request $request, $id_beasiswa_siswa)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -54,21 +56,21 @@ class BeasiswaSiswaController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         
-        $beasiswa = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa','beasiswa_siswa.keterangan_beasiswa_siswa','beasiswa_siswa.tahun_mulai_beasiswa_siswa','beasiswa_siswa.tahun_selesai_beasiswa_siswa','siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','beasiswa_siswa.id_beasiswa_siswa','siswa.id_siswa')
-        ->join('siswa','siswa.id_siswa','=','beasiswa_siswa.id_siswa')
-        ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-        ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-        ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-        ->where('beasiswa_siswa.id_beasiswa_siswa','=',$id_beasiswa_siswa)
+        $beasiswa = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa', 'siswa.id_siswa')
+        ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
+        ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+        ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('beasiswa_siswa.id_beasiswa_siswa', '=', $id_beasiswa_siswa)
         ->first();
         // dd($beasiswa);
         // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('kesiswaan/siswa/beasiswa-siswa/edit-beasiswa-siswa',compact('auth_data','beasiswa'));
-
+        return view('kesiswaan/siswa/beasiswa-siswa/edit-beasiswa-siswa', compact('auth_data', 'beasiswa'));
     }
 
-    public function ajaxGetSiswaByKelas(Request $request) {
+    public function ajaxGetSiswaByKelas(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -79,33 +81,32 @@ class BeasiswaSiswaController extends BaseController
         return $data_siswa;
     }
 
-    public function datatablesBeasiswaSiswa(Request $request){
+    public function datatablesBeasiswaSiswa(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa','beasiswa_siswa.keterangan_beasiswa_siswa','beasiswa_siswa.tahun_mulai_beasiswa_siswa','beasiswa_siswa.tahun_selesai_beasiswa_siswa','siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','beasiswa_siswa.id_beasiswa_siswa')
-        ->join('siswa','siswa.id_siswa','=','beasiswa_siswa.id_siswa')
-        ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-        ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-        ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+        $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
+        ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
+        ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+        ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->get();
 
         return Datatables::of($list_data)
-                ->addColumn('jenis_beasiswa_siswa', function($item){
-                  if($item->jenis_beasiswa_siswa == 1){
-                      return "Anak Berprestasi";
-                  }
-                  elseif($item->jenis_beasiswa_siswa == 2){
-                      return "Anak Miskin";
-                  }
-                  elseif($item->jenis_beasiswa_siswa == 3){
-                    return "Pendidikan";
-                  }elseif($item->jenis_beasiswa_siswa == 99){
-                    return "Lain-Lain";
-                  }elseif ($item->jenis_beasiswa_siswa == 4){
-                  	return "Unggulan";
-                  }
-              })
-                ->addColumn('action', function($item){
+                ->addColumn('jenis_beasiswa_siswa', function ($item) {
+                    if ($item->jenis_beasiswa_siswa == 1) {
+                        return "Anak Berprestasi";
+                    } elseif ($item->jenis_beasiswa_siswa == 2) {
+                        return "Anak Miskin";
+                    } elseif ($item->jenis_beasiswa_siswa == 3) {
+                        return "Pendidikan";
+                    } elseif ($item->jenis_beasiswa_siswa == 99) {
+                        return "Lain-Lain";
+                    } elseif ($item->jenis_beasiswa_siswa == 4) {
+                        return "Unggulan";
+                    }
+                })
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_beasiswa_siswa
                     );
@@ -114,8 +115,8 @@ class BeasiswaSiswaController extends BaseController
                 ->make(true);
     }
 
-    public function actionBeasiswaSiswa(Request $request, $mode, $id = null){
-
+    public function actionBeasiswaSiswa(Request $request, $mode, $id = null)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -126,64 +127,60 @@ class BeasiswaSiswaController extends BaseController
             'tahun_mulai_beasiswa_siswa' => 'required', 'tahun_selesai_beasiswa_siswa' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // ACTION ADD
-            if($mode == 'add') {
-               $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 
-               $beasiswa 								= new BeasiswaSiswa;
-               $beasiswa->id_beasiswa_siswa 			= $id;
-               $beasiswa->id_siswa 						= $input->id_siswa;
-               $beasiswa->jenis_beasiswa_siswa 			= $input->jenis_beasiswa_siswa;
-               $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
-               $beasiswa->tahun_selesai_beasiswa_siswa 	= $input->tahun_selesai_beasiswa_siswa;
-               $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
-               $beasiswa->created_by 					= $input->auth_data->pengguna->id_pengguna;
-               $beasiswa->created_at 					= $now;
-               $beasiswa->save();
+                $beasiswa 								= new BeasiswaSiswa;
+                $beasiswa->id_beasiswa_siswa 			= $id;
+                $beasiswa->id_siswa 						= $input->id_siswa;
+                $beasiswa->jenis_beasiswa_siswa 			= $input->jenis_beasiswa_siswa;
+                $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
+                $beasiswa->tahun_selesai_beasiswa_siswa 	= $input->tahun_selesai_beasiswa_siswa;
+                $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
+                $beasiswa->created_by 					= $input->auth_data->pengguna->id_pengguna;
+                $beasiswa->created_at 					= $now;
+                $beasiswa->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/beasiswa-siswa',
                     'message' => 'Save Data Beasiswa Siswa successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
-               $beasiswa 								= BeasiswaSiswa::find($id);
-               $beasiswa->id_siswa 						= $input->id_siswa;
-               $beasiswa->jenis_beasiswa_siswa 			= $input->jenis_beasiswa_siswa;
-               $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
-               $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
-               $beasiswa->tahun_selesai_beasiswa_siswa 	= $input->tahun_selesai_beasiswa_siswa;
-               $beasiswa->created_by 					= $input->auth_data->pengguna->id_pengguna;
-               $beasiswa->created_at 					= $now;
-               $beasiswa->save();
+            } elseif ($mode == 'edit') {
+                $beasiswa 								= BeasiswaSiswa::find($id);
+                $beasiswa->id_siswa 						= $input->id_siswa;
+                $beasiswa->jenis_beasiswa_siswa 			= $input->jenis_beasiswa_siswa;
+                $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
+                $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
+                $beasiswa->tahun_selesai_beasiswa_siswa 	= $input->tahun_selesai_beasiswa_siswa;
+                $beasiswa->created_by 					= $input->auth_data->pengguna->id_pengguna;
+                $beasiswa->created_at 					= $now;
+                $beasiswa->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/beasiswa-siswa',
                     'message' => 'Save Data Beasiswa Siswa successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
+            } elseif ($mode == 'delete') {
                 $beasiswa                 = BeasiswaSiswa::find($id);
                 $beasiswa->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                 $beasiswa->save();
 
                 $prestasi->delete();
 
-                    return [
+                return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Data Beasiswa Siswa successfully'
                     ];
             }
-
         }
     }
 }

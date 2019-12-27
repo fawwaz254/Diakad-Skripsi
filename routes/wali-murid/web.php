@@ -27,14 +27,25 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
         /** ==== MODUL KEUANGAN ==== **/
         Route::group(array('prefix' => 'keuangan'), function () {
-
+            
             // MENU Tagihan
             Route::get('tagihan', 'WaliMurid\Keuangan\TagihanController@viewTagihan');
             Route::get('tagihan/datatables', 'WaliMurid\Keuangan\TagihanController@datatablesTagihan');
-
+            
             // MENU Riwayat Bayar
             Route::get('riwayat-bayar', 'WaliMurid\Keuangan\RiwayatBayarController@viewRiwayatBayar');
             Route::get('riwayat-bayar/datatables', 'WaliMurid\Keuangan\RiwayatBayarController@datatablesRiwayatBayar');
+        });
+        
+        /** ==== MODUL KESISWAAN ==== **/
+        Route::group(array('prefix' => 'kesiswaan'), function () {
+            //MENU Prestasi
+            Route::get('prestasi', 'WaliMurid\Kesiswaan\PrestasiController@viewPrestasi');
+            Route::get('prestasi/datatables', 'WaliMurid\Kesiswaan\PrestasiController@datatablesPrestasi');
+
+            //MENU Beasiswa
+            Route::get('beasiswa', 'WaliMurid\Kesiswaan\BeasiswaController@viewBeasiswa');
+            Route::get('beasiswa/datatables', 'WaliMurid\Kesiswaan\BeasiswaController@datatablesBeasiswa');
         });
 
         /** ==== MODUL PELANGGARAN ==== **/
