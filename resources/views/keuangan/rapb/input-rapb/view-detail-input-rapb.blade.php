@@ -81,6 +81,7 @@
                                     <th>No. </th>
                                     <th>Mulai</th>
                                     <th>Selesai</th>
+                                    <th>Jenis Kategori</th>
                                     <th>Kode Sub-Kategori</th>
                                     <th>Nama Sub-Kategori</th>
                                     <th>Unit Kerja</th>
@@ -110,7 +111,7 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-rapb/datatables/' + id_semester_mulai + '/' + id_semester_selesai;
     var kepala_unit_url         = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-unit';
     var kepala_keuangan_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-keuangan';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'input-rapb/edit';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'input-rapb/edit/' + id_semester_mulai + '/' + id_semester_selesai;
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-input-rapb/delete';
 
     var primary_table = $('#primary_table').DataTable({
@@ -125,6 +126,7 @@
             { data: null, searchable: false, orderable: false },
             { data: 'semester_mulai', name: 'semester_mulai' },
             { data: 'semester_selesai', name: 'semester_selesai' },
+            { data: 'tipe_kategori_rapb', name: 'tipe_kategori_rapb' },
             { data: 'kode_subkategori_rapb', name: 'subkategori_rapb.kode_subkategori_rapb' },
             { data: 'nm_subkategori_rapb', name: 'subkategori_rapb.nm_subkategori_rapb' },
             { data: 'nm_unit_kerja', name: 'unit_kerja.nm_unit_kerja' },
