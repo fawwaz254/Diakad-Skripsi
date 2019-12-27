@@ -13,6 +13,7 @@ use App\Models\Realisasi as Realisasi;
 use App\Models\Guru as Guru;
 use App\Models\Staff as Staff;
 use App\Models\UnitKerja as UnitKerja;
+use App\Models\SubkategoriRapb as SubkategoriRapb;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Keuangan\LibDataKeuangan;
@@ -84,6 +85,14 @@ class InputRapbController extends BaseController
                 })
                 ->addColumn('semester_selesai', function($item){
                     return $item->tahun_ajaran_selesai." (".$item->nm_semester_selesai.")";
+                })
+                ->addColumn('tipe_kategori_rapb', function($item){
+                    if($item->tipe_kategori_rapb == 1) {
+                      return "Penerimaan";
+                    }
+                    elseif($item->prioritas_rapb == 2) {
+                      return "Pengeluaran";
+                    }
                 })
                 ->addColumn('dana_perkiraan_rapb', function($item){
                     return "Rp".number_format($item->dana_perkiraan_rapb);
@@ -168,6 +177,43 @@ class InputRapbController extends BaseController
 
         return $data_subkategori;
     }
+
+    public function editInputRapb(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
+
+        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
+
+        $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
+
+        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb);
+
+        $kategori = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'kategori_rapb.tipe_kategori_rapb')
+                            ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                            ->where('subkategori_rapb.id_subkategori_rapb', '=', $data_rapb->id_subkategori_rapb)
+                            ->first();
+
+        $jenis_kategori = $kategori->tipe_kategori_rapb;
+
+        $id_kategori_rapb = $kategori->id_kategori_rapb;
+
+        $data_kategori = LibDataKeuangan::fetchDataKategoriRapb($auth_data, $jenis_kategori);
+
+        $data_subkategori = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb);
+
+        // convert format date
+        $tgl_rapb = strftime( "%A, %d %B %Y", strtotime($data_rapb->tgl_rapb));
+
+        return view('keuangan/rapb/input-rapb/edit-input-rapb',compact('auth_data', 'semester_mulai', 'semester_selesai', 'data_unit_kerja', 'data_rapb', 'jenis_kategori', 'id_kategori_rapb', 'data_kategori', 'data_subkategori', 'tgl_rapb'));
+
+    }
+
 
     // Action POST
     public function actionApvRapb(Request $request, $mode, $id = null, $id_unit_kerja = null){
@@ -346,6 +392,7 @@ class InputRapbController extends BaseController
                     // make object to find id
                     $rapb               = Rapb::find($id);
                     $rapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->save();
 
                     $rapb->delete();
 

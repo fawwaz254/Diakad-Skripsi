@@ -148,7 +148,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('input-rapb/view-detail-input-rapb/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\InputRapbController@viewDetailInputRapb');
             Route::get('input-rapb/datatables/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\InputRapbController@datatablesInputRapb');
             Route::get('input-rapb/add/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\InputRapbController@addInputRapb');
-            Route::get('input-rapb/edit/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\InputRapbController@editInputRapb');
+            Route::get('input-rapb/edit/{semester_mulai}/{semester_selesai}/{id}', 'Keuangan\Rapb\InputRapbController@editInputRapb');
 
             Route::post('action-input-rapb/{mode}/{id}', 'Keuangan\Rapb\InputRapbController@actionInputRapb');
             Route::post('action-apv-rapb/{mode}/{id}/{id_unit_kerja}', 'Keuangan\Rapb\InputRapbController@actionApvRapb');
