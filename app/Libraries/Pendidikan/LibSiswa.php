@@ -19,7 +19,7 @@ use DB;
 class LibSiswa
 {
     /** GET SISWA BY ID_PENGGUNA WALI MURID **/
-    public static function fetchDataSiswaWaliMurid($auth_data, $id_pengguna)
+    public static function fetchDataSiswaWaliMurid($auth_data, $id_pengguna, $is_aktif = 0)
     {
 
         // get id_wali_murid
@@ -31,8 +31,13 @@ class LibSiswa
                     ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                     ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
                     ->where('siswa.id_wali_murid', '=', $id_wali_murid)
-                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->get();
+                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+                    
+        if ($is_aktif == 1) {
+            $siswa = $siswa->where('is_aktif_wali_murid', 1)->first();
+        } else {
+            $siswa = $siswa->get();
+        }
 
         return $siswa;
     }

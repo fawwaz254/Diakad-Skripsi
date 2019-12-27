@@ -4,7 +4,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>TAGIHAN SISWA</h2>
+                        <h2>MAGANG SISWA</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -12,14 +12,13 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Biaya Sekolah</th>
-                                        <th>Jalur</th>
-                                        <th>Nama Biaya</th>
-                                        <th>Jenis Biaya</th>
-                                        <th>Besar Tagihan</th>
-                                        <th>Denda Tagihan</th>
-                                        <th>Keterangan</th>
-                                        <th>Besar Pembayaran</th>
+                                        <th>Semester</th>
+                                        <th>Nama - Periode Magang</th>
+                                        <th>Instansi Magang</th>
+                                        <th>Alamat Magang</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Selesai</th>
+                                        <th>Nilai</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -32,27 +31,26 @@
 </div>
 <script>
 
-    var modul_url       = 'keuangan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'tagihan/datatables';
+    var modul_url       = 'akademik';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'magang/datatables';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
-            { data: 'nm_biaya', name: 'nm_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_biaya'},
-            { data: 'besar_biaya', name: 'besar_biaya'},
-            { data: 'denda_biaya', name: 'denda_biaya'},
-            { data: 'keterangan', name: 'keterangan'},
-            { data: 'besar_pembayaran', name: 'besar_pembayaran'}
+            { data: 'semester', name: 'semester' },
+            { data: 'nm_magang', name: 'nm_magang'},
+            { data: 'nm_rekanan_magang', name: 'nm_rekanan_magang' },
+            { data: 'alamat_rekanan_magang', name: 'alamat_rekanan_magang'},
+            { data: 'tgl_magang_mulai', name: 'tgl_magang_mulai'},
+            { data: 'tgl_magang_selesai', name: 'tgl_magang_selesai'},
+            { data: 'nilai', name: 'nilai'}
         ]
     });
 

@@ -16,80 +16,50 @@ use DB;
 use Session;
 use Validator;
 
-class MagangController extends BaseController{
-
-    public function viewSiswaMagang(Request $request){
+class MagangController extends BaseController
+{
+    public function viewMagang(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_siswa = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna);
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
-        return view('wali-murid/akademik/jadwal-ujian/view-siswa-jadwal-ujian',compact('auth_data','data_siswa'));
+        $data_siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $data_anak_murid_aktif->id_pengguna);
 
+        return view('wali-murid/akademik/magang/view-magang', compact('auth_data', 'data_siswa'));
     }
 
-    public function actionViewSiswaMagang(Request $request){
-        # code...
+    public function datatablesMagang(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $validator = Validator::make($request->all(), [
-            'id_pengguna' => 'required'
-        ]);
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
-        if($validator->fails()) {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
-        }
-        else{
-            return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'akademik/magang/'.$input->id_pengguna
-                    ];   
-        }
-    }
-
-    public function viewMagang(Request $request, $id_pengguna){
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $data_siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
-
-    	return view('wali-murid/akademik/magang/view-magang',compact('auth_data', 'data_siswa'));
-    }
-
-    public function datatablesMagang(Request $request, $id_pengguna){
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $list_data = LibSiswa::fetchDataMagang($auth_data, $id_pengguna);
+        $list_data = LibSiswa::fetchDataMagang($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return Datatables::of($list_data)
-                ->addColumn('semester', function($item){
+                ->addColumn('semester', function ($item) {
                     return $item->tahun_ajaran." ".$item->nm_semester;
                 })
-                ->addColumn('nm_magang', function($item){
+                ->addColumn('nm_magang', function ($item) {
                     return $item->nm_magang." ".$item->periode_magang;
                 })
-                ->addColumn('tgl_magang_mulai', function($item){
-                    return strftime( "%A, %d %B %Y", strtotime($item->tgl_magang_mulai));
+                ->addColumn('tgl_magang_mulai', function ($item) {
+                    return strftime("%A, %d %B %Y", strtotime($item->tgl_magang_mulai));
                 })
-                ->addColumn('tgl_magang_selesai', function($item){
-                    return strftime( "%A, %d %B %Y", strtotime($item->tgl_magang_selesai));
+                ->addColumn('tgl_magang_selesai', function ($item) {
+                    return strftime("%A, %d %B %Y", strtotime($item->tgl_magang_selesai));
                 })
-                ->addColumn('nilai', function($item){
-                    if($item->is_tampil == 1) {
+                ->addColumn('nilai', function ($item) {
+                    if ($item->is_tampil == 1) {
                         return $item->nilai_angka." - ".$item->nilai_huruf;
-                    }
-                    else {
+                    } else {
                         return "-";
                     }
                 })
                 ->make(true);
     }
-
 }

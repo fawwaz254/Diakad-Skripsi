@@ -4,7 +4,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>TAGIHAN SISWA</h2>
+                        <h2>JADWAL KBM SEMESTER {{$semester_aktif->tahun_ajaran}} {{strtoupper($semester_aktif->nm_semester)}}</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -12,14 +12,12 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Biaya Sekolah</th>
-                                        <th>Jalur</th>
-                                        <th>Nama Biaya</th>
-                                        <th>Jenis Biaya</th>
-                                        <th>Besar Tagihan</th>
-                                        <th>Denda Tagihan</th>
-                                        <th>Keterangan</th>
-                                        <th>Besar Pembayaran</th>
+                                        <th>Mata Pelajaran</th>
+                                        <th>Guru Pengampu</th>
+                                        <th>Hari</th>
+                                        <th>Jam KBM</th>
+                                        <th>Kelas</th>
+                                        <th>Ruangan</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -32,8 +30,8 @@
 </div>
 <script>
 
-    var modul_url       = 'keuangan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'tagihan/datatables';
+    var modul_url       = 'akademik';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kbm/datatables';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -45,14 +43,12 @@ responsive: true,
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
-            { data: 'nm_biaya', name: 'nm_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_biaya'},
-            { data: 'besar_biaya', name: 'besar_biaya'},
-            { data: 'denda_biaya', name: 'denda_biaya'},
-            { data: 'keterangan', name: 'keterangan'},
-            { data: 'besar_pembayaran', name: 'besar_pembayaran'}
+            { data: 'mata_pelajaran', name: 'mata_pelajaran' },
+            { data: 'nm_pengguna', name: 'nm_pengguna'},
+            { data: 'nm_jadwal_hari', name: 'nm_jadwal_hari' },
+            { data: 'jadwal_jam', name: 'jadwal_jam'},
+            { data: 'nm_kelas', name: 'nm_kelas'},
+            { data: 'nm_ruangan', name: 'nm_ruangan'}
         ]
     });
 

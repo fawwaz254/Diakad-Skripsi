@@ -8,9 +8,11 @@ use Illuminate\Support\Facades\Hash;
 
 use Carbon\Carbon;
 
-use App\Models\Sekolah as Sekolah;
+use App\Models\Sekolah;
+use App\Models\WaliMurid;
 
 use App\Models\Role;
+use App\Models\Siswa;
 use Yajra\Datatables\Datatables;
 
 use Auth;
@@ -48,6 +50,15 @@ class SignInController extends BaseController
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
             $role = Role::find($role_aktif->id_role);
+
+            if ($role_aktif->id_role == 4) {
+                if ($wali_murid = WaliMurid::where('id_pengguna', $pengguna->id_pengguna)->first()) {
+                    if (!Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first()) {
+                        Auth::logout();
+                        return back()->with('toast', 'Akun Anda belum disetting menjadi wali murid')->withInput();
+                    }
+                }
+            }
 
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
