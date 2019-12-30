@@ -97,17 +97,29 @@ class LibGuru
     public static function fetchDataJadwalKBM($auth_data, $id_pengguna, $id_semester = null, $id_kelas_mp = null, $id_jadwal_kelas_mp = null, $pertemuan_ke = null)
     {
         // get id_guru
-        if(!empty($id_pengguna)){
+        if (!empty($id_pengguna)) {
             $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
             $id_guru = $guru->id_guru;
         }
 
         if (! empty($id_kelas_mp) && ! empty($pertemuan_ke)) {
             $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'pengampu_mp.pjmp_pengampu_mp', 'presensi_mp.pertemuan_ke', 'presensi_mp.uraian_materi', 'presensi_mp.waktu_mulai', 'presensi_mp.waktu_selesai')
-                    ->join('pengampu_mp', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
-                    ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'pengampu_mp.id_kelas_mp')
-                    ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-                    ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                    ->join('pengampu_mp', function ($q) {
+                        $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
+                            ->whereNull('pengampu_mp.deleted_at');
+                    })
+                    ->join('kelas_mp', function ($q) {
+                        $q->on('kelas_mp.id_kelas_mp', '=', 'pengampu_mp.id_kelas_mp')
+                            ->whereNull('kelas_mp.deleted_at');
+                    })
+                    ->join('mata_pelajaran', function ($q) {
+                        $q->on('mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+                            ->whereNull('mata_pelajaran.deleted_at');
+                    })
+                    ->join('kelas', function ($q) {
+                        $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                            ->whereNull('kelas.deleted_at');
+                    })
                     ->leftJoin('presensi_mp', function ($join) use ($pertemuan_ke) {
                         $join->on('presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                                  ->where('presensi_mp.pertemuan_ke', '=', $pertemuan_ke)
@@ -115,34 +127,50 @@ class LibGuru
                     })
                     ->where('pengampu_mp.id_guru', '=', $id_guru)
                     ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
-                    ->whereNull('pengampu_mp.deleted_at')
-                    ->whereNull('kelas_mp.deleted_at')
-                    ->whereNull('mata_pelajaran.deleted_at')
-                    ->whereNull('kelas.deleted_at')
                     ->orderBy('presensi_mp.pertemuan_ke', 'desc')
                     ->first();
         } else {
             $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'semester.tahun_ajaran', 'semester.nm_semester', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'jadwal_hari.nm_jadwal_hari', 'jj.jam_mulai', 'jj.menit_mulai', 'jjs.jam_selesai', 'jjs.menit_selesai', 'kelas.nm_kelas', 'ruangan.nm_ruangan', 'pengampu_mp.pjmp_pengampu_mp')
-                    ->join('pengampu_mp', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
-                    ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'pengampu_mp.id_kelas_mp')
-                    ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
-                    ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-                    ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-                    ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                    ->join('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
-                    ->join('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
-                    ->join('jadwal_jam AS jj', 'jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
-                    ->join('jadwal_jam AS jjs', 'jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
-                    ->whereNull('pengampu_mp.deleted_at')
-                    ->whereNull('kelas_mp.deleted_at')
-                    ->whereNull('semester.deleted_at')
-                    ->whereNull('mata_pelajaran.deleted_at')
-                    ->whereNull('kelas.deleted_at')
-                    ->whereNull('jadwal_kelas_mp.deleted_at')
-                    ->whereNull('ruangan.deleted_at')
-                    ->whereNull('jadwal_hari.deleted_at')
-                    ->whereNull('jj.deleted_at')
-                    ->whereNull('jjs.deleted_at');
+                    ->join('pengampu_mp', function ($q) {
+                        $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
+                            ->whereNull('pengampu_mp.deleted_at');
+                    })
+                    ->join('kelas_mp', function ($q) {
+                        $q->on('kelas_mp.id_kelas_mp', '=', 'pengampu_mp.id_kelas_mp')
+                            ->whereNull('kelas_mp.deleted_at');
+                    })
+                    ->join('semester', function ($q) {
+                        $q->on('semester.id_semester', '=', 'kelas_mp.id_semester')
+                            ->whereNull('semester.deleted_at');
+                    })
+                    ->join('mata_pelajaran', function ($q) {
+                        $q->on('mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+                            ->whereNull('mata_pelajaran.deleted_at');
+                    })
+                    ->join('kelas', function ($q) {
+                        $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                            ->whereNull('kelas.deleted_at');
+                    })
+                    ->join('jadwal_kelas_mp', function ($q) {
+                        $q->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                            ->whereNull('jadwal_kelas_mp.deleted_at');
+                    })
+                    ->join('ruangan', function ($q) {
+                        $q->on('ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
+                            ->whereNull('ruangan.deleted_at');
+                    })
+                    ->join('jadwal_hari', function ($q) {
+                        $q->on('jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
+                            ->whereNull('jadwal_hari.deleted_at');
+                    })
+                    ->join('jadwal_jam AS jj', function ($q) {
+                        $q->on('jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
+                            ->whereNull('jj.deleted_at');
+                    })
+                    ->join('jadwal_jam AS jjs', function ($q) {
+                        $q->on('jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
+                            ->whereNull('jjs.deleted_at');
+                    });
 
             if (! empty($id_pengguna)) {
                 $jadwalKBM = $jadwalKBM->where('pengampu_mp.id_guru', '=', $id_guru);
