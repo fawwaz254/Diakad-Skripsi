@@ -164,6 +164,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('cetak-presensi-uts/view-semester-cetak-presensi-uts/{id}', 'Akademik\Presensi\CetakPresensiUTSController@viewSemesterCetakPresensiUTS');
             Route::get('cetak-presensi-uts/datatables/{id}', 'Akademik\Presensi\CetakPresensiUTSController@datatablesCetakPresensiUTS');
             Route::get('cetak-presensi-uts/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUTSController@printCetakPresensiUTS');
+
+            // MENU Cetak Presensi UAS
+            Route::get('cetak-presensi-uas', 'Akademik\Presensi\CetakPresensiUASController@viewCetakPresensiUAS');
+            Route::post('post-cetak-presensi-uas', 'Akademik\Presensi\CetakPresensiUASController@actionviewCetakPresensiUAS');
+            Route::get('cetak-presensi-uas/view-semester-cetak-presensi-uas/{id}', 'Akademik\Presensi\CetakPresensiUASController@viewSemesterCetakPresensiUAS');
+            Route::get('cetak-presensi-uas/datatables/{id}', 'Akademik\Presensi\CetakPresensiUASController@datatablesCetakPresensiUAS');
+            Route::get('cetak-presensi-uas/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUASController@printCetakPresensiUAS');
         });
     });
 });
