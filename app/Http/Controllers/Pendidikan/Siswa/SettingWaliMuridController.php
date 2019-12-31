@@ -362,12 +362,6 @@ class SettingWaliMuridController extends BaseController
                             'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
                         ];
                     }
-                    if (empty($item->nisn)) {
-                        return [
-                            'status' 	=> 300, // GAGAL
-                            'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NISN siswa yang tidak diisi dalam file yang diupload'
-                        ];
-                    }
 
                     if ($siswa = Siswa::where('nis_siswa', $item->nis)->where('id_kelas', $id_kelas)->first()) {
                         if (!empty($siswa->id_wali_murid)) {
