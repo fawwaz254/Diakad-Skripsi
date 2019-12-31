@@ -145,7 +145,7 @@ class LibSiswa
     }
     public static function fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna)
     {
-        $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'jurusan.nm_jurusan', 'status_pengguna.nm_status_pengguna', 'calon_siswa_baru.asal_sekolah', 'calon_siswa_baru.alamat_jalan', 'calon_siswa_baru.alamat_dusun', 'calon_siswa_baru.alamat_kelurahan', 'calon_siswa_baru.alamat_rt', 'calon_siswa_baru.alamat_rw', 'calon_siswa_baru.alamat_kecamatan', 'calon_siswa_baru.alamat_kodepos', 'calon_siswa_baru.kode_voucher', 'jalur.nm_jalur', 'calon_siswa_baru.nomor_hp', 'calon_siswa_ortu.nomor_hp_ortu', 'provinsi.nm_provinsi', 'kota.nm_kota', 'pengguna.id_pengguna')
+        $siswa = Siswa::select('pengguna.path_foto_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'jurusan.nm_jurusan', 'status_pengguna.nm_status_pengguna', 'calon_siswa_baru.asal_sekolah', 'calon_siswa_baru.alamat_jalan', 'calon_siswa_baru.alamat_dusun', 'calon_siswa_baru.alamat_kelurahan', 'calon_siswa_baru.alamat_rt', 'calon_siswa_baru.alamat_rw', 'calon_siswa_baru.alamat_kecamatan', 'calon_siswa_baru.alamat_kodepos', 'calon_siswa_baru.kode_voucher', 'jalur.nm_jalur', 'calon_siswa_baru.nomor_hp', 'calon_siswa_ortu.nomor_hp_ortu', 'provinsi.nm_provinsi', 'kota.nm_kota', 'pengguna.id_pengguna')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
             ->join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')

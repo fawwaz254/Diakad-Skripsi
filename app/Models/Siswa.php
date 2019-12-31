@@ -45,7 +45,7 @@ class Siswa extends Model
 
     public function kelas()
     {
-        return $this->belongsTo('App\Models\Kelas', 'id_siswa');
+        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
     }
 
     public function tagihan_biaya()
