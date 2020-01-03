@@ -401,7 +401,7 @@ class InputGuruController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Guru successfully'
+                        'message' => 'Delete Guru successfully!'
                     ];
                 }
             }
