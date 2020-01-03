@@ -976,6 +976,53 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
+    public function actionGetKategoriPelanggaranSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kategori_pelanggaran' => $data_kategori
+            )
+        ]);
+    }
+
+    public function actionGetSubkategoriPelanggaranSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_kategori' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->id_kategori);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'subkategori_pelanggaran' => $data_subkategori
+            )
+        ]);
+    }
+
     public function actionPelanggaranSiswa(Request $request, $mode)
     {
         $input = (object) $request->input();
@@ -983,6 +1030,7 @@ class Apiv1Controller extends BaseController
         $validator = Validator::make($request->all(), [
             'id_presensi_mp'              => 'required',
             'id_siswa'              => 'required',
+            'id_subkategori_pelanggaran'   => 'required',
             'catatan_pelanggaran'   => 'required',
         ]);
         
@@ -1002,10 +1050,14 @@ class Apiv1Controller extends BaseController
                 if ($mode == 'add') {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
+                    $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
+
                     $presensiMpPelanggaran                               = new PresensiMpPelanggaran;
                     $presensiMpPelanggaran->id_presensi_mp_pelanggaran   = $id;
                     $presensiMpPelanggaran->id_presensi_mp               = $input->id_presensi_mp;
                     $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                    $presensiMpPelanggaran->id_kelas                     = $siswa->id_kelas;
+                    $presensiMpPelanggaran->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                     $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                     // convert format date
                     $presensiMpPelanggaran->is_sudah_tindakan            = 0;
@@ -1022,8 +1074,9 @@ class Apiv1Controller extends BaseController
                     
                     // make object to find id
                     $presensiMpPelanggaran                               = PresensiMpPelanggaran::find($id);
-                    $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                    // $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
                     $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                    $presensiMpPelanggaran->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                     // convert format date
                     $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                     $presensiMpPelanggaran->updated_at                   = $now;
@@ -1067,7 +1120,7 @@ class Apiv1Controller extends BaseController
                 return response()->json([
                     'status_code' 	=> 300,
                     'status_text' 	=> 'Failed',
-                    'message' => 'Terdapat error'
+                    'message' => 'Terdapat error '.$e->getMessage()
                 ]);
             }
         }

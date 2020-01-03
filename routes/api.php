@@ -42,6 +42,8 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::group(array('prefix' => 'pelanggaran-siswa'), function () {
             Route::post('get', 'Apiv1Controller@actionGetPelanggaranSiswa');
+            Route::post('kategori/get', 'Apiv1Controller@actionGetKategoriPelanggaranSiswa');
+            Route::post('subkategori/get', 'Apiv1Controller@actionGetSubkategoriPelanggaranSiswa');
             Route::post('{mode}/submit', 'Apiv1Controller@actionPelanggaranSiswa');
         });
 
