@@ -177,5 +177,22 @@ class LibAkademik
 
         return $cek;
     }
+
+    /** CEK JADWAL KELAS MP BERUBAH / TIDAK **/
+    public static function cekJadwalKelasMpBerubah($id_kelas_mp, $id_ruangan, $id_jadwal_hari, $id_jadwal_jam, $id_jadwal_jam_selesai)
+    {
+        $cek_jadwal_kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id_kelas_mp)
+                                    ->where('id_ruangan', '=', $id_ruangan)
+                                    ->where('id_jadwal_hari', '=', $id_jadwal_hari)
+                                    ->where('id_jadwal_jam', '=', $id_jadwal_jam)
+                                    ->where('id_jadwal_jam_selesai', '=', $id_jadwal_jam_selesai)
+                                    ->first();
+
+        if ($cek_jadwal_kelas_mp) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     /** ========== **/
 }
