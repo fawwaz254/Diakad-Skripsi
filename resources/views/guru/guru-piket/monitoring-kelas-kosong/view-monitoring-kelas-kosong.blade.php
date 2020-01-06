@@ -41,10 +41,10 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
+            { data: 'nm_kelas'},
             { data: 'nm_pengguna', searchable: false, orderable: false },
-            { data: 'nm_mata_pelajaran', name: 'mata_pelajaran.nm_mata_pelajaran' },
-            { data: 'nm_ruangan', name: 'ruangan.nm_ruangan' },
+            { data: 'nm_mata_pelajaran'},
+            { data: 'nm_ruangan'},
             { data: 'status', searchable: false, orderable: false}
         ]
     });
