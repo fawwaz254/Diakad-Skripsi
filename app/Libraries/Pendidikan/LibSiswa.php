@@ -222,7 +222,7 @@ class LibSiswa
         return $admisi;
     }
     /** PENGAMBILAN SISWA BY id_kelas_mp **/
-    public static function fetchDataSiswaKelasMp($auth_data, $id_kelas_mp, $pertemuan_ke = null)
+    public static function fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke = null)
     {
         if (!empty($tipe) && $tipe == 'rekap-absen') {
             $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
@@ -246,12 +246,11 @@ class LibSiswa
                             $join->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
                             ->whereNull('kelas.deleted_at');
                         })
-                        ->leftJoin('presensi_mp', function ($join) use ($pertemuan_ke) {
-                            $join->on('presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                                    ->where('presensi_mp.pertemuan_ke', '=', $pertemuan_ke)
-                                    ->whereNull('presensi_mp.deleted_at');
+                        ->join('jadwal_kelas_mp', function ($join) {
+                            $join->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                            ->whereNull('jadwal_kelas_mp.deleted_at');
                         })
-                        ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
+                        ->where('jadwal_kelas_mp.id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)
                         ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                         ->where('pengambilan_mp.status_apv_pengambilan_mp', '=', 1)
                         ->orderBy('kelas.nm_kelas', 'asc')
@@ -282,12 +281,16 @@ class LibSiswa
                             $join->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
                             ->whereNull('kelas.deleted_at');
                         })
-                        ->leftJoin('presensi_mp', function ($join) use ($pertemuan_ke) {
-                            $join->on('presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                                    ->where('presensi_mp.pertemuan_ke', '=', $pertemuan_ke)
-                                    ->whereNull('presensi_mp.deleted_at');
+                        ->join('jadwal_kelas_mp', function ($join) {
+                            $join->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                            ->whereNull('jadwal_kelas_mp.deleted_at');
                         })
-                        ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
+                        ->leftJoin('presensi_mp', function ($join) use ($pertemuan_ke) {
+                            $join->on('presensi_mp.id_jadwal_kelas_mp', '=', 'jadwal_kelas_mp.id_jadwal_kelas_mp')
+                            ->where('presensi_mp.pertemuan_ke', '=', $pertemuan_ke)
+                            ->whereNull('presensi_mp.deleted_at');
+                        })
+                        ->where('jadwal_kelas_mp.id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)
                         ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                         ->where('pengambilan_mp.status_apv_pengambilan_mp', '=', 1)
                         ->orderBy('kelas.nm_kelas', 'asc')
@@ -317,7 +320,11 @@ class LibSiswa
                             $join->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
                             ->whereNull('kelas.deleted_at');
                         })
-                        ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
+                        ->join('jadwal_kelas_mp', function ($join) {
+                            $join->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                            ->whereNull('jadwal_kelas_mp.deleted_at');
+                        })
+                        ->where('jadwal_kelas_mp.id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)
                         ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                         ->where('pengambilan_mp.status_apv_pengambilan_mp', '=', 1)
                         ->orderBy('kelas.nm_kelas', 'asc')

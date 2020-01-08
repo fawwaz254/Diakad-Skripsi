@@ -542,11 +542,9 @@ class Apiv1Controller extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
-
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
 
-        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp, $input->pertemuan_ke);
 
         return response()->json([
             'status_code' 	=> 200,
@@ -570,11 +568,9 @@ class Apiv1Controller extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
-
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
 
-        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp, $input->pertemuan_ke);
         if ($presensi_mp_aktif) {
             $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp_aktif->id_presensi_mp)->get();
             $presensi_mp_aktif = $presensi_mp_aktif->only('id_presensi_mp', 'id_kelas_mp', 'id_jadwal_kelas_mp', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'id_guru_pengganti', 'alasan_tidak_hadir', 'tgl_entry', 'persentase_presensi_mp', 'keterangan');

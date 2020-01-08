@@ -84,9 +84,7 @@ class RekapAbsensiKelasController extends BaseController
                                         ->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
                                         ->first();
 
-        $jadwal_kelas_mp = JadwalKelasMp::find($id_jadwal_kelas_mp);
-
-        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $jadwal_kelas_mp->id_kelas_mp);
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp);
 
         $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->get();
 

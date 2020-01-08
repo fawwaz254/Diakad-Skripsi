@@ -139,9 +139,7 @@ class CetakPresensiKBMController extends BaseController
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, null, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
-        $jadwal_kelas_mp = JadwalKelasMp::find($id_jadwal_kelas_mp);
-
-        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $jadwal_kelas_mp->id_kelas_mp);
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp);
 
         $pdf = PDF::loadView('akademik/presensi/cetak-presensi-kbm/download-cetak-presensi-kbm', compact('data_siswa', 'auth_data', 'semester_aktif', 'data_kelas'))->setPaper('a4', 'landscape');
         return $pdf->stream();

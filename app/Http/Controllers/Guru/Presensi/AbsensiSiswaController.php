@@ -115,13 +115,15 @@ class AbsensiSiswaController extends BaseController
         return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp'));
     }
 
-    public function datatablesKBMAbsensiSiswa(Request $request, $id_kelas_mp, $pertemuan_ke)
+    public function datatablesKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_kelas_mp, $pertemuan_ke);
-        $presensi_mp_aktif = PresensiMp::where('id_kelas_mp', '=', $id_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
+        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke);
+
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
+        
         if ($presensi_mp_aktif) {
             $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp_aktif->id_presensi_mp)->get();
         } else {

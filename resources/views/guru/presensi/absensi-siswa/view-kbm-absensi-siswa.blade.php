@@ -102,11 +102,11 @@
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_kelas_mp = {!! json_encode($data_kelas->id_kelas_mp) !!};
+    var id_jadwal_kelas_mp = {!! json_encode($id_jadwal_kelas_mp) !!};
     var pertemuan_ke = {!! json_encode($pertemuan_ke) !!};
 
     var modul_url       = 'presensi';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'absensi-siswa/datatables-kbm/' + id_kelas_mp + '/' + pertemuan_ke;
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'absensi-siswa/datatables-kbm/' + id_jadwal_kelas_mp + '/' + pertemuan_ke;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,

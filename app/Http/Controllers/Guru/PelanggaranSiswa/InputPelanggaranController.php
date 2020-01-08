@@ -128,7 +128,7 @@ class InputPelanggaranController extends BaseController
 
         $presensi_mp_aktif = PresensiMp::where('id_presensi_mp', '=', $id_presensi_mp)->first();
 
-        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $presensi_mp_aktif->id_kelas_mp, $presensi_mp_aktif->pertemuan_ke);
+        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $presensi_mp_aktif->id_jadwal_kelas_mp, $presensi_mp_aktif->pertemuan_ke);
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
