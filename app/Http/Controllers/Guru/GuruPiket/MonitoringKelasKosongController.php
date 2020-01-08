@@ -37,7 +37,7 @@ class MonitoringKelasKosongController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now();
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
@@ -61,6 +61,7 @@ class MonitoringKelasKosongController extends BaseController
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
                                     WHERE jkm.id_jadwal_hari = '.$hari.' 
                                     AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
+                                    AND pmp.id_presensi_mp IS NULL
                                     AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
                                     ORDER BY k.tingkat, k.nm_kelas');
                                     
