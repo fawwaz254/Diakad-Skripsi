@@ -409,7 +409,7 @@ class Apiv1Controller extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
+        $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
                             FROM jadwal_kelas_mp jkm
                             JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
                             JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
