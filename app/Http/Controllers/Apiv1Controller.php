@@ -427,7 +427,8 @@ class Apiv1Controller extends BaseController
                             WHERE jkm.id_jadwal_hari = '.$hari.' 
                             AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
                             AND pmp.id_presensi_mp IS NULL
-                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))');
+                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
+                            ORDER BY k.tingkat, k.nm_kelas');
 
         return response()->json([
             'status_code' 	=> 200,
