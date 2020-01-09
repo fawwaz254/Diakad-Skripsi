@@ -167,7 +167,7 @@ class InputJadwalController extends BaseController
                 $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
                 $id_guru = $guru->id_guru;
 
-                if (LibAkademik::cekJadwalKelasMpBerubah($id, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1)) {
+                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1)) {
                     $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1);
 
                     if ($cek_jadwal['guru'] == 0) {
@@ -184,7 +184,7 @@ class InputJadwalController extends BaseController
                 }
 
                 if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($id, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2)) {
+                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2)) {
                         $cek_jadwal2 = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2);
 
                         if ($cek_jadwal2['guru'] == 0) {
@@ -202,7 +202,7 @@ class InputJadwalController extends BaseController
                 }
 
                 if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($id, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3)) {
+                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3)) {
                         $cek_jadwal3 = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3);
 
                         if ($cek_jadwal3['guru'] == 0) {
@@ -220,7 +220,7 @@ class InputJadwalController extends BaseController
                 }
 
                 if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($id, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4)) {
+                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4)) {
                         $cek_jadwal4 = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4);
 
                         if ($cek_jadwal4['guru'] == 0) {
@@ -238,7 +238,7 @@ class InputJadwalController extends BaseController
                 }
 
                 if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($id, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5)) {
+                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5)) {
                         $cek_jadwal5 = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5);
 
                         if ($cek_jadwal5['guru'] == 0) {
@@ -256,7 +256,7 @@ class InputJadwalController extends BaseController
                 }
 
                 if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($id, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6)) {
+                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6)) {
                         $cek_jadwal6 = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6);
 
                         if ($cek_jadwal6['guru'] == 0) {

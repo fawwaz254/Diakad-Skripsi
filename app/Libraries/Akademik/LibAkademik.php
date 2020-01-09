@@ -204,9 +204,15 @@ class LibAkademik
     }
 
     /** CEK JADWAL KELAS MP BERUBAH / TIDAK **/
-    public static function cekJadwalKelasMpBerubah($id_kelas_mp, $id_ruangan, $id_jadwal_hari, $id_jadwal_jam, $id_jadwal_jam_selesai)
+    public static function cekJadwalKelasMpBerubah($auth_data, $id_kelas_mp, $id_ruangan, $id_jadwal_hari, $id_jadwal_jam, $id_jadwal_jam_selesai)
     {
-        $cek_jadwal_kelas_mp = JadwalKelasMp::where('id_kelas_mp', $id_kelas_mp)
+        $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
+
+        $cek_jadwal_kelas_mp = JadwalKelasMp::join('kelas_mp', function ($q) {
+            $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
+                                                                        ->whereNull('kelas_mp.deleted_at');
+        })
+                                    ->where('id_kelas_mp', $id_kelas_mp)
                                     ->where('id_ruangan', '=', $id_ruangan)
                                     ->where('id_jadwal_hari', '=', $id_jadwal_hari)
                                     ->where('id_jadwal_jam', '=', $id_jadwal_jam)
