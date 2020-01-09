@@ -383,7 +383,7 @@ class SettingWaliMuridController extends BaseController
                     } else {
                         return [
                             'status' 	=> 300, // GAGAL
-                            'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak ada pada kelas dalam file yang diupload'
+                            'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NIS '.$item->nis.' yang tidak ada pada kelas dalam file yang diupload'
                         ];
                     }
                 }
