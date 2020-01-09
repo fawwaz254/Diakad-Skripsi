@@ -143,7 +143,8 @@ class LibAkademik
         // cek by guru
         $cekGuru = KelasMp::join('pengampu_mp', function ($join) {
             $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                                     ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1);
+                                                        ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
+                                                        ->whereNull('pengampu_mp.deleted_at');
         })
                             ->join('jadwal_kelas_mp', function ($q) {
                                 $q->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
