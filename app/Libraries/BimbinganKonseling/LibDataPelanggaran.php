@@ -255,6 +255,9 @@ class LibDataPelanggaran
                     'kategori_pelanggaran.tingkat_kategori_pelanggaran',
                     'subkategori_pelanggaran.tingkat_subkategori_pelanggaran',
                     'subkategori_pelanggaran.keterangan_subkategori_pelanggaran',
+                    'kategori_pelanggaran_mp.tingkat_kategori_pelanggaran as tingkat_kategori_pelanggaran_mp',
+                    'subkategori_pelanggaran_mp.tingkat_subkategori_pelanggaran as tingkat_subkategori_pelanggaran_mp',
+                    'subkategori_pelanggaran_mp.keterangan_subkategori_pelanggaran as keterangan_subkategori_pelanggaran_mp',
                     'subkategori_pelanggaran.poin_subkategori_pelanggaran',
                     'pelanggaran_siswa.catatan_pelanggaran',
                     'pelanggaran_siswa.catatan_pelanggaran_khusus',
@@ -279,17 +282,21 @@ class LibDataPelanggaran
                     'p_tindakan.nm_pengguna as nm_input_tindakan',
                     'p_tindakan.gelar_depan as gelar_depan_tindakan',
                     'p_tindakan.gelar_belakang as gelar_belakang_tindakan',
-                    'kelas.nm_kelas'
+                    'kelas.nm_kelas',
+                    'kelas_presensi.nm_kelas as nm_kelas_presensi'
                 )
                     ->join('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', 'tindakan_pelanggaran.id_jenis_tindakan')
                     ->leftJoin('pelanggaran_siswa', 'pelanggaran_siswa.id_pelanggaran_siswa', '=', 'tindakan_pelanggaran.id_pelanggaran_siswa')
                     ->leftJoin('presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', '=', 'tindakan_pelanggaran.id_presensi_mp_pelanggaran')
                     ->leftJoin('subkategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', '=', 'pelanggaran_siswa.id_subkategori_pelanggaran')
+                    ->leftJoin('subkategori_pelanggaran as subkategori_pelanggaran_mp', 'subkategori_pelanggaran_mp.id_subkategori_pelanggaran', '=', 'presensi_mp_pelanggaran.id_subkategori_pelanggaran')
                     ->leftJoin('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
+                    ->leftJoin('kategori_pelanggaran as kategori_pelanggaran_mp', 'kategori_pelanggaran_mp.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran_mp.id_kategori_pelanggaran')
                     ->leftJoin('siswa', 'siswa.id_siswa', '=', 'pelanggaran_siswa.id_siswa')
                     ->leftJoin('kelas', 'pelanggaran_siswa.id_kelas', '=', 'kelas.id_kelas')
                     ->leftJoin('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                     ->leftJoin('siswa as siswa_presensi', 'siswa_presensi.id_siswa', '=', 'presensi_mp_pelanggaran.id_siswa')
+                    ->leftJoin('kelas as kelas_presensi', 'kelas_presensi.id_kelas', '=', 'presensi_mp_pelanggaran.id_kelas')
                     ->leftJoin('pengguna as p_siswa_presensi', 'p_siswa_presensi.id_pengguna', '=', 'siswa_presensi.id_pengguna')
                     ->leftJoin('guru', 'guru.id_guru', '=', 'pelanggaran_siswa.id_guru_input')
                     ->leftJoin('pengguna as p_guru', 'p_guru.id_pengguna', '=', 'guru.id_pengguna')
