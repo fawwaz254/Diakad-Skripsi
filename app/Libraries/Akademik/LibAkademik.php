@@ -145,9 +145,18 @@ class LibAkademik
             $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                                      ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1);
         })
-                            ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                            ->join('jadwal_jam AS jj', 'jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
-                            ->join('jadwal_jam AS jjs', 'jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
+                            ->join('jadwal_kelas_mp', function ($q) {
+                                $q->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                                    ->whereNull('jadwal_kelas_mp.deleted_at');
+                            })
+                            ->join('jadwal_jam AS jj', function ($q) {
+                                $q->on('jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
+                                    ->whereNull('jj.deleted_at');
+                            })
+                            ->join('jadwal_jam AS jjs', function ($q) {
+                                $q->on('jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
+                                    ->whereNull('jjs.deleted_at');
+                            })
                             ->where('pengampu_mp.id_guru', '=', $id_guru)
                             ->where('jadwal_kelas_mp.id_jadwal_hari', '=', $id_jadwal_hari)
                             ->where(function ($query) use ($jam_ke_mulai, $jam_ke_selesai) {
@@ -157,8 +166,14 @@ class LibAkademik
                             ->first();
 
         // cek by ruangan
-        $cekRuangan = JadwalKelasMp::join('jadwal_jam AS jj', 'jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
-                                    ->join('jadwal_jam AS jjs', 'jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
+        $cekRuangan = JadwalKelasMp::join('jadwal_jam AS jj', function ($q) {
+            $q->on('jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
+                                            ->whereNull('jj.deleted_at');
+        })
+                                    ->join('jadwal_jam AS jjs', function ($q) {
+                                        $q->on('jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
+                                            ->whereNull('jjs.deleted_at');
+                                    })
                                     ->where('id_ruangan', '=', $id_ruangan)
                                     ->where('id_jadwal_hari', '=', $id_jadwal_hari)
                                     ->where(function ($query) use ($jam_ke_mulai, $jam_ke_selesai) {
