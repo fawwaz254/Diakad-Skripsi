@@ -41,7 +41,7 @@ class InputJadwalController extends BaseController
 
         $id_pengguna = $auth_data->pengguna->id_pengguna;
 
-        $guru = Guru::where('id_pengguna','=',$id_pengguna)->first();
+        $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
         $id_guru = $guru->id_guru;
        
         return view('guru/jadwal/input-jadwal/view-input-jadwal', compact('auth_data', 'semester', 'id', 'id_guru'));
@@ -67,16 +67,18 @@ class InputJadwalController extends BaseController
             'mata_pelajaran.kredit_semester',
             'mata_pelajaran.tingkat_semester',
             'kelas_mp.nm_kelas_mp',
-            'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'pengampu_mp.id_guru', 'pengguna.nm_pengguna'
+            'jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+            'pengampu_mp.id_guru',
+            'pengguna.nm_pengguna'
         )
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
             ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
             ->leftJoin('pengampu_mp', function ($join) {
-                            $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                                  ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
                                  ->whereNull('pengampu_mp.deleted_at');
-                        })
+            })
             ->leftJoin('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
             ->leftJoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->where('kelas_mp.id_semester', '=', $id)
@@ -162,7 +164,7 @@ class InputJadwalController extends BaseController
             if ($mode == 'edit') {
                 $id_pengguna = $auth_data->pengguna->id_pengguna;
 
-                $guru = Guru::where('id_pengguna','=',$id_pengguna)->first();
+                $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
                 $id_guru = $guru->id_guru;
 
                 $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $id_guru, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1);
@@ -396,24 +398,24 @@ class InputJadwalController extends BaseController
                             ];
                 }
             } elseif ($mode == 'delete') {
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
-                    return [
-                        'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
-                    ];
-                } else {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+                // if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+                // return [
+                //     'status' => 300, // SUCCESS AND LOAD TABLE
+                //     'message' => 'Terdapat siswa yang telah mengambil kelas ini'
+                // ];
+                // } else {
+                JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    PengampuMp::where('id_kelas_mp', $id)->delete();
+                PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                PengampuMp::where('id_kelas_mp', $id)->delete();
 
 
-                    return [
+                return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Jadwal Mata Ajar Successfully'
                     ];
-                }
+                // }
             }
         }
     }
