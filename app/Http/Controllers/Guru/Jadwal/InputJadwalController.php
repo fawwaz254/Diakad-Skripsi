@@ -512,24 +512,24 @@ class InputJadwalController extends BaseController
                             ];
                 }
             } elseif ($mode == 'delete') {
-                // if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
-                // return [
-                //     'status' => 300, // SUCCESS AND LOAD TABLE
-                //     'message' => 'Terdapat siswa yang telah mengambil kelas ini'
-                // ];
-                // } else {
-                JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
+                    ];
+                } else {
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                PengampuMp::where('id_kelas_mp', $id)->delete();
+                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $id)->delete();
 
 
-                return [
+                    return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Jadwal Mata Ajar Successfully'
                     ];
-                // }
+                }
             }
         }
     }

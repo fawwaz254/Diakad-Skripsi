@@ -343,12 +343,30 @@ class LibSiswa
     public static function fetchDataSiswaUjianMp($auth_data, $id_ujian_mp)
     {
         $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'ujian_mp.id_ujian_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
-                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                    ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                    ->join('ujian_mp_presensi', 'ujian_mp_presensi.id_siswa', '=', 'siswa.id_siswa')
-                    ->join('ujian_mp', 'ujian_mp.id_ujian_mp', '=', 'ujian_mp_presensi.id_ujian_mp')
-                    ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
-                    ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                    ->join('pengguna', function ($q) {
+                        $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                            ->whereNull('pengguna.deleted_at');
+                    })
+                    ->join('status_pengguna', function ($q) {
+                        $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                            ->whereNull('status_pengguna.deleted_at');
+                    })
+                    ->join('ujian_mp_presensi', function ($q) {
+                        $q->on('ujian_mp_presensi.id_siswa', '=', 'siswa.id_siswa')
+                            ->whereNull('ujian_mp_presensi.deleted_at');
+                    })
+                    ->join('ujian_mp', function ($q) {
+                        $q->on('ujian_mp.id_ujian_mp', '=', 'ujian_mp_presensi.id_ujian_mp')
+                            ->whereNull('ujian_mp.deleted_at');
+                    })
+                    ->join('kelas_mp', function ($q) {
+                        $q->on('kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
+                            ->whereNull('kelas_mp.deleted_at');
+                    })
+                    ->join('kelas', function ($q) {
+                        $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                            ->whereNull('kelas.deleted_at');
+                    })
                     ->where('ujian_mp.id_ujian_mp', '=', $id_ujian_mp)
                     ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                     ->orderBy('kelas.nm_kelas', 'asc')
