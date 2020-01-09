@@ -95,7 +95,7 @@
                                         <small><i>*Hanya Untuk Status Akademik Keluar</i></small>
                                     </td>
                                     <td style="width: 50%">
-                                        <input type="text" class="datepicker form-control" name="tgl_keluar" id="tgl_keluar" aria-invalid="true">
+                                        <input type="text" class="datepicker form-control" name="tgl_keluar" id="tgl_keluar" aria-invalid="true" @if(!empty($admisi->tgl_keluar)) value="{{date_format(date_create($admisi->tgl_keluar), "d F Y")}}" @endif>
                                         <input type="hidden" class="form-control" name="nis_nama_siswa" aria-invalid="true" value="{{$nis_nama_siswa}}">
                                     </td>
                                 </tr>
