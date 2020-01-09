@@ -357,10 +357,11 @@ class SettingWaliMuridController extends BaseController
             if ($data->count()) {
                 foreach ($data as $key => $item) {
                     if (empty($item->nis)) {
-                        return [
-                            'status' 	=> 300, // GAGAL
-                            'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
-                        ];
+                        // return [
+                        //     'status' 	=> 300, // GAGAL
+                        //     'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
+                        // ];
+                        $data->forget($key);
                     }
 
                     if ($siswa = Siswa::where('nis_siswa', $item->nis)->where('id_kelas', $id_kelas)->first()) {
