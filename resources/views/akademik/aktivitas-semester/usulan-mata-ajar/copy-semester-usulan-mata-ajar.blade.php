@@ -38,6 +38,16 @@
                                 {{$semester->tahun_ajaran}} ({{$semester->nm_semester}})
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Elemen Copy
+                            <small><strong>Pilihan Data yang Akan di-Copy</strong></small>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="checkbox" id="checkbox-jadwal" name="jadwal" class="filled-in" value="1" checked="">
+                                <label for="checkbox-jadwal">Jadwal Kelas</label> <br>
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

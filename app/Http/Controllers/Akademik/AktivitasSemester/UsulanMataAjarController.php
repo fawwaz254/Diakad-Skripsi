@@ -424,13 +424,17 @@ class UsulanMataAjarController extends BaseController
                         KelasMp::insert($batch_insert_kelas_mp);
                     }
 
-                    if (sizeof($batch_insert_jadwal_kelas_mp) > 0) {
-                        JadwalKelasMp::insert($batch_insert_jadwal_kelas_mp);
+                    if (!empty($input->jadwal)) {
+                        if (sizeof($batch_insert_jadwal_kelas_mp) > 0) {
+                            JadwalKelasMp::insert($batch_insert_jadwal_kelas_mp);
+                        }
+                        
+                        if (sizeof($batch_insert_pengampu_mp) > 0) {
+                            PengampuMp::insert($batch_insert_pengampu_mp);
+                        }
                     }
+                
 
-                    if (sizeof($batch_insert_pengampu_mp) > 0) {
-                        PengampuMp::insert($batch_insert_pengampu_mp);
-                    }
 
                     DB::commit();
                     // all good

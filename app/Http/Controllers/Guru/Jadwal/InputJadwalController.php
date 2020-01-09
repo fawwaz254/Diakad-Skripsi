@@ -55,14 +55,6 @@ class InputJadwalController extends BaseController
             'mata_pelajaran.nm_mata_pelajaran',
             'mata_pelajaran.kd_mata_pelajaran',
             'kelas.nm_kelas',
-            DB::raw("(SELECT COUNT(*) FROM jadwal_kelas_mp WHERE jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND jadwal_kelas_mp.deleted_at IS NULL) AS jml_jadwal"),
-            DB::raw("(SELECT SUM(jjs.jam_ke - jj.jam_ke + 1) 
-                        FROM jadwal_kelas_mp 
-                        JOIN jadwal_jam AS jj ON jj.id_jadwal_jam = jadwal_kelas_mp.id_jadwal_jam
-                        JOIN jadwal_jam AS jjs ON jjs.id_jadwal_jam = jadwal_kelas_mp.id_jadwal_jam_selesai 
-                        WHERE jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND jadwal_kelas_mp.deleted_at IS NULL) AS jml_jadwal_jam"),
-            DB::raw("(SELECT COUNT(*) FROM pengampu_mp WHERE pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengampu_mp.deleted_at IS NULL) AS jml_pengampu"),
-            DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"),
             'kelas_mp.id_kelas_mp',
             'mata_pelajaran.kredit_semester',
             'mata_pelajaran.tingkat_semester',

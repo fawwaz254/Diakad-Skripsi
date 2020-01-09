@@ -22,10 +22,6 @@
                                         <th>Jenis Mapel</th>
                                         <th>Tingkat</th>
                                         <th>Kelas</th>
-                                        <th>Jadwal Hari</th>
-                                        <th>Jadwal Jam</th>
-                                        <th>Pengampu</th>
-                                        <th>Terisi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -63,10 +59,6 @@
             { data: 'nm_jenis_mata_pelajaran', name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
             { data: 'tingkat_semester', name: 'mata_pelajaran.tingkat_semester' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'jml_jadwal', name: 'jml_jadwal', searchable: false, orderable: false },
-            { data: 'jml_jadwal_jam', name: 'jml_jadwal_jam', searchable: false, orderable: false },
-            { data: 'jml_pengampu', name: 'jml_pengampu', searchable: false, orderable: false },
-            { data: 'jml_siswa', name: 'jml_siswa', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     if(data.id_guru == null) {
