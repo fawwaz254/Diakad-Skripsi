@@ -80,8 +80,8 @@
         { data: null, searchable: false, orderable: false },
         { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
             render: function (data, type, full, meta){
-                return '<input type="checkbox" name="id_kelas_mp[]" class="filled-in" value="' + data.id_kelas_mp + '">'+
-                '<label for="checkbox-' + data.id_kelas_mp + '"></label>';
+                return '<input type="checkbox" name="id_siswa[]" class="filled-in" value="' + data.id_siswa + '">'+
+                '<label for="checkbox-' + data.id_siswa + '"></label>';
             }
         },
         { data: 'nis_siswa', name: 'nis_siswa' },
