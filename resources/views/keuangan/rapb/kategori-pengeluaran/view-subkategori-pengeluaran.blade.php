@@ -22,6 +22,7 @@
                                         <th>Kode</th>
                                         <th>Nama Sub-Kategori</th>
                                         <th>Deskripsi</th>
+                                        <th>Keterangan Sub-Kategori</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -37,6 +38,7 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url       = 'rapb';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'kategori-pengeluaran/sub/datatables/' + '{{ $data_kategori_rapb->id_kategori_rapb }}';
+    var sub_ket_url         = role_url + '#' + modul_url + '/' + 'kategori-pengeluaran/sub/ket/' + '{{ $data_kategori_rapb->id_kategori_rapb }}';
     var edit_url        = role_url + '#' + modul_url + '/' + 'kategori-pengeluaran/sub/edit/' + '{{ $data_kategori_rapb->id_kategori_rapb }}';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-kategori-pengeluaran/delete-subkategori';
 
@@ -53,6 +55,14 @@ responsive: true,
             { data: 'kode_subkategori_rapb', name: 'kode_subkategori_rapb' },
             { data: 'nm_subkategori_rapb', name: 'nm_subkategori_rapb' },
             { data: 'deskripsi_subkategori_rapb', name: 'deskripsi_subkategori_rapb' },
+            { data: 'ket_subkategori', name: 'ket_subkategori', searchable: false, orderable: false,
+                render: function(data){
+                    return '<strong>(' + data.jml_ket_subkategori_rapb +' data)</strong> '+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ sub_ket_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">remove_red_eye</i>'+
+                    '</a> ';
+                }
+            },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

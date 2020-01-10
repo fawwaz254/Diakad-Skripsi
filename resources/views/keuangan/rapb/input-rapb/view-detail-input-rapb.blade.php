@@ -79,8 +79,7 @@
                             <thead>
                                 <tr>
                                     <th>No. </th>
-                                    <th>Mulai</th>
-                                    <th>Selesai</th>
+                                    <th>Mulai - Selesai</th>
                                     <th>Jenis Kategori</th>
                                     <th>Kode Sub-Kategori</th>
                                     <th>Nama Sub-Kategori</th>
@@ -124,8 +123,7 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'semester_mulai', name: 'semester_mulai' },
-            { data: 'semester_selesai', name: 'semester_selesai' },
+            { data: 'semester', name: 'semester' },
             { data: 'tipe_kategori_rapb', name: 'tipe_kategori_rapb' },
             { data: 'kode_subkategori_rapb', name: 'subkategori_rapb.kode_subkategori_rapb' },
             { data: 'nm_subkategori_rapb', name: 'subkategori_rapb.nm_subkategori_rapb' },

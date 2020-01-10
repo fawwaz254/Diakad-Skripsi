@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use App\Models\KategoriRapb as KategoriRapb;
 use App\Models\SubkategoriRapb as SubkategoriRapb;
+use App\Models\KetSubkategoriRapb as KetSubkategoriRapb;
 use App\Models\Rapb as Rapb;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -124,9 +125,72 @@ class KategoriPengeluaranController extends BaseController{
         $list_data = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb);
 
         return Datatables::of($list_data)
+                 ->addColumn('ket_subkategori', function($item){
+                    $data = array(
+                        'jml_ket_subkategori_rapb' => $item->jml_ket_subkategori_rapb,
+                        'id' => $item->id_subkategori_rapb
+                    );
+                    return $data;
+                })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_subkategori_rapb
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+    // Keterangan Sub Kategori Pengeluaran
+    public function viewKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
+
+        return view('keuangan/rapb/kategori-pengeluaran/view-ket-subkategori-pengeluaran',compact('auth_data', 'data_subkategori_rapb'));
+
+    }
+
+    public function addKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
+
+        $id_ket_subkategori_rapb = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        return view('keuangan/rapb/kategori-pengeluaran/add-ket-subkategori-pengeluaran',compact('auth_data', 'data_subkategori_rapb', 'id_ket_subkategori_rapb'));
+
+    }
+
+    public function editKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb, $id_ket_subkategori_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
+
+        $data_ket_subkategori_rapb = LibDataKeuangan::fetchDataKetSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb, $id_ket_subkategori_rapb);
+
+        return view('keuangan/rapb/kategori-pengeluaran/edit-ket-subkategori-pengeluaran',compact('auth_data','data_subkategori_rapb','data_ket_subkategori_rapb'));
+
+    }
+
+    public function datatablesKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = LibDataKeuangan::fetchDataKetSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
+
+        return Datatables::of($list_data)
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_ket_subkategori_rapb
                     );
                     return $data;
                 })
@@ -154,13 +218,20 @@ class KategoriPengeluaranController extends BaseController{
                 'deskripsi_subkategori_rapb' => 'required'
             ]); 
         }
+        elseif(in_array($mode, ['add-ket-subkategori','edit-ket-subkategori'])) {
+           $validator = Validator::make($request->all(), [
+                'id_subkategori_rapb' => 'required',
+                'kode_ket_subkategori_rapb' => 'required',
+                'nm_ket_subkategori_rapb' => 'required'
+            ]); 
+        }
         else {
             $validator = Validator::make($request->all(), [
 
             ]); 
         }
         
-        if($validator->fails() && ! in_array($mode, ['delete-kategori','delete-subkategori'])) {
+        if($validator->fails() && ! in_array($mode, ['delete-kategori','delete-subkategori','delete-ket-subkategori'])) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -280,6 +351,51 @@ class KategoriPengeluaranController extends BaseController{
                         'message' => 'Delete Sub-Kategori Pengeluaran successfully'
                     ];
                 }
+            }
+            elseif($mode == 'add-ket-subkategori') {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $ketSubkategoriRapb                             = new KetSubkategoriRapb;
+                $ketSubkategoriRapb->id_ket_subkategori_rapb    = $id;
+                $ketSubkategoriRapb->id_subkategori_rapb        = $input->id_subkategori_rapb;
+                $ketSubkategoriRapb->kode_ket_subkategori_rapb  = $input->kode_ket_subkategori_rapb;
+                $ketSubkategoriRapb->nm_ket_subkategori_rapb    = $input->nm_ket_subkategori_rapb;
+                $ketSubkategoriRapb->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                $ketSubkategoriRapb->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'rapb/kategori-pengeluaran/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
+                    'message' => 'Save Keterangan Sub-Kategori Pengeluaran successfully'
+                ];
+            }
+            elseif($mode == 'edit-ket-subkategori'){
+                // make object to find id
+                $ketSubkategoriRapb                             = KetSubkategoriRapb::find($id);
+                $ketSubkategoriRapb->kode_ket_subkategori_rapb  = $input->kode_ket_subkategori_rapb;
+                $ketSubkategoriRapb->nm_ket_subkategori_rapb    = $input->nm_ket_subkategori_rapb;
+                $ketSubkategoriRapb->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                $ketSubkategoriRapb->updated_at                 = $now;
+                $ketSubkategoriRapb->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'rapb/kategori-pengeluaran/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
+                    'message' => 'Update Keterangan Sub-Kategori Pengeluaran successfully'
+                ];
+            }
+            elseif($mode == 'delete-ket-subkategori'){
+                // make object to find id
+                $ketSubkategoriRapb               = KetSubkategoriRapb::find($id);
+                $ketSubkategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $ketSubkategoriRapb->save();
+
+                $ketSubkategoriRapb->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Keterangan Sub-Kategori Pengeluaran successfully'
+                ];
             }
         }
     }

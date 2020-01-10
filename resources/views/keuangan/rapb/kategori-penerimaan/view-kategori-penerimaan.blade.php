@@ -53,7 +53,7 @@ responsive: true,
             { data: 'deskripsi_kategori_rapb', name: 'deskripsi_kategori_rapb' },
             { data: 'subkategori', name: 'subkategori', searchable: false, orderable: false,
                 render: function(data){
-                    return '<strong>' + data.jml_subkategori_rapb +'</strong> '+
+                    return '<strong>(' + data.jml_subkategori_rapb +' data)</strong> '+
                     '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ sub_url + '/' + data.id +'">'+
                     '    <i class="material-icons">remove_red_eye</i>'+
                     '</a> ';

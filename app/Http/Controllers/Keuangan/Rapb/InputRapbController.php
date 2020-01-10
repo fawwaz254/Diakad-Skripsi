@@ -80,11 +80,8 @@ class InputRapbController extends BaseController
         $list_data = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, null, "1");
 
         return Datatables::of($list_data)
-                ->addColumn('semester_mulai', function($item){
-                    return $item->tahun_ajaran_mulai." (".$item->nm_semester_mulai.")";
-                })
-                ->addColumn('semester_selesai', function($item){
-                    return $item->tahun_ajaran_selesai." (".$item->nm_semester_selesai.")";
+                ->addColumn('semester', function($item){
+                    return $item->tahun_ajaran_mulai." (".$item->nm_semester_mulai.") - ".$item->tahun_ajaran_selesai." (".$item->nm_semester_selesai.")";
                 })
                 ->addColumn('tipe_kategori_rapb', function($item){
                     if($item->tipe_kategori_rapb == 1) {
