@@ -84,7 +84,7 @@
                                     <th>Kode Sub-Kategori</th>
                                     <th>Nama Sub-Kategori</th>
                                     <th>Unit Kerja</th>
-                                    <th>Dana Perkiraan</th>
+                                    <th>Target Perkiraan</th>
                                     <th>Tanggal</th>
                                     <th>Prioritas</th>
                                     <th>Apv Kepala Unit</th>

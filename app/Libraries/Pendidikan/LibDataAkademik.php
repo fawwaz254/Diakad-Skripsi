@@ -62,6 +62,23 @@ class LibDataAkademik
 
         return $semester;
     }
+
+    static function fetchDataRentangSemester($auth_data, $id_semester_mulai, $id_semester_selesai) {
+
+        $semester_mulai = Semester::where('id_semester', '=', $id_semester_mulai)->first();
+        $semester_selesai = Semester::where('id_semester', '=', $id_semester_selesai)->first();
+
+        $kode_semester_mulai = $semester_mulai->kode_semester;
+        $kode_semester_selesai = $semester_selesai->kode_semester;
+
+        $semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                        ->whereBetween('kode_semester', [$kode_semester_mulai, $kode_semester_selesai])
+                        ->orderBy('thn_akademik_semester', 'asc')
+                        ->orderBy('nm_semester', 'asc')
+                        ->get();
+
+        return $semester;
+    }
     /** ========== **/
 
     /** JALUR **/
