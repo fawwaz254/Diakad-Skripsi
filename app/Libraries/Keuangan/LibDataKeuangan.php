@@ -21,6 +21,7 @@ use App\Models\PengeluaranBiayaSubkategori as PengeluaranBiayaSubkategori;
 use App\Models\PengeluaranBiaya as PengeluaranBiaya;
 use App\Models\KategoriRapb as KategoriRapb;
 use App\Models\SubkategoriRapb as SubkategoriRapb;
+use App\Models\KetSubkategoriRapb as KetSubkategoriRapb;
 use App\Models\Semester as Semester;
 use App\Models\Rapb as Rapb;
 
@@ -459,7 +460,12 @@ class LibDataKeuangan
 
         // get mode view
         if ($id == null){
-            $subkategoriRapb = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'subkategori_rapb.id_subkategori_rapb', 'kategori_rapb.nm_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'subkategori_rapb.deskripsi_subkategori_rapb')
+            $subkategoriRapb = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'subkategori_rapb.id_subkategori_rapb', 'kategori_rapb.kode_kategori_rapb', 'kategori_rapb.nm_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'subkategori_rapb.deskripsi_subkategori_rapb')
+                                ->addSelect(
+                                    DB::raw("(SELECT COUNT(*) FROM ket_subkategori_rapb 
+                                            WHERE ket_subkategori_rapb.id_subkategori_rapb = subkategori_rapb.id_subkategori_rapb 
+                                            AND ket_subkategori_rapb.deleted_at IS NULL) 
+                                            AS jml_ket_subkategori_rapb"))
                                 ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
                                 ->where('kategori_rapb.id_kategori_rapb','=',$id_kategori_rapb)
                                 ->orderBy('subkategori_rapb.kode_subkategori_rapb', 'asc')
@@ -468,15 +474,39 @@ class LibDataKeuangan
         }
         // get mode edit
         else{
-            $subkategoriRapb = SubkategoriRapb::where('id_subkategori_rapb','=',$id)->first();
+            $subkategoriRapb = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'subkategori_rapb.id_subkategori_rapb', 'kategori_rapb.kode_kategori_rapb', 'kategori_rapb.nm_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'subkategori_rapb.deskripsi_subkategori_rapb')
+                                ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                                ->where('subkategori_rapb.id_subkategori_rapb','=',$id)->first();
         }
 
         return $subkategoriRapb;
     }
     /** ========== **/
 
+    /** KETERANGAN SUBKATEGORI PEMASUKAN **/
+    static function fetchDataKetSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb, $id = null){
+
+        // get mode view
+        if ($id == null){
+            $ketSubkategoriRapb = KetSubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'subkategori_rapb.id_subkategori_rapb', 'ket_subkategori_rapb.id_ket_subkategori_rapb', 'kategori_rapb.nm_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb')
+                                ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','ket_subkategori_rapb.id_subkategori_rapb')
+                                ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                                ->where('subkategori_rapb.id_subkategori_rapb','=',$id_subkategori_rapb)
+                                ->orderBy('ket_subkategori_rapb.kode_ket_subkategori_rapb', 'asc')
+                                ->orderBy('ket_subkategori_rapb.nm_ket_subkategori_rapb', 'asc')
+                                ->get();
+        }
+        // get mode edit
+        else{
+            $ketSubkategoriRapb = KetSubkategoriRapb::where('id_ket_subkategori_rapb','=',$id)->first();
+        }
+
+        return $ketSubkategoriRapb;
+    }
+    /** ========== **/
+
     /** RAPB **/
-    static function fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id = null, $is_datatable = null){
+    static function fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id = null, $is_datatable = null, $is_realisasi = null){
 
         $semester_mulai = Semester::where('id_semester', '=', $id_semester_mulai)->first();
         $semester_selesai = Semester::where('id_semester', '=', $id_semester_selesai)->first();
@@ -487,6 +517,11 @@ class LibDataKeuangan
         // get mode view
         if ($id == null){
             $rapb = Rapb::select('rapb.id_rapb', 'rapb.id_semester_mulai', 'rapb.id_semester_selesai', 'rapb.id_subkategori_rapb', 'rapb.id_unit_kerja', 's_mulai.tahun_ajaran AS tahun_ajaran_mulai', 's_mulai.nm_semester AS nm_semester_mulai', 's_selesai.tahun_ajaran AS tahun_ajaran_selesai', 's_selesai.nm_semester AS nm_semester_selesai', 'kategori_rapb.tipe_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'unit_kerja.nm_unit_kerja', 'rapb.dana_perkiraan_rapb', 'rapb.tgl_rapb', 'rapb.prioritas_rapb', 'p_unit.nm_pengguna AS nm_kepala_unit', 'p_keuangan.nm_pengguna AS nm_kepala_keuangan')
+                            ->addSelect(
+                                    DB::raw("(SELECT SUM(dana_realisasi) FROM realisasi 
+                                            WHERE realisasi.id_rapb = rapb.id_rapb 
+                                            AND realisasi.deleted_at IS NULL) 
+                                            AS jml_realisasi"))
                                 ->join('semester AS s_mulai','s_mulai.id_semester','=','rapb.id_semester_mulai')
                                 ->join('semester AS s_selesai','s_selesai.id_semester','=','rapb.id_semester_selesai')
                                 ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
@@ -496,9 +531,32 @@ class LibDataKeuangan
                                 ->leftJoin('pengguna AS p_keuangan','p_keuangan.id_pengguna','=','rapb.id_pengguna_kepala_keuangan')
                                 ->where('s_mulai.kode_semester','>=',$kode_semester_mulai)
                                 ->where('s_selesai.kode_semester','<=',$kode_semester_selesai)
-                                ->orderBy('unit_kerja.nm_unit_kerja', 'asc')
-                                ->orderBy('rapb.prioritas_rapb', 'desc')
-                                ->orderBy('rapb.tgl_rapb', 'desc');
+                                ->where('kategori_rapb.id_sekolah','=',$auth_data->pengguna->id_sekolah);
+
+                                if($is_realisasi != null) {
+                                    $rapb = $rapb->whereNotNull('rapb.id_pengguna_kepala_unit')
+                                                    ->whereNotNull('rapb.id_pengguna_kepala_keuangan');
+
+                                    if($is_realisasi == 1) {
+                                        $rapb = $rapb->where('rapb.prioritas_rapb','=',1);
+                                    }
+                                    elseif($is_realisasi == 2) {
+                                        $rapb = $rapb->where('rapb.prioritas_rapb','=',2);
+                                    }
+                                    elseif($is_realisasi == 3) {
+                                        $rapb = $rapb->where('rapb.prioritas_rapb','=',3);
+                                    }
+                                }
+
+                                $rapb = $rapb->orderBy('unit_kerja.nm_unit_kerja', 'asc');
+
+                                if($is_realisasi != null) {
+                                    $rapb = $rapb->orderBy(DB::raw('rapb.dana_perkiraan_rapb - jml_realisasi'), 'asc');
+                                }
+
+                                $rapb = $rapb->orderBy('kategori_rapb.tipe_kategori_rapb', 'asc')
+                                                ->orderBy('rapb.prioritas_rapb', 'desc')
+                                                ->orderBy('rapb.tgl_rapb', 'desc');
                                 
                                 if ( $is_datatable == null ) {
                                     $rapb = $rapb->get();

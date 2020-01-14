@@ -43,7 +43,7 @@
                             <div role="tabpanel" class="tab-pane fade" id="uas_with_icon_title">
                                 <div class="body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_uas">
+                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_uas" style="width:100">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>

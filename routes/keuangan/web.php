@@ -125,6 +125,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('kategori-penerimaan/sub/add/{id_kategori}', 'Keuangan\Rapb\KategoriPenerimaanController@addSubkategoriPenerimaan');
             Route::get('kategori-penerimaan/sub/edit/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPenerimaanController@editSubkategoriPenerimaan');
 
+            Route::get('kategori-penerimaan/sub/ket/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPenerimaanController@viewKetSubkategoriPenerimaan');
+            Route::get('kategori-penerimaan/sub/ket/datatables/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPenerimaanController@datatablesKetSubkategoriPenerimaan');
+            Route::get('kategori-penerimaan/sub/ket/add/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPenerimaanController@addKetSubkategoriPenerimaan');
+            Route::get('kategori-penerimaan/sub/ket/edit/{id_kategori}/{id_subkategori}/{id_ket_subkategori}', 'Keuangan\Rapb\KategoriPenerimaanController@editKetSubkategoriPenerimaan');
+
             Route::post('action-kategori-penerimaan/{mode}/{id}', 'Keuangan\Rapb\KategoriPenerimaanController@actionKategoriPenerimaan');
 
             // MENU Kategori Pengeluaran
@@ -138,6 +143,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('kategori-pengeluaran/sub/datatables/{id_kategori}', 'Keuangan\Rapb\KategoriPengeluaranController@datatablesSubkategoriPengeluaran');
             Route::get('kategori-pengeluaran/sub/add/{id_kategori}', 'Keuangan\Rapb\KategoriPengeluaranController@addSubkategoriPengeluaran');
             Route::get('kategori-pengeluaran/sub/edit/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPengeluaranController@editSubkategoriPengeluaran');
+
+            Route::get('kategori-pengeluaran/sub/ket/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPengeluaranController@viewKetSubkategoriPengeluaran');
+            Route::get('kategori-pengeluaran/sub/ket/datatables/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPengeluaranController@datatablesKetSubkategoriPengeluaran');
+            Route::get('kategori-pengeluaran/sub/ket/add/{id_kategori}/{id_subkategori}', 'Keuangan\Rapb\KategoriPengeluaranController@addKetSubkategoriPengeluaran');
+            Route::get('kategori-pengeluaran/sub/ket/edit/{id_kategori}/{id_subkategori}/{id_ket_subkategori}', 'Keuangan\Rapb\KategoriPengeluaranController@editKetSubkategoriPengeluaran');
 
             Route::post('action-kategori-pengeluaran/{mode}/{id}', 'Keuangan\Rapb\KategoriPengeluaranController@actionKategoriPengeluaran');
 
@@ -156,7 +166,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('kategori-byjenis', 'Keuangan\Rapb\InputRapbController@ajaxGetKategoriByJenis');
             Route::post('subkategori-bykategori', 'Keuangan\Rapb\InputRapbController@ajaxGetSubkategoriByKategori');
 
+            // MENU Realisasi RAPB
+            // url: /keuangan/rapb/realisasi-rapb
+            Route::get('realisasi-rapb', 'Keuangan\Rapb\RealisasiRapbController@viewRealisasi');
+            Route::post('post-view-rapb', 'Keuangan\Rapb\RealisasiRapbController@actionViewRapb');
+            Route::get('realisasi-rapb/view-detail-rapb/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\RealisasiRapbController@viewDetailRapb');
+            Route::get('realisasi-rapb/datatables/rapb-tinggi/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRapbTinggi');
+            Route::get('realisasi-rapb/datatables/rapb-sedang/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRapbSedang');
+            Route::get('realisasi-rapb/datatables/rapb-rendah/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRapbRendah');
 
+            Route::get('realisasi-rapb/view-detail-realisasi/{semester_mulai}/{semester_selesai}/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@viewDetailRealisasi');
+            Route::get('realisasi-rapb/datatables/{semester_mulai}/{semester_selesai}/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRealisasi');
+            Route::get('realisasi-rapb/add/{semester_mulai}/{semester_selesai}/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@addRealisasi');
+            /*Route::get('realisasi-rapb/edit/{semester_mulai}/{semester_selesai}/{id_rapb}/{id}', 'Keuangan\Rapb\RealisasiRapbController@editRealisasi');*/
+
+            Route::post('action-realisasi-rapb/{mode}/{id}', 'Keuangan\Rapb\RealisasiRapbController@actionRealisasi');
 
         });
 
