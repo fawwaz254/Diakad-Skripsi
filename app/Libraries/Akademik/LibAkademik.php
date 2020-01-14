@@ -212,11 +212,11 @@ class LibAkademik
             $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
                                                                         ->whereNull('kelas_mp.deleted_at');
         })
-                                    ->where('id_kelas_mp', $id_kelas_mp)
-                                    ->where('id_ruangan', '=', $id_ruangan)
-                                    ->where('id_jadwal_hari', '=', $id_jadwal_hari)
-                                    ->where('id_jadwal_jam', '=', $id_jadwal_jam)
-                                    ->where('id_jadwal_jam_selesai', '=', $id_jadwal_jam_selesai)
+                                    ->where('jadwal_kelas_mp.id_kelas_mp', $id_kelas_mp)
+                                    ->where('jadwal_kelas_mp.id_ruangan', '=', $id_ruangan)
+                                    ->where('jadwal_kelas_mp.id_jadwal_hari', '=', $id_jadwal_hari)
+                                    ->where('jadwal_kelas_mp.id_jadwal_jam', '=', $id_jadwal_jam)
+                                    ->where('jadwal_kelas_mp.id_jadwal_jam_selesai', '=', $id_jadwal_jam_selesai)
                                     ->first();
 
         if ($cek_jadwal_kelas_mp) {
