@@ -427,13 +427,15 @@ class Apiv1Controller extends BaseController
                             AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
                             AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
                             ORDER BY k.tingkat, k.nm_kelas');
+        
+        $group_data_kelas_kosong = collect($data_kelas_kosong)->groupBy('tingkat')->all();
 
         return response()->json([
             'status_code' 	=> 200,
             'status_text' 	=> 'Success',
             'message' 	=> '',
             'data' => array(
-                'kelas_kosong' => $data_kelas_kosong
+                'kelas_kosong' => $group_data_kelas_kosong
             )
         ]);
     }
