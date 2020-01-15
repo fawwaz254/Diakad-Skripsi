@@ -51,6 +51,10 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
         });
 
+        Route::group(array('prefix' => 'rekap-absen'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRekapAbsen');
+        });
+
         Route::group(array('prefix' => 'absensi-harian'), function () {
             Route::post('kelas/get', 'Apiv1Controller@actionGetAbsensiHarianKelas');
             Route::post('siswa/get', 'Apiv1Controller@actionGetAbsensiHarianSiswa');

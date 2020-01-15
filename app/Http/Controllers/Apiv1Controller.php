@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Models\Guru;
+use App\Models\JadwalKelasMp;
 use App\Models\KomplainSarpras;
 use App\Models\Pengguna;
 use App\Models\PresensiHarian;
@@ -436,6 +437,64 @@ class Apiv1Controller extends BaseController
             'message' 	=> '',
             'data' => array(
                 'kelas_kosong' => $group_data_kelas_kosong
+            )
+        ]);
+    }
+
+    public function actionGetRekapAbsen(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = JadwalKelasMp::with(['kelas_mp', 'kelas_mp.mata_pelajaran', 'kelas_mp.kelas', 'ruangan', 'jadwal_hari'])
+                                        ->where('id_jadwal_kelas_mp', $input->id_jadwal_kelas_mp)
+                                        ->first();
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp);
+
+        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $input->id_jadwal_kelas_mp)->get();
+
+        $rekap_presensi = [];
+
+        foreach ($data_siswa as $siswa) {
+            $rekap_presensi_siswa = [];
+            foreach ($data_presensi as $presensi_mp) {
+                $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] = $presensi_mp->presensi_mp_siswa->count();
+                $rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] = $presensi_mp->presensi_mp_siswa->where('kehadiran', 1)->count();
+
+                $presensi_siswa = [];
+                $presensi_siswa['pertemuan_ke'] = $presensi_mp->pertemuan_ke;
+                $presensi_siswa['tgl_presensi'] = date_format(date_create($presensi_mp->tgl_presensi), "d/m/y");
+                if ($presensi_mp_siswa = $presensi_mp->presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa)) {
+                    if ($presensi_mp_siswa->kehadiran == 1) {
+                        $presensi_siswa['status_absen'] = 'V';
+                    } elseif ($presensi_mp_siswa->kehadiran == 2) {
+                        $presensi_siswa['status_absen'] = 'S';
+                    } elseif ($presensi_mp_siswa->kehadiran == 3) {
+                        $presensi_siswa['status_absen'] = 'I';
+                    } elseif ($presensi_mp_siswa->kehadiran == 4) {
+                        $presensi_siswa['status_absen'] = 'A';
+                    } else {
+                        $presensi_siswa['status_absen'] = 'X';
+                    }
+                } else {
+                    $presensi_siswa['status_absen'] = 'X';
+                }
+                $rekap_presensi_siswa[] = $presensi_siswa;
+            }
+
+            $siswa->rekap = collect($rekap_presensi_siswa);
+        }
+
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'rekap_absen_siswa' => $data_siswa
             )
         ]);
     }
