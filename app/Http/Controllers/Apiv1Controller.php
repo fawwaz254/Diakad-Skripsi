@@ -12,6 +12,7 @@ use Yajra\Datatables\Datatables;
 use App\Models\Guru;
 use App\Models\JadwalKelasMp;
 use App\Models\KomplainSarpras;
+use App\Models\Kota;
 use App\Models\Pengguna;
 use App\Models\PresensiHarian;
 use App\Models\PresensiHarianSiswa;
@@ -90,6 +91,100 @@ class Apiv1Controller extends BaseController
                 'message' 	=> 'User cant found'
             ]);
         }
+    }
+
+    public function actionGetDataPribadi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+
+        $data_pribadi = LibGuru::fetchDataAllGuru($auth_data, $guru->id_guru);
+
+        $data_pribadi = $data_pribadi->only('nm_pengguna', 'gelar_depan', 'gelar_belakang', 'nik_ptk', 'jenis_kelamin', 'id_kota_lahir', 'tgl_lahir', 'nm_ibu_kandung', 'nomor_telp', 'nomor_hp', 'email');
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'data_pribadi' => $data_pribadi
+            )
+        ]);
+    }
+
+    public function actionDataPribadi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        DB::beginTransaction();
+        
+        try {
+            // make object to find id
+            $pengguna                           = Pengguna::find($id_pengguna);
+            $pengguna->nm_pengguna              = $input->nm_pengguna;
+            
+            $pengguna->gelar_depan              = $input->gelar_depan;
+            $pengguna->gelar_belakang           = $input->gelar_belakang;
+            $pengguna->email_pengguna           = $input->email;
+            $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
+            $pengguna->updated_by               = $id_pengguna;
+            $pengguna->updated_at               = $now;
+            $pengguna->save();
+
+            $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
+            $guru->nik_ptk                  = $input->nik_ptk;
+            $guru->jenis_kelamin            = $input->jenis_kelamin;
+            $guru->id_kota_lahir            = $input->id_kota_lahir;
+            $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+            $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
+            $guru->nomor_telp               = $input->nomor_telp;
+            $guru->nomor_hp                 = $input->nomor_hp;
+            $guru->email                    = $input->email;
+            $guru->updated_by               = $id_pengguna;
+            $guru->updated_at               = $now;
+            $guru->save();
+            
+            DB::commit();
+            // all good
+
+            return response()->json([
+                'status_code' 	=> 200,
+                'status_text' 	=> 'Success',
+                'message' => 'Update data pribadi successfully'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => 'Update data pribadi gagal'
+            ]);
+        }
+    }
+
+    public function actionGetKota(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $kota = Kota::select('id_kota', 'id_provinsi', 'nm_kota')->where('kota.is_aktif', '=', 1)->orderBy('nm_kota', 'asc')->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kota' => $kota
+            )
+        ]);
     }
 
     public function actionGetKelasKBM(Request $request)

@@ -16,6 +16,12 @@
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function () {
     Route::group(array('prefix' => 'guru'), function () {
+        Route::group(array('prefix' => 'data-pribadi'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
+            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+        });
+
+        Route::post('kota/get', 'Apiv1Controller@actionGetKota');
         Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
         Route::post('kelas-kbm/get', 'Apiv1Controller@actionGetKelasKBM');
         Route::post('siswa-by-kelas-kbm/get', 'Apiv1Controller@actionGetSiswaByJadwalKelasKBM');
