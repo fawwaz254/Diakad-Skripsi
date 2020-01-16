@@ -77,7 +77,7 @@ class UsulanMataAjarController extends BaseController
 
         $semester   = Semester::where('id_semester', '=', $id)->first();
 
-        $kelas_mp = LibAkademik::FetchDataUsulanMataAjar($auth_data, $semester->id_semester);
+        $kelas_mp = KelasMp::where('kelas_mp.id_semester', '=', $semester->id_semester)->first();
        
         return view('akademik/aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar', compact('auth_data', 'semester', 'id', 'kelas_mp'));
     }
@@ -210,25 +210,41 @@ class UsulanMataAjarController extends BaseController
                 ->make(true);
     }
 
-    public function datatablesUsulanMataAjar(Request $request, $id)
+    public function datatablesUsulanMataAjar(Request $request, $id_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibAkademik::FetchDataUsulanMataAjar($auth_data, $id, 1);
+        $list_data = KelasMp::with(
+            'mata_pelajaran',
+            'mata_pelajaran.jenis_mata_pelajaran',
+            'kelas',
+            'jadwal_kelas_mp',
+            'jadwal_kelas_mp.jadwal_jam_mulai',
+            'jadwal_kelas_mp.jadwal_jam_selesai',
+            'pengampu_mp'
+        )
+            ->with(['pengambilan_mp' => function ($q) {
+                $q->where('status_apv_pengambilan_mp', 1);
+            }])
+            ->where('id_semester', '=', $id_semester);
 
         return Datatables::of($list_data)
-                ->editColumn('jml_jadwal_jam', function ($item) {
-                    if (!empty($item->jml_jadwal_jam)) {
-                        return $item->jml_jadwal_jam;
-                    } else {
-                        return '0';
+                ->addColumn('jml_jadwal_jam', function ($item) {
+                    $jml_jadwal_jam = 0;
+                    foreach ($item->jadwal_kelas_mp as $jadwal) {
+                        $jml_jadwal_jam += $jadwal->jadwal_jam_selesai->jam_ke - $jadwal->jadwal_jam_mulai->jam_ke + 1;
                     }
+                    // return $item->jadwal_kelas_mp->count();
+                    return $jml_jadwal_jam;
                 })
-                ->addColumn('jadwal_ruangan', function ($item) {
-                    return $item->nm_jadwal_hari.",".$item->nm_jadwal_jam."(".$item->nm_ruangan." ".$item->nm_gedung.")";
+                ->addColumn('jml_jadwal', function ($item) {
+                    return $item->jadwal_kelas_mp->count();
                 })
-                ->addColumn('pjma', function ($item) {
-                    return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
+                ->addColumn('jml_siswa', function ($item) {
+                    return $item->pengambilan_mp->count();
+                })
+                ->addColumn('jml_pengampu', function ($item) {
+                    return $item->pengampu_mp->count();
                 })
                 ->addColumn('action', function ($item) {
                     $data = array(

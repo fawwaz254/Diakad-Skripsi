@@ -51,10 +51,10 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nisn_siswa', name: 'nisn_siswa' },
-            { data: 'nis_siswa', name: 'nis_siswa' },
-            { data: 'nm_pengguna', name: 'nm_pengguna' },
-            { data: 'nm_kelas_mp', name: 'nm_kelas_mp' }
+            { data: 'siswa.nisn_siswa' },
+            { data: 'siswa.nis_siswa' },
+            { data: 'siswa.pengguna.nm_pengguna' },
+            { data: 'kelas_mp.nm_kelas_mp' }
         ]
     });
 

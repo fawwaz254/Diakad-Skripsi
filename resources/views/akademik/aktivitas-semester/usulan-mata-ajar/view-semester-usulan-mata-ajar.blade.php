@@ -34,7 +34,7 @@
                                 </thead>
                             </table>
                         </div>
-                        @if(empty($kelas_mp->id_kelas_mp))
+                        @if(!$kelas_mp)
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <a class="target-link btn btn-block bg-blue waves-effect" href="{{url(Request::segment(1).'#aktivitas-semester/usulan-mata-ajar/copy-semester-lain/'.$id)}}"><i class="material-icons">file_copy</i><span>Copy Jadwal Dari Semester Lain</span></a>
@@ -49,7 +49,7 @@
 </div>
 @include('scriptjs')
 
-@if(! empty($kelas_mp->id_kelas_mp))
+@if($kelas_mp)
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var id_semester= {!! json_encode($id) !!};
@@ -70,16 +70,16 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'kd_mata_pelajaran', name: 'mata_pelajaran.kd_mata_pelajaran' },
-            { data: 'nm_mata_pelajaran', name: 'mata_pelajaran.nm_mata_pelajaran' },
-            { data: 'nm_jenis_mata_pelajaran', name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
-            { data: 'tingkat_semester', name: 'mata_pelajaran.tingkat_semester' },
-            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'jml_jadwal', name: 'jml_jadwal', searchable: false, orderable: false },
-            { data: 'jml_jadwal_jam', name: 'jml_jadwal_jam', searchable: false, orderable: false },
-            { data: 'jml_pengampu', name: 'jml_pengampu', searchable: false, orderable: false },
-            { data: 'jml_siswa', name: 'jml_siswa', searchable: false, orderable: false },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
+            { data: 'mata_pelajaran.kd_mata_pelajaran' },
+            { data: 'mata_pelajaran.nm_mata_pelajaran' },
+            { data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
+            { data: 'mata_pelajaran.tingkat_semester' },
+            { data: 'kelas.nm_kelas' },
+            { data: 'jml_jadwal', searchable: false, orderable: false },
+            { data: 'jml_jadwal_jam', searchable: false, orderable: false },
+            { data: 'jml_pengampu', searchable: false, orderable: false },
+            { data: 'jml_siswa', searchable: false, orderable: false },
+            { data: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
                     '    <i class="material-icons">edit</i>'+
