@@ -176,7 +176,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('realisasi-rapb/datatables/rapb-rendah/{semester_mulai}/{semester_selesai}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRapbRendah');
 
             Route::get('realisasi-rapb/view-detail-realisasi/{semester_mulai}/{semester_selesai}/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@viewDetailRealisasi');
-            Route::get('realisasi-rapb/datatables/{semester_mulai}/{semester_selesai}/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRealisasi');
+            Route::get('realisasi-rapb/datatables/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRealisasi');
+
+            Route::post('action-apv-realisasi/{mode}/{id}', 'Keuangan\Rapb\RealisasiRapbController@actionApvRealisasi');
+            // belum
+            // tabel reliasasi_pembayaran
+            Route::get('realisasi-rapb/view-detail-realisasi-termin/{semester_mulai}/{semester_selesai}/{id_rapb}/{id_realisasi}', 'Keuangan\Rapb\RealisasiRapbController@viewDetailRealisasiTermin');
+            // tabel rpb_sarpras
+            Route::get('realisasi-rapb/view-detail-realisasi-sarpras/{semester_mulai}/{semester_selesai}/{id_rapb}/{id_realisasi}', 'Keuangan\Rapb\RealisasiRapbController@viewDetailRealisasiSarpras');
             Route::get('realisasi-rapb/add/{semester_mulai}/{semester_selesai}/{id_rapb}', 'Keuangan\Rapb\RealisasiRapbController@addRealisasi');
             /*Route::get('realisasi-rapb/edit/{semester_mulai}/{semester_selesai}/{id_rapb}/{id}', 'Keuangan\Rapb\RealisasiRapbController@editRealisasi');*/
 

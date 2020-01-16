@@ -77,6 +77,15 @@ class InputRapbController extends BaseController
         $staff = Staff::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
                   ->first();
 
+        $jenis_jabatan = $staff->jenis_jabatan;
+
+        if (empty($jenis_jabatan)) {
+            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+                  ->first();
+
+            $jenis_jabatan = $guru->jenis_jabatan;
+        }
+
         $list_data = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, null, "1");
 
         return Datatables::of($list_data)
@@ -87,7 +96,7 @@ class InputRapbController extends BaseController
                     if($item->tipe_kategori_rapb == 1) {
                       return "Penerimaan";
                     }
-                    elseif($item->prioritas_rapb == 2) {
+                    elseif($item->tipe_kategori_rapb == 2) {
                       return "Pengeluaran";
                     }
                 })
@@ -126,7 +135,7 @@ class InputRapbController extends BaseController
                 ->addColumn('action', function($item) use($staff){
                     $data = array(
                         'id' => $item->id_rapb,
-                        'jenis_jabatan' => $staff->jenis_jabatan
+                        'jenis_jabatan' => $jenis_jabatan
                     );
                     return $data;
                 })
