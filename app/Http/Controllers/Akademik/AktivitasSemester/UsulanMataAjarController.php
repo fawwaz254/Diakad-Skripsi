@@ -234,7 +234,6 @@ class UsulanMataAjarController extends BaseController
                     foreach ($item->jadwal_kelas_mp as $jadwal) {
                         $jml_jadwal_jam += $jadwal->jadwal_jam_selesai->jam_ke - $jadwal->jadwal_jam_mulai->jam_ke + 1;
                     }
-                    // return $item->jadwal_kelas_mp->count();
                     return $jml_jadwal_jam;
                 })
                 ->addColumn('jml_jadwal', function ($item) {
