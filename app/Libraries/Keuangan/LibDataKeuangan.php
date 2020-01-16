@@ -24,6 +24,7 @@ use App\Models\SubkategoriRapb as SubkategoriRapb;
 use App\Models\KetSubkategoriRapb as KetSubkategoriRapb;
 use App\Models\Semester as Semester;
 use App\Models\Rapb as Rapb;
+use App\Models\Realisasi as Realisasi;
 
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -729,11 +730,66 @@ class LibDataKeuangan
             }
         }
         // get mode edit
-        else {
-            $rapb = Rapb::where('id_rapb', '=', $id)->first();
+        else{
+            $rapb = Rapb::select('rapb.id_rapb', 'rapb.id_semester_mulai', 'rapb.id_semester_selesai', 'rapb.id_subkategori_rapb', 'rapb.id_unit_kerja', 's_mulai.tahun_ajaran AS tahun_ajaran_mulai', 's_mulai.nm_semester AS nm_semester_mulai', 's_selesai.tahun_ajaran AS tahun_ajaran_selesai', 's_selesai.nm_semester AS nm_semester_selesai', 'kategori_rapb.tipe_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 'unit_kerja.nm_unit_kerja', 'rapb.dana_perkiraan_rapb', 'rapb.tgl_rapb', 'rapb.prioritas_rapb')
+                        ->addSelect(
+                                DB::raw("(SELECT SUM(dana_realisasi) FROM realisasi 
+                                        WHERE realisasi.id_rapb = rapb.id_rapb 
+                                        AND realisasi.deleted_at IS NULL) 
+                                        AS jml_realisasi"))
+                        ->join('semester AS s_mulai','s_mulai.id_semester','=','rapb.id_semester_mulai')
+                        ->join('semester AS s_selesai','s_selesai.id_semester','=','rapb.id_semester_selesai')
+                        ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
+                        ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                        ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rapb.id_unit_kerja')
+                        ->where('rapb.id_rapb','=',$id)
+                        ->first();
         }
 
         return $rapb;
+    }
+    /** ========== **/
+
+    /** Realisasi RAPB **/
+    static function fetchDataRealisasi($auth_data, $id_rapb, $id = null, $is_datatable = null){
+
+        // get mode view
+        if ($id == null){
+            $realisasi = Realisasi::select('realisasi.id_realisasi', 'realisasi.id_semester_realisasi', 'realisasi.id_rapb', 'realisasi.id_unit_kerja', 'realisasi.id_ket_subkategori_rapb', 'rapb.id_subkategori_rapb', 'kategori_rapb.tipe_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 
+                'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'realisasi.id_rpb_sarpras', 'realisasi.nm_realisasi', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb', 'realisasi.termin_dana_realisasi', 'realisasi.is_hutang_realisasi', 'realisasi.dana_realisasi', 'realisasi.tgl_realisasi', 'p_cek_keuangan.nm_pengguna AS nm_cek_keuangan', 'p_keuangan.nm_pengguna AS nm_kepala_keuangan')
+                                ->join('semester','semester.id_semester','=','realisasi.id_semester_realisasi')
+                                ->join('rapb','rapb.id_rapb','=','realisasi.id_rapb')
+                                ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
+                                ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                                ->join('unit_kerja','unit_kerja.id_unit_kerja','=','realisasi.id_unit_kerja')
+                                ->leftJoin('ket_subkategori_rapb','ket_subkategori_rapb.id_ket_subkategori_rapb','=','realisasi.id_ket_subkategori_rapb')
+                                ->leftJoin('pengguna AS p_cek_keuangan','p_cek_keuangan.id_pengguna','=','realisasi.id_pengguna_cek_keuangan')
+                                ->leftJoin('pengguna AS p_keuangan','p_keuangan.id_pengguna','=','realisasi.id_pengguna_kepala_keuangan')
+                                ->where('realisasi.id_rapb','=',$id_rapb)
+                                ->orderBy('semester.tahun_ajaran', 'desc')
+                                ->orderBy('semester.nm_semester', 'desc')
+                                ->orderBy('unit_kerja.nm_unit_kerja', 'asc')
+                                ->orderBy('realisasi.tgl_realisasi', 'desc');
+                                
+                                if ( $is_datatable == null ) {
+                                    $realisasi = $realisasi->get();
+                                }
+        }
+        // get mode edit
+        else{
+            $realisasi = Realisasi::select('realisasi.id_realisasi', 'realisasi.id_semester_realisasi', 'realisasi.id_rapb', 'realisasi.id_unit_kerja', 'realisasi.id_ket_subkategori_rapb', 'rapb.id_subkategori_rapb', 'kategori_rapb.tipe_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 
+                'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'realisasi.id_rpb_sarpras', 'realisasi.nm_realisasi', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb', 'realisasi.termin_dana_realisasi', 'realisasi.is_hutang_realisasi', 'realisasi.dana_realisasi', 'realisasi.tgl_realisasi')
+                        ->join('semester','semester.id_semester','=','realisasi.id_semester_realisasi')
+                        ->join('rapb','rapb.id_rapb','=','realisasi.id_rapb')
+                        ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
+                        ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                        ->join('unit_kerja','unit_kerja.id_unit_kerja','=','realisasi.id_unit_kerja')
+                        ->leftJoin('ket_subkategori_rapb','ket_subkategori_rapb.id_ket_subkategori_rapb','=','realisasi.id_ket_subkategori_rapb')
+                        ->where('realisasi.id_realisasi','=',$id)
+                        ->first();
+        }
+
+        return $realisasi;
     }
     /** ========== **/
 }

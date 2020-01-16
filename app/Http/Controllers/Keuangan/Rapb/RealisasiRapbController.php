@@ -84,7 +84,7 @@ class RealisasiRapbController extends BaseController
                     if($item->tipe_kategori_rapb == 1) {
                       return "Penerimaan";
                     }
-                    elseif($item->prioritas_rapb == 2) {
+                    elseif($item->tipe_kategori_rapb == 2) {
                       return "Pengeluaran";
                     }
                 })
@@ -138,7 +138,7 @@ class RealisasiRapbController extends BaseController
                     if($item->tipe_kategori_rapb == 1) {
                       return "Penerimaan";
                     }
-                    elseif($item->prioritas_rapb == 2) {
+                    elseif($item->tipe_kategori_rapb == 2) {
                       return "Pengeluaran";
                     }
                 })
@@ -192,7 +192,7 @@ class RealisasiRapbController extends BaseController
                     if($item->tipe_kategori_rapb == 1) {
                       return "Penerimaan";
                     }
-                    elseif($item->prioritas_rapb == 2) {
+                    elseif($item->tipe_kategori_rapb == 2) {
                       return "Pengeluaran";
                     }
                 })
@@ -231,6 +231,201 @@ class RealisasiRapbController extends BaseController
                 })
                 ->make(true);
     }
+
+    // Realisasi
+    public function viewDetailRealisasi(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
+
+        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
+
+        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb); 
+
+        return view('keuangan/rapb/realisasi-rapb/view-detail-realisasi',compact('auth_data','id_rapb', 'semester_mulai', 'semester_selesai', 'data_rapb'));
+
+    }
+
+    public function datatablesRealisasi(Request $request, $id_rapb){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $staff = Staff::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+                  ->first();
+
+        $jenis_jabatan = $staff->jenis_jabatan;
+
+        if (empty($jenis_jabatan)) {
+            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+                  ->first();
+
+            $jenis_jabatan = $guru->jenis_jabatan;
+        }
+
+        $list_data = LibDataKeuangan::fetchDataRealisasi($auth_data, $id_rapb, null, "1");
+
+        return Datatables::of($list_data)
+                ->addColumn('semester', function($item){
+                    return $item->tahun_ajaran." (".$item->nm_semester.")";
+                })
+                ->addColumn('pengadaan', function($item){
+                    if( ! empty($item->id_rpb_sarpras)) {
+                      return "Ya";
+                    }
+                    else {
+                      return "Tidak";
+                    }
+                })
+                ->addColumn('keterangan', function($item){
+                    return $item->kode_ket_subkategori_rapb." - ".$item->nm_ket_subkategori_rapb;
+                })
+                ->addColumn('is_hutang', function($item){
+                    if($item->is_hutang_realisasi == 0) {
+                      return "Tidak";
+                    }
+                    elseif($item->is_hutang_realisasi == 1) {
+                      return "Ya";
+                    }
+                })
+                ->addColumn('dana_realisasi', function($item){
+                    return "Rp".number_format($item->dana_realisasi);
+                })
+                ->addColumn('tgl_realisasi', function($item){
+                    return strftime( "%A, %d %B %Y", strtotime($item->tgl_realisasi));
+                })
+                ->addColumn('nm_cek_keuangan', function($item){
+                    $data = array(
+                        'nm_cek_keuangan'   => $item->nm_cek_keuangan,
+                        'id_realisasi'      => $item->id_realisasi
+                    );
+                    return $data;
+                })
+                ->addColumn('nm_kepala_keuangan', function($item){
+                    $data = array(
+                        'nm_kepala_keuangan'  => $item->nm_kepala_keuangan,
+                        'id_realisasi'        => $item->id_realisasi
+                    );
+                    return $data;
+                })
+                ->addColumn('action', function($item) use($staff){
+                    $data = array(
+                        'id' => $item->id_realisasi,
+                        'jenis_jabatan' => $jenis_jabatan
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+    // Action POST
+    public function actionApvRealisasi(Request $request, $mode, $id = null){
+        $input = (object) $request->input();
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        if($mode == 'approve-cek-keuangan') {
+            $staff = Staff::join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
+                          ->whereIn('staff.jenis_jabatan', [2, 4, 98])
+                          ->where('pengguna.id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                          ->first();
+
+            if( ! empty($staff->id_pengguna)) {
+              // make object to find id
+              $realisasi                           = Realisasi::find($id);
+              $realisasi->id_pengguna_cek_keuangan = $staff->id_pengguna;
+              $realisasi->updated_by               = $input->auth_data->pengguna->id_pengguna;
+              $realisasi->updated_at               = $now;
+              $realisasi->save();
+
+              return [
+                  'status' => 203, // SUCCESS AND LOAD CONTENT
+                  'message' => 'Cek Keuangan successfully'
+              ]; 
+            }  
+            else {
+
+                $guru = Guru::join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')
+                              ->whereIn('guru.jenis_jabatan', [2, 4, 98])
+                              ->where('pengguna.id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                              ->first();
+
+                if( ! empty($guru->id_pengguna)) {
+                  // make object to find id
+                  $realisasi                           = Realisasi::find($id);
+                  $realisasi->id_pengguna_cek_keuangan = $guru->id_pengguna;
+                  $realisasi->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                  $realisasi->updated_at               = $now;
+                  $realisasi->save();
+
+                  return [
+                      'status' => 203, // SUCCESS AND LOAD CONTENT
+                      'message' => 'Cek Keuangan successfully'
+                  ]; 
+                }
+                else {
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Anda Tidak Mempunyai Izin Untuk Cek Keuangan!'
+                    ];
+                }               
+            }                      
+        }
+        elseif($mode == 'approve-kepala-keuangan') {
+            $guru = Guru::join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')
+                          ->where('guru.jenis_jabatan', '=', 2)
+                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                          ->first();
+
+            $staff = Staff::join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
+                          ->where('staff.jenis_jabatan', '=', 2)
+                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                          ->first();
+
+            if( ! empty($guru->id_pengguna)) {
+              // make object to find id
+              $realisasi                               = Realisasi::find($id);
+              $realisasi->id_pengguna_kepala_keuangan  = $guru->id_pengguna;
+              $realisasi->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+              $realisasi->updated_at                   = $now;
+              $realisasi->save();
+
+              return [
+                  'status' => 203, // SUCCESS AND LOAD CONTENT
+                  'message' => 'Approve Kepala Keuangan successfully'
+              ]; 
+            }    
+            elseif(! empty($staff->id_pengguna)) {
+              // make object to find id
+              $realisasi                               = Realisasi::find($id);
+              $realisasi->id_pengguna_kepala_keuangan  = $staff->id_pengguna;
+              $realisasi->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+              $realisasi->updated_at                   = $now;
+              $realisasi->save();
+
+              return [
+                  'status' => 203, // SUCCESS AND LOAD CONTENT
+                  'message' => 'Approve Kepala Keuangan successfully'
+              ]; 
+            }    
+            else {
+              return [
+                    'status' => 300, // SUCCESS AND LOAD TABLE
+                    'message' => 'Kepala Unit Keuangan Belum Dilakukan Setting!'
+                ];
+            } 
+        }
+    }
+
+
+
+
+
+
 
     public function addRealisasiRapb(Request $request, $id_semester_mulai, $id_semester_selesai){
         # code...
