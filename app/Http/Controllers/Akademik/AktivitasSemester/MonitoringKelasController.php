@@ -87,41 +87,28 @@ class MonitoringKelasController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = JadwalKelasMp::select('mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'ruangan.kapasitas_ruangan')
-            ->join('kelas_mp', function ($q) {
-                $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
-                    ->whereNull('kelas_mp.deleted_at');
-            })
-            ->join('jadwal_hari', function ($q) {
-                $q->on('jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
-                    ->whereNull('jadwal_hari.deleted_at');
-            })
-            ->join('jadwal_jam', function ($q) {
-                $q->on('jadwal_jam.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
-                    ->whereNull('jadwal_jam.deleted_at');
-            })
-            ->join('kelas', function ($q) {
-                $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-                    ->whereNull('kelas.deleted_at');
-            })
-            ->join('mata_pelajaran', function ($q) {
-                $q->on('mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-                    ->whereNull('mata_pelajaran.deleted_at');
-            })
-            ->leftJoin('ruangan', function ($q) {
-                $q->on('ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
-                    ->whereNull('ruangan.deleted_at');
-            })
-            ->where('kelas_mp.id_semester', '=', $id)
-            ->orderBy('kelas.nm_kelas', 'ASC')
-            ->orderBy('mata_pelajaran.nm_mata_pelajaran', 'ASC')
-            ->orderBy('jadwal_kelas_mp.id_jadwal_hari', 'ASC')
-            ->get();
+        $list_data = JadwalKelasMp::with(
+            'jadwal_hari',
+            'jadwal_jam_mulai',
+            'jadwal_jam_selesai',
+            'ruangan',
+            'kelas_mp',
+            'kelas_mp.kelas',
+            'kelas_mp.mata_pelajaran'
+        )->with(['kelas_mp.pengambilan_mp' => function ($q) {
+            $q->where('status_apv_pengambilan_mp', 1);
+        }])
+            ->whereHas('kelas_mp', function ($q) use ($id) {
+                $q->where('id_semester', $id);
+            });
 
         return Datatables::of($list_data)
+                ->addColumn('jml_siswa', function ($item) {
+                    return $item->kelas_mp->pengambilan_mp->count();
+                })
                 ->addColumn('action', function ($item) {
                     $data = array(
-                        'id' => $item->id_kelas_mp
+                        'id' => $item->kelas_mp->id_kelas_mp
                     );
                     return $data;
                 })
@@ -132,14 +119,11 @@ class MonitoringKelasController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PengambilanMp::join('siswa', 'siswa.id_siswa', '=', 'pengambilan_mp.id_siswa')
-            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-            ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'pengambilan_mp.id_kelas_mp')
-            ->where('pengambilan_mp.id_kelas_mp', '=', $id)
-            ->where('pengambilan_mp.status_apv_pengambilan_mp', '=', '1')
-            ->orderBy('siswa.nis_siswa', 'ASC')
-            ->get();
+        $list_data = PengambilanMp::with('siswa', 'siswa.pengguna', 'kelas_mp')
+            ->where('id_kelas_mp', '=', $id)
+            ->where('status_apv_pengambilan_mp', '=', '1');
 
-        return Datatables::of($list_data)->make(true);
+        return Datatables::of($list_data)
+                                ->make(true);
     }
 }
