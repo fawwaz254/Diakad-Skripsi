@@ -97,19 +97,19 @@ class GuruController extends BaseController
         $rolePengguna = RolePengguna::select('pengguna.id_pengguna', 'guru.nip_guru', 'pengguna.username', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'role.nm_role', 'unit_kerja.nm_unit_kerja')
                         ->join('role', function ($q) {
                             $q->on('role.id_role', '=', 'role_pengguna.id_role')
-                                ->whereNull('role.delete_at');
+                                ->whereNull('role.deleted_at');
                         })
                         ->join('pengguna', function ($q) {
                             $q->on('pengguna.id_pengguna', '=', 'role_pengguna.id_pengguna')
-                                ->whereNull('pengguna.delete_at');
+                                ->whereNull('pengguna.deleted_at');
                         })
                         ->join('guru', function ($q) {
                             $q->on('guru.id_pengguna', '=', 'pengguna.id_pengguna')
-                                ->whereNull('guru.delete_at');
+                                ->whereNull('guru.deleted_at');
                         })
                         ->join('unit_kerja', function ($q) {
                             $q->on('unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')
-                                ->whereNull('unit_kerja.delete_at');
+                                ->whereNull('unit_kerja.deleted_at');
                         })
                         ->where('pengguna.status_join_table', '=', 2)
                         ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
