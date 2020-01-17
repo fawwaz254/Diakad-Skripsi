@@ -23,8 +23,10 @@
                                         <th>Nama Mata Ajar</th>
                                         <th>Jam KBM</th>
                                         <th>Kelas</th>
+                                        <th>Ruangan</th>
                                         <th>Hari</th>
-                                        <th>Jam</th>
+                                        <th>Jam Mulai</th>
+                                        <th>Jam Selesai</th>
                                         <th>Kapasitas</th>
                                         <th>Terisi</th>
                                         <th>Action</th>
@@ -57,14 +59,16 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'kd_mata_pelajaran', name: 'kd_mata_pelajaran' },
-            { data: 'nm_mata_pelajaran', name: 'nm_mata_pelajaran' },
-            { data: 'kredit_semester', name: 'kredit_semester' },
-            { data: 'nm_kelas', name: 'nm_kelas' },
-            { data: 'nm_jadwal_hari', name: 'nm_jadwal_hari' },
-            { data: 'nm_jadwal_jam', name: 'nm_jadwal_jam' },
-            { data: 'kapasitas_ruangan', name: 'kapasitas_ruangan' },
-            { data: 'jml_siswa', name: 'jml_siswa' },
+            { data: 'kelas_mp.mata_pelajaran.kd_mata_pelajaran' },
+            { data: 'kelas_mp.mata_pelajaran.nm_mata_pelajaran' },
+            { data: 'kelas_mp.mata_pelajaran.kredit_semester' },
+            { data: 'kelas_mp.kelas.nm_kelas' },
+            { data: 'ruangan.nm_ruangan' },
+            { data: 'jadwal_hari.nm_jadwal_hari' },
+            { data: 'jadwal_jam_mulai.nm_jadwal_jam', searchable: false, orderable: false },
+            { data: 'jadwal_jam_mulai.nm_jadwal_jam', searchable: false, orderable: false },
+            { data: 'ruangan.kapasitas_ruangan', searchable: false, orderable: false },
+            { data: 'jml_siswa', name: 'jml_siswa', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+

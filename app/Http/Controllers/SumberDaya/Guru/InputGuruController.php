@@ -165,7 +165,8 @@ class InputGuruController extends BaseController{
             'nip_guru'              => 'required',
             /*'id_jabatan_pegawai'    => 'required',*/
             'id_unit_kerja'         => 'required',
-            'id_status_pengguna'    => 'required',
+            'jenis_jabatan'         => 'required',
+            'id_status_pengguna'    => 'required'
         ]);
 
         if($validator->fails() && $mode != 'delete') {
@@ -204,6 +205,7 @@ class InputGuruController extends BaseController{
                 $guru->id_pengguna              = $pengguna->id_pengguna;
                 /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $guru->id_unit_kerja            = $input->id_unit_kerja;
+                $guru->jenis_jabatan            = $input->jenis_jabatan;
                 $guru->nik_ptk                  = $input->nik_ptk;
                 $guru->jenis_kelamin            = $input->jenis_kelamin;
                 $guru->id_kota_lahir            = $input->id_kota_lahir;
@@ -311,6 +313,7 @@ class InputGuruController extends BaseController{
                 $guru                           = Guru::find($id);
                 /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $guru->id_unit_kerja            = $input->id_unit_kerja;
+                $guru->jenis_jabatan            = $input->jenis_jabatan;
                 $guru->nip_guru                 = $input->nip_guru;
                 $guru->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $guru->updated_at               = $now;
@@ -398,7 +401,7 @@ class InputGuruController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Guru successfully'
+                        'message' => 'Delete Guru successfully!'
                     ];
                 }
             }

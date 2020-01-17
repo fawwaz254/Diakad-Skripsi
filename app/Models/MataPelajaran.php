@@ -16,7 +16,7 @@ class MataPelajaran extends Model
 
     protected $primaryKey = 'id_mata_pelajaran';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -45,9 +45,8 @@ class MataPelajaran extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function jenis_mata_pelajaran()
+    {
+        return $this->belongsTo('App\Models\JenisMataPelajaran', 'id_jenis_mata_pelajaran');
+    }
 }

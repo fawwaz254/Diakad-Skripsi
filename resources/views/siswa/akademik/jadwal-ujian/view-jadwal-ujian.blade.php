@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-blue">
+                    <div class="header">
                         <h2>JADWAL UJIAN SEMESTER {{$semester_aktif->tahun_ajaran}} {{strtoupper($semester_aktif->nm_semester)}}</h2>
                     </div>
                     <div class="body">
@@ -43,7 +43,7 @@
                             <div role="tabpanel" class="tab-pane fade" id="uas_with_icon_title">
                                 <div class="body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_uas">
+                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_uas" style="width:100">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>

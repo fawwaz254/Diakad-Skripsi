@@ -10,7 +10,9 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Models\Guru;
+use App\Models\JadwalKelasMp;
 use App\Models\KomplainSarpras;
+use App\Models\Kota;
 use App\Models\Pengguna;
 use App\Models\PresensiHarian;
 use App\Models\PresensiHarianSiswa;
@@ -89,6 +91,100 @@ class Apiv1Controller extends BaseController
                 'message' 	=> 'User cant found'
             ]);
         }
+    }
+
+    public function actionGetDataPribadi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+
+        $data_pribadi = LibGuru::fetchDataAllGuru($auth_data, $guru->id_guru);
+
+        $data_pribadi = $data_pribadi->only('nm_pengguna', 'gelar_depan', 'gelar_belakang', 'nik_ptk', 'jenis_kelamin', 'id_kota_lahir', 'tgl_lahir', 'nm_ibu_kandung', 'nomor_telp', 'nomor_hp', 'email');
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'data_pribadi' => $data_pribadi
+            )
+        ]);
+    }
+
+    public function actionDataPribadi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        DB::beginTransaction();
+        
+        try {
+            // make object to find id
+            $pengguna                           = Pengguna::find($id_pengguna);
+            $pengguna->nm_pengguna              = $input->nm_pengguna;
+            
+            $pengguna->gelar_depan              = $input->gelar_depan;
+            $pengguna->gelar_belakang           = $input->gelar_belakang;
+            $pengguna->email_pengguna           = $input->email;
+            $pengguna->nomor_hp_pengguna        = $input->nomor_hp;
+            $pengguna->updated_by               = $id_pengguna;
+            $pengguna->updated_at               = $now;
+            $pengguna->save();
+
+            $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
+            $guru->nik_ptk                  = $input->nik_ptk;
+            $guru->jenis_kelamin            = $input->jenis_kelamin;
+            $guru->id_kota_lahir            = $input->id_kota_lahir;
+            $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
+            $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
+            $guru->nomor_telp               = $input->nomor_telp;
+            $guru->nomor_hp                 = $input->nomor_hp;
+            $guru->email                    = $input->email;
+            $guru->updated_by               = $id_pengguna;
+            $guru->updated_at               = $now;
+            $guru->save();
+            
+            DB::commit();
+            // all good
+
+            return response()->json([
+                'status_code' 	=> 200,
+                'status_text' 	=> 'Success',
+                'message' => 'Update data pribadi successfully'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => 'Update data pribadi gagal'
+            ]);
+        }
+    }
+
+    public function actionGetKota(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $kota = Kota::select('id_kota', 'id_provinsi', 'nm_kota')->where('kota.is_aktif', '=', 1)->orderBy('nm_kota', 'asc')->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kota' => $kota
+            )
+        ]);
     }
 
     public function actionGetKelasKBM(Request $request)
@@ -237,7 +333,8 @@ class Apiv1Controller extends BaseController
             'status_text' 	=> 'Success',
             'message' 	=> '',
             'data' => array(
-                'tgl_entry' => (!empty($presensi_harian))? $presensi_harian->tgl_entry : null,
+                'tgl_entry' => (!empty($presensi_harian))? date_format(date_create($presensi_harian->tgl_entry), "Y-m-d") : null,
+                'time_entry' => (!empty($presensi_harian))? date_format(date_create($presensi_harian->tgl_entry), "H:i:s") : null,
                 'siswa' =>
                     Datatables::of($list_data)
                         ->addColumn('kehadiran', function ($item) use ($presensi_harian_siswa) {
@@ -262,12 +359,14 @@ class Apiv1Controller extends BaseController
                     'id_kelas' => 'required',
                     'id_semester' => 'required',
                     'tgl_entry' => 'required',
+                    'time_entry' => 'required',
                 ]; break;
-            case 'edit':
+                case 'edit':
                 $required_params = [
                     'id_kelas' => 'required',
                     'id_semester' => 'required',
                     'tgl_entry' => 'required',
+                    'time_entry' => 'required',
                     'id_presensi_harian' => 'required',
                 ]; break;
             case 'delete':
@@ -292,7 +391,7 @@ class Apiv1Controller extends BaseController
             
             // ACTION ADD
             if ($mode == 'add' || $mode == 'edit') {
-                $tgl_entry = Carbon::parse($input->tgl_entry);
+                $tgl_entry = Carbon::parse($input->tgl_entry.' '.$input->time_entry);
                 DB::beginTransaction();
                 try {
                     if (!empty($input->id_presensi_harian)) {
@@ -305,7 +404,7 @@ class Apiv1Controller extends BaseController
                         $presensi_harian->id_kelas = $input->id_kelas;
                         $presensi_harian->id_semester = $input->id_semester;
                     }
-                    $presensi_harian->id_jadwal_hari = $tgl_entry->dayOfWeek;
+                    $presensi_harian->id_jadwal_hari = ($tgl_entry->dayOfWeek == 0)? 7 : $tgl_entry->dayOfWeek;
                     $presensi_harian->tgl_entry = $tgl_entry;
                     $presensi_harian->save();
 
@@ -398,33 +497,99 @@ class Apiv1Controller extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $now = Carbon::now();
-        $now = Carbon::createfromformat('Y-m-d H:i', '2019-11-06 09:00');
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
         $menit = $now->minute;
 
-        $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp
-                                    FROM jadwal_kelas_mp jkm
-                                    JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
-                                    JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
-                                    JOIN kelas k ON k.id_kelas = kmp.id_kelas
-                                    JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
-                                    JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
-                                    JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
-                                    LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
-                                        AND DATE(pmp.tgl_entry) = DATE(NOW()) 
-                                        AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
-                                    WHERE jkm.id_jadwal_hari = '.$hari.' 
-                                    AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))');
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
+                            FROM jadwal_kelas_mp jkm
+                            JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
+                            JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
+                            JOIN kelas k ON k.id_kelas = kmp.id_kelas
+                            JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
+                            JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
+                            JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
+                            LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1
+                            JOIN guru g ON g.id_guru = pm.id_guru
+                            JOIN pengguna p ON p.id_pengguna = g.id_pengguna
+                            LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
+                                AND DATE(pmp.tgl_entry) = DATE(NOW()) 
+                                AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
+                            WHERE jkm.id_jadwal_hari = '.$hari.' 
+                            AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
+                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
+                            ORDER BY k.tingkat, k.nm_kelas');
+        
+        $group_data_kelas_kosong = collect($data_kelas_kosong)->groupBy('tingkat')->all();
 
         return response()->json([
             'status_code' 	=> 200,
             'status_text' 	=> 'Success',
             'message' 	=> '',
             'data' => array(
-                'kelas_kosong' => $data_kelas_kosong
+                'kelas_kosong' => $group_data_kelas_kosong
+            )
+        ]);
+    }
+
+    public function actionGetRekapAbsen(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = JadwalKelasMp::with(['kelas_mp', 'kelas_mp.mata_pelajaran', 'kelas_mp.kelas', 'ruangan', 'jadwal_hari'])
+                                        ->where('id_jadwal_kelas_mp', $input->id_jadwal_kelas_mp)
+                                        ->first();
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp);
+
+        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $input->id_jadwal_kelas_mp)->get();
+
+        $rekap_presensi = [];
+
+        foreach ($data_siswa as $siswa) {
+            $rekap_presensi_siswa = [];
+            foreach ($data_presensi as $presensi_mp) {
+                $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] = $presensi_mp->presensi_mp_siswa->count();
+                $rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] = $presensi_mp->presensi_mp_siswa->where('kehadiran', 1)->count();
+
+                $presensi_siswa = [];
+                $presensi_siswa['pertemuan_ke'] = $presensi_mp->pertemuan_ke;
+                $presensi_siswa['tgl_presensi'] = date_format(date_create($presensi_mp->tgl_presensi), "d/m/y");
+                if ($presensi_mp_siswa = $presensi_mp->presensi_mp_siswa->firstWhere('id_siswa', $siswa->id_siswa)) {
+                    if ($presensi_mp_siswa->kehadiran == 1) {
+                        $presensi_siswa['status_absen'] = 'V';
+                    } elseif ($presensi_mp_siswa->kehadiran == 2) {
+                        $presensi_siswa['status_absen'] = 'S';
+                    } elseif ($presensi_mp_siswa->kehadiran == 3) {
+                        $presensi_siswa['status_absen'] = 'I';
+                    } elseif ($presensi_mp_siswa->kehadiran == 4) {
+                        $presensi_siswa['status_absen'] = 'A';
+                    } else {
+                        $presensi_siswa['status_absen'] = 'X';
+                    }
+                } else {
+                    $presensi_siswa['status_absen'] = 'X';
+                }
+                $rekap_presensi_siswa[] = $presensi_siswa;
+            }
+
+            $siswa->rekap = collect($rekap_presensi_siswa);
+        }
+
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'rekap_absen_siswa' => $data_siswa
             )
         ]);
     }
@@ -532,11 +697,9 @@ class Apiv1Controller extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
-
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
 
-        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp, $input->pertemuan_ke);
 
         return response()->json([
             'status_code' 	=> 200,
@@ -560,11 +723,9 @@ class Apiv1Controller extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
-
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
 
-        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $data_kelas->id_kelas_mp, $input->pertemuan_ke);
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $input->id_jadwal_kelas_mp, $input->pertemuan_ke);
         if ($presensi_mp_aktif) {
             $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp_aktif->id_presensi_mp)->get();
             $presensi_mp_aktif = $presensi_mp_aktif->only('id_presensi_mp', 'id_kelas_mp', 'id_jadwal_kelas_mp', 'pertemuan_ke', 'uraian_materi', 'waktu_mulai', 'waktu_selesai', 'tgl_presensi', 'id_guru_pengganti', 'alasan_tidak_hadir', 'tgl_entry', 'persentase_presensi_mp', 'keterangan');
@@ -973,6 +1134,53 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
+    public function actionGetKategoriPelanggaranSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kategori_pelanggaran' => $data_kategori
+            )
+        ]);
+    }
+
+    public function actionGetSubkategoriPelanggaranSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_kategori' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $input->id_kategori);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'subkategori_pelanggaran' => $data_subkategori
+            )
+        ]);
+    }
+
     public function actionPelanggaranSiswa(Request $request, $mode)
     {
         $input = (object) $request->input();
@@ -980,6 +1188,7 @@ class Apiv1Controller extends BaseController
         $validator = Validator::make($request->all(), [
             'id_presensi_mp'              => 'required',
             'id_siswa'              => 'required',
+            'id_subkategori_pelanggaran'   => 'required',
             'catatan_pelanggaran'   => 'required',
         ]);
         
@@ -999,10 +1208,14 @@ class Apiv1Controller extends BaseController
                 if ($mode == 'add') {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
+                    $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
+
                     $presensiMpPelanggaran                               = new PresensiMpPelanggaran;
                     $presensiMpPelanggaran->id_presensi_mp_pelanggaran   = $id;
                     $presensiMpPelanggaran->id_presensi_mp               = $input->id_presensi_mp;
                     $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                    $presensiMpPelanggaran->id_kelas                     = $siswa->id_kelas;
+                    $presensiMpPelanggaran->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                     $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
                     // convert format date
                     $presensiMpPelanggaran->is_sudah_tindakan            = 0;
@@ -1019,8 +1232,9 @@ class Apiv1Controller extends BaseController
                     
                     // make object to find id
                     $presensiMpPelanggaran                               = PresensiMpPelanggaran::find($id);
-                    $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
+                    // $presensiMpPelanggaran->id_siswa                     = $input->id_siswa;
                     $presensiMpPelanggaran->catatan_pelanggaran          = $input->catatan_pelanggaran;
+                    $presensiMpPelanggaran->id_subkategori_pelanggaran   = $input->id_subkategori_pelanggaran;
                     // convert format date
                     $presensiMpPelanggaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
                     $presensiMpPelanggaran->updated_at                   = $now;
@@ -1064,7 +1278,7 @@ class Apiv1Controller extends BaseController
                 return response()->json([
                     'status_code' 	=> 300,
                     'status_text' 	=> 'Failed',
-                    'message' => 'Terdapat error'
+                    'message' => 'Terdapat error '.$e->getMessage()
                 ]);
             }
         }

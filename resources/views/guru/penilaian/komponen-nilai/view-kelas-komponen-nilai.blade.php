@@ -9,7 +9,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-orange">
+                    <div class="header">
                         <h2>KOMPONEN NILAI MAPEL {{$data_kelas->nm_mata_pelajaran . " (" . $data_kelas->kd_mata_pelajaran . ") Kelas " . $data_kelas->nm_kelas}}</h2>
                     </div>
                     <div class="body">

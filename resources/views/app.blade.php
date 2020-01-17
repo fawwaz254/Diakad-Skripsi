@@ -57,7 +57,7 @@
 
         <!-- Custom Css -->
         <link href="{{asset('css/style.css?v=5')}}" rel="stylesheet">
-        <link href="{{asset('css/loadertemp.css?v=3')}}" rel="stylesheet">
+        <link href="{{asset('css/loadertemp.css?v=6')}}" rel="stylesheet">
 
         <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
         <link href="{{asset('css/themes/all-themes.css')}}" rel="stylesheet" />
@@ -147,6 +147,8 @@
 
     <!-- Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js" integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
 
     <script>
         $(function () {

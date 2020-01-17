@@ -16,7 +16,7 @@ class JadwalKelasMp extends Model
 
     protected $primaryKey = 'id_jadwal_kelas_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -25,6 +25,7 @@ class JadwalKelasMp extends Model
         'id_ruangan',
         'id_jadwal_hari',
         'id_jadwal_jam',
+        'id_jadwal_jam_selesai',
         'created_by',
         'updated_by',
         'deleted_by'
@@ -32,9 +33,28 @@ class JadwalKelasMp extends Model
 
     protected $guarded = [];
 
+    public function kelas_mp()
+    {
+        return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
+    }
 
+    public function ruangan()
+    {
+        return $this->belongsTo('App\Models\Ruangan', 'id_ruangan');
+    }
 
+    public function jadwal_hari()
+    {
+        return $this->belongsTo('App\Models\JadwalHari', 'id_jadwal_hari');
+    }
 
+    public function jadwal_jam_mulai()
+    {
+        return $this->belongsTo('App\Models\JadwalJam', 'id_jadwal_jam');
+    }
 
-
+    public function jadwal_jam_selesai()
+    {
+        return $this->belongsTo('App\Models\JadwalJam', 'id_jadwal_jam_selesai', 'id_jadwal_jam');
+    }
 }

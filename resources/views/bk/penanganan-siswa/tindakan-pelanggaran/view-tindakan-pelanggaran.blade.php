@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{csrf_field()}}
-                <div class="header bg-deep-purple">
+                <div class="header">
                     <h2>DATA PELANGGARAN & TINDAKAN PELANGGARAN</h2>
                 </div>
                 <div class="body">
@@ -78,7 +78,6 @@
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Siswa Presensi</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Tingkat Pelanggaran</th>
                                                 <th>Keterangan Sub-Kategori</th>
@@ -195,9 +194,8 @@ responsive: true,
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
-            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'nm_siswa_presensi', name: 'p_siswa_presensi.nm_pengguna' },
+            { data: 'nm_siswa', searchable: false, orderable: false },
+            { data: 'nm_kelas', searchable: false, orderable: false },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
             { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },

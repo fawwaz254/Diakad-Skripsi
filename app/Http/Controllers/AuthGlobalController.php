@@ -13,30 +13,36 @@ use Yajra\Datatables\Datatables;
 
 use Auth;
 use DB;
+use Session;
 use Validator;
 
-class AuthGlobalController extends BaseController{
-    public function indexDashboard(Request $request){
+class AuthGlobalController extends BaseController
+{
+    public function indexDashboard(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         return view('dashboard', compact('auth_data'));
     }
 
-    public function indexProfile(Request $request){
+    public function indexProfile(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $roles = Role::orderBy('nm_role','asc')->get();
+        $roles = Role::orderBy('nm_role', 'asc')->get();
         return view('profile', compact('auth_data', 'roles'));
     }
 
-    public function indexPassword(Request $request){
+    public function indexPassword(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         return view('password', compact('auth_data'));
     }
 
-    public function indexSearch(Request $request){
+    public function indexSearch(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $search = $input->q;
@@ -44,14 +50,15 @@ class AuthGlobalController extends BaseController{
         return view('search-result', compact('auth_data', 'search'));
     }
 
-    public function actionChangePassword(Request $request){
+    public function actionChangePassword(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => 'required',
             'new_confirm_password' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // Failed
                 'message' => $validator->errors()->first()
@@ -62,25 +69,27 @@ class AuthGlobalController extends BaseController{
 
         $input = (object) $request->input();
         $pengguna = $input->auth_data->pengguna;
-        if($input->new_password == $input->new_confirm_password){
+        if ($input->new_password == $input->new_confirm_password) {
             if (Auth::once(['username' => $pengguna->username, 'password' => $input->old_password])) {
                 $pengguna->password             = Hash::make($input->new_password);
                 $pengguna->last_time_password   = $now;
                 $pengguna->is_online = 0;
                 $pengguna->save();
+                
+                Session::flush();
                 Auth::logout();
                 return [
                     'status' => 201, // SUCCESS AND REDIRECT
                     'link' => url('/'),
                     'message' => 'Change password successfully'
                 ];
-            }else{
+            } else {
                 return [
                     'status' => 300, // FAILED
                     'message' => 'Your old password is incorrect'
                 ];
             }
-        }else{
+        } else {
             return [
                 'status' => 300, // FAILED
                 'message' => 'Re-type your new password again'
@@ -88,7 +97,8 @@ class AuthGlobalController extends BaseController{
         }
     }
 
-    public function actionSaveProfile(Request $request){
+    public function actionSaveProfile(Request $request)
+    {
         $input = (object) $request->input();
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -101,12 +111,12 @@ class AuthGlobalController extends BaseController{
 
         $roles_pengguna = $input->auth_data->roles_pengguna;
 
-        if($role_pengguna_selected = $roles_pengguna->where('id_role', $input->role)->first()){
-            foreach($roles_pengguna as $role_pengguna){
-                if($role_pengguna->id_role == $role_pengguna_selected->id_role){
+        if ($role_pengguna_selected = $roles_pengguna->where('id_role', $input->role)->first()) {
+            foreach ($roles_pengguna as $role_pengguna) {
+                if ($role_pengguna->id_role == $role_pengguna_selected->id_role) {
                     $role_pengguna->is_aktif = 1;
                     $role_pengguna->save();
-                }else{
+                } else {
                     $role_pengguna->is_aktif = 0;
                     $role_pengguna->save();
                 }
@@ -116,13 +126,14 @@ class AuthGlobalController extends BaseController{
             $pengguna->is_online = 0;
             $pengguna->save();
 
+            Session::flush();
             Auth::logout();
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
                 'link' => url('/'),
                 'message' => 'Save Profile successfully'
             ];
-        }else{
+        } else {
             return [
                 'status' => 300, // FAILED
                 'message' => 'Your data is incorrect'
@@ -130,15 +141,16 @@ class AuthGlobalController extends BaseController{
         }
     }
 
-    public function actionSignOut(Request $request){
+    public function actionSignOut(Request $request)
+    {
         $input = (object) $request->input();
 
         $pengguna = $input->auth_data->pengguna;
         $pengguna->is_online = 0;
         $pengguna->save();
 
+        Session::flush();
         Auth::logout();
         return redirect('/');
     }
-
 }

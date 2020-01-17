@@ -9,7 +9,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-orange">
+                    <div class="header">
                         <h2>KOMPLAIN SARPRAS RUANGAN ({{$data_ruangan->nm_ruangan}} - {{$data_ruangan->nm_jenis_ruangan}})</h2>
                     </div>
                     <div class="body">

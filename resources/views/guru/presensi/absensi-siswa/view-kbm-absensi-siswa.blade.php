@@ -6,7 +6,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-orange">
+                    <div class="header">
                         <h2>KELAS {{$data_kelas->nm_kelas}} <br>
                         MAPEL {{$data_kelas->nm_mata_pelajaran}}
                         <br>
@@ -102,11 +102,11 @@
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_kelas_mp = {!! json_encode($data_kelas->id_kelas_mp) !!};
+    var id_jadwal_kelas_mp = {!! json_encode($id_jadwal_kelas_mp) !!};
     var pertemuan_ke = {!! json_encode($pertemuan_ke) !!};
 
     var modul_url       = 'presensi';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'absensi-siswa/datatables-kbm/' + id_kelas_mp + '/' + pertemuan_ke;
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'absensi-siswa/datatables-kbm/' + id_jadwal_kelas_mp + '/' + pertemuan_ke;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -134,7 +134,7 @@
                             html += '<option value="'+item.id+'">'+ item.text + '</option>';
                         }
                     })
-                    return '<select class="form-control show-tick" name="alasan[]">'+
+                    return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
                     html +
                     '</select>';
                 }

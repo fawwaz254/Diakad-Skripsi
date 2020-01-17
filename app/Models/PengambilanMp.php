@@ -16,7 +16,7 @@ class PengambilanMp extends Model
 
     protected $primaryKey = 'id_pengambilan_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -42,7 +42,18 @@ class PengambilanMp extends Model
 
     protected $guarded = [];
 
-    public function nilai_mp(){
+    public function nilai_mp()
+    {
         return $this->hasMany('App\Models\NilaiMp', 'id_pengambilan_mp', 'id_pengambilan_mp');
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo('App\Models\Siswa', 'id_siswa');
+    }
+
+    public function kelas_mp()
+    {
+        return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
     }
 }

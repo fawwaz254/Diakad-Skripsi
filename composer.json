@@ -12,7 +12,9 @@
         "laravel/tinker": "~1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "maatwebsite/excel": "~2.1.0",
-        "yajra/laravel-datatables-oracle": "^8.3"
+        "predis/predis": "^1.1",
+        "yajra/laravel-datatables-oracle": "^8.3",
+        "barryvdh/laravel-dompdf": "^0.8.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
@@ -39,8 +41,7 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": [
-            ]
+            "dont-discover": []
         }
     },
     "scripts": {

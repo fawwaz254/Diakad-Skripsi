@@ -10,7 +10,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-light-green">
+                    <div class="header">
                         <h2>Daftar Mata Pelajaran</h2>
                     </div>
                     <div class="body">

@@ -6,7 +6,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-amber">
+                    <div class="header">
                         <h2>DATA BIAYA SEKOLAH</h2>
                     </div>
                     <div class="body">
@@ -25,6 +25,15 @@
                                     </tr>
                                 </thead>
                             </table>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <a class="target-link btn btn-block bg-blue waves-effect" href="{{url(Request::segment(1).'#data-keuangan/biaya-sekolah/copy')}}"><i class="material-icons">file_copy</i><span>Copy Biaya Sekolah & Detail Biaya</span></a>
+                            </div>
                         </div>
                     </div>
                 </div>

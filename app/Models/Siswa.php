@@ -16,7 +16,7 @@ class Siswa extends Model
 
     protected $primaryKey = 'id_siswa';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -38,11 +38,23 @@ class Siswa extends Model
 
     protected $guarded = [];
 
-    public function pengguna(){
+    public function pengguna()
+    {
         return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
     }
 
-    public function tagihan_biaya(){
+    public function kelas()
+    {
+        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+    }
+
+    public function tagihan_biaya()
+    {
         return $this->hasMany('App\Models\TagihanBiaya', 'id_siswa');
+    }
+
+    public function wali_murid()
+    {
+        return $this->belongsTo('App\Models\WaliMurid', 'id_wali_murid');
     }
 }

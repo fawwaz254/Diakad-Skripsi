@@ -6,7 +6,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-orange">
+                    <div class="header">
                         <h2>UTS KELAS {{$data_kelas->nm_kelas}} SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2>
                     </div>
                     <div class="body">
@@ -82,7 +82,7 @@
                             html += '<option value="'+item.id+'">'+ item.text + '</option>';
                         }
                     })
-                    return '<select class="form-control show-tick" name="alasan[]">'+
+                    return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
                     html +
                     '</select>';
                     /*return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

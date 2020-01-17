@@ -37,13 +37,15 @@ class MonitoringKelasKosongController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now();
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         $tgl = $now->toDateString();
         $hari = $now->dayOfWeekIso;
         $jam = $now->hour;
         $menit = $now->minute;
 
-        $list_data = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $list_data = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
                                     FROM jadwal_kelas_mp jkm
                                     JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
                                     JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
@@ -58,7 +60,10 @@ class MonitoringKelasKosongController extends BaseController
                                         AND DATE(pmp.tgl_entry) = DATE(NOW()) 
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
                                     WHERE jkm.id_jadwal_hari = '.$hari.' 
-                                    AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))');
+                                    AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
+                                    AND pmp.id_presensi_mp IS NULL
+                                    AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
+                                    ORDER BY k.tingkat, k.nm_kelas');
                                     
         return Datatables::of($list_data)
                 ->addColumn('nm_pengguna', function ($item) {

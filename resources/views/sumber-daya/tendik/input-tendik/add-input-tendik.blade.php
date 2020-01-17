@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-pink">
+                <div class="header">
                     <h2>
                         INPUT TENAGA PENDIDIK BARU
                     </h2>
@@ -13,10 +13,8 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-tendik/add/'.$id_staff)}}">
                         {{csrf_field()}}
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Identitas Pendidik dan Tenaga Pendidik
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Nama Tendik
@@ -92,10 +90,8 @@
                                 <input type="text" class="form-control" name="nm_ibu_kandung" aria-invalid="true">
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Data Pribadi
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Alamat Jalan
@@ -289,10 +285,25 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <h2 class="card-inside-title">
+                            Jenis Jabatan Internal
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                               <select class="form-control show-tick" name="jenis_jabatan" required >
+                                    <option value="" disabled selected >-- Pilih Jenis Jabatan  --</option>
+                                    <option value="1">Kepala Unit Sarana & Prasarana</option>
+                                    <option value="2">Kepala Unit Keuangan</option>
+                                    <option value="3">Staf Unit Sarana & Prasarana</option>
+                                    <option value="4">Staf Unit Keuangan</option>
+                                    <option value="5">Staf Unit Sumber Daya</option>
+                                    <option value="98">Kepala Unit</option>
+                                    <option value="99">Staf Unit</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="demo-color-box bg-success">
                                 Kepegawaian
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Status Kepegawaian
@@ -428,10 +439,8 @@
                                 <input type="text" class="form-control" name="nomor_kartu_pasangan" aria-invalid="true">
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kompetensi Khusus
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Punya Lisensi Kepala Sekolah
@@ -479,10 +488,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kontak
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Nomor Telepon
@@ -508,10 +515,8 @@
                                 <input type="email" class="form-control" name="email" aria-invalid="true">
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Penugasan
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Nomor SK Penugasan

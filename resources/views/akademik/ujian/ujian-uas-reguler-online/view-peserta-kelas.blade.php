@@ -8,7 +8,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{csrf_field()}}
-                <div class="header bg-light-green">
+                <div class="header">
                     <h2>Daftar Siswa Kelas {{$kelas->nm_kelas}} {{$kelas->nm_mata_pelajaran}}</h2><br>
                     <h2>{{$kelas->nm_ujian_mp}} @if($kelas->is_online == 0) Reguler  @else Online @endif</h2>
                 </div>

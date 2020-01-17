@@ -2,7 +2,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-orange">
+                <div class="header">
                     <h2>
                         PILIH ABSENSI SISWA
                     </h2>
@@ -36,8 +36,12 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <select class="form-control show-tick" name="id_jadwal_kelas_mp" onchange="changeKelas(this)">
                                             <option value="" disabled selected >-- Pilih Kelas KBM --</option>
-                                            @foreach($data_kbm as $data)
-                                                <option value="{{$data->id_jadwal_kelas_mp}}">{{$data->nm_jadwal_hari}} - {{$data->nm_mata_pelajaran}} - {{$data->nm_kelas}} - {{$data->nm_ruangan}}</option>
+                                            @foreach($grup_kbm_perhari as $hari => $data_kbm)
+                                            <optgroup label="{{$hari}}">
+                                                @foreach($data_kbm as $data)
+                                                    <option value="{{$data->id_jadwal_kelas_mp}}">{{$data->nm_mata_pelajaran}} - {{$data->nm_kelas}} - {{$data->nm_ruangan}}</option>
+                                                @endforeach
+                                            </optgroup>
                                             @endforeach
                                         </select>
                                     </div>

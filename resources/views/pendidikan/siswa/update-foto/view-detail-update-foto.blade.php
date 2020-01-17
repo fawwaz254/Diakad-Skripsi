@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-green">
+                    <div class="header">
                         <h2>Data Siswa</h2> 
                     </div>
                 <div class="body">
@@ -139,6 +139,7 @@
                             <thead>
                                 <tr>
                                     <th>No. </th>
+                                    <th>Foto</th>
                                     <th>NIS</th>
                                     <th>NISN</th>
                                     <th>Nama</th>
@@ -183,6 +184,11 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
+            { data: 'path_foto_pengguna', searchable: false, orderable: false, 
+                render: function(data){
+                    return '<img width="75" src='+data+'>';
+                }
+            },
             { data: 'nis_siswa', name: 'nis_siswa' },
             { data: 'nisn_siswa', name: 'nisn_siswa' },
             { data: 'nm_pengguna', name: 'nm_pengguna' },
@@ -216,7 +222,6 @@
     var modul_url       = 'siswa';
 
     $('#jurusan').on('change', function(e){
-    console.log(e);
     var id_jurusan = e.target.value;
         $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'data-siswa/get-kelas/' + id_jurusan,function(data) {
             console.log(data);

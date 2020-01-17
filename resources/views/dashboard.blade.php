@@ -14,7 +14,7 @@
 <!-- Javascript -->
 <script>
 
-    var loadingHtml = '<div style="width: 100%;" align="center"><img src="{{asset('js/loading.gif')}}" /><br><span><h2><strong>Loading...</strong></h2></span></div>';
+    var loadingHtml = '<div class="loading-html"><img src="{{asset('js/loading_new.gif')}}" /><br><span><h4>Sedang memuat, mohon tunggu...</h4></span></div>';
 
     $(document).ready(function  () {
         var original_title = location.hash;
@@ -27,7 +27,7 @@
             $('#modul-item-' + target_url.split('/')[0]).addClass('active');
             $('#modul-item-' + target_url.split('/')[0] +' a').addClass('toggled');
             $('#modul-item-' + target_url.split('/')[0] +' .ml-menu').css('display', 'block');
-            $('#menu-item-' + target_url.split('/')[1]).addClass('active');
+            $('#menu-item-' + target_url.split('/')[0] + '-' + target_url.split('/')[1]).addClass('active');
         }
     });
 
@@ -110,7 +110,7 @@
                 NProgress.done();
                 
                 $('.menu-item').removeClass('active');
-                $('#menu-item-' + target_url.split('/')[1]).addClass('active');
+                $('#menu-item-' + target_url.split('/')[0] + '-' + target_url.split('/')[1]).addClass('active');
             },
             error: function (xhr, status, error) {
                 // alert(xhr.responseText);

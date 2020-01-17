@@ -27,37 +27,19 @@ use DB;
 use Session;
 use Validator;
 
-
 class PrestasiSiswaController extends BaseController
 {
-    public function viewPrestasiSiswa(Request $request, $id_kelas = null){
+    public function viewPrestasiSiswa(Request $request, $id_kelas = null)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('kesiswaan/siswa/prestasi-siswa/view-prestasi-siswa',compact('auth_data','data_kelas','id_kelas'));
+        return view('kesiswaan/siswa/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
     }
 
-    public function addPrestasiSiswa(Request $request){
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $data_kelas = LibKelas::fetchDataKelas($auth_data);
-        $data_ekskul = Ekskul::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $data_semester = Semester::where('semester.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $data_guru = Guru::join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
-        return view('kesiswaan/siswa/prestasi-siswa/add-prestasi-siswa',compact('auth_data','data_kelas','data_semester','data_tingkat_prestasi','data_ekskul','data_guru'));
-
-    }
-
-    public function editPrestasiSiswa(Request $request, $id_prestasi_siswa){
+    public function addPrestasiSiswa(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -65,19 +47,38 @@ class PrestasiSiswaController extends BaseController
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
-        $data_ekskul = Ekskul::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $data_semester = Semester::where('semester.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $data_guru = Guru::join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $prestasi = PrestasiSiswa::join('siswa','siswa.id_siswa','=','prestasi_siswa.id_siswa')->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')->join('kelas','kelas.id_kelas','=','siswa.id_kelas')->where('id_prestasi_siswa','=',$id_prestasi_siswa)->first();
+        $data_ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('kesiswaan/siswa/prestasi-siswa/edit-prestasi-siswa',compact('auth_data','data_kelas','data_semester','data_tingkat_prestasi','data_ekskul','data_guru','prestasi'));
-
+        return view('kesiswaan/siswa/prestasi-siswa/add-prestasi-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'data_tingkat_prestasi', 'data_ekskul', 'data_guru'));
     }
 
-    public function ajaxGetSiswaByKelas(Request $request) {
+    public function editPrestasiSiswa(Request $request, $id_prestasi_siswa)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $prestasi = PrestasiSiswa::join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_prestasi_siswa', '=', $id_prestasi_siswa)->first();
+
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        return view('kesiswaan/siswa/prestasi-siswa/edit-prestasi-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'data_tingkat_prestasi', 'data_ekskul', 'data_guru', 'prestasi'));
+    }
+
+    public function ajaxGetSiswaByKelas(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -88,59 +89,74 @@ class PrestasiSiswaController extends BaseController
         return $data_siswa;
     }
     
-    public function datatablesPrestasiSiswa(Request $request){
+    public function datatablesPrestasiSiswa(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PrestasiSiswa::select('prestasi_siswa.nm_prestasi_siswa','tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
-            'prestasi_siswa.jenis_prestasi_siswa','prestasi_siswa.peringkat_prestasi_siswa','p1.nm_pengguna as nm_siswa','siswa.nisn_siswa','siswa.nis_siswa','semester.nm_semester','semester.tahun_ajaran','kelas.nm_kelas','prestasi_siswa.lokasi_prestasi_siswa','prestasi_siswa.penyelenggara_prestasi_siswa','prestasi_siswa.tgl_prestasi_siswa','ekskul.nm_ekskul','prestasi_siswa.id_prestasi_siswa','prestasi_siswa.id_guru_pendamping','p2.nm_pengguna as nm_guru_pendamping','p2.gelar_depan','p2.gelar_belakang')
-        ->join('tingkat_prestasi_siswa','tingkat_prestasi_siswa.id_tingkat_prestasi_siswa','=','prestasi_siswa.id_tingkat_prestasi_siswa')
-        ->join('siswa','siswa.id_siswa','=','prestasi_siswa.id_siswa')
-        ->join('pengguna as p1','p1.id_pengguna','=','siswa.id_pengguna')
-        ->join('semester','semester.id_semester','=','prestasi_siswa.id_semester')
-        ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-        ->leftJoin('ekskul','ekskul.id_ekskul','=','prestasi_siswa.id_ekskul')
-        ->leftJoin('guru','guru.id_guru','=','prestasi_siswa.id_guru_pendamping')
-        ->leftJoin('pengguna as p2','p2.id_pengguna','=','guru.id_pengguna')
-        ->orderBy('prestasi_siswa.created_at','desc')
+        $list_data = PrestasiSiswa::select(
+            'prestasi_siswa.nm_prestasi_siswa',
+            'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+            'prestasi_siswa.jenis_prestasi_siswa',
+            'prestasi_siswa.peringkat_prestasi_siswa',
+            'p1.nm_pengguna as nm_siswa',
+            'siswa.nisn_siswa',
+            'siswa.nis_siswa',
+            'semester.nm_semester',
+            'semester.tahun_ajaran',
+            'kelas.nm_kelas',
+            'prestasi_siswa.lokasi_prestasi_siswa',
+            'prestasi_siswa.penyelenggara_prestasi_siswa',
+            'prestasi_siswa.tgl_prestasi_siswa',
+            'ekskul.nm_ekskul',
+            'prestasi_siswa.id_prestasi_siswa',
+            'prestasi_siswa.id_guru_pendamping',
+            'p2.nm_pengguna as nm_guru_pendamping',
+            'p2.gelar_depan',
+            'p2.gelar_belakang'
+        )
+        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+        ->orderBy('prestasi_siswa.created_at', 'desc')
         ->orderBy('semester.thn_akademik_semester', 'desc')
         ->orderBy('semester.nm_semester', 'desc')
-        ->where('tingkat_prestasi_siswa.id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
-                ->addColumn('semester', function($item){
+                ->addColumn('semester', function ($item) {
                     return $item->nm_semester.' ('.$item->tahun_ajaran.')';
                 })
-                ->addColumn('jenis_prestasi', function($item){
-                  if($item->jenis_prestasi_siswa == 1){
-                      return "Sains";
-                  }
-                  elseif($item->jenis_prestasi_siswa == 2){
-                      return "Seni";
-                  }
-                  elseif($item->jenis_prestasi_siswa == 3){
-                    return "Olahraga";
-                  }elseif($item->jenis_prestasi_siswa == 99){
-                    return "Lain-Lain";
-                  }
-              })
-              ->addColumn('tgl_prestasi_siswa', function($item){
-                  return strftime( "%d %B %Y", strtotime($item->tgl_prestasi_siswa));
-              })
-              ->addColumn('nm_guru_pendamping', function($item){
-                    if( ! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                        return $item->gelar_depan." ".$item->nm_guru_pendamping.", ".$item->gelar_belakang;
-                    }
-                    elseif( ! empty($item->gelar_depan)) {
-                        return $item->gelar_depan." ".$item->nm_guru_pendamping;   
-                    }
-                    elseif( ! empty($item->gelar_belakang)) {
-                        return $item->nm_guru_pendamping.", ".$item->gelar_belakang;   
-                    }
-                    else {
-                        return $item->nm_guru_pendamping; 
+                ->addColumn('jenis_prestasi', function ($item) {
+                    if ($item->jenis_prestasi_siswa == 1) {
+                        return "Sains";
+                    } elseif ($item->jenis_prestasi_siswa == 2) {
+                        return "Seni";
+                    } elseif ($item->jenis_prestasi_siswa == 3) {
+                        return "Olahraga";
+                    } elseif ($item->jenis_prestasi_siswa == 99) {
+                        return "Lain-Lain";
                     }
                 })
-                ->addColumn('action', function($item){
+              ->addColumn('tgl_prestasi_siswa', function ($item) {
+                  return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
+              })
+              ->addColumn('nm_guru_pendamping', function ($item) {
+                  if (! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
+                      return $item->gelar_depan." ".$item->nm_guru_pendamping.", ".$item->gelar_belakang;
+                  } elseif (! empty($item->gelar_depan)) {
+                      return $item->gelar_depan." ".$item->nm_guru_pendamping;
+                  } elseif (! empty($item->gelar_belakang)) {
+                      return $item->nm_guru_pendamping.", ".$item->gelar_belakang;
+                  } else {
+                      return $item->nm_guru_pendamping;
+                  }
+              })
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_prestasi_siswa
                     );
@@ -149,8 +165,8 @@ class PrestasiSiswaController extends BaseController
                 ->make(true);
     }
     
-    public function actionPrestasiSiswa(Request $request, $mode, $id = null){
-
+    public function actionPrestasiSiswa(Request $request, $mode, $id = null)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -165,78 +181,72 @@ class PrestasiSiswaController extends BaseController
             'peringkat_prestasi_siswa' => 'required' ,'tgl_prestasi_siswa' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // ACTION ADD
-            if($mode == 'add') {
-               $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 
-               $prestasi                                 = new PrestasiSiswa;
-               $prestasi->id_prestasi_siswa              = $id;
-               $prestasi->id_siswa                       = $input->id_siswa;
-               $prestasi->id_semester                    = $input->id_semester;
-               $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
-               $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
-               $prestasi->id_ekskul                      = $input->id_ekskul;
-               $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
-               $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
-               $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
-               $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
-               $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
-               $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa),"Y-m-d"); 
-               $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
-               $prestasi->created_at                     = $now;
-               $prestasi->save();
+                $prestasi                                 = new PrestasiSiswa;
+                $prestasi->id_prestasi_siswa              = $id;
+                $prestasi->id_siswa                       = $input->id_siswa;
+                $prestasi->id_semester                    = $input->id_semester;
+                $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
+                $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
+                $prestasi->id_ekskul                      = $input->id_ekskul;
+                $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+                $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
+                $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
+                $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
+                $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
+                $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
+                $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->created_at                     = $now;
+                $prestasi->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/prestasi-siswa',
                     'message' => 'Save Data Prestasi Siswa successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
-
-               $prestasi                                 = PrestasiSiswa::find($id);
-               $prestasi->id_siswa                       = $input->id_siswa;
-               $prestasi->id_semester                    = $input->id_semester;
-               $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
-               $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
-               $prestasi->id_ekskul                      = $input->id_ekskul;
-               $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
-               $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
-               $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
-               $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
-               $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
-               $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa),"Y-m-d"); 
-               $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
-               $prestasi->updated_at                     = $now;
-               $prestasi->save();
+            } elseif ($mode == 'edit') {
+                $prestasi                                 = PrestasiSiswa::find($id);
+                $prestasi->id_siswa                       = $input->id_siswa;
+                $prestasi->id_semester                    = $input->id_semester;
+                $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
+                $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
+                $prestasi->id_ekskul                      = $input->id_ekskul;
+                $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+                $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
+                $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
+                $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
+                $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
+                $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
+                $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->updated_at                     = $now;
+                $prestasi->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/prestasi-siswa',
                     'message' => 'Save Data Prestasi Siswa successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
+            } elseif ($mode == 'delete') {
                 $prestasi                 = PrestasiSiswa::find($id);
                 $prestasi->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                 $prestasi->save();
 
                 $prestasi->delete();
 
-                    return [
+                return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Data Prestasi Siswa successfully'
                     ];
             }
-
         }
     }
-
 }

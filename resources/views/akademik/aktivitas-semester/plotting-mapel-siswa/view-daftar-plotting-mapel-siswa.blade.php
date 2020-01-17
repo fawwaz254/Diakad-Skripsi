@@ -2,7 +2,7 @@
     <div class="row-clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-light-green">
+                <div class="header">
                     <h2>
                         Plotting Mapel Siswa
                     </h2>
@@ -66,19 +66,11 @@
                     </form>
                 </div>
                 <div class="body">
-                    <div class="header bg-light-green" id="daftar-mata-pelajaran">
-                        <h2>
-                            Daftar Mata Pelajaran
-                        </h2>
+                    <div class="demo-color-box bg-success" id="daftar-mata-pelajaran">
+                        Daftar Mata Pelajaran
                     </div>
-                    <div class="header bg-light-green" id="daftar-siswa" style="display: none">
-                        <h2>
-                            Daftar Siswa
-                        </h2>
-                    </div>
-                    <div class="row clearfix">
-                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        </div>
+                    <div class="demo-color-box bg-success" id="daftar-siswa" style="display: none">
+                        Daftar Siswa
                     </div>
                     <form id="form-validation-2" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-plotting-mapel-siswa/add-krs')}}">
                     {{csrf_field()}}
@@ -105,6 +97,7 @@
                         </div>
                         <input type="hidden" name="id_semester" value="{{$id_semester}}">
                         <input type="hidden" name="angkatan" value="{{$angkatan}}">
+                        <input type="hidden" name="id_kelas" value="{{$id_kelas}}">
                         <div class="row clearfix" id="spaceButtonLanjut">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             </div>
@@ -138,7 +131,7 @@
                         </div>
                         <div class="row clearfix" style="display: none" id="buttonDIV">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <a class="btn btn-block bg-blue waves-effect" onclick="backFunction()" id="buttonKembali"><i class="material-icons">arrow_back</i><span>Kembali ke Daftar Mapel</span></a>
+                                <a class="btn btn-block bg-blue waves-effect" onclick="backFunction()"><i class="material-icons">arrow_back</i><span>Kembali ke Daftar Mapel</span></a>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <a class="btn btn-block bg-blue waves-effect" onclick="reviewFunction()" id="buttonTinjau"><i class="material-icons">rate_review</i><span>Tinjau Kembali</span></a>
@@ -146,7 +139,7 @@
                         </div>
                         <div class="row clearfix" style="display: none" id="ajukan">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <a class="btn btn-block bg-blue waves-effect" onclick="backFunction()" id="buttonKembali"><i class="material-icons">arrow_back</i><span>Kembali ke Daftar Mapel</span></a>
+                                <a class="btn btn-block bg-blue waves-effect" onclick="backFunction()"><i class="material-icons">arrow_back</i><span>Kembali ke Daftar Mapel</span></a>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Ajukan Plotting Siswa</span></button>
@@ -180,11 +173,16 @@
         },
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
+            NProgress.start();
+            window.onbeforeunload = function() {
+                return "Data will be lost if you leave the page, are you sure?";
+            };
             $.ajax({
                 url: form.action,
                 type: form.method,
                 data: $(form).serialize(),
                 success: function(response) {
+                    NProgress.done();
                     if(response.status == 200){
                         vex.dialog.alert(response.message);
                     }else if(response.status == 201){
@@ -203,6 +201,7 @@
                 },
                 complete: function() {
                     $('button').removeAttr('disabled');
+                    window.onbeforeunload = function() {};
                 }
             });
         }
@@ -303,9 +302,10 @@
     }
     function backFunction() {
       if (document.getElementById("table-mapel").style.display === "none") {
-        document.getElementById("myDIV").style.display = "block";
+        document.getElementById("myDIV").style.display = "none";
         document.getElementById("buttonDIV").style.display = "none";
-        document.getElementById("daftar-siswa").style.display = "block";
+        document.getElementById("ajukan").style.display = "none";
+        document.getElementById("daftar-siswa").style.display = "none";
         document.getElementById("buttonLanjut").style.display = "block";
         document.getElementById("table-mapel").style.display = "block";
         document.getElementById("daftar-mata-pelajaran").style.display = "block";
@@ -319,7 +319,6 @@
         document.getElementById("myDIV").style.display = "block";
         document.getElementById("buttonDIV").style.display = "none";
         document.getElementById("ajukan").style.display = "block";
-        document.getElementById("buttonReview").style.display = "none";
         document.getElementById("daftar-siswa").style.display = "block";
         document.getElementById("buttonLanjut").style.display = "none";
         document.getElementById("daftar-mata-pelajaran").style.display = "block";

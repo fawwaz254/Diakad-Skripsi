@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-light-green">
+                    <div class="header">
                         @if($id == '0')
                             <h2>Daftar Ujian Tengah Semester (UTS) - {{$semester->tahun_ajaran}} {{$semester->nm_semester}}</h2>
                         @elseif($id == '1')

@@ -16,7 +16,7 @@ class TagihanBiaya extends Model
 
     protected $primaryKey = 'id_tagihan_biaya';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -34,7 +34,13 @@ class TagihanBiaya extends Model
 
     protected $guarded = [];
 
-    public function detail_biaya(){
+    public function detail_biaya()
+    {
         return $this->belongsTo('App\Models\DetailBiaya', 'id_detail_biaya');
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo('App\Models\Siswa', 'id_siswa');
     }
 }

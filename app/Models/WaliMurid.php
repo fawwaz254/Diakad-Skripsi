@@ -16,7 +16,7 @@ class WaliMurid extends Model
 
     protected $primaryKey = 'id_wali_murid';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -32,9 +32,8 @@ class WaliMurid extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function pengguna()
+    {
+        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
+    }
 }

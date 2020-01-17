@@ -6,7 +6,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-green">
+                    <div class="header">
                         <h2>PENGAJUAN WISUDA @if(is_null($data_periode_wisuda))  @else {{$data_periode_wisuda->nm_periode_wisuda}} SEMESTER {{$data_periode_wisuda->tahun_ajaran}} {{$data_periode_wisuda->nm_semester}} @endif</h2>
                     </div>
                     <div class="body">

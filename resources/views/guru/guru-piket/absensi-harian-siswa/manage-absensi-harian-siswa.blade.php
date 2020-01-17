@@ -6,7 +6,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-orange">
+                    <div class="header">
                         <h2>KELAS {{$data_kelas->nm_kelas}}
                         <br>
                         SEMESTER {{$data_semester->tahun_ajaran}} {{$data_semester->nm_semester}}</h2>
@@ -98,7 +98,7 @@
                             html += '<option value="'+item.id+'">'+ item.text + '</option>';
                         }
                     })
-                    return '<select class="form-control show-tick" name="alasan[]">'+
+                    return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
                     html +
                     '</select>';
                 }

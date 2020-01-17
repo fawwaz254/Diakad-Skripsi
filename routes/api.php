@@ -16,6 +16,12 @@
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function () {
     Route::group(array('prefix' => 'guru'), function () {
+        Route::group(array('prefix' => 'data-pribadi'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
+            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+        });
+
+        Route::post('kota/get', 'Apiv1Controller@actionGetKota');
         Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
         Route::post('kelas-kbm/get', 'Apiv1Controller@actionGetKelasKBM');
         Route::post('siswa-by-kelas-kbm/get', 'Apiv1Controller@actionGetSiswaByJadwalKelasKBM');
@@ -42,11 +48,17 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::group(array('prefix' => 'pelanggaran-siswa'), function () {
             Route::post('get', 'Apiv1Controller@actionGetPelanggaranSiswa');
+            Route::post('kategori/get', 'Apiv1Controller@actionGetKategoriPelanggaranSiswa');
+            Route::post('subkategori/get', 'Apiv1Controller@actionGetSubkategoriPelanggaranSiswa');
             Route::post('{mode}/submit', 'Apiv1Controller@actionPelanggaranSiswa');
         });
 
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
+        });
+
+        Route::group(array('prefix' => 'rekap-absen'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRekapAbsen');
         });
 
         Route::group(array('prefix' => 'absensi-harian'), function () {

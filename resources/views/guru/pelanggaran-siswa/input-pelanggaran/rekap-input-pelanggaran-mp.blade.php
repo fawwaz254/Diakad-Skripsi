@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-orange">
+                    <div class="header">
                         <h2>DATA PELANGGARAN SISWA MP</h2>
                     </div>
                     <div class="body">
@@ -13,6 +13,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Siswa</th>
+                                        <th>Kelas</th>
                                         <th>MAPEL</th>
                                         <th>Pertemuan ke</th>
                                         <th>Catatan Pelanggaran</th>
@@ -46,6 +47,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_kelas' },
             { data: 'nm_mata_pelajaran', name: 'nm_mata_pelajaran', searchable: false, orderable: false },
             { data: 'pertemuan_ke', name: 'pertemuan_ke', searchable: false, orderable: false },
             { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },

@@ -23,10 +23,10 @@ use DB;
 use Session;
 use Validator;
 
-class AbsensiSiswaController extends BaseController{
-
-
-    public function viewAbsensiSiswa(Request $request){
+class AbsensiSiswaController extends BaseController
+{
+    public function viewAbsensiSiswa(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -39,11 +39,13 @@ class AbsensiSiswaController extends BaseController{
 
         $data_uas = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
 
-    	return view('guru/presensi/absensi-siswa/view-absensi-siswa',compact('auth_data','semester_aktif','data_kbm','data_uts','data_uas'));
+        $grup_kbm_perhari = $data_kbm->groupBy('nm_jadwal_hari');
 
+        return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
     }
 
-    public function ajaxGetPertemuanByJadwalKelasMp(Request $request) {
+    public function ajaxGetPertemuanByJadwalKelasMp(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -51,17 +53,16 @@ class AbsensiSiswaController extends BaseController{
         $id_jadwal_kelas_mp = $input->id_jadwal_kelas_mp;
 
         $data_pertemuan = array();
-        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp)->get();
+        $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
 
-        for ($i=1; $i < 26; $i++) {     
+        for ($i=1; $i < 26; $i++) {
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
                 $pertemuan = array(
                     'text' => $i." (Sudah)",
                     'value' => $i
                 );
-            }
-            else {
+            } else {
                 $pertemuan = array(
                     'text' => $i,
                     'value' => $i
@@ -75,7 +76,8 @@ class AbsensiSiswaController extends BaseController{
     }
 
     // ==== ACTION PRESENSI KBM ====
-    public function actionViewKBMAbsensiSiswa(Request $request){
+    public function actionViewKBMAbsensiSiswa(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -85,13 +87,12 @@ class AbsensiSiswaController extends BaseController{
             'pertemuan_ke' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
                 'path' => 'presensi/absensi-siswa/view-kbm/'.$input->id_jadwal_kelas_mp.'/'.$input->pertemuan_ke
@@ -99,7 +100,8 @@ class AbsensiSiswaController extends BaseController{
         }
     }
 
-    public function viewKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke){
+    public function viewKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -108,34 +110,36 @@ class AbsensiSiswaController extends BaseController{
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
-        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp)->where('pertemuan_ke','=',$pertemuan_ke)->first();
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
 
-        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa',compact('auth_data','semester_aktif','data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp'));
-
+        return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp'));
     }
 
-    public function datatablesKBMAbsensiSiswa(Request $request, $id_kelas_mp, $pertemuan_ke){
+    public function datatablesKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_kelas_mp, $pertemuan_ke);
-        $presensi_mp_aktif = PresensiMp::where('id_kelas_mp','=',$id_kelas_mp)->where('pertemuan_ke','=',$pertemuan_ke)->first();
-        if($presensi_mp_aktif){
-            $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp','=',$presensi_mp_aktif->id_presensi_mp)->get();
-        }else{
+        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke);
+
+        $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
+        
+        if ($presensi_mp_aktif) {
+            $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp_aktif->id_presensi_mp)->get();
+        } else {
             $data_presensi_mp_siswa = null;
         }
         return Datatables::of($list_data)
-            ->editColumn('nis_siswa', function($item){
+            ->editColumn('nis_siswa', function ($item) {
                 $data = array(
                     'id_siswa' => $item->id_siswa,
                     'nis_siswa' => $item->nis_siswa
                 );
                 return $data;
             })
-            ->addColumn('alasan', function($item) use ($data_presensi_mp_siswa){
+            ->addColumn('alasan', function ($item) use ($data_presensi_mp_siswa) {
                 $kehadiran = null;
-                if($data_presensi_mp_siswa && $presensi_mp_siswa = $data_presensi_mp_siswa->firstWhere('id_siswa', $item->id_siswa)){
+                if ($data_presensi_mp_siswa && $presensi_mp_siswa = $data_presensi_mp_siswa->firstWhere('id_siswa', $item->id_siswa)) {
                     $kehadiran = $presensi_mp_siswa->kehadiran;
                 }
                 $options = array(
@@ -154,7 +158,8 @@ class AbsensiSiswaController extends BaseController{
     }
 
     // ==== ACTION PRESENSI UTS ====
-    public function actionViewUTSAbsensiSiswa(Request $request){
+    public function actionViewUTSAbsensiSiswa(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -163,21 +168,21 @@ class AbsensiSiswaController extends BaseController{
             'id_ujian_mp' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
                 'path' => 'presensi/absensi-siswa/view-uts/'.$input->id_ujian_mp
-            ];   
+            ];
         }
     }
 
-    public function viewUTSAbsensiSiswa(Request $request, $id_ujian_mp){
+    public function viewUTSAbsensiSiswa(Request $request, $id_ujian_mp)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -186,27 +191,27 @@ class AbsensiSiswaController extends BaseController{
 
         $data_kelas = LibGuru::fetchDataJadwalUTS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0, $id_ujian_mp);
 
-        return view('guru/presensi/absensi-siswa/view-uts-absensi-siswa',compact('auth_data','semester_aktif','data_kelas', 'id_ujian_mp'));
-
+        return view('guru/presensi/absensi-siswa/view-uts-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'id_ujian_mp'));
     }
 
-    public function datatablesUTSAbsensiSiswa(Request $request, $id_ujian_mp){
+    public function datatablesUTSAbsensiSiswa(Request $request, $id_ujian_mp)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchDataSiswaUjianMp($auth_data, $id_ujian_mp);
-        $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp','=',$id_ujian_mp)->get();
+        $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $id_ujian_mp)->get();
 
         return Datatables::of($list_data)
-            ->addColumn('checkbox', function($item){
+            ->addColumn('checkbox', function ($item) {
                 $data = array(
                     'id_siswa' => $item->id_siswa
                 );
                 return $data;
             })
-            ->addColumn('alasan', function($item) use ($data_ujian_mp_presensi){
+            ->addColumn('alasan', function ($item) use ($data_ujian_mp_presensi) {
                 $kehadiran = null;
-                if($data_ujian_mp_presensi->first() && $ujian_mp_presensi = $data_ujian_mp_presensi->firstWhere('id_siswa', $item->id_siswa)){
+                if ($data_ujian_mp_presensi->first() && $ujian_mp_presensi = $data_ujian_mp_presensi->firstWhere('id_siswa', $item->id_siswa)) {
                     $kehadiran = $ujian_mp_presensi->kehadiran;
                 }
                 $options = array(
@@ -226,7 +231,8 @@ class AbsensiSiswaController extends BaseController{
 
 
     // ==== ACTION PRESENSI UAS ====
-    public function actionViewUASAbsensiSiswa(Request $request){
+    public function actionViewUASAbsensiSiswa(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -235,21 +241,21 @@ class AbsensiSiswaController extends BaseController{
             'id_ujian_mp' => 'required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
                 'path' => 'presensi/absensi-siswa/view-uas/'.$input->id_ujian_mp
-            ];   
+            ];
         }
     }
 
-    public function viewUASAbsensiSiswa(Request $request, $id_ujian_mp){
+    public function viewUASAbsensiSiswa(Request $request, $id_ujian_mp)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -258,27 +264,27 @@ class AbsensiSiswaController extends BaseController{
 
         $data_kelas = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0, $id_ujian_mp);
 
-        return view('guru/presensi/absensi-siswa/view-uas-absensi-siswa',compact('auth_data','semester_aktif','data_kelas', 'id_ujian_mp'));
-
+        return view('guru/presensi/absensi-siswa/view-uas-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'id_ujian_mp'));
     }
 
-    public function datatablesUASAbsensiSiswa(Request $request, $id_ujian_mp){
+    public function datatablesUASAbsensiSiswa(Request $request, $id_ujian_mp)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchDataSiswaUjianMp($auth_data, $id_ujian_mp);
-        $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp','=',$id_ujian_mp)->get();
+        $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $id_ujian_mp)->get();
 
         return Datatables::of($list_data)
-            ->addColumn('checkbox', function($item){
+            ->addColumn('checkbox', function ($item) {
                 $data = array(
                     'id_siswa' => $item->id_siswa
                 );
                 return $data;
             })
-            ->addColumn('alasan', function($item) use ($data_ujian_mp_presensi){
+            ->addColumn('alasan', function ($item) use ($data_ujian_mp_presensi) {
                 $kehadiran = null;
-                if($data_ujian_mp_presensi->first() && $ujian_mp_presensi = $data_ujian_mp_presensi->firstWhere('id_siswa', $item->id_siswa)){
+                if ($data_ujian_mp_presensi->first() && $ujian_mp_presensi = $data_ujian_mp_presensi->firstWhere('id_siswa', $item->id_siswa)) {
                     $kehadiran = $ujian_mp_presensi->kehadiran;
                 }
                 $options = array(
@@ -300,8 +306,8 @@ class AbsensiSiswaController extends BaseController{
 
 
     // Action POST
-    public function actionAbsensiSiswa(Request $request, $mode, $id = null, $pertemuan_ke = null){
-
+    public function actionAbsensiSiswa(Request $request, $mode, $id = null, $pertemuan_ke = null)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
@@ -311,13 +317,12 @@ class AbsensiSiswaController extends BaseController{
             'tgl_presensi' => 'required'
         ]);
 
-        if($validator->fails() && $mode == 'add-kbm') {
+        if ($validator->fails() && $mode == 'add-kbm') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             
@@ -325,18 +330,16 @@ class AbsensiSiswaController extends BaseController{
             // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
             // ACTION ADD
-            if($mode == 'add-kbm') {
+            if ($mode == 'add-kbm') {
                 $id_jadwal_kelas_mp = $id;
 
-                $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp','=',$id_jadwal_kelas_mp)->where('pertemuan_ke','=',$pertemuan_ke)->first();
+                $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
                 
                 DB::beginTransaction();
                 try {
-                
-                    if($presensi_mp) {
+                    if ($presensi_mp) {
                         $presensi_mp->updated_by         = $input->auth_data->pengguna->id_pengguna;
-                    }
-                    else { 
+                    } else {
                         // make id
                         $id_presensi_mp = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                         
@@ -361,16 +364,15 @@ class AbsensiSiswaController extends BaseController{
                         
                     // PresensiMpSiswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        if(! empty($alasan)) {
+                        if (! empty($alasan)) {
                             $kehadiran = $alasan;
-                        }
-                        else {
+                        } else {
                             $kehadiran = 1;
                         }
                         
-                        if($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp','=',$presensi_mp->id_presensi_mp)->where('id_siswa','=',$id_siswa)->first()){
+                        if ($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp->id_presensi_mp)->where('id_siswa', '=', $id_siswa)->first()) {
                             $presensi_mp_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
-                        }else{
+                        } else {
                             // make id
                             $id_presensi_mp_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
@@ -378,11 +380,11 @@ class AbsensiSiswaController extends BaseController{
                             $presensi_mp_siswa->id_presensi_mp_siswa      = $id_presensi_mp_siswa;
                             $presensi_mp_siswa->id_presensi_mp            = $presensi_mp->id_presensi_mp;
                             $presensi_mp_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
-                            $presensi_mp_siswa->id_siswa                  = $id_siswa;   
+                            $presensi_mp_siswa->id_siswa                  = $id_siswa;
                         }
 
                         $presensi_mp_siswa->kehadiran     = $kehadiran;
-                        $presensi_mp_siswa->save();   
+                        $presensi_mp_siswa->save();
                     }
 
                     DB::commit();
@@ -393,7 +395,6 @@ class AbsensiSiswaController extends BaseController{
                         'path' => 'presensi/absensi-siswa/view-kbm/'.$id_jadwal_kelas_mp.'/'.$pertemuan_ke,
                         'message' => 'Save Absensi KBM Siswa successfully'
                     ];
-
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
@@ -403,8 +404,7 @@ class AbsensiSiswaController extends BaseController{
                         'message' => 'Absensi KBM Gagal!'
                     ];
                 }
-            }
-            elseif($mode == 'add-uts') {
+            } elseif ($mode == 'add-uts') {
                 $id_ujian_mp = $id;
 
                 DB::beginTransaction();
@@ -412,13 +412,12 @@ class AbsensiSiswaController extends BaseController{
                 try {
                     // UjianMpPresensi
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        $ujianMpPresensiSet = UjianMpPresensi::where('id_ujian_mp','=',$id_ujian_mp)->where('id_siswa','=',$id_siswa)->first();
+                        $ujianMpPresensiSet = UjianMpPresensi::where('id_ujian_mp', '=', $id_ujian_mp)->where('id_siswa', '=', $id_siswa)->first();
 
                         $ujianMpPresensi                = UjianMpPresensi::find($ujianMpPresensiSet->id_ujian_mp_presensi);
-                        if(! empty($alasan)) {
+                        if (! empty($alasan)) {
                             $kehadiran = $alasan;
-                        }
-                        else {
+                        } else {
                             $kehadiran = 1;
                         }
                         $ujianMpPresensi->kehadiran     = $kehadiran;
@@ -433,7 +432,6 @@ class AbsensiSiswaController extends BaseController{
                         'path' => 'presensi/absensi-siswa/view-uts/'.$id_ujian_mp,
                         'message' => 'Save Absensi UTS Siswa successfully'
                     ];
-
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
@@ -442,9 +440,8 @@ class AbsensiSiswaController extends BaseController{
                         'status' => 203, // GAGAL
                         'message' => 'Absensi UTS Gagal!'
                     ];
-                }      
-            }
-            elseif($mode == 'add-uas') {
+                }
+            } elseif ($mode == 'add-uas') {
                 $id_ujian_mp = $id;
 
                 DB::beginTransaction();
@@ -452,13 +449,12 @@ class AbsensiSiswaController extends BaseController{
                 try {
                     // UjianMpPresensi
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
-                        $ujianMpPresensiSet = UjianMpPresensi::where('id_ujian_mp','=',$id_ujian_mp)->where('id_siswa','=',$id_siswa)->first();
+                        $ujianMpPresensiSet = UjianMpPresensi::where('id_ujian_mp', '=', $id_ujian_mp)->where('id_siswa', '=', $id_siswa)->first();
 
                         $ujianMpPresensi                = UjianMpPresensi::find($ujianMpPresensiSet->id_ujian_mp_presensi);
-                        if(! empty($alasan)) {
+                        if (! empty($alasan)) {
                             $kehadiran = $alasan;
-                        }
-                        else {
+                        } else {
                             $kehadiran = 1;
                         }
                         $ujianMpPresensi->kehadiran     = $kehadiran;
@@ -473,7 +469,6 @@ class AbsensiSiswaController extends BaseController{
                         'path' => 'presensi/absensi-siswa/view-uas/'.$id_ujian_mp,
                         'message' => 'Save Absensi UAS Siswa successfully'
                     ];
-                    
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
@@ -486,5 +481,4 @@ class AbsensiSiswaController extends BaseController{
             }
         }
     }
-
 }

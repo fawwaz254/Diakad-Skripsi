@@ -5,7 +5,7 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                <div class="header bg-pink">
+                <div class="header">
                     <h2>
                         EDIT DATA TENAGA PENDIDIK
                     </h2>
@@ -13,10 +13,8 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-tendik/edit/'.$tendik->id_staff)}}">
                         {{csrf_field()}}
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Identitas Pendidik dan Tenaga Pendidik
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Nama Tendik
@@ -92,10 +90,8 @@
                                 <input type="text" class="form-control" name="nm_ibu_kandung" aria-invalid="true" value="{{$tendik->nm_ibu_kandung}}">
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Data Pribadi
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Alamat Jalan
@@ -291,10 +287,53 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <h2 class="card-inside-title">
+                            Jenis Jabatan Internal
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                               <select class="form-control show-tick" name="jenis_jabatan" required >
+                                    <option value="" disabled selected >-- Pilih Jenis Jabatan  --</option>
+                                    @if($tendik->jenis_jabatan == 1)
+                                        <option value="1" selected >Kepala Unit Sarana & Prasarana</option>
+                                    @else
+                                        <option value="1">Kepala Unit Sarana & Prasarana</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 2)
+                                        <option value="2" selected >Kepala Unit Keuangan</option>
+                                    @else
+                                        <option value="2">Kepala Unit Keuangan</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 3)
+                                        <option value="3" selected >Staf Unit Sarana & Prasarana</option>
+                                    @else
+                                        <option value="3">Staf Unit Sarana & Prasarana</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 4)
+                                        <option value="4" selected >Staf Unit Keuangan</option>
+                                    @else
+                                        <option value="4">Staf Unit Keuangan</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 5)
+                                        <option value="5" selected >Staf Unit Sumber Daya</option>
+                                    @else
+                                        <option value="5">Staf Unit Sumber Daya</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 98)
+                                        <option value="98" selected >Kepala Unit</option>
+                                    @else
+                                        <option value="98">Kepala Unit</option>
+                                    @endif
+                                    @if($tendik->jenis_jabatan == 99)
+                                        <option value="99" selected >Staf Unit</option>
+                                    @else
+                                        <option value="99">Staf Unit</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="demo-color-box bg-success">
                                 Kepegawaian
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                             Jenis Kepegawaian
@@ -430,10 +469,8 @@
                                 <input type="text" class="form-control" name="nomor_kartu_pasangan" aria-invalid="true" value="{{$tendik->nomor_kartu_pasangan}}">
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kompetensi Khusus
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Punya Lisensi Kepala Sekolah
@@ -481,10 +518,8 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Kontak
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Nomor Telepon
@@ -510,10 +545,8 @@
                                 <input type="email" class="form-control" name="email" aria-invalid="true" value="{{$tendik->email}}">
                             </div>
                         </div>
-                        <div class="header bg-pink">
-                            <h2>
+                        <div class="demo-color-box bg-success">
                                 Penugasan
-                            </h2>
                         </div>
                         <h2 class="card-inside-title">
                            Nomor SK Penugasan

@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
-                <div class="header bg-light-green">
+            <div class="card is-gap">
+                <div class="header">
                     <h2>
                         PLOTTING MAPEL SISWA
                     </h2>
@@ -54,10 +54,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 {{csrf_field()}}
                 <div class="body">
@@ -104,7 +100,7 @@
             { data: 'jml_siswa', name: 'jml_siswa' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-block bg-blue waves-effect" href="'+ detail_url +'">Manual Plotting</a>';
+                    return '<a class="target-link btn btn-block bg-blue waves-effect" href="'+ detail_url +'/' + data.id + '">Manual Plotting</a>';
                 }
             }           
         ]

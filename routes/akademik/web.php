@@ -1,11 +1,11 @@
-<?php 
+<?php
 // ROLE AKADEMIK
-Route::group(array('middleware'=> ['token_staff']), function() {
-    Route::group(array('prefix' => 'akademik'), function() {
+Route::group(array('middleware'=> ['token_staff']), function () {
+    Route::group(array('prefix' => 'akademik'), function () {
         Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
 
         /** ==== MODUL DATA AKADEMIK ==== **/
-        Route::group(array('prefix' => 'data-akademik'), function() {
+        Route::group(array('prefix' => 'data-akademik'), function () {
             // MENU Kurikulum
             Route::get('kurikulum', 'Akademik\DataAkademik\KurikulumController@viewKurikulum');
             Route::get('kurikulum/datatables', 'Akademik\DataAkademik\KurikulumController@datatablesKurikulum');
@@ -52,7 +52,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
         // MODUL AKTIVITAS SEMESTER
-        Route::group(array('prefix' => 'aktivitas-semester'), function() {
+        Route::group(array('prefix' => 'aktivitas-semester'), function () {
             // MENU Usulan Mata Ajar
             Route::get('usulan-mata-ajar', 'Akademik\AktivitasSemester\UsulanMataAjarController@viewUsulanMataAjar');
             Route::post('post-usulan-mata-ajar', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionViewUsulanMataAjar');
@@ -63,6 +63,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('usulan-mata-ajar/add/{id_semester}/{id_mata_pelajaran}', 'Akademik\AktivitasSemester\UsulanMataAjarController@addUsulanMataAjar');
             Route::get('usulan-mata-ajar/edit/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@editUsulanMataAjar');
             Route::get('usulan-mata-ajar/copy/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyUsulanMataAjar');
+            Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyJadwalSemesterLain');
 
             Route::post('action-usulan-mata-ajar/{mode}/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionUsulanMataAjar');
 
@@ -79,7 +80,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::post('post-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/view-kelas-plotting/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewKelasPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/datatables/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewMapelPlottingMapelSiswa');
+            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewMapelPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesMataPelajaran');
             Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesSiswa');
             Route::post('post-daftar-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewDaftarPlottingMapelSiswa');
@@ -108,10 +109,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
             Route::post('action-komponen-nilai/{mode}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@actionKomponenNilai');
-
         });
         
-        Route::group(array('prefix' => 'ujian'), function() {
+        Route::group(array('prefix' => 'ujian'), function () {
             //UTS
             Route::get('ujian-uts-reguler-online', 'Akademik\Ujian\UjianUTSController@viewUjianUts');
             Route::get('ujian-uts-reguler-online/datatables/{online}', 'Akademik\Ujian\UjianUTSController@datatablesUjianUts');
@@ -147,7 +147,30 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('try-out-reguler-online/assign/{id}', 'Akademik\Ujian\TryOutController@assignTryOut');
 
             Route::post('action-try-out/{mode}/{id}', 'Akademik\Ujian\TryOutController@actionTryOut');
-            
         });
-    });	
-});	
+
+        // MODUL PRESENSI
+        Route::group(array('prefix' => 'presensi'), function () {
+            // MENU Cetak Presensi KBM
+            Route::get('cetak-presensi-kbm', 'Akademik\Presensi\CetakPresensiKBMController@viewCetakPresensiKBM');
+            Route::post('post-cetak-presensi-kbm', 'Akademik\Presensi\CetakPresensiKBMController@actionviewCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm/view-semester-cetak-presensi-kbm/{id}', 'Akademik\Presensi\CetakPresensiKBMController@viewSemesterCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm/datatables/{id}', 'Akademik\Presensi\CetakPresensiKBMController@datatablesCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm/print/{id}', 'Akademik\Presensi\CetakPresensiKBMController@printCetakPresensiKBM');
+
+            // MENU Cetak Presensi UTS
+            Route::get('cetak-presensi-uts', 'Akademik\Presensi\CetakPresensiUTSController@viewCetakPresensiUTS');
+            Route::post('post-cetak-presensi-uts', 'Akademik\Presensi\CetakPresensiUTSController@actionviewCetakPresensiUTS');
+            Route::get('cetak-presensi-uts/view-semester-cetak-presensi-uts/{id}', 'Akademik\Presensi\CetakPresensiUTSController@viewSemesterCetakPresensiUTS');
+            Route::get('cetak-presensi-uts/datatables/{id}', 'Akademik\Presensi\CetakPresensiUTSController@datatablesCetakPresensiUTS');
+            Route::get('cetak-presensi-uts/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUTSController@printCetakPresensiUTS');
+
+            // MENU Cetak Presensi UAS
+            Route::get('cetak-presensi-uas', 'Akademik\Presensi\CetakPresensiUASController@viewCetakPresensiUAS');
+            Route::post('post-cetak-presensi-uas', 'Akademik\Presensi\CetakPresensiUASController@actionviewCetakPresensiUAS');
+            Route::get('cetak-presensi-uas/view-semester-cetak-presensi-uas/{id}', 'Akademik\Presensi\CetakPresensiUASController@viewSemesterCetakPresensiUAS');
+            Route::get('cetak-presensi-uas/datatables/{id}', 'Akademik\Presensi\CetakPresensiUASController@datatablesCetakPresensiUAS');
+            Route::get('cetak-presensi-uas/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUASController@printCetakPresensiUAS');
+        });
+    });
+});

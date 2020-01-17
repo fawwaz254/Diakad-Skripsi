@@ -100,6 +100,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('kelas/datatables', 'Pendidikan\SettingKelas\KelasController@datatablesKelas');
 			Route::get('kelas/add', 'Pendidikan\SettingKelas\KelasController@addKelas');
 			Route::get('kelas/edit/{id}', 'Pendidikan\SettingKelas\KelasController@editKelas');
+			Route::get('kelas/copy', 'Pendidikan\SettingKelas\KelasController@copyKelas');
 
 			Route::post('action-kelas/{mode}/{id}', 'Pendidikan\SettingKelas\KelasController@actionKelas');
 

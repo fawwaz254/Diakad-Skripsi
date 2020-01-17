@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
-                    <div class="header bg-green">
+                    <div class="header">
                         <h2>Data Siswa</h2> 
                     </div>
                 <div class="body">
@@ -172,7 +172,7 @@
     var id_status_pengguna = {!! json_encode($id_status_pengguna) !!};
     var id_jalur = {!! json_encode($id_jalur) !!};
 
-    var modul_url       = 'data-kesiswaan';
+    var modul_url       = 'siswa';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-siswa/datatables/' + id_jurusan + '/' + id_kelas +'/' + thn_masuk_siswa+'/' + id_jalur+'/' + id_status_pengguna;
 
     var primary_table = $('#primary_table').DataTable({
