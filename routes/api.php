@@ -26,10 +26,23 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
         Route::post('kelas-kbm/get', 'Apiv1Controller@actionGetKelasKBM');
         Route::post('siswa-by-kelas-kbm/get', 'Apiv1Controller@actionGetSiswaByJadwalKelasKBM');
         Route::post('pertemuan-kelas-kbm/get', 'Apiv1Controller@actionGetPertemuanByJadwalKelasKBM');
+
+        Route::post('kelas-uts/get', 'Apiv1Controller@actionGetKelasUTS');
+        Route::post('kelas-uas/get', 'Apiv1Controller@actionGetKelasUAS');
         
         Route::group(array('prefix' => 'presensi-kbm'), function () {
             Route::post('get', 'Apiv1Controller@actionGetPresensiKBM');
-            Route::post('submit', 'Apiv1Controller@actionAbsensiSiswa');
+            Route::post('submit', 'Apiv1Controller@actionAbsensiKBMSiswa');
+        });
+
+        Route::group(array('prefix' => 'presensi-uts'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetPresensiUjian');
+            Route::post('submit', 'Apiv1Controller@actionAbsensiUjianSiswa');
+        });
+
+        Route::group(array('prefix' => 'presensi-uas'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetPresensiUjian');
+            Route::post('submit', 'Apiv1Controller@actionAbsensiUjianSiswa');
         });
         
         Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
