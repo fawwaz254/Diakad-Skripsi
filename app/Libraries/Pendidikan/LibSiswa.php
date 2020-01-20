@@ -63,9 +63,18 @@ class LibSiswa
         // get all siswa order by kelas
         if ($id_kelas == null && $id == null) {
             $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
-                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                    ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                    ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                    ->join('pengguna', function ($q) {
+                        $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                            ->whereNull('pengguna.deleted_at');
+                    })
+                    ->join('status_pengguna', function ($q) {
+                        $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                            ->whereNull('status_pengguna.deleted_at');
+                    })
+                    ->join('kelas', function ($q) {
+                        $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+                            ->whereNull('kelas.deleted_at');
+                    })
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                     ->orderBy('kelas.nm_kelas', 'asc')
@@ -76,11 +85,21 @@ class LibSiswa
         // get siswa by kelas
         elseif ($id == null) {
             $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
-                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                    ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                    ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                    ->join('pengguna', function ($q) {
+                        $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                            ->whereNull('pengguna.deleted_at');
+                    })
+                    ->join('status_pengguna', function ($q) {
+                        $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                            ->whereNull('status_pengguna.deleted_at');
+                    })
+                    ->join('kelas', function ($q) {
+                        $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+                            ->whereNull('kelas.deleted_at');
+                    })
                     ->where('siswa.id_kelas', '=', $id_kelas)
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                     ->orderBy('siswa.nis_siswa', 'asc')
                     ->get();
         }

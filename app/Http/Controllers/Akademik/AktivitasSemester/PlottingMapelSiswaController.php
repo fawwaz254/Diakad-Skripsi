@@ -247,11 +247,25 @@ class PlottingMapelSiswaController extends BaseController
                 ->make(true);
     }
 
-    public function datatablesSiswa(Request $request, $angkatan, $tingkat)
+    public function datatablesSiswa(Request $request, $angkatan, $kelas)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->where('status_pengguna.aktif_status_pengguna', '=', '1')->where('siswa.id_kelas', '=', $tingkat)->get();
+        $list_data = Siswa::join('pengguna', function ($q) {
+            $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                ->whereNull('pengguna.deleted_at');
+        })
+                            ->join('status_pengguna', function ($q) use ($input) {
+                                $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                                    ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                                    ->where('status_pengguna.aktif_status_pengguna', '=', '1')
+                                    ->whereNull('status_pengguna.deleted_at');
+                            })
+                            ->join('kelas', function ($q) {
+                                $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+                                    ->whereNull('kelas.deleted_at');
+                            })
+                            ->where('siswa.id_kelas', '=', $kelas)->get();
 
         return Datatables::of($list_data)
                 ->addColumn('checkbox', function ($item) {
