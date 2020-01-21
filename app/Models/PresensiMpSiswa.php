@@ -16,7 +16,7 @@ class PresensiMpSiswa extends Model
 
     protected $primaryKey = 'id_presensi_mp_siswa';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -32,9 +32,8 @@ class PresensiMpSiswa extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function presensi_mp()
+    {
+        return $this->belongsTo('App\Models\PresensiMp', 'id_presensi_mp');
+    }
 }

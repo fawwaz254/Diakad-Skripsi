@@ -41,7 +41,6 @@ class UsulanMataAjarController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-        // dd($data_semester);
 
         return view('akademik/aktivitas-semester/usulan-mata-ajar/view-usulan-mata-ajar', compact('auth_data', 'data_semester'));
     }
