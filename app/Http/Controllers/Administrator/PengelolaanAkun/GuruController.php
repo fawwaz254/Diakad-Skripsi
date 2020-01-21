@@ -32,7 +32,10 @@ class GuruController extends BaseController
                             $join->on('rp.id_role', '=', 'role.id_role')
                                              ->whereNull('rp.deleted_at');
                         })
-                        ->join('pengguna AS p', 'p.id_pengguna', '=', 'rp.id_pengguna')
+                        ->join('pengguna AS p', function ($q) {
+                            $q->on('p.id_pengguna', '=', 'rp.id_pengguna')
+                                ->whereNull('p.deleted_at');
+                        })
                         ->where('p.status_join_table', '=', "?")
                         ->where('p.id_sekolah', '=', "?")
                         ->orderBy('role.nm_role', 'asc')
