@@ -25,6 +25,7 @@ use App\Models\KetSubkategoriRapb as KetSubkategoriRapb;
 use App\Models\Semester as Semester;
 use App\Models\Rapb as Rapb;
 use App\Models\Realisasi as Realisasi;
+use App\Models\RealisasiPembayaran as RealisasiPembayaran;
 
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -756,13 +757,26 @@ class LibDataKeuangan
         // get mode view
         if ($id == null){
             $realisasi = Realisasi::select('realisasi.id_realisasi', 'realisasi.id_semester_realisasi', 'realisasi.id_rapb', 'realisasi.id_unit_kerja', 'realisasi.id_ket_subkategori_rapb', 'rapb.id_subkategori_rapb', 'kategori_rapb.tipe_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 
-                'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'realisasi.id_rpb_sarpras', 'realisasi.nm_realisasi', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb', 'realisasi.termin_dana_realisasi', 'realisasi.is_hutang_realisasi', 'realisasi.dana_realisasi', 'realisasi.tgl_realisasi', 'p_cek_keuangan.nm_pengguna AS nm_cek_keuangan', 'p_keuangan.nm_pengguna AS nm_kepala_keuangan')
+                'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'realisasi.id_rpb_sarpras', 'realisasi.nm_realisasi', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb', 'realisasi.termin_dana_realisasi', 'realisasi.is_hutang_realisasi', 'realisasi.dana_realisasi', 'realisasi.tgl_realisasi', 'p_cek_keuangan.nm_pengguna AS nm_cek_keuangan', 'p_keuangan.nm_pengguna AS nm_kepala_keuangan', 
+                's_sarpras.tahun_ajaran AS tahun_ajaran_sarpras', 's_sarpras.nm_semester AS nm_semester_sarpras', 'uk_sarpras.nm_unit_kerja AS nm_unit_kerja_sarpras', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras.harga_satuan_rpb_sarpras', 'rpb_sarpras.qty_rpb_sarpras', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras')
                                 ->join('semester','semester.id_semester','=','realisasi.id_semester_realisasi')
                                 ->join('rapb','rapb.id_rapb','=','realisasi.id_rapb')
                                 ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
                                 ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
                                 ->join('unit_kerja','unit_kerja.id_unit_kerja','=','realisasi.id_unit_kerja')
                                 ->leftJoin('ket_subkategori_rapb','ket_subkategori_rapb.id_ket_subkategori_rapb','=','realisasi.id_ket_subkategori_rapb')
+                                ->leftJoin('rpb_sarpras', function ($q) {
+                                    $q->on('rpb_sarpras.id_rpb_sarpras', '=', 'realisasi.id_rpb_sarpras')
+                                        ->whereNotNull('rpb_sarpras.id_pengguna_kepala_unit')
+                                        ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras')
+                                        ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras_approve')
+                                        ->whereNull('rpb_sarpras.deleted_at');
+                                })
+                                ->leftJoin('semester AS s_sarpras','s_sarpras.id_semester','=','rpb_sarpras.id_semester')
+                                ->leftJoin('unit_kerja AS uk_sarpras','uk_sarpras.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
+                                ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
+                                ->leftJoin('inventaris_ruangan','inventaris_ruangan.id_inventaris_ruangan','=','rpb_sarpras.id_inventaris_ruangan')
+                                ->leftJoin('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
                                 ->leftJoin('pengguna AS p_cek_keuangan','p_cek_keuangan.id_pengguna','=','realisasi.id_pengguna_cek_keuangan')
                                 ->leftJoin('pengguna AS p_keuangan','p_keuangan.id_pengguna','=','realisasi.id_pengguna_kepala_keuangan')
                                 ->where('realisasi.id_rapb','=',$id_rapb)
@@ -778,18 +792,53 @@ class LibDataKeuangan
         // get mode edit
         else{
             $realisasi = Realisasi::select('realisasi.id_realisasi', 'realisasi.id_semester_realisasi', 'realisasi.id_rapb', 'realisasi.id_unit_kerja', 'realisasi.id_ket_subkategori_rapb', 'rapb.id_subkategori_rapb', 'kategori_rapb.tipe_kategori_rapb', 'subkategori_rapb.kode_subkategori_rapb', 'subkategori_rapb.nm_subkategori_rapb', 
-                'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'realisasi.id_rpb_sarpras', 'realisasi.nm_realisasi', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb', 'realisasi.termin_dana_realisasi', 'realisasi.is_hutang_realisasi', 'realisasi.dana_realisasi', 'realisasi.tgl_realisasi')
+                'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'realisasi.id_rpb_sarpras', 'realisasi.nm_realisasi', 'ket_subkategori_rapb.kode_ket_subkategori_rapb', 'ket_subkategori_rapb.nm_ket_subkategori_rapb', 'realisasi.termin_dana_realisasi', 'realisasi.is_hutang_realisasi', 'realisasi.dana_realisasi', 'realisasi.tgl_realisasi',
+                's_sarpras.tahun_ajaran AS tahun_ajaran_sarpras', 's_sarpras.nm_semester AS nm_semester_sarpras', 'uk_sarpras.nm_unit_kerja AS nm_unit_kerja_sarpras', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras.harga_satuan_rpb_sarpras', 'rpb_sarpras.qty_rpb_sarpras', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras')
                         ->join('semester','semester.id_semester','=','realisasi.id_semester_realisasi')
                         ->join('rapb','rapb.id_rapb','=','realisasi.id_rapb')
                         ->join('subkategori_rapb','subkategori_rapb.id_subkategori_rapb','=','rapb.id_subkategori_rapb')
                         ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
                         ->join('unit_kerja','unit_kerja.id_unit_kerja','=','realisasi.id_unit_kerja')
                         ->leftJoin('ket_subkategori_rapb','ket_subkategori_rapb.id_ket_subkategori_rapb','=','realisasi.id_ket_subkategori_rapb')
+                        ->leftJoin('rpb_sarpras', function ($q) {
+                            $q->on('rpb_sarpras.id_rpb_sarpras', '=', 'realisasi.id_rpb_sarpras')
+                                ->whereNotNull('rpb_sarpras.id_pengguna_kepala_unit')
+                                ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras')
+                                ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras_approve')
+                                ->whereNull('rpb_sarpras.deleted_at');
+                        })
+                        ->leftJoin('semester AS s_sarpras','s_sarpras.id_semester','=','rpb_sarpras.id_semester')
+                        ->leftJoin('unit_kerja AS uk_sarpras','uk_sarpras.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
+                        ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
+                        ->leftJoin('inventaris_ruangan','inventaris_ruangan.id_inventaris_ruangan','=','rpb_sarpras.id_inventaris_ruangan')
+                        ->leftJoin('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
                         ->where('realisasi.id_realisasi','=',$id)
                         ->first();
         }
 
         return $realisasi;
+    }
+
+    static function fetchDataRealisasiPembayaran($auth_data, $id_realisasi, $id = null, $is_datatable = null){
+
+        // get mode view
+        if ($id == null){
+            $realisasiPembayaran = RealisasiPembayaran::select('realisasi_pembayaran.*', 'pengguna.nm_pengguna')
+                                ->leftJoin('pengguna','pengguna.id_pengguna','=','realisasi_pembayaran.id_pengguna_kepala_keuangan')
+                                ->where('id_realisasi','=',$id_realisasi)
+                                ->orderBy('termin_ke', 'asc');
+                                
+                                if ( $is_datatable == null ) {
+                                    $realisasiPembayaran = $realisasiPembayaran->get();
+                                }
+        }
+        // get mode edit
+        else{
+            $realisasiPembayaran = RealisasiPembayaran::where('id_realisasi_pembayaran','=',$id)
+                        ->first();
+        }
+
+        return $realisasiPembayaran;
     }
     /** ========== **/
 }

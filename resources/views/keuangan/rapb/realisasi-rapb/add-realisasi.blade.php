@@ -130,6 +130,18 @@
                             </div>
                         </div>
                         <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Tanggal RAPB
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ strftime("%A, %d %B %Y", strtotime($data_rapb->tgl_rapb)) }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <hr style="border: 3px solid black;">
                             </div>

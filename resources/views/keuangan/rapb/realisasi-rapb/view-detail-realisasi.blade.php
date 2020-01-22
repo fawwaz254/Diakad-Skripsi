@@ -124,6 +124,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Tanggal RAPB
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ strftime("%A, %d %B %Y", strtotime($data_rapb->tgl_rapb)) }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <hr style="border: 3px solid black;">
@@ -151,7 +163,7 @@
                                     <th>Tgl Realisasi</th>
                                     <th>Cek Staf Keuangan</th>
                                     <th>Apv Kepala Keuangan</th>
-                                    <th>Action</th>
+                                    <th>Cicilan</th>
                                 </tr>
                             </thead>
                         </table>
@@ -172,8 +184,7 @@
     var datatable_url           = base_url + '/' + role_url + '/' + modul_url + '/' + 'realisasi-rapb/datatables/' + id_rapb;
     var cek_keuangan_url        = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-realisasi/approve-cek-keuangan';
     var kepala_keuangan_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-realisasi/approve-kepala-keuangan';
-    var edit_url                = role_url + '#' + modul_url + '/' + 'realisasi-rapb/edit/' + id_semester_mulai + '/' + id_semester_selesai;
-    var delete_url              = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-realisasi-rapb/delete';
+    var cicilan_url                = role_url + '#' + modul_url + '/' + 'realisasi-rapb/view-detail-realisasi-termin/' + id_semester_mulai + '/' + id_semester_selesai + '/' + id_rapb;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -218,19 +229,11 @@
                     }
                 }
             },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
+            { data: 'cicilan', name: 'cicilan', searchable: false, orderable: false,
                 render: function(data){
-                    if(data.jenis_jabatan == 2) {
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                        '    <i class="material-icons">edit</i>'+
-                        '</a> '+
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                        '    <i class="material-icons">delete_forever</i>'+
-                        '</button>';
-                    }
-                    else {
-                        return '<a>Hanya Kepala Keuangan yang Berhak Edit dan Hapus</a>';
-                    }
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ cicilan_url + '/' + data.id +'">'+
+                        '    <i class="material-icons">attach_money</i>'+
+                        '</a> ';
                 }
             }
         ]

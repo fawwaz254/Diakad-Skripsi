@@ -10,6 +10,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Rapb as Rapb;
 use App\Models\Realisasi as Realisasi;
+use App\Models\RealisasiPembayaran as RealisasiPembayaran;
 use App\Models\Guru as Guru;
 use App\Models\Staff as Staff;
 use App\Models\UnitKerja as UnitKerja;
@@ -273,18 +274,6 @@ class RealisasiRapbController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $staff = Staff::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-                  ->first();
-
-        $jenis_jabatan = $staff->jenis_jabatan;
-
-        if (empty($jenis_jabatan)) {
-            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-                  ->first();
-
-            $jenis_jabatan = $guru->jenis_jabatan;
-        }
-
         $list_data = LibDataKeuangan::fetchDataRealisasi($auth_data, $id_rapb, null, "1");
 
         return Datatables::of($list_data)
@@ -330,10 +319,9 @@ class RealisasiRapbController extends BaseController
                     );
                     return $data;
                 })
-                ->addColumn('action', function($item) use($jenis_jabatan){
+                ->addColumn('cicilan', function($item) {
                     $data = array(
-                        'id' => $item->id_realisasi,
-                        'jenis_jabatan' => $jenis_jabatan
+                        'id' => $item->id_realisasi
                     );
                     return $data;
                 })
@@ -366,6 +354,49 @@ class RealisasiRapbController extends BaseController
 
     }
 
+    // Realisasi Pembayaran
+    public function viewDetailRealisasiTermin(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb, $id_realisasi){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
+
+        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
+
+        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb); 
+
+        $data_realisasi = LibDataKeuangan::fetchDataRealisasi($auth_data, $id_rapb, $id_realisasi); 
+
+        return view('keuangan/rapb/realisasi-rapb/view-detail-realisasi-termin',compact('auth_data','id_rapb', 'semester_mulai', 'semester_selesai', 'data_rapb', 'data_realisasi'));
+
+    }
+
+    public function datatablesRealisasiTermin(Request $request, $id_realisasi){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibDataKeuangan::fetchDataRealisasiPembayaran($auth_data, $id_realisasi, null, "1");
+
+        return Datatables::of($list_data)
+                ->addColumn('tgl_pembayaran', function($item){
+                    return strftime( "%A, %d %B %Y", strtotime($item->tgl_pembayaran));
+                })
+                ->addColumn('dana_realisasi_pembayaran', function($item){
+                    return "Rp".number_format($item->dana_realisasi_pembayaran);
+                })
+                ->addColumn('nm_kepala_keuangan', function($item){
+                    $data = array(
+                        'nm_kepala_keuangan'            => $item->nm_pengguna,
+                        'id_realisasi_pembayaran'       => $item->id_realisasi_pembayaran
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
 
 
     // Action POST
@@ -452,6 +483,50 @@ class RealisasiRapbController extends BaseController
               $realisasi->updated_by                   = $input->auth_data->pengguna->id_pengguna;
               $realisasi->updated_at                   = $now;
               $realisasi->save();
+
+              return [
+                  'status' => 203, // SUCCESS AND LOAD CONTENT
+                  'message' => 'Approve Kepala Keuangan successfully'
+              ]; 
+            }    
+            else {
+              return [
+                    'status' => 300, // SUCCESS AND LOAD TABLE
+                    'message' => 'Kepala Unit Keuangan Belum Dilakukan Setting!'
+                ];
+            } 
+        }
+        elseif($mode == 'approve-kepala-keuangan-termin') {
+            $guru = Guru::join('pengguna','pengguna.id_pengguna','=','guru.id_pengguna')
+                          ->where('guru.jenis_jabatan', '=', 2)
+                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                          ->first();
+
+            $staff = Staff::join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
+                          ->where('staff.jenis_jabatan', '=', 2)
+                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                          ->first();
+
+            if( ! empty($guru->id_pengguna)) {
+              // make object to find id
+              $RealisasiPembayaran                               = RealisasiPembayaran::find($id);
+              $RealisasiPembayaran->id_pengguna_kepala_keuangan  = $guru->id_pengguna;
+              $RealisasiPembayaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+              $RealisasiPembayaran->updated_at                   = $now;
+              $RealisasiPembayaran->save();
+
+              return [
+                  'status' => 203, // SUCCESS AND LOAD CONTENT
+                  'message' => 'Approve Kepala Keuangan successfully'
+              ]; 
+            }    
+            elseif(! empty($staff->id_pengguna)) {
+              // make object to find id
+              $RealisasiPembayaran                               = RealisasiPembayaran::find($id);
+              $RealisasiPembayaran->id_pengguna_kepala_keuangan  = $staff->id_pengguna;
+              $RealisasiPembayaran->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+              $RealisasiPembayaran->updated_at                   = $now;
+              $RealisasiPembayaran->save();
 
               return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
