@@ -14,6 +14,7 @@
                                         <th>Nama Kelas</th>
                                         <th>Guru Pengampu</th>
                                         <th>Mata Pelajaran</th>
+                                        <th>Jam</th>
                                         <th>Ruangan</th>
                                         <th>Status</th>
                                     </tr>
@@ -44,6 +45,7 @@
             { data: 'nm_kelas'},
             { data: 'nm_pengguna', searchable: false, orderable: false },
             { data: 'nm_mata_pelajaran'},
+            { data: 'jam', searchable: false, orderable: false },
             { data: 'nm_ruangan'},
             { data: 'status', searchable: false, orderable: false}
         ]
