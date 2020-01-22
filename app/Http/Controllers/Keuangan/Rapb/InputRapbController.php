@@ -130,7 +130,7 @@ class InputRapbController extends BaseController
                     );
                     return $data;
                 })
-                ->addColumn('action', function ($item) use ($staff) {
+                ->addColumn('action', function ($item) use ($jenis_jabatan) {
                     $data = array(
                         'id' => $item->id_rapb,
                         'jenis_jabatan' => $jenis_jabatan
