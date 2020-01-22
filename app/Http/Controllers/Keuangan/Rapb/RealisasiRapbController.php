@@ -115,6 +115,12 @@ class RealisasiRapbController extends BaseController
                     );
                     return $data;
                 })
+                ->addColumn('detail', function($item){
+                    $data = array(
+                        'id' => $item->id_rapb
+                    );
+                    return $data;
+                })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_rapb
@@ -169,6 +175,12 @@ class RealisasiRapbController extends BaseController
                     );
                     return $data;
                 })
+                ->addColumn('detail', function($item){
+                    $data = array(
+                        'id' => $item->id_rapb
+                    );
+                    return $data;
+                })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_rapb
@@ -220,6 +232,12 @@ class RealisasiRapbController extends BaseController
                     $data = array(
                         'nm_kepala_keuangan'  => $item->nm_kepala_keuangan,
                         'id_rapb'             => $item->id_rapb
+                    );
+                    return $data;
+                })
+                ->addColumn('detail', function($item){
+                    $data = array(
+                        'id' => $item->id_rapb
                     );
                     return $data;
                 })
@@ -312,7 +330,7 @@ class RealisasiRapbController extends BaseController
                     );
                     return $data;
                 })
-                ->addColumn('action', function($item) use($staff){
+                ->addColumn('action', function($item) use($jenis_jabatan){
                     $data = array(
                         'id' => $item->id_realisasi,
                         'jenis_jabatan' => $jenis_jabatan
@@ -321,6 +339,34 @@ class RealisasiRapbController extends BaseController
                 })
                 ->make(true);
     }
+
+    public function addRealisasi(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $id_realisasi = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
+
+        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
+
+        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb);
+
+        $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
+
+        $data_semester = LibDataAkademik::fetchDataRentangSemester($auth_data, $id_semester_mulai, $id_semester_selesai);
+
+        $data_ket_subkategori_rapb = LibDataKeuangan::fetchDataKetSubkategoriRapb($auth_data, $data_rapb->id_kategori_rapb, $data_rapb->id_subkategori_rapb);
+
+        return view('keuangan/rapb/realisasi-rapb/add-realisasi',compact('auth_data','id_realisasi', 'semester_mulai', 'semester_selesai', 'data_rapb', 'data_unit_kerja', 'data_semester', 'data_ket_subkategori_rapb'));
+
+    }
+
+
 
     // Action POST
     public function actionApvRealisasi(Request $request, $mode, $id = null){
@@ -421,82 +467,24 @@ class RealisasiRapbController extends BaseController
         }
     }
 
-
-
-
-
-
-
-    public function addRealisasiRapb(Request $request, $id_semester_mulai, $id_semester_selesai){
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        
-        // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-        $id_rapb = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
-        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
-
-        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
-
-        $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
-
-        return view('keuangan/rapb/input-rapb/add-input-rapb',compact('auth_data','id_rapb', 'semester_mulai', 'semester_selesai', 'data_unit_kerja'));
-
-    }
-
-    public function editRealisasiRapb(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb){
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        
-        // mengambil waktu sekarang
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
-
-        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
-
-        $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
-
-        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb);
-
-        $kategori = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'kategori_rapb.tipe_kategori_rapb')
-                            ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
-                            ->where('subkategori_rapb.id_subkategori_rapb', '=', $data_rapb->id_subkategori_rapb)
-                            ->first();
-
-        $jenis_kategori = $kategori->tipe_kategori_rapb;
-
-        $id_kategori_rapb = $kategori->id_kategori_rapb;
-
-        $data_kategori = LibDataKeuangan::fetchDataKategoriRapb($auth_data, $jenis_kategori);
-
-        $data_subkategori = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb);
-
-        // convert format date
-        $tgl_rapb = strftime( "%A, %d %B %Y", strtotime($data_rapb->tgl_rapb));
-
-        return view('keuangan/rapb/input-rapb/edit-input-rapb',compact('auth_data', 'semester_mulai', 'semester_selesai', 'data_unit_kerja', 'data_rapb', 'jenis_kategori', 'id_kategori_rapb', 'data_kategori', 'data_subkategori', 'tgl_rapb'));
-
-    }
-
     // Action POST
-    public function actionRealisasiRapb(Request $request, $mode, $id = null){
+    public function actionRealisasi(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
 
-        $validator = Validator::make($request->all(), [
-            'id_semester_mulai' => 'required',
-            'id_semester_selesai' => 'required',
-            'id_subkategori_rapb' => 'required',
-            'id_unit_kerja' => 'required',
-            'dana_perkiraan_rapb' => 'required',
-            'tgl_rapb' => 'required',
-            'prioritas_rapb' => 'required'
-        ]);
+        if ($mode == 'add') {
+            $validator = Validator::make($request->all(), [
+                'id_semester_realisasi'     => 'required',
+                'id_rapb'                   => 'required',
+                'id_unit_kerja'             => 'required',
+                'nm_realisasi'              => 'required',
+                //'id_ket_subkategori_rapb' => 'required',
+                'termin_dana_realisasi'     => 'required',
+                'is_cicilan'                => 'required',
+                'dana_realisasi'            => 'required',
+                'tgl_realisasi'             => 'required'
+            ]);
+        }
         
         if($validator->fails() && in_array($mode, ['add','edit'])) {
             return [
@@ -511,22 +499,31 @@ class RealisasiRapbController extends BaseController
             if($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $rapb                         = new Rapb;
-                $rapb->id_rapb                = $id;
-                $rapb->id_semester_mulai      = $input->id_semester_mulai;
-                $rapb->id_semester_selesai    = $input->id_semester_selesai;
-                $rapb->id_subkategori_rapb    = $input->id_subkategori_rapb;
-                $rapb->id_unit_kerja          = $input->id_unit_kerja;
-                $rapb->dana_perkiraan_rapb    = $input->dana_perkiraan_rapb;
-                $rapb->tgl_rapb               = date_format(date_create($input->tgl_rapb),"Y-m-d");
-                $rapb->prioritas_rapb         = $input->prioritas_rapb;
-                $rapb->created_by             = $input->auth_data->pengguna->id_pengguna;
-                $rapb->save();
+                $realisasi                               = new Realisasi;
+                $realisasi->id_realisasi                 = $id;
+                $realisasi->id_semester_realisasi        = $input->id_semester_realisasi;
+                $realisasi->id_rapb                      = $input->id_rapb;
+                $realisasi->id_unit_kerja                = $input->id_unit_kerja;
+                $realisasi->nm_realisasi                 = $input->nm_realisasi;
+                if (! empty($input->id_ket_subkategori_rapb)) {
+                    $realisasi->id_ket_subkategori_rapb  = $input->id_ket_subkategori_rapb;
+                }
+                $realisasi->termin_dana_realisasi        = $input->termin_dana_realisasi;
+                if ($input->is_cicilan == 1) {
+                    $realisasi->is_hutang_realisasi          = 1;
+                }
+                elseif ($input->is_cicilan == 2) {
+                    $realisasi->is_hutang_realisasi          = 0;
+                }
+                $realisasi->dana_realisasi               = $input->dana_realisasi;
+                $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi),"Y-m-d");
+                $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai,
-                    'message' => 'Input RAPB successfully'
+                    'path' => 'rapb/realisasi-rapb/view-detail-realisasi/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai.'/'.$input->id_rapb,
+                    'message' => 'Input Realisasi RAPB successfully'
                 ];  
             }
             elseif($mode == 'edit') {
@@ -573,4 +570,50 @@ class RealisasiRapbController extends BaseController
 
         }
     }
+
+
+
+
+
+
+
+    
+
+    public function editRealisasiRapb(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
+
+        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
+
+        $data_unit_kerja = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
+
+        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb);
+
+        $kategori = SubkategoriRapb::select('kategori_rapb.id_kategori_rapb', 'kategori_rapb.tipe_kategori_rapb')
+                            ->join('kategori_rapb','kategori_rapb.id_kategori_rapb','=','subkategori_rapb.id_kategori_rapb')
+                            ->where('subkategori_rapb.id_subkategori_rapb', '=', $data_rapb->id_subkategori_rapb)
+                            ->first();
+
+        $jenis_kategori = $kategori->tipe_kategori_rapb;
+
+        $id_kategori_rapb = $kategori->id_kategori_rapb;
+
+        $data_kategori = LibDataKeuangan::fetchDataKategoriRapb($auth_data, $jenis_kategori);
+
+        $data_subkategori = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb);
+
+        // convert format date
+        $tgl_rapb = strftime( "%A, %d %B %Y", strtotime($data_rapb->tgl_rapb));
+
+        return view('keuangan/rapb/input-rapb/edit-input-rapb',compact('auth_data', 'semester_mulai', 'semester_selesai', 'data_unit_kerja', 'data_rapb', 'jenis_kategori', 'id_kategori_rapb', 'data_kategori', 'data_subkategori', 'tgl_rapb'));
+
+    }
+
+    
 }

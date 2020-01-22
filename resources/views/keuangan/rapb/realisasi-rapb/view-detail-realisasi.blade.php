@@ -12,6 +12,14 @@
                 <div class="body">
                         {{csrf_field()}}
                         <div class="row clearfix">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    INFO RAPB
+                                </h2>
+                                <hr style="border: 3px solid black;">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Semester Mulai
@@ -118,10 +126,14 @@
                         </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <hr style="border: 3px solid black;">
                         </div>
                     </div>
                     <div class="block-header">
-                        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/add/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb)}}"><i class="material-icons">note_add</i><span>INPUT REALISASI</span></a></h2>
+                        <h2>
+                            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/add/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb)}}"><i class="material-icons">note_add</i><span>INPUT REALISASI</span></a> &nbsp; &nbsp;
+                            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/view-detail-realisasi-sarpras/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb)}}"><i class="material-icons">note_add</i><span>REALISASI RPB SARPRAS</span></a>
+                        </h2>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
@@ -181,7 +193,7 @@
             { data: 'termin_dana_realisasi', name: 'realisasi.termin_dana_realisasi' },
             { data: 'is_hutang', name: 'is_hutang' },
             { data: 'dana_realisasi', name: 'realisasi.dana_realisasi' },
-            { data: 'tgl_reealisasi', name: 'tgl_reealisasi' },
+            { data: 'tgl_realisasi', name: 'tgl_realisasi' },
             { data: 'nm_cek_keuangan', name: 'nm_cek_keuangan', searchable: false, orderable: false,
                 render: function(data){
                     if(data.nm_cek_keuangan == null) {
