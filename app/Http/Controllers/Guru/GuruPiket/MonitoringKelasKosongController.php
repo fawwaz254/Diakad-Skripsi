@@ -47,21 +47,22 @@ class MonitoringKelasKosongController extends BaseController
 
         $list_data = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
                                     FROM jadwal_kelas_mp jkm
-                                    JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
-                                    JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
-                                    JOIN kelas k ON k.id_kelas = kmp.id_kelas
-                                    JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
-                                    JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
-                                    JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
-                                    LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1
-                                    JOIN guru g ON g.id_guru = pm.id_guru
-                                    JOIN pengguna p ON p.id_pengguna = g.id_pengguna
+                                    JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan AND r.deleted_at IS NULL
+                                    JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp AND kmp.deleted_at IS NULL
+                                    JOIN kelas k ON k.id_kelas = kmp.id_kelas AND k.deleted_at IS NULL
+                                    JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran AND mp.deleted_at IS NULL
+                                    JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam AND jj.deleted_at IS NULL
+                                    JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai AND jjs.deleted_at IS NULL
+                                    LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1 AND pm.deleted_at IS NULL
+                                    JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
+                                    JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                         AND DATE(pmp.tgl_entry) = DATE(NOW()) 
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
+                                        AND pmp.deleted_at IS NULL
                                     WHERE jkm.id_jadwal_hari = '.$hari.' 
+                                    AND jkm.deleted_at IS NULL
                                     AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
-                                    AND pmp.id_presensi_mp IS NULL
                                     AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
                                     ORDER BY k.tingkat, k.nm_kelas');
                                     
