@@ -107,6 +107,7 @@
                                                 <th>Tanggal</th>
                                                 <th>Kepala Unit</th>
                                                 <th>Kepala Keuangan</th>
+                                                <th>Detail</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -132,6 +133,7 @@
                                                 <th>Tanggal</th>
                                                 <th>Kepala Unit</th>
                                                 <th>Kepala Keuangan</th>
+                                                <th>Detail</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -157,6 +159,7 @@
                                                 <th>Tanggal</th>
                                                 <th>Kepala Unit</th>
                                                 <th>Kepala Keuangan</th>
+                                                <th>Detail</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -182,6 +185,7 @@
     var datatable_url_sedang    = base_url + '/' + role_url + '/' + modul_url + '/' + 'realisasi-rapb/datatables/rapb-sedang/' + id_semester_mulai + '/' + id_semester_selesai;
     var datatable_url_rendah    = base_url + '/' + role_url + '/' + modul_url + '/' + 'realisasi-rapb/datatables/rapb-rendah/' + id_semester_mulai + '/' + id_semester_selesai;
     var add_url                 = role_url + '#' + modul_url + '/' + 'realisasi-rapb/add/' + id_semester_mulai + '/' + id_semester_selesai;
+    var sarpras_url             = role_url + '#' + modul_url + '/' + 'realisasi-rapb/view-detail-realisasi-sarpras/' + id_semester_mulai + '/' + id_semester_selesai;
     var view_detail_url         = role_url + '#' + modul_url + '/' + 'realisasi-rapb/view-detail-realisasi/' + id_semester_mulai + '/' + id_semester_selesai;
 
     // TINGGI
@@ -214,13 +218,20 @@
                     return '<a>'+ data.nm_kepala_keuangan +'</a>';
                 }
             },
+            { data: 'detail', name: 'detail', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ view_detail_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">visibility</i>'+
+                    '</a> ';
+                }
+            },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url + '/' + data.id +'">'+
                     '    <i class="material-icons">post_add</i>'+
                     '</a> '+
-                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ view_detail_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">visibility</i>'+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ sarpras_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">build</i>'+
                     '</a> ';
                 }
             }
@@ -264,13 +275,20 @@
                     return '<a>'+ data.nm_kepala_keuangan +'</a>';
                 }
             },
+            { data: 'detail', name: 'detail', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ view_detail_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">visibility</i>'+
+                    '</a> ';
+                }
+            },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">library_add</i>'+
+                    '    <i class="material-icons">post_add</i>'+
                     '</a> '+
-                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ view_detail_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">visibility</i>'+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ sarpras_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">build</i>'+
                     '</a> ';
                 }
             }
@@ -314,13 +332,20 @@
                     return '<a>'+ data.nm_kepala_keuangan +'</a>';
                 }
             },
+            { data: 'detail', name: 'detail', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ view_detail_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">visibility</i>'+
+                    '</a> ';
+                }
+            },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">add_to_queue</i>'+
+                    '    <i class="material-icons">post_add</i>'+
                     '</a> '+
-                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ view_detail_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">visibility</i>'+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ sarpras_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">build</i>'+
                     '</a> ';
                 }
             }
