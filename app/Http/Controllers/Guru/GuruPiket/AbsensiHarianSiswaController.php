@@ -76,6 +76,30 @@ class AbsensiHarianSiswaController extends BaseController
         );
     }
 
+    public function viewDetailAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $bulan)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $auth_data->modul_url = $this->modul_url;
+        $auth_data->menu_url = $this->menu_url;
+
+        $selected_semester = null;
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        if (!empty($id_semester)) {
+            $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+        }
+        
+        $selected_kelas = null;
+        if (!empty($id_kelas)) {
+            $selected_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
+        }
+
+        return view(
+            'guru/guru-piket/absensi-harian-siswa/view-detail-absensi-harian-siswa',
+            compact('auth_data', 'selected_kelas', 'data_kelas', 'selected_semester', 'data_semester')
+        );
+    }
+
     public function datatablesAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas)
     {
         $input = (object) $request->input();
@@ -110,7 +134,7 @@ class AbsensiHarianSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas);
+        $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'all');
         
         if (!empty($id)) {
             $presensi_harian = PresensiHarian::find($id);
@@ -140,7 +164,11 @@ class AbsensiHarianSiswaController extends BaseController
                 );
                 $data = array(
                     'options' => $options,
-                    'kehadiran' => $kehadiran
+                    'kehadiran' => $kehadiran,
+                    'status_pengguna' => array(
+                        'status' => $item->aktif_status_pengguna,
+                        'nm_status' => $item->nm_status_pengguna
+                    )
                 );
                 return $data;
             })

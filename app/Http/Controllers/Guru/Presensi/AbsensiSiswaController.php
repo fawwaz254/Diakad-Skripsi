@@ -120,7 +120,7 @@ class AbsensiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke);
+        $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke, 'all');
 
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
         
@@ -150,7 +150,11 @@ class AbsensiSiswaController extends BaseController
                 );
                 $data = array(
                     'options' => $options,
-                    'kehadiran' => $kehadiran
+                    'kehadiran' => $kehadiran,
+                    'status_pengguna' => array(
+                        'status' => $item->aktif_status_pengguna,
+                        'nm_status' => $item->nm_status_pengguna
+                    )
                 );
                 return $data;
             })
