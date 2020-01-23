@@ -181,6 +181,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // tabel reliasasi_pembayaran
             Route::get('realisasi-rapb/view-detail-realisasi-termin/{semester_mulai}/{semester_selesai}/{id_rapb}/{id_realisasi}', 'Keuangan\Rapb\RealisasiRapbController@viewDetailRealisasiTermin');
             Route::get('realisasi-rapb/datatables-termin/{id_realisasi}', 'Keuangan\Rapb\RealisasiRapbController@datatablesRealisasiTermin');
+            Route::get('realisasi-rapb/add-realisasi-termin/{semester_mulai}/{semester_selesai}/{id_rapb}/{id_realisasi}', 'Keuangan\Rapb\RealisasiRapbController@addRealisasiTermin');
 
             Route::post('action-apv-realisasi/{mode}/{id}', 'Keuangan\Rapb\RealisasiRapbController@actionApvRealisasi');
             Route::post('action-realisasi-rapb/{mode}/{id}', 'Keuangan\Rapb\RealisasiRapbController@actionRealisasi');

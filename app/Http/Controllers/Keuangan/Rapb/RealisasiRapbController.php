@@ -371,7 +371,9 @@ class RealisasiRapbController extends BaseController
 
         $data_realisasi = LibDataKeuangan::fetchDataRealisasi($auth_data, $id_rapb, $id_realisasi); 
 
-        return view('keuangan/rapb/realisasi-rapb/view-detail-realisasi-termin',compact('auth_data','id_rapb', 'semester_mulai', 'semester_selesai', 'data_rapb', 'data_realisasi'));
+        $total_cicilan = RealisasiPembayaran::where('id_realisasi', '=', $id_realisasi)->sum('dana_realisasi_pembayaran');
+
+        return view('keuangan/rapb/realisasi-rapb/view-detail-realisasi-termin',compact('auth_data','id_rapb', 'semester_mulai', 'semester_selesai', 'data_rapb', 'data_realisasi', 'total_cicilan'));
 
     }
 
@@ -396,6 +398,30 @@ class RealisasiRapbController extends BaseController
                     return $data;
                 })
                 ->make(true);
+    }
+
+    public function addRealisasiTermin(Request $request, $id_semester_mulai, $id_semester_selesai, $id_rapb, $id_realisasi){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $id_realisasi_pembayaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        $semester_mulai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_mulai);
+
+        $semester_selesai = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester_selesai);
+
+        $data_rapb = LibDataKeuangan::fetchDataRapb($auth_data, $id_semester_mulai, $id_semester_selesai, $id_rapb);
+
+        $data_realisasi = LibDataKeuangan::fetchDataRealisasi($auth_data, $id_rapb, $id_realisasi); 
+
+        $total_cicilan = RealisasiPembayaran::where('id_realisasi', '=', $id_realisasi)->sum('dana_realisasi_pembayaran');
+
+        return view('keuangan/rapb/realisasi-rapb/add-realisasi-termin',compact('auth_data','id_realisasi_pembayaran', 'semester_mulai', 'semester_selesai', 'data_rapb', 'data_realisasi', 'total_cicilan'));
+
     }
 
 
@@ -560,8 +586,15 @@ class RealisasiRapbController extends BaseController
                 'tgl_realisasi'             => 'required'
             ]);
         }
+        elseif ($mode == 'add-realisasi-termin') {
+            $validator = Validator::make($request->all(), [
+                'termin_ke'                     => 'required',
+                'tgl_pembayaran'                => 'required',
+                'dana_realisasi_pembayaran'     => 'required'
+            ]);
+        }
         
-        if($validator->fails() && in_array($mode, ['add','edit'])) {
+        if($validator->fails() && in_array($mode, ['add','add-realisasi-termin'])) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -601,23 +634,22 @@ class RealisasiRapbController extends BaseController
                     'message' => 'Input Realisasi RAPB successfully'
                 ];  
             }
-            elseif($mode == 'edit') {
+            elseif($mode == 'add-realisasi-termin') {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
                 // make object to find id
-                $rapb                         = Rapb::find($id);
-                $rapb->id_semester_mulai      = $input->id_semester_mulai;
-                $rapb->id_semester_selesai    = $input->id_semester_selesai;
-                $rapb->id_subkategori_rapb    = $input->id_subkategori_rapb;
-                $rapb->id_unit_kerja          = $input->id_unit_kerja;
-                $rapb->dana_perkiraan_rapb    = $input->dana_perkiraan_rapb;
-                $rapb->tgl_rapb               = date_format(date_create($input->tgl_rapb),"Y-m-d");
-                $rapb->prioritas_rapb         = $input->prioritas_rapb;
-                $rapb->updated_by             = $input->auth_data->pengguna->id_pengguna;
-                $rapb->updated_at             = $now;
-                $rapb->save();
+                $realisasiPembayaran                               = New RealisasiPembayaran;
+                $realisasiPembayaran->id_realisasi_pembayaran      = $id;
+                $realisasiPembayaran->id_realisasi                 = $input->id_realisasi;
+                $realisasiPembayaran->termin_ke                    = $input->termin_ke;
+                $realisasiPembayaran->tgl_pembayaran               = date_format(date_create($input->tgl_pembayaran),"Y-m-d");
+                $realisasiPembayaran->dana_realisasi_pembayaran    = $input->dana_realisasi_pembayaran;
+                $realisasiPembayaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasiPembayaran->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai,
+                    'path' => 'rapb/realisasi-rapb/view-detail-realisasi-termin/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai.'/'.$input->id_rapb.'/'.$input->id_realisasi,
                     'message' => 'Input RAPB successfully'
                 ];  
             }
