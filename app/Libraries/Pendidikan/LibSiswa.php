@@ -261,7 +261,7 @@ class LibSiswa
     public static function fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke = null, $type_status_pengguna = 'only-aktif')
     {
         if (!empty($tipe) && $tipe == 'rekap-absen') {
-            $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+            $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
                         ->join('pengguna', function ($join) {
                             $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
@@ -304,7 +304,7 @@ class LibSiswa
                         ->get();
         } else {
             if (! empty($pertemuan_ke)) {
-                $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+                $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
                         ->join('pengguna', function ($join) {
                             $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
@@ -351,7 +351,7 @@ class LibSiswa
                         ->orderBy('siswa.nis_siswa', 'asc')
                         ->get();
             } else {
-                $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+                $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
                         ->join('pengguna', function ($join) {
                             $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
