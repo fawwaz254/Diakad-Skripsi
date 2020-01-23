@@ -118,6 +118,22 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('subkategori-bykategori', 'Guru\PelanggaranSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
         });
 
+        /** ==== MODUL REWARD SISWA ==== **/
+        Route::group(array('prefix' => 'reward-siswa'), function () {
+            // MENU Input Pelanggaran Siswa
+            Route::get('input-reward-siswa', 'Guru\RewardSiswa\InputRewardSiswaController@viewInputRewardSiswa');
+            Route::post('post-input-reward-siswa', 'Guru\RewardSiswa\InputRewardSiswaController@actionViewInputRewardSiswa');
+            Route::get('input-reward-siswa/view-kelas/{id_kelas}', 'Guru\RewardSiswa\InputRewardSiswaController@viewKelasInputRewardSiswa');
+            Route::get('input-reward-siswa/add/{id_siswa}', 'Guru\RewardSiswa\InputRewardSiswaController@addInputRewardSiswa');
+            Route::get('input-reward-siswa/edit/{id}', 'Guru\RewardSiswa\InputRewardSiswaController@editInputRewardSiswa');
+
+            Route::get('input-reward-siswa/datatables/{id_kelas}', 'Guru\RewardSiswa\InputRewardSiswaController@datatablesInputRewardSiswa');
+            Route::post('action-input-reward-siswa/{mode}/{id}', 'Guru\RewardSiswa\InputRewardSiswaController@actionInputRewardSiswa');
+
+            Route::get('rekap-input-reward-siswa', 'Guru\RewardSiswa\InputRewardSiswaController@viewRekapInputRewardSiswa');
+            Route::get('rekap-input-reward-siswa/datatables', 'Guru\RewardSiswa\InputRewardSiswaController@datatablesRekapInputRewardSiswa');
+        });
+
         /** ==== MODUL SARANA PRASARANA ==== **/
         Route::group(array('prefix' => 'sarpras'), function () {
             // MENU Komplain Inventaris/Sarpras
