@@ -35,8 +35,12 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="tipe_unit_kerja" required="" aria-required="true"
-                                    aria-invalid="true">
+                                <select class="form-control show-tick" name="tipe_unit_kerja">
+                                    <option value="">-- Pilih Tipe Unit Kerja --</option>
+                                    <option value="PIMPINAN">PIMPINAN</option>
+                                    <option value="KEUANGAN">KEUANGAN</option>
+                                    <option value="SARPRAS">SARPRAS</option>
+                                </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">

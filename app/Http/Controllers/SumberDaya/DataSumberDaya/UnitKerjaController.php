@@ -83,7 +83,7 @@ class UnitKerjaController extends BaseController{
         $validator = Validator::make($request->all(), [
             'nm_unit_kerja'         => 'required',
             'deskripsi_unit_kerja'  => 'required',
-            'tipe_unit_kerja'       => 'required',
+            //'tipe_unit_kerja'       => 'required',
             //'id_unit_kerja_induk'   => 'required',
             'nm_singkatan_unit'     => 'required'
         ]);

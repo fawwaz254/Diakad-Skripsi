@@ -110,10 +110,23 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('input-perawatan-rutin/datatables-sudah', 'SaranaPrasarana\PerawatanSarpras\InputPerawatanRutinController@datatablesInputPerawatanRutinSudah');
             Route::get('input-perawatan-rutin/add', 'SaranaPrasarana\PerawatanSarpras\InputPerawatanRutinController@addInputPerawatanRutin');
             Route::get('input-perawatan-rutin/edit/{id}', 'SaranaPrasarana\PerawatanSarpras\InputPerawatanRutinController@editInputPerawatanRutin');
-            // AJAX GET SISWA BY KELAS
+            // AJAX GET INVENTARIS BY RUANGAN
             Route::post('inventaris-byruangan', 'SaranaPrasarana\PerawatanSarpras\InputPerawatanRutinController@ajaxGetInventarisByRuangan');
 
             Route::post('action-input-perawatan-rutin/{mode}/{id}', 'SaranaPrasarana\PerawatanSarpras\InputPerawatanRutinController@actionInputPerawatanRutin');
+
+            // MENU Pengadaan Barang/Sarpras
+            // url: /sarana-prasarana/perawatan-sarpras/pengadaan-sarpras
+            Route::get('pengadaan-sarpras', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@viewPengadaanSarpras');
+            Route::get('pengadaan-sarpras/datatables-tinggi', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@datatablesPengadaanSarprasTinggi');
+            Route::get('pengadaan-sarpras/datatables-sedang', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@datatablesPengadaanSarprasSedang');
+            Route::get('pengadaan-sarpras/datatables-rendah', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@datatablesPengadaanSarprasRendah');
+            Route::get('pengadaan-sarpras/add', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@addPengadaanSarpras');
+            Route::get('pengadaan-sarpras/edit/{id}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@editInputPerawatanRutin');
+            // AJAX GET INVENTARIS BY RUANGAN
+            Route::post('inventaris-byruangan', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@ajaxGetInventarisByRuangan');
+
+            Route::post('action-pengadaan-sarpras/{mode}/{id}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@actionInputPerawatanRutin');
 
         }); 
 
