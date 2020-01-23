@@ -22,6 +22,7 @@ use App\Models\PresensiMpPelanggaran;
 use App\Models\TindakanPelanggaran;
 use App\Models\Semester;
 use App\Models\Siswa;
+use App\Models\UjianMpPresensi;
 
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibDataAkademik;
@@ -507,19 +508,21 @@ class Apiv1Controller extends BaseController
 
         $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
                             FROM jadwal_kelas_mp jkm
-                            JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan
-                            JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp
-                            JOIN kelas k ON k.id_kelas = kmp.id_kelas
-                            JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran
-                            JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam
-                            JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai
-                            LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1
-                            JOIN guru g ON g.id_guru = pm.id_guru
-                            JOIN pengguna p ON p.id_pengguna = g.id_pengguna
+                            JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan AND r.deleted_at IS NULL
+                            JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp AND kmp.deleted_at IS NULL
+                            JOIN kelas k ON k.id_kelas = kmp.id_kelas AND k.deleted_at IS NULL
+                            JOIN mata_pelajaran mp ON mp.id_mata_pelajaran = kmp.id_mata_pelajaran AND mp.deleted_at IS NULL
+                            JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam AND jj.deleted_at IS NULL
+                            JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai AND jjs.deleted_at IS NULL
+                            LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1 AND pm.deleted_at IS NULL
+                            JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
+                            JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                             LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                 AND DATE(pmp.tgl_entry) = DATE(NOW()) 
                                 AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
+                                AND pmp.deleted_at IS NULL
                             WHERE jkm.id_jadwal_hari = '.$hari.' 
+                            AND jkm.deleted_at IS NULL
                             AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
                             AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
                             ORDER BY k.tingkat, k.nm_kelas');
@@ -761,7 +764,7 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
-    public function actionAbsensiSiswa(Request $request)
+    public function actionAbsensiKBMSiswa(Request $request)
     {
         $input = (object) $request->input();
 
@@ -839,6 +842,135 @@ class Apiv1Controller extends BaseController
 
                 $presensi_mp_siswa->kehadiran     = $kehadiran;
                 $presensi_mp_siswa->save();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status_code' 	=> 200,
+                'status_text' 	=> 'Success',
+                'message' 	=> 'Absensi success'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => 'Absensi gagal'
+            ]);
+        }
+    }
+
+    public function actionGetKelasUTS(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
+        
+        $data_uts = LibGuru::fetchDataJadwalUTS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kelas_uts' => $data_uts
+            )
+        ]);
+    }
+
+    public function actionGetKelasUAS(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
+        
+        $data_uas = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kelas_uas' => $data_uas
+            )
+        ]);
+    }
+
+    public function actionGetPresensiUjian(Request $request)
+    {
+        $input = (object) $request->input();
+        $validator = Validator::make($request->all(), [
+            'id_ujian_mp' => 'required'
+        ]);
+
+        $auth_data = $input->auth_data;
+        $data_siswa = LibSiswa::fetchDataSiswaUjianMp($auth_data, $input->id_ujian_mp);
+
+        $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $input->id_ujian_mp)->get();
+
+        foreach ($data_siswa as $siswa) {
+            $kehadiran = null;
+            if ($data_ujian_mp_presensi && $presensi_ujian_mp_siswa = $data_ujian_mp_presensi->firstWhere('id_siswa', $siswa->id_siswa)) {
+                $kehadiran = $presensi_ujian_mp_siswa->kehadiran;
+            }
+            $siswa->status_kehadiran = $kehadiran;
+            switch ($kehadiran) {
+                case 1: $text = 'Hadir'; break;
+                case 2: $text = 'Sakit'; break;
+                case 3: $text = 'Izin'; break;
+                case 4: $text = 'Alpa'; break;
+                default: $text = 'Belum diset'; break;
+            }
+            $siswa->status_text = $text;
+        }
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'siswa' => $data_siswa,
+            )
+        ]);
+    }
+
+    public function actionAbsensiUjianSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_ujian_mp' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+        
+        DB::beginTransaction();
+        
+        try {
+            $data_ujian_mp_presensi = UjianMpPresensi::where('id_ujian_mp', '=', $input->id_ujian_mp)->get();
+
+            foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
+                if ($presensi_ujian_mp_siswa = $data_ujian_mp_presensi->firstWhere('id_siswa', $id_siswa)) {
+                    if (! empty($alasan)) {
+                        $kehadiran = $alasan;
+                    } else {
+                        $kehadiran = 1;
+                    }
+                    $presensi_ujian_mp_siswa->kehadiran     = $kehadiran;
+                    $presensi_ujian_mp_siswa->save();
+                }
             }
 
             DB::commit();

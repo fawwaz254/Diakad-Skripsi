@@ -88,6 +88,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-plotting-mapel-siswa/{mode}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionPlottingMapelSiswa');
 
+            //MENU Hapus Plotting Mapel Siswa
+            Route::get('hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewHapusPlottingMapelSiswa');
+            Route::post('post-hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionViewHapusPlottingMapelSiswa');
+            Route::get('hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa/{id}', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewSemesterHapusPlottingMapelSiswa');
+            Route::get('hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/{id}', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewDetailHapusPlottingMapelSiswa');
+            Route::get('hapus-plotting-mapel-siswa/datatables/{id}', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@datatablesHapusPlottingMapelSiswa');
+
+            Route::post('action-hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusPlottingMapelSiswa');
+
             //MENU CARI SISWA
             Route::get('cari-siswa', 'Akademik\AktivitasSemester\CariSiswaController@viewCariSiswa');
             Route::post('post-view-cari-siswa', 'Akademik\AktivitasSemester\CariSiswaController@actionViewCariSiswa');

@@ -298,7 +298,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_2);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai2;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2)? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
@@ -319,7 +319,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal2;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal2;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai2;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai2)? $input->jam_jadwal_selesai2 : $input->jam_jadwal2);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan2;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -333,7 +333,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_3);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai3;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3)? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
@@ -354,7 +354,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal3;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal3;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai3;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai3)? $input->jam_jadwal_selesai3 : $input->jam_jadwal3);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan3;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -368,7 +368,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_4);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai4;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4)? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
@@ -389,7 +389,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal4;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal4;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai4;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai4)? $input->jam_jadwal_selesai4 : $input->jam_jadwal4);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan4;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -403,7 +403,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_5);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai5;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5)? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
@@ -424,7 +424,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal5;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal5;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai5;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai5)? $input->jam_jadwal_selesai5 : $input->jam_jadwal5);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan5;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
@@ -438,7 +438,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp                        = JadwalKelasMp::find($input->id_jadwal_kelas_mp_6);
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai6;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6)? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
                             $jadwal_kelas_mp->updated_at            = $now;
                             $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
@@ -459,7 +459,7 @@ class InputJadwalController extends BaseController
                             $jadwal_kelas_mp->id_kelas_mp           = $id;
                             $jadwal_kelas_mp->id_jadwal_hari        = $input->hari_jadwal6;
                             $jadwal_kelas_mp->id_jadwal_jam         = $input->jam_jadwal6;
-                            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jam_jadwal_selesai6;
+                            $jadwal_kelas_mp->id_jadwal_jam_selesai = (!empty($input->jam_jadwal_selesai6)? $input->jam_jadwal_selesai6 : $input->jam_jadwal6);
                             $jadwal_kelas_mp->id_ruangan            = $input->ruangan6;
                             $jadwal_kelas_mp->created_at            = $now;
                             $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;

@@ -33,7 +33,6 @@ class MonitoringKelasController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-        // dd($data_semester);
 
         return view('akademik/aktivitas-semester/monitoring-kelas/view-monitoring-kelas', compact('auth_data', 'data_semester'));
     }
