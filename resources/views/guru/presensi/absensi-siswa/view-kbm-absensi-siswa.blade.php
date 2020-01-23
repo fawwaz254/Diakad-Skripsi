@@ -126,17 +126,21 @@
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
             { data: 'alasan', name: 'alasan', searchable: false, orderable: false,
                 render: function(data){
-                    var html = '';
-                    $.each(data.options, function(index, item){
-                        if(data.kehadiran == item.id){
-                            html += '<option value="'+item.id+'" selected>'+ item.text + '</option>';
-                        }else{
-                            html += '<option value="'+item.id+'">'+ item.text + '</option>';
-                        }
-                    })
-                    return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
-                    html +
-                    '</select>';
+                    if(data.status_pengguna.status == 1){
+                        var html = '';
+                        $.each(data.options, function(index, item){
+                            if(data.kehadiran == item.id){
+                                html += '<option value="'+item.id+'" selected>'+ item.text + '</option>';
+                            }else{
+                                html += '<option value="'+item.id+'">'+ item.text + '</option>';
+                            }
+                        })
+                        return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
+                        html +
+                        '</select>';
+                    }else{
+                        return '<p class="font-underline col-orange font-24">' + data.status_pengguna.nm_status + '</p>';
+                    }
                 }
             }
         ]
