@@ -122,6 +122,9 @@ class LibSiswa
             $siswa = Siswa::join('pengguna', function ($q) {
                 $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                     ->whereNull('pengguna.deleted_at');
+            })->join('kelas', function ($q) {
+                $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+                    ->whereNull('kelas.deleted_at');
             })->where('id_siswa', '=', $id)->first();
         }
 
