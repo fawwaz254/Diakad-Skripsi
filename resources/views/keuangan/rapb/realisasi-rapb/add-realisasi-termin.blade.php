@@ -1,15 +1,17 @@
- <div class="container-fluid">
+<div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/view-detail-realisasi/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/view-detail-realisasi-termin/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb.'/'.$data_realisasi->id_realisasi)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                    {{csrf_field()}}
-                    <div class="header">
-                        <h2>CICILAN TERMIN REALISASI RAPB</h2> 
-                    </div>
+                <div class="header">
+                    <h2>
+                        TAMBAH DATA CICILAN
+                    </h2>
+                </div>
                 <div class="body">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-realisasi-rapb/add-realisasi-termin/'.$id_realisasi_pembayaran)}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -27,6 +29,10 @@
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $semester_mulai->tahun_ajaran }} {{ $semester_mulai->nm_semester }}">
+                                        <input type="hidden" class="form-control" name="id_rapb" aria-required="true" aria-invalid="true" value="{{ $data_rapb->id_rapb }}">
+                                        <input type="hidden" class="form-control" name="id_realisasi" aria-required="true" aria-invalid="true" value="{{ $data_realisasi->id_realisasi }}">
+                                        <input type="hidden" class="form-control" name="id_semester_mulai" aria-required="true" aria-invalid="true" value="{{ $semester_mulai->id_semester }}">
+                                        <input type="hidden" class="form-control" name="id_semester_selesai" aria-required="true" aria-invalid="true" value="{{ $semester_selesai->id_semester }}">
                                     </div>
                                 </div>
                             </div>
@@ -343,115 +349,55 @@
                         </div>
                     </div>
 
-                    <div class="block-header">
-                        <h2>
-                            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/add-realisasi-termin/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb.'/'.$data_realisasi->id_realisasi)}}"><i class="material-icons">note_add</i><span>INPUT CICILAN</span></a>
+                        <h2 class="card-inside-title">
+                            Termin Ke
                         </h2>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
-                            <thead>
-                                <tr>
-                                    <th>No. </th>
-                                    <th>Termin Ke</th>
-                                    <th>Tanggal Pembayaran</th>
-                                    <th>Dana Cicilan Termin</th>
-                                    <th>Apv Kepala Keuangan</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>                        
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="termin_ke" required="" aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Tanggal Pembayaran
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="datepicker form-control" name="tgl_pembayaran" required="" aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Dana Cicilan Termin
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="dana_realisasi_pembayaran" required="" aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 @include('scriptjs')
+
 <script>
-
-    var id_realisasi            = {!! json_encode($data_realisasi->id_realisasi) !!};
-
-    var modul_url               = 'rapb';
-    var datatable_url           = base_url + '/' + role_url + '/' + modul_url + '/' + 'realisasi-rapb/datatables-termin/' + id_realisasi;
-    var kepala_keuangan_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-realisasi/approve-kepala-keuangan-termin';
-
-    var primary_table = $('#primary_table').DataTable({
-        processing: true,
-        // serverSide: true,
-        responsive: true,
-        ajax: {
-            url: datatable_url,
-            type: 'GET'
-        },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'termin_ke', name: 'termin_ke' },
-            { data: 'tgl_pembayaran', name: 'tgl_pembayaran' },
-            { data: 'dana_realisasi_pembayaran', name: 'dana_realisasi_pembayaran' },
-            { data: 'nm_kepala_keuangan', name: 'nm_kepala_keuangan', searchable: false, orderable: false,
-                render: function(data){
-                    if(data.nm_kepala_keuangan == null) {
-                        return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="kepalaKeuanganAction(\''+ kepala_keuangan_url +'\', this)" data-idrealisasipembayaran="'+  data.id_realisasi_pembayaran +'">'+
-                        '    <i class="material-icons">verified_user</i>'+
-                        '</button>';
-                    }
-                    else {
-                        return '<a>'+ data.nm_kepala_keuangan +'</a>';
-                    }
-                }
-            }
-        ]
+$(function(){    
+    $('.datepicker').bootstrapMaterialDatePicker({
+        format: 'dddd, DD MMMM YYYY',
+        //lang : 'id',
+        clearButton: true,
+        weekStart: 1,
+        time: false
     });
-
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
-
-    function kepalaKeuanganAction(kepala_keuangan_url, element){
-        var item = $(element);
-        $('button').attr('disabled', 'disabled');
-
-        swal({
-            title: "Apakah Anda Yakin?",
-            text: "Aksi Ini Akan Otomatis Melakukan Approve Kepala Keuangan!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Ya, Saya Yakin!",
-            cancelButtonText: "Tidak, Batalkan!",
-            closeOnConfirm: true,
-            closeOnCancel: true
-        }, function (result) {
-            if (result) {
-                $.ajax({
-                    type: "POST",
-                    url: kepala_keuangan_url + '/' + item.attr('data-idrealisasipembayaran'),
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            primary_table.ajax.reload(null, false);
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
-                        }
-                    },
-                    complete: function() {
-                        $('button').removeAttr('disabled', 'disabled');
-                    }
-                });
-            } else {
-                $('button').removeAttr('disabled', 'disabled');
-            }
-        });
-    }
+});
 </script>
