@@ -36,8 +36,26 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="tipe_unit_kerja" required="" aria-required="true"
-                                    aria-invalid="true" value="{{$data_unit_kerja->tipe_unit_kerja}}">
+                                <select class="form-control show-tick" name="tipe_unit_kerja">
+                                    <option value="">-- Pilih Tipe Unit Kerja --</option>
+                                    @if($data_unit_kerja->tipe_unit_kerja == 'PIMPINAN')
+                                        <option value="PIMPINAN" selected >PIMPINAN</option>
+                                        <option value="KEUANGAN">KEUANGAN</option>
+                                        <option value="SARPRAS">SARPRAS</option>
+                                    @elseif($data_unit_kerja->tipe_unit_kerja == 'KEUANGAN')
+                                        <option value="PIMPINAN">PIMPINAN</option>
+                                        <option value="KEUANGAN" selected >KEUANGAN</option>
+                                        <option value="SARPRAS">SARPRAS</option>
+                                    @elseif($data_unit_kerja->tipe_unit_kerja == 'SARPRAS')
+                                        <option value="PIMPINAN">PIMPINAN</option>
+                                        <option value="KEUANGAN">KEUANGAN</option>
+                                        <option value="SARPRAS" selected >SARPRAS</option>
+                                    @else
+                                        <option value="PIMPINAN">PIMPINAN</option>
+                                        <option value="KEUANGAN">KEUANGAN</option>
+                                        <option value="SARPRAS">SARPRAS</option>
+                                    @endif
+                                </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
