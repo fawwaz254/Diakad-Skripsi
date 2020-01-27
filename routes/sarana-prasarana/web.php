@@ -130,7 +130,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             // AJAX GET INVENTARIS BY RUANGAN
             Route::post('inventaris-byruangan', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@ajaxGetInventarisByRuangan');
 
-            Route::post('action-apv-pengadaan/{mode}/{id}', 'Keuangan\Rapb\PengadaanSarprasController@actionApvPengadaan');
+            Route::post('action-apv-pengadaan/{mode}/{id}/{id_unit_kerja}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@actionApvPengadaan');
             Route::post('action-pengadaan-sarpras/{mode}/{id}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@actionPengadaanSarpras');
 
         }); 
