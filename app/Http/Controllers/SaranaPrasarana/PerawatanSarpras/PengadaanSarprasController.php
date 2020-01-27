@@ -68,7 +68,7 @@ class PengadaanSarprasController extends BaseController
                     );
                     return $data;
                 })
-                ->addColumn('action', function ($item) {
+                ->addColumn('supplier', function ($item) {
                     $data = array(
                         'id' => $item->id_rpb_sarpras
                     );
@@ -115,7 +115,7 @@ class PengadaanSarprasController extends BaseController
                     );
                     return $data;
                 })
-                ->addColumn('action', function ($item) {
+                ->addColumn('supplier', function ($item) {
                     $data = array(
                         'id' => $item->id_rpb_sarpras
                     );
@@ -162,7 +162,7 @@ class PengadaanSarprasController extends BaseController
                     );
                     return $data;
                 })
-                ->addColumn('action', function ($item) {
+                ->addColumn('supplier', function ($item) {
                     $data = array(
                         'id' => $item->id_rpb_sarpras
                     );
@@ -420,8 +420,12 @@ class PengadaanSarprasController extends BaseController
                     $rpbSarpras->id_rpb_sarpras             = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                     $rpbSarpras->id_semester                = $input->id_semester;
                     $rpbSarpras->id_unit_kerja              = $input->id_unit_kerja;
-                    $rpbSarpras->id_buku_alat               = $input->id_buku_alat;
-                    $rpbSarpras->id_inventaris_ruangan      = $input->id_inventaris_ruangan;
+                    if(! empty($input->id_buku_alat)) {
+                        $rpbSarpras->id_buku_alat               = $input->id_buku_alat;    
+                    }
+                    if(! empty($input->id_inventaris_ruangan)) {
+                        $rpbSarpras->id_inventaris_ruangan      = $input->id_inventaris_ruangan;
+                    }
                     $rpbSarpras->harga_satuan_rpb_sarpras   = $input->harga_satuan_rpb_sarpras;
                     $rpbSarpras->qty_rpb_sarpras            = $input->qty_rpb_sarpras;
                     // convert format date
@@ -438,7 +442,7 @@ class PengadaanSarprasController extends BaseController
                 } else {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Isi Salah Satu (Inventaris atau Buku/Alat)'
+                        'message' => 'Isi Salah Satu (Inventaris Ruangan atau Buku/Alat)'
                     ];
                 }
             }

@@ -47,6 +47,7 @@
                                                 <th>Kepala Unit</th>
                                                 <th>Kepala Sarpras</th>
                                                 <th>Supplier</th>
+                                                <th>Kepala Sarpras Apv Supplier</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -72,6 +73,7 @@
                                                 <th>Kepala Unit</th>
                                                 <th>Kepala Sarpras</th>
                                                 <th>Supplier</th>
+                                                <th>Kepala Sarpras Apv Supplier</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -97,6 +99,7 @@
                                                 <th>Kepala Unit</th>
                                                 <th>Kepala Sarpras</th>
                                                 <th>Supplier</th>
+                                                <th>Kepala Sarpras Apv Supplier</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -117,7 +120,8 @@
     var datatable_url_rendah    = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengadaan-sarpras/datatables-rendah';
     var kepala_unit_url         = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-unit';
     var kepala_sarpas_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-sarpras';
-    var kepala_sarpas_fix_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-sarpras-fix';
+    var kepala_sarpas_fix_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-sarpras-fix';
+    var supplier_url            = role_url + '#' + modul_url + '/' + 'pengadaan-sarpras/view-detail-supplier';
 
     var primary_table_tinggi = $('#primary_table_tinggi').DataTable({
         processing: true,
@@ -160,6 +164,13 @@
                     else {
                         return '<a>'+ data.nm_kepala_sarpras +'</a>';
                     }
+                }
+            },
+            { data: 'supplier', name: 'supplier', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ supplier_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> ';
                 }
             },
             { data: 'nm_kepala_sarpras_approve', name: 'nm_kepala_sarpras_approve', searchable: false, orderable: false,
@@ -228,6 +239,13 @@
                     }
                 }
             },
+            { data: 'supplier', name: 'supplier', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ supplier_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> ';
+                }
+            },
             { data: 'nm_kepala_sarpras_approve', name: 'nm_kepala_sarpras_approve', searchable: false, orderable: false,
                 render: function(data){
                     if(data.nm_kepala_sarpras_approve == null) {
@@ -292,6 +310,13 @@
                     else {
                         return '<a>'+ data.nm_kepala_sarpras +'</a>';
                     }
+                }
+            },
+            { data: 'supplier', name: 'supplier', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ supplier_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> ';
                 }
             },
             { data: 'nm_kepala_sarpras_approve', name: 'nm_kepala_sarpras_approve', searchable: false, orderable: false,

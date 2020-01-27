@@ -52,7 +52,7 @@
                                 <select class="form-control show-tick" name="id_buku_alat">
                                     @foreach($data_buku_alat as $data)
                                         @if($data->id_buku_alat == $data_perawatan_sarpras->id_buku_alat)
-                                            <option value="{{$data->id_buku_alat}}" readonly>{{$data->nm_buku_alat}} - {{$data->jenis_buku_alat}}</option>
+                                            <option value="{{$data->id_buku_alat}}" readonly>{{$data->nm_buku_alat}} - {{$data->nm_jenis_buku_alat}}</option>
                                         @endif
                                     @endforeach
                                 </select>
