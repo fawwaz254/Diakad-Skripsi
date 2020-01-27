@@ -16,7 +16,7 @@ class PelatihEkskulSet extends Model
 
     protected $primaryKey = 'id_pelatih_ekskul_set';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -31,9 +31,8 @@ class PelatihEkskulSet extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function ekskul()
+    {
+        return $this->belongsTo('App\Models\Ekskul', 'id_ekskul');
+    }
 }

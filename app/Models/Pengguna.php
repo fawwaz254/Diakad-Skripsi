@@ -17,7 +17,7 @@ class Pengguna extends Authenticatable
 
     protected $primaryKey = 'id_pengguna';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -40,29 +40,36 @@ class Pengguna extends Authenticatable
 
     protected $guarded = [];
 
-    public function role_pengguna(){
+    public function role_pengguna()
+    {
         return $this->hasMany('App\Models\RolePengguna', 'id_pengguna');
     }
 
-    public function sekolah(){
+    public function sekolah()
+    {
         return $this->belongsTo('App\Models\Sekolah', 'id_sekolah');
     }
 
-    public function status_join_to_text(){
-        switch($this->status_join_table){
-            case 1:  
-                return 'Pegawai'; 
-            case 2: 
-                return 'Guru'; 
-            case 3: 
+    public function status_pengguna()
+    {
+        return $this->belongsTo('App\Models\StatusPengguna', 'id_status_pengguna');
+    }
+
+    public function status_join_to_text()
+    {
+        switch ($this->status_join_table) {
+            case 1:
+                return 'Pegawai';
+            case 2:
+                return 'Guru';
+            case 3:
                 return 'Siswa';
-            case 4: 
+            case 4:
                 return 'Wali Murid';
-            case 5: 
+            case 5:
                 return 'Pelatih Ekskul';
             default:
                 return '';
         }
     }
-
 }

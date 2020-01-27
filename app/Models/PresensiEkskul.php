@@ -16,7 +16,7 @@ class PresensiEkskul extends Model
 
     protected $primaryKey = 'id_presensi_ekskul';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -37,9 +37,13 @@ class PresensiEkskul extends Model
 
     protected $guarded = [];
 
+    public function presensi_ekskul_peserta()
+    {
+        return $this->hasMany('App\Models\PresensiEkskulPeserta', 'id_presensi_ekskul');
+    }
 
-
-
-
-
+    public function convertDateFormat($label, $format)
+    {
+        return date_format(date_create($this->$label), $format);
+    }
 }
