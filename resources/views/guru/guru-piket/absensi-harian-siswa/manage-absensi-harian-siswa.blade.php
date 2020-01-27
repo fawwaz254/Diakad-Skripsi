@@ -83,7 +83,11 @@
             { data: null, searchable: false, orderable: false },
             { data: 'nis_siswa', name: 'siswa.nis_siswa',
                 render: function(data){
-                    return data.nis_siswa+'<br><input type="hidden" name="id_siswa[]" value="'+ data.id_siswa + '" >';
+                    if (data.status_pengguna.status == 1) {
+                        return data.nis_siswa+'<br><input type="hidden" name="id_siswa[]" value="'+ data.id_siswa + '" >';
+                    }else{
+                        return '';
+                    }
                 }
             },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },

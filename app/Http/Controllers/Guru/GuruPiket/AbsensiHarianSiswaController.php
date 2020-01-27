@@ -155,7 +155,11 @@ class AbsensiHarianSiswaController extends BaseController
             ->editColumn('nis_siswa', function ($item) {
                 $data = array(
                     'id_siswa' => $item->id_siswa,
-                    'nis_siswa' => $item->nis_siswa
+                    'nis_siswa' => $item->nis_siswa,
+                    'status_pengguna' => array(
+                        'status' => $item->aktif_status_pengguna,
+                        'nm_status' => $item->nm_status_pengguna
+                    )
                 );
                 return $data;
             })
