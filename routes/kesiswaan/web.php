@@ -97,6 +97,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         /* TAMBAHAN SEMENTARA */
         /** === MODUL SISWA === **/
         Route::group(array('prefix' => 'siswa'), function () {
+            // MENU Data Status Siswa
+            Route::get('status-siswa', 'Pendidikan\DataAkademik\StatusSiswaController@viewStatusSiswa');
+            Route::get('status-siswa/datatables', 'Pendidikan\DataAkademik\StatusSiswaController@datatablesStatusSiswa');
+            Route::get('status-siswa/add', 'Pendidikan\DataAkademik\StatusSiswaController@addStatusSiswa');
+            Route::get('status-siswa/edit/{id}', 'Pendidikan\DataAkademik\StatusSiswaController@editStatusSiswa');
+
+            Route::post('action-status-siswa/{mode}/{id}', 'Pendidikan\DataAkademik\StatusSiswaController@actionStatusSiswa');
+            
             // MENU DATA SISWA
             Route::get('data-siswa', 'Pendidikan\Siswa\DataSiswaController@viewDataSiswa');
             Route::get('data-siswa/get-kelas/{id_jurusan}', 'Pendidikan\Siswa\DataSiswaController@getKelas');
