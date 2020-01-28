@@ -95,6 +95,10 @@
                 color: #fff;
             }
 
+            table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc{
+                background-position: right 0px;
+            }
+
             .bg-btn-submit{
                 background-color: #235789;
                 color: #fff !important;

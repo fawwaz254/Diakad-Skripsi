@@ -17,6 +17,19 @@
     var dtLengButton=[[ 10, 25, 50, 100, -1 ], [ '10', '25', '50', '100', 'All' ]];
     var loadingHtml = '<div class="loading-html"><img src="{{asset('js/loading_new.gif')}}" /><br><span><h4>Sedang memuat, mohon tunggu...</h4></span></div>';
 
+    function initDtInputSearch(title){
+        return '<div class="form-group"><div class="form-line"><input class="form-control" type="text" placeholder="Search '+title+'" onclick="stopPropagation(event);" /></div></div>';
+    }
+
+    function stopPropagation(evt) {
+        if (evt.stopPropagation !== undefined) {
+            evt.preventDefault();
+            evt.stopPropagation();
+        } else {
+            evt.cancelBubble = true;
+        }
+    }
+
     $(document).ready(function  () {
         var original_title = location.hash;
         var target_url = original_title.replace('#','');

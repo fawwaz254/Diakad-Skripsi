@@ -1,3 +1,8 @@
+<style>
+.dataTables_filter{
+    display:none;
+}
+</style>
 <div class="container-fluid">
     <div class="block-header">
         <h2>
@@ -51,19 +56,15 @@
     
     $('#primary_table thead th.search-filter').each( function () {
         var title = $(this).text();
-        $(this).append( '<div class="form-group">'+
-                        '    <div class="form-line">'+
-                        '        <input class="form-control" type="text" placeholder="Search '+title+'" />'+
-                        '    </div>'+
-                        '</div>' );
+        $(this).append( initDtInputSearch(title) );
     } );
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         // responsive: true,
-        searchDelay: 500,
-        bFilter: false,
+        searchDelay: 250,
+        // ordering: false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -72,7 +73,7 @@
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'kelas_mp.mata_pelajaran.nm_mata_pelajaran' },
             { data: 'kelas_mp.kelas.nm_kelas' },
             { data: 'nm_pengampu', name: 'kelas_mp.pengampu_mp_utama.guru.pengguna.nm_pengguna' },
@@ -89,22 +90,28 @@
                     '    <i class="material-icons">remove_red_eye</i>';
                 }
             }
-        ]
+        ],
+        order: [[4, 'desc']]
     });
 
     primary_table.on( 'draw', function () {
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
     primary_table.columns().every( function () {
-        var that = this;
+        var column = this;
  
-        $( 'input', this.header() ).on( 'keyup change clear', function () {
-            if ( that.search() !== this.value ) {
-                that.search( this.value ).draw();
+        $( 'input', this.header() ).on( 'keyup change', function () {
+            if(this.value.length <= 0){
+                column.search( this.value ).draw();
+            }else{
+                if (  this.value.length > 3 && column.search() !== this.value ) {
+                    column.search( this.value ).draw();
+                }
             }
         });
     });
