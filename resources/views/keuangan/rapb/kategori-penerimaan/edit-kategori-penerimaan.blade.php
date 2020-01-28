@@ -30,6 +30,17 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Jenis Kategori
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="jenis_kategori_rapb" required="">
+                                    <option value="0" {{($data_kategori_rapb->jenis_kategori_rapb == 0)? 'selected' : ''}}>Non-SPP</option>
+                                    <option value="1" {{($data_kategori_rapb->jenis_kategori_rapb == 1)? 'selected' : ''}}>SPP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Deskripsi
                         </h2>
                         <div class="row clearfix">

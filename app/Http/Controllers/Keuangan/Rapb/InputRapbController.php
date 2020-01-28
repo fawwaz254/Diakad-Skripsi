@@ -229,11 +229,11 @@ class InputRapbController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         if ($mode == 'approve-kepala-unit') {
-            $unit_kerja = UnitKerja::where('id_unit_kerja','=', $id_unit_kerja)->first();
+            $unit_kerja = UnitKerja::where('id_unit_kerja', '=', $id_unit_kerja)->first();
 
             $tipe_unit_kerja = $unit_kerja->tipe_unit_kerja;
 
-            if($tipe_unit_kerja == 'SARPRAS') {
+            if ($tipe_unit_kerja == 'SARPRAS') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                               ->where('guru.jenis_jabatan', '=', 1)
                               ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
@@ -243,8 +243,7 @@ class InputRapbController extends BaseController
                               ->where('staff.jenis_jabatan', '=', 1)
                               ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                               ->first();
-            }
-            elseif($tipe_unit_kerja == 'KEUANGAN') {
+            } elseif ($tipe_unit_kerja == 'KEUANGAN') {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                               ->where('guru.jenis_jabatan', '=', 2)
                               ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
@@ -254,8 +253,7 @@ class InputRapbController extends BaseController
                               ->where('staff.jenis_jabatan', '=', 2)
                               ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                               ->first();
-            }
-            else {
+            } else {
                 $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                               ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
                               ->where('guru.jenis_jabatan', '=', 98)
