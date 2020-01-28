@@ -68,7 +68,7 @@
             { data: 'kelas_mp.mata_pelajaran.kredit_semester' },
             { data: 'jadwal_hari.nm_jadwal_hari' },
             { data: 'jadwal_jam_mulai.nm_jadwal_jam', searchable: false, orderable: false },
-            { data: 'jadwal_jam_mulai.nm_jadwal_jam', searchable: false, orderable: false },
+            { data: 'jadwal_jam_selesai.nm_jadwal_jam', searchable: false, orderable: false },
             { data: 'ruangan.kapasitas_ruangan', searchable: false, orderable: false },
             { data: 'jml_siswa', name: 'jml_siswa', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
