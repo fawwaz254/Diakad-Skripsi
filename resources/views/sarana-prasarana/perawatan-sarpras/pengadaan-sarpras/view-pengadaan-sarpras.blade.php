@@ -118,9 +118,9 @@
     var datatable_url_tinggi    = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengadaan-sarpras/datatables-tinggi';
     var datatable_url_sedang    = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengadaan-sarpras/datatables-sedang';
     var datatable_url_rendah    = base_url + '/' + role_url + '/' + modul_url + '/' + 'pengadaan-sarpras/datatables-rendah';
-    var kepala_unit_url         = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-unit';
-    var kepala_sarpas_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-sarpras';
-    var kepala_sarpas_fix_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-rapb/approve-kepala-sarpras-fix';
+    var kepala_unit_url         = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-pengadaan/approve-kepala-unit';
+    var kepala_sarpas_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-pengadaan/approve-kepala-sarpras';
+    var kepala_sarpas_fix_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-apv-pengadaan/approve-kepala-sarpras-fix';
     var supplier_url            = role_url + '#' + modul_url + '/' + 'pengadaan-sarpras/view-detail-supplier';
 
     var primary_table_tinggi = $('#primary_table_tinggi').DataTable({
