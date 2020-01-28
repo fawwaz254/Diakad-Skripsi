@@ -13,7 +13,8 @@
 @section('js')
 <!-- Javascript -->
 <script>
-
+    var dtButtonConfig={buttons:[{extend:"pageLength",className:"bg-amber waves-effect"},{extend:"print",text:"PDF",className:"bg-pink waves-effect",orientation:"landscape",exportOptions:{columns:":visible"},customize:function(e){$(e.document.body).css("font-size","10pt"),$(e.document.body).find("table").addClass("compact").css("font-size","inherit")}},{extend:"excelHtml5",className:"bg-green waves-effect",exportOptions:{columns:":visible"}},{extend:"colvis",text:"Kolom yang ditampilkan",className:"bg-blue waves-effect"}],dom:{button:{className:"btn"}}};
+    var dtLengButton=[[ 10, 25, 50, 100, -1 ], [ '10', '25', '50', '100', 'All' ]];
     var loadingHtml = '<div class="loading-html"><img src="{{asset('js/loading_new.gif')}}" /><br><span><h4>Sedang memuat, mohon tunggu...</h4></span></div>';
 
     $(document).ready(function  () {

@@ -14,20 +14,19 @@
                         <h2>Monitoring Kapasitas Kelas</h2>
                     </div>
                     <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                        <div class="table-responsive" style="overflow-x: auto;">
+                            <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode</th>
-                                        <th>Nama Mata Ajar</th>
-                                        <th>Kelas</th>
-                                        <th>Pengampu</th>
-                                        <th>Ruangan</th>
+                                        <th class="search-filter">Nama Mata Ajar</th>
+                                        <th class="search-filter">Kelas</th>
+                                        <th class="search-filter">Pengampu</th>
+                                        <th class="search-filter">Hari</th>
+                                        <th class="search-filter">Ruangan</th>
                                         <th>Jam KBM</th>
-                                        <th>Hari</th>
-                                        <th>Jam Mulai</th>
-                                        <th>Jam Selesai</th>
+                                        <th>Mulai</th>
+                                        <th>Selesai</th>
                                         <th>Kapasitas</th>
                                         <th>Terisi</th>
                                         <th>Action</th>
@@ -50,23 +49,36 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'monitoring-kelas/datatables/' + id_semester;
     var detail_url        = role_url + '#' + modul_url + '/' + 'monitoring-kelas/view-daftar-siswa';
     
+    $('#primary_table thead th.search-filter').each( function () {
+        var title = $(this).text();
+        $(this).append( '<div class="form-group">'+
+                        '    <div class="form-line">'+
+                        '        <input class="form-control" type="text" placeholder="Search '+title+'" />'+
+                        '    </div>'+
+                        '</div>' );
+    } );
+
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        // responsive: true,
+        searchDelay: 500,
+        bFilter: false,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'kelas_mp.mata_pelajaran.kd_mata_pelajaran' },
             { data: 'kelas_mp.mata_pelajaran.nm_mata_pelajaran' },
             { data: 'kelas_mp.kelas.nm_kelas' },
             { data: 'nm_pengampu', name: 'kelas_mp.pengampu_mp_utama.guru.pengguna.nm_pengguna' },
+            { data: 'jadwal_hari.nm_jadwal_hari' },
             { data: 'ruangan.nm_ruangan' },
             { data: 'kelas_mp.mata_pelajaran.kredit_semester' },
-            { data: 'jadwal_hari.nm_jadwal_hari' },
             { data: 'jadwal_jam_mulai.nm_jadwal_jam', searchable: false, orderable: false },
             { data: 'jadwal_jam_selesai.nm_jadwal_jam', searchable: false, orderable: false },
             { data: 'ruangan.kapasitas_ruangan', searchable: false, orderable: false },
@@ -86,4 +98,14 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    primary_table.columns().every( function () {
+        var that = this;
+ 
+        $( 'input', this.header() ).on( 'keyup change clear', function () {
+            if ( that.search() !== this.value ) {
+                that.search( this.value ).draw();
+            }
+        });
+    });
 </script>
