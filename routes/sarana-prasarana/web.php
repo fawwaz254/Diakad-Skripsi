@@ -129,8 +129,6 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('pengadaan-sarpras/add-supplier/{id_rpb_sarpras}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@addPengadaanSarprasSupplier');
             Route::get('pengadaan-sarpras/edit-apv-supplier/{id_rpb_sarpras}/{id_rpb_sarpras_supplier}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@editApvPengadaanSarprasSupplier');
 
-            Route::get('pengadaan-sarpras/apv-supplier/{id_rpb_sarpras}/{id_rpb_sarpras_supplier}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@apvPengadaanSarprasSupplier');
-
             // AJAX GET INVENTARIS BY RUANGAN
             Route::post('inventaris-byruangan', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@ajaxGetInventarisByRuangan');
 

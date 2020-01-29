@@ -472,10 +472,10 @@ class PengadaanSarprasController extends BaseController
 
                 if (! empty($guru->id_pengguna)) {
                     // make object to find id
-                    $rpb_sarpras                                       = RpbSarpras::find($id);
-                    $rpb_sarpras->id_pengguna_kepala_keuangan_approve  = $guru->id_pengguna;
-                    $rpb_sarpras->updated_by                           = $input->auth_data->pengguna->id_pengguna;
-                    $rpb_sarpras->updated_at                           = $now;
+                    $rpb_sarpras                                        = RpbSarpras::find($id);
+                    $rpb_sarpras->id_pengguna_kepala_sarpras_approve    = $guru->id_pengguna;
+                    $rpb_sarpras->updated_by                            = $input->auth_data->pengguna->id_pengguna;
+                    $rpb_sarpras->updated_at                            = $now;
                     $rpb_sarpras->save();
 
                     return [
@@ -484,10 +484,10 @@ class PengadaanSarprasController extends BaseController
                     ];
                 } elseif (! empty($staff->id_pengguna)) {
                     // make object to find id
-                    $rpb_sarpras                                       = RpbSarpras::find($id);
-                    $rpb_sarpras->id_pengguna_kepala_keuangan_approve  = $staff->id_pengguna;
-                    $rpb_sarpras->updated_by                           = $input->auth_data->pengguna->id_pengguna;
-                    $rpb_sarpras->updated_at                           = $now;
+                    $rpb_sarpras                                        = RpbSarpras::find($id);
+                    $rpb_sarpras->id_pengguna_kepala_sarpras_approve    = $staff->id_pengguna;
+                    $rpb_sarpras->updated_by                            = $input->auth_data->pengguna->id_pengguna;
+                    $rpb_sarpras->updated_at                            = $now;
                     $rpb_sarpras->save();
 
                     return [
