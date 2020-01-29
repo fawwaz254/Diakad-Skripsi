@@ -15,6 +15,8 @@ use App\Models\BukuAlat as BukuAlat;
 use App\Models\KomplainSarpras as KomplainSarpras;
 use App\Models\PerawatanSarpras as PerawatanSarpras;
 use App\Models\RpbSarpras as RpbSarpras;
+use App\Models\RpbSarprasSupplier as RpbSarprasSupplier;
+use App\Models\Supplier as Supplier;
 
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -471,11 +473,18 @@ class LibDataSarpras
     /** ========== **/
 
     /** PENGADAAN SARPRAS **/
-    static function fetchDataPengadaanSarpras($auth_data, $prioritas_rpb_sarpras, $id = null, $is_datatable = null){
+    static function fetchDataPengadaanSarpras($auth_data, $prioritas_rpb_sarpras = null, $id = null, $is_datatable = null){
 
         // get mode view
         if ($id == null) {
             $rpb_sarpras = RpbSarpras::select('rpb_sarpras.id_rpb_sarpras', 'rpb_sarpras.id_semester','rpb_sarpras.id_unit_kerja','rpb_sarpras.id_buku_alat','rpb_sarpras.id_inventaris_ruangan', 'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'jenis_buku_alat.nm_jenis_buku_alat', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras.harga_satuan_rpb_sarpras', 'rpb_sarpras.qty_rpb_sarpras', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras', 'p_unit.nm_pengguna AS nm_kepala_unit', 'p_sarpras.nm_pengguna AS nm_kepala_sarpras', 'p_sarpras_approve.nm_pengguna AS nm_kepala_sarpras_approve')
+                    ->addSelect(
+                                DB::raw("(SELECT COUNT(id_rpb_sarpras_supplier) FROM rpb_sarpras_supplier 
+                                            WHERE rpb_sarpras_supplier.id_rpb_sarpras = rpb_sarpras.id_rpb_sarpras
+                                            AND rpb_sarpras_supplier.is_approve = 1 
+                                            AND rpb_sarpras_supplier.deleted_at IS NULL) 
+                                            AS apv_supplier")
+                            )
                     ->join('semester','semester.id_semester','=','rpb_sarpras.id_semester')
                     ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
                     ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
@@ -512,10 +521,83 @@ class LibDataSarpras
         }
         // get mode edit
         else {
-            $rpb_sarpras = RpbSarpras::where('id_rpb_sarpras','=',$id)->first();
+            $rpb_sarpras = RpbSarpras::select('rpb_sarpras.id_rpb_sarpras', 'rpb_sarpras.id_semester','rpb_sarpras.id_unit_kerja','rpb_sarpras.id_buku_alat','rpb_sarpras.id_inventaris_ruangan', 'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'jenis_buku_alat.nm_jenis_buku_alat', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras.harga_satuan_rpb_sarpras', 'rpb_sarpras.qty_rpb_sarpras', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras')
+                                ->join('semester','semester.id_semester','=','rpb_sarpras.id_semester')
+                                ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
+                                ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
+                                ->leftJoin('jenis_buku_alat','jenis_buku_alat.id_jenis_buku_alat','=','buku_alat.id_jenis_buku_alat')
+                                ->leftJoin('inventaris_ruangan','inventaris_ruangan.id_inventaris_ruangan','=','rpb_sarpras.id_inventaris_ruangan')
+                                ->leftJoin('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
+                                ->where('rpb_sarpras.id_rpb_sarpras','=',$id)
+                                ->first();
         }
 
         return $rpb_sarpras;
+    }
+    /** ========== **/
+
+    /** PENGADAAN SUPPLIER **/
+    static function fetchDataPengadaanSarprasSupplier($auth_data, $id_rpb_sarpras, $id = null, $is_datatable = null){
+
+        // get mode view
+        if ($id == null) {
+            $rpb_sarpras_supplier = RpbSarprasSupplier::select('rpb_sarpras_supplier.id_rpb_sarpras_supplier', 'rpb_sarpras_supplier.id_rpb_sarpras','rpb_sarpras_supplier.id_supplier','supplier.nm_supplier','supplier.cp_supplier_1', 'rpb_sarpras_supplier.harga_supplier', 'rpb_sarpras_supplier.harga_penawaran', 'rpb_sarpras_supplier.qty_penawaran', 'rpb_sarpras_supplier.termin_penawaran', 'rpb_sarpras_supplier.harga_approve_supplier', 'rpb_sarpras_supplier.qty_approve_supplier', 'rpb_sarpras_supplier.termin_approve_supplier', 'rpb_sarpras_supplier.is_approve', 'pengguna.nm_pengguna', 'rpb_sarpras_supplier.tgl_approve')
+                    ->join('supplier','supplier.id_supplier','=','rpb_sarpras_supplier.id_supplier')
+                    ->leftJoin('pengguna', function ($q) {
+                        $q->on('pengguna.id_pengguna', '=', 'rpb_sarpras_supplier.id_pengguna_approve')
+                            ->whereNull('pengguna.deleted_at');
+                    })
+                    ->where('rpb_sarpras_supplier.id_rpb_sarpras', '=', $id_rpb_sarpras)
+                    ->orderBy('rpb_sarpras_supplier.is_approve', 'desc')
+                    ->orderBy('supplier.nm_supplier', 'asc');
+
+                    if ( $is_datatable == null ) {
+                        $rpb_sarpras_supplier = $rpb_sarpras_supplier->get();
+                    }
+        }
+        // get mode edit
+        else {
+            $rpb_sarpras_supplier = RpbSarprasSupplier::select('rpb_sarpras_supplier.id_rpb_sarpras_supplier', 'rpb_sarpras_supplier.id_rpb_sarpras','rpb_sarpras_supplier.id_supplier','supplier.nm_supplier','supplier.cp_supplier_1', 'rpb_sarpras_supplier.harga_supplier', 'rpb_sarpras_supplier.harga_penawaran', 'rpb_sarpras_supplier.qty_penawaran', 'rpb_sarpras_supplier.termin_penawaran', 'rpb_sarpras_supplier.harga_approve_supplier', 'rpb_sarpras_supplier.qty_approve_supplier', 'rpb_sarpras_supplier.termin_approve_supplier', 'rpb_sarpras_supplier.is_approve', 'rpb_sarpras_supplier.tgl_approve')
+                                ->join('supplier','supplier.id_supplier','=','rpb_sarpras_supplier.id_supplier')
+                                ->where('rpb_sarpras_supplier.id_rpb_sarpras_supplier','=',$id)
+                                ->first();
+        }
+
+        return $rpb_sarpras_supplier;
+    }
+    /** ========== **/
+
+    /** SUPPLIER **/
+    static function fetchDataSupplier($auth_data, $id = null, $is_datatable = null)
+    {
+
+        // get all guru
+        if ($id == null) {
+            $supplier = Supplier::select(
+                'supplier.id_supplier',
+                'supplier.id_pengguna',
+                'supplier.nm_supplier',
+                'supplier.cp_supplier_1',
+                'supplier.cp_supplier_2',
+                'supplier.alamat_supplier',
+                'supplier.nomor_sk_kerjasama',
+                'supplier.tgl_awal_kerjasama',
+                'supplier.tgl_akhir_kerjasama'
+            )
+                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'supplier.id_pengguna')
+                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->orderBy('supplier.nm_supplier', 'asc');
+            if ($is_datatable == null) {
+                $supplier = $supplier->get();
+            }
+        }
+        // get mode edit
+        else {
+            $supplier = Supplier::where('supplier.id_supplier', '=', $id)
+                    ->first();
+        }
+
+        return $supplier;
     }
     /** ========== **/
 

@@ -168,8 +168,9 @@
             },
             { data: 'supplier', name: 'supplier', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ supplier_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
+                    return '<strong>(' + data.apv_supplier +')</strong> '+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ supplier_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">person_add</i>'+
                     '</a> ';
                 }
             },
@@ -372,7 +373,9 @@
                             loadURI(response.path);
                         }else if(response.status == 203){
                             vex.dialog.alert(response.message);
-                            primary_table.ajax.reload(null, false);
+                            primary_table_tinggi.ajax.reload(null, false);
+                            primary_table_sedang.ajax.reload(null, false);
+                            primary_table_rendah.ajax.reload(null, false);
                         }else if(response.status == 300){
                             vex.dialog.alert(response.message);
                         }
@@ -417,7 +420,9 @@
                             loadURI(response.path);
                         }else if(response.status == 203){
                             vex.dialog.alert(response.message);
-                            primary_table.ajax.reload(null, false);
+                            primary_table_tinggi.ajax.reload(null, false);
+                            primary_table_sedang.ajax.reload(null, false);
+                            primary_table_rendah.ajax.reload(null, false);
                         }else if(response.status == 300){
                             vex.dialog.alert(response.message);
                         }
@@ -462,7 +467,9 @@
                             loadURI(response.path);
                         }else if(response.status == 203){
                             vex.dialog.alert(response.message);
-                            primary_table.ajax.reload(null, false);
+                            primary_table_tinggi.ajax.reload(null, false);
+                            primary_table_sedang.ajax.reload(null, false);
+                            primary_table_rendah.ajax.reload(null, false);
                         }else if(response.status == 300){
                             vex.dialog.alert(response.message);
                         }
