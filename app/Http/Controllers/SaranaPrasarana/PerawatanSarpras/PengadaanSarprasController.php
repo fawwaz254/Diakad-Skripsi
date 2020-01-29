@@ -279,9 +279,16 @@ class PengadaanSarprasController extends BaseController
                     return $data;
                 })
                 ->addColumn('nm_approve', function ($item) {
+                    $tgl_approve = "-";
+
+                    if(! empty($item->tgl_approve)) {
+                        $tgl_approve = strftime("%d %B %Y", strtotime($item->tgl_approve));
+                    }
+
                     $data = array(
                         'is_approve'                => $item->is_approve,
                         'nm_approve'                => $item->nm_pengguna,
+                        'tgl_approve'               => $tgl_approve,
                         'id_rpb_sarpras_supplier'   => $item->id_rpb_sarpras_supplier
                     );
                     return $data;
@@ -304,6 +311,24 @@ class PengadaanSarprasController extends BaseController
         $data_supplier = LibDataSarpras::fetchDataSupplier($auth_data);
 
         return view('sarana-prasarana/perawatan-sarpras/pengadaan-sarpras/add-supplier',compact('auth_data','id_rpb_sarpras_supplier', 'data_rpb_sarpras', 'data_supplier'));
+
+    }
+
+    public function editApvPengadaanSarprasSupplier(Request $request, $id_rpb_sarpras, $id_rpb_sarpras_supplier){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $data_rpb_sarpras = LibDataSarpras::fetchDataPengadaanSarpras($auth_data, null, $id_rpb_sarpras, null); 
+
+        $data_supplier = LibDataSarpras::fetchDataSupplier($auth_data);
+
+        $data_rpb_sarpras_supplier = LibDataSarpras::fetchDataPengadaanSarprasSupplier($auth_data, $id_rpb_sarpras, $id_rpb_sarpras_supplier, null);
+
+        return view('sarana-prasarana/perawatan-sarpras/pengadaan-sarpras/edit-apv-supplier',compact('auth_data','data_rpb_sarpras', 'data_supplier', 'data_rpb_sarpras_supplier'));
 
     }
 
@@ -543,15 +568,28 @@ class PengadaanSarprasController extends BaseController
         }
         elseif($mode == 'add-supplier') {
             $validator = Validator::make($request->all(), [
-                'id_rpb_sarpras'               => 'required',
-                'id_supplier'             => 'required',
-                'harga_supplier'             => 'required',
-                'harga_penawaran'             => 'required',
+                'id_rpb_sarpras'            => 'required',
+                'id_supplier'               => 'required',
+                'harga_supplier'            => 'required',
+                'harga_penawaran'           => 'required',
                 'qty_penawaran'             => 'required',
-                'termin_penawaran'             => 'required'
+                'termin_penawaran'          => 'required'
                 /*'harga_approve_supplier'             => 'required',
                 'qty_approve_supplier'             => 'required',
                 'termin_approve_supplier'             => 'required'*/
+            ]);
+        }
+        elseif($mode == 'edit-apv-supplier') {
+            $validator = Validator::make($request->all(), [
+                'id_rpb_sarpras'            => 'required',
+                'id_supplier'               => 'required',
+                'harga_supplier'            => 'required',
+                'harga_penawaran'           => 'required',
+                'qty_penawaran'             => 'required',
+                'termin_penawaran'          => 'required',
+                'harga_approve_supplier'    => 'required',
+                'qty_approve_supplier'      => 'required',
+                'termin_approve_supplier'   => 'required'
             ]);
         }
         
@@ -623,6 +661,27 @@ class PengadaanSarprasController extends BaseController
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'perawatan-sarpras/pengadaan-sarpras/view-detail-supplier/'.$input->id_rpb_sarpras,
                     'message' => 'Input Pengadaan Supplier successfully'
+                ];
+            }
+            elseif ($mode == 'edit-apv-supplier') {
+                // make object to find id
+                $rpbSarprasSupplier                             = RpbSarprasSupplier::find($id);
+                $rpbSarprasSupplier->id_supplier                = $input->id_supplier;
+                $rpbSarprasSupplier->harga_supplier             = $input->harga_supplier;
+                $rpbSarprasSupplier->harga_penawaran            = $input->harga_penawaran;
+                $rpbSarprasSupplier->qty_penawaran              = $input->qty_penawaran;
+                $rpbSarprasSupplier->termin_penawaran           = $input->termin_penawaran;
+                $rpbSarprasSupplier->harga_approve_supplier     = $input->harga_approve_supplier;
+                $rpbSarprasSupplier->qty_approve_supplier       = $input->qty_approve_supplier;
+                $rpbSarprasSupplier->termin_approve_supplier    = $input->termin_approve_supplier;
+                $rpbSarprasSupplier->updated_by                 = $input->auth_data->pengguna->id_pengguna;
+                $rpbSarprasSupplier->updated_at                 = $now;
+                $rpbSarprasSupplier->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'perawatan-sarpras/pengadaan-sarpras/view-detail-supplier/'.$input->id_rpb_sarpras,
+                    'message' => 'Edit Approve Pengadaan Supplier successfully'
                 ];
             }
         }
