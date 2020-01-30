@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Yajra\Datatables\Datatables;
 
+use App\Models\KategoriPelanggaran;
 use App\Models\PresensiMp as PresensiMp;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\Siswa as Siswa;
@@ -188,7 +189,7 @@ class InputPelanggaranController extends BaseController
 
         $id_presensi_mp_pelanggaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+        $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
 
         return view('guru/pelanggaran-siswa/input-pelanggaran/add-input-pelanggaran-mp', compact('auth_data', 'data_kelas', 'data_siswa', 'presensi_mp_aktif', 'id_presensi_mp_pelanggaran', 'data_kategori'));
     }
@@ -222,11 +223,9 @@ class InputPelanggaranController extends BaseController
         // ambil data siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $data_pelanggaran_siswa->id_siswa);
 
-        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+        $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
 
-        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $data_pelanggaran_siswa->id_kategori_pelanggaran);
-
-        return view('guru/pelanggaran-siswa/input-pelanggaran/edit-input-pelanggaran-mp', compact('auth_data', 'data_kelas', 'data_siswa', 'presensi_mp_aktif', 'data_pelanggaran_siswa', 'data_kategori', 'data_subkategori'));
+        return view('guru/pelanggaran-siswa/input-pelanggaran/edit-input-pelanggaran-mp', compact('auth_data', 'data_kelas', 'data_siswa', 'presensi_mp_aktif', 'data_pelanggaran_siswa', 'data_kategori'));
     }
 
     // Action POST

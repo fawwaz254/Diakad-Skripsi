@@ -180,36 +180,8 @@
         serverSide: true,
         // responsive: true,
         dom: 'Bfrtip',
-        lengthMenu: [
-            [ 10, 25, 50, 100, -1 ],
-            [ '10 rows', '25 rows', '50 rows', '100 rows', 'Show all' ]
-        ],
-        buttons: [
-            'pageLength',
-            {
-                extend: 'print',
-                text: 'PDF',
-                orientation: 'landscape',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                customize: function ( win ) {
-                    $(win.document.body)
-                        .css( 'font-size', '10pt' );
- 
-                    $(win.document.body).find( 'table' )
-                        .addClass( 'compact' )
-                        .css( 'font-size', 'inherit' );
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            'colvis'
-        ],
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'

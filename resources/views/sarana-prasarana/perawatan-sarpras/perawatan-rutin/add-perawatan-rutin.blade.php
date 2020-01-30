@@ -47,7 +47,7 @@
                                 <select class="form-control show-tick" name="id_buku_alat">
                                     <option value="">-- Pilih Buku/Alat --</option>
                                     @foreach($data_buku_alat as $data)
-                                        <option value="{{$data->id_buku_alat}}">{{$data->nm_buku_alat}} - {{$data->jenis_buku_alat}}</option>
+                                        <option value="{{$data->id_buku_alat}}">{{$data->nm_buku_alat}} - {{$data->nm_jenis_buku_alat}}</option>
                                     @endforeach
                                 </select>
                             </div>

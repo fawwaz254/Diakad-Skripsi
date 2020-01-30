@@ -41,14 +41,6 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::post('action-nama-semester/{mode}/{id}', 'Pendidikan\DataAkademik\NamaSemesterController@actionNamaSemester');
 
-			// MENU Data Status Siswa
-			Route::get('status-siswa', 'Pendidikan\DataAkademik\StatusSiswaController@viewStatusSiswa');
-			Route::get('status-siswa/datatables', 'Pendidikan\DataAkademik\StatusSiswaController@datatablesStatusSiswa');
-			Route::get('status-siswa/add', 'Pendidikan\DataAkademik\StatusSiswaController@addStatusSiswa');
-			Route::get('status-siswa/edit/{id}', 'Pendidikan\DataAkademik\StatusSiswaController@editStatusSiswa');
-
-			Route::post('action-status-siswa/{mode}/{id}', 'Pendidikan\DataAkademik\StatusSiswaController@actionStatusSiswa');
-
 			// MENU Data Jalur
 			Route::get('jalur', 'Pendidikan\DataAkademik\JalurController@viewJalur');
 			Route::get('jalur/datatables', 'Pendidikan\DataAkademik\JalurController@datatablesJalur');

@@ -229,17 +229,43 @@ class InputRapbController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         if ($mode == 'approve-kepala-unit') {
-            $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                          ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
-                          ->where('guru.jenis_jabatan', '=', 98)
-                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                          ->first();
+            $unit_kerja = UnitKerja::where('id_unit_kerja', '=', $id_unit_kerja)->first();
 
-            $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                          ->where('staff.id_unit_kerja', '=', $id_unit_kerja)
-                          ->where('staff.jenis_jabatan', '=', 98)
-                          ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                          ->first();
+            $tipe_unit_kerja = $unit_kerja->tipe_unit_kerja;
+
+            if ($tipe_unit_kerja == 'SARPRAS') {
+                $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                              ->where('guru.jenis_jabatan', '=', 1)
+                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                              ->first();
+
+                $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                              ->where('staff.jenis_jabatan', '=', 1)
+                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                              ->first();
+            } elseif ($tipe_unit_kerja == 'KEUANGAN') {
+                $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                              ->where('guru.jenis_jabatan', '=', 2)
+                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                              ->first();
+
+                $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                              ->where('staff.jenis_jabatan', '=', 2)
+                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                              ->first();
+            } else {
+                $guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                              ->where('guru.id_unit_kerja', '=', $id_unit_kerja)
+                              ->where('guru.jenis_jabatan', '=', 98)
+                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                              ->first();
+
+                $staff = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                              ->where('staff.id_unit_kerja', '=', $id_unit_kerja)
+                              ->where('staff.jenis_jabatan', '=', 98)
+                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                              ->first();
+            }
 
             if (! empty($guru->id_pengguna)) {
                 // make object to find id
@@ -266,8 +292,6 @@ class InputRapbController extends BaseController
                   'message' => 'Approve Kepala Unit successfully'
               ];
             } else {
-                $unit_kerja = UnitKerja::where('id_unit_kerja', '=', $id_unit_kerja)->first();
-
                 return [
                     'status' => 300, // SUCCESS AND LOAD TABLE
                     'message' => 'Kepala Unit '.$unit_kerja->nm_unit_kerja.' Belum Dilakukan Setting!'

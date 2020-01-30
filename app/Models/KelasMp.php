@@ -48,6 +48,11 @@ class KelasMp extends Model
         return $this->hasMany('App\Models\PengambilanMp', 'id_kelas_mp');
     }
 
+    public function pengampu_mp_utama()
+    {
+        return $this->hasOne('App\Models\PengampuMp', 'id_kelas_mp')->where('pjmp_pengampu_mp', 1);
+    }
+
     public function pengampu_mp()
     {
         return $this->hasMany('App\Models\PengampuMp', 'id_kelas_mp');

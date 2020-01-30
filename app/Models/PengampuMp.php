@@ -16,7 +16,7 @@ class PengampuMp extends Model
 
     protected $primaryKey = 'id_pengampu_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -35,9 +35,8 @@ class PengampuMp extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function guru()
+    {
+        return $this->belongsTo('App\Models\Guru', 'id_guru');
+    }
 }

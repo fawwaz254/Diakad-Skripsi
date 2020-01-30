@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Models\Ruangan as Ruangan;
 use App\Models\RuanganKelas as RuanganKelas;
 use App\Models\InventarisRuangan as InventarisRuangan;
+use App\Models\JadwalKelasMp;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
@@ -19,18 +20,19 @@ use DB;
 use Session;
 use Validator;
 
-class RuanganController extends BaseController{
-
-    public function viewRuangan(Request $request){
+class RuanganController extends BaseController
+{
+    public function viewRuangan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/view-ruangan',compact('auth_data'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/view-ruangan', compact('auth_data'));
     }
 
-    public function addRuangan(Request $request){
+    public function addRuangan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -46,11 +48,11 @@ class RuanganController extends BaseController{
 
         $id_ruangan = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/add-ruangan',compact('auth_data','data_jenis_ruangan','data_gedung','data_pemilik_sarpras','id_ruangan'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/add-ruangan', compact('auth_data', 'data_jenis_ruangan', 'data_gedung', 'data_pemilik_sarpras', 'id_ruangan'));
     }
 
-    public function editRuangan($id, Request $request){
+    public function editRuangan($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -63,25 +65,24 @@ class RuanganController extends BaseController{
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, null, $id);
 
-        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/edit-ruangan',compact('auth_data','data_jenis_ruangan','data_gedung','data_pemilik_sarpras','data_ruangan'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/edit-ruangan', compact('auth_data', 'data_jenis_ruangan', 'data_gedung', 'data_pemilik_sarpras', 'data_ruangan'));
     }
 
-    public function datatablesRuangan(Request $request){
+    public function datatablesRuangan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataRuangan($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('status_aktif', function($item){
-                    if($item->is_aktif == 1) {
+                ->addColumn('status_aktif', function ($item) {
+                    if ($item->is_aktif == 1) {
                         return "Aktif";
-                    }
-                    else {
+                    } else {
                         return "Non-Aktif";
                     }
                 })
-                ->addColumn('action', function($item){
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_ruangan
                     );
@@ -91,8 +92,8 @@ class RuanganController extends BaseController{
     }
 
     // Action POST
-    public function actionRuangan(Request $request, $mode, $id = null){
-
+    public function actionRuangan(Request $request, $mode, $id = null)
+    {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
@@ -106,17 +107,16 @@ class RuanganController extends BaseController{
             'is_aktif'          => 'required'
         ]);
         
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($mode == 'add') {
+            if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $ruangan                        = new Ruangan;
@@ -137,8 +137,7 @@ class RuanganController extends BaseController{
                     'path' => 'data-sarpras-ruangan/ruangan',
                     'message' => 'Save Ruangan successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $ruangan                        = Ruangan::find($id);
                 $ruangan->id_jenis_ruangan      = $input->id_jenis_ruangan;
@@ -158,15 +157,13 @@ class RuanganController extends BaseController{
                     'path' => 'data-sarpras-ruangan/ruangan',
                     'message' => 'Update Ruangan successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
-                if($ruanganKelas = RuanganKelas::where('id_ruangan',$id)->first() or $inventarisRuangan = InventarisRuangan::where('id_ruangan',$id)->first()){
+            } elseif ($mode == 'delete') {
+                if ($ruanganKelas = RuanganKelas::where('id_ruangan', $id)->first() or $inventarisRuangan = InventarisRuangan::where('id_ruangan', $id)->first() or $jadwal_kelas_mp = JadwalKelasMp::where('id_ruangan', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Ruangan'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $ruangan               = Ruangan::find($id);
                     $ruangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -182,6 +179,4 @@ class RuanganController extends BaseController{
             }
         }
     }
-
-
 }

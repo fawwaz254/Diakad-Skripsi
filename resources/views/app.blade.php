@@ -75,6 +75,30 @@
                 width: 100%;
             }
 
+            .dt-buttons{
+                padding-bottom:1rem;
+            }
+
+            .dt-button-collection .btn{
+                display: block;
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
+
+            .button-page-length.active{
+                background-color: #FFC107 !important;
+                color: #fff;
+            }
+
+            .buttons-columnVisibility.active{
+                background-color: #2196F3 !important;
+                color: #fff;
+            }
+
+            table.dataTable thead .sorting, table.dataTable thead .sorting_asc, table.dataTable thead .sorting_desc{
+                background-position: right 0px;
+            }
+
             .bg-btn-submit{
                 background-color: #235789;
                 color: #fff !important;

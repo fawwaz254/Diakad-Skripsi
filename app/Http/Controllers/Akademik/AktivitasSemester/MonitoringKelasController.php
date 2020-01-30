@@ -93,6 +93,7 @@ class MonitoringKelasController extends BaseController
             'ruangan',
             'kelas_mp',
             'kelas_mp.kelas',
+            'kelas_mp.pengampu_mp_utama.guru.pengguna',
             'kelas_mp.mata_pelajaran'
         )->with(['kelas_mp.pengambilan_mp' => function ($q) {
             $q->where('status_apv_pengambilan_mp', 1);
@@ -102,6 +103,15 @@ class MonitoringKelasController extends BaseController
             });
 
         return Datatables::of($list_data)
+                ->addColumn('nm_pengampu', function ($item) {
+                    if (!empty($item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna)) {
+                        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->gelar_depan.' '.
+                                $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna.' '.
+                                $item->kelas_mp->pengampu_mp_utama->guru->pengguna->gelar_belakang;
+                    } else {
+                        return '-';
+                    }
+                })
                 ->addColumn('jml_siswa', function ($item) {
                     return $item->kelas_mp->pengambilan_mp->count();
                 })

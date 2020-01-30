@@ -13,7 +13,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
+                        <table class="table table-bordered table-striped table-hover dataTable display">
                             <tr>
                                 <th colspan="2" style="text-align: center;">BIODATA SISWA</th>
                             </tr>
@@ -68,7 +68,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="tagihan">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_tagihan">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tagihan">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -90,7 +90,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="riwayat_bayar">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_riwayat_bayar">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_riwayat_bayar">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -132,7 +132,6 @@
     var primary_table_tagihan = $('#primary_table_tagihan').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_tagihan_url,
             type: 'GET'
@@ -163,7 +162,6 @@ responsive: true,
     var primary_table_riwayat_bayar = $('#primary_table_riwayat_bayar').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_riwayat_bayar_url,
             type: 'GET'

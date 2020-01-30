@@ -66,10 +66,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Hari</th>
-                                    <th>Tanggal Presensi</th>
-                                    <th>Persentase</th>
-                                    <th>Petugas Presensi</th>
+                                    <th>Bulan</th>
+                                    <th>Tahun</th>
+                                    <th>Sudah presensi</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -89,7 +88,7 @@
     let datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables/' + id_semester + '/' + id_kelas;
     let delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
 
-    let edit_url        = role_url + '#' + modul_url + '/' + menu_url + '/manage/' + id_semester + '/' + id_kelas;
+    let detail_url        = role_url + '#' + modul_url + '/' + menu_url + '/detail/' + id_semester + '/' + id_kelas;
 
     let primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -101,22 +100,18 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'jadwal_hari.nm_jadwal_hari' },
-            { data: 'tanggal', searchable: false, orderable: false },
-            { data: 'persentase_presensi_harian', 
+            { data: 'bulan', searchable: false, orderable: false },
+            { data: 'tahun', searchable: false, orderable: false },
+            { data: 'jml_record', searchable: false, orderable: false,
                 render: function(data){
-                    return Math.round(data * 100) + '%';
+                    return data+'x';
                 }
             },
-            { data: 'petugas', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.tahun + '/' + data.bulan + '">'+
+                    '    <i class="material-icons">remove_red_eye</i>'+
+                    '</a> ';
                 }
             }
         ]

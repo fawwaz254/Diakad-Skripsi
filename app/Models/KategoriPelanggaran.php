@@ -16,7 +16,7 @@ class KategoriPelanggaran extends Model
 
     protected $primaryKey = 'id_kategori_pelanggaran';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
     
@@ -32,9 +32,8 @@ class KategoriPelanggaran extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function subkategori_pelanggaran()
+    {
+        return $this->hasMany('App\Models\SubkategoriPelanggaran', 'id_kategori_pelanggaran');
+    }
 }

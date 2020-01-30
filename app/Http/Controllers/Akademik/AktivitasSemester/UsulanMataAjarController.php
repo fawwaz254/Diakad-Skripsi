@@ -127,11 +127,15 @@ class UsulanMataAjarController extends BaseController
         $id_semester = $kelas_mp->id_semester;
         $id_mata_pelajaran = $kelas_mp->id_mata_pelajaran;
 
-        $kelas      = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
+        $kelas      = Kelas::join('jurusan', function ($q) {
+            $q->on('jurusan.id_jurusan', '=', 'kelas.id_jurusan')
+                ->whereNull('jurusan.deleted_at');
+        })
                             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                             ->whereNotExists(function ($query) use ($id_semester, $id_mata_pelajaran) {
                                 $query->select(DB::raw(1))
                                       ->from('kelas_mp')
+                                      ->whereNull('kelas_mp.deleted_at')
                                       ->whereRaw('kelas_mp.id_kelas = kelas.id_kelas')
                                       ->whereRaw('kelas_mp.id_semester = "'.$id_semester.'"')
                                       ->whereRaw('kelas_mp.id_mata_pelajaran = "'.$id_mata_pelajaran.'"');
@@ -862,7 +866,7 @@ class UsulanMataAjarController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Update Usulan Mata Ajar successfully',
-                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
+                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/edit/'.$id
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

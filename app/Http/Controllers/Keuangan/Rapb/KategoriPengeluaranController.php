@@ -19,18 +19,19 @@ use DB;
 use Session;
 use Validator;
 
-class KategoriPengeluaranController extends BaseController{
-
-    public function viewKategoriPengeluaran(Request $request){
+class KategoriPengeluaranController extends BaseController
+{
+    public function viewKategoriPengeluaran(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/rapb/kategori-pengeluaran/view-kategori-pengeluaran',compact('auth_data'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/view-kategori-pengeluaran', compact('auth_data'));
     }
 
-    public function addKategoriPengeluaran(Request $request){
+    public function addKategoriPengeluaran(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -40,35 +41,35 @@ class KategoriPengeluaranController extends BaseController{
 
         $id_kategori_rapb = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('keuangan/rapb/kategori-pengeluaran/add-kategori-pengeluaran',compact('auth_data','id_kategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/add-kategori-pengeluaran', compact('auth_data', 'id_kategori_rapb'));
     }
 
-    public function editKategoriPengeluaran(Request $request, $id){
+    public function editKategoriPengeluaran(Request $request, $id)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_kategori_rapb = LibDataKeuangan::fetchDataKategoriRapb($auth_data, null, $id);
 
-        return view('keuangan/rapb/kategori-pengeluaran/edit-kategori-pengeluaran',compact('auth_data','data_kategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/edit-kategori-pengeluaran', compact('auth_data', 'data_kategori_rapb'));
     }
 
-    public function datatablesKategoriPengeluaran(Request $request){
+    public function datatablesKategoriPengeluaran(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataKategoriRapb($auth_data, 2);
+        $list_data = LibDataKeuangan::fetchDataKategoriRapb($auth_data, 2);
 
         return Datatables::of($list_data)
-                ->addColumn('subkategori', function($item){
+                ->addColumn('subkategori', function ($item) {
                     $data = array(
                         'jml_subkategori_rapb' => $item->jml_subkategori_rapb,
                         'id' => $item->id_kategori_rapb
                     );
                     return $data;
                 })
-                ->addColumn('action', function($item){
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_kategori_rapb
                     );
@@ -79,18 +80,19 @@ class KategoriPengeluaranController extends BaseController{
 
 
     // Sub Kategori Pengeluaran
-    public function viewSubkategoriPengeluaran(Request $request, $id_kategori_rapb){
+    public function viewSubkategoriPengeluaran(Request $request, $id_kategori_rapb)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_kategori_rapb = LibDataKeuangan::fetchDataKategoriRapb($auth_data, null, $id_kategori_rapb);
 
-        return view('keuangan/rapb/kategori-pengeluaran/view-subkategori-pengeluaran',compact('auth_data', 'data_kategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/view-subkategori-pengeluaran', compact('auth_data', 'data_kategori_rapb'));
     }
 
-    public function addSubkategoriPengeluaran(Request $request, $id_kategori_rapb){
+    public function addSubkategoriPengeluaran(Request $request, $id_kategori_rapb)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -102,11 +104,11 @@ class KategoriPengeluaranController extends BaseController{
 
         $id_subkategori_rapb = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('keuangan/rapb/kategori-pengeluaran/add-subkategori-pengeluaran',compact('auth_data', 'data_kategori_rapb', 'id_subkategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/add-subkategori-pengeluaran', compact('auth_data', 'data_kategori_rapb', 'id_subkategori_rapb'));
     }
 
-    public function editSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+    public function editSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -115,24 +117,24 @@ class KategoriPengeluaranController extends BaseController{
 
         $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
 
-        return view('keuangan/rapb/kategori-pengeluaran/edit-subkategori-pengeluaran',compact('auth_data','data_kategori_rapb','data_subkategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/edit-subkategori-pengeluaran', compact('auth_data', 'data_kategori_rapb', 'data_subkategori_rapb'));
     }
 
-    public function datatablesSubkategoriPengeluaran(Request $request, $id_kategori_rapb){
+    public function datatablesSubkategoriPengeluaran(Request $request, $id_kategori_rapb)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb);
 
         return Datatables::of($list_data)
-                 ->addColumn('ket_subkategori', function($item){
-                    $data = array(
+                 ->addColumn('ket_subkategori', function ($item) {
+                     $data = array(
                         'jml_ket_subkategori_rapb' => $item->jml_ket_subkategori_rapb,
                         'id' => $item->id_subkategori_rapb
                     );
-                    return $data;
-                })
-                ->addColumn('action', function($item){
+                     return $data;
+                 })
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_subkategori_rapb
                     );
@@ -142,18 +144,19 @@ class KategoriPengeluaranController extends BaseController{
     }
 
     // Keterangan Sub Kategori Pengeluaran
-    public function viewKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+    public function viewKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_subkategori_rapb = LibDataKeuangan::fetchDataSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
 
-        return view('keuangan/rapb/kategori-pengeluaran/view-ket-subkategori-pengeluaran',compact('auth_data', 'data_subkategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/view-ket-subkategori-pengeluaran', compact('auth_data', 'data_subkategori_rapb'));
     }
 
-    public function addKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+    public function addKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -165,11 +168,11 @@ class KategoriPengeluaranController extends BaseController{
 
         $id_ket_subkategori_rapb = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('keuangan/rapb/kategori-pengeluaran/add-ket-subkategori-pengeluaran',compact('auth_data', 'data_subkategori_rapb', 'id_ket_subkategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/add-ket-subkategori-pengeluaran', compact('auth_data', 'data_subkategori_rapb', 'id_ket_subkategori_rapb'));
     }
 
-    public function editKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb, $id_ket_subkategori_rapb){
+    public function editKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb, $id_ket_subkategori_rapb)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -178,17 +181,17 @@ class KategoriPengeluaranController extends BaseController{
 
         $data_ket_subkategori_rapb = LibDataKeuangan::fetchDataKetSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb, $id_ket_subkategori_rapb);
 
-        return view('keuangan/rapb/kategori-pengeluaran/edit-ket-subkategori-pengeluaran',compact('auth_data','data_subkategori_rapb','data_ket_subkategori_rapb'));
-
+        return view('keuangan/rapb/kategori-pengeluaran/edit-ket-subkategori-pengeluaran', compact('auth_data', 'data_subkategori_rapb', 'data_ket_subkategori_rapb'));
     }
 
-    public function datatablesKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb){
+    public function datatablesKetSubkategoriPengeluaran(Request $request, $id_kategori_rapb, $id_subkategori_rapb)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataKeuangan::fetchDataKetSubkategoriRapb($auth_data, $id_kategori_rapb, $id_subkategori_rapb);
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
+                ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_ket_subkategori_rapb
                     );
@@ -199,49 +202,46 @@ class KategoriPengeluaranController extends BaseController{
 
 
     // Action POST
-    public function actionKategoriPengeluaran(Request $request, $mode, $id = null){
-
+    public function actionKategoriPengeluaran(Request $request, $mode, $id = null)
+    {
         $input = (object) $request->input();
 
-        if(in_array($mode, ['add-kategori','edit-kategori'])) {
-           $validator = Validator::make($request->all(), [
+        if (in_array($mode, ['add-kategori','edit-kategori'])) {
+            $validator = Validator::make($request->all(), [
                 'kode_kategori_rapb' => 'required',
                 'nm_kategori_rapb' => 'required',
+                'jenis_kategori_rapb' => 'required',
                 'deskripsi_kategori_rapb' => 'required'
-            ]); 
-        }
-        elseif(in_array($mode, ['add-subkategori','edit-subkategori'])) {
-           $validator = Validator::make($request->all(), [
+            ]);
+        } elseif (in_array($mode, ['add-subkategori','edit-subkategori'])) {
+            $validator = Validator::make($request->all(), [
                 'id_kategori_rapb' => 'required',
                 'kode_subkategori_rapb' => 'required',
                 'nm_subkategori_rapb' => 'required',
                 'deskripsi_subkategori_rapb' => 'required'
-            ]); 
-        }
-        elseif(in_array($mode, ['add-ket-subkategori','edit-ket-subkategori'])) {
-           $validator = Validator::make($request->all(), [
+            ]);
+        } elseif (in_array($mode, ['add-ket-subkategori','edit-ket-subkategori'])) {
+            $validator = Validator::make($request->all(), [
                 'id_subkategori_rapb' => 'required',
                 'kode_ket_subkategori_rapb' => 'required',
                 'nm_ket_subkategori_rapb' => 'required'
-            ]); 
-        }
-        else {
+            ]);
+        } else {
             $validator = Validator::make($request->all(), [
 
-            ]); 
+            ]);
         }
         
-        if($validator->fails() && ! in_array($mode, ['delete-kategori','delete-subkategori','delete-ket-subkategori'])) {
+        if ($validator->fails() && ! in_array($mode, ['delete-kategori','delete-subkategori','delete-ket-subkategori'])) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($mode == 'add-kategori') {
+            if ($mode == 'add-kategori') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $kategoriRapb                           = new KategoriRapb;
@@ -250,6 +250,7 @@ class KategoriPengeluaranController extends BaseController{
                 $kategoriRapb->nm_kategori_rapb         = $input->nm_kategori_rapb;
                 $kategoriRapb->deskripsi_kategori_rapb  = $input->deskripsi_kategori_rapb;
                 $kategoriRapb->tipe_kategori_rapb       = 2;
+                $kategoriRapb->jenis_kategori_rapb      = $input->jenis_kategori_rapb;
                 $kategoriRapb->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
                 $kategoriRapb->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $kategoriRapb->save();
@@ -259,13 +260,13 @@ class KategoriPengeluaranController extends BaseController{
                     'path' => 'rapb/kategori-pengeluaran',
                     'message' => 'Save Kategori Pengeluaran successfully'
                 ];
-            }
-            elseif($mode == 'edit-kategori'){
+            } elseif ($mode == 'edit-kategori') {
                 // make object to find id
                 $kategoriRapb                           = KategoriRapb::find($id);
                 $kategoriRapb->kode_kategori_rapb       = $input->kode_kategori_rapb;
                 $kategoriRapb->nm_kategori_rapb         = $input->nm_kategori_rapb;
                 $kategoriRapb->deskripsi_kategori_rapb  = $input->deskripsi_kategori_rapb;
+                $kategoriRapb->jenis_kategori_rapb      = $input->jenis_kategori_rapb;
                 $kategoriRapb->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $kategoriRapb->updated_at               = $now;
                 $kategoriRapb->save();
@@ -275,15 +276,13 @@ class KategoriPengeluaranController extends BaseController{
                     'path' => 'rapb/kategori-pengeluaran',
                     'message' => 'Update Kategori Pengeluaran successfully'
                 ];
-            }
-            elseif($mode == 'delete-kategori'){
-                if($subkategoriRapb = SubkategoriRapb::where('id_kategori_rapb',$id)->first()){
+            } elseif ($mode == 'delete-kategori') {
+                if ($subkategoriRapb = SubkategoriRapb::where('id_kategori_rapb', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Kategori Pengeluaran Sudah Terpakai Pada Sub-Kategori Pengeluaran!'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $kategoriRapb               = KategoriRapb::find($id);
                     $kategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -296,8 +295,7 @@ class KategoriPengeluaranController extends BaseController{
                         'message' => 'Delete Kategori Pengeluaran successfully'
                     ];
                 }
-            }
-            elseif($mode == 'add-subkategori') {
+            } elseif ($mode == 'add-subkategori') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $subkategoriRapb                                = new SubkategoriRapb;
@@ -314,8 +312,7 @@ class KategoriPengeluaranController extends BaseController{
                     'path' => 'rapb/kategori-pengeluaran/sub/'.$input->id_kategori_rapb,
                     'message' => 'Save Sub-Kategori Pengeluaran successfully'
                 ];
-            }
-            elseif($mode == 'edit-subkategori'){
+            } elseif ($mode == 'edit-subkategori') {
                 // make object to find id
                 $subkategoriRapb                                = SubkategoriRapb::find($id);
                 $subkategoriRapb->kode_subkategori_rapb         = $input->kode_subkategori_rapb;
@@ -330,15 +327,13 @@ class KategoriPengeluaranController extends BaseController{
                     'path' => 'rapb/kategori-pengeluaran/sub/'.$input->id_kategori_rapb,
                     'message' => 'Update Sub-Kategori Pengeluaran successfully'
                 ];
-            }
-            elseif($mode == 'delete-subkategori'){
-                if($rapb = Rapb::where('id_subkategori_rapb',$id)->first()){
+            } elseif ($mode == 'delete-subkategori') {
+                if ($rapb = Rapb::where('id_subkategori_rapb', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Sub-Kategori Pengeluaran Sudah Terpakai Pada RAPB!'
-                    ]; 
-                }
-                else{
+                    ];
+                } else {
                     // make object to find id
                     $subkategoriRapb               = SubkategoriRapb::find($id);
                     $subkategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -351,8 +346,7 @@ class KategoriPengeluaranController extends BaseController{
                         'message' => 'Delete Sub-Kategori Pengeluaran successfully'
                     ];
                 }
-            }
-            elseif($mode == 'add-ket-subkategori') {
+            } elseif ($mode == 'add-ket-subkategori') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $ketSubkategoriRapb                             = new KetSubkategoriRapb;
@@ -368,8 +362,7 @@ class KategoriPengeluaranController extends BaseController{
                     'path' => 'rapb/kategori-pengeluaran/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
                     'message' => 'Save Keterangan Sub-Kategori Pengeluaran successfully'
                 ];
-            }
-            elseif($mode == 'edit-ket-subkategori'){
+            } elseif ($mode == 'edit-ket-subkategori') {
                 // make object to find id
                 $ketSubkategoriRapb                             = KetSubkategoriRapb::find($id);
                 $ketSubkategoriRapb->kode_ket_subkategori_rapb  = $input->kode_ket_subkategori_rapb;
@@ -383,8 +376,7 @@ class KategoriPengeluaranController extends BaseController{
                     'path' => 'rapb/kategori-pengeluaran/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
                     'message' => 'Update Keterangan Sub-Kategori Pengeluaran successfully'
                 ];
-            }
-            elseif($mode == 'delete-ket-subkategori'){
+            } elseif ($mode == 'delete-ket-subkategori') {
                 // make object to find id
                 $ketSubkategoriRapb               = KetSubkategoriRapb::find($id);
                 $ketSubkategoriRapb->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -399,6 +391,4 @@ class KategoriPengeluaranController extends BaseController{
             }
         }
     }
-
-
 }

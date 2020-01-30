@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
+use App\Models\Bulan;
 use App\Models\Guru;
 use App\Models\PresensiHarian;
 use App\Models\PresensiHarianSiswa;
@@ -76,27 +77,37 @@ class AbsensiHarianSiswaController extends BaseController
         );
     }
 
-    public function viewDetailAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $bulan)
+    public function viewDetailAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $tahun, $id_bulan)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
-        $selected_semester = null;
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-        if (!empty($id_semester)) {
-            $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
-        }
         
-        $selected_kelas = null;
-        if (!empty($id_kelas)) {
-            $selected_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
-        }
+        $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+        
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
+        
+        $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'all');
+
+        $bulan = Bulan::find($id_bulan);
+        
+        $start_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
+
+        $end_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta')->endOfMonth();
+
+        $data_presensi = PresensiHarian::with('jadwal_hari', 'presensi_harian_siswa')
+                                    ->where('id_semester', $id_semester)
+                                    ->where('id_kelas', $id_kelas)
+                                    ->whereBetween('tgl_entry', [$start_date, $end_date])
+                                    ->orderBy('tgl_entry', 'asc')
+                                    ->get();
+        // dd($start_date);
 
         return view(
             'guru/guru-piket/absensi-harian-siswa/view-detail-absensi-harian-siswa',
-            compact('auth_data', 'selected_kelas', 'data_kelas', 'selected_semester', 'data_semester')
+            compact('auth_data', 'bulan', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'tahun')
         );
     }
 
@@ -104,25 +115,22 @@ class AbsensiHarianSiswaController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $bulan = Bulan::get();
                 
-        $list_data = PresensiHarian::with('jadwal_hari', 'guru_entry', 'siswa_entry')
-                                        ->where('id_semester', $id_semester)
-                                        ->where('id_kelas', $id_kelas);
+        $list_data = PresensiHarian::selectRaw('COUNT(*) as jml_record, YEAR(tgl_entry) tahun, MONTH(tgl_entry) bulan')
+                                    ->where('id_semester', $id_semester)
+                                    ->where('id_kelas', $id_kelas)
+                                    ->groupBy(DB::raw('YEAR(tgl_entry),  MONTH(tgl_entry)'));
                                     
         return Datatables::of($list_data)
-                ->addColumn('tanggal', function ($item) {
-                    return $item->convertDateFormat('tgl_entry', 'd M Y H:i');
-                })
-                ->addColumn('petugas', function ($item) {
-                    if (!empty($item->id_guru_entry)) {
-                        return $item->guru_entry->nm_pengguna.' (Guru Piket)';
-                    } elseif (!empty($item->id_siswa_entry)) {
-                        return $item->siswa_entry->nm_pengguna.' (Siswa)';
-                    }
+                ->editColumn('bulan', function ($item) use ($bulan) {
+                    return $bulan->firstWhere('id_bulan', $item->bulan)->nm_bulan;
                 })
                 ->addColumn('action', function ($item) {
                     $data = array(
-                        'id' => $item->id_presensi_harian
+                        'tahun' => $item->tahun,
+                        'bulan' => $item->bulan
                     );
                     return $data;
                 })
@@ -147,7 +155,11 @@ class AbsensiHarianSiswaController extends BaseController
             ->editColumn('nis_siswa', function ($item) {
                 $data = array(
                     'id_siswa' => $item->id_siswa,
-                    'nis_siswa' => $item->nis_siswa
+                    'nis_siswa' => $item->nis_siswa,
+                    'status_pengguna' => array(
+                        'status' => $item->aktif_status_pengguna,
+                        'nm_status' => $item->nm_status_pengguna
+                    )
                 );
                 return $data;
             })
@@ -175,7 +187,7 @@ class AbsensiHarianSiswaController extends BaseController
             ->make(true);
     }
 
-    public function actionAbsensiHarianSiswa(Request $request, $mode)
+    public function actionAbsensiHarianSiswa(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
 
@@ -193,12 +205,12 @@ class AbsensiHarianSiswaController extends BaseController
         } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            $tgl_entry = Carbon::parse($input->tgl_entry);
-
+            
             // ACTION ADD
             if ($mode == 'manage') {
                 DB::beginTransaction();
                 try {
+                    $tgl_entry = Carbon::parse($input->tgl_entry);
                     if (!empty($input->id_presensi_harian)) {
                         $presensi_harian = PresensiHarian::find($input->id_presensi_harian);
                     } else {
@@ -271,14 +283,14 @@ class AbsensiHarianSiswaController extends BaseController
             } elseif ($mode == 'delete') {
                 DB::beginTransaction();
                 try {
-                    $presensi_harian = PresensiHarian::where('id_presensi_harian', $input->id_presensi_harian)->delete();
-                    $presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', $input->id_presensi_harian)->delete();
+                    $presensi_harian = PresensiHarian::where('id_presensi_harian', $id)->delete();
+                    $presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', $id)->delete();
 
                     DB::commit();
                     // all good
 
                     return [
-                        'status' => 203, // SUCCESS AND LOAD DATATABLES
+                        'status' => 200, // SUCCESS AND LOAD DATATABLES
                         'message' => 'Delete Absensi Harian Siswa successfully'
                     ];
                 } catch (\Exception $e) {

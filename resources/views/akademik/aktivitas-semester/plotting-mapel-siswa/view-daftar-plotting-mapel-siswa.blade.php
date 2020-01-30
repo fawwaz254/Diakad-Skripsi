@@ -219,6 +219,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         // serverSide: true,
+        pageLength: 100,
         responsive: true,
         ajax: {
             url: datatable_url,
@@ -256,6 +257,7 @@
     var primary_table_siswa = $('#primary_table_siswa').DataTable({
         processing: true,
         // serverSide: true,
+        pageLength: 100,
         responsive: true,
         ajax: {
             url: datatable_url_siswa,

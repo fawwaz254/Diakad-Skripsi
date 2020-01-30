@@ -52,7 +52,7 @@
                             <form id="primary_form" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-batch-biaya-siswa/set')}}">
                                     {{csrf_field()}}
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                        <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -96,7 +96,7 @@
                                 <form id="secondary_form" method="POST" action="">
                                     {{csrf_field()}}
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="secondary_table" style="width:100%;">
+                                        <table class="table table-bordered table-striped table-hover dataTable display" id="secondary_table" style="width:100%;">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -282,7 +282,6 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         // serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_url_belum,
             type: 'GET',
@@ -318,7 +317,6 @@
     var secondary_table = $('#secondary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET',

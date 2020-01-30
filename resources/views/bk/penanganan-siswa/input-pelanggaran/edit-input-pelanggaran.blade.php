@@ -73,35 +73,22 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Kategori Pelanggaran
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="kategori" onchange="changeKategori(this)">
-                                    <option value="">-- Pilih Kategori --</option>
-                                    @foreach($data_kategori as $data)
-                                        @if($data->id_kategori_pelanggaran == $data_pelanggaran_siswa->id_kategori_pelanggaran)
-                                            <option value="{{$data->id_kategori_pelanggaran}}" selected >{{$data->tingkat_kategori_pelanggaran}} - {{$data->nm_kategori_pelanggaran}}</option>
-                                        @else
-                                            <option value="{{$data->id_kategori_pelanggaran}}">{{$data->tingkat_kategori_pelanggaran}} - {{$data->nm_kategori_pelanggaran}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
                             Sub-Kategori Pelanggaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_subkategori_pelanggaran">
-                                    <option value="">-- Pilih Sub-Kategori --</option>
-                                    @foreach($data_subkategori as $data)
-                                        @if($data->id_subkategori_pelanggaran == $data_pelanggaran_siswa->id_subkategori_pelanggaran)
-                                            <option value="{{$data->id_subkategori_pelanggaran}}" selected>{{$data->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
-                                        @else
-                                            <option value="{{$data->id_subkategori_pelanggaran}}">{{$data->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
-                                        @endif
+                                <select class="form-control show-tick select2" name="id_subkategori_pelanggaran">
+                                    <option value="" disabled selected >-- Pilih --</option>
+                                    @foreach($data_kategori as $kategori)
+                                    <optgroup label="{{$kategori->nm_kategori_pelanggaran}}">
+                                        @foreach($kategori->subkategori_pelanggaran as $data)
+                                            @if($data->id_subkategori_pelanggaran == $data_pelanggaran_siswa->id_subkategori_pelanggaran)
+                                            <option value="{{$data->id_subkategori_pelanggaran}}" selected="">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
+                                            @else
+                                            <option value="{{$data->id_subkategori_pelanggaran}}">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
+                                            @endif
+                                        @endforeach
+                                    </optgroup>
                                     @endforeach
                                 </select>
                             </div>
@@ -191,21 +178,7 @@ function changeKelas(el){
     });
 }
 
-function changeKategori(el){
-    $.ajax({
-        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/subkategori-bykategori')}}',
-        type: 'POST',
-        data: {
-            kategori: $('select[name=kategori]').val()
-        },
-        success: function(result) {
-            $('select[name=id_subkategori_pelanggaran]').html('');
-            var html = '<option value="">-- Pilih Sub-Kategori --</option>';
-            $.each(result, function( key, item ) {
-                html += '<option value="'+item.id_subkategori_pelanggaran+'">'+item.tingkat_kategori_pelanggaran+'.'+item.tingkat_subkategori_pelanggaran+' '+item.keterangan_subkategori_pelanggaran+'</option>'
-            });
-            $('select[name=id_subkategori_pelanggaran]').html(html);
-        }
-    });
-}
+</script>
+<script>
+    $('.select2').select2();
 </script>
