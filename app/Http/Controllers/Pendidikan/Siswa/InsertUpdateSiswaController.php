@@ -253,15 +253,16 @@ class InsertUpdateSiswaController extends BaseController
 		    			);
 		    			DB::commit();
 		    			return [
-			                    'status' => 203, // SUCCESS AND LOAD TABLE
-			                    'message' => 'Insert Data Siswa Berhasil!'
+			                    'status' => 202, // SUCCESS AND LOAD PAGE
+								'message' => 'Insert Data Siswa Berhasil!',
+								'path' => 'siswa/cari-siswa/view-detail-siswa/'.$input->nis_siswa.'/'.$input->nis_siswa
 			            ];
 		    		}
 		    		catch (\Exception $e) {
 	                    DB::rollback();
 	                    // something went wrong
 	                    return [
-	                                'status' 	=> 203, // GAGAL
+	                                'status' 	=> 200, // GAGAL
 	                                'message'	=> 'Insert Data Siswa Gagal'
 	                            ];
 	                } 
@@ -431,7 +432,7 @@ class InsertUpdateSiswaController extends BaseController
 		    			);
 	    				DB::commit();
 		    			return [
-			                    'status' => 203, // SUCCESS AND LOAD TABLE
+			                    'status' => 200, // SUCCESS AND LOAD TABLE
 			                    'message' => 'Update Data Siswa Berhasil!'
 			            ];
 	    			}
@@ -439,14 +440,14 @@ class InsertUpdateSiswaController extends BaseController
 	    				DB::rollback();
 	                    // something went wrong
 	                    return [
-	                            'status' 	=> 203, // GAGAL
+	                            'status' 	=> 200, // GAGAL
 	                            'message'	=> 'Update Data Siswa Gagal!'
 	                    ];
 	    			}
 	    		}
 	    		else{
 	    			return [
-			                'status' => 203, // SUCCESS AND LOAD TABLE
+			                'status' => 200, // SUCCESS AND LOAD TABLE
 			               	'message' => 'Siswa Tidak Ditemukan!'
 			        ];
 	    		}
