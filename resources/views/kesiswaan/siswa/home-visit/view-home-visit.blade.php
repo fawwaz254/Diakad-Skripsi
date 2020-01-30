@@ -24,7 +24,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="belum_lengkap">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_belum_lengkap">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_lengkap">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -48,7 +48,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah_lengkap">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_sudah_lengkap">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah_lengkap">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -86,7 +86,6 @@
     var primary_table_belum_lengkap = $('#primary_table_belum_lengkap').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_belum_lengkap,
             type: 'GET'
@@ -124,7 +123,6 @@
     var primary_table_sudah_lengkap = $('#primary_table_sudah_lengkap').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_sudah_lengkap,
             type: 'GET'
