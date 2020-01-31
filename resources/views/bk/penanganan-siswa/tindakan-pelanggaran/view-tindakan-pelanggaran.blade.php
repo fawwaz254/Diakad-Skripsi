@@ -28,7 +28,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="belum_tindakan_nonkbm">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_belum_nonkbm">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_nonkbm">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -51,7 +51,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="belum_tindakan_kbm">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_belum_kbm">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_kbm">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -72,7 +72,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah_tindakan">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_sudah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -117,7 +117,6 @@
     var primary_table_belum_nonkbm = $('#primary_table_belum_nonkbm').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_belum_nonkbm,
             type: 'GET'
@@ -153,7 +152,6 @@ responsive: true,
     var primary_table_belum_kbm = $('#primary_table_belum_kbm').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_belum_kbm,
             type: 'GET'
@@ -187,7 +185,6 @@ responsive: true,
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET'

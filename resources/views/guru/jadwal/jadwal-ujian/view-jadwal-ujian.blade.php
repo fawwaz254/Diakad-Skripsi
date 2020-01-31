@@ -23,7 +23,7 @@
                             <div role="tabpanel" class="tab-pane fade active in" id="uts_with_icon_title">
                                 <div class="body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_uts">
+                                        <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_uts">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -43,7 +43,7 @@
                             <div role="tabpanel" class="tab-pane fade" id="uas_with_icon_title">
                                 <div class="body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_uas">
+                                        <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_uas">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -77,7 +77,6 @@
     var primary_table_uts = $('#primary_table_uts').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_uts_url,
             type: 'GET'
@@ -106,7 +105,6 @@ responsive: true,
     var primary_table_uas = $('#primary_table_uas').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_uas_url,
             type: 'GET'

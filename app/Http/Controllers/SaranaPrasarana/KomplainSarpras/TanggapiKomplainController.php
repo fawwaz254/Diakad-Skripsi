@@ -117,6 +117,9 @@ class TanggapiKomplainController extends BaseController{
                         }
                     }
                 })
+                ->addColumn('tgl_komplain', function($item){
+                    return strftime( "%A, %d %B %Y %H:%M:%S", strtotime($item->created_at));
+                })
                 ->addColumn('is_urgent', function($item){
                     if($item->is_urgent == 0) {
                         return "Tidak Urgent";
@@ -216,6 +219,9 @@ class TanggapiKomplainController extends BaseController{
                             return $item->nm_pengguna_staff_sarpras; 
                         }
                     }
+                })
+                ->addColumn('tgl_komplain', function($item){
+                    return strftime( "%A, %d %B %Y %H:%M:%S", strtotime($item->created_at));
                 })
                 ->addColumn('tgl_perbaikan', function($item){
                     return strftime( "%A, %d %B %Y %H:%M:%S", strtotime($item->tgl_perbaikan));

@@ -23,7 +23,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="belum">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_belum">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -32,6 +32,7 @@
                                                 <th>Nama Buku/Alat</th>
                                                 <th>User Komplain</th>
                                                 <th>Keterangan Komplain</th>
+                                                <th>Tgl Komplain</th>
                                                 <th>Status Urgent</th>
                                                 <th>Action</th>
                                             </tr>
@@ -43,7 +44,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_sudah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -52,6 +53,7 @@
                                                 <th>Nama Buku/Alat</th>
                                                 <th>User Komplain</th>
                                                 <th>Keterangan Komplain</th>
+                                                <th>Tgl Komplain</th>
                                                 <th>Status Urgent</th>
                                                 <th>User Perbaikan</th>
                                                 <th>Tgl Perbaikan</th>
@@ -79,7 +81,6 @@
     var primary_table_belum = $('#primary_table_belum').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_belum,
             type: 'GET'
@@ -91,6 +92,7 @@ responsive: true,
             { data: 'nm_buku_alat', name: 'nm_buku_alat' },
             { data: 'user_komplain', name: 'user_komplain'},
             { data: 'keterangan_komplain', name: 'keterangan_komplain'},
+            { data: 'tgl_komplain', name: 'created_at' },
             { data: 'is_urgent', name: 'is_urgent'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
@@ -116,7 +118,6 @@ responsive: true,
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET'
@@ -128,6 +129,7 @@ responsive: true,
             { data: 'nm_buku_alat', name: 'nm_buku_alat' },
             { data: 'user_komplain', name: 'user_komplain'},
             { data: 'keterangan_komplain', name: 'keterangan_komplain'},
+            { data: 'tgl_komplain', name: 'created_at' },
             { data: 'is_urgent', name: 'is_urgent'},
             { data: 'nm_pengguna_guru_sarpras', name: 'nm_pengguna_guru_sarpras'},
             { data: 'tgl_perbaikan', name: 'tgl_perbaikan'},

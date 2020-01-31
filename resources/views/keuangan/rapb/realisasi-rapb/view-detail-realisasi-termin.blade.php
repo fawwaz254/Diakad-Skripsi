@@ -377,7 +377,7 @@
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
-        // serverSide: true,
+        serverSide: true,
         responsive: true,
         ajax: {
             url: datatable_url,

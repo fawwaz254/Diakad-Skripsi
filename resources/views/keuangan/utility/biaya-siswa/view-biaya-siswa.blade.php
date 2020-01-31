@@ -23,7 +23,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="belum">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_belum">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -41,7 +41,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_sudah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -75,7 +75,6 @@
     var primary_table_belum = $('#primary_table_belum').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_belum,
             type: 'GET'
@@ -107,7 +106,6 @@ responsive: true,
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET'

@@ -866,7 +866,7 @@ class UsulanMataAjarController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'message' => 'Update Usulan Mata Ajar successfully',
-                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
+                        'path'      =>  'aktivitas-semester/usulan-mata-ajar/edit/'.$id
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

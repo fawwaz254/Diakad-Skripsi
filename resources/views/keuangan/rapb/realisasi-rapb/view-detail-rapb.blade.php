@@ -92,7 +92,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="tinggi">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_tinggi">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tinggi">
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
@@ -118,7 +118,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sedang">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_sedang">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sedang">
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
@@ -144,7 +144,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="rendah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_rendah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_rendah">
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
@@ -191,8 +191,7 @@
     // TINGGI
     var primary_table_tinggi = $('#primary_table_tinggi').DataTable({
         processing: true,
-        // serverSide: true,
-        responsive: true,
+        serverSide: true,
         ajax: {
             url: datatable_url_tinggi,
             type: 'GET'
@@ -248,8 +247,7 @@
     // SEDANG
     var primary_table_sedang = $('#primary_table_sedang').DataTable({
         processing: true,
-        // serverSide: true,
-        responsive: true,
+        serverSide: true,
         ajax: {
             url: datatable_url_sedang,
             type: 'GET'
@@ -305,7 +303,7 @@
     // RENDAH
     var primary_table_rendah = $('#primary_table_rendah').DataTable({
         processing: true,
-        // serverSide: true,
+        serverSide: true,
         responsive: true,
         ajax: {
             url: datatable_url_rendah,

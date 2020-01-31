@@ -49,7 +49,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="daftar-siswa">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table">
                                     <thead>
                                         <tr>
                                             <th>No. </th>
@@ -78,7 +78,6 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_url,
             type: 'GET'

@@ -23,7 +23,7 @@
                             <div role="tabpanel" class="tab-pane fade active in" id="nonkbm_with_icon_title">
                                 <div class="body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_nonkbm">
+                                        <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_nonkbm">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -43,7 +43,7 @@
                             <div role="tabpanel" class="tab-pane fade" id="kbm_with_icon_title">
                                 <div class="body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_kbm">
+                                        <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_kbm">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -79,7 +79,6 @@
     var primary_table_nonkbm = $('#primary_table_nonkbm').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_nonkbm_url,
             type: 'GET'
@@ -108,7 +107,6 @@
     var primary_table_kbm = $('#primary_table_kbm').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
         ajax: {
             url: datatable_kbm_url,
             type: 'GET'

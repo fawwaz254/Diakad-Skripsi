@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use App\Models\HomeVisit as HomeVisit;
 use App\Models\Guru as Guru;
+use App\Models\Siswa;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -216,41 +217,59 @@ class HomeVisitController extends BaseController{
                     ];
                 }   
                 else {*/
-                    $homeVisit                                  = new HomeVisit;
-                    $homeVisit->id_home_visit                   = $id;
-                    $homeVisit->id_semester                     = $semester_aktif->id_semester;
-                    $homeVisit->id_guru_wali_kelas              = $id_guru_input;
-                    $homeVisit->id_siswa                        = $input->id_siswa;
+                    if($siswa = Siswa::find($input->id_siswa)){
+                        $homeVisit                                  = new HomeVisit;
+                        $homeVisit->id_home_visit                   = $id;
+                        $homeVisit->id_semester                     = $semester_aktif->id_semester;
+                        $homeVisit->id_guru_wali_kelas              = $id_guru_input;
+                        $homeVisit->id_siswa                        = $input->id_siswa;
+                        $homeVisit->id_kelas                        = $siswa->id_kelas;
+                        $homeVisit->nomor_hp_wali_murid             = $input->nomor_hp_wali_murid;
+                        $homeVisit->alamat_wali_murid               = $input->alamat_wali_murid;
+                        $homeVisit->rangkuman_home_visit            = $input->rangkuman_home_visit;
+                        $homeVisit->is_berkas_lengkap               = 0;
+                        $homeVisit->created_by                      = $input->auth_data->pengguna->id_pengguna;
+                        $homeVisit->save();
+    
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'wali-kelas/home-visit',
+                            'message' => 'Save Home Visit successfully'
+                        ];
+                    }else{
+                        return [
+                            'status' => 300, // SUCCESS AND LOAD TABLE
+                            'message' => 'Failed To Update Home Visit'
+                        ]; 
+                    }
+                /*}*/                                 
+            }
+            elseif($mode == 'edit') {
+                if($siswa = Siswa::find($input->id_siswa)){
+                    // make object to find id
+                    $homeVisit                                  = HomeVisit::find($id);
+                    if($input->id_siswa != $homeVisit->id_siswa){
+                        $homeVisit->id_siswa                        = $input->id_siswa;
+                        $homeVisit->id_kelas                        = $siswa->id_kelas;
+                    }
                     $homeVisit->nomor_hp_wali_murid             = $input->nomor_hp_wali_murid;
                     $homeVisit->alamat_wali_murid               = $input->alamat_wali_murid;
                     $homeVisit->rangkuman_home_visit            = $input->rangkuman_home_visit;
-                    $homeVisit->is_berkas_lengkap               = 0;
-                    $homeVisit->created_by                      = $input->auth_data->pengguna->id_pengguna;
+                    $homeVisit->updated_by                      = $input->auth_data->pengguna->id_pengguna;
+                    $homeVisit->updated_at                      = $now;
                     $homeVisit->save();
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'wali-kelas/home-visit',
-                        'message' => 'Save Home Visit successfully'
+                        'message' => 'Update Home Visit successfully'
                     ];
-                /*}*/                                 
-            }
-            elseif($mode == 'edit') {
-                // make object to find id
-                $homeVisit                                  = HomeVisit::find($id);
-                $homeVisit->id_siswa                        = $input->id_siswa;
-                $homeVisit->nomor_hp_wali_murid             = $input->nomor_hp_wali_murid;
-                $homeVisit->alamat_wali_murid               = $input->alamat_wali_murid;
-                $homeVisit->rangkuman_home_visit            = $input->rangkuman_home_visit;
-                $homeVisit->updated_by                      = $input->auth_data->pengguna->id_pengguna;
-                $homeVisit->updated_at                      = $now;
-                $homeVisit->save();
-
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'wali-kelas/home-visit',
-                    'message' => 'Update Home Visit successfully'
-                ];
+                }else{
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Failed To Update Home Visit'
+                    ];
+                }
             }
             elseif($mode == 'delete') {
                 // cek apabila sudah validasi kesiswaan

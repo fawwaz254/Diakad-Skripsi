@@ -41,7 +41,7 @@
                                     </div>
                                 @endif
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_reguler">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_reguler">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -77,7 +77,7 @@
                                     </div>
                                 @endif
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_online">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_online">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -122,7 +122,6 @@
     var primary_table_online = $('#primary_table_online').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_online_url,
             type: 'GET'
@@ -165,7 +164,6 @@
     var primary_table_reguler = $('#primary_table_reguler').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_reguler_url,
             type: 'GET'

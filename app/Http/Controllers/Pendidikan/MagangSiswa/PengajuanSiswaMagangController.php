@@ -236,6 +236,7 @@ class PengajuanSiswaMagangController extends BaseController
                         $PengajuanSiswaMagang                        = new PengajuanSiswaMagang;
                         $PengajuanSiswaMagang->id_pengambilan_magang = $id_pengambilan_magang;
                         $PengajuanSiswaMagang->id_siswa              = $id_siswa;
+                        $PengajuanSiswaMagang->id_kelas              = $siswa->id_kelas;
                         $PengajuanSiswaMagang->id_periode_magang     = $id_periode_magang;
                         $PengajuanSiswaMagang->id_rekanan_magang     = $id_rekanan_magang;
                         $PengajuanSiswaMagang->status_magang         = 0;
@@ -261,7 +262,8 @@ class PengajuanSiswaMagangController extends BaseController
                             $PengajuanSiswaMagang                        = new PengajuanSiswaMagang;
                             $PengajuanSiswaMagang->id_pengambilan_magang = $id_pengambilan_magang;
                             $PengajuanSiswaMagang->id_siswa              = $id_siswa;
-                            $PengajuanSiswaMagang->id_periode_magang   = $periodeMagang->id_periode_magang;
+                            $PengajuanSiswaMagang->id_kelas              = $siswa->id_kelas;
+                            $PengajuanSiswaMagang->id_periode_magang     = $periodeMagang->id_periode_magang;
                             $PengajuanSiswaMagang->id_rekanan_magang     = $id_rekanan_magang;
                             $PengajuanSiswaMagang->status_magang         = 0;
                             $PengajuanSiswaMagang->status_apv_pengambilan_magang = 0;
