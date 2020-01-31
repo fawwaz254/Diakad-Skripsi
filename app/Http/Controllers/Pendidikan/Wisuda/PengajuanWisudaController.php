@@ -353,10 +353,13 @@ class PengajuanWisudaController extends BaseController{
                         $pengguna->updated_at           = $now;
                         $pengguna->save();
 
+                        $siswa = Siswa::find($id_siswa);
+
                         // -- INSERT tabel pengajuan_wisuda --
                         $pengajuanWisuda                        = new PengajuanWisuda;
                         $pengajuanWisuda->id_pengajuan_wisuda   = $id_pengajuan_wisuda;
                         $pengajuanWisuda->id_siswa              = $id_siswa;
+                        $pengajuanWisuda->id_kelas              = $siswa->id_kelas;
                         $pengajuanWisuda->id_periode_wisuda     = $id_periode_wisuda;
                         $pengajuanWisuda->status_wisuda         = 1;
                         $pengajuanWisuda->tgl_pengajuan_wisuda  = $now;
@@ -399,11 +402,13 @@ class PengajuanWisudaController extends BaseController{
                             $pengguna->updated_at           = $now;
                             $pengguna->save();
 
+                            $siswa = Siswa::find($id_siswa);
 
                             // -- INSERT tabel pengajuan_wisuda --
                             $pengajuanWisuda                        = new PengajuanWisuda;
                             $pengajuanWisuda->id_pengajuan_wisuda   = $id_pengajuan_wisuda;
                             $pengajuanWisuda->id_siswa              = $id_siswa;
+                            $pengajuanWisuda->id_kelas              = $siswa->id_kelas;
                             $pengajuanWisuda->id_periode_wisuda     = $periodeWisuda->id_periode_wisuda;
                             $pengajuanWisuda->status_wisuda         = 1;
                             $pengajuanWisuda->tgl_pengajuan_wisuda  = $now;

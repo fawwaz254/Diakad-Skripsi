@@ -473,51 +473,91 @@ class LibDataSarpras
     /** ========== **/
 
     /** PENGADAAN SARPRAS **/
-    static function fetchDataPengadaanSarpras($auth_data, $prioritas_rpb_sarpras = null, $id = null, $is_datatable = null){
+    static function fetchDataPengadaanSarpras($auth_data, $prioritas_rpb_sarpras = null, $id = null, $is_datatable = null, $is_realisasi == null){
 
         // get mode view
         if ($id == null) {
-            $rpb_sarpras = RpbSarpras::select('rpb_sarpras.id_rpb_sarpras', 'rpb_sarpras.id_semester','rpb_sarpras.id_unit_kerja','rpb_sarpras.id_buku_alat','rpb_sarpras.id_inventaris_ruangan', 'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'jenis_buku_alat.nm_jenis_buku_alat', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras.harga_satuan_rpb_sarpras', 'rpb_sarpras.qty_rpb_sarpras', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras', 'p_unit.nm_pengguna AS nm_kepala_unit', 'p_sarpras.nm_pengguna AS nm_kepala_sarpras', 'p_sarpras_approve.nm_pengguna AS nm_kepala_sarpras_approve')
-                    ->addSelect(
-                                DB::raw("(SELECT COUNT(id_rpb_sarpras_supplier) FROM rpb_sarpras_supplier 
-                                            WHERE rpb_sarpras_supplier.id_rpb_sarpras = rpb_sarpras.id_rpb_sarpras
-                                            AND rpb_sarpras_supplier.is_approve = 1 
-                                            AND rpb_sarpras_supplier.deleted_at IS NULL) 
-                                            AS apv_supplier")
-                            )
-                    ->join('semester','semester.id_semester','=','rpb_sarpras.id_semester')
-                    ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
-                    ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
-                    ->leftJoin('jenis_buku_alat','jenis_buku_alat.id_jenis_buku_alat','=','buku_alat.id_jenis_buku_alat')
-                    ->leftJoin('inventaris_ruangan','inventaris_ruangan.id_inventaris_ruangan','=','rpb_sarpras.id_inventaris_ruangan')
-                    ->leftJoin('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
-                    ->leftJoin('pengguna AS p_unit', function ($q) {
-                        $q->on('p_unit.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_unit')
-                            ->whereNull('p_unit.deleted_at');
-                    })
-                    ->leftJoin('pengguna AS p_sarpras', function ($q) {
-                        $q->on('p_sarpras.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_sarpras')
-                            ->whereNull('p_sarpras.deleted_at');
-                    })
-                    ->leftJoin('pengguna AS p_sarpras_approve', function ($q) {
-                        $q->on('p_sarpras_approve.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_sarpras_approve')
-                            ->whereNull('p_sarpras_approve.deleted_at');
-                    });
-                    if ($prioritas_rpb_sarpras == 1) {
-                        $rpb_sarpras = $rpb_sarpras->where('rpb_sarpras.prioritas_rpb_sarpras','=',1);
-                    }
-                    elseif ($prioritas_rpb_sarpras == 2) {
-                        $rpb_sarpras = $rpb_sarpras->where('rpb_sarpras.prioritas_rpb_sarpras','=',2);
-                    }
-                    elseif ($prioritas_rpb_sarpras == 3) {
-                        $rpb_sarpras = $rpb_sarpras->where('rpb_sarpras.prioritas_rpb_sarpras','=',3);
-                    }
-                    $rpb_sarpras = $rpb_sarpras->orderBy('rpb_sarpras.tgl_rpb_sarpras', 'desc')
-                        ->orderBy('unit_kerja.nm_unit_kerja', 'asc');
+            if($is_realisasi == null) {
+                $rpb_sarpras = RpbSarpras::select('rpb_sarpras.id_rpb_sarpras', 'rpb_sarpras.id_semester','rpb_sarpras.id_unit_kerja','rpb_sarpras.id_buku_alat','rpb_sarpras.id_inventaris_ruangan', 'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'jenis_buku_alat.nm_jenis_buku_alat', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras.harga_satuan_rpb_sarpras', 'rpb_sarpras.qty_rpb_sarpras', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras', 'p_unit.nm_pengguna AS nm_kepala_unit', 'p_sarpras.nm_pengguna AS nm_kepala_sarpras', 'p_sarpras_approve.nm_pengguna AS nm_kepala_sarpras_approve')
+                        ->addSelect(
+                                    DB::raw("(SELECT COUNT(id_rpb_sarpras_supplier) FROM rpb_sarpras_supplier 
+                                                WHERE rpb_sarpras_supplier.id_rpb_sarpras = rpb_sarpras.id_rpb_sarpras
+                                                AND rpb_sarpras_supplier.is_approve = 1 
+                                                AND rpb_sarpras_supplier.deleted_at IS NULL) 
+                                                AS apv_supplier")
+                                )
+                        ->join('semester','semester.id_semester','=','rpb_sarpras.id_semester')
+                        ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
+                        ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
+                        ->leftJoin('jenis_buku_alat','jenis_buku_alat.id_jenis_buku_alat','=','buku_alat.id_jenis_buku_alat')
+                        ->leftJoin('inventaris_ruangan','inventaris_ruangan.id_inventaris_ruangan','=','rpb_sarpras.id_inventaris_ruangan')
+                        ->leftJoin('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan')
+                        ->leftJoin('pengguna AS p_unit', function ($q) {
+                            $q->on('p_unit.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_unit')
+                                ->whereNull('p_unit.deleted_at');
+                        })
+                        ->leftJoin('pengguna AS p_sarpras', function ($q) {
+                            $q->on('p_sarpras.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_sarpras')
+                                ->whereNull('p_sarpras.deleted_at');
+                        })
+                        ->leftJoin('pengguna AS p_sarpras_approve', function ($q) {
+                            $q->on('p_sarpras_approve.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_sarpras_approve')
+                                ->whereNull('p_sarpras_approve.deleted_at');
+                        });
+                        if ($prioritas_rpb_sarpras == 1) {
+                            $rpb_sarpras = $rpb_sarpras->where('rpb_sarpras.prioritas_rpb_sarpras','=',1);
+                        }
+                        elseif ($prioritas_rpb_sarpras == 2) {
+                            $rpb_sarpras = $rpb_sarpras->where('rpb_sarpras.prioritas_rpb_sarpras','=',2);
+                        }
+                        elseif ($prioritas_rpb_sarpras == 3) {
+                            $rpb_sarpras = $rpb_sarpras->where('rpb_sarpras.prioritas_rpb_sarpras','=',3);
+                        }
+                        $rpb_sarpras = $rpb_sarpras->orderBy('rpb_sarpras.tgl_rpb_sarpras', 'desc')
+                            ->orderBy('unit_kerja.nm_unit_kerja', 'asc');
 
-                    if ( $is_datatable == null ) {
-                        $rpb_sarpras = $rpb_sarpras->get();
-                    }
+                        if ( $is_datatable == null ) {
+                            $rpb_sarpras = $rpb_sarpras->get();
+                        }
+            }
+            else {
+                $rpb_sarpras = RpbSarpras::select('rpb_sarpras.id_rpb_sarpras', 'rpb_sarpras.id_semester','rpb_sarpras.id_unit_kerja','rpb_sarpras.id_buku_alat','rpb_sarpras.id_inventaris_ruangan', 'semester.tahun_ajaran', 'semester.nm_semester', 'unit_kerja.nm_unit_kerja', 'jenis_buku_alat.nm_jenis_buku_alat', 'buku_alat.nm_buku_alat', 'ruangan.nm_ruangan', 'inventaris_ruangan.nm_inventaris_ruangan', 'rpb_sarpras_supplier.harga_approve_supplier', 'rpb_sarpras_supplier.qty_approve_supplier', 'rpb_sarpras_supplier.termin_approve_supplier', 'rpb_sarpras.tgl_rpb_sarpras', 'rpb_sarpras.prioritas_rpb_sarpras', 'p_unit.nm_pengguna AS nm_kepala_unit', 'p_sarpras.nm_pengguna AS nm_kepala_sarpras', 'p_sarpras_approve.nm_pengguna AS nm_kepala_sarpras_approve')
+                        ->join('semester','semester.id_semester','=','rpb_sarpras.id_semester')
+                        ->join('unit_kerja','unit_kerja.id_unit_kerja','=','rpb_sarpras.id_unit_kerja')
+                        ->join('rpb_sarpras_supplier', function ($q) {
+                            $q->on('rpb_sarpras_supplier.id_rpb_sarpras', '=', 'rpb_sarpras.id_rpb_sarpras')
+                                ->where('rpb_sarpras_supplier.is_approve', 1)
+                                ->whereNull('p_unit.deleted_at');
+                        })
+                        ->join('supplier','supplier.id_supplier','=','rpb_sarpras_supplier.id_supplier')
+                        ->join('pengguna AS p_unit', function ($q) {
+                            $q->on('p_unit.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_unit')
+                                ->whereNull('p_unit.deleted_at');
+                        })
+                        ->join('pengguna AS p_sarpras', function ($q) {
+                            $q->on('p_sarpras.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_sarpras')
+                                ->whereNull('p_sarpras.deleted_at');
+                        })
+                        ->join('pengguna AS p_sarpras_approve', function ($q) {
+                            $q->on('p_sarpras_approve.id_pengguna', '=', 'rpb_sarpras.id_pengguna_kepala_sarpras_approve')
+                                ->whereNull('p_sarpras_approve.deleted_at');
+                        })
+                        ->leftJoin('buku_alat','buku_alat.id_buku_alat','=','rpb_sarpras.id_buku_alat')
+                        ->leftJoin('jenis_buku_alat','jenis_buku_alat.id_jenis_buku_alat','=','buku_alat.id_jenis_buku_alat')
+                        ->leftJoin('inventaris_ruangan','inventaris_ruangan.id_inventaris_ruangan','=','rpb_sarpras.id_inventaris_ruangan')
+                        ->leftJoin('ruangan','ruangan.id_ruangan','=','inventaris_ruangan.id_ruangan');
+
+                        $rpb_sarpras = $rpb_sarpras->whereNotNull('rpb_sarpras.id_pengguna_kepala_unit')
+                            ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras')
+                            ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras_approve')
+                            ->orderBy('rpb_sarpras.tgl_rpb_sarpras', 'desc')
+                            ->orderBy('unit_kerja.nm_unit_kerja', 'asc');
+
+                        if ( $is_datatable == null ) {
+                            $rpb_sarpras = $rpb_sarpras->get();
+                        }
+            }
+            
         }
         // get mode edit
         else {
