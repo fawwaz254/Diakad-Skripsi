@@ -225,8 +225,10 @@ class PrestasiSiswaController extends BaseController
             } elseif ($mode == 'edit') {
                 if($siswa = Siswa::find($input->id_siswa)){
                     $prestasi                                 = PrestasiSiswa::find($id);
-                    $prestasi->id_siswa                       = $input->id_siswa;
-                    $prestasi->id_kelas                       = $siswa->id_kelas;
+                    if($input->id_siswa != $prestasi->id_siswa){
+                        $prestasi->id_siswa                       = $input->id_siswa;
+                        $prestasi->id_kelas                       = $siswa->id_kelas;
+                    }
                     $prestasi->id_semester                    = $input->id_semester;
                     $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
                     $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;

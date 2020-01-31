@@ -195,16 +195,19 @@ class TagihanSiswaController extends BaseController
 
                       }
 
-                      $tagihanBiaya                       = new TagihanBiaya;
-                      $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                      $tagihanBiaya->id_siswa             = $id_siswa;
-                      $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
-                      $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
-                      $tagihanBiaya->denda_biaya          = 0;
-                      $tagihanBiaya->is_tagih             = 1;
-                      $tagihanBiaya->keterangan           = "Tagihan Keuangan";
-                      $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
-                      $tagihanBiaya->save();
+                        $siswa = Siswa::find($id_siswa);
+                        
+                        $tagihanBiaya                       = new TagihanBiaya;
+                        $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $tagihanBiaya->id_siswa             = $id_siswa;
+                        $tagihanBiaya->id_kelas             = $siswa->id_kelas;
+                        $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
+                        $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
+                        $tagihanBiaya->denda_biaya          = 0;
+                        $tagihanBiaya->is_tagih             = 1;
+                        $tagihanBiaya->keterangan           = "Tagihan Keuangan";
+                        $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
+                        $tagihanBiaya->save();
                     }                                                              
                   }
 

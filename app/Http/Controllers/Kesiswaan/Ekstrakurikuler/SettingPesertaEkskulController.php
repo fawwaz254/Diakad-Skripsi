@@ -248,11 +248,13 @@ class SettingPesertaEkskulController extends BaseController
                         $id_pengambilan_ekskul = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                         $id_peserta_ekskul_set = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
+                        $siswa = Siswa::find($id_siswa);
 
                         $pengambilan_ekskul                     = new PengambilanEkskul;
                         $pengambilan_ekskul->id_pengambilan_ekskul  = $id_pengambilan_ekskul;
                         $pengambilan_ekskul->id_ekskul          = $id_ekskul;
                         $pengambilan_ekskul->id_siswa           = $id_siswa;
+                        $pengambilan_ekskul->id_kelas           = $siswa->id_kelas;
                         $pengambilan_ekskul->id_semester        = $semester->id_semester;
                         $pengambilan_ekskul->is_tampil          = 0;
                         $pengambilan_ekskul->created_at         = $now;
