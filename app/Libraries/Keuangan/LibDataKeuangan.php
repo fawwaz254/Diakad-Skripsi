@@ -787,8 +787,9 @@ class LibDataKeuangan
                 'buku_alat.nm_buku_alat',
                 'ruangan.nm_ruangan',
                 'inventaris_ruangan.nm_inventaris_ruangan',
-                'rpb_sarpras.harga_satuan_rpb_sarpras',
-                'rpb_sarpras.qty_rpb_sarpras',
+                'rpb_sarpras_supplier.harga_approve_supplier', 
+                'rpb_sarpras_supplier.qty_approve_supplier', 
+                'rpb_sarpras_supplier.termin_approve_supplier',
                 'rpb_sarpras.tgl_rpb_sarpras',
                 'rpb_sarpras.prioritas_rpb_sarpras'
             )
@@ -804,6 +805,11 @@ class LibDataKeuangan
                                         ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras')
                                         ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras_approve')
                                         ->whereNull('rpb_sarpras.deleted_at');
+                                })
+                                ->leftJoin('rpb_sarpras_supplier', function ($q) {
+                                    $q->on('rpb_sarpras_supplier.id_rpb_sarpras', '=', 'rpb_sarpras.id_rpb_sarpras')
+                                        ->where('rpb_sarpras_supplier.is_approve', 1)
+                                        ->whereNull('rpb_sarpras_supplier.deleted_at');
                                 })
                                 ->leftJoin('semester AS s_sarpras', 's_sarpras.id_semester', '=', 'rpb_sarpras.id_semester')
                                 ->leftJoin('unit_kerja AS uk_sarpras', 'uk_sarpras.id_unit_kerja', '=', 'rpb_sarpras.id_unit_kerja')
@@ -851,8 +857,9 @@ class LibDataKeuangan
                 'buku_alat.nm_buku_alat',
                 'ruangan.nm_ruangan',
                 'inventaris_ruangan.nm_inventaris_ruangan',
-                'rpb_sarpras.harga_satuan_rpb_sarpras',
-                'rpb_sarpras.qty_rpb_sarpras',
+                'rpb_sarpras_supplier.harga_approve_supplier', 
+                'rpb_sarpras_supplier.qty_approve_supplier', 
+                'rpb_sarpras_supplier.termin_approve_supplier',
                 'rpb_sarpras.tgl_rpb_sarpras',
                 'rpb_sarpras.prioritas_rpb_sarpras'
             )
@@ -868,6 +875,11 @@ class LibDataKeuangan
                                 ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras')
                                 ->whereNotNull('rpb_sarpras.id_pengguna_kepala_sarpras_approve')
                                 ->whereNull('rpb_sarpras.deleted_at');
+                        })
+                        ->leftJoin('rpb_sarpras_supplier', function ($q) {
+                            $q->on('rpb_sarpras_supplier.id_rpb_sarpras', '=', 'rpb_sarpras.id_rpb_sarpras')
+                                ->where('rpb_sarpras_supplier.is_approve', 1)
+                                ->whereNull('rpb_sarpras_supplier.deleted_at');
                         })
                         ->leftJoin('semester AS s_sarpras', 's_sarpras.id_semester', '=', 'rpb_sarpras.id_semester')
                         ->leftJoin('unit_kerja AS uk_sarpras', 'uk_sarpras.id_unit_kerja', '=', 'rpb_sarpras.id_unit_kerja')

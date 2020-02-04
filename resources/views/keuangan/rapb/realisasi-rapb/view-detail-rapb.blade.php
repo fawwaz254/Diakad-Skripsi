@@ -228,7 +228,7 @@
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url + '/' + data.id +'">'+
                     '    <i class="material-icons">post_add</i>'+
-                    '</a> '+
+                    '</a> &nbsp;'+
                     '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ sarpras_url + '/' + data.id +'">'+
                     '    <i class="material-icons">build</i>'+
                     '</a> ';

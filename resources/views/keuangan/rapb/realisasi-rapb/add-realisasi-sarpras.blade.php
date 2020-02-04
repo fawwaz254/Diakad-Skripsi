@@ -14,7 +14,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-realisasi-rapb/add/'.$id_realisasi)}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-realisasi-rapb/add-sarpras/'.$id_realisasi)}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -33,6 +33,7 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $semester_mulai->tahun_ajaran }} {{ $semester_mulai->nm_semester }}">
                                         <input type="hidden" class="form-control" name="id_rapb" aria-required="true" aria-invalid="true" value="{{ $data_rapb->id_rapb }}">
+                                        <input type="hidden" class="form-control" name="id_rpb_sarpras" aria-required="true" aria-invalid="true" value="{{ $data_rpb_sarpras->id_rpb_sarpras }}">
                                         <input type="hidden" class="form-control" name="id_semester_mulai" aria-required="true" aria-invalid="true" value="{{ $semester_mulai->id_semester }}">
                                         <input type="hidden" class="form-control" name="id_semester_selesai" aria-required="true" aria-invalid="true" value="{{ $semester_selesai->id_semester }}">
 
@@ -156,6 +157,136 @@
                                         @elseif($data_rapb->prioritas_rapb == 3)
                                             <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Tinggi">
                                         @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <hr style="border: 3px solid black;">
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    INFO RENCANA PENGADAAN BARANG SARPRAS
+                                </h2>
+                                <hr style="border: 3px solid black;">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Semester
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_rpb_sarpras->tahun_ajaran }} {{ $data_rpb_sarpras->nm_semester }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Unit Kerja
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_rpb_sarpras->nm_unit_kerja }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Buku/Alat - Jenis
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_rpb_sarpras->nm_buku_alat }} - {{ $data_rpb_sarpras->nm_jenis_buku_alat }} ">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Inventaris Ruangan - Nama Ruangan
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_rpb_sarpras->nm_inventaris_ruangan }} - {{ $data_rpb_sarpras->nm_ruangan }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Harga Satuan - Qty
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Rp{{ number_format($data_rpb_sarpras->harga_approve_supplier, 0) }} - {{ $data_rpb_sarpras->qty_approve_supplier }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Termin
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_rpb_sarpras->termin_approve_supplier }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Tgl Pengadaan
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ strftime("%A, %d %B %Y", strtotime($data_rpb_sarpras->tgl_rpb_sarpras)) }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Prioritas
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        @if($data_rpb_sarpras->prioritas_rpb_sarpras == 1)
+                                            <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Rendah">
+                                        @elseif($data_rpb_sarpras->prioritas_rpb_sarpras == 2)
+                                            <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Sedang">
+                                        @elseif($data_rpb_sarpras->prioritas_rpb_sarpras == 3)
+                                            <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Tinggi">
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Jumlah Realisasi
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Rp{{ number_format($data_rpb_sarpras->jml_realisasi_sarpras, 0) }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Sisa Realisasi
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Rp{{ number_format(($data_rpb_sarpras->qty_approve_supplier * $data_rpb_sarpras->harga_approve_supplier) - $data_rpb_sarpras->jml_realisasi_sarpras, 0) }}">
                                     </div>
                                 </div>
                             </div>

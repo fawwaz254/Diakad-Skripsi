@@ -126,6 +126,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Prioritas
+                                </h2>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        @if($data_rapb->prioritas_rapb == 1)
+                                            <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Rendah">
+                                        @elseif($data_rapb->prioritas_rapb == 2)
+                                            <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Sedang">
+                                        @elseif($data_rapb->prioritas_rapb == 3)
+                                            <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="Tinggi">
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -215,17 +231,17 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_realisasi->harga_satuan_rpb_sarpras }}">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_realisasi->harga_approve_supplier }} - {{ $data_realisasi->qty_approve_supplier }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Pengadaan Sarpras (Qty)
+                                    Pengadaan Sarpras (Termin)
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_realisasi->qty_rpb_sarpras }}">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_realisasi->termin_approve_supplier }}">
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +253,7 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $data_realisasi->tgl_rpb_sarpras }}">
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ strftime("%A, %d %B %Y", strtotime($data_realisasi->tgl_rpb_sarpras)) }}">
                                     </div>
                                 </div>
                             </div>
