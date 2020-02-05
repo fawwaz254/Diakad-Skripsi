@@ -473,7 +473,7 @@ class LibDataSarpras
     /** ========== **/
 
     /** PENGADAAN SARPRAS **/
-    static function fetchDataPengadaanSarpras($auth_data, $prioritas_rpb_sarpras = null, $id = null, $is_datatable = null, $is_realisasi == null){
+    static function fetchDataPengadaanSarpras($auth_data, $prioritas_rpb_sarpras = null, $id = null, $is_datatable = null, $is_realisasi = null){
 
         // get mode view
         if ($id == null) {
