@@ -1,4 +1,4 @@
-<div class="container-fluid">
+ <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/view-detail-rapb/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester)}}"><i class="material-icons">backspace</i><span>Kembali Ke Data RAPB</span></a></h2>
     </div>
@@ -6,15 +6,13 @@
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#rapb/realisasi-rapb/view-detail-realisasi/'.$semester_mulai->id_semester.'/'.$semester_selesai->id_semester.'/'.$data_rapb->id_rapb)}}"><i class="material-icons">backspace</i><span>Kembali Ke Detail Realisasi</span></a></h2>
     </div>
     <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                <div class="header">
-                    <h2>
-                        TAMBAH REALISASI
-                    </h2>
-                </div>
+                    {{csrf_field()}}
+                    <div class="header">
+                        <h2>REALISASI RPB SARPRAS</h2> 
+                    </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-realisasi-rapb/add/'.$id_realisasi)}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -31,11 +29,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true" aria-invalid="true" value="{{ $semester_mulai->tahun_ajaran }} {{ $semester_mulai->nm_semester }}">
-                                        <input type="hidden" class="form-control" name="id_rapb" aria-required="true" aria-invalid="true" value="{{ $data_rapb->id_rapb }}">
-                                        <input type="hidden" class="form-control" name="id_semester_mulai" aria-required="true" aria-invalid="true" value="{{ $semester_mulai->id_semester }}">
-                                        <input type="hidden" class="form-control" name="id_semester_selesai" aria-required="true" aria-invalid="true" value="{{ $semester_selesai->id_semester }}">
-
+                                        <input type="text" class="form-control" name="nm_mata_pelajaran" disabled="" aria-required="true"
+                                        aria-invalid="true" value="{{ $semester_mulai->tahun_ajaran }} {{ $semester_mulai->nm_semester }}">
                                     </div>
                                 </div>
                             </div>
@@ -74,7 +69,7 @@
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Unit Kerja RAPB
+                                    Unit Kerja
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -160,123 +155,98 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <hr style="border: 3px solid black;">
-                            </div>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <hr style="border: 3px solid black;">
                         </div>
-
-                        <h2 class="card-inside-title">
-                            Semester Realisasi
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_semester_realisasi">
-                                  <option value="" disabled selected >-- Pilih Semester Realisasi --</option>
-                                    @foreach($data_semester as $data)
-                                        @if($data->is_aktif_semester == 1)
-                                            <option value="{{$data->id_semester}}">{{$data->tahun_ajaran}} {{$data->nm_semester}} (Aktif)</option>
-                                        @else
-                                            <option value="{{$data->id_semester}}">{{$data->tahun_ajaran}} {{$data->nm_semester}}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Unit Kerja Realisasi
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_unit_kerja">
-                                  <option value="" disabled selected >-- Pilih Unit Kerja --</option>
-                                    @foreach($data_unit_kerja as $data)
-                                        <option value="{{$data->id_unit_kerja}}">{{$data->nm_singkatan_unit}} - {{$data->nm_unit_kerja}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Nama Realisasi
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_realisasi" required="" aria-required="true" aria-invalid="true">
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Keterangan Sub-Kategori RAPB <small>*Optional</small>
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_ket_subkategori_rapb">
-                                  <option value="" disabled selected >-- Pilih Keterangan Sub-Kategori --</option>
-                                    @foreach($data_ket_subkategori_rapb as $data)
-                                        <option value="{{$data->id_ket_subkategori_rapb}}">{{$data->kode_ket_subkategori_rapb}} - {{$data->nm_ket_subkategori_rapb}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Termin Realisasi <small>Apabila Tidak Ada Isikan 1</small>
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="termin_dana_realisasi" required="" aria-required="true" aria-invalid="true">
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Cicilan Pembayaran Realisasi
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="is_cicilan">
-                                    <option value="2">Tidak (Langsung Lunas)</option>
-                                    <option value="1">Ya (Dibagi Termin)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Dana Realisasi
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="dana_realisasi" required="" aria-required="true" aria-invalid="true">
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Tanggal Realisasi
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" aria-required="true" aria-invalid="true">
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
-                            </div>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="block-header">
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                            <thead>
+                                <tr>
+                                    <th>No. </th>
+                                    <th>Semester</th>
+                                    <th>Unit Kerja</th>
+                                    <th>Jenis Buku/Alat</th>
+                                    <th>Buku/Alat</th>
+                                    <th>Ruangan</th>
+                                    <th>Inventaris</th>
+                                    <th>Harga Satuan</th>
+                                    <th>Qty</th>
+                                    <th>Termin</th>
+                                    <th>Rencana Realisasi</th>
+                                    <th>Realisasi</th>
+                                    <th>Sisa Realisasi</th>
+                                    <th>Tgl Pengadaan</th>
+                                    <th>Kepala Unit</th>
+                                    <th>Kepala Sarpras</th>
+                                    <th>Supplier</th>
+                                    <th>Kepala Sarpras Apv Supplier</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>                        
                 </div>
             </div>
         </div>
     </div>
 </div>
 @include('scriptjs')
-
 <script>
-$(function(){    
-    $('.datepicker').bootstrapMaterialDatePicker({
-        format: 'dddd, DD MMMM YYYY',
-        //lang : 'id',
-        clearButton: true,
-        weekStart: 1,
-        time: false
+
+    var id_rapb                 = {!! json_encode($data_rapb->id_rapb) !!};
+    var id_semester_mulai       = {!! json_encode($semester_mulai->id_semester) !!};
+    var id_semester_selesai     = {!! json_encode($semester_selesai->id_semester) !!};
+
+    var modul_url               = 'rapb';
+    var datatable_url           = base_url + '/' + role_url + '/' + modul_url + '/' + 'realisasi-rapb/datatables-sarpras';
+    var add_url                 = role_url + '#' + modul_url + '/' + 'realisasi-rapb/add-realisasi-sarpras/' + id_semester_mulai + '/' + id_semester_selesai + '/' + id_rapb;
+
+    var primary_table = $('#primary_table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: {
+            url: datatable_url,
+            type: 'GET'
+        },
+        columns: [
+            { data: null, searchable: false, orderable: false },
+            { data: 'semester', name: 'semester' },
+            { data: 'nm_unit_kerja', name: 'unit_kerja.nm_unit_kerja' },
+            { data: 'nm_jenis_buku_alat', name: 'jenis_buku_alat.nm_jenis_buku_alat' },
+            { data: 'nm_buku_alat', name: 'buku_alat.nm_buku_alat' },
+            { data: 'nm_ruangan', name: 'ruangan.nm_ruangan' },
+            { data: 'nm_inventaris_ruangan', name: 'inventaris_ruangan.nm_inventaris_ruangan' },
+            { data: 'harga_approve_supplier', name: 'harga_approve_supplier' },
+            { data: 'qty_approve_supplier', name: 'rpb_sarpras_supplier.qty_approve_supplier' },
+            { data: 'termin_approve_supplier', name: 'rpb_sarpras_supplier.termin_approve_supplier' },
+            { data: 'rencana_realisasi', name: 'rencana_realisasi' },
+            { data: 'jml_realisasi_sarpras', name: 'jml_realisasi_sarpras' },
+            { data: 'sisa_realisasi', name: 'sisa_realisasi' },
+            { data: 'tgl_rpb_sarpras', name: 'tgl_rpb_sarpras' },
+            { data: 'nm_kepala_unit', name: 'nm_kepala_unit' },
+            { data: 'nm_kepala_sarpras', name: 'nm_kepala_sarpras' },
+            { data: 'nm_supplier', name: 'supplier.nm_supplier' },
+            { data: 'nm_kepala_sarpras_approve', name: 'nm_kepala_sarpras_approve' },
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url + '/' + data.id +'">'+
+                        '    <i class="material-icons">post_add</i>'+
+                        '</a> ';
+                }
+            }
+        ]
     });
-});
+
+    primary_table.on( 'draw', function () {
+        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = start + i + 1;
+        } );
+    } ).draw();
+
 </script>

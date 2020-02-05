@@ -22,6 +22,7 @@ class PrestasiSiswa extends Model
     
     protected $fillable = [
         'id_siswa',
+        'id_kelas',
         'id_semester',
         'id_tingkat_prestasi_siswa',
         'id_guru_pendamping',

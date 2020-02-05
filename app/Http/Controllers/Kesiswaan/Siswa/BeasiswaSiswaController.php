@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
+use App\Models\Siswa as Siswa;
 use App\Models\BeasiswaSiswa as BeasiswaSiswa;
 
 use App\Libraries\Pendidikan\LibSiswa;
@@ -136,13 +137,16 @@ class BeasiswaSiswaController extends BaseController
             // ACTION ADD
             if ($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $siswa = Siswa::find($input->id_siswa);
                 
                 $beasiswa 								= new BeasiswaSiswa;
                 $beasiswa->id_beasiswa_siswa 			= $id;
-                $beasiswa->id_siswa 						= $input->id_siswa;
-                $beasiswa->jenis_beasiswa_siswa 			= $input->jenis_beasiswa_siswa;
+                $beasiswa->id_siswa 					= $input->id_siswa;
+                $beasiswa->id_kelas                     = $siswa->id_kelas;
+                $beasiswa->jenis_beasiswa_siswa 		= $input->jenis_beasiswa_siswa;
                 $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
-                $beasiswa->tahun_selesai_beasiswa_siswa 	= $input->tahun_selesai_beasiswa_siswa;
+                $beasiswa->tahun_selesai_beasiswa_siswa = $input->tahun_selesai_beasiswa_siswa;
                 $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
                 $beasiswa->created_by 					= $input->auth_data->pengguna->id_pengguna;
                 $beasiswa->created_at 					= $now;
@@ -155,11 +159,16 @@ class BeasiswaSiswaController extends BaseController
                 ];
             } elseif ($mode == 'edit') {
                 $beasiswa 								= BeasiswaSiswa::find($id);
-                $beasiswa->id_siswa 						= $input->id_siswa;
-                $beasiswa->jenis_beasiswa_siswa 			= $input->jenis_beasiswa_siswa;
+
+                if($beasiswa->id_siswa != $input->siswa) {
+                    $siswa = Siswa::find($input->id_siswa);
+                    $beasiswa->id_siswa                     = $input->id_siswa;
+                    $beasiswa->id_kelas                     = $siswa->id_kelas;
+                }
+                $beasiswa->jenis_beasiswa_siswa 		= $input->jenis_beasiswa_siswa;
                 $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
                 $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
-                $beasiswa->tahun_selesai_beasiswa_siswa 	= $input->tahun_selesai_beasiswa_siswa;
+                $beasiswa->tahun_selesai_beasiswa_siswa = $input->tahun_selesai_beasiswa_siswa;
                 $beasiswa->created_by 					= $input->auth_data->pengguna->id_pengguna;
                 $beasiswa->created_at 					= $now;
                 $beasiswa->save();

@@ -188,53 +188,72 @@ class PrestasiSiswaController extends BaseController
             ];
         } else {
             // ACTION ADD
+
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                if($siswa = Siswa::find($input->id_siswa)){
+                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 
-                $prestasi                                 = new PrestasiSiswa;
-                $prestasi->id_prestasi_siswa              = $id;
-                $prestasi->id_siswa                       = $input->id_siswa;
-                $prestasi->id_semester                    = $input->id_semester;
-                $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
-                $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
-                $prestasi->id_ekskul                      = $input->id_ekskul;
-                $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
-                $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
-                $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
-                $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
-                $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
-                $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
-                $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
-                $prestasi->created_at                     = $now;
-                $prestasi->save();
+                    $prestasi                                 = new PrestasiSiswa;
+                    $prestasi->id_prestasi_siswa              = $id;
+                    $prestasi->id_siswa                       = $input->id_siswa;
+                    $prestasi->id_kelas                       = $siswa->id_kelas;
+                    $prestasi->id_semester                    = $input->id_semester;
+                    $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
+                    $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
+                    $prestasi->id_ekskul                      = $input->id_ekskul;
+                    $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+                    $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
+                    $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
+                    $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
+                    $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
+                    $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
+                    $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                    $prestasi->created_at                     = $now;
+                    $prestasi->save();
 
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-kesiswaan/prestasi-siswa',
-                    'message' => 'Save Data Prestasi Siswa successfully'
-                ];
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'data-kesiswaan/prestasi-siswa',
+                        'message' => 'Save Data Prestasi Siswa successfully'
+                    ];
+                }else{
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Update Data Prestasi siswa gagal'
+                    ];
+                }
             } elseif ($mode == 'edit') {
-                $prestasi                                 = PrestasiSiswa::find($id);
-                $prestasi->id_siswa                       = $input->id_siswa;
-                $prestasi->id_semester                    = $input->id_semester;
-                $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
-                $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
-                $prestasi->id_ekskul                      = $input->id_ekskul;
-                $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
-                $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
-                $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
-                $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
-                $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
-                $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
-                $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
-                $prestasi->updated_at                     = $now;
-                $prestasi->save();
+                if($siswa = Siswa::find($input->id_siswa)){
+                    $prestasi                                 = PrestasiSiswa::find($id);
+                    if($input->id_siswa != $prestasi->id_siswa){
+                        $prestasi->id_siswa                       = $input->id_siswa;
+                        $prestasi->id_kelas                       = $siswa->id_kelas;
+                    }
+                    $prestasi->id_semester                    = $input->id_semester;
+                    $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
+                    $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
+                    $prestasi->id_ekskul                      = $input->id_ekskul;
+                    $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+                    $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
+                    $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
+                    $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
+                    $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
+                    $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
+                    $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+                    $prestasi->updated_at                     = $now;
+                    $prestasi->save();
 
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-kesiswaan/prestasi-siswa',
-                    'message' => 'Save Data Prestasi Siswa successfully'
-                ];
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'data-kesiswaan/prestasi-siswa',
+                        'message' => 'Save Data Prestasi Siswa successfully'
+                    ];
+                }else{
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Update Data Prestasi siswa gagal'
+                    ];
+                }
             } elseif ($mode == 'delete') {
                 $prestasi                 = PrestasiSiswa::find($id);
                 $prestasi->deleted_by     = $input->auth_data->pengguna->id_pengguna;
