@@ -529,7 +529,7 @@ class Apiv1Controller extends BaseController
         if(!empty($input->length) && !empty($input->page)){
             $start = $input->length * ($input->page - 1);
             $count = $input->length;
-            $query .= 'AND limit '.$start.', '.$count;
+            $query .= ' limit '.$start.', '.$count;
         }
         
         $data_kelas_kosong = DB::select($query);
