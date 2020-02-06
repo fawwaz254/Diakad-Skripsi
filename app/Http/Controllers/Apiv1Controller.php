@@ -506,7 +506,7 @@ class Apiv1Controller extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $query = 'SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
+        $data_kelas_kosong = DB::select('SELECT jkm.id_jadwal_kelas_mp, mp.nm_mata_pelajaran, k.tingkat, k.nm_kelas, r.nm_ruangan, pmp.id_presensi_mp, p.nm_pengguna, p.gelar_depan, p.gelar_belakang
                             FROM jadwal_kelas_mp jkm
                             JOIN ruangan r ON r.id_ruangan = jkm.id_ruangan AND r.deleted_at IS NULL
                             JOIN kelas_mp kmp ON kmp.id_kelas_mp = jkm.id_kelas_mp AND kmp.deleted_at IS NULL
@@ -524,15 +524,7 @@ class Apiv1Controller extends BaseController
                             WHERE jkm.id_jadwal_hari = '.$hari.' 
                             AND jkm.deleted_at IS NULL
                             AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
-                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai)) ORDER BY k.tingkat, k.nm_kelas';
-
-        if(!empty($input->length) && !empty($input->page)){
-            $start = $input->length * ($input->page - 1);
-            $count = $input->length;
-            $query .= ' limit '.$start.', '.$count;
-        }
-        
-        $data_kelas_kosong = DB::select($query);
+                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai)) ORDER BY k.tingkat, k.nm_kelas');
         
         $group_data_kelas_kosong = collect($data_kelas_kosong)->groupBy('tingkat')->all();
 
