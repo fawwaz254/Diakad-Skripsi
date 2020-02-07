@@ -63,8 +63,8 @@ class MonitoringKelasKosongController extends BaseController
                                     JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam AND jj.deleted_at IS NULL
                                     JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai AND jjs.deleted_at IS NULL
                                     LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1 AND pm.deleted_at IS NULL
-                                    JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
-                                    JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
+                                    LEFT JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
+                                    LEFT JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
                                         AND DATE(pmp.tgl_entry) = DATE(NOW()) 
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
@@ -123,10 +123,10 @@ class MonitoringKelasKosongController extends BaseController
                                     JOIN jadwal_jam jj ON jj.id_jadwal_jam = jkm.id_jadwal_jam AND jj.deleted_at IS NULL
                                     JOIN jadwal_jam jjs ON jjs.id_jadwal_jam = jkm.id_jadwal_jam_selesai AND jjs.deleted_at IS NULL
                                     LEFT JOIN pengampu_mp pm ON pm.id_kelas_mp = kmp.id_kelas_mp AND pm.pjmp_pengampu_mp = 1 AND pm.deleted_at IS NULL
-                                    JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
-                                    JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
+                                    LEFT JOIN guru g ON g.id_guru = pm.id_guru AND g.deleted_at IS NULL
+                                    LEFT JOIN pengguna p ON p.id_pengguna = g.id_pengguna AND p.deleted_at IS NULL
                                     LEFT JOIN presensi_mp pmp ON pmp.id_kelas_mp = kmp.id_kelas_mp 
-                                        AND DATE(pmp.tgl_entry) = DATE('.$on_date.') 
+                                        AND DATE(pmp.tgl_entry) = DATE("'.$on_date.'") 
                                         AND WEEKDAY(pmp.tgl_entry) = '.$hari.'-1
                                         AND pmp.deleted_at IS NULL
                                     WHERE jkm.id_jadwal_hari = '.$hari.' 
