@@ -160,6 +160,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('komplain-sarpras/bukualat-sarpras/edit/{id_buku_alat}/{id}', 'Guru\Sarpras\KomplainSarprasController@editBukualatKomplainSarpras');
 
             Route::post('action-komplain-sarpras/{mode}/{id}', 'Guru\Sarpras\KomplainSarprasController@actionKomplainSarpras');
+
+            // AJAX GET SISWA BY KELAS
+            Route::post('siswa-bykelas', 'Guru\GuruPiket\InputPelanggaranController@ajaxGetSiswaByKelas');
         });
 
         /** ==== MODUL GURU PIKET ==== **/
