@@ -124,6 +124,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('input-pelanggaran/edit/{id}', 'Guru\GuruPiket\InputPelanggaranController@editInputPelanggaran');
 
             Route::post('action-input-pelanggaran/{mode}/{id}', 'Guru\GuruPiket\InputPelanggaranController@actionInputPelanggaran');
+
+            // AJAX GET SISWA BY KELAS
+            Route::post('siswa-bykelas', 'Guru\GuruPiket\InputPelanggaranController@ajaxGetSiswaByKelas');
         });
 
         /** ==== MODUL REWARD SISWA ==== **/
@@ -161,8 +164,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-komplain-sarpras/{mode}/{id}', 'Guru\Sarpras\KomplainSarprasController@actionKomplainSarpras');
 
-            // AJAX GET SISWA BY KELAS
-            Route::post('siswa-bykelas', 'Guru\GuruPiket\InputPelanggaranController@ajaxGetSiswaByKelas');
         });
 
         /** ==== MODUL GURU PIKET ==== **/
