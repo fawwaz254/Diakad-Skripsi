@@ -44,25 +44,19 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Kategori Pelanggaran
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="kategori" onchange="changeKategori(this)">
-                                    <option value="">-- Pilih Kategori --</option>
-                                    @foreach($data_kategori as $data)
-                                        <option value="{{$data->id_kategori_pelanggaran}}">{{$data->tingkat_kategori_pelanggaran}} - {{$data->nm_kategori_pelanggaran}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
                             Sub-Kategori Pelanggaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_subkategori_pelanggaran">
-                                    <option value="">-- Pilih Sub-Kategori --</option>
+                                <select class="form-control show-tick select2" name="id_subkategori_pelanggaran">
+                                    <option value="" disabled selected >-- Pilih --</option>
+                                    @foreach($data_kategori as $kategori)
+                                    <optgroup label="{{$kategori->nm_kategori_pelanggaran}}">
+                                        @foreach($kategori->subkategori_pelanggaran as $data)
+                                            <option value="{{$data->id_subkategori_pelanggaran}}">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
+                                        @endforeach
+                                    </optgroup>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -126,4 +120,7 @@ function changeKategori(el){
         }
     });
 }
+</script>
+<script>
+    $('.select2').select2();
 </script>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guru\WaliKelas;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\KategoriPelanggaran;
 use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 use App\Models\Guru as Guru;
@@ -65,7 +66,7 @@ class InputPelanggaranController extends BaseController{
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas);
 
         // ambil data all kategori
-        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+        $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
 
         $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
@@ -93,17 +94,14 @@ class InputPelanggaranController extends BaseController{
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas);
 
         // ambil data all kategori
-        $data_kategori = LibDataPelanggaran::fetchDataKategoriPelanggaran($auth_data);
+        $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
 
         $data_pelanggaran_siswa = LibDataPelanggaran::fetchDataInputPelanggaran($auth_data, null, $id);
-
-        // ambil data subkategori by kategori
-        $data_subkategori = LibDataPelanggaran::fetchDataSubkategoriPelanggaranByKategori($auth_data, $data_pelanggaran_siswa->id_kategori_pelanggaran);
 
         // convert format date
         $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));
 
-        return view('guru/wali-kelas/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','data_subkategori','tgl_pelanggaran'));
+        return view('guru/wali-kelas/input-pelanggaran/edit-input-pelanggaran',compact('auth_data','wali_kelas','data_semester','data_siswa','data_kategori','data_pelanggaran_siswa','tgl_pelanggaran'));
 
     }
 
