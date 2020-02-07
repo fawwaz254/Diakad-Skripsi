@@ -38,15 +38,7 @@ class RiwayatPelanggaranController extends BaseController{
                     return strftime( "%A, %d %B %Y", strtotime($item->tgl_pelanggaran));
                 })
                 ->addColumn('aktor_input_pelanggaran', function($item){
-                    if($item->aktor_input_pelanggaran == 1) {
-                        return "Guru BK";
-                    }
-                    elseif($item->aktor_input_pelanggaran == 2) {
-                        return "Kesiswaan";
-                    }
-                    elseif($item->aktor_input_pelanggaran == 3) {
-                        return "Wali Kelas";
-                    }
+                    return $item->aktor_input_to_text();
                 })
                 ->addColumn('nm_jenis_tindakan', function($item){
                     if($item->is_sudah_tindakan == 1) {

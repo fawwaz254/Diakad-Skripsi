@@ -110,15 +110,7 @@ class TindakanPelanggaranController extends BaseController{
                     return $item->nm_pengguna;
                 })
                 ->addColumn('aktor_input_pelanggaran', function($item){
-                    if ($item->aktor_input_pelanggaran == 1) {
-                        return "Role BK";
-                    }
-                    elseif ($item->aktor_input_pelanggaran == 2) {
-                        return "Kesiswaan";
-                    }
-                    elseif ($item->aktor_input_pelanggaran == 3) {
-                        return "Wali Kelas";
-                    }
+                    return $item->aktor_input_to_text();
                 })
                 ->addColumn('nm_input', function($item){
                     if( ! empty($item->nm_guru_input)){
@@ -316,15 +308,7 @@ class TindakanPelanggaranController extends BaseController{
                 })
                 ->addColumn('aktor_input_pelanggaran', function($item){
                     if( ! empty($item->id_pelanggaran_siswa)) {
-                        if ($item->aktor_input_pelanggaran == 1) {
-                            return "Role BK";
-                        }
-                        elseif ($item->aktor_input_pelanggaran == 2) {
-                            return "Kesiswaan";
-                        }
-                        elseif ($item->aktor_input_pelanggaran == 3) {
-                            return "Wali Kelas";
-                        }
+                        return $item->aktor_input_to_text();
                     }
                     else {
                         return "Guru Pengampu";

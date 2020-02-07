@@ -37,7 +37,22 @@ class PelanggaranSiswa extends Model
 
     protected $guarded = [];
 
-
+    public function aktor_input_to_text(){
+        switch($this->aktor_input_pelanggaran){
+            case 1: 
+                return 'Role BK'; break;
+            case 2: 
+                return 'Kesiswaan'; break;
+            case 3: 
+                return 'Wali Kelas'; break;
+            case 4:
+                return 'Guru Reguler'; break;
+            case 5:
+                return 'Guru Piket'; break;
+            default:
+                return ''; break;
+        }
+    }
 
 
 
