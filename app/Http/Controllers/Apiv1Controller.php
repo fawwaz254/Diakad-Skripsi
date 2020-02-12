@@ -65,7 +65,9 @@ class Apiv1Controller extends BaseController
                     'id_sekolah' => $pengguna->id_sekolah,
                     'nm_pengguna' => $pengguna->nm_pengguna,
                     'username' => $pengguna->username,
-                    'actor' => $pengguna->status_join_to_text(),
+                    'type_actor' => $pengguna->status_join_table,
+                    'keterangan_actor' => $pengguna->status_join_to_text(),
+                    'path_actor' => $pengguna->path_join_to_text(),
                     'gelar_depan' => $pengguna->gelar_depan,
                     'gelar_belakang' => $pengguna->gelar_belakang,
                     'api_key' => $pengguna->api_key
@@ -524,17 +526,16 @@ class Apiv1Controller extends BaseController
                             WHERE jkm.id_jadwal_hari = '.$hari.' 
                             AND jkm.deleted_at IS NULL
                             AND kmp.id_semester = "'.$semester_aktif->id_semester.'"
-                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai))
-                            ORDER BY k.tingkat, k.nm_kelas');
+                            AND TIME("'.$now.'") BETWEEN TIME(CONCAT(jj.jam_mulai, ":", jj.menit_mulai)) and TIME(CONCAT(jjs.jam_selesai, ":", jjs.menit_selesai)) ORDER BY k.tingkat, k.nm_kelas');
         
-        // $group_data_kelas_kosong = collect($data_kelas_kosong)->groupBy('tingkat')->all();
+        $group_data_kelas_kosong = collect($data_kelas_kosong)->groupBy('tingkat')->all();
 
         return response()->json([
             'status_code' 	=> 200,
             'status_text' 	=> 'Success',
             'message' 	=> '',
             'data' => array(
-                'kelas_kosong' => $data_kelas_kosong
+                'kelas_kosong' => $group_data_kelas_kosong
             )
         ]);
     }

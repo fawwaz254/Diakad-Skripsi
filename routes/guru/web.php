@@ -116,6 +116,17 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-input-pelanggaran-mp/datatables', 'Guru\PelanggaranSiswa\InputPelanggaranController@datatablesRekapInputPelanggaran');
 
             Route::post('subkategori-bykategori', 'Guru\PelanggaranSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
+
+            // MENU Input Pelanggaran Siswa Non-KBM
+            Route::get('input-pelanggaran', 'Guru\GuruPiket\InputPelanggaranController@viewInputPelanggaran');
+            Route::get('input-pelanggaran/datatables', 'Guru\GuruPiket\InputPelanggaranController@datatablesInputPelanggaran');
+            Route::get('input-pelanggaran/add', 'Guru\GuruPiket\InputPelanggaranController@addInputPelanggaran');
+            Route::get('input-pelanggaran/edit/{id}', 'Guru\GuruPiket\InputPelanggaranController@editInputPelanggaran');
+
+            Route::post('action-input-pelanggaran/{mode}/{id}', 'Guru\GuruPiket\InputPelanggaranController@actionInputPelanggaran');
+
+            // AJAX GET SISWA BY KELAS
+            Route::post('siswa-bykelas', 'Guru\GuruPiket\InputPelanggaranController@ajaxGetSiswaByKelas');
         });
 
         /** ==== MODUL REWARD SISWA ==== **/
@@ -152,6 +163,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('komplain-sarpras/bukualat-sarpras/edit/{id_buku_alat}/{id}', 'Guru\Sarpras\KomplainSarprasController@editBukualatKomplainSarpras');
 
             Route::post('action-komplain-sarpras/{mode}/{id}', 'Guru\Sarpras\KomplainSarprasController@actionKomplainSarpras');
+
         });
 
         /** ==== MODUL GURU PIKET ==== **/
@@ -175,6 +187,17 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesKelasAbsensiHariSiswa');
             Route::post('absensi-harian-siswa/action/{mode}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
             Route::post('absensi-harian-siswa/action/{mode}/{id}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
+
+            // MENU Input Pelanggaran Siswa Non-KBM
+            Route::get('input-pelanggaran', 'Guru\GuruPiket\InputPelanggaranController@viewInputPelanggaran');
+            Route::get('input-pelanggaran/datatables', 'Guru\GuruPiket\InputPelanggaranController@datatablesInputPelanggaran');
+            Route::get('input-pelanggaran/add', 'Guru\GuruPiket\InputPelanggaranController@addInputPelanggaran');
+            Route::get('input-pelanggaran/edit/{id}', 'Guru\GuruPiket\InputPelanggaranController@editInputPelanggaran');
+
+            Route::post('action-input-pelanggaran/{mode}/{id}', 'Guru\GuruPiket\InputPelanggaranController@actionInputPelanggaran');
+
+            // AJAX GET SISWA BY KELAS
+            Route::post('siswa-bykelas', 'Guru\GuruPiket\InputPelanggaranController@ajaxGetSiswaByKelas');
         });
 
         /** ==== MODUL WALI KELAS ==== **/

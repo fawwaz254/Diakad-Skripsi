@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#wali-kelas/input-pelanggaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#'.Request::segment(2).'/input-pelanggaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -39,17 +39,34 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Nama Siswa <small><b>* Pilih Siswa Kelas {{$wali_kelas->nm_kelas}}</b></small>
+                            Kelas
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="kelas" onchange="changeKelas(this)" required="">
+                                    <option value="">-- Pilih Kelas --</option>
+                                    @foreach($data_kelas as $data)
+                                        @if($data_siswa->id_kelas == $data->id_kelas)
+                                        <option value="{{$data->id_kelas}}" selected>{{$data->nm_kelas}}</option>
+                                        @else
+                                        <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Nama Siswa
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_siswa" required="">
                                     <option value="">-- Pilih Siswa --</option>
-                                    @foreach($data_siswa as $data)
-                                        @if($data->id_siswa == $data_pelanggaran_siswa->id_siswa)
-                                            <option value="{{$data->id_siswa}}" selected >{{$data->nm_pengguna}} - {{$data->nis_siswa}}</option>
+                                    @foreach($data_siswa_sekelas as $data)
+                                        @if($data_siswa->id_siswa == $data->id_siswa)
+                                        <option value="{{$data->id_siswa}}" selected>{{$data->nm_pengguna}} ({{$data->nis_siswa}})</option>
                                         @else
-                                            <option value="{{$data->id_siswa}}">{{$data->nm_pengguna}} - {{$data->nis_siswa}}</option>
+                                        <option value="{{$data->id_siswa}}">{{$data->nm_pengguna}} ({{$data->nis_siswa}})</option>
                                         @endif
                                     @endforeach
                                 </select>
