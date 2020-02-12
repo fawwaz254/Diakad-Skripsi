@@ -59,7 +59,7 @@ class Pengguna extends Authenticatable
     {
         switch ($this->status_join_table) {
             case 1:
-                return 'Pegawai';
+                return 'Tendik';
             case 2:
                 return 'Guru';
             case 3:
@@ -68,6 +68,24 @@ class Pengguna extends Authenticatable
                 return 'Wali Murid';
             case 5:
                 return 'Pelatih Ekskul';
+            default:
+                return '';
+        }
+    }
+
+    public function path_join_to_text()
+    {
+        switch ($this->status_join_table) {
+            case 1:
+                return 'tendik';
+            case 2:
+                return 'guru';
+            case 3:
+                return 'siswa';
+            case 4:
+                return 'wali-murid';
+            case 5:
+                return 'pelatih-ekskul';
             default:
                 return '';
         }

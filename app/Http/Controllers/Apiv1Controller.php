@@ -65,7 +65,9 @@ class Apiv1Controller extends BaseController
                     'id_sekolah' => $pengguna->id_sekolah,
                     'nm_pengguna' => $pengguna->nm_pengguna,
                     'username' => $pengguna->username,
-                    'actor' => $pengguna->status_join_to_text(),
+                    'type_actor' => $pengguna->status_join_table,
+                    'keterangan_actor' => $pengguna->status_join_to_text(),
+                    'path_actor' => $pengguna->path_join_to_text(),
                     'gelar_depan' => $pengguna->gelar_depan,
                     'gelar_belakang' => $pengguna->gelar_belakang,
                     'api_key' => $pengguna->api_key
