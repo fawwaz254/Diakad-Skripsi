@@ -185,7 +185,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Harga Apv Supplier
+                            Harga Apv Supplier <small>*Wajib Diisi</small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -193,7 +193,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Qty Apv Supplier <small>*Boleh Kosong</small>
+                            Qty Apv Supplier <small>*Wajib Diisi</small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -201,7 +201,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Termin Apv Supplier <small>*Boleh Kosong</small>
+                            Termin Apv Supplier <small>*Wajib Diisi</small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

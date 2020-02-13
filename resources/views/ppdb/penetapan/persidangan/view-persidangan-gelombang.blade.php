@@ -1,9 +1,6 @@
 <div class="container-fluid">
-    <!-- <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penetapan/data-penetapan/add/')}}"><i class="material-icons">note_add</i><span>Tambah Penetapan</span></a></h2>
-    </div> -->
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#penetapan/persidangan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#penetapan/persidangan/tahun/'.date_format(date_create($data_penetapan->tgl_penetapan),'Y'))}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -13,6 +10,17 @@
                         
                         <h2>Data '{{$data_penetapan->nm_penetapan}}'</h2>
 
+
+                    <!-- --> 
+                    <!--  -->
+                     @foreach ($data_jurusan as $jurusan)
+                <div class="header bg-lime">
+                    <h2>{{ $jurusan->nm_jurusan }} ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
+                </div>
+
+                     <!----> 
+                               
+                   <h2>Data '{{$data_penetapan->nm_penetapan}}'</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -23,8 +31,7 @@
                                         <th>Jurusan</th>
                                         <th>Peserta</th>
                                         <th>Kuota</th>
-                                        <th>Diterima</th>
-                                                   
+                                        <th>Diterima</th>                                                
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -39,7 +46,7 @@
 <script>
 
     var modul_url       = 'penetapan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'persidangan/datatablesviewgelombang';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'persidangan/datatablesviewgelombang/{$data_penetapan->id_penetapan}';
     var edit_url        = role_url + '#' + modul_url + '/' + 'persidangan/view-persidangan-gelombang';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-persidangan/delete';
 
