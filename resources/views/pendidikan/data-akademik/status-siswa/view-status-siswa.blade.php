@@ -16,7 +16,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Status</th>
-                                        <th>Status Aktif</th>
+                                        <th>Aktif/Keluar</th>
                                         <th>Kode Status</th>
                                         <th>Action</th>
                                     </tr>

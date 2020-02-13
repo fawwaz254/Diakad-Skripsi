@@ -43,7 +43,7 @@
                                     <option value="CUTI">CUTI/NON-AKTIF-SEMENTARA</option>
                                     <option value="CALON_LULUS">CALON_LULUS</option>
                                     <option value="LULUS">LULUS</option>
-                                    <option value="MUTASI">MUTASI</option>
+                                    <option value="MUTASI">MUTASI KELUAR</option>
                                     <option value="DIKELUARKAN">DIKELUARKAN</option>
                                     <option value="MENGUNDURKAN_DIRI">MENGUNDURKAN_DIRI</option>
                                     <option value="PUTUS_SEKOLAH">PUTUS_SEKOLAH</option>
