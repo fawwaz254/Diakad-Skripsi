@@ -28,13 +28,9 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="nm_semester">
-                                    @if($data_semester->nm_semester == "Ganjil")
-                                    <option value="Ganjil" selected >Ganjil</option>
-                                    <option value="Genap">Genap</option>
-                                    @else
-                                    <option value="Ganjil">Ganjil</option>
-                                    <option value="Genap" selected >Genap</option>
-                                    @endif
+                                    <option value="Ganjil" {{($data_semester->nm_semester == "Ganjil")? 'selected' : ''}} >Ganjil</option>
+                                    <option value="Genap" {{($data_semester->nm_semester == "Genap")? 'selected' : ''}}>Genap</option>
+                                    <option value="Wisuda" {{($data_semester->nm_semester == "Wisuda")? 'selected' : ''}}>Wisuda</option>
                                 </select>
                             </div>
                         </div>

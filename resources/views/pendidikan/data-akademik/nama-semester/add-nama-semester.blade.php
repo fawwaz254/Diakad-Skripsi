@@ -29,6 +29,7 @@
                                 <select class="form-control show-tick" name="nm_semester">
                                     <option value="Ganjil">Ganjil</option>
                                     <option value="Genap">Genap</option>
+                                    <option value="Wisuda">Wisuda</option>
                                 </select>
                             </div>
                         </div>
