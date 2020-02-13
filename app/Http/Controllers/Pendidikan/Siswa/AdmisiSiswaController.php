@@ -303,7 +303,7 @@ class AdmisiSiswaController extends BaseController
                                 $admisi->id_status_pengguna     = $siswa_aktif_set->id_status_pengguna;
                                 $admisi->id_semester            = $input->id_semester;
                                 $admisi->id_siswa               = $siswa_aktif_set->id_siswa;
-                                $admisi->keterangan_admisi      = "Generate Admisi Pendidikan";
+                                $admisi->keterangan_admisi      = "Generate Admisi Kesiswaan";
                                 $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
                                 $admisi->save();
                             }
@@ -329,7 +329,7 @@ class AdmisiSiswaController extends BaseController
                                 $admisi->id_status_pengguna     = $status_pengguna_cuti->id_status_pengguna;
                                 $admisi->id_semester            = $input->id_semester;
                                 $admisi->id_siswa               = $siswa_aktif_set->id_siswa;
-                                $admisi->keterangan_admisi      = "Generate Admisi Pendidikan";
+                                $admisi->keterangan_admisi      = "Generate Admisi Kesiswaaan";
                                 $admisi->created_by             = $input->auth_data->pengguna->id_pengguna;
                                 $admisi->save();
                             }
