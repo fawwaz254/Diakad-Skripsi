@@ -114,11 +114,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             //MENU UPDATE FOTO
             Route::get('update-foto', 'Pendidikan\Siswa\UpdateFotoController@viewUpdateFoto');
+            Route::get('update-foto/batch', 'Pendidikan\Siswa\UpdateFotoController@viewBatchUpdateFoto');
             Route::post('post-view-update-foto', 'Pendidikan\Siswa\UpdateFotoController@actionViewUpdateFoto');
             Route::get('update-foto/view-detail-update-foto/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewDetailUpdateFoto');
             Route::get('update-foto/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@datatablesUpdateFoto');
             Route::get('update-foto/upload/{id_pengguna}', 'Pendidikan\Siswa\UpdateFotoController@viewUpload');
             Route::post('action-update-foto/{mode}/{id}', 'Pendidikan\Siswa\UpdateFotoController@actionUpdateFoto');
+            Route::post('action-batch-upload-foto', 'Pendidikan\Siswa\UpdateFotoController@actionBatchUploadFoto');
 
             //MENU UPLOAD DATA SISWA
             Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');

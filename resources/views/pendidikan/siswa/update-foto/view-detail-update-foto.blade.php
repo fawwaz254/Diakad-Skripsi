@@ -135,6 +135,11 @@
                     </form>
 
                     <div class="table-responsive">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <a class="btn btn-block bg-btn-submit waves-effect target-link" href="{{url(Request::segment(1).'#siswa/update-foto/batch')}}"><i class="material-icons">cloud_upload</i><span>Upload Batch Foto</span></a>
+                            </div>
+                        </div>
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                             <thead>
                                 <tr>

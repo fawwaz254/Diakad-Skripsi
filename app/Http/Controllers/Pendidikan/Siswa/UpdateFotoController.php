@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pendidikan\Siswa;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -43,6 +44,15 @@ class UpdateFotoController extends BaseController
                                   ->orderBy('thn_masuk_siswa', 'ASC')->get();
 
         return view('pendidikan/siswa/update-foto/view-update-foto', compact('auth_data', 'jurusan', 'jalur', 'status_pengguna', 'thn_masuk_siswa'));
+    }
+
+    public function viewBatchUpdateFoto(Request $request)
+    {
+        # code..
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('pendidikan/siswa/update-foto/view-batch-upload-foto', compact('auth_data'));
     }
 
     public function actionViewUpdateFoto(Request $request)
@@ -164,6 +174,43 @@ class UpdateFotoController extends BaseController
                     'path' => 'kesiswaan#siswa/update-foto/upload/'.$id
                 ];
             }
+        }
+    }
+
+    public function actionBatchUploadFoto(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'file|required|max:2048|mimes:jpg,jpeg,bmp,png'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        $upload_image = $request->file('file');
+        $filename = pathinfo($upload_image->getClientOriginalName(), PATHINFO_FILENAME);
+
+        if($siswa = Siswa::where('nis_siswa', $filename)->first()){
+            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+    
+            $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/siswa/'.$siswa->id_pengguna, $upload_image, 'public');
+            
+            //save file name to database
+            $siswa                          = Pengguna::find($siswa->id_pengguna);
+            $siswa->path_foto_pengguna      = $file;
+            $siswa->updated_by              = $input->auth_data->pengguna->id_pengguna;
+            $siswa->save();
+
+            return Response::json('success', 200);
+        }else{
+            return Response::json('error '.$filename, 400);
         }
     }
 }
