@@ -31,6 +31,8 @@ class AbsensiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $id_jadwal_hari = Carbon::now(env('APP_TIMEZONE', ''))->format('N');
+
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kbm = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
@@ -39,7 +41,7 @@ class AbsensiSiswaController extends BaseController
 
         $data_uas = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
 
-        $grup_kbm_perhari = $data_kbm->groupBy('nm_jadwal_hari');
+        $grup_kbm_perhari = $data_kbm->where('id_jadwal_hari', $id_jadwal_hari)->groupBy('nm_jadwal_hari');
 
         return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
     }

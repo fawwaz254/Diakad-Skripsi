@@ -130,7 +130,7 @@ class LibGuru
                     ->orderBy('presensi_mp.pertemuan_ke', 'desc')
                     ->first();
         } else {
-            $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'semester.tahun_ajaran', 'semester.nm_semester', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'jadwal_hari.nm_jadwal_hari', 'jj.jam_mulai', 'jj.menit_mulai', 'jjs.jam_selesai', 'jjs.menit_selesai', 'kelas.nm_kelas', 'ruangan.nm_ruangan', 'pengampu_mp.pjmp_pengampu_mp')
+            $jadwalKBM = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'semester.tahun_ajaran', 'semester.nm_semester', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'jadwal_hari.id_jadwal_hari', 'jadwal_hari.nm_jadwal_hari', 'jj.jam_mulai', 'jj.menit_mulai', 'jjs.jam_selesai', 'jjs.menit_selesai', 'kelas.nm_kelas', 'ruangan.nm_ruangan', 'pengampu_mp.pjmp_pengampu_mp')
                     ->join('pengampu_mp', function ($q) {
                         $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
                             ->whereNull('pengampu_mp.deleted_at');
