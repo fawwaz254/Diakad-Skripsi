@@ -70,6 +70,10 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
         });
 
+        Route::group(array('prefix' => 'rekap-monitoring-kelas-kosong'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRekapMonitoringKelasKosong');
+        });
+
         Route::group(array('prefix' => 'rekap-absen'), function () {
             Route::post('get', 'Apiv1Controller@actionGetRekapAbsen');
         });
@@ -93,6 +97,10 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
+        });
+
+        Route::group(array('prefix' => 'rekap-monitoring-kelas-kosong'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRekapMonitoringKelasKosong');
         });
 
         Route::group(array('prefix' => 'rekap-absen'), function () {
