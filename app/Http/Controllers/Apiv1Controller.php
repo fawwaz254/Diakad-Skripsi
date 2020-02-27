@@ -1305,6 +1305,57 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
+    public function actionGetInputJadwal(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $id = $semester->id_semester;
+        $id_pengguna = $auth_data->pengguna->id_pengguna;
+        $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
+        $id_guru = $guru->id_guru;
+       
+        $data_jadwal = KelasMp::select(
+            'mata_pelajaran.nm_mata_pelajaran',
+            'mata_pelajaran.kd_mata_pelajaran',
+            'kelas.nm_kelas',
+            'kelas_mp.id_kelas_mp',
+            'mata_pelajaran.kredit_semester',
+            'mata_pelajaran.tingkat_semester',
+            'kelas_mp.nm_kelas_mp',
+            'jenis_mata_pelajaran.nm_jenis_mata_pelajaran',
+            'pengampu_mp.id_guru',
+            'pengguna.nm_pengguna'
+        )
+            ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+            ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+            ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+            ->leftJoin('pengampu_mp', function ($join) {
+                $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                                 ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
+                                 ->whereNull('pengampu_mp.deleted_at');
+            })
+            ->leftJoin('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
+            ->leftJoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+            ->where('kelas_mp.id_semester', '=', $id)
+            ->orderBy('mata_pelajaran.nm_mata_pelajaran', 'asc')
+            ->orderBy('kelas.nm_kelas', 'asc')
+            ->orderBy('mata_pelajaran.tingkat_semester', 'asc');
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'data_jadwal' => $data_jadwal,
+                'semester_aktif' => $semester,
+                'id_semester_aktif' => $id,
+                'id_guru' => $id_guru
+            )
+        ]);
+    }
+
     public function actionGetPelanggaranSiswa(Request $request)
     {
         $input = (object) $request->input();

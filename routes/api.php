@@ -66,6 +66,11 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('{mode}/submit', 'Apiv1Controller@actionPelanggaranSiswa');
         });
 
+        Route::group(array('prefix' => 'input-jadwal'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetInputJadwal');
+            Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
+        });
+
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
         });
@@ -98,6 +103,11 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
+        });
+
+        Route::group(array('prefix' => 'input-jadwal'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetInputJadwal');
+            Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
         });
 
         Route::group(array('prefix' => 'rekap-monitoring-kelas-kosong'), function () {
