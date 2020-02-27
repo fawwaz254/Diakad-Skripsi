@@ -1342,7 +1342,8 @@ class Apiv1Controller extends BaseController
             ->where('kelas_mp.id_semester', '=', $id)
             ->orderBy('mata_pelajaran.nm_mata_pelajaran', 'asc')
             ->orderBy('kelas.nm_kelas', 'asc')
-            ->orderBy('mata_pelajaran.tingkat_semester', 'asc');
+            ->orderBy('mata_pelajaran.tingkat_semester', 'asc')
+            ->get();
 
         return response()->json([
             'status_code' 	=> 200,
@@ -1351,7 +1352,6 @@ class Apiv1Controller extends BaseController
             'data' => array(
                 'data_jadwal' => $data_jadwal,
                 'semester_aktif' => $semester,
-                'id_semester_aktif' => $id,
                 'id_guru' => $id_guru
             )
         ]);
