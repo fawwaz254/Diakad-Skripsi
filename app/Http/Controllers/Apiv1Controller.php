@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Guru;
 use App\Models\JadwalKelasMp;
+use App\Models\KelasMp;
 use App\Models\KomplainSarpras;
 use App\Models\Kota;
 use App\Models\Pengguna;
