@@ -68,7 +68,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::group(array('prefix' => 'input-jadwal'), function () {
             Route::post('get', 'Apiv1Controller@actionGetInputJadwal');
-            Route::post('detail', 'Apiv1Controller@actionGetDetailInputJadwal');
+            Route::post('detail/get', 'Apiv1Controller@actionGetDetailInputJadwal');
             Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
         });
 
@@ -108,7 +108,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::group(array('prefix' => 'input-jadwal'), function () {
             Route::post('get', 'Apiv1Controller@actionGetInputJadwal');
-            Route::post('detail', 'Apiv1Controller@actionGetDetailInputJadwal');
+            Route::post('detail/get', 'Apiv1Controller@actionGetDetailInputJadwal');
             Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
         });
 
