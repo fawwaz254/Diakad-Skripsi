@@ -66,8 +66,18 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('{mode}/submit', 'Apiv1Controller@actionPelanggaranSiswa');
         });
 
+        Route::group(array('prefix' => 'input-jadwal'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetInputJadwal');
+            Route::post('detail/get', 'Apiv1Controller@actionGetDetailInputJadwal');
+            Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
+        });
+
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
+        });
+
+        Route::group(array('prefix' => 'rekap-monitoring-kelas-kosong'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRekapMonitoringKelasKosong');
         });
 
         Route::group(array('prefix' => 'rekap-absen'), function () {
@@ -88,11 +98,22 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('submit', 'Apiv1Controller@actionDataPribadi');
         });
 
+        Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
         Route::post('kota/get', 'Apiv1Controller@actionGetKota');
         Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
 
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
+        });
+
+        Route::group(array('prefix' => 'input-jadwal'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetInputJadwal');
+            Route::post('detail/get', 'Apiv1Controller@actionGetDetailInputJadwal');
+            Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
+        });
+
+        Route::group(array('prefix' => 'rekap-monitoring-kelas-kosong'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRekapMonitoringKelasKosong');
         });
 
         Route::group(array('prefix' => 'rekap-absen'), function () {
