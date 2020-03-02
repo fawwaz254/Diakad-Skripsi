@@ -11,6 +11,10 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Guru;
 use App\Models\JadwalKelasMp;
+use App\Models\JadwalHari;
+use App\Models\JadwalJam;
+use App\Models\PengampuMp;
+use App\Models\Ruangan;
 use App\Models\KelasMp;
 use App\Models\KomplainSarpras;
 use App\Models\Kota;
@@ -1353,6 +1357,76 @@ class Apiv1Controller extends BaseController
                 'data_jadwal' => $data_jadwal,
                 'semester_aktif' => $semester,
                 'id_guru' => $id_guru
+            )
+        ]);
+    }
+
+    public function actionGetDetailInputJadwal(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_kelas_mp' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+        $id = $input->id_kelas_mp;
+
+        $kelas_mp   = KelasMp::select('mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', DB::raw("(SELECT COUNT(*) FROM pengambilan_mp WHERE pengambilan_mp.id_kelas_mp = kelas_mp.id_kelas_mp AND pengambilan_mp.status_apv_pengambilan_mp = 1 AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa"), 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester')
+        ->leftJoin('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+        ->leftJoin('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
+        ->leftJoin('jadwal_jam', 'jadwal_jam.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
+        ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+        ->leftJoin('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
+        ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+        ->leftJoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+        ->leftJoin('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
+        ->leftJoin('pengguna', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
+        ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+        ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
+        ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
+        ->where('kelas_mp.id_kelas_mp', '=', $id)
+        ->first();
+
+        $jadwal     = JadwalKelasMp::where('id_kelas_mp', '=', $id)
+                        ->orderBy('id_jadwal_hari', 'asc')
+                        ->get();
+        $jml_jadwal = count($jadwal);
+
+        $pengampu_mp_pj   = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 1)->first();
+        $anggota          = PengampuMp::where('id_kelas_mp', '=', $id)->where('pjmp_pengampu_mp', '=', 2)
+                                ->orderBy('id_guru', 'asc')
+                                ->get();
+        $jml_anggota        = count($anggota);
+
+        $hari       = JadwalHari::get();
+        $jam        = JadwalJam::orderBy('jam_ke', 'asc')->get();
+        $pjma       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
+        $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kelas_mp' => $kelas_mp,
+                'jadwal' => $jadwal,
+                'jml_jadwal' => $jml_jadwal,
+                'pengampu_mp_pj' => $pengampu_mp_pj,
+                'anggota' => $anggota,
+                'jml_anggota' => $jml_anggota,
+                'hari' => $hari,
+                'jam' => $jam,
+                'pjma' => $pjma,
+                'ruangan' => $ruangan
             )
         ]);
     }
