@@ -1857,25 +1857,11 @@ class Apiv1Controller extends BaseController
                     ]);
                 }
             } elseif ($mode == 'delete') {
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
-                    return response()->json([
-                        'status_code' 	=> 300,
-                        'status_text' 	=> 'Failed',
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
-                    ]);
-                } else {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
-
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    PengampuMp::where('id_kelas_mp', $id)->delete();
-
-                    return response()->json([
-                        'status_code' 	=> 200,
-                        'status_text' 	=> 'Success',
-                        'message' => 'Delete Jadwal Mata Ajar Successfully'
-                    ]);
-                }
+                return response()->json([
+                    'status_code' 	=> 200,
+                    'status_text' 	=> 'Success',
+                    'message' => 'Coba Api'
+                ]);
             }
         }
     }
