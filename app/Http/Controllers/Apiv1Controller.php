@@ -24,6 +24,7 @@ use App\Models\PresensiHarianSiswa;
 use App\Models\PresensiMp;
 use App\Models\PresensiMpSiswa;
 use App\Models\PresensiMpPelanggaran;
+use App\Models\PengambilanMp;
 use App\Models\TindakanPelanggaran;
 use App\Models\Semester;
 use App\Models\Siswa;
