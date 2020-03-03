@@ -1436,8 +1436,6 @@ class Apiv1Controller extends BaseController
     public function actionInputJadwal(Request $request, $mode)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         switch ($mode) {
             case 'edit':
@@ -1492,7 +1490,9 @@ class Apiv1Controller extends BaseController
                 'message' => $validator->errors()->first()
             ]);
         } else {
-            $id = $input->id_kelas_mp;
+            // $auth_data = $input->auth_data;
+            // $now = Carbon::now(env('APP_TIMEZONE', ''));
+            // $id = $input->id_kelas_mp;
             if ($mode == 'edit') {
                 $id_pengguna = $auth_data->pengguna->id_pengguna;
 
@@ -1857,18 +1857,18 @@ class Apiv1Controller extends BaseController
                     ]);
                 }
             } elseif ($mode == 'delete') {
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $input->id_kelas_mp)->first()) {
                     return response()->json([
                         'status_code' 	=> 300,
                         'status_text' 	=> 'Failed',
                         'message' => 'Terdapat siswa yang telah mengambil kelas ini'
                     ]);
                 } else {
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+                    JadwalKelasMp::where('id_kelas_mp', $input->id_kelas_mp)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $input->id_kelas_mp)->delete();
 
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    PengampuMp::where('id_kelas_mp', $id)->delete();
+                    PengampuMp::where('id_kelas_mp', $input->id_kelas_mp)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $input->id_kelas_mp)->delete();
 
                     return response()->json([
                         'status_code' 	=> 200,
