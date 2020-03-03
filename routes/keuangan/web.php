@@ -3,6 +3,7 @@
 Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => 'keuangan'), function () {
         Route::get('welcome', 'Keuangan\WelcomeController@indexWelcome');
+        // Test Push
 
         /** ==== MODUL DATA KEUANGAN ==== **/
         // url: /keuangan/data-keuangan
