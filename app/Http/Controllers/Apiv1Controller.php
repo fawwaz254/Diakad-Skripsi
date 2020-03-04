@@ -1439,51 +1439,9 @@ class Apiv1Controller extends BaseController
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        switch ($mode) {
-            case 'edit':
-                $required_params = [
-                    'id_kelas_mp' => 'required',
-                    'id_pengampu_mp_pj' => 'required',
-                    'id_jadwal_kelas_mp1' => 'required',
-                    'ruangan1' => 'required',
-                    'hari_jadwal1' => 'required',
-                    'jam_jadwal1' => 'required',
-                    'jam_jadwal_selesai1' => 'required',
-                    'id_jadwal_kelas_mp2' => 'required',
-                    'ruangan2' => 'required',
-                    'hari_jadwal2' => 'required',
-                    'jam_jadwal2' => 'required',
-                    'jam_jadwal_selesai2' => 'required',
-                    'id_jadwal_kelas_mp3' => 'required',
-                    'ruangan3' => 'required',
-                    'hari_jadwal3' => 'required',
-                    'jam_jadwal3' => 'required',
-                    'jam_jadwal_selesai3' => 'required',
-                    'id_jadwal_kelas_mp4' => 'required',
-                    'ruangan4' => 'required',
-                    'hari_jadwal4' => 'required',
-                    'jam_jadwal4' => 'required',
-                    'jam_jadwal_selesai4' => 'required',
-                    'id_jadwal_kelas_mp5' => 'required',
-                    'ruangan5' => 'required',
-                    'hari_jadwal5' => 'required',
-                    'jam_jadwal5' => 'required',
-                    'jam_jadwal_selesai5' => 'required',
-                    'id_jadwal_kelas_mp6' => 'required',
-                    'ruangan6' => 'required',
-                    'hari_jadwal6' => 'required',
-                    'jam_jadwal6' => 'required',
-                    'jam_jadwal_selesai6' => 'required'
-                ]; break;
-            case 'delete':
-                $required_params = [
-                    'id_kelas_mp' => 'required',
-                ]; break;
-            default:
-                $required_params = [];
-        }
-
-        $validator = Validator::make($request->all(), $required_params);
+        $validator = Validator::make($request->all(), [
+            'id_kelas_mp' => 'required',
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
