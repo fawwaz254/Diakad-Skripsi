@@ -10,8 +10,8 @@
                         <h2>DATA RUANGAN</h2>
                     </div>
                     <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                        <div class="table-responsive" style="overflow-x: auto;">
+                            <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -44,13 +44,15 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_jenis_ruangan', name: 'nm_jenis_ruangan' },
             { data: 'nm_gedung', name: 'nm_gedung' },
             { data: 'nm_pemilik_sarpras', name: 'nm_pemilik_sarpras' },
@@ -76,6 +78,7 @@ responsive: true,
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 </script>

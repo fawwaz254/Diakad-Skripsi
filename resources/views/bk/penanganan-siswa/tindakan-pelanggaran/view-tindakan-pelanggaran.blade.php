@@ -27,8 +27,8 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="belum_tindakan_nonkbm">
                             <div class="body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_nonkbm">
+                                <div class="table-responsive" style="overflow-x: auto;">
+                            <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_nonkbm">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -50,7 +50,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="belum_tindakan_kbm">
                             <div class="body">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="overflow-x: auto;">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_kbm">
                                         <thead>
                                             <tr>
@@ -71,7 +71,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="sudah_tindakan">
                             <div class="body">
-                                <div class="table-responsive">
+                                <div class="table-responsive" style="overflow-x: auto;">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
@@ -117,12 +117,15 @@
     var primary_table_belum_nonkbm = $('#primary_table_belum_nonkbm').DataTable({
         processing: true,
         serverSide: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_belum_nonkbm,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
@@ -146,18 +149,22 @@
         primary_table_belum_nonkbm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table_belum_nonkbm.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
     var primary_table_belum_kbm = $('#primary_table_belum_kbm').DataTable({
         processing: true,
         serverSide: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_belum_kbm,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
@@ -179,18 +186,22 @@
         primary_table_belum_kbm.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table_belum_kbm.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url_sudah,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', searchable: false, orderable: false },
             { data: 'nm_kelas', searchable: false, orderable: false },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
@@ -222,6 +233,7 @@
         primary_table_sudah.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table_sudah.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
