@@ -43,6 +43,14 @@ Route::post('upload', function (Request $request) {
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
 
+Route::group(array('prefix' => 'reporting-dashboard'), function () {
+    Route::get('/', 'SignInController@indexReportingDashboard');
+    Route::get('akademik', function(){
+        return view('reporting-dashboard/akademik');
+    });
+});
+
+
 Route::group(array('middleware'=> ['token_staff']), function () {
     //
     Route::group(array('prefix' => '{global}'), function () {

@@ -36,7 +36,10 @@ class UjianMp extends Model
 
     protected $guarded = [];
 
-
+    public function kelas_mp()
+    {
+        return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
+    }
 
 
 
