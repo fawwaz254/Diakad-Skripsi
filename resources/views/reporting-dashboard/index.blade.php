@@ -31,7 +31,7 @@
                                     <a class="btn btn-primary btn-lg btn-block waves-effect" href="{{url('reporting-dashboard/bk-kesiswaan')}}">BK & Kesiswaan</a>
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
-                                    <a class="btn btn-danger btn-lg btn-block waves-effect" href="{{url('reporting-dashboard/keungan')}}">Keuangan</a>
+                                    <a class="btn btn-danger btn-lg btn-block waves-effect" href="{{url('reporting-dashboard/keuangan')}}">Keuangan</a>
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
                                     <a class="btn btn-warning btn-lg btn-block waves-effect" href="{{url('reporting-dashboard/sarpras')}}">Sarpras</a>
