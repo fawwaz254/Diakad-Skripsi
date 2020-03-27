@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                DATA AKADEMIK
+                                DATA AKADEMIK {{$semester_aktif->tahun_ajaran}} ({{$semester_aktif->nm_semester}})
                             </h2>
                         </div>
                         <div class="body">

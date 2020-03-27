@@ -13,7 +13,7 @@
             <div class="block-header">
             </div>
             <div class="block-header">
-                <h2><a class="btn bg-blue waves-effect" href="{{url('reporting-dashboard')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>&nbsp; &nbsp; AKADEMIK - {{\App\Models\Sekolah::first()->nm_sekolah}}</h2>
+                <h2><a class="btn bg-blue waves-effect" href="{{url('reporting-dashboard')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>&nbsp; &nbsp; KEUANGAN - {{\App\Models\Sekolah::first()->nm_sekolah}}</h2>
             </div>
 
             <!-- Widgets -->
@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                DATA KEUANGAN
+                                DATA KEUANGAN {{$semester_aktif->tahun_ajaran}} ({{$semester_aktif->nm_semester}})
                             </h2>
                         </div>
                         <div class="body">
@@ -67,18 +67,20 @@
                                         </div>
                                         <div class="content">
                                             <div class="text">Kelompok Biaya Siswa</div>
-                                            <div class="number">{{$count_kelompok_biaya_siswa->where('id_kelompok_biaya', null)->count()}} / {{$count_kelompok_biaya_siswa->count()}}</div>
+                                            <div class="number">{{$count_kelompok_biaya_siswa->where('id_kelompok_biaya', '<>', null)->count()}} / {{$count_kelompok_biaya_siswa->count()}}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                                     @php
-                                        $count_tagihan = \App\Models\TagihanBiaya::with('detail_biaya', 'detail_biaya.biaya_sekolah')->whereHas('detail_biaya.biaya_sekolah', function($q) use ($semester_aktif){
-                                            $q->where('id_semester', $semester_aktif->id_semester);
-                                        })->count();
-                                        $last_updated_tagihan = \App\Models\TagihanBiaya::with('detail_biaya', 'detail_biaya.biaya_sekolah')->whereHas('detail_biaya.biaya_sekolah', function($q) use ($semester_aktif){
-                                            $q->where('id_semester', $semester_aktif->id_semester);
-                                        })->orderBy('updated_at', 'desc')->first();
+                                        $count_tagihan = \App\Models\TagihanBiaya::join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
+                                            ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
+                                            ->where('biaya_sekolah.id_semester', $semester_aktif->id_semester)
+                                            ->count();
+                                        $last_updated_tagihan = \App\Models\TagihanBiaya::join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
+                                            ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
+                                            ->where('biaya_sekolah.id_semester', $semester_aktif->id_semester)
+                                            ->orderBy('tagihan_biaya.updated_at', 'desc')->first();
                                     @endphp
                                     @if($last_updated_tagihan)
                                     <div class="text-center"><b>Last updated: {{date_format(date_create($last_updated_tagihan->updated_at), 'd M Y H:i')}}</b></div>
@@ -127,7 +129,7 @@
                                     @endif
                                     <div class="info-box bg-blue hover-expand-effect">
                                         <div class="icon">
-                                            <i class="material-icons">arrow_upward</i>
+                                            <i class="material-icons">arrow_downward</i>
                                         </div>
                                         <div class="content">
                                             <div class="text">Pemasukan Sekolah</div>
@@ -147,7 +149,7 @@
                                     @endif
                                     <div class="info-box bg-green hover-expand-effect">
                                         <div class="icon">
-                                            <i class="material-icons">arrow_downward</i>
+                                            <i class="material-icons">arrow_upward</i>
                                         </div>
                                         <div class="content">
                                             <div class="text">Pengeluaran Sekolah</div>

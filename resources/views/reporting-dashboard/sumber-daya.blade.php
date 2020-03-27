@@ -13,7 +13,7 @@
             <div class="block-header">
             </div>
             <div class="block-header">
-                <h2><a class="btn bg-blue waves-effect" href="{{url('reporting-dashboard')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>&nbsp; &nbsp; AKADEMIK - {{\App\Models\Sekolah::first()->nm_sekolah}}</h2>
+                <h2><a class="btn bg-blue waves-effect" href="{{url('reporting-dashboard')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>&nbsp; &nbsp; SUMBER DAYA - {{\App\Models\Sekolah::first()->nm_sekolah}}</h2>
             </div>
 
             <!-- Widgets -->
@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                DATA SUMBER DAYA
+                                DATA SUMBER DAYA {{$semester_aktif->tahun_ajaran}} ({{$semester_aktif->nm_semester}})
                             </h2>
                         </div>
                         <div class="body">
