@@ -42,9 +42,8 @@ class PengajuanWisuda extends Model
 
     protected $guarded = [];
 
-
-
-
-
+    public function periode_wisuda(){
+        return $this->belongsTo('App\Models\PeriodeWisuda', 'id_periode_wisuda');
+    }
 
 }

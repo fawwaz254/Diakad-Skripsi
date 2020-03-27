@@ -68,6 +68,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-absen', 'Guru\Presensi\RekapAbsenController@viewRekapAbsen');
             Route::post('post-kbm-rekap-absen', 'Guru\Presensi\RekapAbsenController@actionViewKBMRekapAbsen');
             Route::get('rekap-absen/view-kbm/{id_jadwal_kelas_mp}', 'Guru\Presensi\RekapAbsenController@viewKBMRekapAbsen');
+
+            Route::get('rekap-absen/print/{id_jadwal_kelas_mp}', 'Guru\Presensi\RekapAbsenController@printKBMRekapAbsen');
         });
 
         /** ==== MODUL PENILAIAN ==== **/

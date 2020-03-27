@@ -43,6 +43,34 @@ Route::post('upload', function (Request $request) {
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
 
+Route::group(array('prefix' => 'reporting-dashboard'), function () {
+    Route::get('/', 'SignInController@indexReportingDashboard');
+    Route::get('akademik', function(){
+        return view('reporting-dashboard/akademik');
+    });
+
+    Route::get('bk-kesiswaan', function(){
+        return view('reporting-dashboard/bk-kesiswaan');
+    });
+
+    Route::get('keuangan', function(){
+        return view('reporting-dashboard/keuangan');
+    });
+
+    Route::get('sarpras', function(){
+        return view('reporting-dashboard/sarpras');
+    });
+
+    Route::get('sekretariat', function(){
+        return view('reporting-dashboard/sekretariat');
+    });
+
+    Route::get('sumber-daya', function(){
+        return view('reporting-dashboard/sumber-daya');
+    });
+});
+
+
 Route::group(array('middleware'=> ['token_staff']), function () {
     //
     Route::group(array('prefix' => '{global}'), function () {

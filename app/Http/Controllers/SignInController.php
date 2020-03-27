@@ -21,6 +21,10 @@ use Session;
 
 class SignInController extends BaseController
 {
+    public function indexReportingDashboard(Request $request){
+        return view('reporting-dashboard/index');
+    }
+
     public function indexSignin(Request $request)
     {
         if (Auth::check()) {

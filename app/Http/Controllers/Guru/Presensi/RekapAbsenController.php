@@ -77,6 +77,23 @@ class RekapAbsenController extends BaseController
 
         $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
 
-        return view('guru/presensi/rekap-absen/view-kbm-rekap-absen', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
+        return view('guru/presensi/rekap-absen/view-kbm-rekap-absen', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'id_jadwal_kelas_mp'));
+    }
+
+    public function printKBMRekapAbsen(Request $request, $id_jadwal_kelas_mp)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, null, 'all');
+
+        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+
+        return view('guru/presensi/rekap-absen/print-kbm-rekap-absen', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
     }
 }
