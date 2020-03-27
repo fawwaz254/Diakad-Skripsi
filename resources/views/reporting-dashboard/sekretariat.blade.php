@@ -22,7 +22,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                                DATA SARANA PRASARANA
+                                DATA SEKRETARIAT
                             </h2>
                         </div>
                         <div class="body">
