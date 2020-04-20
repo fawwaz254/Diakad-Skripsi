@@ -219,6 +219,7 @@ class LibPenerimaan
                 })
                 ->where('calon_siswa_baru.id_pilihan_jurusan_1','=',$id_jurusan)
                 ->where('calon_siswa_baru.id_penerimaan','=',$id_penerimaan)
+                ->whereNotNull('calon_siswa_baru.tgl_submit_form')
                 ->orderBy('calon_siswa_baru.nm_c_siswa', 'asc');
 
         return $calon_siswa_baru;
