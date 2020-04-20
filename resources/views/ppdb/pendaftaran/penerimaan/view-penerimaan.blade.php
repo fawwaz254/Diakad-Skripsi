@@ -20,6 +20,7 @@
                                         <th>Penerimaan</th>
                                         <th>Gelombang</th>
                                         <th>Semester</th>
+                                        <th>Biaya Daftar Ulang</th>
                                         <th>Status</th>
                                         <th>Pengumuman</th>
                                         <th>Jenis Penerimaan</th>
@@ -56,6 +57,7 @@
             { data: 'nm_penerimaan', name: 'nm_penerimaan' },
             { data: 'gelombang_penerimaan', name: 'gelombang_penerimaan' },
             { data: 'nm_semester_penerimaan', name: 'nm_semester_penerimaan' },
+            { data: 'biaya_daftar_ulang', name: 'biaya_daftar_ulang' },
             { data: 'status_aktif', name: 'status_aktif'},
             { data: 'pengumuman', name: 'pengumuman'},
             { data: 'jenis_penerimaan', name: 'jenis_penerimaan'},

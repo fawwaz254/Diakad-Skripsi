@@ -109,6 +109,9 @@ class PenerimaanController extends BaseController {
                         return "Aktif";
                     }
                 })
+                ->editColumn('biaya_daftar_ulang', function($item) {
+                    return 'Rp'.number_format($item->biaya_daftar_ulang);
+                })
                 ->addColumn('pengumuman', function($item){
                     // mengambil waktu sekarang
                     $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -162,6 +165,7 @@ class PenerimaanController extends BaseController {
             'is_verifikasi'             => 'required',
             'is_bayar_voucher'          => 'required',
             'nomor_rekening_transfer'   => 'required',
+            'biaya_daftar_ulang'          => 'required',
             'jenis_penerimaan'          => 'required',
             'is_aktif'                  => 'required'
         ]);
@@ -221,6 +225,7 @@ class PenerimaanController extends BaseController {
                 $penerimaan->is_bayar_voucher           = $input->is_bayar_voucher;
                 $penerimaan->nomor_rekening_transfer    = $input->nomor_rekening_transfer;
                 $penerimaan->jenis_penerimaan           = $input->jenis_penerimaan;
+                $penerimaan->biaya_daftar_ulang         = $input->biaya_daftar_ulang;
                 $penerimaan->is_aktif                   = $input->is_aktif;
                 $penerimaan->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
                 $penerimaan->created_by                 = $input->auth_data->pengguna->id_pengguna;
@@ -255,6 +260,7 @@ class PenerimaanController extends BaseController {
                 $penerimaan->is_bayar_voucher           = $input->is_bayar_voucher;
                 $penerimaan->nomor_rekening_transfer    = $input->nomor_rekening_transfer;
                 $penerimaan->jenis_penerimaan           = $input->jenis_penerimaan;
+                $penerimaan->biaya_daftar_ulang         = $input->biaya_daftar_ulang;
                 $penerimaan->is_aktif                   = $input->is_aktif;
                 $penerimaan->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                 $penerimaan->updated_at                 = $now;
