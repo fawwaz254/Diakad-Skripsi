@@ -32,7 +32,7 @@
             <div class="block-header">
                 <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#report/report-pendaftaran')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
             </div>
-            <div class="card">
+            <div class="card is-gap">
                 {{csrf_field()}}
                 <div class="header">
                     <h2>REKAP JURUSAN PER PILIHAN ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
