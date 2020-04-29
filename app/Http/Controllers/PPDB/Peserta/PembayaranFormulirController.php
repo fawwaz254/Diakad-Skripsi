@@ -67,7 +67,7 @@ class PembayaranFormulirController extends Controller
         $auth_data  = $input->auth_data;
 
         $voucher = Voucher::select(
-                        'voucher.id_voucher', 'voucher.id_penerimaan', 'voucher.kode_voucher', 'voucher.pin_password', 'voucher.tgl_ambil', 'voucher.tgl_bayar', 'voucher_tarif.tarif', 'penerimaan.nm_penerimaan', 'voucher.besar_biaya', 'voucher.is_tagih_bank', 'voucher.nomor_transaksi', 'voucher.id_bank', 'voucher.id_bank_via', 'calon_siswa_baru.nm_c_siswa'
+                        'voucher.id_voucher', 'voucher.id_penerimaan', 'voucher.kode_voucher', 'voucher.pin_password', 'voucher.tgl_ambil', 'voucher.tgl_bayar', 'voucher_tarif.tarif', 'penerimaan.nm_penerimaan', 'voucher.besar_biaya', 'voucher.is_tagih_bank', 'voucher.nomor_transaksi', 'voucher.id_bank', 'voucher.id_bank_via', 'voucher.gelombang_penerimaan', 'calon_siswa_baru.nm_c_siswa'
                     )
                     ->where('voucher.kode_voucher', '=', $kode_voucher)                    
                     ->leftJoin('voucher_tarif', 'voucher.id_voucher_tarif', '=', 'voucher_tarif.id_voucher_tarif')

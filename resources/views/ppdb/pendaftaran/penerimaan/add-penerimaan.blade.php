@@ -204,6 +204,14 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Biaya Daftar Ulang
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="biaya_daftar_ulang" required="" aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Status Aktif
                         </h2>
                         <div class="row clearfix">

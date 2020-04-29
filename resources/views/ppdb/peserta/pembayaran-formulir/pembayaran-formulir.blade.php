@@ -78,7 +78,11 @@ select[id="id_bank_via"]:disabled {
                                                 </tr>
                                                 <tr>
                                                     <td>Gelombang Penerimaan</td>
-                                                    <td>{{ $voucher->nm_penerimaan }}</td>
+                                                    @if(!empty($voucher->nm_penerimaan))
+                                                    <td>{{ $voucher->nm_penerimaan }} Gelombang {{ $voucher->gelombang_penerimaan }}</td>
+                                                    @else
+                                                    <td></td>
+                                                    @endif
                                                 </tr>
                                                 <tr>
                                                     <td>Tanggal Ambil</td>
