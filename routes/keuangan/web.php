@@ -258,6 +258,20 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('action-input-pengeluaran/{mode}/{id}', 'Keuangan\PengeluaranSekolah\InputPengeluaranController@actionInputPengeluaran');
         });
 
+        /** ==== MODUL SIM ==== **/
+        // url: /keuangan/sim
+        Route::group(array('prefix' => 'sim'), function () {
+            // MENU SPP
+            Route::group(array('prefix' => 'spp'), function () {
+                Route::get('/', 'Keuangan\SIM\SppController@viewMenuSpp');
+            });
+
+            // MENU PENGELUARAN
+            Route::group(array('prefix' => 'pengeluaran'), function () {
+                Route::get('/', 'Keuangan\SIM\PengeluaranController@viewMenuPengeluaran');
+            });
+        });
+
         /** ==== MODUL LAPORAN KEUNGAN ==== **/
         // url: /keuangan/laporan-keuangan
         Route::group(array('prefix' => 'laporan-keuangan'), function () {
