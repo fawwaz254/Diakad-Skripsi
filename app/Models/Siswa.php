@@ -40,21 +40,21 @@ class Siswa extends Model
 
     public function pengguna()
     {
-        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
     public function kelas()
     {
-        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
 
     public function tagihan_biaya()
     {
-        return $this->hasMany('App\Models\TagihanBiaya', 'id_siswa');
+        return $this->hasMany(TagihanBiaya::class, 'id_siswa');
     }
 
     public function wali_murid()
     {
-        return $this->belongsTo('App\Models\WaliMurid', 'id_wali_murid');
+        return $this->belongsTo(WaliMurid::class, 'id_wali_murid');
     }
 }

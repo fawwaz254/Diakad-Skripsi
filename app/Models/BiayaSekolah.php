@@ -34,7 +34,10 @@ class BiayaSekolah extends Model
 
     protected $guarded = [];
 
-
+    public function detail_biaya()
+    {
+        return $this->hasMany(DetailBiaya::class, 'id_biaya_sekolah');
+    }
 
 
 

@@ -264,6 +264,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU SPP
             Route::group(array('prefix' => 'spp'), function () {
                 Route::get('/', 'Keuangan\SIM\SppController@viewMenuSpp');
+                Route::get('cari', 'Keuangan\SIM\SppController@viewMenuCari');
+                Route::post('cari/datatables', 'Keuangan\SIM\SppController@datatablesMenuCari');
             });
 
             // MENU PENGELUARAN

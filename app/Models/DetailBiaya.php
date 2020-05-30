@@ -45,4 +45,9 @@ class DetailBiaya extends Model
     {
         return $this->belongsTo('App\Models\Biaya', 'id_biaya');
     }
+
+    public function bulan()
+    {
+        return $this->belongsTo(Bulan::class, 'id_bulan');
+    }
 }
