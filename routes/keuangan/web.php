@@ -274,6 +274,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', 'Keuangan\SIM\SppController@viewMenuPemasukan');
 
                 Route::get('penerimaan', 'Keuangan\SIM\SppController@viewMenuPenerimaan');
+                Route::get('tunggakan', 'Keuangan\SIM\SppController@viewMenuTunggakan');
             });
 
             // MENU PENGELUARAN

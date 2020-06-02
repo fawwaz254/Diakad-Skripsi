@@ -177,4 +177,19 @@ class SppController extends BaseController
         
         return view('keuangan/sim/spp/view-menu-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
     }
+
+    public function viewMenuTunggakan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        if(empty($tahun_akademik_semester)){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+        
+        return view('keuangan/sim/spp/view-menu-tunggakan', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
+    }
 }

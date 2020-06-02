@@ -8,7 +8,7 @@
                 <li><a href="javascript:void(0);" class=" waves-effect waves-block">Rincian SPP</a></li>
                 <li><a href="javascript:void(0);" class=" waves-effect waves-block">Rincian UNAS</a></li>
                 <li><a href="dashboard#sim/spp/penerimaan" class="target-link waves-effect waves-block">Penerimaan Lain-Lain</a></li>
-                <li><a href="javascript:void(0);" class=" waves-effect waves-block">Tunggakan Tahun Lalu</a></li>
+                <li><a href="dashboard#sim/spp/tunggakan" class="target-link waves-effect waves-block">Tunggakan Tahun Lalu</a></li>
             </ul>
         </li>
         <li><a href="dashboard#sim/spp/pemasukan" class="target-link">PEMASUKAN</a></li>
