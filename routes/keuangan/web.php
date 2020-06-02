@@ -266,6 +266,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('/', 'Keuangan\SIM\SppController@viewMenuSpp');
                 Route::get('cari', 'Keuangan\SIM\SppController@viewMenuCari');
                 Route::post('cari/datatables', 'Keuangan\SIM\SppController@datatablesMenuCari');
+
+                Route::get('pembayaran', 'Keuangan\SIM\SppController@viewMenuPembayaran');
+                Route::get('pembayaran/{id_semester}/{id_kelas}', 'Keuangan\SIM\SppController@viewMenuPembayaran');
+
+                Route::get('pemasukan', 'Keuangan\SIM\SppController@viewMenuPemasukan');
+                Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', 'Keuangan\SIM\SppController@viewMenuPemasukan');
+
+                Route::get('penerimaan', 'Keuangan\SIM\SppController@viewMenuPenerimaan');
             });
 
             // MENU PENGELUARAN

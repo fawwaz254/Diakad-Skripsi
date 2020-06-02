@@ -43,4 +43,9 @@ class TagihanBiaya extends Model
     {
         return $this->belongsTo('App\Models\Siswa', 'id_siswa');
     }
+
+    public function kelas()
+    {
+        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+    }
 }

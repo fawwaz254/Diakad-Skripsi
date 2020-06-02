@@ -53,6 +53,16 @@ class LibDataAkademik
         return $semester;
     }
 
+    static function fetchDataTahunAjaranSemester($auth_data) {
+
+        $semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                        ->orderBy('tahun_ajaran', 'asc')
+                        ->distinct()
+                        ->get(['thn_akademik_semester', 'tahun_ajaran']);
+
+        return $semester;
+    }
+
     static function fetchDataNmSemester($auth_data) {
 
         $semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)
