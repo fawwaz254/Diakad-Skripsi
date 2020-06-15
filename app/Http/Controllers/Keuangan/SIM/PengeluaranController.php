@@ -10,6 +10,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Guru;
 use App\Models\Rapb;
+use App\Models\Realisasi;
 use App\Models\Semester;
 use App\Models\Staff;
 use App\Models\SubkategoriRapb;
@@ -36,11 +37,18 @@ class PengeluaranController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        if(empty($tahun_akademik_semester)){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
         $data_subkategori = SubkategoriRapb::whereHas('kategori', function($q){
             $q->where('tipe_kategori_rapb', 2);
         })->get();
 
-        return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data', 'data_subkategori'));
+        return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori'));
     }
 
     public function viewMenuTarget(Request $request, $tahun_akademik_semester = null)
@@ -193,6 +201,119 @@ class PengeluaranController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/pengeluaran/target',
+                    'message' => 'Success'
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status' => 300,
+                    'status_text' => 'Failed',
+                    'message' => 'Failed'
+                ]);
+            }
+        }
+    }
+
+    public function viewMenuTampilkan(Request $request, $tahun_akademik_semester = null)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        if(empty($tahun_akademik_semester)){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        return view('keuangan/sim/pengeluaran/view-menu-tampilkan', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
+    }
+
+    public function datatablesMenuTampilkan(Request $request){
+        $input = (object) $request->input();
+
+        $tahun = $input->tahun;
+        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+
+        $list_data = Realisasi::with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function($q){
+            $q->where('tipe_kategori_rapb', 2);
+        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
+
+        return Datatables::of($list_data)
+                    ->editColumn('tgl_realisasi', function ($item) {
+                        return date_format(date_create($item->tgl_realisasi), "d M Y");
+                    })
+                    ->editColumn('dana_realisasi', function ($item){
+                        return 'Rp'.number_format($item->dana_realisasi);
+                    })
+                    ->make(true);
+    }
+
+    public function actionSaveInputPengeluaran(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'tahun' =>'required',
+            'tgl_realisasi' =>'required',
+            'nm_realisasi' =>'required',
+            'id_subkategori_rapb' =>'required',
+            'dana_realisasi' =>'required',
+        ]);
+  
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }else{
+            $now = Carbon::today();
+
+            $tahun_akademik_semester = $input->tahun;
+            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+
+            $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first();
+
+            $tgl_realisasi = Carbon::parse($input->tgl_realisasi);
+            $id_bulan = $tgl_realisasi->month;
+            
+            if($id_bulan < 7){
+                $id_semester = $semester_selesai->id_semester;
+            }else{
+                $id_semester = $semester_mulai->id_semester;
+            }
+
+            DB::beginTransaction();
+            try {
+
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $realisasi                               = new Realisasi;
+                $realisasi->id_realisasi                 = $id;
+                $realisasi->id_semester_realisasi        = $id_semester;
+                $realisasi->id_rapb                      = $rapb->id_rapb;
+                if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
+                }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
+                }
+                $realisasi->nm_realisasi                 = $input->nm_realisasi;
+                $realisasi->termin_dana_realisasi        = 1;
+                $realisasi->is_hutang_realisasi          = 0;
+                $realisasi->dana_realisasi               = $input->dana_realisasi;
+                $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi),"Y-m-d");
+                $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 202,
+                    'status_text' => 'Success',
+                    'path' => 'sim/pengeluaran/tampilkan',
                     'message' => 'Success'
                 ]);
             } catch (\Exception $e) {
