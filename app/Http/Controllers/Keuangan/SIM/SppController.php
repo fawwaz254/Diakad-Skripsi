@@ -19,6 +19,7 @@ use App\Models\Siswa;
 use App\Models\SubkategoriRapb;
 use App\Models\TagihanBiaya;
 use App\Models\TutupBukuBulananBiaya;
+use App\Models\TutupBukuBulananKas;
 use App\Models\TutupBukuTahunanBiaya;
 
 use App\Libraries\Pendidikan\LibKelas;
@@ -102,7 +103,11 @@ class SppController extends BaseController
         $bulan = Bulan::find($id_bulan);
         $sekolah = $input->auth_data->sekolah_data;
 
-        return view('keuangan/sim/spp/lap-bulanan-excel', compact('data_tutup_buku_bulanan_biaya', 'data_realisasi', 'bulan', 'tahun', 'sekolah'));
+        $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first();
+        $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first();
+        $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first();
+
+        return view('keuangan/sim/spp/lap-bulanan-excel', compact('data_tutup_buku_bulanan_biaya', 'data_realisasi', 'bulan', 'tahun', 'sekolah', 'tutup_buku_tahun_ini', 'tutup_buku_kas_bulan_ini', 'tutup_buku_kas_bulan_lalu'));
     }
 
     public function actionRefreshLapBulanan(Request $request, $tahun_akademik_semester = null, $id_bulan = null){
@@ -292,24 +297,96 @@ class SppController extends BaseController
             }
 
             DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
 
-            $pembayaran_tunggakan_tahun_lalu = TutupBukuBulananBiaya::where([
+            return response()->json([
+                'status_code' => 300,
+                'status_text' => 'Failed',
+                'message' => $e->getMessage(). ' in Line '.$e->getLine()
+                // 'message' => json_encode($list_data_tagihan)
+            ]);
+        }
+
+        DB::beginTransaction();
+        try {
+            $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
                 'id_semester_mulai' => $id_semester_mulai,
                 'id_semester_selesai' => $id_semester_selesai,
                 'id_bulan' => $id_bulan
-            ])->sum('jml_pembayaran_biaya_tahun_lalu');
-
+            ])->get();
+    
+            /* INSERT TUTUP BUKU TAHUNAN BIAYA */
+            $pembayaran_tunggakan_tahun_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
+    
             $tahun_lalu      = $tahun - 1;
             $id_semester_mulai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'1')->first()->id_semester;
             $id_semester_selesai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'2')->first()->id_semester;
+    
+            $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
+    
+            if($tutup_buku_tahunan_biaya_now = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first()){
+                $tutup_buku_tahunan_biaya_now->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+            }else{
+                $tutup_buku_tahunan_biaya_now = new TutupBukuTahunanBiaya;
+                $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya  = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $tutup_buku_tahunan_biaya_now->id_semester_mulai            = $id_semester_mulai;
+                $tutup_buku_tahunan_biaya_now->id_semester_selesai          = $id_semester_selesai;
+                $tutup_buku_tahunan_biaya_now->created_by                   = $input->auth_data->pengguna->id_pengguna;
+            }
+            
+            $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
+            $tutup_buku_tahunan_biaya_now->save();
+            /* END INSERT TUTUP BUKU TAHUNAN BIAYA */
+    
+            /* INSERT TUTUP BUKU BULANAN KAS */
+            $pembayaran_tunggakan_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya');
+            $pembayaran_tunggakan_bulan_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu');
+    
+            $data_realisasi = Realisasi::selectRaw('
+                                        nm_kategori_rapb, 
+                                        kode_subkategori_rapb,
+                                        nm_subkategori_rapb,
+                                        tipe_kategori_rapb,
+                                        SUM(dana_realisasi) as total_realisasi,
+                                        dana_perkiraan_rapb')
+                                    ->join('rapb', function($q){
+                                        $q->on('rapb.id_rapb', '=', 'realisasi.id_rapb')
+                                            ->whereNull('rapb.deleted_at');
+                                    })
+                                    ->join('subkategori_rapb', function($q){
+                                        $q->on('subkategori_rapb.id_subkategori_rapb', '=' ,'rapb.id_subkategori_rapb')
+                                            ->whereNull('subkategori_rapb.deleted_at');
+                                    })
+                                    ->join('kategori_rapb', function($q){
+                                        $q->on('kategori_rapb.id_kategori_rapb', '=' ,'subkategori_rapb.id_kategori_rapb')
+                                            ->whereNull('kategori_rapb.deleted_at');
+                                    })
+                                    ->whereIn('id_semester_realisasi', [ $id_semester_mulai, $id_semester_selesai])
+                                    ->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')
+                                    ->get();
+    
+            $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first();
+    
+            if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first()){
+                $tutup_buku_bulanan_kas_now->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+            }else{
+                $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
+                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $tutup_buku_bulanan_kas_now->id_semester_mulai            = $id_semester_mulai;
+                $tutup_buku_bulanan_kas_now->id_semester_selesai          = $id_semester_selesai;
+                $tutup_buku_bulanan_kas_now->id_bulan                     = $id_bulan;
+                $tutup_buku_bulanan_kas_now->created_by                   = $input->auth_data->pengguna->id_pengguna;
+            }
+            $tutup_buku_bulanan_kas_now->kas_spp                = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu;
+            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
+            $tutup_buku_bulanan_kas_now->save();
+            /* END INSERT TUTUP BUKU BULANAN KAS */
 
-            $tutup_buku_tahunan_biaya = TutupBukuTahunanBiaya::where([
-                'id_semester_mulai' => $id_semester_mulai_tahun_lalu,
-                'id_semester_selesai' => $id_semester_selesai_tahun_lalu
-            ])->first();
-
-            $tutup_buku_tahunan_biaya->jml_tunggakan_biaya = $tutup_buku_tahunan_biaya->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
-            $tutup_buku_tahunan_biaya->save();
+            DB::commit();
+            
 
             return response()->json([
                 'status_code' => 200,
@@ -326,7 +403,6 @@ class SppController extends BaseController
                 // 'message' => json_encode($list_data_tagihan)
             ]);
         }
-
     }
 
     public function datatablesMenuCari(Request $request)

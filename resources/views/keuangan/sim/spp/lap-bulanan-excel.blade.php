@@ -110,44 +110,49 @@
 
             <td>Tunggakan tahun lalu</td>
 
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') )}}</td>
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
+            <td class="text-right">{{number_format( $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
 
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya'))}}</td>
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') )}}</td>
+            <td class="text-right">{{number_format( $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         <tr valign=top>
             <td class="no-bordered" colspan=3></td>
 
             <td class="test-bold">TOTAL</td>
 
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') )}}</td>
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
 
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya'))}}</td>
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         <tr valign=top>
             <td class="no-bordered" colspan=5></td>
             <td class="text-bold" colspan=2>Jumlah Pemasukan</td>
-            <td class="text-right">27835000</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         @foreach($data_realisasi_pemasukan as $realisasi)
         <tr valign=top>
             <td class="no-bordered" colspan=5></td>
-            <td colspan=2>Pinjaman Dana dari</td>
+            <td class="text-right">{{$realisasi->kode_subkategori_rapb}}</td>
+            <td>{{$realisasi->nm_subkategori_rapb}}</td>
             <td class="text-right">{{number_format($realisasi->total_realisasi)}}</td>
         </tr>
         @endforeach
         <tr valign=top>
             <td class="no-bordered" colspan=5></td>
             <td class="text-bold" colspan=2>Saldo Kas Bulan Lalu</td>
-            <td class="text-right">19296334</td>
+            <td class="text-right">{{ $tutup_buku_kas_bulan_lalu->kas_akhir_bulan }}</td>
         </tr>
         <tr valign=top>
             <td class="no-bordered" colspan=5></td>
             <td class="text-bold" colspan=2>Kas tersedia dalam bulan ini</td>
-            <td class="text-right">48131334</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + 
+                                    $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + 
+                                    $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') +
+                                    $data_realisasi_pemasukan->sum('total_realisasi') + 
+                                    $tutup_buku_kas_bulan_lalu->kas_akhir_bulan )}}</td>
         </tr>
     </table>
     <br>
@@ -190,7 +195,7 @@
         </tr>
         <tr valign=top>
             <td colspan=5>SALDO AKHIR BULAN</td>
-            <td class="text-right">3795987</td>
+            <td class="text-right">{{number_format( $tutup_buku_kas_bulan_ini->kas_akhir_bulan )}}</td>
         </tr>
     </table>
     <br>
