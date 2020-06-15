@@ -4,7 +4,7 @@
         <li><a href="dashboard#sim/pengeluaran/input" class="target-link">INPUT</a></li>
         <li><a href="javascript:void(0);">TAMPILKAN</a></li>
         <li><a href="javascript:void(0);">LAPORAN</a></li>
-        <li><a href="javascript:void(0);">TARGET</a></li>
+        <li><a href="dashboard#sim/pengeluaran/target" class="target-link">TARGET</a></li>
         <li><a href="javascript:void(0);">PUNGUTAN</a></li>
         <li><a href="javascript:void(0);">SETTING</a></li>
     </ol>

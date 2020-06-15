@@ -13,6 +13,7 @@ use App\Models\Bulan;
 use App\Models\DetailBiaya;
 use App\Models\PembayaranBiaya;
 use App\Models\Kelas;
+use App\Models\Rapb;
 use App\Models\Realisasi;
 use App\Models\Semester;
 use App\Models\Siswa;
@@ -77,16 +78,16 @@ class SppController extends BaseController
             $q->where('tipe_kategori_rapb', 2);
         })->get()->pluck('id_subkategori_rapb');
 
-        $data_realisasi = Realisasi::selectRaw('
+        $data_realisasi = Rapb::selectRaw('
                                         nm_kategori_rapb, 
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
                                         tipe_kategori_rapb,
                                         SUM(dana_realisasi) as total_realisasi,
                                         dana_perkiraan_rapb')
-                                    ->join('rapb', function($q){
-                                        $q->on('rapb.id_rapb', '=', 'realisasi.id_rapb')
-                                            ->whereNull('rapb.deleted_at');
+                                    ->leftJoin('realisasi', function($q){
+                                        $q->on('realisasi.id_rapb', '=', 'rapb.id_rapb')
+                                            ->whereNull('realisasi.deleted_at');
                                     })
                                     ->join('subkategori_rapb', function($q){
                                         $q->on('subkategori_rapb.id_subkategori_rapb', '=' ,'rapb.id_subkategori_rapb')
@@ -96,7 +97,8 @@ class SppController extends BaseController
                                         $q->on('kategori_rapb.id_kategori_rapb', '=' ,'subkategori_rapb.id_kategori_rapb')
                                             ->whereNull('kategori_rapb.deleted_at');
                                     })
-                                    ->whereIn('id_semester_realisasi', [ $id_semester_mulai, $id_semester_selesai])
+                                    ->where('id_semester_mulai', $id_semester_mulai)
+                                    ->where('id_semester_selesai', $id_semester_selesai)
                                     ->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')
                                     ->get();
         

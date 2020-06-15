@@ -289,6 +289,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('/', 'Keuangan\SIM\PengeluaranController@viewMenuPengeluaran');
 
                 Route::get('input', 'Keuangan\SIM\PengeluaranController@viewMenuInput');
+
+                Route::get('target', 'Keuangan\SIM\PengeluaranController@viewMenuTarget');
+                Route::post('target/datatables', 'Keuangan\SIM\PengeluaranController@datatablesMenuTarget');
+                Route::get('target/edit/{tahun}/{id}', 'Keuangan\SIM\PengeluaranController@viewMenuEditTarget');
+                Route::post('target/save', 'Keuangan\SIM\PengeluaranController@actionSaveEditTarget');
             });
         });
 
