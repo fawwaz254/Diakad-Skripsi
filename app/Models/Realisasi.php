@@ -31,7 +31,10 @@ class Realisasi extends Model
 
     protected $guarded = [];
 
-
+    public function rapb()
+    {
+        return $this->belongsTo(Rapb::class, 'id_rapb');
+    }
 
 
 

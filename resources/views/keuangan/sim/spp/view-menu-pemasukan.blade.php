@@ -57,8 +57,7 @@
                                     <th colspan="3">Bulan ini</th>
                                     <th colspan="3">Tunggakan bulan lalu yang masuk bulan ini</th>
                                     <th rowspan="2">Jumlah</th>
-                                    <th rowspan="2">Tunggakan Tahun Lalu Masuk</th>
-                                    <th>Tunggakan Tahun Lalu Masuk Yang Masuk Bulan Ini</th>
+                                    
                                 </tr>
                                 <tr>
                                     <th>I</th>
@@ -67,7 +66,6 @@
                                     <th>I</th>
                                     <th>II</th>
                                     <th>III</th>
-                                    <th>Rp 0</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,6 +112,12 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="row clearfix">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <a class="btn btn-block bg-btn-submit waves-effect" target="_blank" href="{{url('keuangan/sim/spp/pemasukan/'.$tahun_akademik_semester.'/'.$id_bulan.'/refresh')}}">Refresh</span></a>
+                                <a class="btn btn-block bg-btn-submit waves-effect" target="_blank" href="{{url('keuangan/sim/spp/pemasukan/'.$tahun_akademik_semester.'/'.$id_bulan.'/report')}}">Download Laporan Bulanan</span></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -272,14 +272,23 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('pemasukan', 'Keuangan\SIM\SppController@viewMenuPemasukan');
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', 'Keuangan\SIM\SppController@viewMenuPemasukan');
+                
+                Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/report', 'Keuangan\SIM\SppController@indexDownloadLapBulanan');
+                Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/refresh', 'Keuangan\SIM\SppController@actionRefreshLapBulanan');
+                // Route::post('refresh/monthly-report', 'Keuangan\SIM\SppController@actionRefreshLapBulanan');
 
                 Route::get('penerimaan', 'Keuangan\SIM\SppController@viewMenuPenerimaan');
                 Route::get('tunggakan', 'Keuangan\SIM\SppController@viewMenuTunggakan');
+
+                Route::get('setting', 'Keuangan\SIM\SppController@viewMenuSetting');
+                Route::post('setting/datatables', 'Keuangan\SIM\SppController@datatablesMenuSetting');
             });
 
             // MENU PENGELUARAN
             Route::group(array('prefix' => 'pengeluaran'), function () {
                 Route::get('/', 'Keuangan\SIM\PengeluaranController@viewMenuPengeluaran');
+
+                Route::get('input', 'Keuangan\SIM\PengeluaranController@viewMenuInput');
             });
         });
 

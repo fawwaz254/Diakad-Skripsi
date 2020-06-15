@@ -22,4 +22,12 @@ class PengeluaranController extends BaseController
         
         return view('keuangan/sim/pengeluaran/view-menu-pengeluaran', compact('auth_data'));
     }
+
+    public function viewMenuInput(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data'));
+    }
 }

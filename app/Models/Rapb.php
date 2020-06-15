@@ -32,7 +32,10 @@ class Rapb extends Model
 
     protected $guarded = [];
 
-
+    public function subkategori()
+    {
+        return $this->belongsTo(SubkategoriRapb::class, 'id_subkategori_rapb');
+    }
 
 
 

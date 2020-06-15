@@ -24,6 +24,6 @@
                 <li><a href="javascript:void(0);" class=" waves-effect waves-block">Input Belum Masuk Keseluruhan</a></li>
             </ul>
         </li>
-        <li><a href="javascript:void(0);">SETTING</a></li>
+        <li><a href="dashboard#sim/spp/setting" class="target-link">SETTING</a></li>
     </ol>
 </div>
