@@ -1,39 +1,39 @@
 <style>
     .tdbg-1{
-        background:aquamarine;
+        background: #efee9d;
     }
     .tdbg-2{
-        background:yellowgreen;
+        background: #d1eaa3;
     }
     .tdbg-3{
-        background:yellow;
+        background: #dbc6eb;
     }
     .tdbg-4{
-        background:chartreuse;
+        background: #abc2e8;
     }
     .tdbg-5{
-        background:cadetblue;
+        background: #ddf3f5;
     }
     .tdbg-6{
-        background:chocolate;
+        background: #f2aaaa;
     }
     .tdbg-7{
-        background:darkgray;
+        background: #f6def6;
     }
     .tdbg-8{
-        background:red;
+        background: #f4ebc1;
     }
     .tdbg-9{
-        background:plum;
+        background: #a6dcef;
     }
     .tdbg-10{
-        background:olivedrab;
+        background: #f2aaaa;
     }
     .tdbg-11{
-        background:blue;
+        background: #ddf3f5;
     }
     .tdbg-12{
-        background:hotpink;
+        background: #a0c1b8;
     }
 </style>
 <div class="container-fluid">
@@ -156,8 +156,8 @@
                                         @elseif($tagihan->is_tagih == 0)
                                         <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
                                             <br>
-                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
-                                                <i class="material-icons">close</i>
+                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
+                                                <i class="material-icons" style="left: -7px; top: -7px;">close</i>
                                             </button>
                                         </td>
                                         @endif

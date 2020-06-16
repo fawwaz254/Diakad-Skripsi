@@ -25,6 +25,9 @@ class KategoriRapb extends Model
         'nm_kategori_rapb',
         'deskripsi_kategori_rapb',
         'tipe_kategori_rapb',
+        'jenis_kategori_rapb',
+        'is_rutin',
+        'id_sekolah',
         'created_by',
         'updated_by',
         'deleted_by'
@@ -32,7 +35,13 @@ class KategoriRapb extends Model
 
     protected $guarded = [];
 
-
+    public function jenisToText(){
+        if($this->jenis_kategori_rapb == 1){
+            return 'SPP';
+        }else{
+            return 'Non-SPP';
+        }
+    }
 
 
 

@@ -39,98 +39,26 @@
                         <table class="table table-bordered table-striped table-hover dataTable display nowrap" id="primary_table">
                             <thead>
                                 <tr>
-                                    <th>Pediode </th>
+                                    <th>Bulan </th>
                                     <th>Jumlah Pemasukan</th>
-                                    <th>Pinjam dana dari</th>
-                                    <th>Subsidi BOS, BKSM</th>
-                                    <th>Penerimaan lain dari</th>
+                                    @foreach($data_subkategori as $subkategori)
+                                    <th>{{$subkategori->nm_subkategori_rapb}}</th>
+                                    @endforeach
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($data_bulan as $bulan)
+                                @php
+                                    $all_realisasi_this_month = collect($data_realisasi->where('month', $bulan->id_bulan)->all());
+                                @endphp
                                 <tr>
-                                    <td>Bulan Juli </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
+                                    <td>Bulan {{$bulan->nm_bulan}}</td>
+                                    <td>{{number_format($all_realisasi_this_month->sum('dana_realisasi'))}}</td>
+                                    @foreach($data_subkategori as $subkategori)
+                                    <td>{{number_format($all_realisasi_this_month->where('rapb.subkategori.id_subkategori_rapb', $subkategori->id_subkategori_rapb)->sum('dana_realisasi'))}}</td>
+                                    @endforeach
                                 </tr>
-                                <tr>
-                                    <td>Bulan Agustus </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan September </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Oktober </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan November </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Desember </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Januari </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Februari </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Maret </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan April </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Mei </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                                <tr>
-                                    <td>Bulan Juni </td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -143,8 +71,7 @@
 <script>
 
 function filterAction(){
-    var bulan = $('select[name=bulan]').val();
     var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
-    loadURI('sim/spp/pemasukan/'+tahun_akademik_semester+'/'+bulan);
+    loadURI('sim/spp/penerimaan/'+tahun_akademik_semester);
 }
 </script>

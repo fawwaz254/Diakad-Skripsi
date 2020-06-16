@@ -1,39 +1,39 @@
 <style>
     .tdbg-1{
-        background:aquamarine;
+        background: #efee9d;
     }
     .tdbg-2{
-        background:yellowgreen;
+        background: #d1eaa3;
     }
     .tdbg-3{
-        background:yellow;
+        background: #dbc6eb;
     }
     .tdbg-4{
-        background:chartreuse;
+        background: #abc2e8;
     }
     .tdbg-5{
-        background:cadetblue;
+        background: #ddf3f5;
     }
     .tdbg-6{
-        background:chocolate;
+        background: #f2aaaa;
     }
     .tdbg-7{
-        background:darkgray;
+        background: #f6def6;
     }
     .tdbg-8{
-        background:red;
+        background: #f4ebc1;
     }
     .tdbg-9{
-        background:plum;
+        background: #a6dcef;
     }
     .tdbg-10{
-        background:olivedrab;
+        background: #f2aaaa;
     }
     .tdbg-11{
-        background:blue;
+        background: #ddf3f5;
     }
     .tdbg-12{
-        background:hotpink;
+        background: #a0c1b8;
     }
 </style>
 <div class="container-fluid">
@@ -52,17 +52,15 @@
                     <div class="row clearfix">
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
-                                Semester
+                                Tahun Ajaran
                             </h2>
-                            <select class="form-control show-tick" name="semester">
-                            @foreach($data_semester as $data)
-                            <option value="{{$data->id_semester}}" @if((empty($id_semester) && $data->is_aktif_semester == 1) or (!empty($id_semester) && $id_semester == $data->id_semester)) selected @endif>
-                                {{$data->tahun_ajaran}}
-                                {{$data->nm_semester}} 
-                                @if($data->is_aktif_semester == 1)
-                                    (Aktif)
-                                @endif
-                            </option>
+                            <select class="form-control show-tick" name="tahun_akademik_semester">
+                            @foreach($data_semester as $semester)
+                                <option value="{{$semester->thn_akademik_semester}}" 
+                                    @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                        selected
+                                    @endif>
+                                {{$semester->tahun_ajaran}}</option>
                             @endforeach
                             </select>
                         </div>
@@ -80,7 +78,7 @@
                             </select>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Kelas/Semester</span></button>
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Tahun Ajaran/kelas</span></button>
                         </div>
                     </div>
                 </div>
@@ -152,8 +150,8 @@
                                         @elseif($tagihan->is_tagih == 0)
                                         <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
                                             <br>
-                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
-                                                <i class="material-icons">close</i>
+                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
+                                                <i class="material-icons" style="left: -7px; top: -7px;">close</i>
                                             </button>
                                         </td>
                                         @endif
@@ -230,7 +228,7 @@
                     url: delete_pembayaran_url + '/' + item.attr('data-id'),
                     success: function (response) {
                         vex.dialog.alert(response.message);
-                        loadContent('sim/spp/pembayaran/{{$id_semester}}/{{$id_kelas}}');
+                        loadContent('sim/spp/pembayaran/{{$tahun_akademik_semester}}/{{$id_kelas}}');
                     },
                     complete: function() {
                         $('button').removeAttr('disabled', 'disabled');
@@ -244,8 +242,8 @@
 
     function filterAction(){
         var kelas = $('select[name=kelas]').val();
-        var semester = $('select[name=semester]').val();
-        loadURI('sim/spp/pembayaran/'+semester+'/'+kelas);
+        var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
+        loadURI('sim/spp/pembayaran/'+tahun_akademik_semester+'/'+kelas);
     }
 </script>
 <script>

@@ -418,4 +418,20 @@ class PembayaranSiswaController extends BaseController
             }
         }
     }
+
+    public function actionDeleteTagihanSiswa(Request $request, $id){
+        // make object to find id
+        if($tagihanBiaya                   = TagihanBiaya::find($id)){
+            $tagihanBiaya->is_tagih         = 0;
+            $tagihanBiaya->deleted_by       = $input->auth_data->pengguna->id_pengguna;
+            $tagihanBiaya->save();
+    
+            $tagihanBiaya->delete();
+        }
+
+        return [
+            'status' => 203, // SUCCESS AND LOAD TABLE
+            'message' => 'Delete Tagihan Siswa successfully'
+        ];
+    }
 }

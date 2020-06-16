@@ -8,57 +8,39 @@
                     </h2>
                 </div>
                 @include('keuangan/sim/spp/partials/header-card-menu')
-                @php
-                $semester_aktif = $data_semester->firstWhere('is_aktif_semester', 1);
-                $start_semester = $data_semester->firstWhere('kode_semester', $semester_aktif->thn_akademik_semester.'1');
-                $end_semester = $data_semester->firstWhere('kode_semester', $semester_aktif->thn_akademik_semester.'2');
-                @endphp
             </div>
             <div class="card">
                 <div class="body">
                     <div class="row clearfix">
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
-                                Semester awal
+                                Tahun Ajaran
                             </h2>
-                            <select class="form-control show-tick" name="start_semester">
+                            <select class="form-control show-tick" name="tahun_akademik_semester">
                             @foreach($data_semester as $semester)
-                                <option value="{{$semester->id_semester}}" 
-                                @if(!empty($start_semester))
-                                    @if($start_semester->id_semester == $semester->id_semester)
+                                <option value="{{$semester->thn_akademik_semester}}" 
+                                    @if($semester->thn_akademik_semester == $tahun_akademik_semester)
                                         selected
-                                    @endif
-                                @else
-                                    @if($semester->is_aktif_semester == 1)
-                                        selected
-                                    @endif
-                                @endif>
-                                {{$semester->tahun_ajaran}} ({{$semester->nm_semester}})</option>
+                                    @endif>
+                                {{$semester->tahun_ajaran}}</option>
                             @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
-                                Semester akhir
+                                Kelas
                             </h2>
-                            <select class="form-control show-tick" name="end_semester">
-                            @foreach($data_semester as $semester)
-                                <option value="{{$semester->id_semester}}" 
-                                @if(!empty($end_semester))
-                                    @if($end_semester->id_semester == $semester->id_semester)
-                                        selected
-                                    @endif
-                                @else
-                                    @if($semester->is_aktif_semester == 1)
-                                        selected
-                                    @endif
-                                @endif>
-                                {{$semester->tahun_ajaran}} ({{$semester->nm_semester}})</option>
+                            <select class="form-control show-tick" name="kelas">
+                            <option value="">Semua kelas</option>
+                            @foreach($data_kelas as $data)
+                            <option value="{{$data->id_kelas}}">
+                                {{$data->nm_kelas}}
+                            </option>
                             @endforeach
                             </select>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Semester</span></button>
+                            <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Tahun Ajaran/kelas</span></button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -93,8 +75,8 @@ var primary_table = $('#primary_table').DataTable({
         url: datatable_url,
         type: 'POST',
         data: function(params){
-            params.start_semester = $('select[name=start_semester]').val();
-            params.end_semester = $('select[name=end_semester]').val();
+            params.kelas = $('select[name=kelas]').val();
+            params.tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
         },
     },
     columns: [

@@ -130,6 +130,7 @@
     var datatable_tagihan_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables-tagihan/' + id_pengguna + '/' + nis_nama_siswa;
     var datatable_riwayat_bayar_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables-riwayat-bayar/' + id_pengguna;
     var detail_tagihan_siswa_url    = role_url + '#' + modul_url + '/' + 'pembayaran-siswa/view-detail-tagihan-siswa';
+    var delete_tagihan_siswa        = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tagihan-siswa/delete';
     var delete_pembayaran_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/delete';
     var lunas_url                   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
 
@@ -158,8 +159,11 @@
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
                     '    <i class="material-icons">attach_money</i>'+
                     '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
+                    '<button class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">money</i>'+
+                    '</button>'+
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTagihan(this)" data-id="'+data.id+'">'+
+                    '    <i class="material-icons">close</i>'+
                     '</button>';
                 }
             }
@@ -173,8 +177,6 @@
         } );
     } ).draw();
 
-
-    // datatable jadwal UAS
     var primary_table_riwayat_bayar = $('#primary_table_riwayat_bayar').DataTable({
         processing: true,
         serverSide: true,
@@ -234,6 +236,52 @@
                 $.ajax({
                     type: "POST",
                     url: delete_url + '/' + item.attr('data-id'),
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table_tagihan.ajax.reload(null, false);
+                            primary_table_riwayat_bayar.ajax.reload(null, false);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+    function deleteActionTagihan(delete_url, element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to delete this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: delete_tagihan_siswa + '/' + item.attr('data-id'),
                     success: function (response) {
                         if(response.status == 200){
                             vex.dialog.alert(response.message);

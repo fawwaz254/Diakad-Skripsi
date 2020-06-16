@@ -18,6 +18,7 @@
                                         <th>Kode</th>
                                         <th>Nama Kategori</th>
                                         <th>Deskripsi</th>
+                                        <th>SPP/Non-SPP</th>
                                         <th>Sub-Kategori</th>
                                         <th>Action</th>
                                     </tr>
@@ -51,6 +52,7 @@ responsive: true,
             { data: 'kode_kategori_rapb', name: 'kode_kategori_rapb' },
             { data: 'nm_kategori_rapb', name: 'nm_kategori_rapb' },
             { data: 'deskripsi_kategori_rapb', name: 'deskripsi_kategori_rapb' },
+            { data: 'jenis_kategori_rapb', searchable: false, orderable: false },
             { data: 'subkategori', name: 'subkategori', searchable: false, orderable: false,
                 render: function(data){
                     return '<strong>(' + data.jml_subkategori_rapb +' data)</strong> '+

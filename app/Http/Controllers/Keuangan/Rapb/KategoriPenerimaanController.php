@@ -62,6 +62,9 @@ class KategoriPenerimaanController extends BaseController
         $list_data = LibDataKeuangan::fetchDataKategoriRapb($auth_data, 1);
 
         return Datatables::of($list_data)
+                ->editColumn('jenis_kategori_rapb', function ($item) {
+                    return $item->jenisToText();
+                })
                 ->addColumn('subkategori', function ($item) {
                     $data = array(
                         'jml_subkategori_rapb' => $item->jml_subkategori_rapb,

@@ -102,6 +102,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-siswa/datatables-riwayat-bayar/{id_pengguna}', 'Keuangan\Utility\PembayaranSiswaController@datatablesRiwayatBayarSiswa');
             Route::get('pembayaran-siswa/view-detail-tagihan-siswa/{id_tagihan}/{nis_nama_siswa_asli}', 'Keuangan\Utility\PembayaranSiswaController@viewDetailTagihanPembayaranSiswa');
 
+            Route::post('action-tagihan-siswa/delete/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionDeleteTagihanSiswa');
             Route::post('action-pembayaran-siswa/{mode}/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionPembayaranSiswa');
 
             //MENU Pembayaran By Kelas
@@ -264,11 +265,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU SPP
             Route::group(array('prefix' => 'spp'), function () {
                 Route::get('/', 'Keuangan\SIM\SppController@viewMenuSpp');
+
+                Route::get('input', 'Keuangan\SIM\SppController@viewMenuInput');
+                Route::post('input/save', 'Keuangan\SIM\SppController@actionSaveInputPenerimaan');
+
                 Route::get('cari', 'Keuangan\SIM\SppController@viewMenuCari');
                 Route::post('cari/datatables', 'Keuangan\SIM\SppController@datatablesMenuCari');
 
                 Route::get('pembayaran', 'Keuangan\SIM\SppController@viewMenuPembayaran');
-                Route::get('pembayaran/{id_semester}/{id_kelas}', 'Keuangan\SIM\SppController@viewMenuPembayaran');
+                Route::get('pembayaran/{tahun_akademik_semester}/{id_kelas}', 'Keuangan\SIM\SppController@viewMenuPembayaran');
 
                 Route::get('pemasukan', 'Keuangan\SIM\SppController@viewMenuPemasukan');
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', 'Keuangan\SIM\SppController@viewMenuPemasukan');
@@ -282,6 +287,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('setting', 'Keuangan\SIM\SppController@viewMenuSetting');
                 Route::post('setting/datatables', 'Keuangan\SIM\SppController@datatablesMenuSetting');
+
+                Route::get('edit-setting/{tahun_akademik_semester}/{id}', 'Keuangan\SIM\SppController@viewMenuEditSetting');
+                Route::post('setting/save', 'Keuangan\SIM\SppController@actionMenuSettingSaveSpp');
             });
 
             // MENU PENGELUARAN

@@ -4,14 +4,14 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                    INPUT
+                    INPUT PENERIMAAN
                     </h2>
                 </div>
-                @include('keuangan/sim/pengeluaran/partials/header-card-menu')
+                @include('keuangan/sim/spp/partials/header-card-menu')
             </div>
             <div class="card">
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/pengeluaran/input/save')}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/spp/input/save')}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -28,7 +28,7 @@
                                 <br>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <label>Tanggal</label>
+                                        <label>Tanggal Terima</label>
                                         <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
                                     </div>
                                 </div>

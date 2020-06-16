@@ -9,14 +9,20 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Yajra\Datatables\Datatables;
 
+use App\Models\Biaya;
+use App\Models\BiayaSekolah;
 use App\Models\Bulan;
 use App\Models\DetailBiaya;
-use App\Models\PembayaranBiaya;
+use App\Models\KelompokBiaya;
+use App\Models\KelompokBiayaInternal;
+use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Rapb;
+use App\Models\PembayaranBiaya;
 use App\Models\Realisasi;
 use App\Models\Semester;
 use App\Models\Siswa;
+use App\Models\Staff;
 use App\Models\SubkategoriRapb;
 use App\Models\TagihanBiaya;
 use App\Models\TutupBukuBulananBiaya;
@@ -41,14 +47,59 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-spp', compact('auth_data'));
     }
 
+    public function viewMenuInput(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        if(empty($tahun_akademik_semester)){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        $data_subkategori = SubkategoriRapb::whereHas('kategori', function($q){
+            $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
+        })->get();
+
+        return view('keuangan/sim/spp/view-menu-input-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori'));
+    }
+
+    public function viewMenuEditSetting(Request $request, $thn_akademik_semester, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+        $tahun_akademik_semester = $thn_akademik_semester;
+
+        $data_kelompok_biaya = KelompokBiaya::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                                    ->orderBy('status_kelompok_biaya', 'asc')
+                                    ->orderBy('nm_kelompok_biaya', 'asc')
+                                    ->get();
+
+        $data_kelompok_biaya_internal = KelompokBiayaInternal::orderBy('nm_kelompok_biaya_internal', 'asc')
+                                    ->get();
+        
+        $kelas = Kelas::find($id);
+
+        return view('keuangan/sim/spp/view-menu-edit-setting', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelompok_biaya', 'data_kelompok_biaya_internal', 'kelas'));
+    }
+
     public function viewMenuCari(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'asc')->orderBy('nm_semester', 'asc')->get();
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
         
-        return view('keuangan/sim/spp/view-menu-cari', compact('auth_data', 'data_semester'));
+        return view('keuangan/sim/spp/view-menu-cari', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelas'));
     }
 
     public function indexDownloadLapBulanan(Request $request, $tahun_akademik_semester = null, $id_bulan = null){
@@ -411,10 +462,19 @@ class SppController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $tahun      = $input->tahun_akademik_semester;
+        $kelas      = $input->kelas;
+
+        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+
+        $id_semester_mulai = $semester_mulai->id_semester;
+        $id_semester_selesai = $semester_selesai->id_semester;
         
-        if (!empty($input->start_semester) && !empty($input->end_semester)) {
-            $data_detail_biaya = DetailBiaya::with('bulan')->whereHas('biaya_sekolah', function($q) use ($input){
-                $q->whereIn('id_semester', [$input->start_semester, $input->end_semester]);
+        if (!empty($id_semester_mulai) && !empty($id_semester_selesai)) {
+            $data_detail_biaya = DetailBiaya::with('bulan')->whereHas('biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
+                $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
             })->where('id_jenis_detail_biaya', 4)->get();
 
             $list_data = Siswa::with(['tagihan_biaya' => function($q) use ($data_detail_biaya){
@@ -422,6 +482,12 @@ class SppController extends BaseController
                     ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
             }])
             ->with('pengguna', 'kelas');
+
+            if(!empty($kelas)){
+                $list_data = $list_data->whereHas('kelas', function($q) use ($kelas){
+                    $q->where('id_kelas', $kelas);
+                });
+            }
         }else{
             $list_data = array();
         }
@@ -446,16 +512,24 @@ class SppController extends BaseController
                 ->make(true);
     }
 
-    public function viewMenuPembayaran(Request $request, $id_semester = null, $id_kelas = null)
+    public function viewMenuPembayaran(Request $request, $tahun_akademik_semester = null, $id_kelas = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        if(empty($tahun_akademik_semester)){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         
-        if(!empty($id_kelas) && !empty($id_semester)){
+        if(!empty($id_kelas) && !empty($tahun_akademik_semester)){
+            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+
             $data_siswa = Siswa::with('pengguna')->where('siswa.id_kelas', $id_kelas)
                                 ->get();
             
@@ -482,7 +556,7 @@ class SppController extends BaseController
                                 })
                                 ->where('detail_biaya.validasi_biaya', 1)
                                 ->where('detail_biaya.id_jenis_detail_biaya', 4)
-                                ->where('biaya_sekolah.id_semester', $id_semester)
+                                ->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester])
                                 ->where('siswa.id_kelas', $id_kelas)
                                 ->get();
             
@@ -493,7 +567,7 @@ class SppController extends BaseController
             $data_bulan_tagihan = array();
         }
 
-        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'id_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan'));
+        return view('keuangan/sim/spp/view-menu-pembayaran', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan'));
     }
 
     public function viewMenuPemasukan(Request $request, $tahun_akademik_semester = null, $id_bulan = null)
@@ -526,7 +600,7 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_semester', 'data_bulan', 'dates', 'tahun_akademik_semester', 'id_bulan', 'data_pemasukan_bulan_ini'));
     }
 
-    public function viewMenuPenerimaan(Request $request)
+    public function viewMenuPenerimaan(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -536,9 +610,24 @@ class SppController extends BaseController
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
 
+        $tahun = $tahun_akademik_semester;
+        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        $data_subkategori = SubkategoriRapb::whereHas('kategori', function($q){
+            $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
+        })->get();
+
+        $data_bulan = Bulan::orderBy('id_bulan')->get();
+
+        $data_realisasi = Realisasi::select('*')->addSelect(DB::raw('MONTH(realisasi.created_at) month'))
+                            ->with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function($q){
+                                $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
+                            })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])->get();
         
-        return view('keuangan/sim/spp/view-menu-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
+        return view('keuangan/sim/spp/view-menu-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'data_bulan', 'data_realisasi'));
     }
 
     public function viewMenuTunggakan(Request $request)
@@ -561,25 +650,76 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('keuangan/sim/spp/view-menu-setting', compact('auth_data'));
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        return view('keuangan/sim/spp/view-menu-setting', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
     }
 
     public function datatablesMenuSetting(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $tahun      = $input->tahun_akademik_semester;
+
+        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+
+        $id_semester_mulai = $semester_mulai->id_semester;
+        $id_semester_selesai = $semester_selesai->id_semester;
+        
+        if (!empty($id_semester_mulai) && !empty($id_semester_selesai)) {
+            $data_tagihan = TagihanBiaya::with('detail_biaya', 'detail_biaya.bulan')
+                                    ->whereHas('detail_biaya.biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
+                                        $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+                                    })
+                                    ->whereHas('detail_biaya', function($q) use ($id_semester_mulai, $id_semester_selesai){
+                                        $q->where('id_jenis_detail_biaya', 4);
+                                    })
+                                    ->get();
+        }else{
+            $data_tagihan = null;
+        }
     
         $list_data = Kelas::orderBy('tingkat');
 
         return Datatables::of($list_data)
-                ->addColumn('nominal_spp_juli', function ($item) {
-                    return '';
+                ->addColumn('nominal_spp_juli', function ($item) use ($data_tagihan) {
+                    $biaya = 'Belum diset';
+                    if(!empty($data_tagihan)){
+                        if($tagihan = $data_tagihan->where('detail_biaya.bulan.id_bulan', 7)->where('id_kelas', $item->id_kelas)->first()){
+                            $biaya = 'Rp'.number_format($tagihan->besar_biaya);
+                        }
+                    }
+
+                    return $biaya;
                 })
-                ->addColumn('nominal_spp_non_juli', function ($item) {
-                    return '';
+                ->addColumn('nominal_spp_non_juli', function ($item) use ($data_tagihan) {
+                    $biaya = 'Belum diset';
+                    if(!empty($data_tagihan)){
+                        if($tagihan = $data_tagihan->where('detail_biaya.bulan.id_bulan', 1)->where('id_kelas', $item->id_kelas)->first()){
+                            $biaya = 'Rp'.number_format($tagihan->besar_biaya);
+                        }
+                    }
+
+                    return $biaya;
                 })
-                ->addColumn('action', function ($item) {
-                    return '';
+                ->addColumn('action', function ($item) use ($data_tagihan) {
+                    $status = 0;
+                    if(!empty($data_tagihan)){
+                        if($tagihan = $data_tagihan->where('detail_biaya.bulan.id_bulan', 7)->where('id_kelas', $item->id_kelas)->first()){
+                            $status = 1;
+                        }
+                    }
+
+                    $data = array(
+                        'id' => $item->id_kelas,
+                        'status' => $status
+                    );
+                    return $data;
                 })
                 ->make(true);
     }
@@ -590,10 +730,12 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_kelas' => 'required',
-            'nominal_spp' => 'required',
-            'setting_bulan' => 'required',
-            'id_kelompok_biaya_internal' => 'required',
+            'tahun_akademik_semester'       => 'required',
+            'id_kelas'                      => 'required',
+            'nominal_spp_juli'              => 'required',
+            'nominal_spp_non_juli'          => 'required',
+            'id_kelompok_biaya'             => 'required',
+            'id_kelompok_biaya_internal'    => 'required'
         ]);
         
         if($validator->fails()) {
@@ -602,14 +744,91 @@ class SppController extends BaseController
                 'message' => $validator->errors()->first()
             ];
         }else{
+            $now = Carbon::now();
+
+            $tahun      = $input->tahun_akademik_semester;
+            $data_siswa = Siswa::where('id_kelas', $input->id_kelas)->get();
+            $kelas      = Kelas::find($input->id_kelas);
+
+            $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+    
+            $biaya = Biaya::where('nm_biaya', 'SPP')->first();
+
+            $data_bulan = Bulan::orderBy('id_bulan', 'asc')->get();
+
             DB::beginTransaction();
             try {
-        
+                foreach($data_siswa as $siswa){
+                    $detail_biaya = array();
+                    $tagihan = array();
+
+                    foreach($data_bulan as $bulan){
+                        $id_detail_biaya = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        if($bulan->id_bulan < 7){
+                            $id_semester = $semester_selesai->id_semester;
+                        }else{
+                            $id_semester = $semester_mulai->id_semester;
+                        }
+
+                        if($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()){
+
+                        }else{
+                            $biaya_sekolah = new BiayaSekolah;
+                            $biaya_sekolah->id_biaya_sekolah                = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $biaya_sekolah->id_kelompok_biaya               = $input->id_kelompok_biaya;
+                            $biaya_sekolah->id_semester                     = $id_semester;
+                            $biaya_sekolah->besar_biaya_sekolah             = (1 * $input->nominal_spp_juli) + (11 * $input->nominal_spp_non_juli);
+                            $biaya_sekolah->validasi_biaya_sekolah          = 1;
+                            $biaya_sekolah->keterangan_biaya_sekolah        = 'SPP Kelas '.$kelas->nm_kelas;
+                            $biaya_sekolah->save();
+                        }
+
+                        if($bulan->id_bulan == 7){
+                            $besar_biaya = $input->nominal_spp_juli;
+                        }else{
+                            $besar_biaya = $input->nominal_spp_non_juli;
+                        }
+
+                        $detail_biaya[] = array(
+                            'id_detail_biaya'               => $id_detail_biaya,
+                            'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
+                            'id_biaya'                      => $biaya->id_biaya ,
+                            'id_kelompok_biaya_internal'    => $input->id_kelompok_biaya_internal,
+                            'validasi_biaya'                => 1,
+                            'besar_biaya'                   => $besar_biaya,
+                            'id_jenis_detail_biaya'         => 4,
+                            'id_bulan'                      => $bulan->id_bulan,
+                            'created_at'                    => $now,
+                            'created_by'                    => $input->auth_data->pengguna->id_pengguna,
+                            'updated_at'                    => $now,
+                        );
+    
+                        $tagihan[] = array(
+                            'id_tagihan_biaya'  => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id_siswa'          => $siswa->id_siswa,
+                            'id_kelas'          => $siswa->id_kelas,
+                            'id_detail_biaya'   => $id_detail_biaya,
+                            'besar_biaya'       => $besar_biaya,
+                            'denda_biaya'       => 0,
+                            'is_tagih'          => 1,
+                            'created_at'        => $now,
+                            'created_by'        => $input->auth_data->pengguna->id_pengguna,
+                            'updated_at'        => $now,
+                        );
+                    }
+
+                    DetailBiaya::insert($detail_biaya);
+                    TagihanBiaya::insert($tagihan);
+                }
+                
 
                 DB::commit();
+
                 return response()->json([
-                    'status_code' => 200,
+                    'status' => 202,
                     'status_text' => 'Success',
+                    'path' => 'sim/spp/setting',
                     'message' => 'Success'
                 ]);
             } catch (\Exception $e) {
@@ -617,6 +836,117 @@ class SppController extends BaseController
 
                 return response()->json([
                     'status_code' => 300,
+                    'status_text' => 'Failed',
+                    'message' => 'Failed '.$e->getMessage().' in line '.$e->getLine()
+                ]);
+            }
+        }
+    }
+
+    public function actionSaveInputPenerimaan(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'tahun' =>'required',
+            'tgl_realisasi' =>'required',
+            'nm_realisasi' =>'required',
+            'id_subkategori_rapb' =>'required',
+            'dana_realisasi' =>'required',
+        ]);
+  
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }else{
+            $now = Carbon::today();
+
+            $tahun_akademik_semester = $input->tahun;
+            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+            
+            $tgl_realisasi = Carbon::parse($input->tgl_realisasi);
+            $id_bulan = $tgl_realisasi->month;
+            
+            if($id_bulan < 7){
+                $id_semester = $semester_selesai->id_semester;
+            }else{
+                $id_semester = $semester_mulai->id_semester;
+            }
+            
+            DB::beginTransaction();
+            try {
+                $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first();
+
+                if($rapb){
+
+                }else{
+                    $rapb = new Rapb;
+                    $rapb->id_rapb = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                    $rapb->id_semester_mulai            = $semester_mulai->id_semester;
+                    $rapb->id_semester_selesai          = $semester_selesai->id_semester;
+                    $rapb->id_subkategori_rapb          = $input->id_subkategori_rapb;
+                    $rapb->tgl_rapb                     = $now->format('Y-m-d');
+                    $rapb->prioritas_rapb               = 3;
+                    $rapb->dana_perkiraan_rapb          = 0;
+                    $rapb->created_by                   = $input->auth_data->pengguna->id_pengguna;
+
+                    if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                        $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                    }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                        $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                    }
+
+                    if($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                            ->where('guru.jenis_jabatan', '=', 2)
+                            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                            ->first()){
+                        $rapb->id_pengguna_kepala_unit      = $kepala_unit_keuangan->id_pengguna;
+                    }else if($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                            ->where('staff.jenis_jabatan', '=', 2)
+                            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                            ->first()){
+                        $rapb->id_pengguna_kepala_keuangan  = $kepala_unit_keuangan->id_pengguna;;
+                    }
+                    $rapb->save();
+                }
+
+
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $realisasi                               = new Realisasi;
+                $realisasi->id_realisasi                 = $id;
+                $realisasi->id_semester_realisasi        = $id_semester;
+                $realisasi->id_rapb                      = $rapb->id_rapb;
+                if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
+                }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
+                }
+                $realisasi->nm_realisasi                 = $input->nm_realisasi;
+                $realisasi->termin_dana_realisasi        = 1;
+                $realisasi->is_hutang_realisasi          = 0;
+                $realisasi->dana_realisasi               = $input->dana_realisasi;
+                $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi),"Y-m-d");
+                $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 202,
+                    'status_text' => 'Success',
+                    'path' => 'sim/spp/penerimaan',
+                    'message' => 'Success'
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status' => 300,
                     'status_text' => 'Failed',
                     'message' => 'Failed'
                 ]);
