@@ -111,7 +111,8 @@
 
     function loadContent(target_url, content) {
         content = typeof content !== 'undefined' ? content : 'content';
-        NProgress.start();
+        // NProgress.start();
+        // Pace.start();
         $.ajax({
             type: "GET",
             url: base_url + '/' + role_url + '/' + target_url,
@@ -121,7 +122,8 @@
             },
             success: function (data) {
                 $("#" + content).html(data);
-                NProgress.done();
+                // NProgress.done();
+                // Pace.done();
                 
                 $('.menu-item').removeClass('active');
                 $('#menu-item-' + target_url.split('/')[0] + '-' + target_url.split('/')[1]).addClass('active');

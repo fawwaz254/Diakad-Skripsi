@@ -32,7 +32,17 @@ class Kelas extends Model
 
     protected $guarded = [];
 
+    public function check_siswa(){
+        return $this->siswa()->take(1);
+    }
 
+    public function siswa(){
+        return $this->hasMany(Siswa::class, 'id_kelas');
+    }
+
+    public function tagihan(){
+        return $this->hasMany(TagihanBiaya::class, 'id_kelas');
+    }
 
 
 
