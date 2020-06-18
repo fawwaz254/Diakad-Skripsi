@@ -288,8 +288,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('setting', 'Keuangan\SIM\SppController@viewMenuSetting');
                 Route::post('setting/datatables', 'Keuangan\SIM\SppController@datatablesMenuSetting');
 
+                Route::get('setting-non-spp', 'Keuangan\SIM\SppController@viewMenuSettingNonSpp');
+                Route::post('setting-non-spp/datatables', 'Keuangan\SIM\SppController@datatablesMenuSettingNonSpp');
+
                 Route::get('edit-setting/{tahun_akademik_semester}/{id}', 'Keuangan\SIM\SppController@viewMenuEditSetting');
                 Route::post('setting/save', 'Keuangan\SIM\SppController@actionMenuSettingSaveSpp');
+
+                Route::get('edit-setting-non-spp/{tahun_akademik_semester}/{id}', 'Keuangan\SIM\SppController@viewMenuEditSettingNonSpp');
+                Route::post('setting-non-spp/save', 'Keuangan\SIM\SppController@actionMenuSettingSaveNonSpp');
             });
 
             // MENU PENGELUARAN

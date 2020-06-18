@@ -11,7 +11,7 @@
             </div>
             <div class="card">
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/spp/setting/save')}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/spp/setting-non-spp/save')}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -24,22 +24,36 @@
                                     @endif
                                 @endforeach
                                 <br>
+                                <label>Ganjil/Genap</label>
+                                <select class="form-control show-tick" name="semester" required="">
+                                    <option value="1">Ganjil</option>
+                                    <option value="2">Genap</option>
+                                </select>
+                                <br>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Kelas</label>
                                         <input type="text" class="form-control" disabled="" value="{{$kelas->nm_kelas}}">
                                     </div>
                                 </div>
+                                <label>Setting Untuk</label>
+                                <select class="form-control show-tick" name="id_biaya" required="">
+                                    @foreach($data_biaya as $biaya)
+                                    <option value="{{$biaya->id_biaya}}">{{$biaya->nm_biaya}}</option>
+                                    @endforeach
+                                </select>
+                                <br>
+                                <label>Jenis Biaya</label>
+                                <select class="form-control show-tick" name="id_jenis_detail_biaya" required="">
+                                    @foreach($data_jenis_detail_biaya as $data)
+                                    <option value="{{$data->id_jenis_detail_biaya}}">{{$data->nm_jenis_detail_biaya}} </option>
+                                    @endforeach
+                                </select>
+                                <br>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <label>Biaya SPP JULI</label>
-                                        <input type="number" class="form-control" name="nominal_spp_juli" required="">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <label>Biaya SPP NON-JULI</label>
-                                        <input type="number" class="form-control" name="nominal_spp_non_juli" required="">
+                                        <label>Besar Biaya</label>
+                                        <input type="number" class="form-control" name="besar_biaya" required="">
                                     </div>
                                 </div>
                                 <label>Kelompok Biaya</label>

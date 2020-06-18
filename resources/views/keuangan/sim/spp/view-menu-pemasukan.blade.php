@@ -114,7 +114,7 @@
                         </table>
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <a class="btn btn-block bg-btn-submit waves-effect" target="_blank" href="{{url('keuangan/sim/spp/pemasukan/'.$tahun_akademik_semester.'/'.$id_bulan.'/refresh')}}">Refresh</span></a>
+                                <a class="btn btn-block bg-btn-submit waves-effect" onclick="refreshAction(this)">Refresh</span></a>
                                 <a class="btn btn-block bg-btn-submit waves-effect" target="_blank" href="{{url('keuangan/sim/spp/pemasukan/'.$tahun_akademik_semester.'/'.$id_bulan.'/report')}}">Download Laporan Bulanan</span></a>
                             </div>
                         </div>
@@ -126,10 +126,24 @@
 </div>
 
 <script>
+    function filterAction(){
+        var bulan = $('select[name=bulan]').val();
+        var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
+        loadURI('sim/spp/pemasukan/'+tahun_akademik_semester+'/'+bulan);
+    }
 
-function filterAction(){
-    var bulan = $('select[name=bulan]').val();
-    var tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
-    loadURI('sim/spp/pemasukan/'+tahun_akademik_semester+'/'+bulan);
-}
+    function refreshAction(element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+        $.ajax({
+            type: "GET",
+            url: "{{url('keuangan/sim/spp/pemasukan/'.$tahun_akademik_semester.'/'.$id_bulan.'/refresh')}}",
+            success: function (response) {
+                vex.dialog.alert(response.message);
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
 </script>
