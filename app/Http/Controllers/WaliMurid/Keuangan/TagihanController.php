@@ -24,7 +24,7 @@ class TagihanController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('siswa/keuangan/tagihan/view-tagihan', compact('auth_data'));
+        return view('wali-murid/keuangan/tagihan/view-tagihan', compact('auth_data'));
     }
 
     public function datatablesTagihan(Request $request)
@@ -42,27 +42,34 @@ class TagihanController extends BaseController
         $list_data = LibSiswa::fetchTagihanSiswa($auth_data, $data_anak_murid_aktif->id_pengguna);
 
         return Datatables::of($list_data)
-                ->addColumn('biaya_sekolah', function ($item) {
+                ->addColumn('biaya_sekolah', function($item){
                     return $item->nm_kelompok_biaya." (".$item->tahun_ajaran." ".$item->nm_semester.")";
                 })
-                ->addColumn('semester', function ($item) {
+                ->addColumn('semester', function($item){
                     return $item->tahun_ajaran." ".$item->nm_semester;
                 })
-                ->addColumn('jenis_biaya', function ($item) {
-                    if ($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_jenis_detail_biaya." (".$item->nm_bulan.")";
-                    } else {
+                ->addColumn('jenis_biaya', function($item){
+                    if($item->id_jenis_detail_biaya == 4) {
+                        return $item->nm_jenis_detail_biaya." ".$item->nm_bulan."";
+                    }
+                    else {
                         return $item->nm_jenis_detail_biaya;
                     }
                 })
-                ->addColumn('besar_biaya', function ($item) {
+                ->addColumn('besar_biaya', function($item){
                     return "Rp".number_format($item->besar_biaya);
                 })
-                ->addColumn('denda_biaya', function ($item) {
+                ->addColumn('denda_biaya', function($item){
                     return "Rp".number_format($item->denda_biaya);
                 })
-                ->addColumn('besar_pembayaran', function ($item) {
+                ->addColumn('besar_pembayaran', function($item){
                     return "Rp".number_format($item->besar_pembayaran);
+                })
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_tagihan_biaya
+                    );
+                    return $data;
                 })
                 ->make(true);
     }

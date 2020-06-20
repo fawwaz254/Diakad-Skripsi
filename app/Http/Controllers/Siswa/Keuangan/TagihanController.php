@@ -47,7 +47,7 @@ class TagihanController extends BaseController{
                 })
                 ->addColumn('jenis_biaya', function($item){
                     if($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_jenis_detail_biaya." (".$item->nm_bulan.")";
+                        return $item->nm_jenis_detail_biaya." ".$item->nm_bulan."";
                     }
                     else {
                         return $item->nm_jenis_detail_biaya;
@@ -61,6 +61,12 @@ class TagihanController extends BaseController{
                 })
                 ->addColumn('besar_pembayaran', function($item){
                     return "Rp".number_format($item->besar_pembayaran);
+                })
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_tagihan_biaya
+                    );
+                    return $data;
                 })
                 ->make(true);
     }

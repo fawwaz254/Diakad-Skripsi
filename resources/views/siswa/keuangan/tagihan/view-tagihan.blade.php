@@ -12,18 +12,20 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Biaya Sekolah</th>
-                                        <th>Jalur</th>
-                                        <th>Nama Biaya</th>
-                                        <th>Jenis Biaya</th>
+                                        <th>
+                                            <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
+                                            <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
+                                        </th>
+                                        <th>Biaya</th>
+                                        <th>-</th>
+                                        <th>Semester</th>
                                         <th>Besar Tagihan</th>
                                         <th>Denda Tagihan</th>
-                                        <th>Keterangan</th>
-                                        <th>Besar Pembayaran</th>
                                     </tr>
                                 </thead>
                             </table>
                         </div>
+                        <button class="btn bg-blue waves-effect" type="submit"><span>Bayar yang dicentang</span></button>
                     </div>
                 </div>
             </div>
@@ -45,14 +47,18 @@ responsive: true,
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function (data, type, full, meta){
+                    return '<input id="checkbox-' + data.id + '" type="checkbox" name="id_tagihan_biaya[]" class="filled-in" value="' + data.id + '">'+
+                    '<label for="checkbox-' + data.id + '"></label>'; 
+
+                }
+            },
             { data: 'nm_biaya', name: 'nm_biaya' },
             { data: 'jenis_biaya', name: 'jenis_biaya'},
+            { data: 'semester', name: 'semester', searchable: false, orderable: false },
             { data: 'besar_biaya', name: 'besar_biaya'},
             { data: 'denda_biaya', name: 'denda_biaya'},
-            { data: 'keterangan', name: 'keterangan'},
-            { data: 'besar_pembayaran', name: 'besar_pembayaran'}
         ]
     });
 
@@ -62,4 +68,15 @@ responsive: true,
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {        
+        /* Select All Checkbox */
+        $('#checkbox_select_all_primary_table').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
 </script>

@@ -45,10 +45,14 @@ class RiwayatBayarController extends BaseController
                 ->addColumn('biaya_sekolah', function ($item) {
                     return $item->nm_kelompok_biaya." (".$item->tahun_ajaran_biaya." ".$item->nm_semester_biaya.")";
                 })
-                ->addColumn('jenis_biaya', function ($item) {
-                    if ($item->id_jenis_detail_biaya == 4) {
-                        return $item->nm_jenis_detail_biaya." (".$item->nm_bulan.")";
-                    } else {
+                ->addColumn('semester', function($item){
+                    return $item->tahun_ajaran_biaya." ".$item->nm_semester_biaya;
+                })
+                ->addColumn('jenis_biaya', function($item){
+                    if($item->id_jenis_detail_biaya == 4) {
+                        return $item->nm_jenis_detail_biaya." ".$item->nm_bulan;
+                    }
+                    else {
                         return $item->nm_jenis_detail_biaya;
                     }
                 })
@@ -73,7 +77,7 @@ class RiwayatBayarController extends BaseController
                     }
                 })
                 ->addColumn('tgl_pembayaran', function ($item) {
-                    return strftime("%A, %d %B %Y", strtotime($item->tgl_pembayaran));
+                    return strftime("%d %b %Y", strtotime($item->tgl_pembayaran));
                 })
                 ->addColumn('semester_bayar', function ($item) {
                     return $item->tahun_ajaran_bayar." ".$item->nm_semester_bayar;
