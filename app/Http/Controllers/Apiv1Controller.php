@@ -29,6 +29,8 @@ use App\Models\TindakanPelanggaran;
 use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\UjianMpPresensi;
+use App\Models\BeasiswaSiswa;
+use App\Models\PrestasiSiswa;
 
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibDataAkademik;
@@ -2004,4 +2006,233 @@ class Apiv1Controller extends BaseController
             }
         }
     }
+
+    public function actionGetPelanggaranNonKBM(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_pelanggaran_non_kbm = LibSiswa::fetchPelanggaranNonKBM($auth_data, $data_anak_murid_aktif->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'pelanggaran_non_kbm' => $data_pelanggaran_non_kbm
+            )
+        ]);
+    }
+
+    public function actionGetPelanggaranKBM(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_pelanggaran_kbm = LibSiswa::fetchPelanggaranKBM($auth_data, $data_anak_murid_aktif->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'pelanggaran_kbm' => $data_pelanggaran_kbm
+            )
+        ]);
+    }
+
+    public function actionGetTagihan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_tagihan = LibSiswa::fetchTagihanSiswa($auth_data, $data_anak_murid_aktif->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'tagihan' => $data_tagihan
+            )
+        ]);
+    }
+
+    public function actionGetRiwayatBayar(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_riwayat_bayar = LibSiswa::fetchPembayaranSiswa($auth_data, $data_anak_murid_aktif->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'riwayat_bayar' => $data_riwayat_bayar
+            )
+        ]);
+    }
+
+    public function actionGetBeasiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_beasiswa = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
+        ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
+        ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
+        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+        ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
+        ->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'beasiswa' => $data_beasiswa
+            )
+        ]);
+    }
+
+    public function actionGetPrestasi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_prestasi = PrestasiSiswa::select(
+            'prestasi_siswa.nm_prestasi_siswa',
+            'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+            'prestasi_siswa.jenis_prestasi_siswa',
+            'prestasi_siswa.peringkat_prestasi_siswa',
+            'p1.nm_pengguna as nm_siswa',
+            'siswa.nisn_siswa',
+            'siswa.nis_siswa',
+            'semester.nm_semester',
+            'semester.tahun_ajaran',
+            'kelas.nm_kelas',
+            'prestasi_siswa.lokasi_prestasi_siswa',
+            'prestasi_siswa.penyelenggara_prestasi_siswa',
+            'prestasi_siswa.tgl_prestasi_siswa',
+            'ekskul.nm_ekskul',
+            'prestasi_siswa.id_prestasi_siswa',
+            'prestasi_siswa.id_guru_pendamping',
+            'p2.nm_pengguna as nm_guru_pendamping',
+            'p2.gelar_depan',
+            'p2.gelar_belakang'
+        )
+        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+        ->orderBy('prestasi_siswa.created_at', 'desc')
+        ->orderBy('semester.thn_akademik_semester', 'desc')
+        ->orderBy('semester.nm_semester', 'desc')
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
+        ->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'prestasi' => $data_prestasi
+            )
+        ]);
+    }
+
+    public function actionGetMagang(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        
+        $data_magang = LibSiswa::fetchDataMagang($auth_data, $data_anak_murid_aktif->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'magang' => $data_magang
+            )
+        ]);
+    }
+
+    public function actionGetKalenderAkademik(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        
+        $data_kalender_akademik = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $semester_aktif->id_semester);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kalender_akademik' => $data_kalender_akademik
+            )
+        ]);
+    }
+
+    public function actionGetJadwalWaliMurid(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+
+        if (!empty($input->type)) {
+            switch ($input->type) {
+                case 'kbm':
+                    $list_data = LibSiswa::fetchDataJadwalKBM($auth_data, $data_anak_murid_aktif->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                case 'uts':
+                    $list_data = LibSiswa::fetchDataJadwalUTS($auth_data, $data_anak_murid_aktif->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                case 'uas':
+                    $list_data = LibSiswa::fetchDataJadwalUAS($auth_data, $data_anak_murid_aktif->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                default:
+                    $list_data = null;
+                    break;
+            }
+        }
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'jadwal' => $list_data
+            )
+        ]);
+    }
+
 }
