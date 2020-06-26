@@ -4,7 +4,7 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                    INPUT
+                    INPUT PENGELUARAN
                     </h2>
                 </div>
                 @include('keuangan/sim/pengeluaran/partials/header-card-menu')

@@ -35,6 +35,7 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 
 use Auth;
 use DB;
+use Excel;
 use Session;
 use Validator;
 
@@ -127,6 +128,86 @@ class SppController extends BaseController
         
         return view('keuangan/sim/spp/view-menu-cari', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelas'));
     }
+
+    public function viewMenuUpload(Request $request)
+    {   
+        return view('keuangan/sim/spp/view-menu-upload');
+    }
+
+    public function actionMenuUpload(Request $request){
+    	$input = (object) $request->input();
+	    $auth_data = $input->auth_data;
+	    $now = Carbon::now(env('APP_TIMEZONE', ''));
+        if($request->hasFile('file-excel')){
+            $path = $request->file('file-excel')->getRealPath();
+            $data = Excel::load($path)->get();
+
+       		if($data->count()){
+                DB::beginTransaction();
+                try {
+                    foreach ($data as $key => $item) {
+                        if(!empty($item->nis)){
+                            $siswa = Siswa::where('nis_siswa', $item->nis)->first();
+                            $semester = Semester::where('kode_semester', $item->kode_semester)->first();
+                            
+                            $tanggal_bayar = $item->tanggal;
+                            $id_bulan = $item->id_bulan;
+    
+                            $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
+                                                            ->whereHas('detail_biaya', function($q) use ($id_bulan){
+                                                                $q->where('id_bulan', $id_bulan)->where('id_jenis_detail_biaya', 4);
+                                                            })
+                                                            ->whereHas('detail_biaya.biaya_sekolah', function($q) use ($semester){
+                                                                $q->where('id_semester', $semester->id_semester);
+                                                            })->first();
+    
+                            if($tagihan_siswa){
+                                $pembayaran_biaya                        = new PembayaranBiaya;
+                                $pembayaran_biaya->id_pembayaran_biaya   = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $pembayaran_biaya->id_tagihan_biaya      = $tagihan_siswa->id_tagihan_biaya;
+                                $pembayaran_biaya->id_staff_bayar        = $input->auth_data->pengguna->id_pengguna;
+                                $pembayaran_biaya->id_semester_bayar     = $semester->id_semester;
+                                $pembayaran_biaya->besar_pembayaran      = $tagihan_siswa->besar_biaya;
+                                $pembayaran_biaya->tgl_pembayaran        = $tanggal_bayar;
+                                $pembayaran_biaya->keterangan            = "Langsung Lunas";
+                                $pembayaran_biaya->created_by            = $input->auth_data->pengguna->id_pengguna;
+                                $pembayaran_biaya->save();
+    
+                                $tagihan_siswa->is_tagih     = 0;
+                                $tagihan_siswa->updated_by   = $input->auth_data->pengguna->id_pengguna;
+                                $tagihan_siswa->save();
+                            }
+                        }
+                    }
+
+                    DB::commit();
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'sim/spp/upload-pembayaran',
+                        'message' => 'Upload Pembayaran successfully'
+                    ];
+                }
+                catch (\Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+                    return [
+                        'status' 	=> 203, // GAGAL
+                        'message'	=> 'Upload Pembayaran Gagal '.$e->getMessage().' in line '.$e->getLine()
+                    ];
+                } 
+            }else{
+                return [
+                    'status' 	=> 300, // FAILED
+                    'message' 	=> "File Excel Anda Kosong"
+                ];
+            }
+        }else{
+			return [
+				'status' 	=> 300, // FAILED
+				'message' 	=> "File Excel tidak ditemukan"
+			];
+		}
+    } 
 
     public function indexDownloadLapBulanan(Request $request, $tahun_akademik_semester = null, $id_bulan = null){
         $input = (object) $request->input();

@@ -4,7 +4,7 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        SPP
+                        PEMASUKAN
                     </h2>
                 </div>
                 @include('keuangan/sim/spp/partials/header-card-menu')

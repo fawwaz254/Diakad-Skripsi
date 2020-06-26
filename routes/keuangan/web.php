@@ -280,7 +280,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/report', 'Keuangan\SIM\SppController@indexDownloadLapBulanan');
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/refresh', 'Keuangan\SIM\SppController@actionRefreshLapBulanan');
-                // Route::post('refresh/monthly-report', 'Keuangan\SIM\SppController@actionRefreshLapBulanan');
 
                 Route::get('penerimaan', 'Keuangan\SIM\SppController@viewMenuPenerimaan');
                 Route::get('tunggakan', 'Keuangan\SIM\SppController@viewMenuTunggakan');
@@ -296,6 +295,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('edit-setting-non-spp/{tahun_akademik_semester}/{id}', 'Keuangan\SIM\SppController@viewMenuEditSettingNonSpp');
                 Route::post('setting-non-spp/save', 'Keuangan\SIM\SppController@actionMenuSettingSaveNonSpp');
+
+                Route::get('upload-pembayaran', 'Keuangan\SIM\SppController@viewMenuUpload');
+                Route::post('upload-pembayaran', 'Keuangan\SIM\SppController@actionMenuUpload');
             });
 
             // MENU PENGELUARAN
