@@ -39,6 +39,20 @@ class BiayaSekolah extends Model
         return $this->hasMany(DetailBiaya::class, 'id_biaya_sekolah');
     }
 
+    public function kelompok()
+    {
+        return $this->belongsTo(KelompokBiaya::class, 'id_kelompok_biaya');
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
+
+    public function jalur()
+    {
+        return $this->belongsTo(Jalur::class, 'id_jalur');
+    }
 
 
 

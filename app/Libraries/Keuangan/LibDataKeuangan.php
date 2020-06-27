@@ -151,7 +151,7 @@ class LibDataKeuangan
     /** ========== **/
 
     /** BIAYA SEKOLAH **/
-    public static function fetchDataBiayaSekolah($auth_data, $valid = null, $id = null)
+    public static function fetchDataBiayaSekolah($auth_data, $valid = null, $id = null, $is_datatables = null)
     {
 
         // get mode view
@@ -176,8 +176,11 @@ class LibDataKeuangan
             $biayaSekolah = $biayaSekolah->orderBy('semester.thn_akademik_semester', 'desc')
                                 ->orderBy('semester.nm_semester', 'desc')
                                 ->orderBy('kelompok_biaya.status_kelompok_biaya', 'asc')
-                                ->orderBy('kelompok_biaya.nm_kelompok_biaya', 'asc')
-                                ->get();
+                                ->orderBy('kelompok_biaya.nm_kelompok_biaya', 'asc');
+            
+            if(empty($is_datatables)){
+                $biayaSekolah = $biayaSekolah->get();
+            }
         }
         // get mode edit
         else {

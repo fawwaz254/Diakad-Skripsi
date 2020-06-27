@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Keuangan\DataKeuangan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
-use App\Models\DetailBiaya as DetailBiaya;
-use App\Models\TagihanBiaya as TagihanBiaya;
+use App\Models\DetailBiaya;
+use App\Models\KelompokBiaya;
+use App\Models\TagihanBiaya;
+use App\Models\Semester;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 use Auth;
 use DB;
@@ -24,7 +27,16 @@ class DetailBiayaController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/data-keuangan/detail-biaya/view-detail-biaya',compact('auth_data'));
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        if(empty($tahun_akademik_semester)){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        $data_kelompok_biaya = LibDataKeuangan::fetchDataKelompokBiaya($auth_data);
+
+    	return view('keuangan/data-keuangan/detail-biaya/view-detail-biaya',compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelompok_biaya'));
 
     }
 
@@ -92,7 +104,19 @@ class DetailBiayaController extends BaseController{
     public function datatablesDetailBiaya(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataDetailBiaya($auth_data, null, "1");
+        $list_data = LibDataKeuangan::fetchDataDetailBiaya($auth_data, null, "1");
+        
+        if(!empty($input->tahun_akademik_semester)){
+            $tahun      = $input->tahun_akademik_semester;
+
+            $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+            $list_data = $list_data->whereIn('biaya_sekolah.id_semester', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
+        }
+
+        if(!empty($input->kelompok_biaya)){
+            $list_data = $list_data->where('biaya_sekolah.id_kelompok_biaya', $input->kelompok_biaya);
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('biaya_sekolah', function($item){

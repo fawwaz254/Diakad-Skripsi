@@ -953,6 +953,7 @@ class SppController extends BaseController
 
             DB::beginTransaction();
             try {
+                Siswa::where('id_kelas', $kelas->id_kelas)->update(['id_kelompok_biaya' => $input->id_kelompok_biaya]);
                 foreach($data_siswa as $siswa){
                     $detail_biaya = array();
                     $tagihan = array();
