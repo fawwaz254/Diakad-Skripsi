@@ -654,7 +654,7 @@ class SppController extends BaseController
             $data_siswa = Siswa::with('pengguna')->where('siswa.id_kelas', $id_kelas)
                                 ->get();
             
-            $data_tagihan = TagihanBiaya::select('tagihan_biaya.id_siswa', 'siswa.nis_siswa', 'tagihan_biaya.id_tagihan_biaya', 'tagihan_biaya.is_tagih', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"), 'pembayaran_biaya.tgl_pembayaran', 'pembayaran_biaya.id_pembayaran_biaya')
+            $data_tagihan = TagihanBiaya::select('tagihan_biaya.id_siswa', 'semester.kode_semester', 'siswa.nis_siswa', 'tagihan_biaya.id_tagihan_biaya', 'tagihan_biaya.is_tagih', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"), 'pembayaran_biaya.tgl_pembayaran', 'pembayaran_biaya.id_pembayaran_biaya')
                                 ->join('siswa', function($q){
                                     $q->on('tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
                                         ->whereNull('siswa.deleted_at');
@@ -666,6 +666,10 @@ class SppController extends BaseController
                                 ->leftJoin('biaya_sekolah', function($q){
                                     $q->on('biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
                                         ->whereNull('biaya_sekolah.deleted_at');
+                                })
+                                ->leftJoin('semester', function($q){
+                                    $q->on('semester.id_semester', '=', 'biaya_sekolah.id_semester')
+                                        ->whereNull('semester.deleted_at');
                                 })
                                 ->leftJoin('bulan', function($q){
                                     $q->on('detail_biaya.id_bulan', '=', 'bulan.id_bulan')
@@ -681,7 +685,7 @@ class SppController extends BaseController
                                 ->where('siswa.id_kelas', $id_kelas)
                                 ->get();
             
-            $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->values()->all();
+            $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
         }else{
             $data_siswa = array();
             $data_tagihan = array();
