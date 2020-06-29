@@ -23,7 +23,9 @@ class DetailBiayaInternalController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('keuangan/data-keuangan/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data'));
+        $data_kelompok_biaya_internal = LibDataKeuangan::fetchDataBiayaInternal($auth_data);
+
+    	return view('keuangan/data-keuangan/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data', 'data_kelompok_biaya_internal'));
 
     }
 
@@ -59,7 +61,11 @@ class DetailBiayaInternalController extends BaseController{
     public function datatablesDetailBiayaInternal(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataDetailBiayaInternal($auth_data, null, "1");
+        $list_data = LibDataKeuangan::fetchDataDetailBiayaInternal($auth_data, null, "1");
+        
+        if(!empty($input->kelompok_biaya_internal)){
+            $list_data = $list_data->where('kelompok_biaya_internal.id_kelompok_biaya_internal', $input->kelompok_biaya_internal);
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('nm_biaya_internal', function($item){

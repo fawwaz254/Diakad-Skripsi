@@ -809,7 +809,7 @@ class SppController extends BaseController
         $list_data = Kelas::with(['tagihan' => function($q) use ($data_detail_biaya){
                                     $q->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'))
                                         ->with('detail_biaya', 'detail_biaya.bulan');
-                                }])->orderBy('tingkat');
+                                }])->orderBy('tingkat')->orderBy('nm_kelas');
 
         return Datatables::of($list_data)
                 ->addColumn('nominal_spp_juli', function ($item) {

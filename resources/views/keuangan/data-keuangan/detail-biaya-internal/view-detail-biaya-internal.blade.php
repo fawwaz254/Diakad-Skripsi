@@ -5,11 +5,28 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                    {{csrf_field()}}
                     <div class="header">
                         <h2>DATA DETAIL BIAYA INTERNAL</h2>
                     </div>
                     <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Kelompok Biaya Internal
+                                </h2>
+                                <select class="form-control show-tick" name="kelompok_biaya_internal">
+                                    <option value="">Semua Kelompok Biaya</option>
+                                    @foreach($data_kelompok_biaya_internal as $data)
+                                    <option value="{{$data->id_kelompok_biaya_internal}}">
+                                        {{$data->nm_kelompok_biaya_internal}}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Kelompok Biaya</span></button>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                 <thead>
@@ -39,10 +56,13 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(params){
+                params.kelompok_biaya_internal = $('select[name=kelompok_biaya_internal]').val();
+            }
         },
         columns: [
             { data: null, searchable: false, orderable: false },
@@ -68,4 +88,8 @@ responsive: true,
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    function filterAction(){
+        primary_table.ajax.reload(null, false);
+    }
 </script>

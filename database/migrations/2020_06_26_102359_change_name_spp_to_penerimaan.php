@@ -15,7 +15,7 @@ class ChangeNameSppToPenerimaan extends Migration
      */
     public function up()
     {
-        $menu              	= Menu::where('id_modul', 77)->where('nm_menu', 'SPP')->first();
+        $menu              	= Menu::where('id_modul', 74)->where('nm_menu', 'SPP')->first();
         $menu->nm_menu      = "Pemasukan";
         $menu->save();
     }
