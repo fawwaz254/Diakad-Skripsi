@@ -46,7 +46,7 @@
                                 </div>
                                 <label>Biaya Internal JULI</label>
                                 <select class="form-control show-tick" name="id_kelompok_biaya_internal_juli" required="">
-                                    <option value="">Pilih Biaya Internal Juli</option>
+                                    <option value="">-- Pilih Biaya Internal</option>
                                     @foreach($data_kelompok_biaya_internal as $kelompok_biaya_internal)
                                     <option value="{{$kelompok_biaya_internal->id_kelompok_biaya_internal}}">{{$kelompok_biaya_internal->nm_kelompok_biaya_internal}}</option>
                                     @endforeach
@@ -60,7 +60,7 @@
                                 </div>
                                 <label>Biaya Internal NON-JULI</label>
                                 <select class="form-control show-tick" name="id_kelompok_biaya_internal_non_juli" required="">
-                                    <option value="">Pilih Biaya Internal NON-JULI</option>
+                                    <option value="">-- Pilih Biaya Internal</option>
                                     @foreach($data_kelompok_biaya_internal as $kelompok_biaya_internal)
                                     <option value="{{$kelompok_biaya_internal->id_kelompok_biaya_internal}}">{{$kelompok_biaya_internal->nm_kelompok_biaya_internal}}</option>
                                     @endforeach

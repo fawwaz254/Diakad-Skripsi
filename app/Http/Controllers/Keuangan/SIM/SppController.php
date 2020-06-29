@@ -924,12 +924,13 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'tahun_akademik_semester'       => 'required',
-            'id_kelas'                      => 'required',
-            'nominal_spp_juli'              => 'required',
-            'nominal_spp_non_juli'          => 'required',
-            'id_kelompok_biaya'             => 'required',
-            'id_kelompok_biaya_internal'    => 'required'
+            'tahun_akademik_semester'               => 'required',
+            'id_kelas'                              => 'required',
+            'nominal_spp_juli'                      => 'required',
+            'nominal_spp_non_juli'                  => 'required',
+            'id_kelompok_biaya'                     => 'required',
+            'id_kelompok_biaya_internal_juli'       => 'required',
+            'id_kelompok_biaya_internal_non_juli'   => 'required'
         ]);
         
         if($validator->fails()) {
