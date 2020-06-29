@@ -110,7 +110,20 @@ class TindakanPelanggaranController extends BaseController{
                     return $item->nm_pengguna;
                 })
                 ->addColumn('aktor_input_pelanggaran', function($item){
-                    return $item->aktor_input_to_text();
+                    switch($item->aktor_input_pelanggaran){
+                        case 1: 
+                            return 'Role BK'; break;
+                        case 2: 
+                            return 'Kesiswaan'; break;
+                        case 3: 
+                            return 'Wali Kelas'; break;
+                        case 4:
+                            return 'Guru Reguler'; break;
+                        case 5:
+                            return 'Guru Piket'; break;
+                        default:
+                            return ''; break;
+                    }
                 })
                 ->addColumn('nm_input', function($item){
                     if( ! empty($item->nm_guru_input)){
@@ -308,7 +321,20 @@ class TindakanPelanggaranController extends BaseController{
                 })
                 ->addColumn('aktor_input_pelanggaran', function($item){
                     if( ! empty($item->id_pelanggaran_siswa)) {
-                        return $item->aktor_input_to_text();
+                        switch($item->aktor_input_pelanggaran){
+                            case 1: 
+                                return 'Role BK'; break;
+                            case 2: 
+                                return 'Kesiswaan'; break;
+                            case 3: 
+                                return 'Wali Kelas'; break;
+                            case 4:
+                                return 'Guru Reguler'; break;
+                            case 5:
+                                return 'Guru Piket'; break;
+                            default:
+                                return ''; break;
+                        }
                     }
                     else {
                         return "Guru Pengampu";
