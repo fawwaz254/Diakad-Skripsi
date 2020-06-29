@@ -10,12 +10,12 @@
                     </div>
                     <div class="body">
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Kelompok Biaya Internal
+                                    Biaya Internal
                                 </h2>
                                 <select class="form-control show-tick" name="kelompok_biaya_internal">
-                                    <option value="">Semua Kelompok Biaya</option>
+                                    <option value="">Semua Biaya Internal</option>
                                     @foreach($data_kelompok_biaya_internal as $data)
                                     <option value="{{$data->id_kelompok_biaya_internal}}">
                                         {{$data->nm_kelompok_biaya_internal}}

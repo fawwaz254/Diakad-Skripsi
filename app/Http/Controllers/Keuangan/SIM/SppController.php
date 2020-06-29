@@ -981,15 +981,17 @@ class SppController extends BaseController
 
                         if($bulan->id_bulan == 7){
                             $besar_biaya = $input->nominal_spp_juli;
+                            $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_non_juli;
                         }else{
                             $besar_biaya = $input->nominal_spp_non_juli;
+                            $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_juli;
                         }
 
                         $detail_biaya[] = array(
                             'id_detail_biaya'               => $id_detail_biaya,
                             'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
                             'id_biaya'                      => $biaya->id_biaya ,
-                            'id_kelompok_biaya_internal'    => $input->id_kelompok_biaya_internal,
+                            'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
                             'validasi_biaya'                => 1,
                             'besar_biaya'                   => $besar_biaya,
                             'id_jenis_detail_biaya'         => 4,

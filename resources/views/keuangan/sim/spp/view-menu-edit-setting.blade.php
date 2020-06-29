@@ -30,18 +30,6 @@
                                         <input type="text" class="form-control" disabled="" value="{{$kelas->nm_kelas}}">
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <label>Biaya SPP JULI</label>
-                                        <input type="number" class="form-control" name="nominal_spp_juli" required="">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <label>Biaya SPP NON-JULI</label>
-                                        <input type="number" class="form-control" name="nominal_spp_non_juli" required="">
-                                    </div>
-                                </div>
                                 <label>Kelompok Biaya</label>
                                 <select class="form-control show-tick" name="id_kelompok_biaya" required="">
                                     <option value="">Pilih Kelompok Biaya</option>
@@ -50,9 +38,29 @@
                                     @endforeach
                                 </select>
                                 <br>
-                                <label>Kelompok Biaya Internal</label>
-                                <select class="form-control show-tick" name="id_kelompok_biaya_internal" required="">
-                                    <option value="">Pilih Kelompok Biaya Internal</option>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label>Biaya SPP JULI</label>
+                                        <input type="number" class="form-control" name="nominal_spp_juli" required="">
+                                    </div>
+                                </div>
+                                <label>Biaya Internal JULI</label>
+                                <select class="form-control show-tick" name="id_kelompok_biaya_internal_juli" required="">
+                                    <option value="">Pilih Biaya Internal Juli</option>
+                                    @foreach($data_kelompok_biaya_internal as $kelompok_biaya_internal)
+                                    <option value="{{$kelompok_biaya_internal->id_kelompok_biaya_internal}}">{{$kelompok_biaya_internal->nm_kelompok_biaya_internal}}</option>
+                                    @endforeach
+                                </select>
+                                <br>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label>Biaya SPP NON-JULI</label>
+                                        <input type="number" class="form-control" name="nominal_spp_non_juli" required="">
+                                    </div>
+                                </div>
+                                <label>Biaya Internal NON-JULI</label>
+                                <select class="form-control show-tick" name="id_kelompok_biaya_internal_non_juli" required="">
+                                    <option value="">Pilih Biaya Internal NON-JULI</option>
                                     @foreach($data_kelompok_biaya_internal as $kelompok_biaya_internal)
                                     <option value="{{$kelompok_biaya_internal->id_kelompok_biaya_internal}}">{{$kelompok_biaya_internal->nm_kelompok_biaya_internal}}</option>
                                     @endforeach
