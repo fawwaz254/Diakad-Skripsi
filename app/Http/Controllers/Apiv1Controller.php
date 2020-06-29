@@ -27,6 +27,7 @@ use App\Models\PresensiMpPelanggaran;
 use App\Models\PengambilanMp;
 use App\Models\TindakanPelanggaran;
 use App\Models\Semester;
+use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\UjianMpPresensi;
 use App\Models\BeasiswaSiswa;
@@ -79,6 +80,7 @@ class Apiv1Controller extends BaseController
                     'path_actor' => $pengguna->path_join_to_text(),
                     'gelar_depan' => $pengguna->gelar_depan,
                     'gelar_belakang' => $pengguna->gelar_belakang,
+                    'is_magang' => Setting::where('key_setting', 'is_pkl_online')->first()->value,
                     'api_key' => $pengguna->api_key
                 );
                 return response()->json([
