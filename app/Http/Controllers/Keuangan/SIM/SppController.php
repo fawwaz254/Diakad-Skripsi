@@ -953,59 +953,60 @@ class SppController extends BaseController
             $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
     
             $biaya = Biaya::where('nm_biaya', 'SPP')->first();
+            $kelompok_biaya = KelompokBiaya::where('id_kelompok_biaya', $input->id_kelompok_biaya)->first();
 
             $data_bulan = Bulan::orderBy('id_bulan', 'asc')->get();
 
             DB::beginTransaction();
             try {
                 Siswa::where('id_kelas', $kelas->id_kelas)->update(['id_kelompok_biaya' => $input->id_kelompok_biaya]);
-                foreach($data_siswa as $siswa){
+                foreach($data_bulan as $bulan){
                     $detail_biaya = array();
                     $tagihan = array();
+                
+                    $id_detail_biaya = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    if($bulan->id_bulan < 7){
+                        $id_semester = $semester_selesai->id_semester;
+                    }else{
+                        $id_semester = $semester_mulai->id_semester;
+                    }
 
-                    foreach($data_bulan as $bulan){
-                        $id_detail_biaya = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                        if($bulan->id_bulan < 7){
-                            $id_semester = $semester_selesai->id_semester;
-                        }else{
-                            $id_semester = $semester_mulai->id_semester;
-                        }
+                    if($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()){
 
-                        if($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()){
+                    }else{
+                        $biaya_sekolah = new BiayaSekolah;
+                        $biaya_sekolah->id_biaya_sekolah                = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $biaya_sekolah->id_kelompok_biaya               = $input->id_kelompok_biaya;
+                        $biaya_sekolah->id_semester                     = $id_semester;
+                        $biaya_sekolah->besar_biaya_sekolah             = (1 * $input->nominal_spp_juli) + (11 * $input->nominal_spp_non_juli);
+                        $biaya_sekolah->validasi_biaya_sekolah          = 1;
+                        $biaya_sekolah->keterangan_biaya_sekolah        = 'SPP '.$kelompok_biaya->nm_kelompok_biaya;
+                        $biaya_sekolah->save();
+                    }
 
-                        }else{
-                            $biaya_sekolah = new BiayaSekolah;
-                            $biaya_sekolah->id_biaya_sekolah                = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            $biaya_sekolah->id_kelompok_biaya               = $input->id_kelompok_biaya;
-                            $biaya_sekolah->id_semester                     = $id_semester;
-                            $biaya_sekolah->besar_biaya_sekolah             = (1 * $input->nominal_spp_juli) + (11 * $input->nominal_spp_non_juli);
-                            $biaya_sekolah->validasi_biaya_sekolah          = 1;
-                            $biaya_sekolah->keterangan_biaya_sekolah        = 'SPP Kelas '.$kelas->nm_kelas;
-                            $biaya_sekolah->save();
-                        }
+                    if($bulan->id_bulan == 7){
+                        $besar_biaya = $input->nominal_spp_juli;
+                        $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_non_juli;
+                    }else{
+                        $besar_biaya = $input->nominal_spp_non_juli;
+                        $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_juli;
+                    }
 
-                        if($bulan->id_bulan == 7){
-                            $besar_biaya = $input->nominal_spp_juli;
-                            $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_non_juli;
-                        }else{
-                            $besar_biaya = $input->nominal_spp_non_juli;
-                            $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_juli;
-                        }
+                    $detail_biaya[] = array(
+                        'id_detail_biaya'               => $id_detail_biaya,
+                        'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
+                        'id_biaya'                      => $biaya->id_biaya ,
+                        'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
+                        'validasi_biaya'                => 1,
+                        'besar_biaya'                   => $besar_biaya,
+                        'id_jenis_detail_biaya'         => 4,
+                        'id_bulan'                      => $bulan->id_bulan,
+                        'created_at'                    => $now,
+                        'created_by'                    => $input->auth_data->pengguna->id_pengguna,
+                        'updated_at'                    => $now,
+                    );
 
-                        $detail_biaya[] = array(
-                            'id_detail_biaya'               => $id_detail_biaya,
-                            'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
-                            'id_biaya'                      => $biaya->id_biaya ,
-                            'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
-                            'validasi_biaya'                => 1,
-                            'besar_biaya'                   => $besar_biaya,
-                            'id_jenis_detail_biaya'         => 4,
-                            'id_bulan'                      => $bulan->id_bulan,
-                            'created_at'                    => $now,
-                            'created_by'                    => $input->auth_data->pengguna->id_pengguna,
-                            'updated_at'                    => $now,
-                        );
-    
+                    foreach($data_siswa as $siswa){
                         $tagihan[] = array(
                             'id_tagihan_biaya'  => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
                             'id_siswa'          => $siswa->id_siswa,
