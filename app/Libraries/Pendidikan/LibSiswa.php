@@ -601,12 +601,12 @@ class LibSiswa
                                 ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
                                 ->where('tagihan_biaya.is_tagih', '=', 1)
                                 ->where('tagihan_biaya.id_siswa', '=', $id_siswa)
-                                ->orderBy('semester.thn_akademik_semester', 'desc')
-                                ->orderBy('semester.nm_semester', 'desc')
-                                ->orderBy('tagihan_biaya.besar_biaya', 'desc')
+                                ->orderBy('semester.thn_akademik_semester', 'asc')
+                                ->orderBy('semester.nm_semester', 'asc')
                                 ->orderBy('kelompok_biaya.status_kelompok_biaya', 'asc')
                                 ->orderBy('kelompok_biaya.nm_kelompok_biaya', 'asc')
                                 ->orderBy('biaya.nm_biaya', 'asc')
+                                ->orderBy('bulan.id_bulan', 'asc')
                                 ->get();
 
         return $tagihanBiaya;
