@@ -785,6 +785,8 @@ class UsulanMataAjarController extends BaseController
                         $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_pj);
                         $pengampu_mp->id_guru           = $input->pjma;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
+                        $pengampu_mp->pjmp_uts          = 1;
+                        $pengampu_mp->pjmp_uas          = 1;
                         $pengampu_mp->updated_at        = $now;
                         $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
@@ -794,6 +796,8 @@ class UsulanMataAjarController extends BaseController
                         $pengampu_mp->id_kelas_mp       = $id;
                         $pengampu_mp->id_guru           = $input->pjma;
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
+                        $pengampu_mp->pjmp_uts          = 1;
+                        $pengampu_mp->pjmp_uas          = 1;
                         $pengampu_mp->created_at        = $now;
                         $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
@@ -806,6 +810,8 @@ class UsulanMataAjarController extends BaseController
                             $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_1);
                             $pengampu_mp->id_guru           = $input->pjma_tim1;
                             $pengampu_mp->pjmp_pengampu_mp  = 2;
+                            $pengampu_mp->pjmp_uts          = 0;
+                            $pengampu_mp->pjmp_uas          = 0;
                             $pengampu_mp->updated_at        = $now;
                             $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
@@ -824,6 +830,8 @@ class UsulanMataAjarController extends BaseController
                             $pengampu_mp->id_kelas_mp       = $id;
                             $pengampu_mp->id_guru           = $input->pjma_tim1;
                             $pengampu_mp->pjmp_pengampu_mp  = 2;
+                            $pengampu_mp->pjmp_uts          = 0;
+                            $pengampu_mp->pjmp_uas          = 0;
                             $pengampu_mp->created_at        = $now;
                             $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
@@ -836,6 +844,8 @@ class UsulanMataAjarController extends BaseController
                             $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp_2);
                             $pengampu_mp->id_guru           = $input->pjma_tim2;
                             $pengampu_mp->pjmp_pengampu_mp  = 2;
+                            $pengampu_mp->pjmp_uts          = 0;
+                            $pengampu_mp->pjmp_uas          = 0;
                             $pengampu_mp->updated_at        = $now;
                             $pengampu_mp->updated_by        = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();
@@ -854,6 +864,8 @@ class UsulanMataAjarController extends BaseController
                             $pengampu_mp->id_kelas_mp       = $id;
                             $pengampu_mp->id_guru           = $input->pjma_tim2;
                             $pengampu_mp->pjmp_pengampu_mp  = 2;
+                            $pengampu_mp->pjmp_uts          = 0;
+                            $pengampu_mp->pjmp_uas          = 0;
                             $pengampu_mp->created_at        = $now;
                             $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
                             $pengampu_mp->save();

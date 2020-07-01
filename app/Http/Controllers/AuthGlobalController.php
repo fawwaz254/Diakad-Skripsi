@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 use App\Models\Role;
+use App\Models\RolePengguna;
 use Yajra\Datatables\Datatables;
 
 use Auth;
@@ -111,8 +112,8 @@ class AuthGlobalController extends BaseController
 
         $roles_pengguna = $input->auth_data->roles_pengguna;
 
-        if ($role_pengguna_selected = $roles_pengguna->where('id_role', $input->role)->first()) {
-            foreach ($roles_pengguna as $role_pengguna) {
+        if ($role_pengguna_selected = RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('id_role', $input->role)->first()) {
+            foreach (RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->get() as $role_pengguna) {
                 if ($role_pengguna->id_role == $role_pengguna_selected->id_role) {
                     $role_pengguna->is_aktif = 1;
                     $role_pengguna->save();

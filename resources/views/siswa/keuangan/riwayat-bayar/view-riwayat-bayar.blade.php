@@ -20,7 +20,6 @@
                                         <th>Pembayaran</th>
                                         <th>Tanggal Bayar</th>
                                         <th>Semester Bayar</th>
-                                        <th>Staff Keuangan</th>
                                         <th>Via Bank</th>
                                         <th>Nomor Ref Bank</th>
                                     </tr>
@@ -56,7 +55,6 @@
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'tgl_pembayaran', name: 'tgl_pembayaran'},
             { data: 'semester_bayar', name: 'semester_bayar'},
-            { data: 'nm_pengguna', name: 'nm_pengguna'},
             { data: 'nm_bank', name: 'nm_bank'},
             { data: 'nomor_transaksi', name: 'nomor_transaksi'}
         ]
