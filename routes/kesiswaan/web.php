@@ -268,9 +268,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Pengajuan Wisuda
             Route::get('pengajuan-wisuda', 'Pendidikan\Wisuda\PengajuanWisudaController@viewPengajuanWisuda');
             Route::post('post-view-pengajuan-wisuda', 'Pendidikan\Wisuda\PengajuanWisudaController@actionViewDetailPengajuanWisuda');
-            Route::get('pengajuan-wisuda/view-detail/{id_periode_wisuda}/{nis_nama_siswa}', 'Pendidikan\Wisuda\PengajuanWisudaController@viewDetailPengajuanWisuda');
-            Route::get('pengajuan-wisuda/datatables/{id_periode_wisuda}/{nis_nama_siswa}', 'Pendidikan\Wisuda\PengajuanWisudaController@datatablesPengajuanWisuda');
-            Route::get('pengajuan-wisuda/cancel/{id}/{id_periode_wisuda}/{nis_nama_siswa}/', 'Pendidikan\Wisuda\PengajuanWisudaController@cancelPengajuanWisuda');
+            Route::get('pengajuan-wisuda/view-detail/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\PengajuanWisudaController@viewDetailPengajuanWisuda');
+            Route::get('pengajuan-wisuda/datatables/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\PengajuanWisudaController@datatablesPengajuanWisuda');
+            Route::get('pengajuan-wisuda/cancel/{id}/{id_periode_wisuda}/{id_kelas}/', 'Pendidikan\Wisuda\PengajuanWisudaController@cancelPengajuanWisuda');
 
             Route::post('action-pengajuan-wisuda/{mode}/{id}/{id_siswa}/{id_periode_wisuda}', 'Pendidikan\Wisuda\PengajuanWisudaController@actionPengajuanWisuda');
 

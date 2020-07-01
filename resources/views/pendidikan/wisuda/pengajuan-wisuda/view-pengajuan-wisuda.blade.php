@@ -15,7 +15,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_periode_wisuda">
+                                <select class="form-control show-tick" name="id_periode_wisuda" required="">
                                     <option value="0">-- Pilih Periode Wisuda --</option>
                                     @foreach($data_periode_wisuda as $data)
                                         <option value="{{$data->id_periode_wisuda}}">{{$data->nm_periode_wisuda}} ({{$data->tahun_ajaran}} {{$data->nm_semester}})</option>
@@ -23,12 +23,14 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
-                            NIS atau Nama Siswa <small><b>* Diisi Untuk Pencarian Lebih Spesifik</b></small>
-                        </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nis_nama_siswa" aria-invalid="true">
+                                <select class="form-control show-tick" name="id_kelas" required="">
+                                    <option value="0">-- Pilih Kelas --</option>
+                                    @foreach($data_kelas as $data)
+                                        <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row clearfix">
