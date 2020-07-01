@@ -60,7 +60,11 @@ class BiayaInternalController extends BaseController{
     public function datatablesBiayaInternal(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataKeuangan::fetchDataBiayaInternal($auth_data, null, "1");
+        $list_data = LibDataKeuangan::fetchDataBiayaInternal($auth_data, null, "1");
+        
+        if(!empty($input->is_aktif)){
+            $list_data = $list_data->where('kelompok_biaya_internal.is_aktif', $input->is_aktif);
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('action', function($item){

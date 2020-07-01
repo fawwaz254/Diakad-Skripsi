@@ -10,6 +10,20 @@
                         <h2>DATA BIAYA INTERNAL</h2>
                     </div>
                     <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Status Tampil
+                                </h2>
+                                <select class="form-control show-tick" name="is_aktif">
+                                    <option value="1">Aktif</option>
+                                    <option value="2">Tidak Aktif</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Filter</span></button>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                 <thead>
@@ -38,10 +52,13 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(params){
+                params.is_aktif = $('select[name=is_aktif]').val();
+            }
         },
         columns: [
             { data: null, searchable: false, orderable: false },
