@@ -77,11 +77,12 @@ class SppController extends BaseController
         $tahun_akademik_semester = $thn_akademik_semester;
 
         $data_kelompok_biaya = KelompokBiaya::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                                    ->where('status_kelompok_biaya', 1)
                                     ->orderBy('status_kelompok_biaya', 'asc')
                                     ->orderBy('nm_kelompok_biaya', 'asc')
                                     ->get();
 
-        $data_kelompok_biaya_internal = KelompokBiayaInternal::orderBy('nm_kelompok_biaya_internal', 'asc')
+        $data_kelompok_biaya_internal = KelompokBiayaInternal::where('is_aktif', 1)->orderBy('nm_kelompok_biaya_internal', 'asc')
                                     ->get();
         
         $kelas = Kelas::find($id);
@@ -98,11 +99,12 @@ class SppController extends BaseController
         $tahun_akademik_semester = $thn_akademik_semester;
 
         $data_kelompok_biaya = KelompokBiaya::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                                    ->where('status_kelompok_biaya', 1)
                                     ->orderBy('status_kelompok_biaya', 'asc')
                                     ->orderBy('nm_kelompok_biaya', 'asc')
                                     ->get();
 
-        $data_kelompok_biaya_internal = KelompokBiayaInternal::orderBy('nm_kelompok_biaya_internal', 'asc')
+        $data_kelompok_biaya_internal = KelompokBiayaInternal::where('is_aktif', 1)->orderBy('nm_kelompok_biaya_internal', 'asc')
                                     ->get();
         
         $kelas = Kelas::find($id);
@@ -992,19 +994,30 @@ class SppController extends BaseController
                         $id_kelompok_biaya_internal = $input->id_kelompok_biaya_internal_juli;
                     }
 
-                    $detail_biaya[] = array(
-                        'id_detail_biaya'               => $id_detail_biaya,
-                        'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
-                        'id_biaya'                      => $biaya->id_biaya ,
-                        'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
-                        'validasi_biaya'                => 1,
-                        'besar_biaya'                   => $besar_biaya,
-                        'id_jenis_detail_biaya'         => 4,
-                        'id_bulan'                      => $bulan->id_bulan,
-                        'created_at'                    => $now,
-                        'created_by'                    => $input->auth_data->pengguna->id_pengguna,
-                        'updated_at'                    => $now,
-                    );
+                    if($item = DetailBiaya::where(
+                        [
+                            'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah, 
+                            'id_biaya'                      => $biaya->id_biaya,
+                            'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
+                            'id_jenis_detail_biaya'         => 4,
+                            'id_bulan'                      => $bulan->id_bulan
+                        ])->first()){
+                        $id_detail_biaya = $item->id_detail_biaya;
+                    }else{
+                            $detail_biaya[] = array(
+                                'id_detail_biaya'               => $id_detail_biaya,
+                                'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
+                                'id_biaya'                      => $biaya->id_biaya ,
+                                'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
+                                'validasi_biaya'                => 1,
+                                'besar_biaya'                   => $besar_biaya,
+                                'id_jenis_detail_biaya'         => 4,
+                                'id_bulan'                      => $bulan->id_bulan,
+                                'created_at'                    => $now,
+                                'created_by'                    => $input->auth_data->pengguna->id_pengguna,
+                                'updated_at'                    => $now,
+                            );
+                    }
 
                     foreach($data_siswa as $siswa){
                         $tagihan[] = array(
@@ -1021,8 +1034,13 @@ class SppController extends BaseController
                         );
                     }
 
-                    DetailBiaya::insert($detail_biaya);
-                    TagihanBiaya::insert($tagihan);
+                    if(!empty($detail_biaya)){
+                        DetailBiaya::insert($detail_biaya);
+                    }
+                    
+                    if(!empty($tagihan)){
+                        TagihanBiaya::insert($tagihan);
+                    }
                 }
                 
 

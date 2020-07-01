@@ -75,11 +75,12 @@ class LibDataKeuangan
 
         // get mode view
         if ($id == null) {
-            $biayaInternal = KelompokBiayaInternal::select('kelompok_biaya_internal.id_kelompok_biaya_internal', 'biaya.id_biaya', 'biaya.nm_biaya', 'kelompok_biaya_internal.nm_kelompok_biaya_internal')
+            $biayaInternal = KelompokBiayaInternal::select('kelompok_biaya_internal.id_kelompok_biaya_internal', 'kelompok_biaya_internal.is_aktif', 'biaya.id_biaya', 'biaya.nm_biaya', 'kelompok_biaya_internal.nm_kelompok_biaya_internal')
                                 ->join('biaya', function ($q) {
                                     $q->on('biaya.id_biaya', '=', 'kelompok_biaya_internal.id_biaya')
                                         ->whereNull('biaya.deleted_at');
                                 })
+                                ->where('kelompok_biaya_internal.is_aktif', '=', 1)
                                 ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                                 ->orderBy('biaya.nm_biaya', 'asc')
                                 ->orderBy('kelompok_biaya_internal.nm_kelompok_biaya_internal', 'desc');
