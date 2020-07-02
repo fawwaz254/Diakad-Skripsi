@@ -44,17 +44,18 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
 
     var id_periode_wisuda = {!! json_encode($id_periode_wisuda) !!};
-    var nis_nama_siswa = {!! json_encode($nis_nama_siswa) !!};
+    var id_kelas = {!! json_encode($id_kelas) !!};
 
     var modul_url       = 'wisuda';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'entri-wisuda/datatables/' + id_periode_wisuda + '/' + nis_nama_siswa;
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'entri-wisuda/datatables/' + id_periode_wisuda + '/' + id_kelas;
     var input_url        = role_url + '#' + modul_url + '/' + 'entri-wisuda/input';
 
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
+        lengthMenu: [[50, 100, -1], [50, 100, "All"]],
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -82,7 +83,7 @@ responsive: true,
                             return '<a>LULUS</a>';
                         }
                         else if(data.status_wisuda == 1) {
-                            return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ input_url + '/' + data.id + '/' + id_periode_wisuda + '/' + nis_nama_siswa +'">'+
+                            return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ input_url + '/' + data.id + '/' + id_periode_wisuda + '/' + id_kelas +'">'+
                             '    <i class="material-icons">input</i>'+
                             '</a>';
                         }

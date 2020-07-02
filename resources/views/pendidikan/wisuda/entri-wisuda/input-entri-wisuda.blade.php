@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#wisuda/entri-wisuda/view-detail/'.$id_periode_wisuda.'/'.$nis_nama_siswa)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#wisuda/entri-wisuda/view-detail/'.$id_periode_wisuda.'/'.$id_kelas)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -139,7 +139,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tgl_kelulusan" aria-invalid="true" value="{{$tgl_kelulusan}}" >
-                                <input type="hidden" class="form-control" name="nis_nama_siswa" required="" aria-required="true" aria-invalid="true" value="{{$nis_nama_siswa}}">
+                                <input type="hidden" class="form-control" name="id_kelas" required="" aria-required="true" aria-invalid="true" value="{{$id_kelas}}">
                                 <input type="hidden" class="form-control" name="id_periode_wisuda" required="" aria-required="true" aria-invalid="true" value="{{$id_periode_wisuda}}">
                             </div>
                         </div>

@@ -11,13 +11,15 @@ use App\Models\PengajuanWisuda as PengajuanWisuda;
 use App\Models\PeriodeWisuda as PeriodeWisuda;
 
 use App\Models\Admisi as Admisi;
-
+use App\Models\Kelas;
 use App\Models\Siswa as Siswa;
 use App\Models\Pengguna as Pengguna;
 use App\Models\RolePengguna as RolePengguna;
 use App\Models\StatusPengguna as StatusPengguna;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+
+use App\Libraries\Pendidikan\LibWisuda;
 
 use Auth;
 use DB;
@@ -31,14 +33,54 @@ class SetLulusController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('pendidikan/wisuda/set-lulus/view-set-lulus',compact('auth_data'));
+        $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data);
+
+        $kelas_calon_lulus = Kelas::orderBy('tingkat', 'desc')->first();
+        $data_kelas = Kelas::where('tingkat', $kelas_calon_lulus->tingkat)->orderBy('nm_kelas')->get();
+
+    	return view('pendidikan/wisuda/set-lulus/view-set-lulus',compact('auth_data','data_periode_wisuda', 'data_kelas'));
 
     }
 
-    public function datatablesSetLulus(Request $request){
+    public function actionViewDetailSetLulus(Request $request){
+        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = $this->fetchDataSetLulus($auth_data);
+
+        $validator = Validator::make($request->all(), [
+            'id_periode_wisuda' => 'required',
+            'id_kelas' => 'required',
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+        else {
+            return [
+                        'status' => 204, // SUCCESS AND LOAD CONTENT
+                        'path' => 'wisuda/set-lulus/view-detail/'.$input->id_periode_wisuda.'/'.$input->id_kelas
+                    ];
+        }
+    }
+
+    public function viewDetailSetLulus(Request $request, $id_periode_wisuda, $id_kelas){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_periode_wisuda = LibWisuda::fetchDataPeriodeWisuda($auth_data, $id_periode_wisuda);
+
+        return view('pendidikan/wisuda/set-lulus/view-detail-set-lulus',compact('auth_data', 'id_periode_wisuda','data_periode_wisuda', 'id_kelas'));
+
+    }
+
+    public function datatablesSetLulus(Request $request, $id_periode_wisuda, $id_kelas){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = $this->fetchDataSetLulus($auth_data, $id_periode_wisuda, $id_kelas);
 
         return Datatables::of($list_data)
                 ->addColumn('nm_periode_wisuda', function($item){
@@ -134,30 +176,41 @@ class SetLulusController extends BaseController{
                 ->make(true);
     }
 
-    public function fetchDataSetLulus($auth_data){
+    public function fetchDataSetLulus($auth_data, $id_periode_wisuda, $id_kelas){
 
         $siswa = Siswa::select('pengajuan_wisuda.id_pengajuan_wisuda','siswa.id_siswa','periode_wisuda.id_periode_wisuda','periode_wisuda.nm_periode_wisuda', 'semester.tahun_ajaran', 'semester.nm_semester', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'pengajuan_wisuda.status_biodata', 'pengajuan_wisuda.status_lab', 'pengajuan_wisuda.status_perpus', 'pengajuan_wisuda.status_ijasah', 'pengajuan_wisuda.nomor_sk_kelulusan', 'pengajuan_wisuda.tgl_sk_kelulusan', 'pengajuan_wisuda.nomor_ijasah', 'pengajuan_wisuda.tgl_kelulusan', 'pengajuan_wisuda.tgl_pengajuan_wisuda', 'pengajuan_wisuda.status_wisuda')
                     ->join('pengajuan_wisuda','pengajuan_wisuda.id_siswa','=','siswa.id_siswa')
                     ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
                     ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
                     ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-                    ->join('periode_wisuda','periode_wisuda.id_periode_wisuda', '=', 'pengajuan_wisuda.id_periode_wisuda')
+                    ->leftJoin('periode_wisuda', function ($join) use ($id_periode_wisuda) {
+                        if($id_periode_wisuda != "0") {
+                            $join->on('periode_wisuda.id_periode_wisuda', '=', 'pengajuan_wisuda.id_periode_wisuda')
+                            ->where('periode_wisuda.id_periode_wisuda', '=', $id_periode_wisuda);
+                        }else{
+                            $join->on('periode_wisuda.id_periode_wisuda', '=', 'pengajuan_wisuda.id_periode_wisuda');
+                        }
+                    })
                     ->join('semester','semester.id_semester','=','periode_wisuda.id_semester')
                     ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                     ->where('status_pengguna.aktif_status_pengguna','=',1)
-                    ->where('pengajuan_wisuda.status_biodata','=',1)
-                    ->where('pengajuan_wisuda.status_lab','=',1)
-                    ->where('pengajuan_wisuda.status_perpus','=',1)
-                    ->where('pengajuan_wisuda.status_ijasah','=',1)
-                    ->whereNotNull('pengajuan_wisuda.nomor_sk_kelulusan')
-                    ->whereNotNull('pengajuan_wisuda.tgl_sk_kelulusan')
-                    ->whereNotNull('pengajuan_wisuda.nomor_ijasah')
-                    ->whereNotNull('pengajuan_wisuda.tgl_kelulusan')
+                    // ->where('pengajuan_wisuda.status_biodata','=',1)
+                    // ->where('pengajuan_wisuda.status_lab','=',1)
+                    // ->where('pengajuan_wisuda.status_perpus','=',1)
+                    // ->where('pengajuan_wisuda.status_ijasah','=',1)
+                    // ->whereNotNull('pengajuan_wisuda.nomor_sk_kelulusan')
+                    // ->whereNotNull('pengajuan_wisuda.tgl_sk_kelulusan')
+                    // ->whereNotNull('pengajuan_wisuda.nomor_ijasah')
+                    // ->whereNotNull('pengajuan_wisuda.tgl_kelulusan')
                     ->where('pengajuan_wisuda.status_wisuda','=',1)
                     ->orderBy('kelas.tingkat', 'asc')
                     ->orderBy('kelas.nm_kelas', 'asc')
-                    ->orderBy('siswa.nis_siswa', 'asc')
-                    ->get();
+                    ->orderBy('siswa.nis_siswa', 'asc');
+
+        if(!empty($id_kelas)){
+            $siswa = $siswa->where('kelas.id_kelas', $id_kelas);
+        }
+        $siswa = $siswa->get();
 
         return $siswa;
     }
@@ -188,62 +241,66 @@ class SetLulusController extends BaseController{
                 DB::beginTransaction();
 
                 try {
-                    // get info pengajuan_wisuda kode CALON_LULUS
-                    $pengajuanWisudaSet = PengajuanWisuda::where('id_pengajuan_wisuda','=',$id)
+
+                    foreach($input->id_pengajuan_wisuda as $id){        
+                        // get info pengajuan_wisuda kode CALON_LULUS
+                        $pengajuanWisudaSet = PengajuanWisuda::where('id_pengajuan_wisuda','=',$id)
+                                            ->first();
+    
+                        // get status_pengguna kode CALON_LULUS
+                        $statusPengguna = StatusPengguna::where('kode_status_pengguna','=',"LULUS")
+                                            ->where('status_join_table','=',3)
+                                            ->where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
+                                            ->first();
+    
+                        // -- UPDATE id_kelas = null tabel siswa --
+                        $siswa                      = Siswa::find($pengajuanWisudaSet->id_siswa);
+                        $siswa->id_kelas            = null;
+                        $siswa->updated_by          = $input->auth_data->pengguna->id_pengguna;
+                        $siswa->updated_at          = $now;
+                        $siswa->save();
+    
+                        // -- UPDATE status_pengguna tabel pengguna --
+                        $pengguna                       = Pengguna::find($siswa->id_pengguna);
+                        $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
+                        $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                        $pengguna->updated_at           = $now;
+                        $pengguna->save();
+    
+                        // get role_pengguna
+                        $rolePenggunaSet = RolePengguna::where('id_pengguna','=',$pengguna->id_pengguna)
+                                        ->where('id_role','=',3)
                                         ->first();
-
-                    // get status_pengguna kode CALON_LULUS
-                    $statusPengguna = StatusPengguna::where('kode_status_pengguna','=',"LULUS")
-                                        ->where('status_join_table','=',3)
-                                        ->where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
+    
+                        // -- UPDATE role tabel role_pengguna --
+                        $rolePengguna                   = RolePengguna::find($rolePenggunaSet->id_role_pengguna);
+                        $rolePengguna->id_role          = 12;
+                        $rolePengguna->updated_by       = $input->auth_data->pengguna->id_pengguna;
+                        $rolePengguna->updated_at       = $now;
+                        $rolePengguna->save();
+    
+                        // -- UPDATE tabel pengajuan_wisuda --
+                        $pengajuanWisuda                        = PengajuanWisuda::find($id);
+                        $pengajuanWisuda->status_wisuda         = 2;
+                        $pengajuanWisuda->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                        $pengajuanWisuda->updated_at            = $now;
+                        $pengajuanWisuda->save();
+    
+                        // -- UPDATE tabel admisi --
+                        // get info admisi
+                        $admisi = Admisi::join('status_pengguna','status_pengguna.id_status_pengguna','=','admisi.id_status_pengguna')
+                                        ->where('admisi.id_siswa','=',$siswa->id_siswa)
+                                        ->where('status_pengguna.kode_status_pengguna','=',"CALON_LULUS")
+                                        ->where('admisi.id_pengajuan_wisuda','=',$id)
                                         ->first();
-
-                    // -- UPDATE id_kelas = null tabel siswa --
-                    $siswa                      = Siswa::find($pengajuanWisudaSet->id_siswa);
-                    $siswa->id_kelas            = null;
-                    $siswa->updated_by          = $input->auth_data->pengguna->id_pengguna;
-                    $siswa->updated_at          = $now;
-                    $siswa->save();
-
-                    // -- UPDATE status_pengguna tabel pengguna --
-                    $pengguna                       = Pengguna::find($siswa->id_pengguna);
-                    $pengguna->id_status_pengguna   = $statusPengguna->id_status_pengguna;
-                    $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
-                    $pengguna->updated_at           = $now;
-                    $pengguna->save();
-
-                    // get role_pengguna
-                    $rolePenggunaSet = RolePengguna::where('id_pengguna','=',$pengguna->id_pengguna)
-                                    ->where('id_role','=',3)
-                                    ->first();
-
-                    // -- UPDATE role tabel role_pengguna --
-                    $rolePengguna                   = RolePengguna::find($rolePenggunaSet->id_role_pengguna);
-                    $rolePengguna->id_role          = 12;
-                    $rolePengguna->updated_by       = $input->auth_data->pengguna->id_pengguna;
-                    $rolePengguna->updated_at       = $now;
-                    $rolePengguna->save();
-
-                    // -- UPDATE tabel pengajuan_wisuda --
-                    $pengajuanWisuda                        = PengajuanWisuda::find($id);
-                    $pengajuanWisuda->status_wisuda         = 2;
-                    $pengajuanWisuda->updated_by            = $input->auth_data->pengguna->id_pengguna;
-                    $pengajuanWisuda->updated_at            = $now;
-                    $pengajuanWisuda->save();
-
-                    // -- UPDATE tabel admisi --
-                    // get info admisi
-                    $admisi = Admisi::join('status_pengguna','status_pengguna.id_status_pengguna','=','admisi.id_status_pengguna')
-                                    ->where('admisi.id_siswa','=',$siswa->id_siswa)
-                                    ->where('status_pengguna.kode_status_pengguna','=',"CALON_LULUS")
-                                    ->where('admisi.id_pengajuan_wisuda','=',$id)
-                                    ->first();
-
-                    $admisi                         = Admisi::find($admisi->id_admisi);
-                    $admisi->id_status_pengguna     = $statusPengguna->id_status_pengguna;
-                    $admisi->updated_by             = $input->auth_data->pengguna->id_pengguna;
-                    $admisi->updated_at             = $now;
-                    $admisi->save();
+    
+                        $admisi                         = Admisi::find($admisi->id_admisi);
+                        $admisi->id_status_pengguna     = $statusPengguna->id_status_pengguna;
+                        $admisi->updated_by             = $input->auth_data->pengguna->id_pengguna;
+                        $admisi->updated_at             = $now;
+                        $admisi->save();
+    
+                    }
 
                     DB::commit();
                     // all good

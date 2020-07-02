@@ -277,15 +277,17 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Entri Data Wisuda
             Route::get('entri-wisuda', 'Pendidikan\Wisuda\EntriWisudaController@viewEntriWisuda');
             Route::post('post-view-entri-wisuda', 'Pendidikan\Wisuda\EntriWisudaController@actionViewDetailEntriWisuda');
-            Route::get('entri-wisuda/view-detail/{id_periode_wisuda}/{nis_nama_siswa}', 'Pendidikan\Wisuda\EntriWisudaController@viewDetailEntriWisuda');
-            Route::get('entri-wisuda/datatables/{id_periode_wisuda}/{nis_nama_siswa}', 'Pendidikan\Wisuda\EntriWisudaController@datatablesEntriWisuda');
-            Route::get('entri-wisuda/input/{id}/{id_periode_wisuda}/{nis_nama_siswa}/', 'Pendidikan\Wisuda\EntriWisudaController@inputEntriWisuda');
+            Route::get('entri-wisuda/view-detail/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\EntriWisudaController@viewDetailEntriWisuda');
+            Route::get('entri-wisuda/datatables/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\EntriWisudaController@datatablesEntriWisuda');
+            Route::get('entri-wisuda/input/{id}/{id_periode_wisuda}/{id_kelas}/', 'Pendidikan\Wisuda\EntriWisudaController@inputEntriWisuda');
 
             Route::post('action-entri-wisuda/{mode}/{id}/{id_siswa}/{id_periode_wisuda}', 'Pendidikan\Wisuda\EntriWisudaController@actionEntriWisuda');
 
             // MENU Set Lulus Siswa ==== (BELOM SEMUA) ====
             Route::get('set-lulus', 'Pendidikan\Wisuda\SetLulusController@viewSetLulus');
-            Route::get('set-lulus/datatables', 'Pendidikan\Wisuda\SetLulusController@datatablesSetLulus');
+            Route::post('post-view-set-lulus', 'Pendidikan\Wisuda\SetLulusController@actionViewDetailSetLulus');
+            Route::get('set-lulus/view-detail/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\SetLulusController@viewDetailSetLulus');
+            Route::get('set-lulus/datatables/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\SetLulusController@datatablesSetLulus');
 
             Route::post('action-set-lulus/{mode}/{id}', 'Pendidikan\Wisuda\SetLulusController@actionSetLulus');
         });

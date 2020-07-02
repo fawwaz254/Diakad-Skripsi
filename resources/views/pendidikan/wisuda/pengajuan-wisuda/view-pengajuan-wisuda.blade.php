@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        PILIH PERIODE WISUDA ATAU NIS/NAMA SISWA
+                        PILIH PERIODE WISUDA ATAU KELAS
                     </h2>
                 </div>
                 <div class="body">
