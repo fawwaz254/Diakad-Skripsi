@@ -32,7 +32,7 @@ class SettingKelasSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
-        return view('pendidikan/siswa/setting-kelas-siswa/view-kelas-setting-kelas-siswa',compact('auth_data','data_kelas','siswa'));
+        return view('pendidikan/siswa/setting-kelas-siswa/view-kelas-setting-kelas-siswa',compact('auth_data','data_kelas'));
     }
 
     public function actionViewSettingKelasSiswa(Request $request){
