@@ -23,7 +23,8 @@ deploy_to_demo:
     - master
   environment: production
   script:
-    - ssh -t root@$DEMO_SERVER "cd /var/www/diakademik && git pull origin master"
+    - ssh -t root@$DEMO_SERVER "cd /var/www/diakademik_demo && git pull origin master"
+    - ssh -t root@$DEMO_SERVER "cd /var/www/diakademik_dev && git pull origin master"
 
 deploy_to_smpypm1sepanjang:
   stage: deploy
