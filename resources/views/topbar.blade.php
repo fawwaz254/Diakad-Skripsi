@@ -205,6 +205,9 @@
                         </ul>
                     </li>
                     <!-- #END# Notifications -->
+                    @if($semester_aktif = \App\Libraries\Pendidikan\LibDataAkademik::fetchDataSemesterAktif($auth_data))
+                    <li><a class="navbar-brand" style="display: block; left: 8px;">TH AJARAN {{strtoupper($semester_aktif->tahun_ajaran.' ('.$semester_aktif->nm_semester.')')}}</a></li>
+                    @endif
                 </ul>
             </div>
         </div>
