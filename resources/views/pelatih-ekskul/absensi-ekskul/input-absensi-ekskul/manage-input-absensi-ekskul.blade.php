@@ -38,7 +38,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <labe>Pertemuan Ke</label>
+                                            <labe>Pertemuan pekan ke</label>
                                             @if($presensi_ekskul)
                                             <input type="number" class="form-control" name="pertemuan_ke" required="" aria-required="true" aria-invalid="true" value="{{$presensi_ekskul->pertemuan_ke}}">
                                             @else

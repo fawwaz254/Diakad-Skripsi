@@ -15,7 +15,7 @@
                                         <th>Nama Siswa</th>
                                         <th>Kelas</th>
                                         <th>MAPEL</th>
-                                        <th>Pertemuan ke</th>
+                                        <th>Pertemuan pekan ke</th>
                                         <th>Catatan Pelanggaran</th>
                                         <th>Sudah ditindaklanjuti</th>
                                         <th>Action</th>

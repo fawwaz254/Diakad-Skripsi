@@ -95,7 +95,7 @@
             },
             success: function(result) {
                 $('select[name=pertemuan_ke]').html('');
-                $('select[name=pertemuan_ke]').append('<option value="" disabled selected >-- Pilih Pertemuan Ke --</option>');
+                $('select[name=pertemuan_ke]').append('<option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>');
                 $.each(result, function( key, item ) {
                     $('select[name=pertemuan_ke]').append('<option value="'+item.value+'">'+item.text+'</option>');
                 });

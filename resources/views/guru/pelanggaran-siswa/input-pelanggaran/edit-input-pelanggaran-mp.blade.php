@@ -33,7 +33,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Pada pertemuan ke
+                            Pada pekan ke
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

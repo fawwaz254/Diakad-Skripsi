@@ -28,12 +28,12 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Pertemuan Ke
+                            Pertemuan pekan ke
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="pertemuan_ke">
-                                    <option value="" disabled selected >-- Pilih Pertemuan Ke --</option>
+                                    <option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>
                                 </select>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
             },
             success: function(result) {
                 $('select[name=pertemuan_ke]').html('');
-                $('select[name=pertemuan_ke]').append('<option value="" disabled selected >-- Pilih Pertemuan Ke --</option>');
+                $('select[name=pertemuan_ke]').append('<option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>');
                 $.each(result, function( key, item ) {
                     $('select[name=pertemuan_ke]').append('<option value="'+item.value+'">'+item.text+'</option>');
                 });
