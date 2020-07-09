@@ -31,7 +31,7 @@
                                     <th rowspan="2">NIS</th>
                                     <th rowspan="2">NISN</th>
                                     <th rowspan="2">Nama</th>
-                                    <th colspan="25">Pertemuan</th>
+                                    <th colspan="25">Pertemuan pekan ke</th>
                                 </tr>
                                 <tr>
                                     @foreach($data_presensi as $presensi_mp)

@@ -92,7 +92,7 @@
                 <th rowspan="2">No. </th>
                 <th rowspan="2">NIS</th>
                 <th rowspan="2">Nama</th>
-                <th colspan="25" style="text-align:center">Pertemuan</th>
+                <th colspan="25" style="text-align:center">Pertemuan pekan ke</th>
             </tr>
             <tr>
                 @for($i=0; $i < 25; $i++)

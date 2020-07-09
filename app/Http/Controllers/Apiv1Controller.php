@@ -729,7 +729,7 @@ class Apiv1Controller extends BaseController
                 if (!empty($input->query) && $input->query == 'absensi_is_null') {
                 } else {
                     $pertemuan = array(
-                        'text' => 'Pertemuan '.$i." (Sudah)",
+                        'text' => 'Pertemuan pekan '.$i." (Sudah)",
                         'value' => $i
                     );
                     $data_pertemuan[] = $pertemuan;
@@ -738,7 +738,7 @@ class Apiv1Controller extends BaseController
                 if (!empty($input->query) && $input->query == 'absensi_is_not_null') {
                 } else {
                     $pertemuan = array(
-                        'text' => 'Pertemuan '.$i,
+                        'text' => 'Pertemuan pekan '.$i,
                         'value' => $i
                     );
                     $data_pertemuan[] = $pertemuan;
