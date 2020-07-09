@@ -1290,7 +1290,7 @@ class Apiv1Controller extends BaseController
                 return response()->json([
                     'status_code' 	=> 300,
                     'status_text' 	=> 'Failed',
-                    'message' => 'Terdapat error'
+                    'message' => 'Terdapat error '.$e->getMessage()
                 ]);
             }
         }
