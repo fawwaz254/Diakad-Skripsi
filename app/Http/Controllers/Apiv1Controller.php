@@ -1252,6 +1252,48 @@ class Apiv1Controller extends BaseController
         }
     }
 
+    public function actionSaveToken(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'api_token' => 'required'
+        ]);
+
+        if ($validator->fails() && !in_array($mode, $mode_delete)) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        } else {
+            DB::beginTransaction();
+        
+            try {
+
+                $pengguna = Pengguna::find($input->auth_data->pengguna->id_pengguna);
+                $pengguna->api_token = $input->api_token;
+                $pengguna->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status_code' 	=> 200,
+                    'status_text' 	=> 'Success',
+                    'message' 	=> ''
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code' 	=> 300,
+                    'status_text' 	=> 'Failed',
+                    'message' => 'Terdapat error'
+                ]);
+            }
+        }
+    }
+
     public function actionGetRuangan(Request $request)
     {
         $input = (object) $request->input();

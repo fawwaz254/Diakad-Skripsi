@@ -15,6 +15,10 @@
 
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function () {
+    Route::group(array('prefix' => 'token'), function () {
+        Route::post('save', 'Apiv1Controller@actionSaveToken');
+    });
+
     Route::group(array('prefix' => 'guru'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
             Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
