@@ -32,6 +32,7 @@ use App\Models\Siswa;
 use App\Models\UjianMpPresensi;
 use App\Models\BeasiswaSiswa;
 use App\Models\PrestasiSiswa;
+use App\Models\WaliMurid;
 
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibDataAkademik;
@@ -46,6 +47,7 @@ use Validator;
 
 class Apiv1Controller extends BaseController
 {
+    
     public function actionSignIn(Request $request)
     {
         $input = (object) $request->input();
@@ -1989,10 +1991,46 @@ class Apiv1Controller extends BaseController
                     $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
                     $presensiMpPelanggaran->save();
 
+                    $result = null;
+                    if($siswa = Siswa::find($presensiMpPelanggaran->id_siswa)){
+                        if(!empty($siswa->id_wali_murid)){
+                            $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                            $token_wali_murid = $wali_murid->pengguna->api_token;
+                            if(!empty($token_wali_murid)){
+                                $api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
+    
+                                $notif = array(
+                                    'title' => 'Yay!',
+                                    'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                    'priority' => 'high'
+                                );
+    
+                                $fields = array ('to' => $token_wali_murid, 'priority' => 'high', 'content_available' => true, 'data' => $notif);
+                                $headers = array ('Authorization: key='.$api_key, 'Content-Type: application/json');
+            
+                                $url = 'https://fcm.googleapis.com/fcm/send';
+            
+                                $ch = curl_init ();
+                                curl_setopt ( $ch, CURLOPT_URL, $url );
+                                curl_setopt ( $ch, CURLOPT_POST, true );
+                                curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
+                                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
+            
+                                curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, false ); 
+                                curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($fields) );
+            
+                                $result = curl_exec ( $ch );
+                                curl_close ( $ch );
+                            }
+                        }
+                    }
+
                     $return_array = [
                         'status_code' 	=> 200,
                         'status_text' 	=> 'Success',
-                        'message' 	=> 'Save Pelanggaran Siswa successfully'
+                        'message' 	=> 'Save Pelanggaran Siswa successfully',
+                        'data' => json_decode($result, true)
                     ];
                 } elseif ($mode == 'edit') {
                     $id = $input->id;
