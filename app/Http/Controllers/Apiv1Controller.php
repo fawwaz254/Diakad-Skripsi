@@ -2003,7 +2003,9 @@ class Apiv1Controller extends BaseController
                                 $notif = array(
                                     'title' => 'Yay!',
                                     'body' => 'Putra/Putri Anda melakukan pelanggaran',
-                                    'priority' => 'high'
+                                    'priority' => 'high',
+                                    'role' => 'wali-murid',
+                                    'screen' => 'RiwayatPelanggaranKBM'
                                 );
     
                                 $fields = array ('to' => $token_wali_murid, 'priority' => 'high', 'content_available' => true, 'data' => $notif);
