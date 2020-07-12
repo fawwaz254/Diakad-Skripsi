@@ -237,21 +237,7 @@ class PembayaranOnlineController extends BaseController
     }
 
     public function actionPayment(Request $request, $id_transaksi){
-        $input = (object) $request->input();
-
-        $validator = Validator::make($request->all(), [
-            'no_reff' => 'required',
-            'method_code' => 'required',
-            'response_code' => 'required',
-            'id_transaksi' => 'required',
-        ]);
-            
-        if ($validator->fails()) {
-            return response()->json([
-                'status' 	=> 300,
-                'message' => $validator->errors()->first(),
-            ]);
-        } 
+        $input = json_decode(file_get_contents('php://input'));
 
         $message = 'DECLINED';
         DB::beginTransaction();
