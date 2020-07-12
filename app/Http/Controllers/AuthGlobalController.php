@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Carbon\Carbon;
 
+use App\Libraries\WinpayPHP\Winpay;
 use App\Models\Role;
 use App\Models\RolePengguna;
 use Yajra\Datatables\Datatables;

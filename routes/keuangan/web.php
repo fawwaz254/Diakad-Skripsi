@@ -315,6 +315,20 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('tampilkan', 'Keuangan\SIM\PengeluaranController@viewMenuTampilkan');
                 Route::post('tampilkan/datatables', 'Keuangan\SIM\PengeluaranController@datatablesMenuTampilkan');
             });
+
+            // MENU PEMBAYARAN ONLINE
+            Route::group(array('prefix' => 'pembayaran-online'), function () {
+                Route::get('/', 'Keuangan\SIM\PembayaranOnlineController@viewIndex');
+                Route::get('add', 'Keuangan\SIM\PembayaranOnlineController@viewAdd');
+
+                Route::get('detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
+                
+                Route::post('datatables', 'Keuangan\SIM\PembayaranOnlineController@datatables');
+                Route::post('tagihan/datatables/{id}', 'Keuangan\SIM\PembayaranOnlineController@datatablesTagihan');
+                Route::post('save', 'Keuangan\SIM\PembayaranOnlineController@actionSave');
+
+                Route::post('siswa-bykelas', 'Keuangan\SIM\PembayaranOnlineController@ajaxGetSiswaByKelas');
+            });
         });
 
         /** ==== MODUL LAPORAN KEUNGAN ==== **/

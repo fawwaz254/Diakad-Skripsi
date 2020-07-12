@@ -2000,16 +2000,23 @@ class Apiv1Controller extends BaseController
                             if(!empty($token_wali_murid)){
                                 $api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
     
-                                $notif = array(
-                                    'title' => 'Yay!',
-                                    'body' => 'Putra/Putri Anda melakukan pelanggaran',
-                                    'priority' => 'high',
-                                    'role' => 'wali-murid',
-                                    'screen' => 'RiwayatPelanggaranKBM'
+                                $fields = array (
+                                    'to' => $token_wali_murid, 
+                                    'priority' => 'high', 
+                                    'content_available' => true, 
+                                    'data' => array(
+                                        'title' => 'Yay!',
+                                        'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                        'priority' => 'high',
+                                        'role' => 'wali-murid',
+                                        'screen' => 'RiwayatPelanggaranKBM'
+                                    )
                                 );
-    
-                                $fields = array ('to' => $token_wali_murid, 'priority' => 'high', 'content_available' => true, 'data' => $notif);
-                                $headers = array ('Authorization: key='.$api_key, 'Content-Type: application/json');
+
+                                $headers = array (
+                                    'Authorization: key='.$api_key, 
+                                    'Content-Type: application/json'
+                                );
             
                                 $url = 'https://fcm.googleapis.com/fcm/send';
             
