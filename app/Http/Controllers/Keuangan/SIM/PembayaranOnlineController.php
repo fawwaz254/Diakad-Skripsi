@@ -10,7 +10,10 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\WinpayPHP\Winpay;
 
+use App\Models\PembayaranBiaya;
 use App\Models\PembayaranTransaksi;
+use App\Models\Sekolah;
+use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\TagihanBiaya;
 
@@ -46,10 +49,6 @@ class PembayaranOnlineController extends BaseController
 
     public function viewDetail(Request $request, $id)
     {
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
         $item = PembayaranTransaksi::find($id);
 
         $winpay = new Winpay;
@@ -123,7 +122,7 @@ class PembayaranOnlineController extends BaseController
                 })
                 ->addColumn('action', function ($item) {
                     if($item->status_pembayaran == 0){
-                        return url('keuangan/sim/pembayaran-online/detail/'.$item->id_pembayaran_transaksi);
+                        return url('payment/detail/'.$item->id_pembayaran_transaksi);
                     }else{
                         return null;
                     }
@@ -142,10 +141,10 @@ class PembayaranOnlineController extends BaseController
         ]);
             
         if ($validator->fails()) {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
+            return response()->json([
+                'status' 	=> 300,
+                'message' => $validator->errors()->first(),
+            ]);
         } 
 
         DB::beginTransaction();
@@ -196,7 +195,7 @@ class PembayaranOnlineController extends BaseController
 
             $params = array(
                 'callback' => url('/'),
-                'listener' => url('keuangan/tagihan/notif'),
+                'listener' => url('payment/notification/'.$pembayaran_transaksi->id_pembayaran_transaksi),
                 'order_id' => $pembayaran_transaksi->nomor_transaksi,
                 'usr_phone' => $wali_murid_phone,
                 'usr_email' => $wali_murid_email,
@@ -233,6 +232,70 @@ class PembayaranOnlineController extends BaseController
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
                 'message' => 'Terdapat error '.$e->getMessage()
+            ]);
+        }
+    }
+
+    public function actionPayment(Request $request, $id_transaksi){
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'no_reff' => 'required',
+            'method_code' => 'required',
+            'response_code' => 'required',
+            'id_transaksi' => 'required',
+        ]);
+            
+        if ($validator->fails()) {
+            return response()->json([
+                'status' 	=> 300,
+                'message' => $validator->errors()->first(),
+            ]);
+        } 
+
+        $message = 'DECLINED';
+        DB::beginTransaction();
+        try {
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $sekolah = Sekolah::orderBy('id_sekolah')->first();
+            $semester_aktif = Semester::where('id_sekolah', $sekolah->id_sekolah)->where('is_aktif_semester', 1)->first();
+
+            if($input->response_code == '00'){
+                if($transaksi = PembayaranTransaksi::where('id_pembayaran_transaksi', $id_transaksi)->where('nomor_transaksi', $input->no_reff)->where('status_pembayaran', 0)->first()){
+                    $transaksi->status_pembayaran = 1;
+                    $transaksi->id_semester_bayar     = $semester_aktif->id_semester;
+                    $transaksi->tgl_pembayaran        = $now;
+                    $transaksi->save();
+
+                    $tagihan_biaya = $transaksi->tagihan_biaya;
+                    $tagihan_biaya->is_tagih = 0;
+                    $tagihan_biaya->save();
+                    
+                    $id = $sekolah->prefix.strtotime($now).uniqid();
+                    $pembayaran                            = new PembayaranBiaya;
+                    $pembayaran->id_pembayaran_biaya       = $id;
+                    $pembayaran->id_tagihan_biaya          = $tagihan_biaya->id_tagihan_biaya;
+                    $pembayaran->id_semester_bayar         = $transaksi->id_semester_bayar;
+                    $pembayaran->besar_pembayaran          = $transaksi->besar_pembayaran;
+                    $pembayaran->tgl_pembayaran            = $transaksi->tgl_pembayaran;
+                    $pembayaran->nomor_transaksi           = $transaksi->nomor_transaksi;
+                    $pembayaran->keterangan                = $transaksi->keterangan;
+                    $pembayaran->save();
+
+                    $message = 'ACCEPTED';
+                }
+            }
+
+            DB::commit();
+
+            return $message;
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => 'Terdapat error'
             ]);
         }
     }

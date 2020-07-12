@@ -321,8 +321,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('/', 'Keuangan\SIM\PembayaranOnlineController@viewIndex');
                 Route::get('add', 'Keuangan\SIM\PembayaranOnlineController@viewAdd');
 
-                Route::get('detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
-                
                 Route::post('datatables', 'Keuangan\SIM\PembayaranOnlineController@datatables');
                 Route::post('tagihan/datatables/{id}', 'Keuangan\SIM\PembayaranOnlineController@datatablesTagihan');
                 Route::post('save', 'Keuangan\SIM\PembayaranOnlineController@actionSave');

@@ -98,7 +98,10 @@
                     if(data == null){
                         return '';
                     }else{
-                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ data + '">'+
+                        return '<a class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="copyToClipboard(\'' +data+ '\')">'+
+                            '    <i class="material-icons">info_outline</i>'+
+                            '</a> '+
+                            '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ data + '">'+
                             '    <i class="material-icons">attach_money</i>'+
                             '</a> ';
                     }
@@ -119,5 +122,14 @@
 
     function filterAction(){
         primary_table.ajax.reload(null, false);
+    }
+
+    function copyToClipboard(link) {
+        var $input = $("<input>");
+        $input.val(link).appendTo('body').select();
+        document.execCommand('copy');
+        $input.remove();
+
+        vex.dialog.alert('Link copied!');
     }
 </script>

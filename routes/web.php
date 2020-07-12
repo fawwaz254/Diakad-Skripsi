@@ -40,6 +40,9 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
+Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
+Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
+
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
 
