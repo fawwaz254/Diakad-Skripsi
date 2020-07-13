@@ -177,7 +177,7 @@ class PembayaranOnlineController extends BaseController
             $pembayaran_transaksi = new PembayaranTransaksi;
             $pembayaran_transaksi->id_pembayaran_transaksi = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
             $pembayaran_transaksi->id_tagihan_biaya = $tagihan_biaya->id_tagihan_biaya;
-            $pembayaran_transaksi->nomor_transaksi = rand(100000, 999999);
+            $pembayaran_transaksi->nomor_transaksi = $this->generateNumberTransaction($now, $auth_data->sekolah_data->prefix);
             $pembayaran_transaksi->besar_pembayaran = $tagihan_biaya->besar_biaya;
             $pembayaran_transaksi->status_pembayaran = 0;
             $pembayaran_transaksi->keterangan = $title;
@@ -284,6 +284,29 @@ class PembayaranOnlineController extends BaseController
                 'message' => 'Terdapat error'
             ]);
         }
+    }
+
+    public function generateNumberTransaction($tanggal_transaksi, $kode_sekolah){
+        $tanggal_totime = strtotime($tanggal_transaksi);
+
+        $tahun = date("Y", $tanggal_totime);
+        $bulan = date("m", $tanggal_totime);
+
+        $max_nomor_transaksi = DB::select('SELECT MAX(nomor_transaksi) AS maxID FROM `pembayaran_transaksi`')[0]->maxID; 
+        if ($max_nomor_transaksi == '') { 
+            $nomor_transaksi = $tahun . "" . $bulan . "000001"; 
+        } else { 
+            $max_id = substr($max_nomor_transaksi, 0, 12); 
+            $nomor_urut = (int) substr($max_id, 6, 6); 
+            $nomor_bulan = (int) substr($max_id, 4, 2); 
+            if ($nomor_bulan != $bulan) { 
+                $nomor_urut = 1; 
+            } else {
+                $nomor_urut++;
+            } 
+            $nomor_transaksi = $tahun . "" . $bulan . sprintf("%06s", $nomor_urut) . "-" .$kode_sekolah;
+        }
+        return $nomor_transaksi;
     }
 
     public function ajaxGetSiswaByKelas(Request $request)
