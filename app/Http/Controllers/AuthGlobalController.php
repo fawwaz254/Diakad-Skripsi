@@ -27,6 +27,13 @@ class AuthGlobalController extends BaseController
         return view('dashboard', compact('auth_data'));
     }
 
+    public function indexMustChangePassword(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('must-change-password', compact('auth_data'));
+    }
+
     public function indexProfile(Request $request)
     {
         $input = (object) $request->input();
@@ -91,6 +98,43 @@ class AuthGlobalController extends BaseController
                     'message' => 'Your old password is incorrect'
                 ];
             }
+        } else {
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Re-type your new password again'
+            ];
+        }
+    }
+
+    public function actionMustChangePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'new_password' => 'required',
+            'new_confirm_password' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // Failed
+                'message' => $validator->errors()->first()
+            ];
+        }
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $input = (object) $request->input();
+        $pengguna = Auth::user();
+        if ($input->new_password == $input->new_confirm_password) {
+            $pengguna->password             = Hash::make($input->new_password);
+            $pengguna->last_time_password   = $now;
+            $pengguna->must_change_password   = 0;
+            $pengguna->save();
+            
+            return [
+                'status' => 201, // SUCCESS AND REDIRECT
+                'link' => url('/'),
+                'message' => 'Change password successfully'
+            ];
         } else {
             return [
                 'status' => 300, // FAILED

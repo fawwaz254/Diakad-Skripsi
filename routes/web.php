@@ -77,6 +77,9 @@ Route::group(array('prefix' => 'reporting-dashboard'), function () {
 Route::group(array('middleware'=> ['token_staff']), function () {
     //
     Route::group(array('prefix' => '{global}'), function () {
+        Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
+        Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
+
         Route::get('/', 'AuthGlobalController@indexDashboard');
         Route::get('search', 'AuthGlobalController@indexSearch');
         Route::get('profile', 'AuthGlobalController@indexProfile');

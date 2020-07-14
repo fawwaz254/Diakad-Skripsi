@@ -71,6 +71,10 @@ class SignInController extends BaseController
             $pengguna->is_online        = 1;
             $pengguna->save();
 
+            if($pengguna->must_change_password == 1){
+                return redirect('must-change-password');
+            }
+
             return redirect($role->path);
         } else {
             return back()->with('toast', 'Sign in failed')->withInput();

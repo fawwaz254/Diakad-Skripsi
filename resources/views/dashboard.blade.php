@@ -115,7 +115,11 @@
         Pace.ignore(function(){
             $.ajax({
                 type: "GET",
+                @if(Auth::user()->must_change_password == 1)
+                url: base_url + '/' + role_url + '/' + 'must-change-password',
+                @else
                 url: base_url + '/' + role_url + '/' + target_url,
+                @endif
                 contentType: false,
                 beforeSend: function() { 
                     $("#" + content).html(loadingHtml); 

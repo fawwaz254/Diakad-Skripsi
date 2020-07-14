@@ -151,7 +151,11 @@
                                             $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
                                         @endphp
                                         <td>
+                                            @if($tagihan->is_request == 0)
                                             <button class="btn btn-block bg-black waves-effect" onclick="takeAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button>
+                                            @else
+                                            Rp{{number_format($tagihan_bulanan)}}<br><b>Online</b>
+                                            @endif
                                         </td>
                                         @elseif($tagihan->is_tagih == 0)
                                         <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
