@@ -2008,8 +2008,8 @@ class Apiv1Controller extends BaseController
                                         'title' => 'Yay!',
                                         'body' => 'Putra/Putri Anda melakukan pelanggaran',
                                         'priority' => 'high',
-                                        'role' => 'wali-murid',
-                                        'screen' => 'RiwayatPelanggaranKBM'
+                                        'screen1' => 'RiwayatPelanggaran1',
+                                        'screen2' => 'RiwayatPelanggaranKBM'
                                     )
                                 );
 
