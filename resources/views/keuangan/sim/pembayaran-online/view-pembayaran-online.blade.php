@@ -83,8 +83,8 @@
         columns: [
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
             { data: 'nomor_transaksi' },
-            { data: 'tagihan_biaya.siswa.nis_siswa' },
-            { data: 'tagihan_biaya.siswa.pengguna.nm_pengguna' },
+            { data: 'siswa.nis_siswa' },
+            { data: 'siswa.pengguna.nm_pengguna' },
             { data: 'keterangan', searchable: false, orderable: false },
             { data: 'besar_pembayaran',
                 render: function(data){

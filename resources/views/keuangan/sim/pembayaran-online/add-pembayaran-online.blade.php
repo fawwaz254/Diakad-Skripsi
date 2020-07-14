@@ -41,9 +41,8 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="id_tagihan_biaya">
-                                        <option value="">-- Pilih Tagihan --</option>
-                                    </select>
+                                    <div id="div_tagihan">
+                                    </div>
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
@@ -106,12 +105,15 @@ function changeSiswa(el){
         url: "{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/tagihan/datatables')}}/" + id_pengguna,
         type: 'POST',
         success: function(result) {
-            $('select[name=id_tagihan_biaya]').html('');
-            var html = '<option value="">-- Pilih Tagihan --</option>';
+            $('#div_tagihan').html('');
+            var html = '';
             $.each(result.data, function( key, item ) {
-                html += '<option value="'+item.id_tagihan_biaya+'">'+item.nm_biaya + ' ' + item.jenis_biaya +' ('+item.besar_biaya+')</option>';
+                html += '<div class="row clearfix" style="margin-left:0;">'+
+                    '<input type="checkbox" id="checkbox-'+item.id_tagihan_biaya+'" name="id_tagihan_biaya[]" class="filled-in" value="'+item.id_tagihan_biaya+'">'+
+                    '<label for="checkbox-'+item.id_tagihan_biaya+'">'+item.nm_biaya + ' ' + item.jenis_biaya +' ('+item.besar_biaya+')</label>'+
+                '</div>';
             });
-            $('select[name=id_tagihan_biaya]').html(html);
+            $('#div_tagihan').html(html);
         }
     });
 }

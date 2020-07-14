@@ -11,7 +11,8 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\WinpayPHP\Winpay;
 
 use App\Models\PembayaranBiaya;
-use App\Models\PembayaranTransaksi;
+use App\Models\PembayaranTrs;
+use App\Models\PembayaranTrsDetail;
 use App\Models\Sekolah;
 use App\Models\Semester;
 use App\Models\Siswa;
@@ -49,7 +50,7 @@ class PembayaranOnlineController extends BaseController
 
     public function viewDetail(Request $request, $id)
     {
-        $item = PembayaranTransaksi::find($id);
+        $item = PembayaranTrs::find($id);
 
         $winpay = new Winpay;
         return redirect($winpay->getRedirectStatusPayment($item->payment_code, $item->token));
@@ -95,7 +96,7 @@ class PembayaranOnlineController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PembayaranTransaksi::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna', 'tagihan_biaya.detail_biaya');
+        $list_data = PembayaranTrs::with('siswa', 'siswa.pengguna');
 
         if (!empty($input->start_date) && !empty($input->end_date)) {
             $list_data = $list_data->whereBetween('created_at', [$input->start_date.' 00:00:00', $input->end_date.' 23:59:59']);
@@ -122,7 +123,7 @@ class PembayaranOnlineController extends BaseController
                 })
                 ->addColumn('action', function ($item) {
                     if($item->status_pembayaran == 0){
-                        return url('payment/detail/'.$item->id_pembayaran_transaksi);
+                        return url('payment/detail/'.$item->id_pembayaran_trs);
                     }else{
                         return null;
                     }
@@ -136,7 +137,6 @@ class PembayaranOnlineController extends BaseController
         
         $validator = Validator::make($request->all(), [
             'id_siswa' => 'required',
-            'id_tagihan_biaya' => 'required',
             'payment_channel' => 'required',
         ]);
             
@@ -152,56 +152,88 @@ class PembayaranOnlineController extends BaseController
         try {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $siswa = Siswa::find($input->id_siswa);
 
-            $tagihan_biaya = TagihanBiaya::with('detail_biaya', 'siswa', 'detail_biaya.biaya', 'detail_biaya.bulan')->where('id_siswa', $input->id_siswa)->where('id_tagihan_biaya', $input->id_tagihan_biaya)->where('is_tagih', 1)->where('is_request', 0)->first();
-            $tagihan_biaya->is_request = 1;
-            $tagihan_biaya->save();
-
-            $winpay = new Winpay;
-
-            if($tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4){
-                $title = $tagihan_biaya->detail_biaya->biaya->nm_biaya.' bulan '.$tagihan_biaya->detail_biaya->bulan->nm_bulan;
-            }else{
-                $title = $tagihan_biaya->detail_biaya->biaya->nm_biaya;
-            }
-
-            if(!empty($tagihan_biaya->siswa->id_wali_murid)){
-                $wali_murid_phone = $tagihan_biaya->siswa->wali_murid->nomor_hp_wali_murid;
+            if(!empty($siswa->id_wali_murid)){
+                $wali_murid_phone = $siswa->wali_murid->nomor_hp_wali_murid;
                 $wali_murid_email = '';
             }else{
                 $wali_murid_phone = '';
                 $wali_murid_email = '';
             }
 
-            $pembayaran_transaksi = new PembayaranTransaksi;
-            $pembayaran_transaksi->id_pembayaran_transaksi = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-            $pembayaran_transaksi->id_tagihan_biaya = $tagihan_biaya->id_tagihan_biaya;
-            $pembayaran_transaksi->nomor_transaksi = $this->generateNumberTransaction($now, $auth_data->sekolah_data->prefix);
-            $pembayaran_transaksi->besar_pembayaran = $tagihan_biaya->besar_biaya;
-            $pembayaran_transaksi->status_pembayaran = 0;
-            $pembayaran_transaksi->keterangan = $title;
-            $pembayaran_transaksi->created_by = $auth_data->pengguna->id_pengguna;
-            $pembayaran_transaksi->save();
+            $winpay = new Winpay;
 
+            $pembayaran_trs = new PembayaranTrs;
+            $pembayaran_trs->id_pembayaran_trs = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $pembayaran_trs->id_siswa = $siswa->id_siswa;
+            $pembayaran_trs->nomor_transaksi = $this->generateNumberTransaction($now, $auth_data->sekolah_data->prefix);
+            $pembayaran_trs->id_semester_bayar = '';
+            $pembayaran_trs->status_pembayaran = 0;
+            $pembayaran_trs->created_by = $auth_data->pengguna->id_pengguna;
+            $pembayaran_trs->save();
+
+            $nomor = 1;
+            $subtotal_pembayaran = 0;
             $items = array();
-            $items[] = array(
-                "name" => $title,
-                "sku" => $tagihan_biaya->id_jenis_detail_biaya,
-                "qty" => 1,
-                "unitPrice" => $pembayaran_transaksi->besar_pembayaran,
-                "desc" => $tagihan_biaya->detail_biaya->biaya->nm_biaya
-            );
+            foreach($input->id_tagihan_biaya as $id_tagihan_biaya){
+                $tagihan_biaya = TagihanBiaya::with('detail_biaya', 'siswa', 'detail_biaya.biaya', 'detail_biaya.bulan')->where('id_siswa', $siswa->id_siswa)->where('id_tagihan_biaya', $id_tagihan_biaya)->where('is_tagih', 1)->where('is_request', 0)->first();
+                $tagihan_biaya->is_request = 1;
+                $tagihan_biaya->save();
+                
+                if($nomor == 1){
+                    if($tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4){
+                        $trs_keterangan = $tagihan_biaya->detail_biaya->biaya->nm_biaya.' '.$tagihan_biaya->detail_biaya->bulan->nm_bulan;
+                    }else{
+                        $trs_keterangan = $tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                    }
+                }else{
+                    if($tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4){
+                        $trs_keterangan .= ', '.$tagihan_biaya->detail_biaya->biaya->nm_biaya.' '.$tagihan_biaya->detail_biaya->bulan->nm_bulan;
+                    }else{
+                        $trs_keterangan .= ', '.$tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                    }
+                }
+
+                $pembayaran_trs_detail = new PembayaranTrsDetail;
+                $pembayaran_trs_detail->id_pembayaran_trs_detail = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pembayaran_trs_detail->id_pembayaran_trs = $pembayaran_trs->id_pembayaran_trs;
+                $pembayaran_trs_detail->id_tagihan_biaya = $tagihan_biaya->id_tagihan_biaya;
+                $pembayaran_trs_detail->besar_pembayaran = $tagihan_biaya->besar_biaya;
+                $pembayaran_trs_detail->save();
+
+                $subtotal_pembayaran += $tagihan_biaya->besar_biaya;
+                $nomor++;
+
+                if($tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4){
+                    $item_title = $tagihan_biaya->detail_biaya->biaya->nm_biaya.' '.$tagihan_biaya->detail_biaya->bulan->nm_bulan;
+                }else{
+                    $item_title = $tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                }
+
+                $items[] = array(
+                    "name" => $item_title,
+                    "sku" => $tagihan_biaya->id_jenis_detail_biaya,
+                    "qty" => 1,
+                    "unitPrice" => $tagihan_biaya->besar_biaya,
+                    "desc" => $tagihan_biaya->detail_biaya->biaya->nm_biaya
+                );
+            }
+
+            
+            $pembayaran_trs->besar_pembayaran = $subtotal_pembayaran;
+            $pembayaran_trs->keterangan = $trs_keterangan;
+            $pembayaran_trs->save();
 
             $params = array(
                 'callback' => url('/'),
-                'listener' => url('payment/notification/'.$pembayaran_transaksi->id_pembayaran_transaksi),
-                'order_id' => $pembayaran_transaksi->nomor_transaksi,
+                'listener' => url('payment/notification/'.$pembayaran_trs->id_pembayaran_trs),
+                'order_id' => $pembayaran_trs->nomor_transaksi,
                 'usr_phone' => $wali_murid_phone,
                 'usr_email' => $wali_murid_email,
                 'usr_name' => $tagihan_biaya->siswa->pengguna->nm_pengguna,
                 'items' => $items,
-                'amount' => $pembayaran_transaksi->besar_pembayaran,
+                'amount' => $pembayaran_trs->besar_pembayaran,
                 'exp_date' => $now->addDays(1)->format('YmdHis'),
             );
             
@@ -211,11 +243,11 @@ class PembayaranOnlineController extends BaseController
             $parts = parse_url($url);
             parse_str($parts['query'], $query);
 
-            $pembayaran_transaksi->token = $query['payid'];
-            $pembayaran_transaksi->payment_channel = $return_array->data->payment_method;
-            $pembayaran_transaksi->payment_code = $return_array->data->payment_method_code;
-            $pembayaran_transaksi->fee_admin = $return_array->data->fee_admin;
-            $pembayaran_transaksi->save();
+            $pembayaran_trs->token = $query['payid'];
+            $pembayaran_trs->payment_channel = $return_array->data->payment_method;
+            $pembayaran_trs->payment_code = $return_array->data->payment_method_code;
+            $pembayaran_trs->fee_admin = $return_array->data->fee_admin;
+            $pembayaran_trs->save();
 
             DB::commit();
 
@@ -247,7 +279,7 @@ class PembayaranOnlineController extends BaseController
             $semester_aktif = Semester::where('id_sekolah', $sekolah->id_sekolah)->where('is_aktif_semester', 1)->first();
 
             if($input->response_code == '00'){
-                if($transaksi = PembayaranTransaksi::where('id_pembayaran_transaksi', $id_transaksi)->where('nomor_transaksi', $input->no_reff)->where('status_pembayaran', 0)->first()){
+                if($transaksi = PembayaranTrs::where('id_pembayaran_trs', $id_transaksi)->where('nomor_transaksi', $input->no_reff)->where('status_pembayaran', 0)->first()){
                     $transaksi->status_pembayaran = 1;
                     $transaksi->id_semester_bayar     = $semester_aktif->id_semester;
                     $transaksi->tgl_pembayaran        = $now;
@@ -292,7 +324,7 @@ class PembayaranOnlineController extends BaseController
         $tahun = date("Y", $tanggal_totime);
         $bulan = date("m", $tanggal_totime);
 
-        $max_nomor_transaksi = DB::select('SELECT MAX(nomor_transaksi) AS maxID FROM `pembayaran_transaksi`')[0]->maxID; 
+        $max_nomor_transaksi = DB::select('SELECT MAX(nomor_transaksi) AS maxID FROM `pembayaran_trs`')[0]->maxID; 
         if ($max_nomor_transaksi == '') { 
             $nomor_transaksi = $tahun . "" . $bulan . "000001"; 
         } else { 
