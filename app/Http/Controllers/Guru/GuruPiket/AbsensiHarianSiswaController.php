@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
+use App\Models\Siswa;
+use App\Models\WaliMurid;
 use App\Models\Bulan;
 use App\Models\Guru;
 use App\Models\PresensiHarian;
@@ -19,6 +21,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\LibGlobal;
 
 use Auth;
 use DB;
@@ -246,6 +249,36 @@ class AbsensiHarianSiswaController extends BaseController
                             $presensi_harian_siswa->id_presensi_harian        = $presensi_harian->id_presensi_harian;
                             $presensi_harian_siswa->id_presensi_harian_siswa  = $id_presensi_harian_siswa;
                             $presensi_harian_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
+
+                            if($siswa = Siswa::find($id_siswa)){
+                                if(!empty($siswa->id_wali_murid)){
+                                    $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                                    switch($kehadiran){
+                                        case 1:
+                                            $status = 'Hadir'; break;
+                                        case 2:
+                                            $status = 'Sakit'; break;
+                                        case 3:
+                                            $status = 'Izin'; break;
+                                        case 4:
+                                            $status = 'Alpa'; break;
+                                    }
+                                    
+                                    $token_wali_murid = $wali_murid->pengguna->api_token;
+                                    if(!empty($token_wali_murid)){
+                                        $send_data = array(
+                                            'title' => 'Informasi',
+                                            'body' => 'Putra/Putri Anda hari ini berstatus '.$status,
+                                            'priority' => 'high',
+                                            'screen1' => 'MainMenu',
+                                            'screen2' => 'MainMenu'
+                                        );
+                                        
+                                        LibGlobal::sendNotification($token_wali_murid, $send_data);
+                                    }
+                                }
+                            }
                         }
 
                         $presensi_harian_siswa->id_siswa                    = $id_siswa;

@@ -41,6 +41,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SaranaPrasarana\LibDataSarpras;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Akademik\LibAkademik;
+use App\Libraries\LibGlobal;
 
 use DB;
 use Validator;
@@ -1998,39 +1999,15 @@ class Apiv1Controller extends BaseController
 
                             $token_wali_murid = $wali_murid->pengguna->api_token;
                             if(!empty($token_wali_murid)){
-                                $api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
-    
-                                $fields = array (
-                                    'to' => $token_wali_murid, 
-                                    'priority' => 'high', 
-                                    'content_available' => true, 
-                                    'data' => array(
-                                        'title' => 'Yay!',
-                                        'body' => 'Putra/Putri Anda melakukan pelanggaran',
-                                        'priority' => 'high',
-                                        'screen1' => 'RiwayatPelanggaran1',
-                                        'screen2' => 'RiwayatPelanggaranKBM'
-                                    )
+                                $send_data = array(
+                                    'title' => 'Informasi',
+                                    'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                    'priority' => 'high',
+                                    'screen1' => 'RiwayatPelanggaran1',
+                                    'screen2' => 'RiwayatPelanggaranKBM'
                                 );
 
-                                $headers = array (
-                                    'Authorization: key='.$api_key, 
-                                    'Content-Type: application/json'
-                                );
-            
-                                $url = 'https://fcm.googleapis.com/fcm/send';
-            
-                                $ch = curl_init ();
-                                curl_setopt ( $ch, CURLOPT_URL, $url );
-                                curl_setopt ( $ch, CURLOPT_POST, true );
-                                curl_setopt ( $ch, CURLOPT_HTTPHEADER, $headers );
-                                curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, true );
-            
-                                curl_setopt ( $ch, CURLOPT_SSL_VERIFYPEER, false ); 
-                                curl_setopt ( $ch, CURLOPT_POSTFIELDS, json_encode($fields) );
-            
-                                $result = curl_exec ( $ch );
-                                curl_close ( $ch );
+                                LibGlobal::sendNotification($token_wali_murid, $send_data);
                             }
                         }
                     }

@@ -9,9 +9,12 @@ use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 use App\Models\Guru as Guru;
+use App\Models\Siswa;
+use App\Models\WaliMurid;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
+use App\Libraries\LibGlobal;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 
@@ -427,6 +430,25 @@ class TindakanPelanggaranController extends BaseController{
                 $pelanggaranSiswa->updated_at           = $now;
                 $pelanggaranSiswa->save();
 
+                if($siswa = Siswa::find($pelanggaranSiswa->id_siswa)){
+                    if(!empty($siswa->id_wali_murid)){
+                        $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                        $token_wali_murid = $wali_murid->pengguna->api_token;
+                        if(!empty($token_wali_murid)){
+                            $send_data = array(
+                                'title' => 'Informasi',
+                                'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                'priority' => 'high',
+                                'screen1' => 'RiwayatPelanggaran1',
+                                'screen2' => 'RiwayatPelanggaranNonKBM'
+                            );
+                            
+                            LibGlobal::sendNotification($token_wali_murid, $send_data);
+                        }
+                    }
+                }
+
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/tindakan-pelanggaran',
@@ -453,6 +475,25 @@ class TindakanPelanggaranController extends BaseController{
                 $presensiMpPelanggaran->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 $presensiMpPelanggaran->updated_at           = $now;
                 $presensiMpPelanggaran->save();
+
+                if($siswa = Siswa::find($presensiMpPelanggaran->id_siswa)){
+                    if(!empty($siswa->id_wali_murid)){
+                        $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                        $token_wali_murid = $wali_murid->pengguna->api_token;
+                        if(!empty($token_wali_murid)){
+                            $send_data = array(
+                                'title' => 'Informasi',
+                                'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                'priority' => 'high',
+                                'screen1' => 'RiwayatPelanggaran1',
+                                'screen2' => 'RiwayatPelanggaranKBM'
+                            );
+                            
+                            LibGlobal::sendNotification($token_wali_murid, $send_data);
+                        }
+                    }
+                }
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT

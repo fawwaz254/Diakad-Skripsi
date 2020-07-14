@@ -7,6 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Yajra\Datatables\Datatables;
 
+use App\Models\Siswa;
+use App\Models\WaliMurid;
 use App\Models\PresensiMp as PresensiMp;
 use App\Models\PresensiMpSiswa as PresensiMpSiswa;
 use App\Models\UjianMpPresensi as UjianMpPresensi;
@@ -17,6 +19,7 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
+use App\Libraries\LibGlobal;
 
 use Auth;
 use DB;
@@ -391,6 +394,36 @@ class AbsensiSiswaController extends BaseController
                             $presensi_mp_siswa->id_presensi_mp            = $presensi_mp->id_presensi_mp;
                             $presensi_mp_siswa->created_by                = $input->auth_data->pengguna->id_pengguna;
                             $presensi_mp_siswa->id_siswa                  = $id_siswa;
+
+                            if($siswa = Siswa::find($id_siswa)){
+                                if(!empty($siswa->id_wali_murid)){
+                                    $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                                    switch($kehadiran){
+                                        case 1:
+                                            $status = 'Hadir'; break;
+                                        case 2:
+                                            $status = 'Sakit'; break;
+                                        case 3:
+                                            $status = 'Izin'; break;
+                                        case 4:
+                                            $status = 'Alpa'; break;
+                                    }
+                                    
+                                    $token_wali_murid = $wali_murid->pengguna->api_token;
+                                    if(!empty($token_wali_murid)){
+                                        $send_data = array(
+                                            'title' => 'Informasi',
+                                            'body' => 'Putra/Putri Anda '.$status.' di KBM saat ini',
+                                            'priority' => 'high',
+                                            'screen1' => 'MainMenu',
+                                            'screen2' => 'MainMenu'
+                                        );
+                                        
+                                        LibGlobal::sendNotification($token_wali_murid, $send_data);
+                                    }
+                                }
+                            }
                         }
 
                         $presensi_mp_siswa->kehadiran     = $kehadiran;
