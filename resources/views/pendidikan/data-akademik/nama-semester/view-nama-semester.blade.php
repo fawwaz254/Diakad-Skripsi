@@ -20,7 +20,7 @@
                                         <th>Tahun Akademik</th>
                                         <th>Kode Semeester</th>
                                         <th>Status Aktif</th>
-                                        <!-- <th>Action</th> -->
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -53,16 +53,16 @@
             { data: 'thn_akademik_semester', name: 'thn_akademik_semester' },
             { data: 'kode_semester', name: 'kode_semester' },
             { data: 'status_aktif', name: 'status_aktif'},
-            // { data: 'action', name: 'action', searchable: false, orderable: false,
-            //     render: function(data){
-            //         return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-            //         '    <i class="material-icons">edit</i>'+
-            //         '</a> '+
-            //         '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-            //         '    <i class="material-icons">delete_forever</i>'+
-            //         '</button>';
-            //     }
-            // }
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> ';
+                    // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    // '    <i class="material-icons">delete_forever</i>'+
+                    // '</button>';
+                }
+            }
         ]
     });
 

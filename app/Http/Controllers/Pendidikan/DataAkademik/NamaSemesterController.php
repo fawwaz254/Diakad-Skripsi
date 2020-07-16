@@ -89,7 +89,7 @@ class NamaSemesterController extends BaseController{
             'is_aktif_semester' => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if($validator->fails() && $mode == 'add') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -134,10 +134,10 @@ class NamaSemesterController extends BaseController{
             elseif($mode == 'edit'){
                 // make object to find id
                 $semester                           = Semester::find($id);
-                $semester->tahun_ajaran             = $input->tahun_ajaran;
-                $semester->nm_semester              = $input->nm_semester;
-                $semester->thn_akademik_semester    = $input->thn_akademik_semester;
-                $semester->kode_semester            = $input->kode_semester;
+                // $semester->tahun_ajaran             = $input->tahun_ajaran;
+                // $semester->nm_semester              = $input->nm_semester;
+                // $semester->thn_akademik_semester    = $input->thn_akademik_semester;
+                // $semester->kode_semester            = $input->kode_semester;
                 $semester->is_aktif_semester        = $input->is_aktif_semester;
                 $semester->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $semester->updated_at               = $now;

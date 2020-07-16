@@ -18,7 +18,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="tahun_ajaran" required="" aria-required="true" aria-invalid="true"
+                                <input type="text" class="form-control" name="tahun_ajaran" disabled="" aria-required="true" aria-invalid="true"
                                     value="{{$data_semester->tahun_ajaran}}">
                             </div>
                         </div>
@@ -27,7 +27,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="nm_semester">
+                                <select class="form-control show-tick" disabled="" name="nm_semester">
                                     <option value="Ganjil" {{($data_semester->nm_semester == "Ganjil")? 'selected' : ''}} >Ganjil</option>
                                     <option value="Genap" {{($data_semester->nm_semester == "Genap")? 'selected' : ''}}>Genap</option>
                                     <option value="Wisuda" {{($data_semester->nm_semester == "Wisuda")? 'selected' : ''}}>Wisuda</option>
@@ -39,7 +39,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="thn_akademik_semester" required="" aria-required="true"
+                                <input type="text" class="form-control" name="thn_akademik_semester" disabled="" aria-required="true"
                                     aria-invalid="true" value="{{$data_semester->thn_akademik_semester}}">
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="kode_semester" required="" aria-required="true" aria-invalid="true"
+                                <input type="text" class="form-control" name="kode_semester" disabled="" aria-required="true" aria-invalid="true"
                                     value="{{$data_semester->kode_semester}}">
                             </div>
                         </div>
