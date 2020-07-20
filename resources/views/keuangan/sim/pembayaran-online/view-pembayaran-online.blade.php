@@ -88,12 +88,12 @@
             { data: 'siswa.nis_siswa' },
             { data: 'siswa.pengguna.nm_pengguna' },
             { data: 'keterangan', searchable: false, orderable: false },
-            { data: 'besar_pembayaran', searchable: false, orderable: false
+            { data: 'besar_pembayaran', searchable: false, orderable: false,
                 render: function(data){
                     return 'Rp' +numeral(data).format('0,0');
                 }
             },
-            { data: 'fee_admin', searchable: false, orderable: false
+            { data: 'fee_admin', searchable: false, orderable: false,
                 render: function(data){
                     return 'Rp' +numeral(data).format('0,0');
                 }
