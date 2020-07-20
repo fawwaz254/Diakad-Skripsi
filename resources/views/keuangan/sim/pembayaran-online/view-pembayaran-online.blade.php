@@ -42,6 +42,8 @@
                                     <th>Nama Siswa</th>
                                     <th>Keterangan</th>
                                     <th>Jumlah Bayar</th>
+                                    <th>Biaya Admin</th>
+                                    <th>Bayar melalui</th>
                                     <th>Status</th>
                                     <th>Tanggal Bayar</th>
                                     <th>Action</th>
@@ -86,11 +88,17 @@
             { data: 'siswa.nis_siswa' },
             { data: 'siswa.pengguna.nm_pengguna' },
             { data: 'keterangan', searchable: false, orderable: false },
-            { data: 'besar_pembayaran',
+            { data: 'besar_pembayaran', searchable: false, orderable: false
                 render: function(data){
                     return 'Rp' +numeral(data).format('0,0');
                 }
             },
+            { data: 'fee_admin', searchable: false, orderable: false
+                render: function(data){
+                    return 'Rp' +numeral(data).format('0,0');
+                }
+            },
+            { data: 'payment_code' },
             { data: 'status', searchable: false, orderable: false },
             { data: 'tanggal_bayar', searchable: false, orderable: false },
             { data: 'action', searchable: false, orderable: false,

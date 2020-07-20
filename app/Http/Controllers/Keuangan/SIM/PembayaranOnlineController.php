@@ -226,7 +226,7 @@ class PembayaranOnlineController extends BaseController
             $pembayaran_trs->save();
 
             $params = array(
-                'callback' => url('/'),
+                'callback' => url('payment/callback/'.$pembayaran_trs->id_pembayaran_trs),
                 'listener' => url('payment/notification/'.$pembayaran_trs->id_pembayaran_trs),
                 'order_id' => $pembayaran_trs->nomor_transaksi,
                 'usr_phone' => $wali_murid_phone,
@@ -266,6 +266,14 @@ class PembayaranOnlineController extends BaseController
                 'message' => 'Terdapat error '.$e->getMessage()
             ]);
         }
+    }
+
+    public function actionCallback(Request $request, $id)
+    {
+        $item = PembayaranTrs::find($id);
+
+        $winpay = new Winpay;
+        return redirect($winpay->getStatusUrl($item->payment_code, $item->token));
     }
 
     public function actionPayment(Request $request, $id_transaksi){

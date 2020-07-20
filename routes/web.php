@@ -42,6 +42,7 @@ Route::post('upload', function (Request $request) {
 
 Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
 Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
+Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionCallback');
 
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
