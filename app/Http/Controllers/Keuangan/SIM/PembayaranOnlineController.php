@@ -293,9 +293,13 @@ class PembayaranOnlineController extends BaseController
                     $transaksi->tgl_pembayaran        = $now;
                     $transaksi->save();
 
-                    $tagihan_biaya = $transaksi->tagihan_biaya;
-                    $tagihan_biaya->is_tagih = 0;
-                    $tagihan_biaya->save();
+                    $data_transaksi_detail = PembayaranTrsDetail::where('id_pembayaran_trs', $transaksi->id_pembayaran_trs)->get();
+
+                    foreach($data_transaksi_detail as $transaksi_detail){
+                        $tagihan_biaya = TagihanBiaya::find($transaksi_detail->id_tagihan_biaya);
+                        $tagihan_biaya->is_tagih = 0;
+                        $tagihan_biaya->save();
+                    }
                     
                     $id = $sekolah->prefix.strtotime($now).uniqid();
                     $pembayaran                            = new PembayaranBiaya;
@@ -321,7 +325,7 @@ class PembayaranOnlineController extends BaseController
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
-                'message' => 'Terdapat error'
+                'message' => 'Terdapat error '.$e->getMessage()
             ]);
         }
     }
