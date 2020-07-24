@@ -8,7 +8,7 @@
                 <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/must-change-password')}}">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>WE DETECT YOUR PASSWORD IS DEFAULT, PLEASE CHANGE YOUR PASSWORD</h2>
+                        <h2>PASSWORD ANDA SAAT INI ADALAH PASSWORD SEMENTARA, TOLONG UBAH PASSWORD ANDA</h2>
                     </div>
                     <div class="body">
                         <div class="row clearfix">
