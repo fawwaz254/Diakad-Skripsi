@@ -600,6 +600,7 @@ class LibSiswa
                                 ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
                                 ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
                                 ->where('tagihan_biaya.is_tagih', '=', 1)
+                                ->where('tagihan_biaya.is_request', '=', 0)
                                 ->where('tagihan_biaya.id_siswa', '=', $id_siswa)
                                 ->orderBy('semester.kode_semester', 'asc')
                                 ->orderBy('bulan.id_bulan', 'asc')
