@@ -35,7 +35,7 @@ class PrestasiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('kesiswaan/siswa/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
+        return view('kesiswaan/siswa/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'id_kelas'));
     }
 
     public function addPrestasiSiswa(Request $request)

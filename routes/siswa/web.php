@@ -41,13 +41,26 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 		});
 
-		/** ==== MODUL AKADEMIK ==== **/
+		/** ==== MODUL PELANGGARAN ==== **/
 		Route::group(array('prefix' => 'pelanggaran'), function() {
 
 			// MENU Jadwal Ujian
 			Route::get('riwayat-pelanggaran', 'Siswa\Pelanggaran\RiwayatPelanggaranController@viewRiwayatPelanggaran');
 			Route::get('riwayat-pelanggaran/datatables-non-kbm', 'Siswa\Pelanggaran\RiwayatPelanggaranController@datatablesPelanggaranNonKBM');
 			Route::get('riwayat-pelanggaran/datatables-kbm', 'Siswa\Pelanggaran\RiwayatPelanggaranController@datatablesPelanggaranKBM');
+
+		});
+
+		/** ==== MODUL KESISWAAN ==== **/
+		Route::group(array('prefix' => 'kesiswaan'), function() {
+
+			//MENU Prestasi
+            Route::get('prestasi', 'Siswa\Kesiswaan\PrestasiController@viewPrestasi');
+			Route::get('prestasi/datatables', 'Siswa\Kesiswaan\PrestasiController@datatablesPrestasi');
+			
+			//MENU Prestasi
+            Route::get('beasiswa', 'Siswa\Kesiswaan\BeasiswaController@viewBeasiswa');
+            Route::get('beasiswa/datatables', 'Siswa\Kesiswaan\BeasiswaController@datatablesBeasiswa');
 
 		});
 
