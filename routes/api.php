@@ -176,4 +176,47 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::post('jadwal/get', 'Apiv1Controller@actionGetJadwalWaliMurid');
     });
+
+    Route::group(array('prefix' => 'siswa'), function () {
+        Route::group(array('prefix' => 'data-pribadi'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
+            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+        });
+
+        Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
+        Route::post('kota/get', 'Apiv1Controller@actionGetKota');
+        Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
+
+        Route::post('jadwal/get', 'Apiv1Controller@actionGetJadwalSiswa');
+
+        Route::group(array('prefix' => 'kalender-akademik'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetKalenderAkademikSiswa');
+        });
+
+        Route::group(array('prefix' => 'magang'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetMagangSiswa');
+        });
+
+        Route::group(array('prefix' => 'riwayat-bayar'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetRiwayatBayarSiswa');
+        });
+
+        Route::group(array('prefix' => 'tagihan'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetTagihanSiswa');
+        });
+
+        Route::group(array('prefix' => 'pelanggaran-kbm'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetPelanggaranKBMSiswa');
+        });
+
+        Route::group(array('prefix' => 'pelanggaran-non-kbm'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetPelanggaranNonKBMSiswa');
+        });
+
+        Route::group(array('prefix' => 'komplain-sarpras'), function () {
+            Route::post('ruangan/detail', 'Apiv1Controller@actionGetKomplainRuanganSiswa');
+            Route::post('buku-alat/detail', 'Apiv1Controller@actionGetKomplainBukuAlatSiswa');
+            Route::post('{mode}/submit', 'Apiv1Controller@actionKomplainSarprasSiswa');
+        });
+    });
 });

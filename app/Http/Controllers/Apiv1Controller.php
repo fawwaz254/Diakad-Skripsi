@@ -2303,4 +2303,335 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
+    public function actionGetJadwalSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        if (!empty($input->type)) {
+            switch ($input->type) {
+                case 'kbm':
+                    $list_data = LibSiswa::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                case 'uts':
+                    $list_data = LibSiswa::fetchDataJadwalUTS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                case 'uas':
+                    $list_data = LibSiswa::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
+                    break;
+                default:
+                    $list_data = null;
+                    break;
+            }
+        }
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'jadwal' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetKalenderAkademikSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $list_data = LibDataAkademik::fetchDataKalenderAkademik($auth_data, $semester_aktif->id_semester);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'kalender_akademik' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetMagangSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibSiswa::fetchDataMagang($auth_data, $auth_data->pengguna->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'magang' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetRiwayatBayarSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibSiswa::fetchPembayaranSiswa($auth_data, $auth_data->pengguna->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'riwayat_bayar' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetTagihanSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibSiswa::fetchTagihanSiswa($auth_data, $auth_data->pengguna->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'tagihan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetPelanggaranKBMSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibSiswa::fetchPelanggaranKBM($auth_data, $auth_data->pengguna->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'pelanggaran_kbm' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetPelanggaranNonKBMSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $auth_data->pengguna->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'pelanggaran_non_kbm' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetKomplainRuanganSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_ruangan' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $list_data = LibDataSarpras::fetchDataKomplainRuangan($auth_data, $input->id_ruangan);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'komplain-ruangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetKomplainBukuAlatSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id_buku_alat' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
+        $auth_data = $input->auth_data;
+
+        $list_data = LibDataSarpras::fetchDataKomplainBukuAlat($auth_data, $input->id_buku_alat);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'komplain-ruangan' => $list_data
+            )
+        ]);
+    }
+
+    public function actionKomplainSarprasSiswa(Request $request, $mode)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            /*'id_ruangan' => 'required',
+            'id_buku_alat' => 'required',*/
+            'keterangan_komplain' => 'required',
+            'is_urgent' => 'required'
+        ]);
+
+        $mode_delete = array("delete-ruangan", "delete-bukualat");
+
+        if ($validator->fails() && !in_array($mode, $mode_delete)) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        } else {
+            DB::beginTransaction();
+        
+            try {
+                // mengambil waktu sekarang
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+                // get id_siswa
+                $siswa = Siswa::where('id_pengguna','=',$input->auth_data->pengguna->id_pengguna)->first();
+                $id_siswa = $siswa->id_siswa;
+
+                //** MODE UNTUK RUANGAN
+                if ($mode == 'add-ruangan') {
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                    $komplainSarpras                            = new KomplainSarpras;
+                    $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
+                    $komplainSarpras->id_ruangan                = $input->id_ruangan;
+                    if (! empty($input->id_inventaris_ruangan)) {
+                        $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
+                    } else {
+                        $komplainSarpras->id_inventaris_ruangan     = null;
+                    }
+                    $komplainSarpras->id_siswa_komplain         = $id_siswa;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->is_sudah_perbaikan        = 0;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $message = 'Save Komplain Sarpras successfully';
+                } elseif ($mode == 'edit-ruangan') {
+                    // make object to find id
+                    $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->id_ruangan                = $input->id_ruangan;
+                    if (! empty($input->id_inventaris_ruangan)) {
+                        $komplainSarpras->id_inventaris_ruangan     = $input->id_inventaris_ruangan;
+                    } else {
+                        $komplainSarpras->id_inventaris_ruangan     = null;
+                    }
+                    $komplainSarpras->id_siswa_komplain         = $id_siswa;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->updated_at                = $now;
+                    $komplainSarpras->save();
+
+                    $message = 'Update Komplain Sarpras successfully';
+                } elseif ($mode == 'delete-ruangan') {
+                    // make object to find id
+                    $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $komplainSarpras->delete();
+
+                    $message = 'Delete Komplain Sarpras successfully';
+                }
+                //** MODE UNTUK BUKU/ALAT
+                elseif ($mode == 'add-bukualat') {
+                    $id_komplain_sarpras = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    
+                    $komplainSarpras                            = new KomplainSarpras;
+                    $komplainSarpras->id_komplain_sarpras       = $id_komplain_sarpras;
+                    $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
+                    $komplainSarpras->id_siswa_komplain         = $id_siswa;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->is_sudah_perbaikan        = 0;
+                    $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $message = 'Save Komplain Sarpras successfully';
+                } elseif ($mode == 'edit-bukualat') {
+                    // make object to find id
+                    $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->id_buku_alat              = $input->id_buku_alat;
+                    $komplainSarpras->id_siswa_komplain         = $id_siswa;
+                    $komplainSarpras->keterangan_komplain       = $input->keterangan_komplain;
+                    $komplainSarpras->is_urgent                 = $input->is_urgent;
+                    $komplainSarpras->updated_by                = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->updated_at                = $now;
+                    $komplainSarpras->save();
+
+                    $message = 'Update Komplain Sarpras successfully';
+                } elseif ($mode == 'delete-bukualat') {
+                    // make object to find id
+                    $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
+                    $komplainSarpras->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $komplainSarpras->save();
+
+                    $komplainSarpras->delete();
+
+                    $message = 'Delete Komplain Sarpras successfully';
+                }
+
+                DB::commit();
+
+                return response()->json([
+                    'status_code' 	=> 200,
+                    'status_text' 	=> 'Success',
+                    'message' 	=> $message
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code' 	=> 300,
+                    'status_text' 	=> 'Failed',
+                    'message' => 'Terdapat error'
+                ]);
+            }
+        }
+    }
 }
