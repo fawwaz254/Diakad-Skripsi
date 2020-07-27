@@ -31,7 +31,9 @@ class PembayaranOnlineController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('keuangan/sim/pembayaran-online/view-pembayaran-online', compact('auth_data'));
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+
+        return view('keuangan/sim/pembayaran-online/view-pembayaran-online', compact('auth_data', 'data_kelas'));
     }
 
     public function viewAdd(Request $request)
@@ -100,6 +102,16 @@ class PembayaranOnlineController extends BaseController
 
         if (!empty($input->start_date) && !empty($input->end_date)) {
             $list_data = $list_data->whereBetween('created_at', [$input->start_date.' 00:00:00', $input->end_date.' 23:59:59']);
+        }
+        
+        if (!empty($input->kelas)){
+            $list_data = $list_data->whereHas('siswa', function($q) use ($input){
+                $q->where('id_kelas', $input->kelas);
+            });
+        }
+
+        if (!empty($input->siswa)){
+            $list_data = $list_data->where('id_siswa', $input->siswa);
         }
 
         return Datatables::of($list_data)

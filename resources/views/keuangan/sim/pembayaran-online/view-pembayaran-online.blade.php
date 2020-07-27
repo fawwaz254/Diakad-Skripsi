@@ -12,6 +12,31 @@
                 </div>
                 <div class="body">
                     <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <labe>Kelas</label>
+                                    <select class="form-control show-tick" name="kelas" onchange="changeKelas(this)">
+                                        <option value="">Semua Kelas</option>
+                                        @foreach($data_kelas as $data)
+                                        <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <labe>Siswa</label>
+                                    <select class="form-control show-tick" name="siswa">
+                                        <option value="">Semua Siswa</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <div class="form-line">
@@ -66,6 +91,24 @@
             time: false
         });
     });
+
+    function changeKelas(el){
+        $.ajax({
+            url: "{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/siswa-bykelas')}}",
+            type: 'POST',
+            data: {
+                kelas: $('select[name=kelas]').val()
+            },
+            success: function(result) {
+                $('select[name=siswa]').html('');
+                var html = '<option value="">Semua Siswa</option>';
+                $.each(result, function( key, item ) {
+                    html += '<option value="'+item.id_siswa+'" data-nis="'+item.nis_siswa+'" data-id="'+item.id_pengguna+'">'+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
+                });
+                $('select[name=siswa]').html(html);
+            }
+        });
+    }
 </script>
 <script>
     var modul_url               = '/sim/pembayaran-online/';
@@ -80,6 +123,8 @@
             data: function(params){
                 params.start_date = encodeURIComponent($('input[name=start_date]').val());
                 params.end_date = encodeURIComponent($('input[name=end_date]').val());
+                params.kelas = encodeURIComponent($('select[name=kelas]').val());
+                params.siswa = encodeURIComponent($('select[name=siswa]').val());
             },
         },
         columns: [
