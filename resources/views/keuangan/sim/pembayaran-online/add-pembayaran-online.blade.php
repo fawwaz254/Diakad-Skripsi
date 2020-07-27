@@ -18,10 +18,10 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="kelas" onchange="changeKelas(this)">
-                                        <option value="">-- Pilih Kelas --</option>
+                                    <select class="form-control show-tick" {{(!empty($id_kelas))? 'disabled' : ''}} name="kelas" onchange="changeKelas()">
+                                        <option value="">Semua Kelas</option>
                                         @foreach($data_kelas as $data)
-                                            <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
+                                        <option value="{{$data->id_kelas}}" {{(!empty($id_kelas) && $id_kelas == $data->id_kelas)? 'selected' : ''}}>{{$data->nm_kelas}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -80,7 +80,12 @@
 </div>
 @include('scriptjs')
 <script>
-function changeKelas(el){
+@if(!empty($id_kelas))
+$(function(){
+    changeKelas();
+});
+@endif
+function changeKelas(){
     $.ajax({
         url: "{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/siswa-bykelas')}}",
         type: 'POST',

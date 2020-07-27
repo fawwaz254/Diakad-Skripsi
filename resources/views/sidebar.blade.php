@@ -50,7 +50,7 @@
                     </a>
                     @if($auth_data->menus->where('id_modul', $modul->id_modul)->first())
                     <ul class="ml-menu">
-                        @foreach($auth_data->menus->where('id_modul', $modul->id_modul)->all() as $menu)
+                        @foreach($auth_data->menus->where('id_modul', $modul->id_modul)->sortBy('urutan')->all() as $menu)
                         <li id="menu-item-{{$modul->route}}-{{$menu->page}}" class="menu-item">
                             @if(!empty($menu->page))
                             <a class="target-link" href="{{url(Request::segment(1).'#'.$modul->route.'/'.$menu->page)}}" class="waves-effect waves-block">

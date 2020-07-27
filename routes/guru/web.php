@@ -231,6 +231,18 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', 'Guru\WaliKelas\InputPelanggaranController@ajaxGetSubkategoriByKategori');
+
+            // MENU PEMBAYARAN ONLINE
+            Route::group(array('prefix' => 'pembayaran-online'), function () {
+                Route::get('/', 'Keuangan\SIM\PembayaranOnlineController@viewIndex');
+                Route::get('add', 'Keuangan\SIM\PembayaranOnlineController@viewAdd');
+
+                Route::post('datatables', 'Keuangan\SIM\PembayaranOnlineController@datatables');
+                Route::post('tagihan/datatables/{id}', 'Keuangan\SIM\PembayaranOnlineController@datatablesTagihan');
+                Route::post('save', 'Keuangan\SIM\PembayaranOnlineController@actionSave');
+
+                Route::post('siswa-bykelas', 'Keuangan\SIM\PembayaranOnlineController@ajaxGetSiswaByKelas');
+            });
         });
     });
 });

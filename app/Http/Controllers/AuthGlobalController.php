@@ -125,6 +125,12 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
         $pengguna = Auth::user();
         if ($input->new_password == $input->new_confirm_password) {
+            if ($input->new_password == $pengguna->username) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Mohon tidak menggunakan password lama Anda'
+                ];
+            }
             $pengguna->password             = Hash::make($input->new_password);
             $pengguna->last_time_password   = $now;
             $pengguna->must_change_password   = 0;
@@ -133,12 +139,12 @@ class AuthGlobalController extends BaseController
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
                 'link' => url('/'),
-                'message' => 'Change password successfully'
+                'message' => 'Sukses mengubah password'
             ];
         } else {
             return [
                 'status' => 300, // FAILED
-                'message' => 'Re-type your new password again'
+                'message' => 'Ketik kembali password baru Anda'
             ];
         }
     }

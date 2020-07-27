@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 use App\Libraries\LibGlobal;
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\WinpayPHP\Winpay;
 
+use App\Models\Guru;
 use App\Models\PembayaranBiaya;
 use App\Models\PembayaranTrs;
 use App\Models\PembayaranTrsDetail;
@@ -33,7 +36,17 @@ class PembayaranOnlineController extends BaseController
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('keuangan/sim/pembayaran-online/view-pembayaran-online', compact('auth_data', 'data_kelas'));
+        if($request->segment(1) == 'guru'){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+
+            $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+            $id_kelas = $wali_kelas->id_kelas;
+        }else{
+            $id_kelas = null;
+        }
+
+        return view('keuangan/sim/pembayaran-online/view-pembayaran-online', compact('auth_data', 'data_kelas', 'id_kelas'));
     }
 
     public function viewAdd(Request $request)
@@ -44,10 +57,20 @@ class PembayaranOnlineController extends BaseController
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
+        if($request->segment(1) == 'guru'){
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+
+            $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+            $id_kelas = $wali_kelas->id_kelas;
+        }else{
+            $id_kelas = null;
+        }
+
         $winpay = new Winpay;
         $grup_payment_channel = $winpay->getPaymentChannel();
 
-        return view('keuangan/sim/pembayaran-online/add-pembayaran-online', compact('auth_data', 'data_kelas', 'grup_payment_channel'));
+        return view('keuangan/sim/pembayaran-online/add-pembayaran-online', compact('auth_data', 'data_kelas', 'grup_payment_channel', 'id_kelas'));
     }
 
     public function viewDetail(Request $request, $id)

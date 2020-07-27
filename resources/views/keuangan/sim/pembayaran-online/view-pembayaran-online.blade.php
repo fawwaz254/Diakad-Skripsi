@@ -16,10 +16,10 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Kelas</label>
-                                    <select class="form-control show-tick" name="kelas" onchange="changeKelas(this)">
+                                    <select class="form-control show-tick" {{(!empty($id_kelas))? 'disabled' : ''}} name="kelas" onchange="changeKelas()">
                                         <option value="">Semua Kelas</option>
                                         @foreach($data_kelas as $data)
-                                        <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
+                                        <option value="{{$data->id_kelas}}" {{(!empty($id_kelas) && $id_kelas == $data->id_kelas)? 'selected' : ''}}>{{$data->nm_kelas}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -90,9 +90,13 @@
             weekStart: 1,
             time: false
         });
+
+        @if(!empty($id_kelas))
+            changeKelas();
+        @endif
     });
 
-    function changeKelas(el){
+    function changeKelas(){
         $.ajax({
             url: "{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/siswa-bykelas')}}",
             type: 'POST',
@@ -111,7 +115,7 @@
     }
 </script>
 <script>
-    var modul_url               = '/sim/pembayaran-online/';
+    var modul_url               = '/{{Request::segment(2)}}/pembayaran-online/';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
