@@ -2634,4 +2634,77 @@ class Apiv1Controller extends BaseController
             }
         }
     }
+
+    public function actionGetBeasiswaSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = BeasiswaSiswa::select('beasiswa_siswa.jenis_beasiswa_siswa', 'beasiswa_siswa.keterangan_beasiswa_siswa', 'beasiswa_siswa.tahun_mulai_beasiswa_siswa', 'beasiswa_siswa.tahun_selesai_beasiswa_siswa', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'beasiswa_siswa.id_beasiswa_siswa')
+                                    ->join('siswa', 'siswa.id_siswa', '=', 'beasiswa_siswa.id_siswa')
+                                    ->join('kelas', 'kelas.id_kelas', '=', 'beasiswa_siswa.id_kelas')
+                                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                                    ->where('siswa.id_pengguna', $auth_data->pengguna->id_pengguna)
+                                    ->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'beasiswa' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetPrestasiSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = PrestasiSiswa::select(
+            'prestasi_siswa.nm_prestasi_siswa',
+            'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+            'prestasi_siswa.jenis_prestasi_siswa',
+            'prestasi_siswa.peringkat_prestasi_siswa',
+            'p1.nm_pengguna as nm_siswa',
+            'siswa.nisn_siswa',
+            'siswa.nis_siswa',
+            'semester.nm_semester',
+            'semester.tahun_ajaran',
+            'kelas.nm_kelas',
+            'prestasi_siswa.lokasi_prestasi_siswa',
+            'prestasi_siswa.penyelenggara_prestasi_siswa',
+            'prestasi_siswa.tgl_prestasi_siswa',
+            'ekskul.nm_ekskul',
+            'prestasi_siswa.id_prestasi_siswa',
+            'prestasi_siswa.id_guru_pendamping',
+            'p2.nm_pengguna as nm_guru_pendamping',
+            'p2.gelar_depan',
+            'p2.gelar_belakang'
+        )
+        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+        ->orderBy('prestasi_siswa.created_at', 'desc')
+        ->orderBy('semester.thn_akademik_semester', 'desc')
+        ->orderBy('semester.nm_semester', 'desc')
+        ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'prestasi' => $list_data
+            )
+        ]);
+    }
 }

@@ -218,5 +218,13 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('buku-alat/detail', 'Apiv1Controller@actionGetKomplainBukuAlatSiswa');
             Route::post('{mode}/submit', 'Apiv1Controller@actionKomplainSarprasSiswa');
         });
+
+        Route::group(array('prefix' => 'beasiswa'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetBeasiswaSiswa');
+        });
+
+        Route::group(array('prefix' => 'prestasi'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetPrestasiSiswa');
+        });
     });
 });
