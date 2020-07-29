@@ -226,5 +226,9 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
         Route::group(array('prefix' => 'prestasi'), function () {
             Route::post('get', 'Apiv1Controller@actionGetPrestasiSiswa');
         });
+
+        Route::post('ruangan/get', 'Apiv1Controller@actionGetRuangan');
+        Route::post('inventaris-ruangan/get', 'Apiv1Controller@actionGetInventarisRuangan');
+        Route::post('buku-alat/get', 'Apiv1Controller@actionGetBukuAlat');
     });
 });
