@@ -2303,6 +2303,23 @@ class Apiv1Controller extends BaseController
         ]);
     }
 
+    public function actionGetWaliMuridSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        $data_anak_murid = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna);
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'anak_murid' => $data_anak_murid
+            )
+        ]);
+    }
+
     public function actionGetJadwalSiswa(Request $request)
     {
         $input = (object) $request->input();
