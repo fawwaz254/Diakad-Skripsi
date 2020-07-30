@@ -19,7 +19,7 @@
                 </div>
                 <div class="email">{{$auth_data->pengguna->username}}</div>
                 @if(!empty($auth_data->nm_anak_murid))
-                <small style="font-size: x-small; color: white;">Ortu dari {{$auth_data->nm_anak_murid}}</small>
+                <small style="font-size: x-small; color: white;">(Siswa) {{$auth_data->nm_anak_murid}}</small>
                 @endif
                 <div class="btn-group user-helper-dropdown">
                     <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
