@@ -90,6 +90,8 @@
         </div>
     </div>
 </div>
+@include('scriptjs')
+
 <script>
 
     var modul_url       = 'keuangan';

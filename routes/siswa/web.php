@@ -35,7 +35,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('tagihan', 'Siswa\Keuangan\TagihanController@viewTagihan');
 			Route::get('tagihan/datatables', 'Siswa\Keuangan\TagihanController@datatablesTagihan');
 
-			Route::post('tagihan/generate', 'WaliMurid\Keuangan\TagihanController@actionGenerate');
+			Route::post('tagihan/generate', 'Siswa\Keuangan\TagihanController@actionGenerate');
 
 			// MENU Riwayat Bayar
 			Route::get('riwayat-bayar', 'Siswa\Keuangan\RiwayatBayarController@viewRiwayatBayar');

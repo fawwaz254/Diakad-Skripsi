@@ -216,7 +216,7 @@ class TagihanController extends BaseController
             DB::rollback();
 
             return response()->json([
-                'status_code' 	=> 300,
+                'status' 	=> 300,
                 'status_text' 	=> 'Failed',
                 'message' => 'Terdapat error '.$e->getMessage()
             ]);
