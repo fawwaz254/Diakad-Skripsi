@@ -138,6 +138,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('submit', 'Apiv1Controller@actionDataPribadi');
         });
 
+        Route::post('siswa/get', 'Apiv1Controller@actionGetWaliMuridSiswa');
         Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
         Route::post('kota/get', 'Apiv1Controller@actionGetKota');
         Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
@@ -218,5 +219,17 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('buku-alat/detail', 'Apiv1Controller@actionGetKomplainBukuAlatSiswa');
             Route::post('{mode}/submit', 'Apiv1Controller@actionKomplainSarprasSiswa');
         });
+
+        Route::group(array('prefix' => 'beasiswa'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetBeasiswaSiswa');
+        });
+
+        Route::group(array('prefix' => 'prestasi'), function () {
+            Route::post('get', 'Apiv1Controller@actionGetPrestasiSiswa');
+        });
+
+        Route::post('ruangan/get', 'Apiv1Controller@actionGetRuangan');
+        Route::post('inventaris-ruangan/get', 'Apiv1Controller@actionGetInventarisRuangan');
+        Route::post('buku-alat/get', 'Apiv1Controller@actionGetBukuAlat');
     });
 });
