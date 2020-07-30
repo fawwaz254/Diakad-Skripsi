@@ -13,6 +13,7 @@
                                 <tr>
                                     <th>Nomor Transaksi</th>
                                     <th>Keterangan</th>
+                                    <th>Status</th>
                                     <th>Jumlah Bayar</th>
                                     <th>Bayar melalui</th>
                                     <th>Aksi</th>
@@ -23,6 +24,7 @@
                                 <tr>
                                     <td>{{$pembayaran_trs->nomor_transaksi}}</td>
                                     <td>{{$pembayaran_trs->keterangan}}</td>
+                                    <td>{{$pembayaran_trs->status_pembayaran_to_text()}}</td>
                                     <td>Rp{{number_format($pembayaran_trs->besar_pembayaran)}}</td>
                                     <td>{{$pembayaran_trs->payment_code}}</td>
                                     <td>

@@ -37,4 +37,17 @@ class PembayaranTrs extends Model
     {
         return $this->belongsTo(Siswa::class, 'id_siswa');
     }
+
+    public function status_pembayaran_to_text()
+    {
+        if($this->status_pembayaran == 0){
+            return 'Waiting for payment';
+        }else if($this->status_pembayaran == 1){
+            return 'Success';
+        }else if($this->status_pembayaran == 10){
+            return 'Expired';
+        }else{
+            return '';
+        }
+    }
 }

@@ -139,15 +139,7 @@ class PembayaranOnlineController extends BaseController
 
         return Datatables::of($list_data)
                 ->addColumn('status', function ($item) {
-                    if($item->status_pembayaran == 0){
-                        return 'Waiting for payment';
-                    }else if($item->status_pembayaran == 1){
-                        return 'Success';
-                    }else if($item->status_pembayaran == 10){
-                        return 'Expired';
-                    }else{
-                        return '';
-                    }
+                    return $item->status_pembayaran_to_text();
                 })
                 ->addColumn('tanggal_bayar', function ($item) {
                     if(!empty($item->tgl_pembayaran)){
