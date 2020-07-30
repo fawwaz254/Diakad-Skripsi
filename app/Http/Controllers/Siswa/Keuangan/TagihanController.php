@@ -10,6 +10,11 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\WinpayPHP\Winpay;
+use App\Models\PembayaranTrs;
+use App\Models\PembayaranTrsDetail;
+use App\Models\TagihanBiaya;
+use App\Models\Siswa;
 
 use Auth;
 use DB;
@@ -23,7 +28,14 @@ class TagihanController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('siswa/keuangan/tagihan/view-tagihan',compact('auth_data'));
+        $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+
+        $winpay = new Winpay;
+        $grup_payment_channel = $winpay->getPaymentChannel();
+
+        $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $siswa->id_siswa)->where('status_pembayaran', 0)->get();
+
+    	return view('siswa/keuangan/tagihan/view-tagihan',compact('auth_data', 'grup_payment_channel', 'pembayaran_aktif'));
 
     }
 

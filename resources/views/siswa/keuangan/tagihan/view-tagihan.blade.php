@@ -1,8 +1,49 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            @if($pembayaran_aktif->first())
+            <div class="card is-gap">
+                <div class="header">
+                    <h2>KODE BAYAR AKTIF</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nomor Transaksi</th>
+                                    <th>Keterangan</th>
+                                    <th>Jumlah Bayar</th>
+                                    <th>Bayar melalui</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($pembayaran_aktif as $pembayaran_trs)
+                                <tr>
+                                    <td>{{$pembayaran_trs->nomor_transaksi}}</td>
+                                    <td>{{$pembayaran_trs->keterangan}}</td>
+                                    <td>Rp{{number_format($pembayaran_trs->besar_pembayaran)}}</td>
+                                    <td>{{$pembayaran_trs->payment_code}}</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="copyToClipboard('{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}')">
+                                            <i class="material-icons">info_outline</i>
+                                        </a> 
+                                        <a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}">
+                                            <i class="material-icons">attach_money</i>
+                                        </a> 
+                                    </td>
+                                </tr>
+                            </tbody>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endif
             <div class="card">
-                    {{csrf_field()}}
+                <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/generate')}}">
+                {{csrf_field()}}
                     <div class="header">
                         <h2>TAGIHAN SISWA</h2>
                     </div>
@@ -25,9 +66,26 @@
                                 </thead>
                             </table>
                         </div>
+                        <h2 class="card-inside-title">
+                            Akan dibayar melalui
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="payment_channel" required="">
+                                    <option value="" disabled selected >-- Pilih Metode Pembayaran --</option>
+                                    @foreach($grup_payment_channel as $name => $data_payment_channel)
+                                    <optgroup label="{{$name}}">
+                                        @foreach($data_payment_channel as $data)
+                                            <option value="{{$data->payment_code}}">{{$data->payment_name}} ({{$data->payment_description}})</option>
+                                        @endforeach
+                                    </optgroup>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <button class="btn bg-blue waves-effect" type="submit"><span>Bayar yang dicentang</span></button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -40,7 +98,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
         ajax: {
             url: datatable_url,
             type: 'GET'
