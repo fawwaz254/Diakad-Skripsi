@@ -25,7 +25,7 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <select class="form-control show-tick" name="role">
-                                            @foreach(\App\Models\RolePengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->join('role', 'role.id_role', '=', 'role_pengguna.id_role')->orderBy('nm_role')->get() as $role_pengguna)
+                                            @foreach($roles as $role_pengguna)
                                             @if($role_pengguna->is_aktif == 1)
                                             <option value="{{$role_pengguna->id_role}}" selected>{{$role_pengguna->nm_role}}</option>
                                             @else

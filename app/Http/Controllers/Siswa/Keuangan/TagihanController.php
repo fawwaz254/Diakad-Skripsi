@@ -98,6 +98,13 @@ class TagihanController extends BaseController{
             ]);
         } 
 
+        if (empty($input->id_tagihan_biaya)) {
+            return response()->json([
+                'status' 	=> 300,
+                'message' => 'Mohon pilih siswa terlebih dahulu',
+            ]);
+        } 
+
         DB::beginTransaction();
         
         try {
@@ -214,7 +221,7 @@ class TagihanController extends BaseController{
             return response()->json([
                 'status' 	=> 300,
                 'status_text' 	=> 'Failed',
-                'message' => 'Terdapat error '.$e->getMessage().' '.$e->getLine()
+                'message' => 'Terdapat error '
             ]);
         }
     }

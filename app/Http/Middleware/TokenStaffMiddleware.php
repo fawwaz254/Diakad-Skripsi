@@ -13,7 +13,9 @@ use App\Models\Role;
 use App\Models\Guru;
 use App\Models\GuruPiket;
 use App\Models\PembinaEkskulSet;
+use App\Models\Siswa;
 use App\Models\WaliKelas;
+use App\Models\WaliMurid;
 
 use Auth;
 use Session;
@@ -152,12 +154,23 @@ class TokenStaffMiddleware
                     $menus = collect($menus->merge($menus_2)->all());
                 }
 
+                // IF Wali Murid
+                $nm_anak_murid = null;
+                if($role_aktif->id_role == 4){
+                    if ($wali_murid = WaliMurid::where('id_pengguna', $pengguna->id_pengguna)->first()) {
+                        if ($siswa = Siswa::with('pengguna')->where('id_wali_murid', $wali_murid->id_wali_murid)->where('is_aktif_wali_murid', 1)->first()) {
+                            $nm_anak_murid = $siswa->pengguna->nm_pengguna;
+                        }
+                    }
+                }
+
                 $auth_data = (object) array(
                     'pengguna' => $pengguna,
                     'sekolah_data' => $sekolah_data,
                     'roles_pengguna' => $roles_pengguna,
                     'moduls' => $moduls,
-                    'menus' => $menus
+                    'menus' => $menus,
+                    'nm_anak_murid' => $nm_anak_murid
                 );
 
                 Session::put('auth_data', $auth_data);

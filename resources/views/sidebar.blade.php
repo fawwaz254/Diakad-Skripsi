@@ -15,8 +15,12 @@
                 <img src="https://ui-avatars.com/api/?size=100&name={{$auth_data->pengguna->nm_pengguna}}" height="50" />
             </div>
             <div class="info-container">
-                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$auth_data->pengguna->nm_pengguna}}</div>
+                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$auth_data->pengguna->nm_pengguna}}
+                </div>
                 <div class="email">{{$auth_data->pengguna->username}}</div>
+                @if(!empty($auth_data->nm_anak_murid))
+                <small style="font-size: x-small; color: white;">Ortu dari {{$auth_data->nm_anak_murid}}</small>
+                @endif
                 <div class="btn-group user-helper-dropdown">
                     <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
                     <ul class="dropdown-menu pull-right">

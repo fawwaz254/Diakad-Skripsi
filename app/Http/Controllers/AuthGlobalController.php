@@ -39,7 +39,7 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $roles = Role::orderBy('nm_role', 'asc')->get();
+        $roles = RolePengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->join('role', 'role.id_role', '=', 'role_pengguna.id_role')->orderBy('nm_role')->get();
         return view('profile', compact('auth_data', 'roles'));
     }
 
