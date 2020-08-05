@@ -160,12 +160,12 @@ class PlottingMapelSiswaController extends BaseController
         $list_data = Jurusan::select(
             'jurusan.id_jurusan',
             'jurusan.nm_jurusan',
-            DB::raw("(SELECT COUNT(*) FROM siswa JOIN kelas ON kelas.id_kelas = siswa.id_kelas WHERE kelas.id_jurusan = jurusan.id_jurusan AND siswa.deleted_at IS NULL) AS jml_siswa"),
-            DB::raw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
+            DB::raw("(SELECT COUNT(*) FROM siswa JOIN kelas ON kelas.id_kelas = siswa.id_kelas WHERE kelas.id_jurusan = jurusan.id_jurusan AND siswa.deleted_at IS NULL) AS jml_siswa")
+        )
+        ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
             JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp
             JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
-            WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL) AS jml_siswa_krs")
-        )
+            WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL AND pengambilan_mp.id_semester = ?) AS jml_siswa_krs", [$id])
         ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->get();
 
