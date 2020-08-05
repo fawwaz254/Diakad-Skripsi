@@ -48,7 +48,7 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
         ajax: {
             url: datatable_url,
             type: 'GET'

@@ -20,11 +20,11 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode</th>
-                                        <th>Nama Mata Ajar</th>
-                                        <th>Jenis Mapel</th>
-                                        <th>Tingkat</th>
-                                        <th>Kelas</th>
+                                        <th class="search-filter">Kode</th>
+                                        <th class="search-filter">Nama Mata Ajar</th>
+                                        <th class="search-filter">Jenis Mapel</th>
+                                        <th class="search-filter">Tingkat</th>
+                                        <th class="search-filter">Kelas</th>
                                         <th>Jadwal Hari</th>
                                         <th>Jadwal Jam</th>
                                         <th>Pengampu</th>
@@ -59,6 +59,11 @@
     var edit_url        = role_url + '#' + modul_url + '/' + 'usulan-mata-ajar/edit';
     var copy_url        = role_url + '#' + modul_url + '/' + 'usulan-mata-ajar/copy';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-usulan-mata-ajar/delete';
+
+    $('#primary_table thead th.search-filter').each( function () {
+        var title = $(this).text();
+        $(this).append( initDtInputSearch(title) );
+    } );
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
