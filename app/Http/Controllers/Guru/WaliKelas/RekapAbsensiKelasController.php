@@ -31,8 +31,6 @@ class RekapAbsensiKelasController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);

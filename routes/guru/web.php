@@ -240,9 +240,20 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::post('datatables', 'Keuangan\SIM\PembayaranOnlineController@datatables');
                 Route::post('tagihan/datatables/{id}', 'Keuangan\SIM\PembayaranOnlineController@datatablesTagihan');
                 Route::post('save', 'Keuangan\SIM\PembayaranOnlineController@actionSave');
-
+                
                 Route::post('siswa-bykelas', 'Keuangan\SIM\PembayaranOnlineController@ajaxGetSiswaByKelas');
             });
+        });
+
+        // MENU JADWAL KELAS
+        Route::group(array('prefix' => 'kelas-daring'), function () {
+            Route::get('jadwal-kelas', 'Guru\KelasDaring\JadwalKelasController@viewJadwalKelasDaring');
+            Route::post('jadwal-kelas/datatables', 'Guru\KelasDaring\JadwalKelasController@datatablesJadwalKelasDaring');
+
+            Route::get('jadwal-kelas/add', 'Guru\KelasDaring\JadwalKelasController@viewAddJadwalKelasDaring');
+            Route::post('jadwal-kelas/save', 'Guru\KelasDaring\JadwalKelasController@actionAddJadwalKelasDaring');
+
+            Route::get('mengajar-daring', 'Guru\KelasDaring\JadwalKelasController@viewAdd');
         });
     });
 });
