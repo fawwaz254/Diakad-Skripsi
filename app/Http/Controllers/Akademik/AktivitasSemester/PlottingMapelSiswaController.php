@@ -41,7 +41,7 @@ class PlottingMapelSiswaController extends BaseController
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
 
-        return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan'));
+        return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif'));
     }
 
     public function actionViewPlottingMapelSiswa(Request $request)
@@ -120,9 +120,9 @@ class PlottingMapelSiswaController extends BaseController
 
         $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
             ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-            ->join('guru', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
-            ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+            ->leftjoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->leftjoin('guru', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
+            ->leftjoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
             ->get();
@@ -143,9 +143,9 @@ class PlottingMapelSiswaController extends BaseController
 
         $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
             ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-            ->join('guru', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
-            ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+            ->leftjoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->leftjoin('guru', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
+            ->leftjoin('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
             ->get();
@@ -189,15 +189,15 @@ class PlottingMapelSiswaController extends BaseController
                 $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
                 ->whereNull('kelas_mp.deleted_at');
             })
-            ->join('pengampu_mp', function ($q) {
+            ->leftjoin('pengampu_mp', function ($q) {
                 $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                 ->whereNull('pengampu_mp.deleted_at');
             })
-            ->join('guru', function ($q) {
+            ->leftjoin('guru', function ($q) {
                 $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
                 ->whereNull('guru.deleted_at');
             })
-            ->join('pengguna', function ($q) {
+            ->leftjoin('pengguna', function ($q) {
                 $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
                 ->whereNull('pengguna.deleted_at');
             })
@@ -213,15 +213,15 @@ class PlottingMapelSiswaController extends BaseController
                 $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
                 ->whereNull('kelas_mp.deleted_at');
             })
-            ->join('pengampu_mp', function ($q) {
+            ->leftjoin('pengampu_mp', function ($q) {
                 $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                 ->whereNull('pengampu_mp.deleted_at');
             })
-            ->join('guru', function ($q) {
+            ->leftjoin('guru', function ($q) {
                 $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
                 ->whereNull('guru.deleted_at');
             })
-            ->join('pengguna', function ($q) {
+            ->leftjoin('pengguna', function ($q) {
                 $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
                 ->whereNull('pengguna.deleted_at');
             })
