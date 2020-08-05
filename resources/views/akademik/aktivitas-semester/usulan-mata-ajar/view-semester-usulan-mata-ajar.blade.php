@@ -106,5 +106,19 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    primary_table.columns().every( function () {
+        var column = this;
+ 
+        $( 'input', this.header() ).on( 'keyup change', function () {
+            if(this.value.length <= 0){
+                column.search( this.value ).draw();
+            }else{
+                if (  this.value.length > 2 && column.search() !== this.value ) {
+                    column.search( this.value ).draw();
+                }
+            }
+        });
+    });
 </script>
 @endif
