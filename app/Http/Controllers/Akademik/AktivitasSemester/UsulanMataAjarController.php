@@ -141,6 +141,7 @@ class UsulanMataAjarController extends BaseController
                                       ->whereRaw('kelas_mp.id_mata_pelajaran = "'.$id_mata_pelajaran.'"');
                             })
                             ->orderBy('kelas.tingkat')
+                            ->orderBy('kelas.nm_kelas')
                             ->get();
 
         $semester   = Semester::where('id_semester', '=', $kelas_mp->id_semester)->first();
