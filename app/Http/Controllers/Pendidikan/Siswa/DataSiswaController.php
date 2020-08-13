@@ -31,7 +31,8 @@ class DataSiswaController extends BaseController
 	    $jurusan = Jurusan::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
 	    $jalur = Jalur::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
 	    $status_pengguna = StatusPengguna::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
-	    	->where('status_join_table','=',3)
+            ->where('status_join_table','=',3)
+            ->orderBy('nm_status_pengguna')
 	    	->get();
 	    $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')
                                   ->distinct()
