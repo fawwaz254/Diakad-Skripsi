@@ -67,4 +67,9 @@ class KelasMp extends Model
     {
         return $this->belongsTo('App\Models\MataPelajaran', 'id_mata_pelajaran');
     }
+
+    public function presensi_mp()
+    {
+        return $this->hasMany('App\Models\PresensiMp', 'id_kelas_mp');
+    }
 }

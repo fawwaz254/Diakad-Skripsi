@@ -32,6 +32,11 @@ class KelasMpGrup extends Model
         return $this->hasMany('App\Models\KelasMp', 'id_kelas_mp_grup');
     }
 
+    public function check_kelas_mp()
+    {
+        return $this->hasOne('App\Models\KelasMp', 'id_kelas_mp_grup');
+    }
+
     public function semester()
     {
         return $this->belongsTo('App\Models\Semester', 'id_semester');
