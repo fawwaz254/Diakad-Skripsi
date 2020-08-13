@@ -108,6 +108,22 @@
                             </div>
                         </div>
                         <div class="table-responsive" style="display: none" id="myDIV">
+                            <div class="row clearfix">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <h2 class="card-inside-title">
+                                        Pilih setting checkall
+                                    </h2>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <select class="form-control show-tick" name="setting_check">
+                                        <option value="1">Check All</option>
+                                        <option value="2">Check Ganjil</option>
+                                        <option value="3">Check Genap</option>
+                                        <option value="4">Check Setengah AWAL</option>
+                                        <option value="5">Check Setengah AKHIR</option>
+                                    </select>
+                                </div>
+                            </div>
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table_siswa" style="width: 100%">
                                 <thead>
                                     <tr>
@@ -234,7 +250,7 @@
 
                 }
             },
-            { data: 'kd_mata_pelajaran', name: 'kd_mata_pelajaran' },
+            { data: 'kd_mata_pelajaran', name: 'kd_mata_pelajaran', searchable: false, orderable: false },
             { data: 'nm_mata_pelajaran', name: 'nm_mata_pelajaran' },
             { data: 'kredit_semester', name: 'kredit_semester' },
             { data: 'tingkat_semester', name: 'tingkat_semester' },
@@ -339,10 +355,69 @@
         });
 
         $('#checkbox_select_all_primary_table_siswa').change(function() {
-            var select_all_checked = this.checked;
-            var rows = primary_table_siswa.rows({ 'search': 'applied' }).nodes();
+            var setting_check = $('select[name=setting_check]').val();
 
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            if(setting_check == 1){
+                var select_all_checked = this.checked;
+                var rows = primary_table_siswa.rows({ 'search': 'applied' }).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }else if(setting_check == 2){
+                var select_all_checked = this.checked;
+                var rows = primary_table_siswa.rows([{ 'search': 'applied' }, ':nth-child(1)', ':nth-child(2n+1)']).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }else if(setting_check == 3){
+                var select_all_checked = this.checked;
+                var rows = primary_table_siswa.rows([{ 'search': 'applied' }, ':nth-child(2n)']).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }else if(setting_check == 4){
+                var select_all_checked = this.checked;
+                var count = primary_table_siswa.data().count();
+                var array = getArrayForSettingTable(count, false);
+
+                var rows = primary_table_siswa.rows(array).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }else if(setting_check == 5){
+                var select_all_checked = this.checked;
+                var count = primary_table_siswa.data().count();
+                var array = getArrayForSettingTable(count, true);
+
+                var rows = primary_table_siswa.rows(array).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }
         });
     });
+
+    function getArrayForSettingTable(count, is_last){
+        if(count%2 == 0){
+            var half_count = count / 2;
+            if(is_last){
+                var start = half_count + 1;
+                var end = count;
+            }else{
+                var start = 1;
+                var end = half_count;
+            }
+        }else{
+            var half_count = count / 2;
+            if(is_last){
+                var start = half_count + 1;
+                var end = count;
+            }else{
+                var start = 1;
+                var end = half_count;
+            }
+        }
+
+        var array = [];
+        for(var i = start; i<=end; i++){
+            array.push(':nth-child(' +i+ ')');
+        }
+
+        return array;
+    }
 </script>
