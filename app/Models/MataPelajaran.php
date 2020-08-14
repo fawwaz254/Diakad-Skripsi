@@ -49,4 +49,9 @@ class MataPelajaran extends Model
     {
         return $this->belongsTo('App\Models\JenisMataPelajaran', 'id_jenis_mata_pelajaran');
     }
+
+    public function jurusan()
+    {
+        return $this->belongsTo('App\Models\Jurusan', 'id_jurusan');
+    }
 }

@@ -40,6 +40,11 @@ class Pengguna extends Authenticatable
 
     protected $guarded = [];
 
+    public function fullname()
+    {
+        return $this->gelar_depan.' '.$this->nm_pengguna.' '.$this->gelar_belakang;
+    }
+
     public function role_pengguna()
     {
         return $this->hasMany('App\Models\RolePengguna', 'id_pengguna');

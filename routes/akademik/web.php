@@ -181,5 +181,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('cetak-presensi-uas/datatables/{id}', 'Akademik\Presensi\CetakPresensiUASController@datatablesCetakPresensiUAS');
             Route::get('cetak-presensi-uas/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUASController@printCetakPresensiUAS');
         });
+
+        // MODUL KELAS DARING
+        Route::group(array('prefix' => 'kelas-daring'), function () {
+            // MENU Setting Toleransi Keterlambatan
+            Route::get('setting-toleransi', 'Akademik\KelasDaring\SettingToleransiController@viewSettingToleransi');
+            Route::post('post-setting-toleransi', 'Akademik\KelasDaring\SettingToleransiController@actionSettingToleransi');
+
+            // MENU Setting Pengampu
+            Route::get('setting-pengampu', 'Akademik\KelasDaring\SettingPengampuController@viewSettingPengampu');
+            Route::post('setting-pengampu/datatables', 'Akademik\KelasDaring\SettingPengampuController@datatablesSettingPengampu');
+
+            Route::get('setting-pengampu/guru/{id_guru}', 'Akademik\KelasDaring\SettingPengampuController@viewGuruSettingPengampu');
+            Route::post('setting-pengampu/guru/datatables', 'Akademik\KelasDaring\SettingPengampuController@datatablesGuruSettingPengampu');
+
+            Route::post('setting-pengampu/guru/action/{mode}', 'Akademik\KelasDaring\SettingPengampuController@actionSettingPengampu');
+        });
     });
 });

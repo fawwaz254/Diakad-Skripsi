@@ -86,4 +86,8 @@ class Guru extends Model
         return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
     }
 
+    public function pengampu_mapel(){
+        return $this->hasMany('App\Models\PengampuMapel', 'id_guru');
+    }
+
 }

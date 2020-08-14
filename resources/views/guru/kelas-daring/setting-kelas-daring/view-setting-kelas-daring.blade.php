@@ -33,6 +33,11 @@
 
     var modul_url       = 'kelas-daring';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kelas/datatables';
+    // var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kelas/delete';
+
+    var add_kelas_url   = role_url + '#' + modul_url + '/' + 'jadwal-kelas/data-kelas';
+    var add_jadwal_url   = role_url + '#' + modul_url + '/' + 'jadwal-kelas/data-jadwal';
+    var edit_url   = role_url + '#' + modul_url + '/' + 'jadwal-kelas/edit';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -47,9 +52,36 @@
         columns: [
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_kelas_mp_grup' },
-            { data: 'kelas', searchable: false, orderable: false },
-            { data: 'jadwal', searchable: false, orderable: false },
-            { data: 'action', searchable: false, orderable: false }
+            { data: 'kelas', searchable: false, orderable: false, 
+                render: function(data){
+                    var html = '';
+                    $.each(data.data_nm_kelas, function(index, item){
+                        html += item + '<br>';
+                    })
+                    return html + '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float target-link" href="'+ add_kelas_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">note_add</i>';
+                }
+            },
+            { data: 'jadwal', searchable: false, orderable: false,
+                render: function(data){
+                    var html = '';
+                    $.each(data.data_jadwal, function(index, item){
+                        html += item + '<br>';
+                    })
+                    return html + '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float target-link" href="'+ add_jadwal_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">note_add</i>';
+                } 
+            },
+            { data: 'action', searchable: false, orderable: false, 
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> ';
+                    // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    // '    <i class="material-icons">delete_forever</i>'+
+                    // '</button>';
+                }
+            }
         ]
     });
 
