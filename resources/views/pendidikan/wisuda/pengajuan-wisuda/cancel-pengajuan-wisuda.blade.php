@@ -51,7 +51,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" name="keterangan_batal" required="" aria-required="true" aria-invalid="true" >
-                                <input type="hidden" class="form-control" name="nis_nama_siswa" required="" aria-required="true" aria-invalid="true" value="{{$nis_nama_siswa}}">
+                                <input type="hidden" class="form-control" name="id_kelas" required="" aria-required="true" aria-invalid="true" value="{{$id_kelas}}">
                                 <input type="hidden" class="form-control" name="id_periode_wisuda" required="" aria-required="true" aria-invalid="true" value="{{$id_periode_wisuda}}">
                             </div>
                         </div>
