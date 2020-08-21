@@ -156,11 +156,11 @@
             { data: 'keterangan', name: 'keterangan'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
-                    '    <i class="material-icons">attach_money</i>'+
+                    return '<a class="target-link btn btn-info waves-effect waves-circle waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
+                    '    <i class="material-icons">attach_money</i><span>Cicilan</span>'+
                     '</a> '+
-                    '<button class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">money</i>'+
+                    '<button class="btn btn-warning waves-effect waves-circle waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
+                    '    <i class="material-icons">money</i><span>Lunas</span>'+
                     '</button>'+
                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTagihan(this)" data-id="'+data.id+'">'+
                     '    <i class="material-icons">close</i>'+
