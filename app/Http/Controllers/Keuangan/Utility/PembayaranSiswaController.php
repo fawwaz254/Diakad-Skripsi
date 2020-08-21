@@ -238,7 +238,7 @@ class PembayaranSiswaController extends BaseController
         if ($tagihan->id_jenis_detail_biaya == 4) {
             $jenis_biaya = $tagihan->nm_jenis_detail_biaya." (".$tagihan->nm_bulan.")";
         } else {
-            $jenis_biaya = $item->nm_jenis_detail_biaya;
+            $jenis_biaya = $tagihan->nm_jenis_detail_biaya;
         }
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
