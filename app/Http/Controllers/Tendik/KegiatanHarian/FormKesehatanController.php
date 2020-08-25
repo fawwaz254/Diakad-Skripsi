@@ -171,9 +171,9 @@ class FormKesehatanController extends BaseController{
 
                     if($pengisian_kegiatan_harian->status_pengisian == 1){
                         if($status_join == 3){
-                            $message = 'Sesuai protokol kesehatan Anda disilakan istirahat di rumah, pastikan di rumah saja dan konsumsi makanan bergizi.';
+                            $message = 'Sesuai protokol kesehatan, Anda disarankan istirahat di rumah. Pastikan memakai masker, cuci tangan, hindari kerumunan, konsumsi makanan yang meningkatkan imun dan istirahat yang cukup.';
                         }else{
-                            $message = 'Sesuai protokol kesehatan Anda disilakan istirahat di rumah, pastikan di rumah saja dan konsumsi makanan bergizi. Segera buat surat pernyataan.';
+                            $message = 'Sesuai protokol kesehatan, Anda disarankan istirahat di rumah. Pastikan memakai masker, cuci tangan, hindari kerumunan, konsumsi makanan yang meningkatkan imun dan istirahat yang cukup. Jangan lupa membuat surat pernyataan dan mengunggah (upload) di menu yang sudah disediakan';
                         }
                     }else{
                         $message = 'Alhamdulillah kondisi Anda sehat, silakan lanjutin kegiatan Anda dan tetap patuhi protokol kesehatan.';
