@@ -141,8 +141,10 @@ class SettingKelasDaringController extends BaseController
             })
             ->addColumn('jadwal', function ($item) {
                 $data_jadwal = array();
-                foreach($item->check_kelas_mp->presensi_mp as $presensi_mp){
-                    $data_jadwal[] = $presensi_mp->tgl_presensi;
+                if(!empty($item->check_kelas_mp)){
+                    foreach($item->check_kelas_mp->presensi_mp as $presensi_mp){
+                        $data_jadwal[] = $presensi_mp->tgl_presensi;
+                    }
                 }
 
                 $data = array(
