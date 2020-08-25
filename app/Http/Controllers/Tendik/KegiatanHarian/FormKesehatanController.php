@@ -75,9 +75,12 @@ class FormKesehatanController extends BaseController{
         $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
         
         if(!empty($input->id_kelas)){
-            $list_data = $list_data->where('status_join_table', 3)->whereHas('pengguna_pengisi.siswa', function($q) use ($input){
-                $q->where('id_kelas', $input->id_kelas);
-            });
+            $list_data = $list_data->leftJoin('siswa', function($q){
+                                        $q->on('siswa.id_pengguna', '=', 'pengisian_kegiatan_harian.id_pengguna_pengisi')
+                                            ->whereNull('siswa.deleted_at');
+                                    })
+                                    ->where('pengisian_kegiatan_harian.status_join_table', 3)
+                                    ->where('id_kelas', $input->id_kelas);
         }else if(!empty($input->is_tendik_guru)){
             $list_data = $list_data->whereIn('status_join_table', [1,2]);
         }else{
