@@ -72,12 +72,14 @@ class FormKesehatanController extends BaseController{
     public function showDatatablesFormKesehatan(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PengisianKegiatanHarian::with('pengguna_pengisi')->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna);
+        $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
         
         if(!empty($input->id_kelas)){
             $list_data = $list_data->where('status_join_table', 3);
         }else if(!empty($input->is_tendik_guru)){
             $list_data = $list_data->whereIn('status_join_table', [1,2]);
+        }else{
+            $list_data = $list_data->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna);
         }
 
         return Datatables::of($list_data)
