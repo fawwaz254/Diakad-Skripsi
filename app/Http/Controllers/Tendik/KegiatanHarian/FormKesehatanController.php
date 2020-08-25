@@ -27,7 +27,20 @@ class FormKesehatanController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('tendik/kegiatan-harian/form-kesehatan/view-form-kesehatan',compact('auth_data'));
+        $now = Carbon::now('Asia/Jakarta');
+        $start_1 = Carbon::createFromTimeString('00:00');;
+        $end_1 = Carbon::createFromTimeString('07:00');;
+
+        $start_2 = Carbon::createFromTimeString('19:00');;
+        $end_2 = Carbon::createFromTimeString('23:59');;
+        
+        if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)){
+            $is_disabled = false;
+        }else{
+            $is_disabled = true;
+        }
+
+    	return view('tendik/kegiatan-harian/form-kesehatan/view-form-kesehatan',compact('auth_data', 'is_disabled'));
     }
 
     public function viewAddFormKesehatan(Request $request){
@@ -156,12 +169,22 @@ class FormKesehatanController extends BaseController{
                     $pengisian_kegiatan_harian->status_pengisian = ($pengisian_jawaban_terbobot->bobot_jawaban != 0)? 2 : 1;
                     $pengisian_kegiatan_harian->save();
 
+                    if($pengisian_kegiatan_harian->status_pengisian == 1){
+                        if($status_join == 3){
+                            $message = 'Sesuai protokol kesehatan Anda disilakan istirahat di rumah, pastikan di rumah saja dan konsumsi makanan bergizi.';
+                        }else{
+                            $message = 'Sesuai protokol kesehatan Anda disilakan istirahat di rumah, pastikan di rumah saja dan konsumsi makanan bergizi. Segera buat surat pernyataan.';
+                        }
+                    }else{
+                        $message = 'Alhamdulillah kondisi Anda sehat, silakan lanjutin kegiatan Anda dan tetap patuhi protokol kesehatan.';
+                    }
+
                     DB::commit();
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'kegiatan-harian/mengisi-form-kesehatan',
-                        'message' => 'Save successfully'
+                        'message' => $message
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
