@@ -200,6 +200,16 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'Guru\GuruPiket\InputPelanggaranController@ajaxGetSiswaByKelas');
+
+
+            // MENU Rekap Kesehatan Siswa
+            Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
+
+            Route::get('rekap-kesehatan/detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                
+            Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
+            Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
         });
 
         /** ==== MODUL WALI KELAS ==== **/
@@ -243,6 +253,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 
                 Route::post('siswa-bykelas', 'Keuangan\SIM\PembayaranOnlineController@ajaxGetSiswaByKelas');
             });
+
+
+            Route::get('rekap-kesehatan', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatan');
+            Route::get('rekap-kesehatan/detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                
+            Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
+            Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
         });
 
         // MENU JADWAL KELAS
