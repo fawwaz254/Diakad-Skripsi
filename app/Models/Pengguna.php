@@ -50,6 +50,11 @@ class Pengguna extends Authenticatable
         return $this->hasMany('App\Models\RolePengguna', 'id_pengguna');
     }
 
+    public function siswa()
+    {
+        return $this->hasOne('App\Models\Siswa', 'id_pengguna');
+    }
+
     public function sekolah()
     {
         return $this->belongsTo('App\Models\Sekolah', 'id_sekolah');

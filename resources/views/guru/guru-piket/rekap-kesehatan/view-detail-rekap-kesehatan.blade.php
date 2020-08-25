@@ -8,7 +8,7 @@
                 <div class="body">
                     <div class="table-responsive">
                         <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                            class="table table-bordered table-striped table-hover dataTable"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -37,7 +37,6 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
         ajax: {
             url: datatable_url,
             type: 'POST'
