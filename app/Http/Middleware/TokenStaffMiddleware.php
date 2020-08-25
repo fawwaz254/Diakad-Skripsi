@@ -123,6 +123,11 @@ class TokenStaffMiddleware
                     return redirect($role->path);
                 }
 
+                if (request()->segment(1) != 'humas' && $role_aktif->id_role == 19) {
+                    $role = Role::find($role_aktif->id_role);
+                    return redirect($role->path);
+                }
+
                 $tambahan_modul = [];
                 if ($role_aktif->id_role == 2) {
                     if ($guru = Guru::where('id_pengguna', $pengguna->id_pengguna)->first()) {

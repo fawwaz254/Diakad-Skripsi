@@ -34,6 +34,8 @@
 <body class="theme-grey">
 @elseif($theme_name == 'administrator')
 <body class="theme-cyan">
+@elseif($theme_name == 'humas')
+<body class="theme-teal">
 @endif
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
