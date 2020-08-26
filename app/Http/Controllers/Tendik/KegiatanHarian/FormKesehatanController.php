@@ -81,7 +81,7 @@ class FormKesehatanController extends BaseController{
                                         'pengisian_kegiatan_harian.status_pengisian',
                                         'pengisian_kegiatan_harian.warna_keadaan',
                                         'pengisian_kegiatan_harian.created_at',
-                                        'pengisian_kegiatan_harian.updated_at',
+                                        'pengisian_kegiatan_harian.updated_at'
                                     )->leftJoin('siswa', function($q){
                                         $q->on('siswa.id_pengguna', '=', 'pengisian_kegiatan_harian.id_pengguna_pengisi')
                                             ->whereNull('siswa.deleted_at');
