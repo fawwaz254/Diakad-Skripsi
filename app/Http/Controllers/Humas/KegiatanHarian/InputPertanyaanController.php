@@ -161,7 +161,7 @@ class InputPertanyaanController extends BaseController{
                 ];
             }
             elseif($mode == 'edit'){
-                $kegiatan_harian_pertanyaan                                 = KegiatanHarianPertanyaan::find($input->id_kegiatan_harian);
+                $kegiatan_harian_pertanyaan                                 = KegiatanHarianPertanyaan::find($input->id_kegiatan_harian_pertanyaan);
                 $kegiatan_harian_pertanyaan->id_kegiatan_harian_kategori    = $input->id_kegiatan_harian_kategori;
                 $kegiatan_harian_pertanyaan->show_order                     = $input->show_order;
                 $kegiatan_harian_pertanyaan->isi_pertanyaan                 = $input->isi_pertanyaan;

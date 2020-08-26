@@ -75,7 +75,14 @@ class FormKesehatanController extends BaseController{
         $list_data = PengisianKegiatanHarian::with('pengguna_pengisi');
         
         if(!empty($input->id_kelas)){
-            $list_data = $list_data->leftJoin('siswa', function($q){
+            $list_data = $list_data->select(
+                                        'pengisian_kegiatan_harian.id_pengguna_pengisi',
+                                        'pengisian_kegiatan_harian.status_join_table',
+                                        'pengisian_kegiatan_harian.status_pengisian',
+                                        'pengisian_kegiatan_harian.warna_keadaan',
+                                        'pengisian_kegiatan_harian.created_at',
+                                        'pengisian_kegiatan_harian.updated_at',
+                                    )->leftJoin('siswa', function($q){
                                         $q->on('siswa.id_pengguna', '=', 'pengisian_kegiatan_harian.id_pengguna_pengisi')
                                             ->whereNull('siswa.deleted_at');
                                     })
@@ -87,9 +94,16 @@ class FormKesehatanController extends BaseController{
             $list_data = $list_data->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna);
         }
 
+        if(!empty($input->status)){
+            $list_data = $list_data->where('pengisian_kegiatan_harian.status_pengisian', $input->status);
+        }
+
         return Datatables::of($list_data)
                 ->editColumn('pengguna_pengisi.nm_pengguna', function($item){
                     return $item->pengguna_pengisi->fullname();
+                })
+                ->editColumn('created_at', function($item){
+                    return date_format(date_create($item->created_at), 'd M Y H:i').' WIB';
                 })
                 ->editColumn('status', function($item){
                     $data = [

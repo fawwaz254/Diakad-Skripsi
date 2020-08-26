@@ -16,6 +16,18 @@
                     <h2>DATA PENGISIAN FORM KESEHATAN</h2>
                 </div>
                 <div class="body">
+                    <h2 class="card-inside-title">
+                        Status
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <select class="form-control show-tick" name="status" onchange="filterAction()">
+                                <option value="">Semua Status</option>
+                                <option value="1">Normal</option>
+                                <option value="2">Warning</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table
                             class="table table-bordered table-striped table-hover dataTable display"
@@ -49,6 +61,9 @@
         serverSide: true,
         ajax: {
             url: datatable_url,
+            data: function(params){
+                params.status = $('select[name=status]').val();
+            },
             type: 'POST'
         },
         columns: [
@@ -126,5 +141,9 @@
                 $('button').removeAttr('disabled', 'disabled');
             }
         });
+    }
+
+    function filterAction(){
+        primary_table.ajax.reload(null, false);
     }
 </script>
