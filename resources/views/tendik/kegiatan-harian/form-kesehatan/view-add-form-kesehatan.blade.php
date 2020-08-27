@@ -59,4 +59,57 @@
         </div>
     </div>
 </div>
-@include('scriptjs')
+<script>
+    $(document).ready(function(){
+        swal({ title:"Info", text: "Mohon diisi dengan sejujurnya..", type: "info" });
+    });
+    var primary_table = null;
+    $('#form-validation').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-group').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-group').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status == 200){
+                        swal({ title:"Info", text: response.message, type: "info" });
+                    }else if(response.status == 201){
+                        swal({ title:"Info", text: response.message, type: "info" });
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        swal({ title:"Info", text: response.message, type: "info" });
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        swal({ title:"Info", text: response.message, type: "info" });
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        swal({ title:"Info", text: response.message, type: "info" });
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
+    });
+</script>
