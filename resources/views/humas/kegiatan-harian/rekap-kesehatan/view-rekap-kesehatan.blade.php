@@ -43,7 +43,7 @@
     var menu_url       = '{{Request::segment(3)}}';
 
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables?is_tendik_guru=1';
-    var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/detail';
+    var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/detail/form';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
 
     var primary_table = $('#primary_table').DataTable({

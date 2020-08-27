@@ -208,7 +208,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-kesehatan/{id}/{bulan}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
             
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
-            Route::get('rekap-kesehatan/detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+            Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
                 
             Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
@@ -259,7 +259,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-kesehatan', 'Guru\WaliKelas\RekapKesehatanController@viewRekapFormKesehatan');
             Route::get('rekap-kesehatan/{bulan}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapFormKesehatan');
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
-            Route::get('rekap-kesehatan/detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+            Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
                 
             Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
