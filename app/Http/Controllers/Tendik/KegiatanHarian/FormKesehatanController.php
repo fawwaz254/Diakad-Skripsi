@@ -207,6 +207,11 @@ class FormKesehatanController extends BaseController{
                     $pengisian_kegiatan_harian->id_pengguna_pengisi            = $input->auth_data->pengguna->id_pengguna;
                     $pengisian_kegiatan_harian->status_join_table              = $status_join;
                     $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                    if ($now->between($start_1, $end_1)){
+                        $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
+                    }else if($now->between($start_2, $end_2)){
+                        $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
+                    }
                     $pengisian_kegiatan_harian->save();
                     
                     foreach($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban){
