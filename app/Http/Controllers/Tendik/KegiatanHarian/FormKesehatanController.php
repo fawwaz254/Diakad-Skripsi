@@ -230,7 +230,7 @@ class FormKesehatanController extends BaseController{
                     $pengisian_kegiatan_harian->status_pengisian = ($pengisian_jawaban_terbobot->bobot_jawaban != 0)? 2 : 1;
                     $pengisian_kegiatan_harian->save();
 
-                    if($pengisian_kegiatan_harian->status_pengisian == 1){
+                    if($pengisian_kegiatan_harian->status_pengisian == 2){
                         if($status_join == 3){
                             $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
                         }else{
