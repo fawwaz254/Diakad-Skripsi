@@ -1,9 +1,14 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3))}}">
+                <i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>DATA PENGISIAN FORM KESEHATAN KELAS {{$data_kelas->nm_kelas}}</h2>
+                    <h2>DATA PENGISIAN FORM KESEHATAN {{$pengguna->fullname()}} Tanggal {{date_format(date_create($date), 'd M Y')}}</h2>
                 </div>
                 <div class="body">
                     <h2 class="card-inside-title">
@@ -42,7 +47,7 @@
     var modul_url       = '{{Request::segment(2)}}';
     var menu_url       = '{{Request::segment(3)}}';
 
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables?id_kelas={{$data_kelas->id_kelas}}';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
     var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/detail';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
 
@@ -53,6 +58,8 @@
             url: datatable_url,
             data: function(params){
                 params.status = $('select[name=status]').val();
+                params.pengguna = '{{$pengguna->id_pengguna}}';
+                params.date = '{{$date}}';
             },
             type: 'POST'
         },

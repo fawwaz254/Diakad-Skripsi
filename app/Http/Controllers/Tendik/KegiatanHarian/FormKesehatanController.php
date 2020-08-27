@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tendik\KegiatanHarian;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\Bulan;
 use App\Models\KegiatanHarian;
 use App\Models\PengisianKegiatanHarian;
 use App\Models\PengisianJawaban;
@@ -13,7 +14,11 @@ use App\Models\KegiatanHarianJawaban;
 use App\Models\KegiatanHarianKategori;
 
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Yajra\Datatables\Datatables;
+
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibSiswa;
 
 use Auth;
 use DB;
@@ -76,8 +81,10 @@ class FormKesehatanController extends BaseController{
         
         if(!empty($input->id_kelas)){
             $list_data = $list_data->select(
+                                        'pengisian_kegiatan_harian.id_pengisian_kegiatan_harian',
                                         'pengisian_kegiatan_harian.id_pengguna_pengisi',
                                         'pengisian_kegiatan_harian.status_join_table',
+                                        'pengisian_kegiatan_harian.tgl_pengisian',
                                         'pengisian_kegiatan_harian.status_pengisian',
                                         'pengisian_kegiatan_harian.warna_keadaan',
                                         'pengisian_kegiatan_harian.created_at',
@@ -90,12 +97,18 @@ class FormKesehatanController extends BaseController{
                                     ->where('id_kelas', $input->id_kelas);
         }else if(!empty($input->is_tendik_guru)){
             $list_data = $list_data->whereIn('status_join_table', [1,2]);
+        }else if(!empty($input->pengguna)){
+            $list_data = $list_data->where('id_pengguna_pengisi', $input->pengguna);
         }else{
             $list_data = $list_data->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna);
         }
 
         if(!empty($input->status)){
             $list_data = $list_data->where('pengisian_kegiatan_harian.status_pengisian', $input->status);
+        }
+        
+        if(!empty($input->date)){
+            $list_data = $list_data->where('pengisian_kegiatan_harian.tgl_pengisian', $input->date);
         }
 
         return Datatables::of($list_data)
@@ -192,12 +205,12 @@ class FormKesehatanController extends BaseController{
 
                     if($pengisian_kegiatan_harian->status_pengisian == 1){
                         if($status_join == 3){
-                            $message = 'Sesuai protokol kesehatan, Anda disarankan istirahat di rumah. Pastikan memakai masker, cuci tangan, hindari kerumunan, konsumsi makanan yang meningkatkan imun dan istirahat yang cukup.';
+                            $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
                         }else{
-                            $message = 'Sesuai protokol kesehatan, Anda disarankan istirahat di rumah. Pastikan memakai masker, cuci tangan, hindari kerumunan, konsumsi makanan yang meningkatkan imun dan istirahat yang cukup. Jangan lupa membuat surat pernyataan dan mengunggah (upload) di menu yang sudah disediakan';
+                            $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
                         }
                     }else{
-                        $message = 'Alhamdulillah kondisi Anda sehat, silakan lanjutin kegiatan Anda dan tetap patuhi protokol kesehatan.';
+                        $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
                     }
 
                     DB::commit();
