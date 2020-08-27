@@ -33,11 +33,11 @@ class FormKesehatanController extends BaseController{
         $auth_data = $input->auth_data;
 
         $now = Carbon::now('Asia/Jakarta');
-        $start_1 = Carbon::createFromTimeString('00:00');;
-        $end_1 = Carbon::createFromTimeString('07:00');;
+        $start_1 = Carbon::createFromTimeString('00:00');
+        $end_1 = Carbon::createFromTimeString('07:00');
 
-        $start_2 = Carbon::createFromTimeString('19:00');;
-        $end_2 = Carbon::createFromTimeString('23:59');;
+        $start_2 = Carbon::createFromTimeString('19:00');
+        $end_2 = Carbon::createFromTimeString('23:59');
         
         if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)){
             $is_disabled = false;
@@ -53,11 +53,24 @@ class FormKesehatanController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $now = Carbon::now('Asia/Jakarta');
+        $start_1 = Carbon::createFromTimeString('00:00');
+        $end_1 = Carbon::createFromTimeString('07:00');
+
+        $start_2 = Carbon::createFromTimeString('19:00');
+        $end_2 = Carbon::createFromTimeString('23:59');
+
+        if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)){
+            $is_disabled = false;
+        }else{
+            $is_disabled = true;
+        }
+
         $kegiatan_harian = KegiatanHarian::with('kategori_pertanyaan', 'kategori_pertanyaan.pertanyaan', 'kategori_pertanyaan.pertanyaan.jawaban')->where('is_aktif', 1)->first();
 
         $data_kegiatan_harian_kategori = $kegiatan_harian->kategori_pertanyaan;
 
-        return view('tendik/kegiatan-harian/form-kesehatan/view-add-form-kesehatan',compact('auth_data', 'kegiatan_harian', 'data_kegiatan_harian_kategori'));
+        return view('tendik/kegiatan-harian/form-kesehatan/view-add-form-kesehatan',compact('auth_data', 'kegiatan_harian', 'data_kegiatan_harian_kategori', 'is_disabled'));
 
     }
 
@@ -158,6 +171,20 @@ class FormKesehatanController extends BaseController{
         else{
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $start_1 = Carbon::createFromTimeString('00:00');
+            $end_1 = Carbon::createFromTimeString('07:00');
+
+            $start_2 = Carbon::createFromTimeString('19:00');
+            $end_2 = Carbon::createFromTimeString('23:59');
+
+            if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)){
+            }else{
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Anda mengisi di luar waktu yang ditentukan.'
+                ];
+            }
 
             if($mode == 'add') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
