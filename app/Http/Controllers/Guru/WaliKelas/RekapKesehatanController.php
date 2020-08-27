@@ -65,7 +65,7 @@ class RekapKesehatanController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $wali_kelas->id_kelas);        
-        $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas, null, 'all');
+        $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas, null, 'only-aktif');
 
         $data_pengisian = PengisianKegiatanHarian::whereBetween('created_at', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
 
