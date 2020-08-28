@@ -14,7 +14,15 @@ class ChangeTransactionNominalInRealisasiWarehouse1 extends Migration
     public function up()
     {
         Schema::table('realisasi_warehouses', function (Blueprint $table) {
-            $table->float('transaction_nominal', 10, 0)->nullable()->change();
+            $table->dropColumn('transaction_nominal');
+        });
+
+        Schema::table('realisasi_warehouses', function (Blueprint $table) {
+            $table->float('transaction_nominal', 10, 0)->after('transaction_date')->nullable();
+        });
+
+        Schema::table('realisasi_warehouse_categories', function (Blueprint $table) {
+            $table->string('id_ket_subkategori_rapb', 40)->after('id_subkategori_rapb')->nullable();
         });
     }
 
