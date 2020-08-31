@@ -101,6 +101,6 @@
 
 <script>
 function filterAction(){
-    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/{{$data_kelas->id_kelas}}' + $('select[name=id_bulan]').val());
+    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/{{$data_kelas->id_kelas}}/' + $('select[name=id_bulan]').val());
 }
 </script>
