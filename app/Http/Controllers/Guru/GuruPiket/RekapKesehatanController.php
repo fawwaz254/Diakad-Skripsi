@@ -66,7 +66,7 @@ class RekapKesehatanController extends BaseController
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);        
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'only-aktif');
 
-        $data_pengisian = PengisianKegiatanHarian::whereBetween('created_at', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
+        $data_pengisian = PengisianKegiatanHarian::whereBetween('tgl_pengisian', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
 
         return view('guru/guru-piket/rekap-kesehatan/view-rekap-kesehatan-siswa',compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_kelas', 'data_siswa', 'data_pengisian'));
     }

@@ -50,7 +50,7 @@ class RekapKesehatanController extends BaseController{
 
         $data_pengguna = Pengguna::whereIn('status_join_table', [1,2])->orderBy('nm_pengguna')->get();
 
-        $data_pengisian = PengisianKegiatanHarian::whereBetween('created_at', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
+        $data_pengisian = PengisianKegiatanHarian::whereBetween('tgl_pengisian', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
 
         return view('humas/kegiatan-harian/rekap-kesehatan/view-rekap-kesehatan-guru-tendik',compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian'));
     }
