@@ -41,6 +41,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
             Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
             Route::get('rekap-kesehatan/{id}/{bulan}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
             
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
             Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
