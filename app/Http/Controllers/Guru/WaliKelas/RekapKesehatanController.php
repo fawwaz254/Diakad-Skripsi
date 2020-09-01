@@ -27,6 +27,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\LibGlobal;
 
 use Auth;
+use Excel;
 use DB;
 use Session;
 use Validator;
@@ -70,5 +71,37 @@ class RekapKesehatanController extends BaseController
         $data_pengisian = PengisianKegiatanHarian::whereBetween('tgl_pengisian', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
 
         return view('guru/wali-kelas/rekap-kesehatan/view-rekap-kesehatan-siswa',compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_kelas', 'data_siswa', 'data_pengisian'));
+    }
+
+    public function downloadRekapKesehatan(Request $request, $id_bulan = null){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $now = Carbon::today();
+        if(empty($id_bulan)){
+            $id_bulan = $now->month;
+        }
+        $tahun = $now->year;
+        
+        $start_month = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
+        $end_month = Carbon::create($tahun, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
+        $dates = CarbonPeriod::create($start_month, $end_month);
+
+        $bulan = Bulan::find($id_bulan);
+        $data_bulan = Bulan::orderBy('id_bulan')->get();
+
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, $wali_kelas->id_kelas);        
+        $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $wali_kelas->id_kelas, null, 'only-aktif');
+
+        $data_pengisian = PengisianKegiatanHarian::whereBetween('tgl_pengisian', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
+
+        return Excel::create('Download Data Rekap Kesehatan Kelas '.$data_kelas->nm_kelas.' Bulan '. $bulan->nm_bulan, function ($excel) use ($auth_data, $dates, $data_bulan, $bulan, $data_kelas, $data_siswa, $data_pengisian) {
+            $excel->sheet('New sheet', function ($sheet) use ($auth_data, $dates, $data_bulan, $bulan, $data_kelas, $data_siswa, $data_pengisian) {
+                $sheet->loadView('guru/guru-piket/rekap-kesehatan/download-rekap-kesehatan-siswa', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_kelas', 'data_siswa', 'data_pengisian'));
+            });
+        })->download('xls');
     }
 }

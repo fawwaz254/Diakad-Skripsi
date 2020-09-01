@@ -42,7 +42,8 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        REKAP MONITORING KESEHATAN SISWA KELAS {{$data_kelas->nm_kelas}} BULAN {{$bulan->nm_bulan}}</h2>
+                        REKAP MONITORING KESEHATAN SISWA KELAS {{$data_kelas->nm_kelas}} BULAN {{$bulan->nm_bulan}}
+                        <a target="_blank" href="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.$data_kelas->id_kelas.'/'.$bulan->id_bulan.'/download')}}" class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download Excel</span></a>
                     </h2>
                 </div>
                 <div class="body">
@@ -63,6 +64,12 @@
                                         <br>
                                         {{$date->format('d')}}
                                     </th>
+
+                                    @php
+                                        $total_pengisi[$date->format('d')] = 0;
+                                        $total_normal[$date->format('d')] = 0;
+                                        $total_warning[$date->format('d')] = 0;
+                                    @endphp
                                     @endforeach
                                 </tr>
                             </thead>
@@ -84,12 +91,42 @@
                                         <td style="background: #{{collect($all_pengisian)->first()->warna_keadaan}}; text-align:center; vertical-align:middle !important;">
                                             <b><a class="target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/user/'.$siswa->id_pengguna.'/'.$date->format('Y-m-d'))}}">{{count($all_pengisian)}}x</a></b>
                                         </td>
+                                            @php
+                                                $total_pengisi[$date->format('d')]++;
+                                            @endphp
+                                            @if(collect($all_pengisian)->first()->status_pengisian == 1)
+                                                @php
+                                                    $total_normal[$date->format('d')]++;
+                                                @endphp
+                                            @elseif(collect($all_pengisian)->first()->status_pengisian == 2)
+                                                @php
+                                                    $total_warning[$date->format('d')]++;
+                                                @endphp
+                                            @endif
                                         @else
                                         <td></td>
                                         @endif
                                     @endforeach
                                 </tr>
                                 @endforeach
+                                <tr>
+                                    <td colspan=4>Total Normal</td>
+                                    @foreach($dates as $date)
+                                    <td>{{$total_normal[$date->format('d')]}}</td>
+                                    @endforeach
+                                </tr>
+                                <tr>
+                                    <td colspan=4>Total Warning</td>
+                                    @foreach($dates as $date)
+                                    <td>{{$total_warning[$date->format('d')]}}</td>
+                                    @endforeach
+                                </tr>
+                                <tr>
+                                    <td colspan=4>Total pengisi</td>
+                                    @foreach($dates as $date)
+                                    <td>{{$total_pengisi[$date->format('d')]}}</td>
+                                    @endforeach
+                                </tr>
                             </tbody>
                         </table>
                     </div>
