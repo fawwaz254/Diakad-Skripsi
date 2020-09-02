@@ -393,7 +393,14 @@ class InputGuruController extends BaseController{
                 }
                 else {
                     // make object to find id
-                    $guru               = Guru::find($id);
+                    $guru                   = Guru::find($id);
+
+                    $pengguna               = Pengguna::find($guru->id_pengguna);
+                    $pengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                    $pengguna->save();
+
+                    $pengguna->delete();
+
                     $guru->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $guru->save();
 

@@ -378,6 +378,12 @@ class InputTendikController extends BaseController{
                         ]; 
                     }
                     else {
+                        $pengguna               = Pengguna::find($staff->id_pengguna);
+                        $pengguna->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                        $pengguna->save();
+
+                        $pengguna->delete();
+
                         $staff->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                         $staff->save();
 
