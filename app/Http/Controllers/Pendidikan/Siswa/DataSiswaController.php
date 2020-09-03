@@ -78,7 +78,7 @@ class DataSiswaController extends BaseController
         $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
         $jurusan = Jurusan::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
-        $kelas = Kelas::where('id_jurusan','=',$id_jurusan)->get();
+        $kelas = Kelas::where('id_jurusan','=',$id_jurusan)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $jalur = Jalur::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)->get();
         $status_pengguna = StatusPengguna::where('id_sekolah','=',$input->auth_data->pengguna->id_sekolah)
           ->where('status_join_table','=',3)
