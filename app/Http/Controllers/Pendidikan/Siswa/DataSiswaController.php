@@ -45,7 +45,7 @@ class DataSiswaController extends BaseController
   	
   	public function getKelas($id_jurusan)
     {
-        $kelas = Kelas::where('id_jurusan','=',$id_jurusan)->get();
+        $kelas = Kelas::where('id_jurusan','=',$id_jurusan)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         return response()->json($kelas);
     }
     
