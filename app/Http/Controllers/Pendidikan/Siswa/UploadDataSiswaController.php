@@ -306,7 +306,7 @@ class UploadDataSiswaController extends BaseController
 
 							DB::table('log_kelas_siswa')->insert(
 							    [	
-							    	'id_log_kelas_siswa'		=> $id_log_kelas_siswa,
+							    	'id_log_kelas_siswa'		=> $data_siswa['id_log_kelas_siswa'],
 							    	'id_siswa' 					=> $data_siswa['id_siswa'],
 							    	'id_kelas' 					=> $data_siswa['kelas'],
 									'created_at'				=> $now,
