@@ -195,6 +195,10 @@ class AdmisiSiswaController extends BaseController
                             $pengguna->updated_at           = $now;
                             $pengguna->save();
 
+                            $siswa->id_kelas             = null;
+                            $siswa->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                            $siswa->save();
+
                             return [
                           'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
                           'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
