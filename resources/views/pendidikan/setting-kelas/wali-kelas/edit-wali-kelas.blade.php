@@ -30,7 +30,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_semester">
                                     <option value="{{$data_semester->id_semester}}">{{$data_semester->tahun_ajaran}}
-                                        {{$data_semester->nm_semester}}</option>
+                                        {{$data_semester->nm_semester}} @if($data_semester->is_aktif_semester == 1) ({{$data_semester->is_aktif_to_text()}}) @endif</option>
                                 </select>
                             </div>
                         </div>
