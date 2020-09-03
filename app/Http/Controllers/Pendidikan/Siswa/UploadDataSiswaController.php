@@ -149,6 +149,7 @@ class UploadDataSiswaController extends BaseController
 	                		$id_jalur_siswa 	= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_log_kelas_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$arr[]= array(
+	                				'id_log_kelas_siswa'=> $id_log_kelas_siswa,
 	                				'id_siswa' 			=> $id_siswa,
 	                				'id_pengguna' 		=> $id_pengguna,
 	                				'id_c_siswa' 		=> $id_c_siswa,
