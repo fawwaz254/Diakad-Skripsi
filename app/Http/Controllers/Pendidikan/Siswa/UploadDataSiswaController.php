@@ -328,7 +328,7 @@ class UploadDataSiswaController extends BaseController
 						// something went wrong
 						return [
 							'status' 	=> 203, // GAGAL
-							'message'	=> 'Upload Data Siswa Gagal'
+							'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
 						];
 					} 
 				}else{
