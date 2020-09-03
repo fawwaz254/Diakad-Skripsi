@@ -19,7 +19,7 @@ class LibKelas
 
         // get mode view
         if ($id == null){
-            $kelas = Kelas::select('kelas.id_kelas', 'jurusan.nm_jurusan', 'kelas.nm_kelas', 'kelas.tingkat', 'kelas.keterangan_kelas', 'p1.nm_pengguna as nm_sekretaris', 'ruangan.nm_ruangan', 'p2.nm_pengguna as nm_wali_kelas', DB::raw("(SELECT COUNT(*) FROM siswa WHERE siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa"))
+            $kelas = Kelas::select('kelas.id_kelas', 'jurusan.nm_jurusan', 'kelas.nm_kelas', 'kelas.tingkat', 'kelas.keterangan_kelas', 'p1.nm_pengguna as nm_sekretaris', 'ruangan.nm_ruangan', 'p2.nm_pengguna as nm_wali_kelas', 'p2.gelar_depan as gelar_depan_wali_kelas', 'p2.gelar_belakang as gelar_belakang_wali_kelas', DB::raw("(SELECT COUNT(*) FROM siswa WHERE siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa"))
                 ->join('jurusan','jurusan.id_jurusan','=','kelas.id_jurusan')
                 ->leftJoin('ruangan_kelas', function ($join) {
                     $join->on('ruangan_kelas.id_kelas', '=', 'kelas.id_kelas')

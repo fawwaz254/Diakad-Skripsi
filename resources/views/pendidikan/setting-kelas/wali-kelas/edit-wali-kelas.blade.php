@@ -42,9 +42,9 @@
                                 <select class="form-control show-tick" name="id_guru">
                                     @foreach($data_guru as $data)
                                     @if($data->id_guru == $data_wali_kelas->id_guru)
-                                    <option value="{{$data->id_guru}}" selected>{{$data->gelar_depan.' '.$data->nm_pengguna.' '.$data->gelar_belakang}}</option>
+                                    <option value="{{$data->id_guru}}" selected>{{$data->pengguna->fullname()}}</option>
                                     @else
-                                    <option value="{{$data->id_guru}}">{{$data->gelar_depan.' '.$data->nm_pengguna.' '.$data->gelar_belakang}}</option>
+                                    <option value="{{$data->id_guru}}">{{$data->pengguna->fullname()}}</option>
                                     @endif
                                     @endforeach
                                 </select>

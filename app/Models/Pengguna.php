@@ -42,7 +42,18 @@ class Pengguna extends Authenticatable
 
     public function fullname()
     {
-        return $this->gelar_depan.' '.$this->nm_pengguna.' '.$this->gelar_belakang;
+        if( ! empty($this->gelar_depan) && ! empty($this->gelar_belakang)) {
+            return $this->gelar_depan." ".$this->nm_pengguna.", ".$this->gelar_belakang;
+        }
+        elseif( ! empty($this->gelar_depan)) {
+            return $this->gelar_depan." ".$this->nm_pengguna;   
+        }
+        elseif( ! empty($this->gelar_belakang)) {
+            return $this->nm_pengguna.", ".$this->gelar_belakang;   
+        }
+        else {
+            return $this->nm_pengguna; 
+        }
     }
 
     public function role_pengguna()

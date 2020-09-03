@@ -114,7 +114,7 @@ class WaliKelasController extends BaseController
 
         return Datatables::of($list_data)
                 ->editColumn('nm_wali_kelas', function ($item) {
-                    return $item->gelar_depan.' '.$item->nm_wali_kelas.' '.$item->gelar_belakang;
+                    return $item->guru->pengguna->fullname();
                 })
                 ->addColumn('semester', function ($item) {
                     return $item->tahun_ajaran." ".$item->nm_semester;

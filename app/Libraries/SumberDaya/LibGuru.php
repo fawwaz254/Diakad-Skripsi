@@ -45,6 +45,7 @@ class LibGuru
                     ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
                     ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                     ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')
+                    ->with('pengguna')
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                     ->orderBy('pengguna.nm_pengguna', 'asc');
@@ -383,7 +384,7 @@ class LibGuru
 
         // get mode view
         if ($id == null) {
-            $waliKelas = WaliKelas::select('wali_kelas.id_wali_kelas', 'wali_kelas.id_kelas', 'wali_kelas.id_semester', 'kelas.nm_kelas', 'pengguna.nm_pengguna as nm_wali_kelas', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'semester.tahun_ajaran', 'semester.nm_semester', 'wali_kelas.is_aktif')
+            $waliKelas = WaliKelas::select('wali_kelas.id_wali_kelas', 'wali_kelas.id_guru', 'wali_kelas.id_kelas', 'wali_kelas.id_semester', 'kelas.nm_kelas', 'pengguna.nm_pengguna as nm_wali_kelas', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'semester.tahun_ajaran', 'semester.nm_semester', 'wali_kelas.is_aktif')
                 ->join('kelas', 'kelas.id_kelas', '=', 'wali_kelas.id_kelas')
                 ->join('guru', 'guru.id_guru', '=', 'wali_kelas.id_guru')
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
@@ -391,6 +392,7 @@ class LibGuru
                 ->where('wali_kelas.id_kelas', '=', $id_kelas)
                 ->orderBy('semester.thn_akademik_semester', 'asc')
                 ->orderBy('semester.nm_semester', 'asc')
+                ->with('guru', 'guru.pengguna')
                 ->get();
         }
         // get mode edit

@@ -83,11 +83,11 @@ class Guru extends Model
     protected $guarded = [];
 
     public function pengguna(){
-        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
     public function pengampu_mapel(){
-        return $this->hasMany('App\Models\PengampuMapel', 'id_guru');
+        return $this->hasMany(PengampuMapel::class, 'id_guru');
     }
 
 }
