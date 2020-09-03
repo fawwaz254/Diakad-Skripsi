@@ -34,7 +34,13 @@ class Semester extends Model
 
     protected $guarded = [];
 
-
+    public function is_aktif_to_text(){
+        if($this->is_aktif_semester == 1){
+            return 'Aktif';
+        }else{
+            return 'Non-Aktif';
+        }
+    }
 
 
 
