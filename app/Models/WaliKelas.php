@@ -32,7 +32,9 @@ class WaliKelas extends Model
 
     protected $guarded = [];
 
-
+    public function guru(){
+        return $this->belongsTo(Guru::class, 'id_guru');
+    }
 
 
 

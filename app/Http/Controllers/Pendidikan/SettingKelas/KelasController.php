@@ -125,8 +125,20 @@ class KelasController extends BaseController
                             'id' => $item->id_kelas
                         );
                     } else {
+                        if( ! empty($item->gelar_depan_wali_kelas) && ! empty($item->gelar_belakang_wali_kelas)) {
+                            $nm_lengkap_wali_kelas = $item->gelar_depan_wali_kelas." ".$item->nm_wali_kelas.", ".$item->gelar_belakang_wali_kelas;
+                        }
+                        elseif( ! empty($item->gelar_depan_wali_kelas)) {
+                            $nm_lengkap_wali_kelas = $item->gelar_depan_wali_kelas." ".$item->nm_wali_kelas;   
+                        }
+                        elseif( ! empty($item->gelar_belakang_wali_kelas)) {
+                            $nm_lengkap_wali_kelas = $item->nm_wali_kelas.", ".$item->gelar_belakang_wali_kelas;   
+                        }
+                        else {
+                            $nm_lengkap_wali_kelas = $item->nm_wali_kelas; 
+                        }
                         $data = array(
-                            'nm_wali_kelas' => $item->nm_wali_kelas
+                            'nm_wali_kelas' => $nm_lengkap_wali_kelas
                         );
                     }
                     return $data;

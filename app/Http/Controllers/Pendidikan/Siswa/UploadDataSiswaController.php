@@ -20,6 +20,7 @@ use App\Models\CalonSiswaOrtu as CalonSiswaOrtu;
 use App\Models\CalonSiswaFisik as CalonSiswaFisik;
 use App\Models\StatusPengguna as StatusPengguna;
 use App\Models\Penerimaan as Penerimaan;
+use App\Models\LogKelasSiswa;
 
 use Auth;
 use Excel;
@@ -146,7 +147,9 @@ class UploadDataSiswaController extends BaseController
 	                		$id_c_siswa 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_admisi 			= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$id_jalur_siswa 	= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+	                		$id_log_kelas_siswa = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 	                		$arr[]= array(
+	                				'id_log_kelas_siswa'=> $id_log_kelas_siswa,
 	                				'id_siswa' 			=> $id_siswa,
 	                				'id_pengguna' 		=> $id_pengguna,
 	                				'id_c_siswa' 		=> $id_c_siswa,
@@ -302,6 +305,17 @@ class UploadDataSiswaController extends BaseController
 								]
 							);
 
+							DB::table('log_kelas_siswa')->insert(
+							    [	
+							    	'id_log_kelas_siswa'		=> $data_siswa['id_log_kelas_siswa'],
+							    	'id_siswa' 					=> $data_siswa['id_siswa'],
+							    	'id_kelas' 					=> $data_siswa['kelas'],
+									'created_at'				=> $now,
+									'updated_at'				=> $now,
+							    	'created_by' 				=> $data_siswa['created_by']
+								]
+							);
+
                 		}
 						DB::commit();
 						return [
@@ -315,7 +329,7 @@ class UploadDataSiswaController extends BaseController
 						// something went wrong
 						return [
 							'status' 	=> 203, // GAGAL
-							'message'	=> 'Upload Data Siswa Gagal'
+							'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
 						];
 					} 
 				}else{

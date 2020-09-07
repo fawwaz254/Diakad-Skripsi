@@ -30,7 +30,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_semester">
                                     <option value="{{$data_semester->id_semester}}">{{$data_semester->tahun_ajaran}}
-                                        {{$data_semester->nm_semester}}</option>
+                                        {{$data_semester->nm_semester}} @if($data_semester->is_aktif_semester == 1) ({{$data_semester->is_aktif_to_text()}}) @endif</option>
                                 </select>
                             </div>
                         </div>
@@ -42,9 +42,9 @@
                                 <select class="form-control show-tick" name="id_guru">
                                     @foreach($data_guru as $data)
                                     @if($data->id_guru == $data_wali_kelas->id_guru)
-                                    <option value="{{$data->id_guru}}" selected>{{$data->nm_pengguna}}</option>
+                                    <option value="{{$data->id_guru}}" selected>{{$data->pengguna->fullname()}}</option>
                                     @else
-                                    <option value="{{$data->id_guru}}">{{$data->nm_pengguna}}</option>
+                                    <option value="{{$data->id_guru}}">{{$data->pengguna->fullname()}}</option>
                                     @endif
                                     @endforeach
                                 </select>

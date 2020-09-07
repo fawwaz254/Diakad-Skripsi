@@ -113,6 +113,9 @@ class WaliKelasController extends BaseController
         $list_data = LibGuru::fetchDataWaliKelas($auth_data, $id_kelas);
 
         return Datatables::of($list_data)
+                ->editColumn('nm_wali_kelas', function ($item) {
+                    return $item->guru->pengguna->fullname();
+                })
                 ->addColumn('semester', function ($item) {
                     return $item->tahun_ajaran." ".$item->nm_semester;
                 })
