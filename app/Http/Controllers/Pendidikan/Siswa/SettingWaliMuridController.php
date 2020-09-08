@@ -416,7 +416,7 @@ class SettingWaliMuridController extends BaseController
                                 // Update Wali Murid
                                 if ($wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first()) {
 
-                                    if($check_wali_murid_lama = WaliMurid::where('telp_wali_murid', $item->telp_wali_murid)->first()){
+                                    if($check_wali_murid_lama = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()){
                                         // Check Value same or Not
                                         if ($wali_murid->nm_wali_murid != $item->nama_wali_murid || $wali_murid->nomor_hp_wali_murid != $item->telp_wali_murid) {
                                             $wali_murid->nm_wali_murid         = $item->nama_wali_murid;
@@ -542,7 +542,7 @@ class SettingWaliMuridController extends BaseController
                     DB::rollback();
                     return [
                         'status' 	=> 300, // GAGAL
-                        'message'	=> 'Upload Setting Wali Murid Gagal'
+                        'message'	=> 'Upload Setting Wali Murid Gagal '.$e->getMessage()
                     ];
                 }
             } else {
