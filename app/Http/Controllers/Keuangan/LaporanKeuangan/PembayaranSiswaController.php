@@ -28,7 +28,7 @@ class PembayaranSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->with(['tagihan_biaya.detail_biaya' => function ($q) {
-            $q->where('id_jenis_detail_biaya', 4)->with('biaya');
+            $q->with('biaya');
         }]);
 
         if (!empty($input->start_date) && !empty($input->end_date)) {
@@ -43,7 +43,11 @@ class PembayaranSiswaController extends BaseController
                     return date_format(date_create($item->tgl_pembayaran), "d M Y H:i").' WIB';
                 })
                 ->addColumn('keterangan_bayar', function ($item) {
-                    return $item->tagihan_biaya->detail_biaya->biaya->nm_biaya.' bulan '.Carbon::createFromFormat('m', $item->tagihan_biaya->detail_biaya->id_bulan)->format('F');
+                    if(!empty($item->tagihan_biaya->detail_biaya->id_bulan)){
+                        return $item->tagihan_biaya->detail_biaya->biaya->nm_biaya.' bulan '.Carbon::createFromFormat('m', $item->tagihan_biaya->detail_biaya->id_bulan)->format('F');
+                    }else{
+                        return $item->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                    }
                 })
                 ->with('total', number_format($total))
                 ->make(true);
