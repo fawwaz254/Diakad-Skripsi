@@ -77,8 +77,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('absensi-tanpa-jadwal/datatables-kbm/{id_guru}/{id_mata_pelajaran}/{id_kelas}', 'Guru\Presensi\AbsensiTanpaJadwalController@datatablesKBMAbsensiTanpaJadwal');
 
             Route::post('absensi-tanpa-jadwal/view-kbm', 'Guru\Presensi\AbsensiTanpaJadwalController@actionViewKBMAbsensiTanpaJadwal');
-            Route::post('action-absensi-siswa/{mode}/{id}', 'Guru\Presensi\AbsensiSiswaController@actionAbsensiSiswa');
-            Route::post('action-absensi-siswa/{mode}/{id}/{pertemuan_ke}', 'Guru\Presensi\AbsensiSiswaController@actionAbsensiSiswa');
+            Route::post('action-absensi-tanpa-jadwal/{mode}/{id_guru}/{id_mata_pelajaran}/{id_kelas}', 'Guru\Presensi\AbsensiTanpaJadwalController@actionAbsensiTanpaJadwal');
+            // Route::post('action-absensi-tanpa-jadwal/{mode}/{id}', 'Guru\Presensi\AbsensiTanpaJadwalController@actionAbsensiTanpaJadwal');
         });
 
         /** ==== MODUL PENILAIAN ==== **/

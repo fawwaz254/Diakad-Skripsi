@@ -13,7 +13,7 @@
                         SEMESTER </h2>
                     </div>
                     <div class="body">
-                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-siswa/add-kbm/')}}">
+                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-tanpa-jadwal/add-kbm/'.$id_guru.'/'.$id_mata_pelajaran.'/'.$id_kelas)}}">
                             {{csrf_field()}}
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable display nowrap" id="primary_table" style="overflow-x: scroll;">
@@ -22,6 +22,7 @@
                                             <th>No</th>
                                             <th>NIS</th>
                                             <th>Nama</th>
+                                            <th>Alasan</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -31,11 +32,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif)
-                                    <input type="text" class="datepicker form-control" name="tgl_presensi" required="" aria-required="true" aria-invalid="true" value="">
-                                    @else
-                                    <input type="text" class="datepicker form-control" name="tgl_presensi" required="" aria-required="true" aria-invalid="true" value="">
-                                    @endif --}}
+                                    <input class="form-control" type="text" name="" value="{{$tanggal}}">
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
@@ -43,11 +40,11 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif)
+                                    {{-- @if($presensi_mp_aktif) --}}
+                                    {{-- <textarea class="form-control" name="uraian_materi" rows="4" cols="100"></textarea> --}}
+                                    {{-- @else --}}
                                     <textarea class="form-control" name="uraian_materi" rows="4" cols="100"></textarea>
-                                    @else
-                                    <textarea class="form-control" name="uraian_materi" rows="4" cols="100"></textarea>
-                                    @endif --}}
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
@@ -55,11 +52,11 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif)
+                                    {{-- @if($presensi_mp_aktif) --}}
+                                    {{-- <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value=""> --}}
+                                    {{-- @else --}}
                                     <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value="">
-                                    @else
-                                    <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value="">
-                                    @endif --}}
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
@@ -67,11 +64,11 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif)
+                                    {{-- @if($presensi_mp_aktif) --}}
+                                    {{-- <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value=""> --}}
+                                    {{-- @else --}}
                                     <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value="">
-                                    @else
-                                    <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value="">
-                                    @endif --}}
+                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <div class="row clearfix">
@@ -119,7 +116,25 @@
                 }
             },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
-            
+            { data: 'alasan', name: 'alasan', searchable: false, orderable: false,
+                render: function(data){
+                    if(data.status_pengguna.status == 1){
+                        var html = '';
+                        $.each(data.options, function(index, item){
+                            if(data.kehadiran == item.id){
+                                html += '<option value="'+item.id+'" selected>'+ item.text + '</option>';
+                            }else{
+                                html += '<option value="'+item.id+'">'+ item.text + '</option>';
+                            }
+                        })
+                        return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
+                        html +
+                        '</select>';
+                    }else{
+                        return '<p class="font-underline col-orange font-24">' + data.status_pengguna.nm_status + '</p>';
+                    }
+                }
+            }
         ]
     });
 
