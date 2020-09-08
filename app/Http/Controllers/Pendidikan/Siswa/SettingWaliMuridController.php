@@ -365,21 +365,21 @@ class SettingWaliMuridController extends BaseController
                     }
 
                     if ($siswa = Siswa::where('nis_siswa', $item->nis)->where('id_kelas', $id_kelas)->first()) {
-                        if (!empty($siswa->id_wali_murid)) {
-                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
-                                return [
-                                    'status' 	=> 300, // GAGAL
-                                    'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
-                                ];
-                            }
-                        } else {
-                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
-                                return [
-                                    'status' 	=> 300, // GAGAL
-                                    'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
-                                ];
-                            }
-                        }
+                        // if (!empty($siswa->id_wali_murid)) {
+                        //     if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
+                        //         return [
+                        //             'status' 	=> 300, // GAGAL
+                        //             'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
+                        //         ];
+                        //     }
+                        // } else {
+                        //     if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
+                        //         return [
+                        //             'status' 	=> 300, // GAGAL
+                        //             'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
+                        //         ];
+                        //     }
+                        // }
                     } else {
                         return [
                             'status' 	=> 300, // GAGAL
