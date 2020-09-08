@@ -118,14 +118,14 @@ class SettingWaliMuridController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = Siswa::where('id_siswa', '=', $id)->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->first();
-        $wali_murid = WaliMurid::where('is_aktif', '=', 1)->get();
+        $data_wali_murid = WaliMurid::where('is_aktif', '=', 1)->get();
 
         //sudah punya wali murid, edit
         if ($siswa->id_wali_murid != null) {
             $wali_murid = WaliMurid::where('id_wali_murid', '=', $siswa->id_wali_murid)->first();
         }
 
-        return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid'));
+        return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid', 'data_wali_murid'));
     }
 
     public function datatablesWaliMurid(Request $request, $id_kelas)
@@ -299,8 +299,8 @@ class SettingWaliMuridController extends BaseController
 
                         DB::table('wali_murid')->insert(
                             [
-                                    'id_pengguna'           => $id_pengguna,
                                     'id_wali_murid'         => $id,
+                                    'id_pengguna'           => $id_pengguna,
                                     'nm_wali_murid'         => $input->nm_wali_murid,
                                     'nomor_hp_wali_murid'   => $input->nomor_hp_wali_murid,
                                     'is_aktif'              => 1,

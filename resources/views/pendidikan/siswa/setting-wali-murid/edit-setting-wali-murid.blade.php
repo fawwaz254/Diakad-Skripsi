@@ -22,7 +22,7 @@
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <input type="text" id="realtxt" onkeyup="searchSel()" class="form-control">
                                         <select class="form-control show-tick" id="nomor_hp_wali_murid" name="nomor_hp_wali_murid">
-                                            @foreach($wali_murid as $data)
+                                            @foreach($data_wali_murid as $data)
                                                 <option value="{{$data->nomor_hp_wali_murid}}">{{$data->nomor_hp_wali_murid}}</option>
                                             @endforeach
                                         </select>
