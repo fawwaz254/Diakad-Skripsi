@@ -158,7 +158,7 @@
     } ).draw();
 
 
-$(function(){  
+$(function(){
     $('.datepicker-time').bootstrapMaterialDatePicker({
         format: 'HH:mm',
         //lang : 'id',

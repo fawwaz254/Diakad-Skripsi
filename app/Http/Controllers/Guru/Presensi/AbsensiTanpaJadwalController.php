@@ -60,6 +60,7 @@ class AbsensiTanpaJadwalController extends BaseController
         $validator = Validator::make($request->all(), [
             'id_kelas'              => 'required',
             'id_mata_pelajaran'     => 'required',
+            'opsi'                  => 'required'
         ]);
 
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
@@ -90,8 +91,9 @@ class AbsensiTanpaJadwalController extends BaseController
         $auth_data          = $input->auth_data;
         $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal            = Carbon::now(env('APP_TIMEZONE', ''))->format('d F Y');
+        $data_kelas         = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
-        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal'));
+        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas'));
     }
 
     public function datatablesKBMAbsensiTanpaJadwal(Request $request, $id_guru, $id_mata_pelajaran, $id_kelas)
@@ -100,7 +102,7 @@ class AbsensiTanpaJadwalController extends BaseController
         $auth_data = $input->auth_data;
 
         $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'only_aktif');
-        
+
         return Datatables::of($list_data)
             ->editColumn('nis_siswa', function ($item) {
                 $data = array(
@@ -132,7 +134,7 @@ class AbsensiTanpaJadwalController extends BaseController
             })
             ->make(true);
     }
-    
+
     // Action POST
     public function actionAbsensiTanpaJadwal(Request $request, $mode, $id_guru, $id_mata_pelajaran, $id_kelas)
     {
@@ -155,7 +157,7 @@ class AbsensiTanpaJadwalController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             // ACTION ADD
-            if ($mode == 'add-kbm') {                
+            if ($mode == 'add-kbm') {
                 DB::beginTransaction();
                 try {
                     // cek kelas_mp
@@ -218,11 +220,6 @@ class AbsensiTanpaJadwalController extends BaseController
                     $presensi_mp->created_by               = $auth_data->pengguna->id_pengguna;
                     $presensi_mp->save();
 
-                    // insert presensi_mp_siswa
-                    $presensi_mp_siswa                          = new PresensiMpSiswa;
-                    $presensi_mp_siswa->id_presensi_mp_siswa    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                    $presensi_mp_siswa->id_presensi_mp          = $presensi_mp->id_presensi_mp;
-
                     // PresensiMpSiswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
                         if (! empty($alasan)) {
@@ -230,9 +227,12 @@ class AbsensiTanpaJadwalController extends BaseController
                         } else {
                             $kehadiran = 1;
                         }
-
+                    
+                    // insert presensi_mp_siswa
+                    $presensi_mp_siswa                          = new PresensiMpSiswa;
+                    $presensi_mp_siswa->id_presensi_mp_siswa    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $presensi_mp_siswa->id_presensi_mp          = $presensi_mp->id_presensi_mp;
                     $presensi_mp_siswa->id_siswa                = $id_siswa;
-                    // $presensi_mp_siswa->kehadiran               = 99;
                     $presensi_mp_siswa->created_at              = $now;
                     $presensi_mp_siswa->created_by              = $auth_data->pengguna->id_pengguna;
                     $presensi_mp_siswa->save();

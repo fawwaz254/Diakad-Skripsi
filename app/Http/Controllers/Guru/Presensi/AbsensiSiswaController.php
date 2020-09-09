@@ -125,7 +125,7 @@ class AbsensiSiswaController extends BaseController
         $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, $pertemuan_ke, 'all');
 
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
-        
+
         if ($presensi_mp_aktif) {
             $data_presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp_aktif->id_presensi_mp)->get();
         } else {
@@ -335,7 +335,7 @@ class AbsensiSiswaController extends BaseController
         } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            
+
             // Ini untuk apa?
             // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
@@ -344,7 +344,7 @@ class AbsensiSiswaController extends BaseController
                 $id_jadwal_kelas_mp = $id;
 
                 $presensi_mp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
-                
+
                 DB::beginTransaction();
                 try {
                     if ($presensi_mp) {
@@ -352,11 +352,11 @@ class AbsensiSiswaController extends BaseController
                     } else {
                         // make id
                         $id_presensi_mp = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                        
+
                         $auth_data = $input->auth_data;
                         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
                         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
-                        
+
                         $presensi_mp                        = new PresensiMp;
                         $presensi_mp->id_presensi_mp        = $id_presensi_mp;
                         $presensi_mp->id_kelas_mp           = $data_kelas->id_kelas_mp;
@@ -371,7 +371,7 @@ class AbsensiSiswaController extends BaseController
                     $presensi_mp->waktu_selesai      = $input->waktu_selesai;
                     $presensi_mp->tgl_presensi       = $input->tgl_presensi;
                     $presensi_mp->save();
-                        
+
                     // PresensiMpSiswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
                         if (! empty($alasan)) {
@@ -379,7 +379,7 @@ class AbsensiSiswaController extends BaseController
                         } else {
                             $kehadiran = 1;
                         }
-                        
+
                         if ($presensi_mp_siswa = PresensiMpSiswa::where('id_presensi_mp', '=', $presensi_mp->id_presensi_mp)->where('id_siswa', '=', $id_siswa)->first()) {
                             $presensi_mp_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {

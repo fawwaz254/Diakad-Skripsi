@@ -7,10 +7,23 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>KELAS  <br>
-                        MAPEL 
-                        <br>
-                        SEMESTER </h2>
+                        <table>
+                            <tr>
+                                <td>KELAS</td>
+                                <td>:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>MAPEL</td>
+                                <td>:</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>SEMESTER</td>
+                                <td>:</td>
+                                <td></td>
+                            </tr>
+                        </table>
                     </div>
                     <div class="body">
                         <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-absensi-tanpa-jadwal/add-kbm/'.$id_guru.'/'.$id_mata_pelajaran.'/'.$id_kelas)}}">
@@ -40,11 +53,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif) --}}
-                                    {{-- <textarea class="form-control" name="uraian_materi" rows="4" cols="100"></textarea> --}}
-                                    {{-- @else --}}
                                     <textarea class="form-control" name="uraian_materi" rows="4" cols="100"></textarea>
-                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
@@ -52,11 +61,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif) --}}
-                                    {{-- <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value=""> --}}
-                                    {{-- @else --}}
                                     <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value="">
-                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
@@ -64,11 +69,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    {{-- @if($presensi_mp_aktif) --}}
-                                    {{-- <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value=""> --}}
-                                    {{-- @else --}}
                                     <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value="">
-                                    {{-- @endif --}}
                                 </div>
                             </div>
                             <div class="row clearfix">
@@ -146,7 +147,7 @@
     } ).draw();
 
 
-$(function(){  
+$(function(){
     $('.datepicker-time').bootstrapMaterialDatePicker({
         format: 'HH:mm',
         //lang : 'id',
