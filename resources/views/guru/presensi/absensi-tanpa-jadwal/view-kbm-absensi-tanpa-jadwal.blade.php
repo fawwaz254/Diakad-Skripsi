@@ -41,6 +41,14 @@
                                 </table>
                             </div>
                             <h2 class="card-inside-title">
+                                Pertemuan pekan ke
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <input type="number" class="form-control" name="pertemuan_ke" required="" aria-required="true" aria-invalid="true" value="{{$pertemuan_ke}}" readonly >
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
                                 Tanggal
                             </h2>
                             <div class="row clearfix">

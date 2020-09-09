@@ -91,9 +91,16 @@ class AbsensiTanpaJadwalController extends BaseController
         $auth_data          = $input->auth_data;
         $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal            = Carbon::now(env('APP_TIMEZONE', ''))->format('d F Y');
+        $kelas_mp           = KelasMp::where('id_kelas', '=', $id_kelas)
+                                ->where('id_semester', '=', $semester_aktif->id_semester)
+                                ->where('id_mata_pelajaran', '=', $id_mata_pelajaran)
+                                ->first();
+        $max_pertemuan      = PresensiMp::where('id_kelas_mp', '=', $kelas_mp->id_kelas_mp)->max('pertemuan_ke');
+        $max_pertemuan++;
+        $pertemuan_ke       = $max_pertemuan;
         $data_kelas         = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
-        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas'));
+        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke'));
     }
 
     public function datatablesKBMAbsensiTanpaJadwal(Request $request, $id_guru, $id_mata_pelajaran, $id_kelas)
