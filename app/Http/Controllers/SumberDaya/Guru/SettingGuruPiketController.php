@@ -74,7 +74,8 @@ class SettingGuruPiketController extends BaseController
         ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
         ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
         ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
-        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)->get();
+        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+        ->get();
 
         return Datatables::of($list_data)
                 ->addColumn('nip_pengguna', function ($item) {
@@ -118,6 +119,7 @@ class SettingGuruPiketController extends BaseController
         ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
         ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
         ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
+        ->whereIn('pengguna.status_join_table', [1, 2])
         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
            ->whereNotExists(function ($query) {
                $query->select(DB::raw(1))
