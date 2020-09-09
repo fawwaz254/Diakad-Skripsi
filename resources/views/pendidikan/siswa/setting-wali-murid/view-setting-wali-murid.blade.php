@@ -50,6 +50,7 @@
                            <th>NISN</th>
                            <th>Nama Siswa</th>
                            <th>Nama Wali Murid</th>
+                           <th>Telp Wali Murid</th>
                            <th>Action</th>
                        </tr>
                    </thead>
@@ -84,6 +85,7 @@
         { data: 'nisn_siswa', name: 'nisn_siswa'},
         { data: 'nm_siswa', name: 'nm_pengguna' },
         { data: 'nm_wali_murid', name: 'nm_wali_murid'},
+        { data: 'nomor_hp_wali_murid', name: 'nomor_hp_wali_murid'},
         { data: 'action', name: 'action', searchable: false, orderable: false,
         render: function(data){
             return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/'  + data.id +'">'+

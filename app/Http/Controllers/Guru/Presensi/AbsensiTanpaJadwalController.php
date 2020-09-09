@@ -162,7 +162,7 @@ class AbsensiTanpaJadwalController extends BaseController
                     $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
                     if($kelas_mp = KelasMp::where('id_kelas', '=', $id_kelas)
-                                            ->where('id_semester', '=', $semester_aktif->id_semester_aktif)
+                                            ->where('id_semester', '=', $semester_aktif->id_semester)
                                             ->where('id_mata_pelajaran', '=', $id_mata_pelajaran)
                                             ->first()) {
                         // skip
