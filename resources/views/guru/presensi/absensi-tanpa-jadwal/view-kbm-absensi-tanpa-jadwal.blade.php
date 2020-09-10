@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#presensi/absensi-siswa')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#presensi/absensi-tanpa-jadwal')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -35,6 +35,7 @@
                                             <th>No</th>
                                             <th>NIS</th>
                                             <th>Nama</th>
+                                            <th>Jenis Kelamin</th>
                                             <th>Alasan</th>
                                         </tr>
                                     </thead>
@@ -115,7 +116,7 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nis_siswa', name: 'siswa.nis_siswa',
+            { data: 'nis_siswa', name: 'siswa.nis_siswa', searchable: false, orderable: false,
                 render: function(data){
                     if (data.status_pengguna.status == 1) {
                         return data.nis_siswa+'<br><input type="hidden" name="id_siswa[]" value="'+ data.id_siswa + '" >';
@@ -124,7 +125,8 @@
                     }
                 }
             },
-            { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_pengguna', name: 'pengguna.nm_pengguna', searchable: false, orderable: false },
+            { data: 'jenis_kelamin', searchable: false, orderable: false },
             { data: 'alasan', name: 'alasan', searchable: false, orderable: false,
                 render: function(data){
                     if(data.status_pengguna.status == 1){
@@ -136,7 +138,7 @@
                                 html += '<option value="'+item.id+'">'+ item.text + '</option>';
                             }
                         })
-                        return '<select class="form-control show-tick" style="width:85px;" name="alasan[]">'+
+                        return '<select class="form-control show-tick" style="width:120px;" name="alasan[]">'+
                         html +
                         '</select>';
                     }else{
@@ -152,8 +154,78 @@
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
         } );
+
+        var opsi = {!! json_encode($opsi) !!};
+
+        if(opsi == 1){
+            var rows = primary_table.rows([{ 'search': 'applied' }, ':nth-child(1)', ':nth-child(2n+1)']).nodes();
+
+            $('select', rows).val(99);
+        }else if(opsi == 2){
+            var rows = primary_table.rows([{ 'search': 'applied' }, ':nth-child(2n)']).nodes();
+
+            $('select', rows).val(99);
+        }else if(opsi == 3){
+            var count = primary_table.data().count();
+            var array = getArrayForSettingTable(count, false);
+
+            var rows = primary_table.rows(array).nodes();
+
+            $('select', rows).val(99);
+        }else if(opsi == 4){
+            var count = primary_table.data().count();
+            var array = getArrayForSettingTable(count, true);
+
+            var rows = primary_table.rows(array).nodes();
+
+            $('select', rows).val(99);
+        }else if(opsi == 5){ // Laki-laki
+            var indexes = primary_table.rows().eq( 0 ).filter( function (rowIdx) {
+                return primary_table.cell( rowIdx, 3 ).data() === 'Laki-laki' ? true : false;
+            });
+
+            var rows = primary_table.rows(indexes).nodes();
+
+            $('select', rows).val(99);
+        }else if(opsi == 6){ // Perempuan
+            var indexes = primary_table.rows().eq( 0 ).filter( function (rowIdx) {
+                return primary_table.cell( rowIdx, 3 ).data() === 'Perempuan' ? true : false;
+            });
+
+            var rows = primary_table.rows(indexes).nodes();
+
+            $('select', rows).val(99);
+        }
     } ).draw();
 
+    function getArrayForSettingTable(count, is_last){
+        if(count%2 == 0){
+            var half_count = count / 2;
+            if(is_last){
+                var start = half_count + 1;
+                var end = count;
+            }else{
+                var start = 1;
+                var end = half_count;
+            }
+        }else{
+            var half_count = count / 2;
+            if(is_last){
+                var start = half_count + 1;
+                var end = count;
+            }else{
+                var start = 1;
+                var end = half_count;
+            }
+        }
+
+        var array = [];
+        for(var i = start; i<=end; i++){
+            array.push(':nth-child(' +i+ ')');
+        }
+
+        return array;
+    }
 
 $(function(){
     $('.datepicker-time').bootstrapMaterialDatePicker({
@@ -172,4 +244,5 @@ $(function(){
         time: false
     });
 });
+
 </script>
