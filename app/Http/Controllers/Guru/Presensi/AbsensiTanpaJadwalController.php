@@ -211,8 +211,8 @@ class AbsensiTanpaJadwalController extends BaseController
                         $pengampu_mp->pjmp_pengampu_mp  = 1;
                         $pengampu_mp->pjmp_uts          = 1;
                         $pengampu_mp->pjmp_uas          = 1;
-                        $pengampu_mp->created_at           = $now;
-                        $pengampu_mp->created_by           = $auth_data->pengguna->id_pengguna;
+                        $pengampu_mp->created_at        = $now;
+                        $pengampu_mp->created_by        = $auth_data->pengguna->id_pengguna;
                         $pengampu_mp->save();
                     }
 
@@ -233,8 +233,8 @@ class AbsensiTanpaJadwalController extends BaseController
                     $presensi_mp->tgl_presensi          = $now->format('Y-m-d');
                     $presensi_mp->tgl_entry             = $now;
                     $presensi_mp->keterangan            = "Absensi Tanpa Jadwal";
-                    $presensi_mp->created_at               = $now;
-                    $presensi_mp->created_by               = $auth_data->pengguna->id_pengguna;
+                    $presensi_mp->created_at            = $now;
+                    $presensi_mp->created_by            = $auth_data->pengguna->id_pengguna;
                     $presensi_mp->save();
 
                     // PresensiMpSiswa
