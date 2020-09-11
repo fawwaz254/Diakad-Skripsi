@@ -62,10 +62,14 @@ class LibSiswa
 
         // get all siswa order by kelas
         if ($id_kelas == null && $id == null) {
-            $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
+            $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'calon_siswa_baru.jenis_kelamin', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
                     ->join('pengguna', function ($q) {
                         $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
+                    })
+                    ->leftJoin('calon_siswa_baru', function ($q) {
+                        $q->on('calon_siswa_baru.id_c_siswa', '=', 'siswa.id_c_siswa')
+                            ->whereNull('calon_siswa_baru.deleted_at');
                     })
                     ->join('status_pengguna', function ($q) {
                         $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
@@ -92,10 +96,14 @@ class LibSiswa
         }
         // get siswa by kelas
         elseif ($id == null) {
-            $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
+            $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'calon_siswa_baru.jenis_kelamin', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
                     ->join('pengguna', function ($q) {
                         $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
+                    })
+                    ->leftJoin('calon_siswa_baru', function ($q) {
+                        $q->on('calon_siswa_baru.id_c_siswa', '=', 'siswa.id_c_siswa')
+                            ->whereNull('calon_siswa_baru.deleted_at');
                     })
                     ->join('status_pengguna', function ($q) {
                         $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')

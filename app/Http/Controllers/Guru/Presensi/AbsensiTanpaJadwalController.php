@@ -100,7 +100,7 @@ class AbsensiTanpaJadwalController extends BaseController
         $pertemuan_ke       = $max_pertemuan;
         $data_kelas         = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
-        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke'));
+        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke', 'opsi'));
     }
 
     public function datatablesKBMAbsensiTanpaJadwal(Request $request, $id_guru, $id_mata_pelajaran, $id_kelas)
@@ -122,12 +122,22 @@ class AbsensiTanpaJadwalController extends BaseController
                 );
                 return $data;
             })
+            ->editColumn('jenis_kelamin', function ($item) {
+                if($item->jenis_kelamin == 1){
+                    return 'Laki-Laki';
+                }else if($item->jenis_kelamin == 2){
+                    return 'Perempuan';
+                }else{
+                    return 'Belum diset';
+                }
+            })
             ->addColumn('alasan', function ($item) {
                 $options = array(
                     array('id' => 1, 'text' => 'Hadir'),
                     array('id' => 2, 'text' => 'Sakit'),
                     array('id' => 3, 'text' => 'Izin'),
                     array('id' => 4, 'text' => 'Alpa'),
+                    array('id' => 99, 'text' => 'Beda kelas'),
                 );
                 $data = array(
                     'options' => $options,

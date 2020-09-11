@@ -60,11 +60,11 @@
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <select class="form-control show-tick" name="opsi">
-                                            <option value="">-- Semua --</option>
+                                            <option value="0">-- Semua --</option>
                                             <option value="1">Ganjil</option>
                                             <option value="2">Genap</option>
-                                            <option value="3">Separuh Awal</option>
-                                            <option value="4">Separuh Akhir</option>
+                                            <option value="3">Setengah Awal</option>
+                                            <option value="4">Setengah Akhir</option>
                                             <option value="5">Laki-laki</option>
                                             <option value="6">Perempuan</option>
                                         </select>
