@@ -78,7 +78,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('absensi-tanpa-jadwal/view-kbm', 'Guru\Presensi\AbsensiTanpaJadwalController@actionViewKBMAbsensiTanpaJadwal');
             Route::post('action-absensi-tanpa-jadwal/{mode}/{id_guru}/{id_mata_pelajaran}/{id_kelas}', 'Guru\Presensi\AbsensiTanpaJadwalController@actionAbsensiTanpaJadwal');
-            // Route::post('action-absensi-tanpa-jadwal/{mode}/{id}', 'Guru\Presensi\AbsensiTanpaJadwalController@actionAbsensiTanpaJadwal');
+
+            // MENU Rekap Absen Tanpa Jadwal
+            Route::get('rekap-absen-tanpa-jadwal', 'Guru\Presensi\RekapAbsenTanpaJadwalController@viewRekapAbsenTanpaJadwal');
         });
 
         /** ==== MODUL PENILAIAN ==== **/
