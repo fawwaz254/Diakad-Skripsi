@@ -15,18 +15,11 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_jadwal_kelas_mp">
+                                <select class="form-control show-tick" name="id_kelas_mp">
                                     <option value="" disabled selected >-- Pilih Kelas KBM --</option>
                                     @foreach($data as $data_kbm)
-                                    <option value="">{{$data_kbm->mata_pelajaran->nm_mata_pelajaran}} - {{$data_kbm->kelas->nm_kelas}}</option>
+                                    <option value="{{$data_kbm->id_kelas_mp}}">{{$data_kbm->mata_pelajaran->nm_mata_pelajaran}} - {{$data_kbm->kelas->nm_kelas}}</option>
                                     @endforeach
-                                    {{-- @foreach($grup_kbm_perhari as $hari => $data_kbm)
-                                    <optgroup label="{{$hari}}">
-                                        @foreach($data_kbm as $data)
-                                            <option value="{{$data->id_jadwal_kelas_mp}}">{{$data->nm_mata_pelajaran}} - {{$data->nm_kelas}} - {{$data->nm_ruangan}}</option>
-                                        @endforeach
-                                    </optgroup>
-                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>

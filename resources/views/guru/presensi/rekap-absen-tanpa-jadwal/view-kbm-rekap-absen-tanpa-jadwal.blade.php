@@ -13,15 +13,15 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        REKAP ABSEN KELAS {{$data_kelas->nm_kelas}} <br>
+                        {{-- REKAP ABSEN KELAS {{$data_kelas->nm_kelas}} <br>
                         HARI {{$data_kelas->nm_jadwal_hari}} <br>
                         MAPEL {{$data_kelas->nm_mata_pelajaran}} <br>
-                        SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2>
+                        SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2> --}}
                     </h2>
                 </div>
                 <div class="body">
                     <div class="block-header">
-                        <h2><a class="btn bg-blue waves-effect" target="_blank" href="{{url(Request::segment(1).'/presensi/rekap-absen/print/'.$id_jadwal_kelas_mp)}}"><i class="material-icons">print</i><span>Cetak</span></a></h2>
+                        <h2><a class="btn bg-blue waves-effect" target="_blank" href="{{url(Request::segment(1).'/presensi/rekap-absen/print/')}}"><i class="material-icons">print</i><span>Cetak</span></a></h2>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" style="overflow-x:auto;" id="primary_table">
@@ -75,9 +75,9 @@
                                 @endforeach
                                 <tr>
                                     <th colspan="4">Persentase Absen</th>
-                                    @foreach($data_presensi as $presensi_mp)
+                                    {{-- @foreach($data_presensi as $presensi_mp)
                                     <td>{{round(($rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] / $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] * 100), 2)}}%</td>
-                                    @endforeach
+                                    @endforeach --}}
                                 </tr>
                             </tbody>
                         </table>

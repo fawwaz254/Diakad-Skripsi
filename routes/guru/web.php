@@ -81,6 +81,10 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             // MENU Rekap Absen Tanpa Jadwal
             Route::get('rekap-absen-tanpa-jadwal', 'Guru\Presensi\RekapAbsenTanpaJadwalController@viewRekapAbsenTanpaJadwal');
+            Route::post('post-kbm-rekap-absen-tanpa-jadwal', 'Guru\Presensi\RekapAbsenTanpaJadwalController@actionViewKBMRekapAbsenTanpaJadwal');
+            Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', 'Guru\Presensi\RekapAbsenTanpaJadwalController@viewKBMRekapAbsenTanpaJadwal');
+
+            Route::get('rekap-absen/print/{id_jadwal_kelas_mp}', 'Guru\Presensi\RekapAbsenController@printKBMRekapAbsen');
         });
 
         /** ==== MODUL PENILAIAN ==== **/
