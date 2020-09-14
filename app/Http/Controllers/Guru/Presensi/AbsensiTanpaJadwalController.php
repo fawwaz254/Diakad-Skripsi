@@ -91,7 +91,8 @@ class AbsensiTanpaJadwalController extends BaseController
         $auth_data          = $input->auth_data;
         $semester_aktif     = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tanggal            = Carbon::now(env('APP_TIMEZONE', ''))->format('d F Y');
-        $kelas_mp           = KelasMp::where('id_kelas', '=', $id_kelas)
+        $kelas_mp           = KelasMp::with('kelas', 'mata_pelajaran')
+                                ->where('id_kelas', '=', $id_kelas)
                                 ->where('id_semester', '=', $semester_aktif->id_semester)
                                 ->where('id_mata_pelajaran', '=', $id_mata_pelajaran)
                                 ->first();
@@ -100,7 +101,7 @@ class AbsensiTanpaJadwalController extends BaseController
         $pertemuan_ke       = $max_pertemuan;
         $data_kelas         = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
-        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke', 'opsi'));
+        return view('guru/presensi/absensi-tanpa-jadwal/view-kbm-absensi-tanpa-jadwal', compact('auth_data', 'id_guru', 'id_mata_pelajaran', 'id_kelas', 'opsi', 'tanggal', 'data_kelas', 'pertemuan_ke', 'opsi', 'semester_aktif', 'kelas_mp'));
     }
 
     public function datatablesKBMAbsensiTanpaJadwal(Request $request, $id_guru, $id_mata_pelajaran, $id_kelas)
@@ -245,15 +246,15 @@ class AbsensiTanpaJadwalController extends BaseController
                             $kehadiran = 1;
                         }
                     
-                    // insert presensi_mp_siswa
-                    $presensi_mp_siswa                          = new PresensiMpSiswa;
-                    $presensi_mp_siswa->id_presensi_mp_siswa    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                    $presensi_mp_siswa->id_presensi_mp          = $presensi_mp->id_presensi_mp;
-                    $presensi_mp_siswa->id_siswa                = $id_siswa;
-                    $presensi_mp_siswa->created_at              = $now;
-                    $presensi_mp_siswa->created_by              = $auth_data->pengguna->id_pengguna;
-                    $presensi_mp_siswa->save();
-
+                        // insert presensi_mp_siswa
+                        $presensi_mp_siswa                          = new PresensiMpSiswa;
+                        $presensi_mp_siswa->id_presensi_mp_siswa    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $presensi_mp_siswa->id_presensi_mp          = $presensi_mp->id_presensi_mp;
+                        $presensi_mp_siswa->id_siswa                = $id_siswa;
+                        $presensi_mp_siswa->kehadiran               = $kehadiran;
+                        $presensi_mp_siswa->created_at              = $now;
+                        $presensi_mp_siswa->created_by              = $auth_data->pengguna->id_pengguna;
+                        $presensi_mp_siswa->save();
                     }
 
                     DB::commit();

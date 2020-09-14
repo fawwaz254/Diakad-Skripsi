@@ -10,18 +10,18 @@
                         <table>
                             <tr>
                                 <td>KELAS</td>
-                                <td>:</td>
-                                <td></td>
+                                <td> : </td>
+                                <td>{{$kelas_mp->kelas->nm_kelas}}</td>
                             </tr>
                             <tr>
                                 <td>MAPEL</td>
-                                <td>:</td>
-                                <td></td>
+                                <td> : </td>
+                                <td>{{$kelas_mp->mata_pelajaran->nm_mata_pelajaran}}</td>
                             </tr>
                             <tr>
                                 <td>SEMESTER</td>
-                                <td>:</td>
-                                <td></td>
+                                <td> : </td>
+                                <td>{{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</td>
                             </tr>
                         </table>
                     </div>
