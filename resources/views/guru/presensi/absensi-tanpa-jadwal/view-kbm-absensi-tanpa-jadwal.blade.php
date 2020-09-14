@@ -9,19 +9,19 @@
                     <div class="header">
                         <table>
                             <tr>
-                                <td>KELAS</td>
+                                <td>KELAS </td>
                                 <td> : </td>
-                                <td>{{$kelas_mp->kelas->nm_kelas}}</td>
+                                <td> {{$kelas_mp->kelas->nm_kelas}}</td>
                             </tr>
                             <tr>
-                                <td>MAPEL</td>
+                                <td>MAPEL </td>
                                 <td> : </td>
-                                <td>{{$kelas_mp->mata_pelajaran->nm_mata_pelajaran}}</td>
+                                <td> {{$kelas_mp->mata_pelajaran->nm_mata_pelajaran}}</td>
                             </tr>
                             <tr>
                                 <td>SEMESTER</td>
                                 <td> : </td>
-                                <td>{{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</td>
+                                <td> {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</td>
                             </tr>
                         </table>
                     </div>
@@ -42,7 +42,7 @@
                                 </table>
                             </div>
                             <h2 class="card-inside-title">
-                                Pertemuan pekan ke
+                                Pertemuan ke
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -158,30 +158,30 @@
         var opsi = {!! json_encode($opsi) !!};
 
         if(opsi == 1){
-            var rows = primary_table.rows([{ 'search': 'applied' }, ':nth-child(1)', ':nth-child(2n+1)']).nodes();
-
-            $('select', rows).val(99);
-        }else if(opsi == 2){
             var rows = primary_table.rows([{ 'search': 'applied' }, ':nth-child(2n)']).nodes();
 
             $('select', rows).val(99);
-        }else if(opsi == 3){
-            var count = primary_table.data().count();
-            var array = getArrayForSettingTable(count, false);
-
-            var rows = primary_table.rows(array).nodes();
+        }else if(opsi == 2){
+            var rows = primary_table.rows([{ 'search': 'applied' }, ':nth-child(1)', ':nth-child(2n+1)']).nodes();
 
             $('select', rows).val(99);
-        }else if(opsi == 4){
+        }else if(opsi == 3){
             var count = primary_table.data().count();
             var array = getArrayForSettingTable(count, true);
 
             var rows = primary_table.rows(array).nodes();
 
             $('select', rows).val(99);
+        }else if(opsi == 4){
+            var count = primary_table.data().count();
+            var array = getArrayForSettingTable(count, false);
+
+            var rows = primary_table.rows(array).nodes();
+
+            $('select', rows).val(99);
         }else if(opsi == 5){ // Laki-laki
             var indexes = primary_table.rows().eq( 0 ).filter( function (rowIdx) {
-                return primary_table.cell( rowIdx, 3 ).data() === 'Laki-laki' ? true : false;
+                return primary_table.cell( rowIdx, 3 ).data() === 'Perempuan' ? true : false;
             });
 
             var rows = primary_table.rows(indexes).nodes();
@@ -189,7 +189,7 @@
             $('select', rows).val(99);
         }else if(opsi == 6){ // Perempuan
             var indexes = primary_table.rows().eq( 0 ).filter( function (rowIdx) {
-                return primary_table.cell( rowIdx, 3 ).data() === 'Perempuan' ? true : false;
+                return primary_table.cell( rowIdx, 3 ).data() === 'Laki-laki' ? true : false;
             });
 
             var rows = primary_table.rows(indexes).nodes();
@@ -209,7 +209,7 @@
                 var end = half_count;
             }
         }else{
-            var half_count = count / 2;
+            var half_count = Math.floor(count / 2);
             if(is_last){
                 var start = half_count + 1;
                 var end = count;

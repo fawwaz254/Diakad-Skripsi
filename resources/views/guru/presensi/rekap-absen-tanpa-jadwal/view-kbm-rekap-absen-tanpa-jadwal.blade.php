@@ -13,10 +13,9 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        {{-- REKAP ABSEN KELAS {{$data_kelas->nm_kelas}} <br>
-                        HARI {{$data_kelas->nm_jadwal_hari}} <br>
+                        REKAP ABSEN KELAS {{$data_kelas->nm_kelas}} <br>
                         MAPEL {{$data_kelas->nm_mata_pelajaran}} <br>
-                        SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2> --}}
+                        SEMESTER {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h2>
                     </h2>
                 </div>
                 <div class="body">
@@ -64,6 +63,8 @@
                                             <td class="is-center bg-cyan">I</td>
                                             @elseif($presensi_mp_siswa->kehadiran == 4)
                                             <td class="is-center bg-red">A</td>
+                                            @elseif($presensi_mp_siswa->kehadiran == 99)
+                                            <td class="is-center" style="background-color: #a4a4a4">BK</td>
                                             @else
                                             <td></td>
                                             @endif
@@ -75,9 +76,9 @@
                                 @endforeach
                                 <tr>
                                     <th colspan="4">Persentase Absen</th>
-                                    {{-- @foreach($data_presensi as $presensi_mp)
+                                    @foreach($data_presensi as $presensi_mp)
                                     <td>{{round(($rekap_absen[$presensi_mp->pertemuan_ke]['total_hadir'] / $rekap_absen[$presensi_mp->pertemuan_ke]['total_siswa'] * 100), 2)}}%</td>
-                                    @endforeach --}}
+                                    @endforeach
                                 </tr>
                             </tbody>
                         </table>

@@ -91,7 +91,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
         $id_guru        = $guru->id_guru;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+        $data_siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna')
                         ->join('pengguna', function ($join) {
                             $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
@@ -99,20 +99,13 @@ class RekapAbsenTanpaJadwalController extends BaseController
                         ->join('status_pengguna', function($join) {
                             $join->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                             ->whereNull('status_pengguna.deleted_at');
-                        })->join('pengambilan_mp', function ($join) {
-                            $join->on('pengambilan_mp.id_siswa', '=', 'siswa.id_siswa')
-                            ->whereNull('pengambilan_mp.deleted_at');
                         })
                         ->join('kelas_mp', function ($join) {
-                            $join->on('kelas_mp.id_kelas_mp', '=', 'pengambilan_mp.id_kelas_mp')
+                            $join->on('kelas_mp.id_kelas', '=', 'siswa.id_kelas')
                             ->whereNull('kelas_mp.deleted_at');
                         })
-                        ->join('kelas', function ($join) {
-                            $join->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-                            ->whereNull('kelas.deleted_at');
-                        })
-                        ->where('kelas_mp.id_kelas_mp', $id_kelas_mp)
-                        ->where('kelas_mp.id_semester', '=', $semester_aktif->id_semester)->get();
+                        ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
+                        ->get();
 
         $data_kelas = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'pengampu_mp.pjmp_pengampu_mp', 'presensi_mp.pertemuan_ke', 'presensi_mp.uraian_materi', 'presensi_mp.waktu_mulai', 'presensi_mp.waktu_selesai')
                         ->join('pengampu_mp', function ($q) {
@@ -146,7 +139,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
 
         $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_kelas_mp', $id_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
 
-        return view('guru/presensi/rekap-absen-tanpa-jadwal/view-kbm-rekap-absen-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'id_jadwal_kelas_mp'));
+        return view('guru/presensi/rekap-absen-tanpa-jadwal/view-kbm-rekap-absen-tanpa-jadwal', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
     }
 
     public function printKBMRekapAbsen(Request $request, $id_jadwal_kelas_mp)
