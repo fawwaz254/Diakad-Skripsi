@@ -17,6 +17,7 @@ use App\Models\ArsipDokumenFile as ArsipDokumenFile;
 use App\Models\ArsipPemilik as ArsipPemilik;
 use App\Models\ArsipLoker as ArsipLoker;
 use App\Models\ArsipSubkategori as ArsipSubkategori;
+use App\Models\StatusPengguna;
 
 use Auth;
 use DB;
@@ -39,12 +40,10 @@ class InputDokumenController extends BaseController
         $auth_data = $input->auth_data;
 
         //kategori
-        $kategori 	= ArsipKategori::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $unit 		= UnitKerja::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $loker 		= ArsipLoker::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $pemilik 	= ArsipPemilik::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-
-
+        $kategori 	        = ArsipKategori::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+        $unit 		        = UnitKerja::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+        $loker 		        = ArsipLoker::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+        $pemilik 	        = ArsipPemilik::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
         // $unit = UnitKerja::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
 
         return view('sekretariat/data-dokumen/input-dokumen/add-input-dokumen',compact('auth_data','kategori','unit','loker','pemilik'));
