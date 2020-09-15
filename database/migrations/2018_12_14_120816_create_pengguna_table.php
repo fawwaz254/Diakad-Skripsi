@@ -30,6 +30,11 @@ class CreatePenggunaTable extends Migration {
 			$table->softDeletes();
 			$table->string('deleted_by', 40)->nullable();
 		});
+		
+		Schema::table('pembayaran_transaksi', function (Blueprint $table) {
+            $table->renameColumn('id_pembayaran_transaksi', 'id_pembayaran_trs');
+            $table->dropColumn('id_tagihan_biaya');
+        });
 	}
 
 
