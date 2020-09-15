@@ -17,6 +17,7 @@ class CreateUploadArsipDokumenAkses extends Migration
         Schema::create('arsip_dokumen_akses', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id_arsip_dokumen_akses', 40)->primary();
+            $table->string('id_arsip_dokumen', 40)->comment('FK: arsip_dokumen.id_arsip_dokumen');
             $table->boolean('status_join_table')->nullable()->comment('Digunakan untuk hak akses status join table user');
             $table->string('id_unit_kerja', 40)->comment('FK: unit_kerja.id_unit_kerja');
             
@@ -29,7 +30,7 @@ class CreateUploadArsipDokumenAkses extends Migration
 
         Schema::table('arsip_dokumen', function (Blueprint $table) {
             $table->string('id_unit_kerja', 40)->nullable()->comment('FK: unit_kerja.id_unit_kerja (merupakan unit kerja owner)')->change();
-            $table->boolean('is_public')->default(0)->comment('0 = Tidak untuk semua role; 1 = Diakses untuk semua role;');
+            $table->boolean('is_publik')->default(0)->after('is_upload')->comment('0 = Tidak untuk semua role; 1 = Diakses untuk semua role;');
         });
     }
 
