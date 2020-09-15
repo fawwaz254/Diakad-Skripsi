@@ -21,7 +21,7 @@
                 </div>
                 <div class="body">
                     <div class="block-header">
-                        <h2><a class="btn bg-blue waves-effect" target="_blank" href="{{url(Request::segment(1).'/presensi/rekap-absen/print/')}}"><i class="material-icons">print</i><span>Cetak</span></a></h2>
+                        <h2><a class="btn bg-blue waves-effect" target="_blank" href="{{url(Request::segment(1).'/presensi/rekap-absen-tanpa-jadwal/print/')}}"><i class="material-icons">print</i><span>Cetak</span></a></h2>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" style="overflow-x:auto;" id="primary_table">
