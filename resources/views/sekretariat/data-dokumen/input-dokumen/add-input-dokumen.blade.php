@@ -137,19 +137,91 @@
                                     aria-invalid="true" value="">
                                 </div>
                             </div>
+                            <h2 class="card-inside-title">
+                                Status Akses Dokumen
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <select class="form-control" name="status_akses" id="status_akses">
+                                        <option value="unselected">-- Pilih Status Akses --</option>
+                                        <option value="1">Publik</option>
+                                        <option value="0">Terbatas</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                </div>
+                            </div>
                             
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
                         </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </div>
+            <br>
+            <div class="card" id="hak_akses" style="display: none">
+                <div class="header">
+                    <h2>
+                        HAK AKSES ARSIP (ONLINE)
+                    </h2>
+                </div>
+                <div class="body">
+                    <h2 class="card-inside-title">
+                        Status Pengguna
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="status_pengguna[]" value="1">
+                                <label class="form-check-label" for="inlineCheckbox1">Tendik</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="status_pengguna[]" value="2">
+                                <label class="form-check-label" for="inlineCheckbox2">Guru</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox3" name="status_pengguna[]" value="3">
+                                <label class="form-check-label" for="inlineCheckbox3">Siswa</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox4" name="status_pengguna[]" value="4">
+                                <label class="form-check-label" for="inlineCheckbox4">Wali Murid</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox5" name="status_pengguna[]" value="5">
+                                <label class="form-check-label" for="inlineCheckbox5">Pelatih Ekskul</label>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="card-inside-title">
+                        Unit Kerja
+                    </h2>
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            @php $end = 6; @endphp
+                            @foreach($unit as $unit_kerja)
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="inlineCheckbox{{$end}}" name="unit_kerja[]" value="{{$unit_kerja->id_unit_kerja}}">
+                                <label class="form-check-label" for="inlineCheckbox{{$end}}">{{$unit_kerja->nm_unit_kerja}}</label>
+                            </div>
+                            @php $end++; @endphp
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="card">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                </div>
+                <br>
+                <br>
+                
+                        </form>
         </div>
     </div>
 </div>
@@ -183,4 +255,17 @@ function subKategori(el){
         }
     });
 }
+</script>
+<script>
+    $(window).load(function () {
+        $("#status_akses").change(function () {
+            console.log($("#status_akses option:selected").val());
+
+            if($("#status_akses option:selected").val() == 0) {
+                $('#hak_akses').show();
+            } else {
+                $('#hak_akses').hide();
+            }
+        });
+    });
 </script>
