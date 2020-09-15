@@ -1,6 +1,6 @@
 <head>
 <title>
-    Rekap Absen Kelas {{$data_kelas->nm_kelas}}, Hari {{$data_kelas->nm_jadwal_hari}}, {{$data_kelas->nm_mata_pelajaran}} ({{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}})
+    Rekap Absen Kelas {{$data_kelas->nm_kelas}}, {{$data_kelas->nm_mata_pelajaran}} ({{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}})
 </title>
     <style>
         table.is-bordered, table.is-bordered th, table.is-bordered td{
@@ -17,6 +17,9 @@
         table th.is-right, table td.is-right{
             text-align:right;
         }
+        table th.is-left, table td.is-left{
+            text-align:left;
+        }
     </style>
     <style type="text/css" media="print">
         @page { size: landscape; }
@@ -30,16 +33,16 @@
     <table>
         <tbody>
             <tr>
-                <th>Kelas</th>
+                <th class="is-left">Kelas</th>
                 <td style="width: 50%;">: {{$data_kelas->nm_kelas}}</td>
-                <th class="is-right">Mata pelajaran</th>
-                <td class="is-right">: {{$data_kelas->nm_mata_pelajaran}}</td>
-            </tr>
-            <tr>
-                <th>Hari</th>
-                <td style="width: 50%;">: {{$data_kelas->nm_jadwal_hari}}</td>
                 <th class="is-right">Semester</th>
                 <td class="is-right">: {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</td>
+            </tr>
+            <tr>
+                <th class="is-left">Mata pelajaran</th>
+                <td style="width: 50%;">: {{$data_kelas->nm_mata_pelajaran}}</td>
+                <th class="is-right"></th>
+                <td class="is-right"></td>
             </tr>
         </tbody>
     </table>
