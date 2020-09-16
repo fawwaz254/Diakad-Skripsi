@@ -252,9 +252,9 @@ class PlottingMapelSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = Siswa::join('pengguna', function ($q) {
-            $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                ->whereNull('pengguna.deleted_at');
-        })
+                                $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                                    ->whereNull('pengguna.deleted_at');
+                            })
                             ->join('status_pengguna', function ($q) use ($input) {
                                 $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                                     ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
@@ -265,6 +265,10 @@ class PlottingMapelSiswaController extends BaseController
                                 $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
                                     ->whereNull('kelas.deleted_at');
                             })
+                            ->join('calon_siswa_baru', function ($q) {
+                                $q->on('siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                                    ->whereNull('calon_siswa_baru.deleted_at');
+                            })
                             ->where('siswa.id_kelas', '=', $kelas)->get();
 
         return Datatables::of($list_data)
@@ -273,6 +277,15 @@ class PlottingMapelSiswaController extends BaseController
                         'id_siswa' => $item->id_siswa
                     );
                     return $data;
+                })
+                ->editColumn('jenis_kelamin', function ($item) {
+                    if($item->jenis_kelamin == 1){
+                        return 'Laki-Laki';
+                    }else if($item->jenis_kelamin == 2){
+                        return 'Perempuan';
+                    }else{
+                        return 'Belum diset';
+                    }
                 })
                 ->make(true);
     }
