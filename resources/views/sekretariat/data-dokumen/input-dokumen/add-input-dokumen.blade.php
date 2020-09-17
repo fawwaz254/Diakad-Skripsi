@@ -1,7 +1,12 @@
 <div class="container-fluid">
-        <div class="block-header">
-            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-dokumen/input-dokumen/')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
-        </div>
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{url(Request::segment(1).'#data-dokumen/input-dokumen/')}}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
+    <form id="form-validation" method="POST"
+        action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-dokumen/add/0')}}">
+        {{csrf_field()}}
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -11,220 +16,228 @@
                         </h2>
                     </div>
                     <div class="body">
-                        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-dokumen/add/0')}}">
-                            {{csrf_field()}}
-                            <h2 class="card-inside-title">
-                                Loker
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="id_arsip_loker">
-                                        <option value="">-- Pilih Arsip Loker--</option>
-                                        @foreach($loker as $data)
-                                            <option value="{{$data->id_arsip_loker}}">
-                                                {{$data->nm_arsip_loker}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        <h2 class="card-inside-title">
+                            Loker
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_arsip_loker">
+                                    <option value="">-- Pilih Arsip Loker--</option>
+                                    @foreach($loker as $data)
+                                    <option value="{{$data->id_arsip_loker}}">
+                                        {{$data->nm_arsip_loker}}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <h2 class="card-inside-title">
-                                Pemilik
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="id_arsip_pemilik">
-                                        <option value="">-- Pilih Arsip Pemilik--</option>
-                                        @foreach($pemilik as $data)
-                                            <option value="{{$data->id_arsip_pemilik}}">
-                                                {{$data->nm_arsip_pemilik}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Pemilik
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_arsip_pemilik">
+                                    <option value="">-- Pilih Arsip Pemilik--</option>
+                                    @foreach($pemilik as $data)
+                                    <option value="{{$data->id_arsip_pemilik}}">
+                                        {{$data->nm_arsip_pemilik}}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <h2 class="card-inside-title">
-                                Kategori
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="kategori" onchange="subKategori(this)">
-                                        <option value="">-- Pilih Arsip Kategori--</option>
-                                        @foreach($kategori as $data)
-                                            <option value="{{$data->id_arsip_kategori}}">
-                                                {{$data->nm_arsip_kategori}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Kategori
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="kategori" onchange="subKategori(this)">
+                                    <option value="">-- Pilih Arsip Kategori--</option>
+                                    @foreach($kategori as $data)
+                                    <option value="{{$data->id_arsip_kategori}}">
+                                        {{$data->nm_arsip_kategori}}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                             <h2 class="card-inside-title">
-                                Sub Kategori
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="id_arsip_subkategori">
-                                        <option value="">-- Pilih Sub Kategori --</option>
-                                    </select>
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Sub Kategori
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_arsip_subkategori">
+                                    <option value="">-- Pilih Sub Kategori --</option>
+                                </select>
                             </div>
-                            <h2 class="card-inside-title">
-                                Unit Kerja <small>*Tidak wajib diisi</small>
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control show-tick" name="id_unit_kerja">
-                                        <option value="">-- Pilih Unit Kerja--</option>
-                                        @foreach($unit as $data)
-                                            <option value="{{$data->id_unit_kerja}}">
-                                                {{$data->nm_unit_kerja}}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Unit Kerja <small>*Tidak wajib diisi</small>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_unit_kerja">
+                                    <option value="">-- Pilih Unit Kerja--</option>
+                                    @foreach($unit as $data)
+                                    <option value="{{$data->id_unit_kerja}}">
+                                        {{$data->nm_unit_kerja}}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <h2 class="card-inside-title">
-                                Nama Arsip Dokumen
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="nm_arsip_dokumen" required="" aria-required="true"
-                                    aria-invalid="true" value="">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Nama Arsip Dokumen
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="nm_arsip_dokumen" required=""
+                                    aria-required="true" aria-invalid="true" value="">
                             </div>
-                            <h2 class="card-inside-title">
-                                Kode Katalog
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="kode_katalog" required="" aria-required="true"
-                                    aria-invalid="true" value="">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Kode Katalog
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="kode_katalog" required=""
+                                    aria-required="true" aria-invalid="true" value="">
                             </div>
-                            <h2 class="card-inside-title">
-                                Nomor Arsip Dokumen
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="nomor_arsip_dokumen" required="" aria-required="true"
-                                    aria-invalid="true" value="">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Nomor Arsip Dokumen
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="nomor_arsip_dokumen" required=""
+                                    aria-required="true" aria-invalid="true" value="">
                             </div>
-                            <h2 class="card-inside-title">
-                                Jumlah Halaman
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="jumlah_halaman" required="" aria-required="true"
-                                    aria-invalid="true" value="">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Jumlah Halaman
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="jumlah_halaman" required=""
+                                    aria-required="true" aria-invalid="true" value="">
                             </div>
-                            <h2 class="card-inside-title">
-                                Tanggal Penyusunan
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="datepicker form-control" name="tgl_penyusunan" required="" aria-required="true"
-                                    aria-invalid="true" value="">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Tanggal Penyusunan
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="datepicker form-control" name="tgl_penyusunan" required=""
+                                    aria-required="true" aria-invalid="true" value="">
                             </div>
-                            <h2 class="card-inside-title">
-                                Contact Person <small>Nomor HP atau kontak dari penanggungjawab dokumen</small>
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="contact_person" required="" aria-required="true"
-                                    aria-invalid="true" value="">
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Contact Person <small>Nomor HP atau kontak dari penanggungjawab dokumen</small>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="contact_person" required=""
+                                    aria-required="true" aria-invalid="true" value="">
                             </div>
-                            <h2 class="card-inside-title">
-                                Status Akses Dokumen
-                            </h2>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <select class="form-control" name="status_akses" id="status_akses">
-                                        <option value="unselected">-- Pilih Status Akses --</option>
-                                        <option value="1">Publik</option>
-                                        <option value="0">Terbatas</option>
-                                    </select>
-                                </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Status Akses Dokumen
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control" name="is_publik" id="is_publik">
+                                    <option value="unselected">-- Pilih Status Akses --</option>
+                                    <option value="1">Publik</option>
+                                    <option value="0">Terbatas</option>
+                                </select>
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                </div>
-                            </div>
-                            
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
                         </div>
                         <div class="row clearfix" id="save">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="hak_akses" style="display: none">
+                    <br>
+                    <div class="card">
+                        <div class="header">
+                            <h2>
+                                HAK AKSES ARSIP (ONLINE)
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <h2 class="card-inside-title">
+                                Status Pengguna
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1"
+                                            name="status_pengguna[]" value="1">
+                                        <label class="form-check-label" for="inlineCheckbox1">Tendik</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2"
+                                            name="status_pengguna[]" value="2">
+                                        <label class="form-check-label" for="inlineCheckbox2">Guru</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3"
+                                            name="status_pengguna[]" value="3">
+                                        <label class="form-check-label" for="inlineCheckbox3">Siswa</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox4"
+                                            name="status_pengguna[]" value="4">
+                                        <label class="form-check-label" for="inlineCheckbox4">Wali Murid</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox5"
+                                            name="status_pengguna[]" value="5">
+                                        <label class="form-check-label" for="inlineCheckbox5">Pelatih Ekskul</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <h2 class="card-inside-title">
+                                Unit Kerja
+                            </h2>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    @php $end = 6; @endphp
+                                    @foreach($unit as $unit_kerja)
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="inlineCheckbox{{$end}}"
+                                            name="unit_kerja[]" value="{{$unit_kerja->id_unit_kerja}}">
+                                        <label class="form-check-label"
+                                            for="inlineCheckbox{{$end}}">{{$unit_kerja->nm_unit_kerja}}</label>
+                                    </div>
+                                    @php $end++; @endphp
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                            class="material-icons">save</i><span>Save</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="hak_akses" style="display: none">
-                <br>
-                <div class="card">
-                    <div class="header">
-                        <h2>
-                            HAK AKSES ARSIP (ONLINE)
-                        </h2>
-                    </div>
-                    <div class="body">
-                        <h2 class="card-inside-title">
-                            Status Pengguna
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="status_pengguna[]" value="1">
-                                    <label class="form-check-label" for="inlineCheckbox1">Tendik</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" name="status_pengguna[]" value="2">
-                                    <label class="form-check-label" for="inlineCheckbox2">Guru</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" name="status_pengguna[]" value="3">
-                                    <label class="form-check-label" for="inlineCheckbox3">Siswa</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox4" name="status_pengguna[]" value="4">
-                                    <label class="form-check-label" for="inlineCheckbox4">Wali Murid</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox5" name="status_pengguna[]" value="5">
-                                    <label class="form-check-label" for="inlineCheckbox5">Pelatih Ekskul</label>
-                                </div>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Unit Kerja
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                @php $end = 6; @endphp
-                                @foreach($unit as $unit_kerja)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox{{$end}}" name="unit_kerja[]" value="{{$unit_kerja->id_unit_kerja}}">
-                                    <label class="form-check-label" for="inlineCheckbox{{$end}}">{{$unit_kerja->nm_unit_kerja}}</label>
-                                </div>
-                                @php $end++; @endphp
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>   
-            </div>          
-        </form>
+        </div>
+    </form>
 </div>
 @include('scriptjs')
 <script type="text/javascript">
@@ -259,9 +272,9 @@ function subKategori(el){
 </script>
 <script>
     $(window).load(function () {
-        $("#status_akses").change(function () {
+        $("#is_publik").change(function () {
             // view hak akses
-            if($("#status_akses option:selected").val() == 0) {
+            if($("#is_publik option:selected").val() == 0) {
                 $('#hak_akses').show();
                 $('#save').hide();
             } else {
