@@ -17,7 +17,7 @@
                                 </h2>
                                 <select class="form-control show-tick" name="is_aktif">
                                     <option value="1">Aktif</option>
-                                    <option value="2">Tidak Aktif</option>
+                                    <option value="0">Tidak Aktif</option>
                                 </select>
                             </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
@@ -83,4 +83,8 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    function filterAction(){
+        primary_table.ajax.reload(null, false);
+    }
 </script>

@@ -38,6 +38,17 @@
                                 <input type="text" class="form-control" name="nm_kelompok_biaya_internal" required="" aria-required="true" aria-invalid="true" value="{{$data_biaya_internal->nm_kelompok_biaya_internal}}">
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Status Aktif
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="is_aktif">
+                                    <option value="1" {{($data_biaya_internal->is_aktif == 1)? 'selected' : ''}} >Aktif</option>
+                                    <option value="0" {{($data_biaya_internal->is_aktif == 0)? 'selected' : ''}} >Non-Aktif</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

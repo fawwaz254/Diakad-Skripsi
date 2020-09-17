@@ -54,7 +54,7 @@
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input class="form-control" type="text" name="" value="{{$tanggal}}">
+                                    <input class="form-control" type="text" name="" readonly value="{{$tanggal}}">
                                 </div>
                             </div>
                             <h2 class="card-inside-title">

@@ -146,7 +146,7 @@ class InputPelanggaranController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data);
+        $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, null, 'guru');
 
         return Datatables::of($list_data)
                 ->addColumn('nm_siswa', function ($item) {

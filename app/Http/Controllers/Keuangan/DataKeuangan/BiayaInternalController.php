@@ -60,10 +60,19 @@ class BiayaInternalController extends BaseController{
     public function datatablesBiayaInternal(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = LibDataKeuangan::fetchDataBiayaInternal($auth_data, null, "1");
+        $list_data = KelompokBiayaInternal::select('kelompok_biaya_internal.id_kelompok_biaya_internal', 'kelompok_biaya_internal.is_aktif', 'biaya.id_biaya', 'biaya.nm_biaya', 'kelompok_biaya_internal.nm_kelompok_biaya_internal')
+                                            ->join('biaya', function ($q) {
+                                                $q->on('biaya.id_biaya', '=', 'kelompok_biaya_internal.id_biaya')
+                                                    ->whereNull('biaya.deleted_at');
+                                            })
+                                            ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                                            ->orderBy('biaya.nm_biaya', 'asc')
+                                            ->orderBy('kelompok_biaya_internal.nm_kelompok_biaya_internal', 'desc');
         
         if(!empty($input->is_aktif)){
             $list_data = $list_data->where('kelompok_biaya_internal.is_aktif', $input->is_aktif);
+        }else{
+            $list_data = $list_data->where('kelompok_biaya_internal.is_aktif', 0);
         }
 
         return Datatables::of($list_data)
@@ -103,6 +112,7 @@ class BiayaInternalController extends BaseController{
                 $biayaInternal->id_kelompok_biaya_internal      = $id;
                 $biayaInternal->id_biaya                        = $input->id_biaya;
                 $biayaInternal->nm_kelompok_biaya_internal      = $input->nm_kelompok_biaya_internal;
+                $biayaInternal->is_aktif                        = $input->is_aktif;
                 $biayaInternal->created_by                      = $input->auth_data->pengguna->id_pengguna;
                 $biayaInternal->save();
 
@@ -117,6 +127,7 @@ class BiayaInternalController extends BaseController{
                 $biayaInternal                                  = KelompokBiayaInternal::find($id);
                 $biayaInternal->id_biaya                        = $input->id_biaya;
                 $biayaInternal->nm_kelompok_biaya_internal      = $input->nm_kelompok_biaya_internal;
+                $biayaInternal->is_aktif                        = $input->is_aktif;
                 $biayaInternal->updated_by                      = $input->auth_data->pengguna->id_pengguna;
                 $biayaInternal->updated_at                      = $now;
                 $biayaInternal->save();

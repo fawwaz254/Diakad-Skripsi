@@ -105,7 +105,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PELANGGARAN **/
-    public static function fetchDataInputPelanggaran($auth_data, $id_kelas = null, $id = null, $is_datatable = null)
+    public static function fetchDataInputPelanggaran($auth_data, $id_kelas = null, $id = null, $is_datatable = null, $akses = 'all')
     {
 
         // get mode view
@@ -127,6 +127,10 @@ class LibDataPelanggaran
                     ->where('pelanggaran_siswa.aktor_input_pelanggaran', '=', 3)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
+                if($akses == 'only-me'){
+                    $pelanggaranSiswa = $pelanggaranSiswa->where('pelanggaran_siswa.created_by', $auth_data->pengguna->id_pengguna);
+                }
+
                 if ($is_datatable == null) {
                     $pelanggaranSiswa = $pelanggaranSiswa->get();
                 }
@@ -144,6 +148,10 @@ class LibDataPelanggaran
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
+                if($akses == 'only-me'){
+                    $pelanggaranSiswa = $pelanggaranSiswa->where('pelanggaran_siswa.created_by', $auth_data->pengguna->id_pengguna);
+                }
+                
                 if ($is_datatable == null) {
                     $pelanggaranSiswa = $pelanggaranSiswa->get();
                 }
@@ -170,7 +178,7 @@ class LibDataPelanggaran
     /** ========== **/
 
     /** AMBIL DATA PRESENSI MP PELANGGARAN **/
-    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null)
+    public static function fetchDataPresensiPelanggaran($auth_data, $id = null, $is_datatable = null, $role = '-')
     {
 
         // get mode view
@@ -188,6 +196,10 @@ class LibDataPelanggaran
                         ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                         ->where('presensi_mp_pelanggaran.is_sudah_tindakan', '=', 0)
                         ->orderBy('presensi_mp_pelanggaran.created_at', 'desc');
+
+            if($role == 'guru'){
+                $presensiMpPelanggaran = $presensiMpPelanggaran->where('presensi_mp_pelanggaran.created_by', $auth_data->pengguna->id_pengguna);
+            }
 
             if ($is_datatable == null) {
                 $presensiMpPelanggaran = $presensiMpPelanggaran->get();
