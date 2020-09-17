@@ -121,6 +121,8 @@
                                         <option value="3">Check Genap</option>
                                         <option value="4">Check Setengah AWAL</option>
                                         <option value="5">Check Setengah AKHIR</option>
+                                        <option value="6">Check Laki-Laki</option>
+                                        <option value="7">Check Perempuan</option>
                                     </select>
                                 </div>
                             </div>
@@ -135,6 +137,7 @@
                                         <th>NISN</th>
                                         <th>NIS</th>
                                         <th>Nama Siswa</th>
+                                        <th>Jenis Kelamin</th>
                                         <th>Kelas</th>
                                         <th>Angkatan</th>
                                     </tr>
@@ -291,6 +294,7 @@
             { data: 'nisn_siswa', name: 'nisn_siswa' },
             { data: 'nis_siswa', name: 'nis_siswa' },
             { data: 'nm_pengguna', name: 'nm_pengguna' },
+            { data: 'jenis_kelamin', searchable: false, orderable: false },
             { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'thn_masuk_siswa', name: 'thn_masuk_siswa' }
         ]
@@ -386,6 +390,24 @@
                 var array = getArrayForSettingTable(count, true);
 
                 var rows = primary_table_siswa.rows(array).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }else if(setting_check == 6){
+                var select_all_checked = this.checked;
+                var indexes = primary_table_siswa.rows().eq( 0 ).filter( function (rowIdx) {
+                    return primary_table_siswa.cell( rowIdx, 5 ).data() === 'Laki-Laki' ? true : false;
+                });
+
+                var rows = primary_table_siswa.rows(indexes).nodes();
+
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            }else if(setting_check == 7){
+                var select_all_checked = this.checked;
+                var indexes = primary_table_siswa.rows().eq( 0 ).filter( function (rowIdx) {
+                    return primary_table_siswa.cell( rowIdx, 5 ).data() === 'Perempuan' ? true : false;
+                });
+
+                var rows = primary_table_siswa.rows(indexes).nodes();
 
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
             }

@@ -48,7 +48,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" style="overflow-x:auto;" id="primary_table">
+                        <table class="table table-bordered table-striped table-hover dataTable" id="primary_table">
                             <thead>
                                 <tr>
                                     <th rowspan="2">No. </th>
@@ -106,19 +106,25 @@
                                 </tr>
                                 @endforeach
                                 <tr>
-                                    <td colspan=2>Total Normal</td>
+                                    <td>Total Normal</td>
+                                    <td></td>
+                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_normal[$date->format('d')]}}</td>
                                     @endforeach
                                 </tr>
                                 <tr>
-                                    <td colspan=2>Total Warning</td>
+                                    <td>Total Warning</td>
+                                    <td></td>
+                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_warning[$date->format('d')]}}</td>
                                     @endforeach
                                 </tr>
                                 <tr>
-                                    <td colspan=2>Total pengisi</td>
+                                    <td>Total pengisi</td>
+                                    <td></td>
+                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_pengisi[$date->format('d')]}}</td>
                                     @endforeach
@@ -136,4 +142,14 @@
 function filterAction(){
     loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('select[name=id_bulan]').val());
 }
+
+var primary_table = $('#primary_table').DataTable({
+    ordering: false,
+    scrollX: true,
+    fixedColumns:   {
+        leftColumns: 3
+    },
+    scrollCollapse: true,
+    paging: false
+});
 </script>

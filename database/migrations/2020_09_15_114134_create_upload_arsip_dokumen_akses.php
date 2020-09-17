@@ -19,7 +19,7 @@ class CreateUploadArsipDokumenAkses extends Migration
             $table->string('id_arsip_dokumen_akses', 40)->primary();
             $table->string('id_arsip_dokumen', 40)->comment('FK: arsip_dokumen.id_arsip_dokumen');
             $table->boolean('status_join_table')->nullable()->comment('Digunakan untuk hak akses status join table user');
-            $table->string('id_unit_kerja', 40)->comment('FK: unit_kerja.id_unit_kerja');
+            $table->string('id_unit_kerja', 40)->nullable()->comment('FK: unit_kerja.id_unit_kerja');
             
             $table->timestamps();
             $table->string('created_by', 40)->nullable();

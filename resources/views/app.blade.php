@@ -68,6 +68,8 @@
         <link href="{{asset('plugins/dropzone/dropzone.css')}}" rel="stylesheet">
         <link href="{{asset('css/pace.css')}}" rel="stylesheet">
 
+        <link href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+
         <script>
             var base_url = document.getElementsByTagName('base')[0].getAttribute('href');
             var role_url = document.getElementsByTagName('meta')[2].getAttribute('content');
@@ -179,6 +181,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js" integrity="sha256-LlHVI5rUauudM5ZcZaD6hHPHKrA7CSefHHnKgq+/AZc=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/fixedcolumns/3.3.0/js/dataTables.fixedColumns.min.js"></script>
 
     <script>
         $(function () {
