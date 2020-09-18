@@ -35,18 +35,61 @@ class InputDokumenController extends BaseController
         return view('sekretariat/data-dokumen/input-dokumen/view-input-dokumen',compact('auth_data'));
     }
 
-    public function addInputDokumen(Request $request){
+    public function manageInputDokumen(Request $request, $id = null) {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        //kategori
         $kategori 	        = ArsipKategori::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
         $unit 		        = UnitKerja::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
         $loker 		        = ArsipLoker::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
         $pemilik 	        = ArsipPemilik::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
 
-        return view('sekretariat/data-dokumen/input-dokumen/add-input-dokumen',compact('auth_data','kategori','unit','loker','pemilik'));
+        // edit
+        if(!empty($id)) {
+            $subkategori 	= ArsipSubkategori::get();
+            $dokumen 		= ArsipDokumen::select(
+                                'arsip_dokumen.id_arsip_dokumen', 
+                                'arsip_dokumen.id_arsip_loker',
+                                'arsip_dokumen.id_arsip_pemilik',
+                                'arsip_dokumen.id_arsip_subkategori',
+                                'arsip_dokumen.id_unit_kerja',
+                                'arsip_dokumen.kode_katalog',
+                                'arsip_dokumen.nm_arsip_dokumen',
+                                'arsip_dokumen.nomor_arsip_dokumen',
+                                'arsip_dokumen.jumlah_halaman',
+                                'arsip_dokumen.tgl_penyusunan',
+                                'arsip_dokumen.contact_person',
+                                'arsip_dokumen.is_upload',
+                                'arsip_dokumen.is_publik',
+                                'arsip_dokumen.id_sekolah',
+                                'arsip_subkategori.id_arsip_subkategori',
+                                'arsip_subkategori.id_arsip_kategori',
+                                'arsip_subkategori.nm_arsip_subkategori',
+                                'arsip_kategori.id_arsip_kategori',
+                                'arsip_kategori.nm_arsip_kategori',
+                                'arsip_kategori.id_sekolah')
+                            ->join('arsip_subkategori', 'arsip_subkategori.id_arsip_subkategori', '=', 'arsip_dokumen.id_arsip_subkategori')
+                            ->join('arsip_kategori', 'arsip_kategori.id_arsip_kategori', '=', 'arsip_subkategori.id_arsip_kategori')
+                            ->where('arsip_dokumen.id_arsip_dokumen','=',$id)->first();
+
+            $dokumen_akses  = ArsipDokumenAkses::select('arsip_dokumen.id_arsip_dokumen', 'arsip_dokumen_akses.id_arsip_dokumen_akses', 'arsip_dokumen_akses.id_arsip_dokumen', 'arsip_dokumen_akses.status_join_table', 'arsip_dokumen_akses.id_unit_kerja')
+                                ->join('arsip_dokumen','arsip_dokumen.id_arsip_dokumen','=','arsip_dokumen_akses.id_arsip_dokumen')
+                                ->where('arsip_dokumen_akses.id_arsip_dokumen', '=', $dokumen->id_arsip_dokumen)
+                                ->get();
+
+            $title          = "EDIT DATA DOKUMEN";
+            
+        } else {
+            // add
+            $subkategori    = null;
+            $dokumen        = null;
+            $sub_dokumen    = null;
+
+            $title          = "TAMBAH DATA DOKUMEN";
+        }
+
+        return view('sekretariat/data-dokumen/input-dokumen/input-dokumen',compact('auth_data','dokumen_akses','title','kategori','unit','loker','pemilik','subkategori','dokumen'));
     }
 
     public function uploadInputDokumen(Request $request, $id){
@@ -66,21 +109,6 @@ class InputDokumenController extends BaseController
         $arsip_dokumen_file = ArsipDokumenFile::where('id_arsip_dokumen','=',$id)->get();
 
         return view('sekretariat/data-dokumen/input-dokumen/upload-input-dokumen',compact('auth_data','dokumen','arsip_dokumen_file'));
-    }
-
-    public function editInputDokumen(Request $request, $id){
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $kategori 		= ArsipKategori::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $subkategori 	= ArsipSubkategori::get();
-        $unit 			= UnitKerja::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $loker 			= ArsipLoker::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $pemilik 		= ArsipPemilik::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-        $dokumen 		= ArsipDokumen::where('id_arsip_dokumen','=',$id)->first();
-       
-        return view('sekretariat/data-dokumen/input-dokumen/edit-input-dokumen',compact('auth_data','kategori','unit','loker','pemilik','dokumen','subkategori'));
     }
 
     public function ajaxGetSubkategori(Request $request) {
@@ -104,7 +132,7 @@ class InputDokumenController extends BaseController
         	->join('arsip_subkategori','arsip_subkategori.id_arsip_subkategori','=','arsip_dokumen.id_arsip_subkategori')
         	->join('arsip_kategori','arsip_kategori.id_arsip_kategori','=','arsip_subkategori.id_arsip_kategori')
         	->leftJoin('unit_kerja','unit_kerja.id_unit_kerja','=','arsip_dokumen.id_unit_kerja')
-        	->where('arsip_kategori.id_sekolah','=',$auth_data->pengguna->id_sekolah);
+            ->where('arsip_kategori.id_sekolah','=',$auth_data->pengguna->id_sekolah);
 
         return Datatables::of($list_data)
                 ->addColumn('action', function($item){
@@ -213,28 +241,76 @@ class InputDokumenController extends BaseController
                 }
             }
             elseif($mode == 'edit') {
-               // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
-                $arsip 							= ArsipDokumen::find($id);
-                $arsip->id_arsip_loker			= $input->id_arsip_loker;
-                $arsip->id_arsip_pemilik		= $input->id_arsip_pemilik;
-                $arsip->id_arsip_subkategori	= $input->id_arsip_subkategori;
-                $arsip->id_unit_kerja			= $input->id_unit_kerja;
-                $arsip->kode_katalog			= $input->kode_katalog;
-                $arsip->nm_arsip_dokumen 		= $input->nm_arsip_dokumen;
-                $arsip->nomor_arsip_dokumen		= $input->nomor_arsip_dokumen;
-                $arsip->jumlah_halaman			= $input->jumlah_halaman;
-                $arsip->tgl_penyusunan			= date_format(date_create($input->tgl_penyusunan),"Y-m-d");
-                $arsip->contact_person 			= $input->contact_person;
-                $arsip->updated_at 				= $now;
-                $arsip->updated_by				= $input->auth_data->pengguna->id_pengguna;
-                $arsip->save();
+                DB::beginTransaction();
+                try {
+                    // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    
+                    $arsip 							= ArsipDokumen::find($id);
+                    $arsip->id_arsip_loker			= $input->id_arsip_loker;
+                    $arsip->id_arsip_pemilik		= $input->id_arsip_pemilik;
+                    $arsip->id_arsip_subkategori	= $input->id_arsip_subkategori;
+                    $arsip->id_unit_kerja			= $input->id_unit_kerja;
+                    $arsip->kode_katalog			= $input->kode_katalog;
+                    $arsip->nm_arsip_dokumen 		= $input->nm_arsip_dokumen;
+                    $arsip->nomor_arsip_dokumen		= $input->nomor_arsip_dokumen;
+                    $arsip->jumlah_halaman			= $input->jumlah_halaman;
+                    $arsip->tgl_penyusunan			= date_format(date_create($input->tgl_penyusunan),"Y-m-d");
+                    $arsip->contact_person 			= $input->contact_person;
+                    $arsip->is_publik               = $input->is_publik;
+                    $arsip->updated_at 				= $now;
+                    $arsip->updated_by				= $input->auth_data->pengguna->id_pengguna;
+                    $arsip->save();
 
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-dokumen/input-dokumen',
-                    'message' => 'Save Data Dokumen successfully'
-                ];
+                        // is_publik = 0
+                        if($input->is_publik == 0) {
+                            // delete status_pengguna & unit_kerja
+                            $data_dokumen_akses = ArsipDokumenAkses::where('id_arsip_dokumen','=',$id)->forceDelete();
+    
+                            // insert new status_pengguna
+                            foreach($input->status_pengguna as $status_pengguna) {
+                                $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                                $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
+                                $arsip_dokumen_akses->status_join_table         = $status_pengguna;
+                                $arsip_dokumen_akses->id_unit_kerja             = null;
+                                $arsip_dokumen_akses->created_at 				= $now;
+                                $arsip_dokumen_akses->created_by				= $input->auth_data->pengguna->id_pengguna;
+                                $arsip_dokumen_akses->save();
+                            }
+    
+                            // insert new unit_kerja
+                            foreach($input->unit_kerja as $unit_kerja) {
+                                $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                                $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
+                                $arsip_dokumen_akses->status_join_table         = null;
+                                $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
+                                $arsip_dokumen_akses->created_at 				= $now;
+                                $arsip_dokumen_akses->created_by				= $input->auth_data->pengguna->id_pengguna;
+                                $arsip_dokumen_akses->save();
+                            }
+                        } else {
+                            // delete status_pengguna & unit_kerja
+                            $data_dokumen_akses = ArsipDokumenAkses::where('id_arsip_dokumen','=',$id)->forceDelete();
+                        }
+
+                    
+                    DB::commit();
+                    //  successfully
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'data-dokumen/input-dokumen/edit/'.$id,
+                        'message' => 'Save Data Dokumen successfully'
+                    ];
+
+                } catch(\Exception $e) {
+                    DB::rollback();
+                    // failed
+                    return [
+                        'status' => 203, // GAGAL
+                        'message' => 'Save Data Dokumen Gagal!'.$e->getMessage()
+                    ];
+                }
             }
             elseif($mode == 'upload') {
                 $validator = Validator::make($request->all(), [
@@ -252,11 +328,11 @@ class InputDokumenController extends BaseController
                 $arsipDokumen->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $arsipDokumen->save();
 
-                $arsip                          = new ArsipDokumenFile;
-                $arsip->id_arsip_dokumen_file   = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                $arsip->id_arsip_dokumen        = $id;
-                $arsip->nm_arsip_dokumen_file   = $file;
-                $arsip->created_by              = $input->auth_data->pengguna->id_pengguna;
+                $arsip                                 = new ArsipDokumenFile;
+                $arsip->id_arsip_dokumen_file          = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $arsip->id_arsip_dokumen               = $id;
+                $arsip->nm_arsip_dokumen_file          = $file;
+                $arsip->created_by                     = $input->auth_data->pengguna->id_pengguna;
                 $arsip->save();
 
                 return redirect('sekretariat#data-dokumen/input-dokumen/upload/'.$id);

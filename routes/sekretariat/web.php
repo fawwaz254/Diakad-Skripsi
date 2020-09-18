@@ -46,8 +46,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
         Route::group(array('prefix' => 'data-dokumen'), function() {
             // MENU Input Dokumen
             Route::get('input-dokumen', 'Sekretariat\DataDokumen\InputDokumenController@viewInputDokumen');
-            Route::get('input-dokumen/add', 'Sekretariat\DataDokumen\InputDokumenController@addInputDokumen');
-            Route::get('input-dokumen/edit/{id}', 'Sekretariat\DataDokumen\InputDokumenController@editInputDokumen');
+            Route::get('input-dokumen/add', 'Sekretariat\DataDokumen\InputDokumenController@manageInputDokumen');
+            Route::get('input-dokumen/edit/{id}', 'Sekretariat\DataDokumen\InputDokumenController@manageInputDokumen');
             Route::get('input-dokumen/upload/{id}', 'Sekretariat\DataDokumen\InputDokumenController@uploadInputDokumen');
             Route::get('input-dokumen/datatables', 'Sekretariat\DataDokumen\InputDokumenController@datatablesInputDokumen');
 
