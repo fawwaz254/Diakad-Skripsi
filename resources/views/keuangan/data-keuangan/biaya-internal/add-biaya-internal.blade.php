@@ -34,6 +34,17 @@
                                 <input type="text" class="form-control" name="nm_kelompok_biaya_internal" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Status Aktif
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="is_aktif">
+                                    <option value="1">Aktif</option>
+                                    <option value="0">Non-Aktif</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

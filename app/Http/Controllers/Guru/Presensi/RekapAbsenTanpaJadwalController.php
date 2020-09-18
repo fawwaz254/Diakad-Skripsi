@@ -99,6 +99,7 @@ class RekapAbsenTanpaJadwalController extends BaseController
                                 ->whereNull('kelas_mp.deleted_at');
                             })
                             ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
+                            ->orderBy('siswa.nis_siswa', 'asc')
                             ->get();
 
         $data_kelas     = Guru::select('guru.id_guru', 'guru.id_pengguna', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'pengampu_mp.pjmp_pengampu_mp', 'presensi_mp.pertemuan_ke', 'presensi_mp.uraian_materi', 'presensi_mp.waktu_mulai', 'presensi_mp.waktu_selesai')

@@ -222,6 +222,7 @@ class AbsensiTanpaJadwalController extends BaseController
                     if($kelas_mp = KelasMp::where('id_kelas', '=', $id_kelas)
                                             ->where('id_semester', '=', $semester_aktif->id_semester)
                                             ->where('id_mata_pelajaran', '=', $id_mata_pelajaran)
+                                            ->where('status_entry', '=', 2)
                                             ->first()) {
                         // skip
                     } else {
