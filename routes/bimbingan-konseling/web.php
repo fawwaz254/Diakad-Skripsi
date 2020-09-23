@@ -45,6 +45,14 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-jenis-tindakan/{mode}/{id}', 'BK\PenangananSiswa\JenisTindakanController@actionJenisTindakan');
 
+            // MENU Data Jurnal Tindakan
+            Route::get('jurnal-tindakan', 'BK\PenangananSiswa\JurnalTindakanController@viewJurnalTindakan');
+            Route::post('jurnal-tindakan', 'BK\PenangananSiswa\JurnalTindakanController@actionPostJurnalTindakan');
+            Route::get('jurnal-tindakan/print/{id_semester}/{id_kelas}/{id_siswa}', 'BK\PenangananSiswa\JurnalTindakanController@printJurnalTindakan');
+
+            //ajax siswa
+            Route::post('sub-kategori', 'Sekretariat\DataDokumen\InputDokumenController@ajaxGetSubkategori');
+
             // MENU Input Pelanggaran Siswa
             Route::get('input-pelanggaran', 'BK\PenangananSiswa\InputPelanggaranController@viewInputPelanggaran');
             Route::get('input-pelanggaran/datatables', 'BK\PenangananSiswa\InputPelanggaranController@datatablesInputPelanggaran');
