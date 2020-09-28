@@ -1,5 +1,8 @@
 <?php
 
+use Carbon\Carbon;
+use App\Models\Sekolah;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,6 +42,20 @@ Route::post('upload', function (Request $request) {
     return redirect()->back();
 });*/
 // END CONTOH UPLOAD DO
+Route::get('guid', function(){
+    $now = Carbon::now(env('APP_TIMEZONE', ''));
+    $prefix = Sekolah::first()->prefix;
+
+    if(!empty($_GET['c'])){
+        $html = '';
+        for($i=0; $i<$_GET['c']; $i++){
+            $html .= $prefix.strtotime($now).uniqid().'<br>';
+        }
+    }else{
+        $html = $prefix.strtotime($now).uniqid();
+    }
+    return $html;
+});
 
 Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
 Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
