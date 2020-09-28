@@ -90,8 +90,6 @@ class RekapAbsenTanpaJadwalController extends BaseController
         # code...
         $input          = (object) $request->input();
         $auth_data      = $input->auth_data;
-        $guru           = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
-        $id_guru        = $guru->id_guru;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_siswa     = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna')
@@ -132,7 +130,6 @@ class RekapAbsenTanpaJadwalController extends BaseController
                                 $q->on('presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                                     ->whereNull('presensi_mp.deleted_at');
                             })                    
-                            ->where('pengampu_mp.id_guru', '=', $id_guru)
                             ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
                             ->orderBy('presensi_mp.pertemuan_ke', 'desc')
                             ->first();
@@ -147,8 +144,6 @@ class RekapAbsenTanpaJadwalController extends BaseController
         # code...
         $input          = (object) $request->input();
         $auth_data      = $input->auth_data;
-        $guru           = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
-        $id_guru        = $guru->id_guru;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_siswa     = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna')
@@ -188,7 +183,6 @@ class RekapAbsenTanpaJadwalController extends BaseController
                                 $q->on('presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                                     ->whereNull('presensi_mp.deleted_at');
                             })                    
-                            ->where('pengampu_mp.id_guru', '=', $id_guru)
                             ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
                             ->orderBy('presensi_mp.pertemuan_ke', 'desc')
                             ->first();
