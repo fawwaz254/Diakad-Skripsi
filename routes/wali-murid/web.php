@@ -58,5 +58,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('riwayat-pelanggaran/datatables-non-kbm', 'WaliMurid\Pelanggaran\RiwayatPelanggaranController@datatablesPelanggaranNonKBM');
             Route::get('riwayat-pelanggaran/datatables-kbm', 'WaliMurid\Pelanggaran\RiwayatPelanggaranController@datatablesPelanggaranKBM');
         });
+
+        Route::group(array('prefix' => 'kesekretariatan'), function () {
+        
+            Route::group(array('prefix' => 'dokumen'), function () {
+                Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
+                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
+                
+                Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
+            });
+        });
     });
 });

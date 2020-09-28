@@ -48,6 +48,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 
             Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+
+            // MENU Rekap Absen Tanpa Jadwal
+            Route::get('rekap-absen-tanpa-jadwal', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@viewRekapAbsenTanpaJadwal');
+            Route::post('post-get-kbm-by-kelas', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@actionGetKBMByKelas');
+
+            Route::post('post-kbm-rekap-absen-tanpa-jadwal', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@actionViewKBMRekapAbsenTanpaJadwal');
+            Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@viewKBMRekapAbsenTanpaJadwal');
+
+            Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@printKBMRekapAbsenTanpaJadwal');
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
@@ -60,6 +69,16 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+            });
+        });
+
+        Route::group(array('prefix' => 'kesekretariatan'), function () {
+        
+            Route::group(array('prefix' => 'dokumen'), function () {
+                Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
+                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
+                
+                Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
             });
         });
     });

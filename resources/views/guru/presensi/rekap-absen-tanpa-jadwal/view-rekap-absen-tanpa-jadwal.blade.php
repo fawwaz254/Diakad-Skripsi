@@ -18,7 +18,7 @@
                                 <select class="form-control show-tick" name="id_kelas_mp">
                                     <option value="" disabled selected >-- Pilih Kelas KBM --</option>
                                     @foreach($data as $data_kbm)
-                                    <option value="{{$data_kbm->id_kelas_mp}}">{{$data_kbm->mata_pelajaran->nm_mata_pelajaran}} - {{$data_kbm->kelas->nm_kelas}}</option>
+                                    <option value="{{$data_kbm->id_kelas_mp}}">{{$data_kbm->nm_mata_pelajaran}} - {{$data_kbm->nm_kelas}}</option>
                                     @endforeach
                                 </select>
                             </div>

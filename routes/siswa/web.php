@@ -97,6 +97,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
+		});
+		
+		Route::group(array('prefix' => 'kesekretariatan'), function () {
+        
+            Route::group(array('prefix' => 'dokumen'), function () {
+                Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
+                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
+                
+                Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
+            });
         });
 
     });

@@ -177,7 +177,7 @@ function subKategori(el){
             $('select[name=id_arsip_subkategori]').html('');
             var html = '<option value="">-- Pilih SubKategori --</option>';
             $.each(result, function( key, item ) {
-                html += '<option value="'+item.id_arsip_subkategori+'">'+item.nm_arsip_subkategori+'</option>'
+                html += '<option value="'+item.id_arsip_subkategori+'">'+item.nm_arsip_subkategori+'</option>';
             });
             $('select[name=id_arsip_subkategori]').html(html);
         }
