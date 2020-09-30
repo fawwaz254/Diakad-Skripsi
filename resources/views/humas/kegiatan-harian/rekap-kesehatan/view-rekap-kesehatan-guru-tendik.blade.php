@@ -147,7 +147,7 @@ var primary_table = $('#primary_table').DataTable({
     ordering: false,
     scrollX: true,
     fixedColumns:   {
-        leftColumns: 3
+        leftColumns: 2
     },
     scrollCollapse: true,
     paging: false

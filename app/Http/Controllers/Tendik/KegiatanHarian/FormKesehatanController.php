@@ -128,6 +128,9 @@ class FormKesehatanController extends BaseController{
                 ->editColumn('pengguna_pengisi.nm_pengguna', function($item){
                     return $item->pengguna_pengisi->fullname();
                 })
+                ->editColumn('tgl_pengisian', function($item){
+                    return date_format(date_create($item->tgl_pengisian), 'd M Y');
+                })
                 ->editColumn('created_at', function($item){
                     return date_format(date_create($item->created_at), 'd M Y H:i').' WIB';
                 })

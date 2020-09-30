@@ -26,7 +26,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Disubmit oleh</th>
-                                    <th>Tanggal Submit</th>
+                                    <th>Tanggal Mengisi</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -60,7 +60,7 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'pengguna_pengisi.nm_pengguna' },
-            { data: 'created_at' },
+            { data: 'tgl_pengisian' },
             { data: 'status', searchable: false, orderable: false,
                 render: function(data){
                     return '<h4><span class="label" style="background-color: #'+data.warna_keadaan+';">'+data.status+'</span></h4>';
