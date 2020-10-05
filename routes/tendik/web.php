@@ -65,7 +65,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
-                Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                Route::get('detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
                 
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');

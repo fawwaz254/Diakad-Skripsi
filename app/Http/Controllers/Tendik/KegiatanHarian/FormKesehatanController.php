@@ -235,7 +235,13 @@ class FormKesehatanController extends BaseController{
                     $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian)->orderBy('bobot_jawaban', 'desc')->first();
 
                     $pengisian_kegiatan_harian->warna_keadaan = $pengisian_jawaban_terbobot->warna_keadaan;
-                    $pengisian_kegiatan_harian->status_pengisian = ($pengisian_jawaban_terbobot->bobot_jawaban != 0)? 2 : 1;
+                    if($pengisian_jawaban_terbobot->bobot_jawaban == 0){
+                        $pengisian_kegiatan_harian->status_pengisian = 1;
+                    }else if($pengisian_jawaban_terbobot->bobot_jawaban < 5){
+                        $pengisian_kegiatan_harian->status_pengisian = 3;
+                    }else{
+                        $pengisian_kegiatan_harian->status_pengisian = 2;
+                    }
                     $pengisian_kegiatan_harian->save();
 
                     if($pengisian_kegiatan_harian->status_pengisian == 2){
@@ -244,6 +250,8 @@ class FormKesehatanController extends BaseController{
                         }else{
                             $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
                         }
+                    }else if($pengisian_kegiatan_harian->status_pengisian == 3){
+                        $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Dengan catatan mohon untuk kegiatan spriritualnya ditingkatkan.';
                     }else{
                         $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
                     }

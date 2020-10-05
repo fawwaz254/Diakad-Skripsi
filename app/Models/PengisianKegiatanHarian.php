@@ -36,6 +36,8 @@ class PengisianKegiatanHarian extends Model
                 return 'Normal';
             case 2: 
                 return 'Warning';
+            case 3: 
+                return 'Perlu peningkatan spiritual';
             default: 
                 return '';
         }
