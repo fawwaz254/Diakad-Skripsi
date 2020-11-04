@@ -73,7 +73,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_siswa" aria-required="true" aria-invalid="true" value="{{$siswa->nik_siswa}}">
+                                <input type="text" class="form-control" name="nik_siswa" aria-invalid="true" value="{{$siswa->nik_siswa}}">
                             </div>
                         </div>
                         <br>
@@ -517,7 +517,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_ayah" required="" aria-required="true" aria-invalid="true" value="{{$siswa->nik_ayah}}">
+                                <input type="text" class="form-control" name="nik_ayah" required="" aria-invalid="true" value="{{$siswa->nik_ayah}}">
                             </div>
                         </div>
                         <br>
@@ -614,7 +614,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_ibu" required="" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nik_ibu" required="" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -711,7 +711,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_wali" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nik_wali"aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -933,7 +933,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="nm_prestasi_c_siswa" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="nm_prestasi_c_siswa"aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -944,7 +944,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="datepicker form-control" name="tgl_prestasi_c_siswa" required="" aria-required="true" aria-invalid="true" value="{{$siswa->tgl_lahir}}">
+                                <input type="text" class="datepicker form-control" name="tgl_prestasi_c_siswa" required="" aria-invalid="true" value="{{$siswa->tgl_lahir}}">
                             </div>
                         </div>
                         <br>
@@ -955,7 +955,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="penyelenggara_prestasi_c_siswa" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="penyelenggara_prestasi_c_siswa" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -966,7 +966,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="peringkat_prestasi_c_siswa" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="peringkat_prestasi_c_siswa" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -998,7 +998,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="keterangan_beasiswa_c_siswa" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="keterangan_beasiswa_c_siswa"aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -1009,7 +1009,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="tahun_mulai_beasiswa_c_siswa" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="tahun_mulai_beasiswa_c_siswa" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -1020,7 +1020,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="tahun_selesai_beasiswa_c_siswa" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="tahun_selesai_beasiswa_c_siswa" aria-invalid="true" value="">
                             </div>
                         </div>
                         <div class="row clearfix">
