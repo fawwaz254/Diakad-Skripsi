@@ -506,7 +506,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_ayah" required="" aria-required="true" aria-invalid="true" value="{{$siswa->nm_ayah}}">
+                                <input type="text" class="form-control" name="nm_ayah" aria-required="true" aria-invalid="true" value="{{$siswa->nm_ayah}}">
                             </div>
                         </div>
                         <br>
@@ -517,7 +517,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_ayah" required="" aria-invalid="true" value="{{$siswa->nik_ayah}}">
+                                <input type="text" class="form-control" name="nik_ayah" aria-invalid="true" value="{{$siswa->nik_ayah}}">
                             </div>
                         </div>
                         <br>
@@ -603,7 +603,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_ibu" required="" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nm_ibu" aria-required="true" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -614,7 +614,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_ibu" required="" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nik_ibu" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -944,7 +944,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="datepicker form-control" name="tgl_prestasi_c_siswa" required="" aria-invalid="true" value="{{$siswa->tgl_lahir}}">
+                                <input type="text" class="datepicker form-control" name="tgl_prestasi_c_siswa" aria-invalid="true" value="{{$siswa->tgl_lahir}}">
                             </div>
                         </div>
                         <br>
