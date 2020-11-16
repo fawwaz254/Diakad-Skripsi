@@ -52,11 +52,14 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                    <div class="form-group form-float">
+                                    <div class="form-group input-group form-float">
                                         <div class="form-line">
                                             <input type="password" class="form-control" name="password" required="" minLength="4" aria-required="true" style="background-color: transparent;">
                                             <label class="form-label" style="color: #555;">Password</label>
                                         </div>
+                                        <span class="input-group-addon">
+                                            <a href="javascript:void(0)" onclick="tooglePassword(this)"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -84,4 +87,15 @@
 
 @section('js')
 <!-- Javascript -->
+<script>
+function tooglePassword(el) {
+    $(el).find('i').toggleClass("fa-eye fa-eye-slash");
+    var input = $('input[name=password]');
+    if (input.attr("type") == "password") {
+        input.attr("type", "text");
+    } else {
+        input.attr("type", "password");
+    }
+}
+</script>
 @endsection
