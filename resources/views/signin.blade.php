@@ -7,21 +7,17 @@
 <!-- <body class="login-page" style="background-color: #006302;"> -->
 <body class="login-page" style="background-image: url({{asset('media/login-bg.jpg')}}); background-repeat: no-repeat; background-size: cover; background-color: whitesmoke;">
     <div class="login-box">
-        <!-- <div class="logo">
-            <a href="javascript:void(0);">Welcome to DIAKAD</b></a>
-            <small>Digital Akademik</small>
-        </div> -->
         <div class="card is-login">
             <div class="row">
                 <div class="col-md-6 hidden-sm hidden-xs">
-                    <img src="https://diakad.sgp1.cdn.digitaloceanspaces.com/signin-logo.png" alt="Logo Diakad" style="width: 100%;" />
+                    <img src="https://diakad.sgp1.cdn.digitaloceanspaces.com/x-image-resources/{{env('APP_NAME', 'diakad')}}-logo.png" alt="Logo Diakad" style="width: 100%;" />
                 </div>
                 <div class="col-md-6">
                     <div class="body" id="khusus-login">
                         <form class="form-validation" method="POST" action="{{url('signin')}}">
                             {{csrf_field()}}
                             <div class="msg" style="font-size:1.5em;line-height:50px">
-                                <img class="hidden-md hidden-lg" src="https://diakad.sgp1.cdn.digitaloceanspaces.com/signin-logo.png" alt="Logo Diakad" style="height: 90px;" />
+                                <img class="hidden-md hidden-lg" src="https://diakad.sgp1.cdn.digitaloceanspaces.com/x-image-resources/{{env('APP_NAME', 'diakad')}}-logo.png" alt="Logo Diakad" style="height: 90px;" />
                                 <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" />
                                 <br>
                                 <strong>{{$sekolah->nm_sekolah}}</strong>
@@ -76,7 +72,7 @@
             <div class="row" style="background-color:#f7f7f7;margin-right:0;margin-left:0;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;padding-top:25px;padding-bottom:25px ">
                     <div class="row">
                             <div class="col-xs-12 align-center">
-                                <span style="color:#a7a7a7">Official Website : <a href="https://www.diakad.id" target="_blank">DIAKAD</a></span><br class="visible-xs-block"><span style="color:#a7a7a7" id="khusus-footer">Powered By <a href="https://www.solusimaster.com" target="_blank">PT Digital Solusi Master</a></span>
+                                <span style="color:#a7a7a7">Official Website : <a href="https://www.{{env('APP_NAME', 'diakad')}}.id" target="_blank">{{strtoupper(env('APP_NAME', 'diakad'))}}</a></span><br class="visible-xs-block"><span style="color:#a7a7a7" id="khusus-footer">Powered By <a href="https://www.solusimaster.com" target="_blank">PT Digital Solusi Master</a></span>
                             </div>
                         </div>
             </div>
