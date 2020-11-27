@@ -5383,7 +5383,7 @@ section.content {
   -ms-box-shadow: none !important;
   box-shadow: none !important;
   border: none;
-  margin-left: 30px;
+  /* margin-left: 30px; */
 }
 
 .bootstrap-select .bs-searchbox {

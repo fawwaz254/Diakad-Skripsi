@@ -59,6 +59,11 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="gelombang_penerimaan">
+                                    @if($data_penerimaan->gelombang_penerimaan == 0)
+                                        <option value="0" selected >(Inden)</option>
+                                    @else
+                                        <option value="0">(Inden)</option>
+                                    @endif
                                     @if($data_penerimaan->gelombang_penerimaan == 1)
                                         <option value="1" selected >1</option>
                                     @else

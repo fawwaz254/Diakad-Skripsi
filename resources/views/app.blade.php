@@ -15,7 +15,7 @@
         @if($theme_name != '')
         <title><?=str_replace('-', ' ', strtoupper($theme_name))?> - Sekolah Berbasis Teknologi</title>
         @else
-        <title>{{env('APP_NAME', 'diakad')}} - Sekolah Berbasis Teknologi</title>
+        <title>{{strtoupper(env('APP_NAME', 'diakad'))}} - Sekolah Berbasis Teknologi</title>
         @endif
 
         <!-- Favicon-->
@@ -56,7 +56,7 @@
         <link href="{{asset('plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css')}}" rel="stylesheet" />
 
         <!-- Custom Css -->
-        <link href="{{asset('css/style.css?v=5')}}" rel="stylesheet">
+        <link href="{{asset('css/style.css?v=6')}}" rel="stylesheet">
         <link href="{{asset('css/loadertemp.css?v=6')}}" rel="stylesheet">
 
         <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
