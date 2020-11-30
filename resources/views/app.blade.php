@@ -41,7 +41,7 @@
         <!-- Bootstrap Select Css -->
         <link href="{{asset('plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
 
-        <link href="{{asset('plugins/nprogress-0.2.0/nprogress.css')}}" rel="stylesheet">
+        <!-- <link href="{{asset('plugins/nprogress-0.2.0/nprogress.css')}}" rel="stylesheet"> -->
 
         <!-- Sweetalert Css -->
         <link href="{{asset('plugins/sweetalert/sweetalert.css')}}" rel="stylesheet" />

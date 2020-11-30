@@ -161,7 +161,7 @@
                                 <a class="btn btn-block bg-blue waves-effect" onclick="backFunction()"><i class="material-icons">arrow_back</i><span>Kembali ke Daftar Mapel</span></a>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Ajukan Plotting Siswa</span></button>
+                                <button class="btn btn-block bg-red waves-effect" onclick="submitPlottingHandler()"><i class="material-icons">save</i><span>Ajukan Plotting Siswa</span></button>
                             </div>
                         </div>
                     </form>
@@ -172,59 +172,38 @@
 </div>
 @include('scriptjs')
 <script>    
-    $('#form-validation-2').validate({
-        rules: {
-            'checkbox': {
-                required: true
-            },
-            'gender': {
-                required: true
-            }
-        },
-        highlight: function (input) {
-            $(input).parents('.form-line').addClass('error');
-        },
-        unhighlight: function (input) {
-            $(input).parents('.form-line').removeClass('error');
-        },
-        errorPlacement: function (error, element) {
-            $(element).parents('.form-group').append(error);
-        },
-        submitHandler: function(form) {
-            $('button').attr('disabled', 'disabled');
-            NProgress.start();
-            window.onbeforeunload = function() {
-                return "Data will be lost if you leave the page, are you sure?";
-            };
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    NProgress.done();
-                    if(response.status == 200){
-                        vex.dialog.alert(response.message);
-                    }else if(response.status == 201){
-                        vex.dialog.alert(response.message);
-                        window.location.href = response.link;
-                    }else if(response.status == 202){
-                        vex.dialog.alert(response.message);
-                        loadURI(response.path);
-                    }else if(response.status == 203){
-                        vex.dialog.alert(response.message);
-                    }else if(response.status == 204){
-                        loadURI(response.path);
-                    }else if(response.status == 300){
-                        vex.dialog.alert(response.message);
-                    }
-                },
-                complete: function() {
-                    $('button').removeAttr('disabled');
-                    window.onbeforeunload = function() {};
+    function submitPlottingHandler(){
+        $('button').attr('disabled', 'disabled');
+        window.onbeforeunload = function() {
+            return "Data will be lost if you leave the page, are you sure?";
+        };
+        $.ajax({
+            url: $('#form-validation-2').attr('action'),
+            type: $('#form-validation-2').attr('method'),
+            data: $('#form-validation-2').serialize(),
+            success: function(response) {
+                if(response.status == 200){
+                    vex.dialog.alert(response.message);
+                }else if(response.status == 201){
+                    vex.dialog.alert(response.message);
+                    window.location.href = response.link;
+                }else if(response.status == 202){
+                    vex.dialog.alert(response.message);
+                    loadURI(response.path);
+                }else if(response.status == 203){
+                    vex.dialog.alert(response.message);
+                }else if(response.status == 204){
+                    loadURI(response.path);
+                }else if(response.status == 300){
+                    vex.dialog.alert(response.message);
                 }
-            });
-        }
-    });
+            },
+            complete: function() {
+                $('button').removeAttr('disabled');
+                window.onbeforeunload = function() {};
+            }
+        });
+    }
 </script>
 <script type="text/javascript">
     var id_semester = {!! json_encode($id_semester) !!};

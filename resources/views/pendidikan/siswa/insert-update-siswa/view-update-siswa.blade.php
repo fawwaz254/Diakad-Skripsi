@@ -787,18 +787,18 @@
                         </div>
                         <br>
                         <div class="demo-color-box bg-success">
-                                KONTAK
+                                KONTAK ORTU/WALI
                         </div>
                         <br>
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
                                     Nomor Telepon Rumah <br>
-                                    <small>Diisi nomor telepon rumah (milik pribadi, orangtua, atau wali) tanpa tanda baca</small>
+                                    <small>Diisi nomor telepon rumah (milik orangtua, atau wali) tanpa tanda baca</small>
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nomor_telp" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nomor_telp_ortu" aria-required="true" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -806,11 +806,11 @@
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
                                     Nomor HP <br>
-                                    <small>Diisi nomor telepon selular (milik pribadi, orangtua, atau wali) tanpa tanda baca</small>
+                                    <small>Diisi nomor telepon selular (milik orangtua, atau wali) tanpa tanda baca</small>
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nomor_hp" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nomor_hp_ortu" aria-required="true" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>
@@ -818,11 +818,11 @@
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
                                     Email <br>
-                                    <small>Diisi alamat surat elektronik(surel) peserta didik yang dapat dihubungi (milik pribadi, orang tua, atau wali)</small>
+                                    <small>Diisi alamat surat elektronik(surel) peserta didik yang dapat dihubungi (milik orang tua, atau wali)</small>
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="email" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="email_ortu" aria-required="true" aria-invalid="true" value="">
                             </div>
                         </div>
                         <br>

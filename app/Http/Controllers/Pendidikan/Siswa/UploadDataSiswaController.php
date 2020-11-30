@@ -210,6 +210,7 @@ class UploadDataSiswaController extends BaseController
 							    	'nm_c_siswa' 	=> $data_siswa['nama_lengkap'],
 							    	'jenis_kelamin' => $data_siswa['jenis_kelamin'],
 							    	'nisn_siswa' 	=> $data_siswa['nisn'],
+							    	'nis_siswa' 	=> $data_siswa['nis'],
 							    	'created_at'	=> $now,
 							    	'created_by' 	=> $data_siswa['created_by']
 								]
