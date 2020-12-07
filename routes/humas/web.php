@@ -56,8 +56,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		});
 
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function() {
-			Route::get('tracer-alumni/', 'AlumniController@index');
-			Route::get('add-alumni/', 'AlumniController@create');
+			Route::get('/', 'AlumniController@index');
+			Route::get('/add', 'AlumniController@create');
 		});
     });
 });
