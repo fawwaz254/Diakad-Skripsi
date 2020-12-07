@@ -8,7 +8,11 @@ use App\Http\Controllers\Controller;
 class AlumniController extends Controller
 {
     const RESOURCE_PATH = 'humas/alumni/';
-
+    const FETCH_ALUMNI_ATTRIBUTE = ['id_siswa', 'tahun_lulus', 'status'];
+    const FETCH_WORK_ATTRIBUTE = ['nm_alumni', 'alamat', 'kontak', 'bidang_usaha', 'tahun_masuk'];
+    const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk'];
+    const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat', 'kontak', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
+    const FETCH_IDLE_ATTRIBUTE = ['idle_status'];
 
     /**
      * Display a listing of the resource.
@@ -44,6 +48,9 @@ class AlumniController extends Controller
      */
     public function store(Request $request)
     {
+        $alumniData     = $request->only(self::FETCH_ALUMNI_ATTRIBUTE);
+        $partialData    = $this->fetchPartialAttribute($request);
+
         
     }
 
@@ -90,5 +97,23 @@ class AlumniController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function fetchPartialAttribute(Request $request)
+    {
+        switch ($request->status) {
+            case 'bekerja':
+                return $request->only(self::FETCH_WORK_ATTRIBUTE);
+                break;
+            case 'usaha':
+                return $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
+                break;
+            case 'kuliah':
+                return $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
+                break;
+            case 'menunggu':
+                return $request->only(self::FETCH_IDLE_ATTRIBUTE);
+                break;
+        }
     }
 }
