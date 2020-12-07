@@ -290,7 +290,7 @@ class PembayaranOnlineController extends BaseController
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
-                'message' => 'Terdapat error '.$e->getMessage()
+                'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
             ]);
         }
     }
@@ -352,7 +352,7 @@ class PembayaranOnlineController extends BaseController
             return response()->json([
                 'status_code' 	=> 300,
                 'status_text' 	=> 'Failed',
-                'message' => 'Terdapat error '.$e->getMessage()
+                'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
             ]);
         }
     }

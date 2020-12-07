@@ -361,9 +361,9 @@ class PengajuanWisudaController extends BaseController{
                     // something went wrong
 
                     return [
-                                'status' => 203, // GAGAL
-                                'message' => 'Pengajuan Wisuda Gagal! '.$e->getMessage()
-                            ];
+                        'status' => 203, // GAGAL
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    ];
                 }   
                 
             }

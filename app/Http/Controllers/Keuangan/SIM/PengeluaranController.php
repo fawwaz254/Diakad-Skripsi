@@ -209,7 +209,7 @@ class PengeluaranController extends BaseController
                 return response()->json([
                     'status' => 300,
                     'status_text' => 'Failed',
-                    'message' => 'Failed'
+                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                 ]);
             }
         }
@@ -277,6 +277,40 @@ class PengeluaranController extends BaseController
 
             $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first();
 
+            if($rapb){
+
+            }else{
+                $rapb = new Rapb;
+                $rapb->id_rapb = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $rapb->id_semester_mulai            = $semester_mulai->id_semester;
+                $rapb->id_semester_selesai          = $semester_selesai->id_semester;
+                $rapb->id_subkategori_rapb          = $input->id_subkategori_rapb;
+                $rapb->tgl_rapb                     = $now->format('Y-m-d');
+                $rapb->prioritas_rapb               = 3;
+                $rapb->dana_perkiraan_rapb          = 0;
+                $rapb->created_by                   = $input->auth_data->pengguna->id_pengguna;
+
+                if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                    $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
+                    $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                }
+
+                if($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                        ->where('guru.jenis_jabatan', '=', 2)
+                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->first()){
+                    $rapb->id_pengguna_kepala_unit      = $kepala_unit_keuangan->id_pengguna;
+                }else if($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                        ->where('staff.jenis_jabatan', '=', 2)
+                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->first()){
+                    $rapb->id_pengguna_kepala_keuangan  = $kepala_unit_keuangan->id_pengguna;;
+                }
+                $rapb->save();
+            }
+
             $tgl_realisasi = Carbon::parse($input->tgl_realisasi);
             $id_bulan = $tgl_realisasi->month;
             
@@ -322,7 +356,7 @@ class PengeluaranController extends BaseController
                 return response()->json([
                     'status' => 300,
                     'status_text' => 'Failed',
-                    'message' => 'Failed'
+                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                 ]);
             }
         }

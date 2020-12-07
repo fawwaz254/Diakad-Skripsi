@@ -381,9 +381,9 @@ class SettingPesertaEkskulController extends BaseController
                     // something went wrong
 
                     return [
-                                'status' => 300, // GAGAL
-                                'message' => 'Setting Pengambilan Ekskul Gagal! '.$e->getMessage()
-                            ];
+                        'status' => 300, // GAGAL
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    ];
                 }
             }
         }

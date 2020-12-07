@@ -296,9 +296,9 @@ class BiayaSekolahController extends BaseController
                     // something went wrong
 
                     return [
-                                'status' => 300, // GAGAL
-                                'message' => 'Copy Biaya Sekolah Gagal! '.$e->getMessage()
-                            ];
+                        'status' => 300, // GAGAL
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    ];
                 }
             } elseif ($mode == 'delete') {
                 if ($detailBiaya = DetailBiaya::where('id_biaya_sekolah', $id)->first()) {

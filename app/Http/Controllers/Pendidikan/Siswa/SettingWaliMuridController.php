@@ -542,7 +542,7 @@ class SettingWaliMuridController extends BaseController
                     DB::rollback();
                     return [
                         'status' 	=> 300, // GAGAL
-                        'message'	=> 'Upload Setting Wali Murid Gagal '.$e->getMessage()
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                     ];
                 }
             } else {

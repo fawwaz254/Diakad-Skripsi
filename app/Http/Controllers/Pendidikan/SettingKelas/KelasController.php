@@ -226,9 +226,9 @@ class KelasController extends BaseController
                     // something went wrong
 
                     return [
-                                'status' => 300, // GAGAL
-                                'message' => 'Copy Kelas Gagal! '.$e->getMessage()
-                            ];
+                        'status' => 300, // GAGAL
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    ];
                 }
             } elseif ($mode == 'delete') {
                 if ($siswa = Siswa::where('id_kelas', $id)->first()) {

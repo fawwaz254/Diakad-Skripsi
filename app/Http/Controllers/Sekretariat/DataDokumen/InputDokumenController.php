@@ -236,7 +236,7 @@ class InputDokumenController extends BaseController
                     // failed
                     return [
                         'status' => 203, // GAGAL
-                        'message' => 'Save Data Dokumen Gagal!'.$e->getMessage()
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                     ];
                 }
             }
@@ -308,7 +308,7 @@ class InputDokumenController extends BaseController
                     // failed
                     return [
                         'status' => 203, // GAGAL
-                        'message' => 'Save Data Dokumen Gagal!'.$e->getMessage()
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                     ];
                 }
             }

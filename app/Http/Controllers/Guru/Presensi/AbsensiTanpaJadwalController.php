@@ -318,7 +318,7 @@ class AbsensiTanpaJadwalController extends BaseController
 
                     return [
                         'status' => 203, // GAGAL
-                        'message' => 'Absensi KBM Tanpa Jadwal Gagal!'.$e->getMessage()
+                        'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                     ];
                 }
             }
