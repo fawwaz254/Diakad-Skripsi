@@ -30,14 +30,14 @@ class AddAlumniModule extends Migration
         $alumniModule->menus()->createMany([
             [
                 "nm_menu"      => "Tracer Alumni",
-                "page"         => "tracer-alumni",
+                "page"         => "/",
                 "urutan"       => 1,
                 "akses"        => 1,
                 "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
             ],
             [
                 "nm_menu"      => "Tambah Alumni",
-                "page"         => "add-alumni",
+                "page"         => "add",
                 "urutan"       => 2,
                 "akses"        => 1,
                 "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
