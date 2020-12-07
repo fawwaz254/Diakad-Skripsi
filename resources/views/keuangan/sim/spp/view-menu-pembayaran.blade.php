@@ -121,7 +121,11 @@
                                     <th>NISN</th>
                                     <th>Nama</th>
                                     @foreach($data_bulan_tagihan as $bulan)
+                                    @if(!empty($bulan->id_bulan))
                                     <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
+                                    @else
+                                    <th class="tdbg">{{$bulan->nm_biaya}}</th>
+                                    @endif
                                     @endforeach
                                 </tr>
                             </thead>

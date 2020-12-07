@@ -49,19 +49,17 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-pembayaran-by-kelas')}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
-                            Semester
+                            Tahun Ajaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_semester">
-                                    @foreach($data_semester as $data)
-                                    <option value="{{$data->id_semester}}" @if((empty($id_semester) && $data->is_aktif_semester == 1) or (!empty($id_semester) && $id_semester == $data->id_semester)) selected @endif>
-                                        {{$data->tahun_ajaran}}
-                                        {{$data->nm_semester}} 
-                                        @if($data->is_aktif_semester == 1)
-                                            (Aktif)
-                                        @endif
-                                    </option>
+                                <select class="form-control show-tick" name="tahun_akademik_semester">
+                                    @foreach($data_semester as $semester)
+                                    <option value="{{$semester->thn_akademik_semester}}" 
+                                        @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                            selected
+                                        @endif>
+                                    {{$semester->tahun_ajaran}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -88,7 +86,7 @@
                     </form>
                 </div>
             </div>
-            @if($id_semester != null && $id_kelas != null)
+            @if($tahun_akademik_semester != null && $id_kelas != null)
             <div class="card">
                 <div class="header">
                     <h2>
@@ -127,7 +125,11 @@
                                     <th>NISN</th>
                                     <th>Nama</th>
                                     @foreach($data_bulan_tagihan as $bulan)
+                                    @if(!empty($bulan->id_bulan))
                                     <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
+                                    @else
+                                    <th class="tdbg">{{$bulan->nm_biaya}}</th>
+                                    @endif
                                     @endforeach
                                 </tr>
                             </thead>
@@ -210,7 +212,7 @@
                         '    </button>'+
                         '</td>'
                     );
-                    // loadContent('utility/pembayaran-by-kelas/view-detail/{{$id_semester}}/{{$id_kelas}}');
+                    // loadContent('utility/pembayaran-by-kelas/view-detail/{{$tahun_akademik_semester}}/{{$id_kelas}}');
                 },
                 complete: function() {
                     $('button').removeAttr('disabled', 'disabled');
@@ -240,7 +242,7 @@
                     url: delete_pembayaran_url + '/' + item.attr('data-id'),
                     success: function (response) {
                         vex.dialog.alert(response.message);
-                        loadContent('utility/pembayaran-by-kelas/view-detail/{{$id_semester}}/{{$id_kelas}}');
+                        loadContent('utility/pembayaran-by-kelas/view-detail/{{$tahun_akademik_semester}}/{{$id_kelas}}');
                     },
                     complete: function() {
                         $('button').removeAttr('disabled', 'disabled');
