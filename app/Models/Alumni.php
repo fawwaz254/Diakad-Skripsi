@@ -12,9 +12,11 @@ class Alumni extends Model
 
     protected $table = 'alumni';
     protected $primaryKey = 'id_alumni';
-	public $timestamps = true;
+    public $timestamps = true;
+    public $incrementing = false;
 
     protected $fillable = [
+        'id_alumni',
         'id_siswa',
         'tahun_lulus',
         'status',

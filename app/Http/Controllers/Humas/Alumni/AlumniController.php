@@ -9,7 +9,7 @@ class AlumniController extends Controller
 {
     const RESOURCE_PATH = 'humas/alumni/';
     const FETCH_ALUMNI_ATTRIBUTE = ['id_siswa', 'tahun_lulus', 'status'];
-    const FETCH_WORK_ATTRIBUTE = ['nm_alumni', 'alamat', 'kontak', 'bidang_usaha', 'tahun_masuk'];
+    const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat', 'kontak', 'bidang_usaha', 'tahun_masuk'];
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat', 'kontak', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
     const FETCH_IDLE_ATTRIBUTE = ['idle_status'];
