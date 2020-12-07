@@ -54,5 +54,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
 			Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
 		});
+
+		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function() {
+			Route::get('tracer-alumni/', 'AlumniController@index');
+			Route::get('add-alumni/', 'AlumniController@create');
+		});
     });
 });
