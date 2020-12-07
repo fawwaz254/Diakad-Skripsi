@@ -21,7 +21,7 @@ class CreateAlumniUniversitiesTable extends Migration
             $table->string('fakultas');
             $table->string('prodi');
             $table->string('jenjang');
-            $table->string('tahun_masuk');
+            $table->integer('tahun_masuk');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->string('deleted_by', 40)->nullable();

@@ -21,7 +21,7 @@ class CreateAlumniWorkplacesTable extends Migration
             $table->string('alamat');
             $table->string('kontak');
             $table->string('bidang_usaha');
-            $table->string('tahun_masuk');
+            $table->integer('tahun_masuk');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->string('deleted_by', 40)->nullable();
