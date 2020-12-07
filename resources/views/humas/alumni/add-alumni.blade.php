@@ -87,8 +87,9 @@
 
                       <div class="row clearfix">
                           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                              <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                      class="material-icons">save</i><span>Save</span></button>
+                              <button id="submit" disabled class="btn btn-block bg-red waves-effect" type="submit">
+                                <i class="material-icons">save</i><span>Save</span>
+                              </button>
                           </div>
                       </div>
                   </form>
@@ -110,20 +111,23 @@
 
   function toggleAlumniForm(status){
     $('.form_layout').hide();
-
+    
     switch (status) {
       case 'bekerja':
-        console.log('halo')
         $('.form_layout#work_state').show();
-      break;
+        $('button#submit').attr('disabled', false);
+        break;
       case 'usaha':
         $('.form_layout#enterpreneur_state').show();    
+        $('button#submit').attr('disabled', false);
       break;
       case 'kuliah':
         $('.form_layout#college_state').show();
+        $('button#submit').attr('disabled', false);
       break;
       case 'menunggu':
         $('.form_layout#idle_state').show();
+        $('button#submit').attr('disabled', false);
       break;
     }
   }
