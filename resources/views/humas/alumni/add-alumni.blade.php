@@ -23,7 +23,7 @@
               </div>
               <div class="body">
                   <form id="form-validation" method="POST" class="row"
-                      action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($item)? '/update' : '/store'}}">
+                      action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($item)? 'update' : 'store'}}">
                       {{csrf_field()}}
                       <input type="hidden" name="id_alumni" value="{{ !empty($item) ? $item->id_alumni : ''}}">
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

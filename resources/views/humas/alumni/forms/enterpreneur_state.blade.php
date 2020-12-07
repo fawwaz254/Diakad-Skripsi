@@ -17,9 +17,9 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <h2 class="card-inside-title"> Jumlah Karyawan </h2>
-  <input type="text" class="form-control" name="total_karyawan" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->total_karyawan : ''}}">
+  <input type="text" class="form-control" name="jumlah_karyawan" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->jumlah_karyawan : ''}}">
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <h2 class="card-inside-title"> Bulan dan Tahun Membuka Usaha </h2>
-  <input type="text" class="form-control" name="tahun_buka" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->tahun_buka : ''}}">
+  <input type="text" class="form-control" name="tahun_rintis" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->tahun_rintis : ''}}">
 </div>

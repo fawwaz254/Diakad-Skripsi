@@ -58,6 +58,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function() {
 			Route::get('/', 'AlumniController@index');
 			Route::get('/add', 'AlumniController@create');
+			Route::post('/store', 'AlumniController@store');
+			Route::post('/update/{id_alumni}', 'AlumniController@update');
+			Route::post('/delete/{id_alumni}', 'AlumniController@destroy');
 		});
     });
 });
