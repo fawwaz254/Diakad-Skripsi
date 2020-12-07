@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Menu;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -18,7 +19,8 @@ class Modul extends Model
 
 	public $timestamps = true;
 
-    public $incrementing = false;
+    // cause error return id_modul of null on create model
+    // public $incrementing = false;
     
     protected $fillable = [
         'id_role',
@@ -32,10 +34,9 @@ class Modul extends Model
         'deleted_by'
     ];
 
-    protected $guarded = [];
-
-
-
+    public function menus(){
+        return $this->hasMany(Menu::class, 'id_modul', 'id_modul');
+    }
 
 
 
