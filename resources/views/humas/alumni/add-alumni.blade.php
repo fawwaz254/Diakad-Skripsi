@@ -49,7 +49,7 @@
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Nomor Telepon/HP/WA </h2>
-                        <input type="text" class="form-control" name="" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <input type="text" class="form-control" name="nomor_hp" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Email </h2>
@@ -58,7 +58,7 @@
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Alamat </h2>
                         {{-- this data is not used of referred to siswa table --}}
-                        <textarea class="form-control" name="alamat" disabled required="" aria-required="true" aria-invalid="true"> {{(!empty($item))? $item->nm_kegiatan_harian : ''}} </textarea>
+                        <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($item))? $item->nm_kegiatan_harian : ''}} </textarea>
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Status </h2>

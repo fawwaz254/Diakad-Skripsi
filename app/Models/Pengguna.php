@@ -22,6 +22,7 @@ class Pengguna extends Authenticatable
     public $incrementing = false;
     
     protected $fillable = [
+        'id_pengguna',
         'id_status_pengguna',
         'id_sekolah',
         'nm_pengguna',
