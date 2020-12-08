@@ -18,7 +18,6 @@ class CreateAlumnisTable extends Migration
             $table->string('id_alumni', 40)->primary();
             $table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
             $table->string('email');
-            $table->string('nomor_telepon');
             $table->integer('tahun_lulus');
             $table->string('status', 10);
             $table->string('created_by', 40)->nullable();
