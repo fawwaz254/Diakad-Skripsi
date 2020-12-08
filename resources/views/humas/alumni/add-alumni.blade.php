@@ -26,34 +26,39 @@
                       action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($item)? 'update' : 'store'}}">
                       {{csrf_field()}}
                       <input type="hidden" name="id_alumni" value="{{ !empty($item) ? $item->id_alumni : ''}}">
-                      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Nama Siswa </h2>
-                        <input type="text" class="form-control" name="id_siswa" required=""
-                              aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <input type="text" class="form-control" name="nama_siswa" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nama_siswa : ''}}">
                       </div>
-                      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                      <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Jurusan </h2>
-                        {{-- this data is not used of referred to siswa table --}}
-                        <input type="text" class="form-control" name="jurusan"  required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <div class="form-group">
+                          <div class="form-line">
+                              <select class="form-control show-tick" name="jurusan">
+                                  <option value="" selected disabled> Pilih Jurusan </option>
+                                  @foreach($data_jurusan as $jurusan)
+                                    <option value="{{$jurusan->id_jurusan}}">{{$jurusan->nm_jurusan}}</option>
+                                  @endforeach
+                              </select>
+                          </div>
+                        </div>
                       </div>
-                      <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                      <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Tahun Lulus </h2>
                         <input type="text" class="form-control" name="tahun_lulus" required="" aria-required="true" aria-invalid="true" value="">
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Nomor Telepon/HP/WA </h2>
-                        {{-- this data is not used of referred to siswa table --}}
-                        <input type="text" class="form-control" name="nm_kegiatan_harian" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <input type="text" class="form-control" name="" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Email </h2>
-                        {{-- this data is not used of referred to siswa table --}}
-                        <input type="text" class="form-control" name="nm_kegiatan_harian" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <input type="text" class="form-control" name="email" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Alamat </h2>
                         {{-- this data is not used of referred to siswa table --}}
-                        <textarea class="form-control" name="nm_kegiatan_harian" required="" aria-required="true" aria-invalid="true"> {{(!empty($item))? $item->nm_kegiatan_harian : ''}} </textarea>
+                        <textarea class="form-control" name="alamat" disabled required="" aria-required="true" aria-invalid="true"> {{(!empty($item))? $item->nm_kegiatan_harian : ''}} </textarea>
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Status </h2>
@@ -98,6 +103,9 @@
       </div>
   </div>
 </div>
+
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.min.css"></script> --}}
 <script>
   // hadle first load of page
   $(document).ready(function(){

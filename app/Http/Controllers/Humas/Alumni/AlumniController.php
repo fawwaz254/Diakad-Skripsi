@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Humas\Alumni;
 
+use App\Models\Jurusan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Libraries\Keuangan\LibAlumni;
+use App\Libraries\Pendidikan\LibSiswa;
 
 class AlumniController extends Controller
 {
@@ -36,8 +39,8 @@ class AlumniController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
-    	return view(self::RESOURCE_PATH . 'add-alumni',compact('auth_data'));
+        $data_jurusan = Jurusan::all();
+    	return view(self::RESOURCE_PATH . 'add-alumni',compact('auth_data', 'data_jurusan'));
     }
 
     /**
