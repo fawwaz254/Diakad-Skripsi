@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Humas\Alumni;
 
 use Carbon\Carbon;
 use App\Models\Siswa;
+use App\Models\Alumni;
 use App\Models\Jurusan;
 use App\Models\Pengguna;
 use App\Models\AlumniIdle;
@@ -127,7 +128,14 @@ class AlumniController extends Controller
         $idSiswa        = $this->storeStudentAndReturnId($request, $idPengguna, $idCalonSiswa);
         $data           = $this->fetchAlumniDataAndSetIdSiswa($request, $idSiswa);
 
+        $this->storeAlumni($data);
+
         return $data['id_alumni'];
+    }
+
+    private function storeAlumni($data)
+    {
+        return Alumni::insert($data);
     }
 
     private function storePartialData($request, $idAlumni)
