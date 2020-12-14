@@ -26,7 +26,6 @@ class AlumniController extends Controller
     const RESOURCE_PATH = 'humas/alumni/';
     const FETCH_PENGGUNA = ['nama_siswa', 'nomor_hp', 'email'];
     const FETCH_STUDENT_APPLICANT = ['nama_siswa', 'nomor_hp'];
-    const FETCH_ALUMNI_ATTRIBUTE = ['id_siswa', 'tahun_lulus', 'status'];
     const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat', 'kontak', 'bidang_usaha', 'tahun_masuk'];
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat', 'kontak', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
@@ -41,6 +40,10 @@ class AlumniController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $data = LibAlumni::getAlumnis();
+
+        dd($data);
 
     	return view(self::RESOURCE_PATH . 'tracer-alumni',compact('auth_data'));
     }
@@ -125,17 +128,12 @@ class AlumniController extends Controller
     {
         $idPengguna     = $this->storeUserAndReturnId($request);
         $idCalonSiswa   = $this->storeAllDataThatRelatedToCalonSiswaAndReturnId($request);
-        $idSiswa        = $this->storeStudentAndReturnId($request, $idPengguna, $idCalonSiswa);
-        $data           = $this->fetchAlumniDataAndSetIdSiswa($request, $idSiswa);
-
-        $this->storeAlumni($data);
+        $data           = $this->fetchAlumniDataAndSetIdCalonSiswa($request, $idCalonSiswa);
+        
+        $this->storeStudent($request, $idPengguna, $idCalonSiswa);
+        LibAlumni::store($data);
 
         return $data['id_alumni'];
-    }
-
-    private function storeAlumni($data)
-    {
-        return Alumni::insert($data);
     }
 
     private function storePartialData($request, $idAlumni)
@@ -145,53 +143,63 @@ class AlumniController extends Controller
 
         switch ($request->status) {
             case 'bekerja':
-                return AlumniWorkplace::insert($data);
+                return LibAlumni::storeWorkplace($data);
             case 'usaha':
-                return AlumniBusiness::insert($data); 
+                return LibAlumni::storeBusiness($data); 
             case 'kuliah':
-                return AlumniUniversity::insert($data);
+                return LibAlumni::storeUniversity($data);
             case 'menunggu':
-                return AlumniIdle::insert($data);
+                return LibAlumni::storeIdleAlumni($data);
         }
     }
 
     private function fetchPartialData(Request $request)
     {
-        $auth = (object) $request->input()['auth_data'];
-        $id = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $auth       = (object) $request->input()['auth_data'];
+        $id         = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId     = $auth->pengguna->id_pengguna;
 
         switch ($request->status) {
             case 'bekerja':
                 $data = $request->only(self::FETCH_WORK_ATTRIBUTE);
-                $data['id_alumni_workplace'] = $id;
+                $data['id_alumni_workplace']    = $id;
+                $data['created_by']             = $userId;
+                $data['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
                 return $data;
             case 'usaha':
                 $data = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
                 $data['id_alumni_business'] = $id;
+                $data['created_by']         = $userId;
+                $data['created_at']         = Carbon::now(env('APP_TIMEZONE', ''));
                 return $data;
             case 'kuliah':
                 $data = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
-                $data['id_alumni_university'] = $id;
+                $data['id_alumni_university']   = $id;
+                $data['created_by']             = $userId;
+                $data['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
                 return $data;
             case 'menunggu':
                 $data = $request->only(self::FETCH_IDLE_ATTRIBUTE);
                 $data['id_alumni_idle'] = $id;
+                $data['created_by']     = $userId;
+                $data['created_at']     = Carbon::now(env('APP_TIMEZONE', ''));
                 return $data;
         }
     }
 
-    private function storeStudentAndReturnId($request, $idPengguna, $idCalonSiswa)
+    private function storeStudent($request, $idPengguna, $idCalonSiswa)
     {
-        $auth = (object) $request->input()['auth_data'];
-        $id = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $auth       = (object) $request->input()['auth_data'];
+        $id         = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId     = $auth->pengguna->id_pengguna;
 
         Siswa::insert([
             'id_siswa'      => $id, 
             'id_pengguna'   => $idPengguna,
-            'id_c_siswa'    => $idCalonSiswa
+            'id_c_siswa'    => $idCalonSiswa,
+            'created_by'    => $userId,
+            'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
         ]);
-
-        return $id;
     }
 
     private function storeUserAndReturnId($request)
@@ -204,13 +212,19 @@ class AlumniController extends Controller
 
     private function storeAllDataThatRelatedToCalonSiswaAndReturnId($request)
     {
-        $auth = (object) $request->input()['auth_data'];
-        $id = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $auth   = (object) $request->input()['auth_data'];
+        $id     = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId = $auth->pengguna->id_pengguna;
 
+        $data = [
+            'id_c_siswa'    => $id,
+            'created_by'    => $userId,
+            'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
+        ];
         $this->storeCalonSiswa($request, $id);
-        CalonSiswaOrtu::insert(['id_c_siswa' => $id]);
-        CalonSiswaFisik::insert(['id_c_siswa' => $id]);
-        CalonSiswaSekolah::insert(['id_c_siswa' => $id]);
+        CalonSiswaOrtu::insert($data);
+        CalonSiswaFisik::insert($data);
+        CalonSiswaSekolah::insert($data);
 
         return $id;
     }
@@ -223,43 +237,53 @@ class AlumniController extends Controller
 
     private function fetchUserData($request)
     {
-        $auth = (object) $request->input()['auth_data'];
-        $id = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $auth   = (object) $request->input()['auth_data'];
+        $id     = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId = $auth->pengguna->id_pengguna;
 
         return [
             'id_pengguna'           => $id,
             'nm_pengguna'           => $request->nama_siswa,
-            'email_pengguna'                 => $request->email,
+            'email_pengguna'        => $request->email,
             'username'              => str_replace(' ', '_', $request->nama_siswa),
             'nomor_hp_pengguna'     => $request->nomor_hp,
             'id_status_pengguna'    => StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna,
-            'id_sekolah'            => $auth->pengguna->id_sekolah
+            'id_sekolah'            => $auth->pengguna->id_sekolah, 
+            'created_by'            => $userId,
+            'created_at'            => Carbon::now(env('APP_TIMEZONE', ''))
         ];
     }
 
     private function fetchStudentApplicant($request, $id)
     {
+        $auth   = (object) $request->input()['auth_data'];
+        $userId = $auth->pengguna->id_pengguna;
+
         return [
             'id_c_siswa'        => $id,
             'id_penerimaan'     => 0,
             'nm_c_siswa'        => $request->nama_siswa,
             'nomor_hp'          => $request->nomor_hp,
             'id_jurusan'        => $request->jurusan,
-            'status_verifikasi' => 0
+            'status_verifikasi' => 0,
+            'created_by'        => $userId,
+            'created_at'        => Carbon::now(env('APP_TIMEZONE', ''))
         ];
     }
 
-    private function fetchAlumniDataAndSetIdSiswa($request, $idSiswa)
+    private function fetchAlumniDataAndSetIdCalonSiswa($request, $idCalonSiswa)
     {
-        $auth = (object) $request->input()['auth_data'];
-        $id = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $auth       = (object) $request->input()['auth_data'];
+        $id         = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId     = $auth->pengguna->id_pengguna;
 
         return [
             'id_alumni'     => $id,
-            'id_siswa'      => $idSiswa,
+            'id_c_siswa'    => $idCalonSiswa,
             'email'         => $request->email,
             'tahun_lulus'   => $request->tahun_lulus,
-            'status'        => $request->status
+            'status'        => $request->status, 
+            'created_by'    => $userId
         ];
     }
 
