@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Siswa;
+use App\Models\Jurusan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -96,7 +98,15 @@ class CalonSiswaBaru extends Model
     protected $guarded = [];
 
 
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class, 'id_jurusan');
+    }
 
+    public function siswa()
+    {
+        return $this->hasOne(Siswa::class, 'id_siswa');
+    }
 
 
 
