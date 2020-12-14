@@ -18,26 +18,29 @@
           <div class="card">
               <div class="header">
                   <h2>
-                      {{!empty($item)? 'EDIT' : 'TAMBAH'}} ALUMNI
+                      {{!empty($alumni)? 'EDIT' : 'TAMBAH'}} ALUMNI
                   </h2>
               </div>
               <div class="body">
                   <form id="form-validation" method="POST" class="row"
-                      action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($item)? 'update' : 'store'}}">
+                      action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($alumni)? 'update' : 'store'}}">
                       {{csrf_field()}}
-                      <input type="hidden" name="id_alumni" value="{{ !empty($item) ? $item->id_alumni : ''}}">
+                      <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : ''}}">
                       <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Nama Siswa </h2>
-                        <input type="text" class="form-control" name="nama_siswa" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nama_siswa : ''}}">
+                        <input type="text" class="form-control" name="nama_siswa" aria-required="true" aria-invalid="true" value="{{(!empty($alumni))? $alumni->calon_siswa->nm_c_siswa : ''}}" {{ !empty($alumni) ? 'disabled' : '' }} >
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Jurusan </h2>
                         <div class="form-group">
                           <div class="form-line">
-                              <select class="form-control show-tick" name="jurusan">
+                              <select class="form-control show-tick" name="jurusan" {{ !empty($alumni) ? 'disabled' : '' }}>
                                   <option value="" selected disabled> Pilih Jurusan </option>
                                   @foreach($data_jurusan as $jurusan)
-                                    <option value="{{$jurusan->id_jurusan}}">{{$jurusan->nm_jurusan}}</option>
+                                    <option value="{{$jurusan->id_jurusan}}" 
+                                      {{ $alumni->calon_siswa->jurusan->id_jurusan == $jurusan->id_jurusan ? 'selected' : '' }}>
+                                        {{$jurusan->nm_jurusan}}
+                                    </option>
                                   @endforeach
                               </select>
                           </div>
@@ -45,30 +48,30 @@
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Tahun Lulus </h2>
-                        <input type="text" class="form-control" name="tahun_lulus" required="" aria-required="true" aria-invalid="true" value="">
+                        <input type="text" class="form-control" name="tahun_lulus" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni))? $alumni->tahun_lulus : ''}}">
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Nomor Telepon/HP/WA </h2>
-                        <input type="text" class="form-control" name="nomor_hp" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <input type="text" class="form-control" name="nomor_hp" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni))? $alumni->calon_siswa->nomor_hp : ''}}">
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Email </h2>
-                        <input type="text" class="form-control" name="email" required="" aria-required="true" aria-invalid="true" value="{{(!empty($item))? $item->nm_kegiatan_harian : ''}}">
+                        <input type="text" class="form-control" name="email" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni))? $alumni->email : ''}}">
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Alamat </h2>
                         {{-- this data is not used of referred to siswa table --}}
-                        <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($item))? $item->nm_kegiatan_harian : ''}} </textarea>
+                        <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Status </h2>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="bekerja" id="work_status" required="required" data-error="Error msg here">
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="bekerja" id="work_status" required="required" {{ $alumni->status == 'bekerja' ? 'checked' : '' }} >
                         <label for="work_status"> Bekerja </label>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="usaha" id="enterpreneur_status" required="required" data-error="Error msg here">
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="usaha" id="enterpreneur_status" required="required" {{ $alumni->status == 'usaha' ? 'checked' : '' }} >
                         <label for="enterpreneur_status"> Wirausaha </label>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="kuliah" id="college_status" required="required" data-error="Error msg here">
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="kuliah" id="college_status" required="required" {{ $alumni->status == 'kuliah' ? 'checked' : '' }} >
                         <label for="college_status"> Kuliah </label>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="menunggu" id="idle_status" required="required" data-error="Error msg here">
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="menunggu" id="idle_status" required="required" {{ $alumni->status == 'menunggu' ? 'checked' : '' }} >
                         <label for="idle_status"> Belum Bekerja </label>
                       </div>
 
@@ -109,7 +112,8 @@
 <script>
   // hadle first load of page
   $(document).ready(function(){
-    var status = $("input[name='status']").value;
+    var alumni = {!! json_encode($alumni->toArray(), JSON_HEX_TAG) !!};
+    var status = $("input[name='status']").value || alumni.status;
     toggleAlumniForm(status)
   })
 

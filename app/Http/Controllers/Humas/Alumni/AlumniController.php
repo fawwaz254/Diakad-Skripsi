@@ -78,12 +78,16 @@ class AlumniController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  Alumni  $alumni
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, Alumni $alumni)
     {
-        //
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $alumni->load(['calon_siswa', 'calon_siswa.jurusan']);
+        $data_jurusan = Jurusan::all();
+    	return view(self::RESOURCE_PATH . 'add-alumni',compact('auth_data', 'data_jurusan', 'alumni'));
     }
 
     /**
@@ -277,6 +281,7 @@ class AlumniController extends Controller
             'nm_c_siswa'        => $request->nama_siswa,
             'nomor_hp'          => $request->nomor_hp,
             'id_jurusan'        => $request->jurusan,
+            'alamat_jalan'      => $request->alamat,
             'status_verifikasi' => 0,
             'created_by'        => $userId,
             'created_at'        => Carbon::now(env('APP_TIMEZONE', ''))
