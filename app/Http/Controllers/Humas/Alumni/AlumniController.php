@@ -85,7 +85,7 @@ class AlumniController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $alumni->load(['calon_siswa', 'calon_siswa.jurusan']);
+        $alumni->load(['calon_siswa', 'calon_siswa.jurusan', $alumni->status]);
         $data_jurusan = Jurusan::all();
     	return view(self::RESOURCE_PATH . 'add-alumni',compact('auth_data', 'data_jurusan', 'alumni'));
     }

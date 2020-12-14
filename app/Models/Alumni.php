@@ -29,4 +29,24 @@ class Alumni extends Model
     {
         return $this->belongsTo(CalonSiswaBaru::class, 'id_c_siswa');
     }
+
+    public function bekerja()
+    {
+        return $this->hasOne(AlumniWorkplace::class, 'id_alumni');
+    }
+
+    public function kuliah()
+    {
+        return $this->hasOne(AlumniUniversity::class, 'id_alumni');
+    }
+
+    public function usaha()
+    {
+        return $this->hasOne(AlumniBusiness::class, 'id_alumni');
+    }
+
+    public function menunggu()
+    {
+        return $this->hasOne(AlumniIdle::class, 'id_alumni');
+    }
 }
