@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Siswa;
+use App\Models\CalonSiswaBaru;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -17,7 +18,7 @@ class Alumni extends Model
 
     protected $fillable = [
         'id_alumni',
-        'id_siswa',
+        'id_c_siswa',
         'tahun_lulus',
         'status',
         'created_by',
@@ -27,6 +28,6 @@ class Alumni extends Model
 
     public function siswa()
     {
-        return $this->belongsTo(Siswa::class, 'id_siswa', 'id_siswa');
+        return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 }

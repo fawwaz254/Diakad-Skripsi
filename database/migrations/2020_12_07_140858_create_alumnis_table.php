@@ -16,7 +16,7 @@ class CreateAlumnisTable extends Migration
         Schema::create('alumni', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id_alumni', 40)->primary();
-            $table->string('id_siswa', 40)->comment('FK: siswa.id_siswa');
+            $table->string('id_c_siswa', 40)->comment('FK: calon_siswa_baru.id_c_siswa');
             $table->string('email');
             $table->integer('tahun_lulus');
             $table->string('status', 10);
