@@ -7,6 +7,7 @@ use App\Models\AlumniIdle;
 use App\Models\AlumniBusiness;
 use App\Models\AlumniWorkplace;
 use App\Models\AlumniUniversity;
+use Illuminate\Support\Facades\DB;
 
 
 class LibAlumni {
@@ -38,16 +39,11 @@ class LibAlumni {
 
   public static function getAlumnis()
   {
-
-    $studentMajorsRelation = ['jurusan' => function($query){
-      return $query->select('id_jurusan', 'nm_jurusan');
-    }];
-
-    $studentCandidateRelation = ['calon_siswa' => function($query) use($studentMajorsRelation) { 
-      return $query->select(['id_c_siswa','nm_c_siswa', 'id_jurusan'])->with($studentMajorsRelation); 
-    }];
-
-    return Alumni::select(['id_c_siswa', 'status', 'tahun_lulus'])->with(['calon_siswa', 'calon_siswa.jurusan'])->get();
+    return DB::table('alumni')
+      ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
+      ->join('jurusan', 'siswa.id_jurusan', '=', 'jurusan.id_jurusan')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status')
+      ->get();
   }
 
 }

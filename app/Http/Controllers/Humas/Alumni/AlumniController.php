@@ -20,6 +20,7 @@ use App\Models\CalonSiswaSekolah;
 use App\Http\Controllers\Controller;
 use App\Libraries\Keuangan\LibAlumni;
 use App\Libraries\Pendidikan\LibSiswa;
+use Yajra\Datatables\Datatables;
 
 class AlumniController extends Controller
 {
@@ -40,8 +41,7 @@ class AlumniController extends Controller
     {
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
-        $alumnis    = LibAlumni::getAlumnis();
-    	return view(self::RESOURCE_PATH . 'tracer-alumni',compact('auth_data', 'alumnis'));
+    	return view(self::RESOURCE_PATH . 'tracer-alumni',compact('auth_data'));
     }
 
     /**
@@ -118,6 +118,22 @@ class AlumniController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function renderDatatables(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $alumnis    = LibAlumni::getAlumnis();
+        return Datatables::of($alumnis)
+        ->editColumn('status', function($item){
+            return ucfirst($item->status);
+        })
+        ->addColumn('action', function($item){
+            return [ 'id' => $item->id_alumni];
+        })
+        ->make(true);
     }
 
     private function storeAlumniAndReturnId($request)

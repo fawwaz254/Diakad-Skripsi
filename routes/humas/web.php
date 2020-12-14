@@ -61,6 +61,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('/store', 'AlumniController@store');
 			Route::post('/update/{id_alumni}', 'AlumniController@update');
 			Route::post('/delete/{id_alumni}', 'AlumniController@destroy');
+			Route::post('/datatables', 'AlumniController@renderDatatables');
 		});
-    });
+  });
 });
