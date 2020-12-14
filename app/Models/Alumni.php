@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Siswa;
 use App\Models\CalonSiswaBaru;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -26,8 +25,8 @@ class Alumni extends Model
         'deleted_by'
     ];
 
-    public function siswa()
+    public function calon_siswa()
     {
-        return $this->belongsTo(Siswa::class, 'id_siswa');
+        return $this->belongsTo(CalonSiswaBaru::class, 'id_c_siswa');
     }
 }
