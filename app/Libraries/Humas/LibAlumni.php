@@ -38,14 +38,16 @@ class LibAlumni {
 
   public static function getAlumnis()
   {
-    $studentCandidateRelation = ['calon_siswa' => function($query) { 
-      return $query->select('nm_c_siswa'); 
+
+    $studentMajorsRelation = ['jurusan' => function($query){
+      return $query->select('id_jurusan', 'nm_jurusan');
     }];
 
-    return Alumni::select(['id_siswa', 'status', 'tahun_lulus'])->with('calon_siswa')->get();
+    $studentCandidateRelation = ['calon_siswa' => function($query) use($studentMajorsRelation) { 
+      return $query->select(['id_c_siswa','nm_c_siswa', 'id_jurusan'])->with($studentMajorsRelation); 
+    }];
 
-    
-    return Alumni::select('status')->with([$studentCandidateRelation, $studentRelation])->get();
+    return Alumni::select(['id_c_siswa', 'status', 'tahun_lulus'])->with(['calon_siswa', 'calon_siswa.jurusan'])->get();
   }
 
 }

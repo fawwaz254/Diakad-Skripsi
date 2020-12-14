@@ -38,14 +38,10 @@ class AlumniController extends Controller
      */
     public function index(Request $request)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $data = LibAlumni::getAlumnis();
-
-        dd($data);
-
-    	return view(self::RESOURCE_PATH . 'tracer-alumni',compact('auth_data'));
+        $input      = (object) $request->input();
+        $auth_data  = $input->auth_data;
+        $alumnis    = LibAlumni::getAlumnis();
+    	return view(self::RESOURCE_PATH . 'tracer-alumni',compact('auth_data', 'alumnis'));
     }
 
     /**
