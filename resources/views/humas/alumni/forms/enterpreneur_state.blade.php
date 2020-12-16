@@ -5,11 +5,11 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <h2 class="card-inside-title"> Alamat Usaha </h2>
-  <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($alumni->usaha))? $alumni->usaha->alamat : ''}} </textarea>
+  <textarea class="form-control" name="alamat_usaha" required="" aria-required="true" aria-invalid="true"> {{(!empty($alumni->usaha))? $alumni->usaha->alamat_usaha : ''}} </textarea>
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <h2 class="card-inside-title"> Nomor Telepon Usaha </h2>
-  <input type="text" class="form-control" name="kontak" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni->usaha))? $alumni->usaha->kontak : ''}}">
+  <input type="text" class="form-control" name="kontak_usaha" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni->usaha))? $alumni->usaha->kontak_usaha : ''}}">
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <h2 class="card-inside-title"> Bidang Usaha </h2>

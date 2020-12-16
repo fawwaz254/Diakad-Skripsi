@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-            href="{{url(Request::segment(1).'#'.Request::segment(2).'/add-alumni')}}">
+            href="{{url(Request::segment(1).'#'.Request::segment(2).'/add')}}">
                 <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -39,7 +39,7 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/datatables';
     var edit_url        = role_url + '#' + modul_url + '/edit';
     var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,

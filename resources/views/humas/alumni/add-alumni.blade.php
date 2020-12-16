@@ -23,22 +23,22 @@
               </div>
               <div class="body">
                   <form id="form-validation" method="POST" class="row"
-                      action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($alumni)? 'update' : 'store'}}">
+                      action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($alumni)? 'update/'.$alumni->id_alumni  : 'store'}}">
                       {{csrf_field()}}
                       <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : ''}}">
                       <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Nama Siswa </h2>
-                        <input type="text" class="form-control" name="nama_siswa" aria-required="true" aria-invalid="true" value="{{(!empty($alumni))? $alumni->calon_siswa->nm_c_siswa : ''}}" {{ !empty($alumni) ? 'disabled' : '' }} >
+                        <input type="text" class="form-control" name="nama_siswa" aria-required="true" aria-invalid="true" value="{{(!empty($alumni))? $alumni->calon_siswa->nm_c_siswa : ''}}" {{ !empty($alumni) ? 'readonly' : '' }} >
                       </div>
                       <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Jurusan </h2>
                         <div class="form-group">
                           <div class="form-line">
-                              <select class="form-control show-tick" name="jurusan" {{ !empty($alumni) ? 'disabled' : '' }}>
+                              <select class="form-control show-tick" name="jurusan" {{ !empty($alumni) ? 'readonly' : '' }}>
                                   <option value="" selected disabled> Pilih Jurusan </option>
                                   @foreach($data_jurusan as $jurusan)
                                     <option value="{{$jurusan->id_jurusan}}" 
-                                      {{ $alumni->calon_siswa->jurusan->id_jurusan == $jurusan->id_jurusan ? 'selected' : '' }}>
+                                      {{ isset($alumni) && $alumni->calon_siswa->jurusan->id_jurusan == $jurusan->id_jurusan ? 'selected' : '' }}>
                                         {{$jurusan->nm_jurusan}}
                                     </option>
                                   @endforeach
@@ -60,18 +60,17 @@
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Alamat </h2>
-                        {{-- this data is not used of referred to siswa table --}}
-                        <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
+                        <textarea class="form-control" name="alamat_siswa" required="" aria-required="true" aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
                       </div>
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <h2 class="card-inside-title"> Status </h2>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="bekerja" id="work_status" required="required" {{ $alumni->status == 'bekerja' ? 'checked' : '' }} >
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="bekerja" id="work_status" required="required" {{ isset($alumni) && $alumni->status == 'bekerja' ? 'checked' : '' }} >
                         <label for="work_status"> Bekerja </label>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="usaha" id="enterpreneur_status" required="required" {{ $alumni->status == 'usaha' ? 'checked' : '' }} >
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="usaha" id="enterpreneur_status" required="required" {{ isset($alumni) && $alumni->status == 'usaha' ? 'checked' : '' }} >
                         <label for="enterpreneur_status"> Wirausaha </label>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="kuliah" id="college_status" required="required" {{ $alumni->status == 'kuliah' ? 'checked' : '' }} >
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="kuliah" id="college_status" required="required" {{ isset($alumni) && $alumni->status == 'kuliah' ? 'checked' : '' }} >
                         <label for="college_status"> Kuliah </label>
-                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="menunggu" id="idle_status" required="required" {{ $alumni->status == 'menunggu' ? 'checked' : '' }} >
+                        <input class="with-gap radio-col-light-green form-control validate" type="radio" name="status" value="menunggu" id="idle_status" required="required" {{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }} >
                         <label for="idle_status"> Belum Bekerja </label>
                       </div>
 
@@ -96,7 +95,7 @@
                       <div class="row clearfix">
                           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                               <button id="submit" disabled class="btn btn-block bg-red waves-effect" type="submit">
-                                <i class="material-icons">save</i><span>Save</span>
+                                <i class="material-icons">save</i><span> {{!empty($alumni)? 'Update' : 'Save'}} </span>
                               </button>
                           </div>
                       </div>
@@ -107,12 +106,10 @@
   </div>
 </div>
 
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/jquery.easy-autocomplete.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/easy-autocomplete/1.3.5/easy-autocomplete.min.css"></script> --}}
 <script>
   // hadle first load of page
   $(document).ready(function(){
-    var alumni = {!! json_encode($alumni->toArray(), JSON_HEX_TAG) !!};
+    var alumni = {!! $alumni != null ? json_encode($alumni->toArray(), JSON_HEX_TAG) : "''" !!};
     var status = $("input[name='status']").value || alumni.status;
     toggleAlumniForm(status)
   })
