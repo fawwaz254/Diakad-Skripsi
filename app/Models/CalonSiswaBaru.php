@@ -105,7 +105,7 @@ class CalonSiswaBaru extends Model
 
     public function siswa()
     {
-        return $this->hasOne(Siswa::class, 'id_siswa');
+        return $this->hasOne(Siswa::class, 'id_c_siswa');
     }
 
 
