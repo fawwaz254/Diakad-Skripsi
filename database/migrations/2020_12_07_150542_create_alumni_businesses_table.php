@@ -18,10 +18,11 @@ class CreateAlumniBusinessesTable extends Migration
             $table->string('id_alumni_business', 40)->primary();
             $table->string('id_alumni', 40)->comment('FK: alumni.id_alumni');
             $table->string('nm_usaha');
-            $table->string('alamat');
-            $table->string('kontak');
+            $table->string('alamat_usaha');
+            $table->string('kontak_usaha');
+            $table->string('bidang_usaha');
             $table->integer('jumlah_karyawan');
-            $table->integer('tahun_masuk');
+            $table->integer('tahun_rintis');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->string('deleted_by', 40)->nullable();

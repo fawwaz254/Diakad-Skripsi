@@ -18,10 +18,10 @@ class CreateAlumniWorkplacesTable extends Migration
             $table->string('id_alumni_workplace', 40)->primary();
             $table->string('id_alumni', 40)->comment('FK: alumni.id_alumni');
             $table->string('nm_instansi');
-            $table->string('alamat');
-            $table->string('kontak');
-            $table->string('bidang_usaha');
-            $table->integer('tahun_masuk');
+            $table->string('alamat_instansi');
+            $table->string('kontak_instansi');
+            $table->string('bidang_usaha_instansi');
+            $table->integer('tahun_masuk_instansi');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->string('deleted_by', 40)->nullable();
