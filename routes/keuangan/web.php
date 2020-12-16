@@ -102,6 +102,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-siswa/datatables-riwayat-bayar/{id_pengguna}', 'Keuangan\Utility\PembayaranSiswaController@datatablesRiwayatBayarSiswa');
             Route::get('pembayaran-siswa/view-detail-tagihan-siswa/{id_tagihan}/{nis_nama_siswa_asli}', 'Keuangan\Utility\PembayaranSiswaController@viewDetailTagihanPembayaranSiswa');
 
+            Route::get('pembayaran-siswa/print-pembayaran-hari-ini/{id_siswa}', 'Keuangan\Utility\PembayaranSiswaController@printPembayaranSiswa');
+
             Route::post('action-tagihan-siswa/delete/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionDeleteTagihanSiswa');
             Route::post('action-pembayaran-siswa/{mode}/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionPembayaranSiswa');
 

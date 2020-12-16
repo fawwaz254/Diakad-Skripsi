@@ -55,7 +55,7 @@
                     <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active">
                                 <a href="#tagihan" data-toggle="tab" aria-expanded="true">
-                                    <i class="material-icons">money_off</i> TAGIHAN
+                                    <i class="material-icons">money_off</i> TAGIHAN SISWA
                                 </a>
                             </li>
                             <li role="presentation">
@@ -72,15 +72,10 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Biaya Sekolah</th>
-                                                <th>Jalur</th>
                                                 <th>Nama Biaya</th>
-                                                <th>Jenis Biaya</th>
                                                 <th>Besar Tagihan</th>
-                                                <th>Denda Tagihan</th>
                                                 <th>Besar Pembayaran</th>
                                                 <th>Sisa Tagihan</th>
-                                                <th>Keterangan</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -90,23 +85,23 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="riwayat_bayar">
                             <div class="body">
+                                <div class="block-header">
+                                    <h2>
+                                        <a class="btn btn-info waves-effect" target="_blank" href="{{url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran-hari-ini/'.$siswa->id_siswa)}}">
+                                            <i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span>
+                                        </a>
+                                    </h2>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_riwayat_bayar">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Biaya Sekolah</th>
-                                                <th>Jalur</th>
                                                 <th>Nama Biaya</th>
-                                                <th>Jenis Biaya</th>
-                                                <th>Besar Tagihan</th>
-                                                <th>Besar Denda</th>
                                                 <th>Besar Pembayaran</th>
-                                                <th>Staff Keuangan</th>
+                                                <th>Verifikasi Oleh</th>
                                                 <th>Tanggal Bayar</th>
                                                 <th>Semester Bayar</th>
-                                                <th>Via Bank</th>
-                                                <th>Nomor Ref Bank</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -139,35 +134,40 @@
     var primary_table_tagihan = $('#primary_table_tagihan').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 100,
         ajax: {
             url: datatable_tagihan_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
             { data: 'nm_biaya', name: 'nm_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_biaya'},
             { data: 'besar_biaya', name: 'besar_biaya'},
-            { data: 'denda_biaya', name: 'denda_biaya'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'sisa_tagihan', name: 'sisa_tagihan'},
-            { data: 'keterangan', name: 'keterangan'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info waves-effect waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
-                    '    <i class="material-icons">attach_money</i><span>Cicilan</span>'+
-                    '</a> '+
-                    '<button class="btn btn-warning waves-effect waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">money</i><span>Lunas</span>'+
-                    '</button>'+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTagihan(this)" data-id="'+data.id+'">'+
-                    '    <i class="material-icons">close</i>'+
-                    '</button>';
+                    if(data.sisa_tagihan > 0){
+                        return '<button class="btn btn-warning waves-effect waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
+                        '    <span>Lunas</span>'+
+                        '</button>'+
+                        '<a class="target-link btn btn-info waves-effect waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
+                        '    <span>Cicilan</span>'+
+                        '</a> ';
+                        // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTagihan(this)" data-id="'+data.id+'">'+
+                        // '    <span>Hapus Tagihan</span>'+
+                        // '</button>';
+                    }else{
+                        return '';
+                    }
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if( data.sisa_tagihan == 'Rp0'){
+                $(row).css('background-color', 'hsl(171, 100%, 41%)');
+            }
+        }
     });
 
     primary_table_tagihan.on( 'draw', function () {
@@ -180,28 +180,22 @@
     var primary_table_riwayat_bayar = $('#primary_table_riwayat_bayar').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 100,
         ajax: {
             url: datatable_riwayat_bayar_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
             { data: 'nm_biaya', name: 'nm_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_biaya'},
-            { data: 'besar_biaya', name: 'besar_biaya'},
-            { data: 'denda_biaya', name: 'denda_biaya'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'nm_pengguna', name: 'nm_pengguna'},
             { data: 'tgl_pembayaran', name: 'tgl_pembayaran'},
             { data: 'semester_bayar', name: 'semester_bayar'},
-            { data: 'nm_bank', name: 'nm_bank'},
-            { data: 'nomor_transaksi', name: 'nomor_transaksi'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(\''+ delete_pembayaran_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">money_off</i>'+
+                    '    <i class="material-icons">close</i>'+
                     '</button>';
                 }
             }
