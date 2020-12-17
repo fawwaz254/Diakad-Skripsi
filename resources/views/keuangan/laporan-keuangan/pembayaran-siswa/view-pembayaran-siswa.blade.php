@@ -2,7 +2,7 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa')}}"><span>Pembayaran by tanggal</span></a>
         <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa/bulanan')}}"><span>Pembayaran bulanan</span></a>
-        <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa-tahunan')}}"><span>Pembayaran Tahunan</span></a></h2>
+        <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa/tahunan')}}"><span>Pembayaran Tahunan</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
