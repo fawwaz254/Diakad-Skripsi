@@ -81,7 +81,7 @@
 <script type="text/javascript">
 
     var modul_url               = 'laporan-keuangan';
-    var data_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa-bulanan/dataPembayaranSiswaBulanan';
+    var data_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/bulanan/dataPembayaranSiswaBulanan';
 
     function filterAction(){
 

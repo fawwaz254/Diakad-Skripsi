@@ -69,15 +69,15 @@ class PembayaranSiswaBulananController extends BaseController
 
         $grup = $collect->groupBy(function ($item, $key){
 
-		            return $item['tingkat'].' '.$item['jurusan'];
+		            return 'Kelas '.$item['tingkat'].' | Jurusan '.$item['jurusan'];
 
 		        })->map(function ($row) {
 
-                    return $row->sum('besar_pembayaran');
+                    return '('.$row->count('*').' Siswa) Rp'.number_format($row->sum('besar_pembayaran'));
 
           		});
 
-        $total = $collect->sum('besar_pembayaran');
+        $total = '('.$collect->count('*').' Siswa) Rp'.number_format($collect->sum('besar_pembayaran'));
 
         $callback['grup'] = $grup;
         $callback['total'] = $total;

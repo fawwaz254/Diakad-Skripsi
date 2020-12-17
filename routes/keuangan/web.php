@@ -338,12 +338,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::group(array('prefix' => 'pembayaran-siswa'), function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@viewPembayaranSiswa');
                 Route::get('datatables', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@datatablesPembayaranSiswa');
+
+                Route::group(array('prefix' => 'bulanan'), function () {
+                      Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@viewPembayaranSiswaBulanan');
+                      Route::get('/dataPembayaranSiswaBulanan', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@dataPembayaranSiswaBulanan');
+                });
             });
 
-            Route::group(array('prefix' => 'pembayaran-siswa-bulanan'), function () {
-                  Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@viewPembayaranSiswaBulanan');
-                  Route::get('/dataPembayaranSiswaBulanan', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@dataPembayaranSiswaBulanan');
-            });
         });
     });
 });
