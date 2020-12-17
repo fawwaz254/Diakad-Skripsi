@@ -62,7 +62,7 @@ class PembayaranSiswaController extends BaseController
                     ->leftJoin('bank_via', 'bank_via.id_bank_via', '=', 'pembayaran_biaya.id_bank_via')
                     ->where('siswa.id_siswa', '=', $siswa->id_siswa)
                     ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->where('pembayaran_biaya.tgl_pembayaran', 'LIKE', $tgl_pembayaran.'%')
+                    ->whereDate('pembayaran_biaya.tgl_pembayaran', $tgl_pembayaran)
                     ->get();
 
         return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));

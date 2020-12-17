@@ -66,6 +66,13 @@
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="tagihan">
+                            <div class="block-header">
+                                <h2>
+                                    <a class="btn btn-info waves-effect" target="_blank" href="{{url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d'))}}">
+                                        <i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span>
+                                    </a>
+                                </h2>
+                            </div>
                             <div class="body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tagihan">
@@ -85,13 +92,6 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="riwayat_bayar">
                             <div class="body">
-                                <div class="block-header">
-                                    <h2>
-                                        <a class="btn btn-info waves-effect" target="_blank" href="{{url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d'))}}">
-                                            <i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span>
-                                        </a>
-                                    </h2>
-                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_riwayat_bayar">
                                         <thead>
