@@ -35,13 +35,37 @@ class PembayaranSiswaController extends BaseController
         return view('keuangan/utility/pembayaran-siswa/view-pembayaran-siswa', compact('auth_data', 'nis_nama_siswa'));
     }
 
-    public function printPembayaranSiswa(Request $request, $id_pengguna = null)
+    public function printPembayaranSiswa(Request $request, $id_pengguna = null, $tgl_pembayaran = null)
     {
         # code..
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data'));
+        $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_pembayaran_siswa = PembayaranBiaya::select('siswa.id_siswa', 'tagihan_biaya.id_tagihan_biaya', 'pembayaran_biaya.id_pembayaran_biaya', 'kelompok_biaya.nm_kelompok_biaya', 's_biaya.tahun_ajaran as tahun_ajaran_biaya', 's_biaya.nm_semester as nm_semester_biaya', 'jalur.nm_jalur', 'biaya.nm_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 's_bayar.tahun_ajaran as tahun_ajaran_bayar', 's_bayar.nm_semester as nm_semester_bayar', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembayaran_biaya.besar_pembayaran', 'pembayaran_biaya.tgl_pembayaran', 'bank.nm_bank', 'bank_via.nm_bank_via', 'pembayaran_biaya.nomor_transaksi')
+                    ->join('tagihan_biaya', 'tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya')
+                    ->join('siswa', 'siswa.id_siswa', '=', 'tagihan_biaya.id_siswa')
+                    ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
+                    ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
+                    ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
+                    ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
+                    ->join('kelompok_biaya', 'kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
+                    ->join('biaya', 'biaya.id_biaya', '=', 'detail_biaya.id_biaya')
+                    ->join('semester AS s_biaya', 's_biaya.id_semester', '=', 'biaya_sekolah.id_semester')
+                    ->leftJoin('jalur', 'jalur.id_jalur', '=', 'biaya_sekolah.id_jalur')
+                    ->join('semester AS s_bayar', 's_bayar.id_semester', '=', 'pembayaran_biaya.id_semester_bayar')
+                    ->leftjoin('staff', 'staff.id_staff', '=', 'pembayaran_biaya.id_staff_bayar')
+                    ->leftjoin('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                    ->leftJoin('bank', 'bank.id_bank', '=', 'pembayaran_biaya.id_bank')
+                    ->leftJoin('bank_via', 'bank_via.id_bank_via', '=', 'pembayaran_biaya.id_bank_via')
+                    ->where('siswa.id_siswa', '=', $siswa->id_siswa)
+                    ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('pembayaran_biaya.tgl_pembayaran', 'LIKE', $tgl_pembayaran.'%')
+                    ->get();
+
+        return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));
     }
 
     public function actionViewPembayaranSiswa(Request $request)

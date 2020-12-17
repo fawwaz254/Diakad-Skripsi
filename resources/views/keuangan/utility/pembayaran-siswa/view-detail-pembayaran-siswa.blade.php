@@ -87,7 +87,7 @@
                             <div class="body">
                                 <div class="block-header">
                                     <h2>
-                                        <a class="btn btn-info waves-effect" target="_blank" href="{{url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran-hari-ini/'.$siswa->id_siswa)}}">
+                                        <a class="btn btn-info waves-effect" target="_blank" href="{{url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d'))}}">
                                             <i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span>
                                         </a>
                                     </h2>

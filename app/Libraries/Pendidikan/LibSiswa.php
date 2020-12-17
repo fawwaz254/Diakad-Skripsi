@@ -45,10 +45,14 @@ class LibSiswa
     /** GET SISWA BY ID_PENGGUNA SISWA **/
     public static function fetchDataSiswaByPengguna($auth_data, $id_pengguna)
     {
-        $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+        $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas', 'calon_siswa_baru.jenis_kelamin')
                     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                     ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                     ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                    ->leftJoin('calon_siswa_baru', function ($q) {
+                        $q->on('calon_siswa_baru.id_c_siswa', '=', 'siswa.id_c_siswa')
+                            ->whereNull('calon_siswa_baru.deleted_at');
+                    })
                     ->where('pengguna.id_pengguna', '=', $id_pengguna)
                     ->first();
 
