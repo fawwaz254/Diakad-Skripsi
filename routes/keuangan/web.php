@@ -345,6 +345,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 });
             });
 
+            Route::group(array('prefix' => 'tagihan-siswa'), function () {
+                Route::get('/', 'Keuangan\LaporanKeuangan\TagihanSiswaController@viewTagihanSiswa');
+                Route::post('datatables', 'Keuangan\LaporanKeuangan\TagihanSiswaController@datatablesTagihanSiswa');
+            });
+
         });
     });
 });
