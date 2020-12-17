@@ -45,6 +45,10 @@ class Kelas extends Model
     }
 
 
+    public function jurusan(){
+        return $this->belongsTo(Jurusan::class, 'id_jurusan');
+    }
+
 
 
 }
