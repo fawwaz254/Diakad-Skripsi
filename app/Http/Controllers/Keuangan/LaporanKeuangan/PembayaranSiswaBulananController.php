@@ -23,7 +23,7 @@ class PembayaranSiswaBulananController extends BaseController
         $auth_data = $input->auth_data;
         $bulan = Bulan::orderBy('id_bulan')->get();
 
-        $now = Carbon::today();
+        $now = Carbon::today(env('APP_TIMEZONE', 'Asia/Jakarta'));
 		$id_bulan = $now->month;
 		$id_tahun = $now->year;
 

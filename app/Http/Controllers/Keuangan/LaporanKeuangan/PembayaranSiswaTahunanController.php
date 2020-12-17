@@ -16,7 +16,15 @@ class PembayaranSiswaTahunanController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('keuangan/laporan-keuangan/pembayaran-siswa-tahunan/view-pembayaran-siswa-tahunan', compact('auth_data'));
+        $now = Carbon::today(env('APP_TIMEZONE', 'Asia/Jakarta'));
+        $id_tahun = $now->year;
+        
+        $data = json_decode($this->dataPembayaranSiswaTahunan($request, $id_tahun)->getContent());
+
+        $list_data = $data->listData;
+        $total = $data->total;
+
+        return view('keuangan/laporan-keuangan/pembayaran-siswa-tahunan/view-pembayaran-siswa-tahunan', compact('auth_data','list_data','total','id_tahun'));
     }
 
     public function dataPembayaranSiswaTahunan(Request $request, $year = null)
@@ -39,17 +47,18 @@ class PembayaranSiswaTahunanController extends BaseController
                 'tgl_bayar' => $value->tgl_pembayaran
             ];
         }
-        $total = $temp_list_data->sum('besar_pembayaran');
         $groupedList = collect($list_data)->groupBy(function($item, $key){
-            return $item['kelas'] . ' ' . $item['jurusan'];
+            return 'Kelas '.$item['kelas'].' | Jurusan '.$item['jurusan'];
         });
         $listGrup = $groupedList->map(function($row){
-            return number_format($row->sum('jumlah_pembayaran'));
+            return '('.$row->count('*').' Siswa) Rp'.number_format($row->sum('jumlah_pembayaran'));
         });
+        
+        $total = '('.$temp_list_data->count('*').' Siswa) Rp'.number_format($temp_list_data->sum('besar_pembayaran'));
         
         $data = [
             'listData' => $listGrup,
-            'total' => number_format($total)
+            'total' => $total
         ];
         return response()->json($data); 
     }

@@ -65,10 +65,10 @@
                     <ul class="list-group">
                         <div id="kotak">
                         @foreach($grup as $key => $r)
-                        <li class="list-group-item">{{$key}} <span class="badge bg-teal">{{$r}}</span></li>
+                        <li class="list-group-item">{{$key}} <span class="pull-right">{{$r}}</span></li>
                         @endforeach
                         </div>
-                        <li class="list-group-item" style="border:2px solid black;">Total Pembayaran <span class="badge bg-purple" id="total_pembayaran">{{$total}}</span></li>
+                        <li class="list-group-item" style="border:2px solid black;">Total Pembayaran <span class="pull-right" id="total_pembayaran">{{$total}}</span></li>
                     </ul>
 
                 </div>
@@ -100,7 +100,7 @@
 
             $.each(response.grup,function(key,value){
                 $('#kotak').append(`
-                    <li class="list-group-item">`+key+` <span class="badge bg-teal">`+value+`</span></li>
+                    <li class="list-group-item">`+key+` <span class="pull-right">`+value+`</span></li>
                 `);
             });
 
