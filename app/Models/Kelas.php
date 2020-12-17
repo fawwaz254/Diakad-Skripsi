@@ -44,7 +44,11 @@ class Kelas extends Model
         return $this->hasMany(TagihanBiaya::class, 'id_kelas');
     }
 
+    public function jurusan(){
 
+        return $this->belongsTo(Jurusan::class, 'id_jurusan');
+
+    }
 
 
 }
