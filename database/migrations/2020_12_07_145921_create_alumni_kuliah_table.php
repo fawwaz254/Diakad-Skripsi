@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlumniIdlesTable extends Migration
+class CreateAlumniKuliahTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,16 @@ class CreateAlumniIdlesTable extends Migration
      */
     public function up()
     {
-        Schema::create('alumni_idle', function (Blueprint $table) {
+        Schema::create('alumni_kuliah', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->string('id_alumni_idle', 40)->primary();
+            $table->string('id_alumni_kuliah', 40)->primary();
             $table->string('id_alumni', 40)->comment('FK: alumni.id_alumni');
-            $table->string('idle_status');
+            $table->string('nm_perguruan');
+            $table->string('alamat_perguruan');
+            $table->string('fakultas');
+            $table->string('prodi');
+            $table->string('jenjang');
+            $table->integer('tahun_masuk_perguruan');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->string('deleted_by', 40)->nullable();
@@ -33,6 +38,6 @@ class CreateAlumniIdlesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alumni_idle');
+        Schema::dropIfExists('alumni_kuliah');
     }
 }

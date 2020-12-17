@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlumniWorkplacesTable extends Migration
+class CreateAlumniBekerjaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateAlumniWorkplacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('alumni_workplace', function (Blueprint $table) {
+        Schema::create('alumni_bekerja', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->string('id_alumni_workplace', 40)->primary();
+            $table->string('id_alumni_bekerja', 40)->primary();
             $table->string('id_alumni', 40)->comment('FK: alumni.id_alumni');
             $table->string('nm_instansi');
             $table->string('alamat_instansi');
@@ -37,6 +37,6 @@ class CreateAlumniWorkplacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alumni_workplace');
+        Schema::dropIfExists('alumni_bekerja');
     }
 }

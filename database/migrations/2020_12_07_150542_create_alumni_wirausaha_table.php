@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlumniUniversitiesTable extends Migration
+class CreateAlumniWirausahaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateAlumniUniversitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('alumni_university', function (Blueprint $table) {
+        Schema::create('alumni_wirausaha', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->string('id_alumni_university', 40)->primary();
+            $table->string('id_alumni_wirausaha', 40)->primary();
             $table->string('id_alumni', 40)->comment('FK: alumni.id_alumni');
-            $table->string('nm_perguruan');
-            $table->string('alamat_perguruan');
-            $table->string('fakultas');
-            $table->string('prodi');
-            $table->string('jenjang');
-            $table->integer('tahun_masuk_perguruan');
+            $table->string('nm_usaha');
+            $table->string('alamat_usaha');
+            $table->string('kontak_usaha');
+            $table->string('bidang_usaha');
+            $table->integer('jumlah_karyawan');
+            $table->integer('tahun_rintis');
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->string('deleted_by', 40)->nullable();
@@ -38,6 +38,6 @@ class CreateAlumniUniversitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('alumni_university');
+        Schema::dropIfExists('alumni_wirausaha');
     }
 }
