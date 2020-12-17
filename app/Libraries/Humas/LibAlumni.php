@@ -3,10 +3,10 @@
 namespace App\Libraries\Keuangan;
 
 use App\Models\Alumni;
-use App\Models\AlumniIdle;
-use App\Models\AlumniBusiness;
-use App\Models\AlumniWorkplace;
-use App\Models\AlumniUniversity;
+use App\Models\AlumniMenunggu;
+use App\Models\AlumniWirausaha;
+use App\Models\AlumniBekerja;
+use App\Models\AlumniKuliah;
 use Illuminate\Support\Facades\DB;
 
 
@@ -19,22 +19,22 @@ class LibAlumni {
 
   public static function storeWorkplace($data)
   {
-    return AlumniWorkplace::insert($data);
+    return AlumniBekerja::insert($data);
   }
 
   public static function storeUniversity($data)
   {
-    return AlumniUniversity::insert($data);
+    return AlumniKuliah::insert($data);
   }
 
   public static function storeBusiness($data)
   {
-    return AlumniBusiness::insert($data);
+    return AlumniWirausaha::insert($data);
   }
 
   public static function storeIdleAlumni($data)
   {
-    return AlumniIdle::insert($data);
+    return AlumniMenunggu::insert($data);
   }
 
   public static function getAlumnis()

@@ -32,21 +32,21 @@ class Alumni extends Model
 
     public function bekerja()
     {
-        return $this->hasOne(AlumniWorkplace::class, 'id_alumni');
+        return $this->hasOne(AlumniBekerja::class, 'id_alumni');
     }
 
     public function kuliah()
     {
-        return $this->hasOne(AlumniUniversity::class, 'id_alumni');
+        return $this->hasOne(AlumniKuliah::class, 'id_alumni');
     }
 
     public function usaha()
     {
-        return $this->hasOne(AlumniBusiness::class, 'id_alumni');
+        return $this->hasOne(AlumniWirausaha::class, 'id_alumni');
     }
 
     public function menunggu()
     {
-        return $this->hasOne(AlumniIdle::class, 'id_alumni');
+        return $this->hasOne(AlumniMenunggu::class, 'id_alumni');
     }
 }

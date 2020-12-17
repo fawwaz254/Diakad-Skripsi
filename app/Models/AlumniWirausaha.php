@@ -6,19 +6,24 @@ use App\Models\Alumni;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AlumniIdle extends Model
+class AlumniWirausaha extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'alumni_idle';
-    protected $primaryKey = 'id_alumni_idle';
+    protected $table = 'alumni_wirausaha';
+    protected $primaryKey = 'id_alumni_wirausaha';
     public $timestamps = true;
     public $incrementing = false;
 
     protected $fillable = [
-        'id_alumni_idle',
+        'id_alumni_wirausaha',
         'id_alumni',
-        'idle_status',
+        'nm_usaha',
+        'alamat',
+        'kontak',
+        'bidang_usaha',
+        'jumlah_karyawan',
+        'tahun_rintis',
         'created_by',
         'updated_by',
         'deleted_by'
@@ -26,6 +31,6 @@ class AlumniIdle extends Model
 
     public function alumni()
     {
-        return $this->belongsTo(Alumni::class, 'id_alumni', 'id_alumni');
+        return $this->belongsTo(Alumni::class, 'id_alumni');
     }
 }

@@ -7,15 +7,15 @@ use App\Models\Siswa;
 use App\Models\Alumni;
 use App\Models\Jurusan;
 use App\Models\Pengguna;
-use App\Models\AlumniIdle;
+use App\Models\AlumniMenunggu;
 use Illuminate\Http\Request;
-use App\Models\AlumniBusiness;
+use App\Models\AlumniWirausaha;
 use App\Models\CalonSiswaBaru;
 use App\Models\CalonSiswaOrtu;
 use App\Models\StatusPengguna;
-use App\Models\AlumniWorkplace;
+use App\Models\AlumniBekerja;
 use App\Models\CalonSiswaFisik;
-use App\Models\AlumniUniversity;
+use App\Models\AlumniKuliah;
 use App\Models\CalonSiswaSekolah;
 use App\Http\Controllers\Controller;
 use App\Libraries\Keuangan\LibAlumni;
@@ -30,7 +30,7 @@ class AlumniController extends Controller
     const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat_instansi', 'kontak_instansi', 'bidang_usaha_instansi', 'tahun_masuk_instansi'];
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat_perguruan', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk_perguruan'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat_usaha', 'kontak_usaha', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
-    const FETCH_IDLE_ATTRIBUTE = ['idle_status'];
+    const FETCH_IDLE_ATTRIBUTE = ['status_menunggu'];
 
     /**
      * Display a listing of the resource.
@@ -235,16 +235,16 @@ class AlumniController extends Controller
 
         switch ($request->status) {
             case 'bekerja':
-                $data['id_alumni_workplace']    = $id;
+                $data['id_alumni_bekerja']    = $id;
             break;
             case 'usaha':
-                $data['id_alumni_business']     = $id;
+                $data['id_alumni_wirausaha']     = $id;
             break;
             case 'kuliah':
-                $data['id_alumni_university']   = $id;
+                $data['id_alumni_kuliah']   = $id;
             break;
             case 'menunggu':
-                $data['id_alumni_idle']         = $id;
+                $data['id_alumni_menunggu']         = $id;
             break;
         }
 
