@@ -20,6 +20,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::post('action-pencarian/{mode}/{id}', 'Administrator\PengelolaanAkun\PencarianController@actionPencarian');
 
+			Route::post('reset-some-password', 'Administrator\PengelolaanAkun\PencarianController@resetPasswordCollection');
+			
 			// MENU Tenaga Pendidik
 			// url: /administrator/pengelolaan-akun/tendik
 			Route::get('tendik', 'Administrator\PengelolaanAkun\TendikController@viewTendik');

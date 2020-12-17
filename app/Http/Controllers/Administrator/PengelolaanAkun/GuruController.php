@@ -132,6 +132,12 @@ class GuruController extends BaseController
                         return $item->nm_pengguna;
                     }
                 })
+                ->addColumn('checkbox', function($item) {
+                    $data = array(
+                        'id_pengguna' => $item->id_pengguna
+                    );
+                    return $data;
+                })
                 ->make(true);
     }
 }

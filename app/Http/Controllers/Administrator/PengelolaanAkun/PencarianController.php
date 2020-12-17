@@ -350,4 +350,39 @@ class PencarianController extends BaseController
             }
         }
     }
+
+    public function resetPasswordCollection(Request $request){
+        $input = (object) $request->input();
+
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        try {
+
+            foreach($input->data_pengguna as $id_pengguna){
+                $pengguna                       = Pengguna::find($id_pengguna);
+                $pengguna->password             = Hash::make($pengguna->username);
+                $pengguna->must_change_password = 1;
+                $pengguna->last_time_password   = $now;
+                $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                $pengguna->updated_at           = $now;
+                $pengguna->save();
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status_code' 	=> 200,
+                'status_text' 	=> 'Success',
+                'message' => 'Reset some password account successfully'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+            ]);
+        }
+    }
 }
