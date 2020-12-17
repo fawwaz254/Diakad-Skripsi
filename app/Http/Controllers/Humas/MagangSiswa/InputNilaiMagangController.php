@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -34,7 +34,7 @@ class InputNilaiMagangController extends BaseController
 
       $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
-    	return view('pendidikan/magang-siswa/input-nilai-magang/view-periode-magang',compact('auth_data','data_periode_magang'));
+    	return view('humas/magang-siswa/input-nilai-magang/view-periode-magang',compact('auth_data','data_periode_magang'));
     }
     public function actionViewKomponenInputNilaiMagang(Request $request){
         # code...
@@ -98,7 +98,7 @@ class InputNilaiMagangController extends BaseController
 
             }
         }
-    	return view('pendidikan/magang-siswa/input-nilai-magang/view-komponen-input-nilai-magang',compact('auth_data','id_periode_magang','periodeMagang','list_data','list_siswa','nilai_magang_siswa'));
+    	return view('humas/magang-siswa/input-nilai-magang/view-komponen-input-nilai-magang',compact('auth_data','id_periode_magang','periodeMagang','list_data','list_siswa','nilai_magang_siswa'));
     }
 
     public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang){

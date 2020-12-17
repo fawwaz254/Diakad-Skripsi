@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -32,7 +32,7 @@ class ApproveSiswaMagangController extends BaseController
       $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
       $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
-    	return view('pendidikan/magang-siswa/approve-siswa-magang/view-approve-siswa-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
+    	return view('humas/magang-siswa/approve-siswa-magang/view-approve-siswa-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
 
     }
     public function actionViewDetailApproveSiswaMagang(Request $request){
@@ -75,7 +75,7 @@ class ApproveSiswaMagangController extends BaseController
       	$data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data,$id_rekanan_magang);
 
 
-        return view('pendidikan/magang-siswa/approve-siswa-magang/view-detail-approve-siswa-magang',compact('auth_data','id_periode_magang','data_periode_magang', 'nis_nama_siswa','id_rekanan_magang','data_rekanan_magang'));
+        return view('humas/magang-siswa/approve-siswa-magang/view-detail-approve-siswa-magang',compact('auth_data','id_periode_magang','data_periode_magang', 'nis_nama_siswa','id_rekanan_magang','data_rekanan_magang'));
 
     }
     public function datatablesApproveSiswaMagang(Request $request, $id_periode_magang, $id_rekanan_magang,$nis_nama_siswa){

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -29,7 +29,7 @@ class KomponenNilaiMagangController extends BaseController
 
         $data_periode = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
-    	return view('pendidikan/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang',compact('auth_data','data_periode'));
+    	return view('humas/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang',compact('auth_data','data_periode'));
 
     }
     public function actionViewKelasKomponenNilaiMagang(Request $request){
@@ -61,7 +61,7 @@ class KomponenNilaiMagangController extends BaseController
 
         $data_periode = LibMagangSiswa::fetchDataKomponenNilaiMagang($auth_data, $id_periode_magang);
 
-        return view('pendidikan/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang-periode',compact('auth_data','data_periode','id_periode_magang'));
+        return view('humas/magang-siswa/komponen-nilai-magang/view-komponen-nilai-magang-periode',compact('auth_data','data_periode','id_periode_magang'));
 
     }
     public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang){
@@ -91,7 +91,7 @@ class KomponenNilaiMagangController extends BaseController
 
         $id_komponen_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('pendidikan/magang-siswa/komponen-nilai-magang/add-komponen-nilai-magang',compact('auth_data','data_periode','id_komponen_magang','id_periode_magang'));
+        return view('humas/magang-siswa/komponen-nilai-magang/add-komponen-nilai-magang',compact('auth_data','data_periode','id_komponen_magang','id_periode_magang'));
 
     }
 
@@ -104,7 +104,7 @@ class KomponenNilaiMagangController extends BaseController
 
         $list_data = LibMagangSiswa::fetchDataKomponenNilaiMagangDetail($auth_data, $id_periode_magang,$id);
  
-        return view('pendidikan/magang-siswa/komponen-nilai-magang/edit-komponen-nilai-magang',compact('auth_data','data_periode','list_data'));
+        return view('humas/magang-siswa/komponen-nilai-magang/edit-komponen-nilai-magang',compact('auth_data','data_periode','list_data'));
 
     }
 
