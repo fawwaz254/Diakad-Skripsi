@@ -82,7 +82,17 @@ var primary_table = $('#primary_table').DataTable({
         { data: 'pengguna.nm_pengguna' },
         { data: 'kelas.nm_kelas' },
         { data: 'total_tagihan_bulan', searchable: false, orderable: false },
-        { data: 'tagihan_bulan', searchable: false, orderable: false },
+        { data: 'tagihan_bulan', searchable: false, orderable: false,
+            render: function(data){
+                var html = '<ul>';
+                $.each(data,function(key, value){
+                    html += '<li>'+value.judul+' ('+value.biaya+')</li>';
+                });
+                html += '</ul>';
+
+                return html;
+            }
+        },
     ]
 });
 

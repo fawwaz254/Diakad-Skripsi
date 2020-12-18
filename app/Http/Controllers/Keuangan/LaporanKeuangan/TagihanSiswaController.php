@@ -101,16 +101,20 @@ class TagihanSiswaController extends BaseController
                         $tagihan_bulan['id_bulan'] = 13;
                         $tagihan_bulan['jenis_tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->biaya->nm_biaya;
                         $tagihan_bulan['judul'] = $tagihan_bulan['jenis_tagihan'];
-                        if($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->id_jenis_detail_biaya==4){
+                        $tagihan_bulan['biaya'] = 'Rp'.number_format($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->besar_biaya);
+
+                        if($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->id_jenis_detail_biaya == 4){
                             $tagihan_bulan['id_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->bulan->id_bulan;
                             $tagihan_bulan['nm_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->bulan->nm_bulan;
-                            $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' bulan '.$tagihan_bulan['nm_bulan'];
-                        }      
+                            $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'];
+                        }else{
+                            $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->keterangan_biaya;
+                        }
                         $array_tagihan_bulan[] = $tagihan_bulan;
                     }
 
                     if(!empty($array_tagihan_bulan)){
-                        $array_tagihan_bulan = collect($array_tagihan_bulan)->sortBy('id_bulan')->pluck('judul');
+                        $array_tagihan_bulan = collect($array_tagihan_bulan)->sortBy('id_bulan')->toArray();
                     }
 
                     return $array_tagihan_bulan;
