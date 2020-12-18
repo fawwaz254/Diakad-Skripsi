@@ -73,7 +73,7 @@
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars" style="display: none;"></a>
-                <a class="navbar-brand"><?=str_replace('-', ' ', strtoupper($theme_name))?> <?=strtoupper($auth_data->sekolah_data->nm_sekolah)?> - {{strtoupper(env('APP_NAME', 'diakad'))}} </a>
+                <a class="navbar-brand"><?=str_replace('-', ' ', strtoupper($theme_name))?> <?=strtoupper(auth_data()->sekolah_data->nm_sekolah)?> - {{strtoupper(env('APP_NAME', 'diakad'))}} </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -207,7 +207,7 @@
                         </ul>
                     </li>
                     <!-- #END# Notifications -->
-                    @if($semester_aktif = \App\Libraries\Pendidikan\LibDataAkademik::fetchDataSemesterAktif($auth_data))
+                    @if($semester_aktif = \App\Libraries\Pendidikan\LibDataAkademik::fetchDataSemesterAktif(auth_data()))
                     <li><a class="navbar-brand" style="display: block; left: 8px;">TH AJARAN {{strtoupper($semester_aktif->tahun_ajaran.' ('.$semester_aktif->nm_semester.')')}}</a></li>
                     @endif
                 </ul>

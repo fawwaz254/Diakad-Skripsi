@@ -33,7 +33,7 @@ class RolePengguna extends Model
     protected $guarded = [];
 
     public function role(){
-        return $this->belongsTo('App\Models\Role', 'id_role');
+        return $this->belongsTo(Role::class, 'id_role');
     }    
 
 }

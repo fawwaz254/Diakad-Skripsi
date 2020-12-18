@@ -23,8 +23,8 @@ class AuthGlobalController extends BaseController
     public function indexDashboard(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        return view('dashboard', compact('auth_data'));
+
+        return view('dashboard');
     }
 
     public function indexMustChangePassword(Request $request)
@@ -160,8 +160,6 @@ class AuthGlobalController extends BaseController
         $pengguna = $input->auth_data->pengguna;
         $pengguna->nm_pengguna = $input->name;
         $pengguna->save();
-
-        $roles_pengguna = $input->auth_data->roles_pengguna;
 
         if ($role_pengguna_selected = RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('id_role', $input->role)->first()) {
             foreach (RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->get() as $role_pengguna) {
