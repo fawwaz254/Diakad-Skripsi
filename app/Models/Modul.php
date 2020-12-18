@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Menu;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -35,7 +36,10 @@ class Modul extends Model
     protected $guarded = [];
 
 
-
+    public function menus()
+    {
+        return $this->hasMany(Menu::class, 'id_modul')->where('akses', 1)->orderBy('urutan', 'asc');
+    }
 
 
 
