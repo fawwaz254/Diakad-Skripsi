@@ -10,16 +10,16 @@
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
         <!-- User Info -->
-        <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
+        <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{auth_data()->sekolah_data->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
-                <img src="https://ui-avatars.com/api/?size=100&name={{$auth_data->pengguna->nm_pengguna}}" height="50" />
+                <img src="https://ui-avatars.com/api/?size=100&name={{auth_data()->pengguna->nm_pengguna}}" height="50" />
             </div>
             <div class="info-container">
-                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{$auth_data->pengguna->nm_pengguna}}
+                <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{auth_data()->pengguna->nm_pengguna}}
                 </div>
-                <div class="email">{{$auth_data->pengguna->username}}</div>
-                @if(!empty($auth_data->nm_anak_murid))
-                <small style="font-size: x-small; color: white;">(Siswa) {{$auth_data->nm_anak_murid}}</small>
+                <div class="email">{{auth_data()->pengguna->username}}</div>
+                @if(!empty(auth_data()->nm_anak_murid))
+                <small style="font-size: x-small; color: white;">(Siswa) {{auth_data()->nm_anak_murid}}</small>
                 @endif
                 <div class="btn-group user-helper-dropdown">
                     <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
@@ -43,7 +43,7 @@
                         <span>Home</span>
                     </a>
                 </li>
-                @foreach($auth_data->moduls as $modul)
+                @foreach(get_moduls() as $modul)
                 <li id="modul-item-{{$modul->route}}" class="modul-item">
                     @if(!empty($modul->page))
                     <a class="target-link" href="{{url(Request::segment(1).'#'.$modul->page)}}" class="menu-toggle waves-effect waves-block">
@@ -52,9 +52,9 @@
                     @endif
                         <span>{{$modul->nm_modul}}</span>
                     </a>
-                    @if($auth_data->menus->where('id_modul', $modul->id_modul)->first())
+                    @if(count($modul->menus))
                     <ul class="ml-menu">
-                        @foreach($auth_data->menus->where('id_modul', $modul->id_modul)->sortBy('urutan')->all() as $menu)
+                        @foreach($modul->menus as $menu)
                         <li id="menu-item-{{$modul->route}}-{{$menu->page}}" class="menu-item">
                             @if(!empty($menu->page))
                             <a class="target-link" href="{{url(Request::segment(1).'#'.$modul->route.'/'.$menu->page)}}" class="waves-effect waves-block">
