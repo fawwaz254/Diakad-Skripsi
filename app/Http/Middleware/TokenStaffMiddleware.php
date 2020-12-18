@@ -40,8 +40,7 @@ class TokenStaffMiddleware
 
                 $roles_pengguna = $pengguna->role_pengguna;
                 $role_aktif = $roles_pengguna->where('is_aktif', 1)->first();
-                $moduls = Modul::where(['id_role' => $role_aktif->id_role, 'akses' => 1])->orderBy('urutan', 'asc')->get();
-                $menus = Menu::with('modul')->whereIn('id_modul', $moduls->pluck('id_modul'))->where('akses', 1)->orderBy('urutan', 'asc')->get();
+                $moduls = Modul::with('menus')->where(['id_role' => $role_aktif->id_role, 'akses' => 1])->orderBy('urutan', 'asc')->get();
 
                 if (request()->segment(1) != 'pendidikan' && $role_aktif->id_role == 1) {
                     $role = Role::find($role_aktif->id_role);
@@ -130,33 +129,34 @@ class TokenStaffMiddleware
 
                 $tambahan_modul = [];
                 if ($role_aktif->id_role == 2) {
-                    if ($guru = Guru::where('id_pengguna', $pengguna->id_pengguna)->first()) {
-                        if ($guru_piket = GuruPiket::where('id_pengguna', $pengguna->id_pengguna)->where('is_aktif', 1)->first()) {
+                    $id_pengguna = $pengguna->id_pengguna;
+                    $guru = Guru::where('id_pengguna', $id)->first();
+
+                    if ($guru) {
+
+                        if ($this->isGuruPiket($id_pengguna)) {
                             $tambahan_modul[] = 35;
                         }
 
-                        if ($wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first()) {
+                        if ($this->isGuruPiket($guru->id_guru)) {
                             $tambahan_modul[] = 36;
                         }
 
-                        if ($pembina_ekskul_set = PembinaEkskulSet::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first()) {
+                        if ($this->isGuruEkskul($guru->id_guru)) {
                             $tambahan_modul[] = 37;
                         }
                     }
                 }
 
                 if ($role_aktif->id_role == 15) {
-                    if ($guru_piket = GuruPiket::where('id_pengguna', $pengguna->id_pengguna)->where('is_aktif', 1)->first()) {
+                    if ($this->isGuruPiket($id_pengguna)) {
                         $tambahan_modul[] = 35;
                     }
                 }
 
                 if (!empty($tambahan_modul)) {
-                    $moduls_2 = Modul::whereIn('id_modul', $tambahan_modul)->get();
-                    $menus_2 = Menu::whereIn('id_modul', $tambahan_modul)->where('akses', 1)->get();
-
-                    $moduls = collect($moduls->merge($moduls_2)->all());
-                    $menus = collect($menus->merge($menus_2)->all());
+                    $additionalModule = Modul::whereIn('id_modul', $tambahan_modul)->with('menus')->orderBy('urutan', 'asc')->get();
+                    $moduls = collect($moduls->merge($additionalModule)->all());
                 }
 
                 // IF Wali Murid
@@ -174,7 +174,6 @@ class TokenStaffMiddleware
                     'sekolah_data' => $sekolah_data,
                     'roles_pengguna' => $roles_pengguna,
                     'moduls' => $moduls,
-                    'menus' => $menus,
                     'nm_anak_murid' => $nm_anak_murid
                 );
 
@@ -185,5 +184,25 @@ class TokenStaffMiddleware
         } else {
             return redirect('/');
         }
+    }
+
+    private function isGuru($id)
+    {
+       return Guru::where('id_pengguna', $id)->exists();   
+    }
+
+    private function isGuruPiket($id)
+    {
+        return GuruPiket::where('id_pengguna', $id)->where('is_aktif', 1)->exists();
+    }
+
+    private function isWaliKelas($id)
+    {
+        return WaliKelas::where('id_guru', $id)->where('is_aktif', 1)->exists();
+    }
+
+    private function isGuruEkskul($id)
+    {
+        return PembinaEkskulSet::where('id_guru', $id)->where('is_aktif', 1)->exists();
     }
 }
