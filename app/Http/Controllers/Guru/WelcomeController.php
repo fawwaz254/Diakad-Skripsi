@@ -18,7 +18,7 @@ class WelcomeController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $role_aktif = $auth_data->roles_pengguna->where('is_aktif', 1)->first();
+        $role_aktif = $auth_data->role_aktif;
 
         $role_dashboard = RoleDashboard::where(['id_role' => $role_aktif->id_role, 'is_aktif' => 1])->first();
         return view('guru/welcome', compact('auth_data', 'role_dashboard')); //folder akademik/nama file welcome.blade
