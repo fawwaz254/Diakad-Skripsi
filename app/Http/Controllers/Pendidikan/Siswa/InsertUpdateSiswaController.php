@@ -393,29 +393,6 @@ class InsertUpdateSiswaController extends BaseController
 							'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 						]);
 
-	    				DB::table('calon_siswa_prestasi')->insert([
-							'id_c_siswa_prestasi'		=> $id_c_siswa_prestasi,
-							'id_c_siswa'				=> $input->id_c_siswa,
-							'id_tingkat_prestasi_siswa'	=> $input->id_tingkat_prestasi_siswa,
-							'jenis_prestasi_c_siswa'	=> $input->jenis_prestasi,
-							'nm_prestasi_c_siswa'		=> $input->nm_prestasi_c_siswa,
-							'tgl_prestasi_c_siswa'		=> $input->tgl_prestasi_c_siswa,
-							'penyelenggara_prestasi_c_siswa'	=> $input->penyelenggara_prestasi_c_siswa,
-							'peringkat_prestasi_c_siswa'	=> $input->peringkat_prestasi_c_siswa,
-							'created_at'		=> $now,
-							'created_by' 			=> $input->auth_data->pengguna->id_pengguna					    	
-						]);
-
-		    			DB::table('calon_siswa_beasiswa')->insert([
-							'id_c_siswa_beasiswa'		=> $id_c_siswa_beasiswa,
-							'id_c_siswa'				=> $input->id_c_siswa,
-							'jenis_beasiswa_c_siswa'	=> $input->jenis_beasiswa_c_siswa,
-							'keterangan_beasiswa_c_siswa'	=> $input->keterangan_beasiswa_c_siswa,
-							'tahun_mulai_beasiswa_c_siswa'	=> $input->tahun_mulai_beasiswa_c_siswa,
-							'tahun_selesai_beasiswa_c_siswa' => $input->tahun_selesai_beasiswa_c_siswa,
-							'created_at'				=> $now,
-							'created_by' 				=> $input->auth_data->pengguna->id_pengguna					    	
-						]);
 	    				DB::commit();
 		    			return [
 							'status' => 200, // SUCCESS AND LOAD TABLE
