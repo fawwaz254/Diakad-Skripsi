@@ -43,8 +43,8 @@ class TokenStaffMiddleware
                 $moduls = Modul::with('menus')->where(['id_role' => $role_aktif->id_role, 'akses' => 1])->orderBy('urutan', 'asc')->get();
 
                 $tambahan_modul = [];
+                $id_pengguna = $pengguna->id_pengguna;
                 if ($role_aktif->id_role == 2) {
-                    $id_pengguna = $pengguna->id_pengguna;
                     $guru = Guru::where('id_pengguna', $id)->first();
 
                     if ($guru) {
