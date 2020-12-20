@@ -45,7 +45,7 @@ class TokenStaffMiddleware
                 $tambahan_modul = [];
                 $id_pengguna = $pengguna->id_pengguna;
                 if ($role_aktif->id_role == 2) {
-                    $guru = Guru::where('id_pengguna', $id)->first();
+                    $guru = Guru::where('id_pengguna', $id_pengguna)->first();
 
                     if ($guru) {
                         if ($this->isGuruPiket($id_pengguna)) {
