@@ -162,6 +162,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('insert-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewInsertUpdateSiswa');
             Route::post('post-view-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@actionViewUpdateSiswa');
             Route::get('insert-update-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewDetailUpdateSiswa');
+            Route::get('insert-update-siswa/view-cari-siswa/{nis_nama_siswa}','Pendidikan\Siswa\InsertUpdateSiswaController@viewCariUpdateSiswa');
+            Route::get('insert-update-siswa/datatables/{nis_nama_siswa}', 'Pendidikan\Siswa\InsertUpdateSiswaController@datatablesCariSiswa');
 
             Route::post('action-insert-update-siswa/{mode}/{id}', 'Pendidikan\Siswa\InsertUpdateSiswaController@actionInsertUpdateSiswa');
 

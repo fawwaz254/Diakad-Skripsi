@@ -135,7 +135,7 @@
                             <form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-update-siswa')}}">
                             {{csrf_field()}}
                                 <h2 class="card-inside-title">
-                                    NIS Siswa
+                                    NIS/NISN atau Nama Siswa
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -77,6 +77,11 @@ class InsertUpdateSiswaController extends BaseController
 					'status' => 204, // SUCCESS AND LOAD CONTENT
 					'path' => 'siswa/insert-update-siswa/view-detail/'.$input->nis_nama_siswa
 				];
+			} elseif ($siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $input->nis_nama_siswa)) {
+				return [
+					'status' => 204, // SUCCESS AND LOAD CONTENT
+					'path' => 'siswa/insert-update-siswa/view-cari-siswa/'.$input->nis_nama_siswa
+				];
 			} else {
 				return [
 					'status' => 300, // FAILED
@@ -116,6 +121,48 @@ class InsertUpdateSiswaController extends BaseController
 
 		return view('pendidikan/siswa/insert-update-siswa/view-update-siswa',compact('auth_data','nis_nama_siswa','siswa','agama','kebutuhanKhusus','jenisTinggal','jenisTransportasi','jenisPip','jenisPendidikan','jenisPenghasilan','jenisPekerjaan','tingkatPrestasi','kotaLahir','kota','provinsi','kotaTinggal'));
 	}
+
+	public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
+	{
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
+
+		$siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
+
+		return view('pendidikan/siswa/insert-update-siswa/view-cari-siswa',compact('auth_data','nis_nama_siswa'));
+	}
+
+	public function datatablesCariSiswa(Request $request, $nis_nama_siswa){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = Siswa::select('siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna','kelas.nm_kelas','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
+          ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
+          ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
+          ->join('status_pengguna','pengguna.id_status_pengguna','=','status_pengguna.id_status_pengguna')
+          ->join('jalur_siswa', function ($join) {
+                            $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+                        })
+          ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
+          ->where(function ($query) use ($nis_nama_siswa) {
+                    $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
+                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%')
+                    ->orWhere('siswa.nisn_siswa', 'like', '%'.$nis_nama_siswa.'%');
+             })
+          ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+          ->get();
+        return Datatables::of($siswa)
+                ->addColumn('action', function($item) use($nis_nama_siswa) {
+                    $data = array(
+                        'id' => $item->nis_siswa,
+                        'id_asli' => $nis_nama_siswa
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
 	public function actionInsertUpdateSiswa(Request $request, $mode, $id = null){
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
