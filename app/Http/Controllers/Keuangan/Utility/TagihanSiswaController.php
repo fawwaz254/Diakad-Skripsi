@@ -205,7 +205,7 @@ class TagihanSiswaController extends BaseController
                         $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
                         $tagihanBiaya->denda_biaya          = 0;
                         $tagihanBiaya->is_tagih             = 1;
-                        $tagihanBiaya->keterangan           = "Tagihan Keuangan";
+                        $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
                         $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
                         $tagihanBiaya->save();
                     }                                                              
