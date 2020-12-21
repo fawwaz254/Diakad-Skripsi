@@ -72,15 +72,10 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Biaya Sekolah</th>
-                                                <th>Jalur</th>
                                                 <th>Nama Biaya</th>
-                                                <th>Jenis Biaya</th>
                                                 <th>Besar Tagihan</th>
-                                                <th>Denda Tagihan</th>
                                                 <th>Besar Pembayaran</th>
                                                 <th>Sisa Tagihan</th>
-                                                <th>Keterangan</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -94,18 +89,11 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Biaya Sekolah</th>
-                                                <th>Jalur</th>
                                                 <th>Nama Biaya</th>
-                                                <th>Jenis Biaya</th>
-                                                <th>Besar Tagihan</th>
-                                                <th>Besar Denda</th>
                                                 <th>Besar Pembayaran</th>
-                                                <th>Staff Keuangan</th>
+                                                <th>Verifikasi Oleh</th>
                                                 <th>Tanggal Bayar</th>
                                                 <th>Semester Bayar</th>
-                                                <th>Via Bank</th>
-                                                <th>Nomor Ref Bank</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -132,21 +120,17 @@
     var primary_table_tagihan = $('#primary_table_tagihan').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 100,
         ajax: {
             url: datatable_tagihan_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
             { data: 'nm_biaya', name: 'nm_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_biaya'},
             { data: 'besar_biaya', name: 'besar_biaya'},
-            { data: 'denda_biaya', name: 'denda_biaya'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'sisa_tagihan', name: 'sisa_tagihan'},
-            { data: 'keterangan', name: 'keterangan'}
         ]
     });
 
@@ -162,24 +146,18 @@
     var primary_table_riwayat_bayar = $('#primary_table_riwayat_bayar').DataTable({
         processing: true,
         serverSide: true,
+        pageLength: 100,
         ajax: {
             url: datatable_riwayat_bayar_url,
             type: 'GET'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'biaya_sekolah', name: 'biaya_sekolah' },
-            { data: 'nm_jalur', name: 'nm_jalur'},
             { data: 'nm_biaya', name: 'nm_biaya' },
-            { data: 'jenis_biaya', name: 'jenis_biaya'},
-            { data: 'besar_biaya', name: 'besar_biaya'},
-            { data: 'denda_biaya', name: 'denda_biaya'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'nm_pengguna', name: 'nm_pengguna'},
             { data: 'tgl_pembayaran', name: 'tgl_pembayaran'},
             { data: 'semester_bayar', name: 'semester_bayar'},
-            { data: 'nm_bank', name: 'nm_bank'},
-            { data: 'nomor_transaksi', name: 'nomor_transaksi'}
         ]
     });
 
