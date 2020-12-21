@@ -4,7 +4,7 @@
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card is-gap">
                 <div class="header">
                     <h2>
                         ADMISI SISWA
@@ -33,10 +33,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
             <div class="card">
                 <div class="body">
                     <div class="table-responsive">
