@@ -6,6 +6,9 @@ use Illuminate\Database\Migrations\Migration;
 
 use App\Models\Menu;
 use App\Models\Modul;
+use App\Models\Role;
+
+use Carbon\Carbon;
 
 class AddingSomeModulsMenusRoleRaporBukuInduk extends Migration
 {
@@ -16,53 +19,61 @@ class AddingSomeModulsMenusRoleRaporBukuInduk extends Migration
      */
     public function up()
     {
-        $modul = new Modul;
-        $modul->id_role = 17;
-        $modul->nm_modul = 'Rapor';
-        $modul->route = 'rapor';
-        $modul->urutan = 1;
-        $modul->akses = 1;
-        $modul->save();
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $menu               = new Menu;
-        $menu->id_modul     = 0;
-        $menu->nm_menu      = 'Cari Siswa';
-        $menu->page         = "cari-siswa";
-        $menu->urutan       = 1;
-        $menu->akses        = 1;
-        $menu->save();
+        $role_id = Role::where('nm_role', 'Rapor & Buku Induk')->first()->id_role;
 
-        $menu               = new Menu;
-        $menu->id_modul     = 0;
-        $menu->nm_menu      = 'Cetak by Kelas';
-        $menu->page         = "cetak-by-kelas";
-        $menu->urutan       = 2;
-        $menu->akses        = 1;
-        $menu->save();
-        
-        $modul = new Modul;
-        $modul->id_role = 17;
-        $modul->nm_modul = 'Buku Induk';
-        $modul->route = 'buku-induk';
-        $modul->urutan = 2;
-        $modul->akses = 1;
-        $modul->save();
+        $modul_1 = Modul::create([
+            "id_role"       => $role_id,
+            "nm_modul"      => "Rapor",
+            "route"         => "rapor" ,
+            "urutan"        => 1,
+            "akses"         => 1,
+            "created_at"    => $now
+        ]);
 
-        $menu               = new Menu;
-        $menu->id_modul     = 0;
-        $menu->nm_menu      = 'Cari Siswa';
-        $menu->page         = "cari-siswa";
-        $menu->urutan       = 1;
-        $menu->akses        = 1;
-        $menu->save();
+        $modul_1->menus()->createMany([
+            [
+                "nm_menu"      => "Cari Siswa",
+                "page"         => "cari-siswa",
+                "urutan"       => 1,
+                "akses"        => 1,
+                "created_at"   => $now
+            ],
+            [
+                "nm_menu"      => "Cetak by Kelas",
+                "page"         => "cetak-by-kelas",
+                "urutan"       => 2,
+                "akses"        => 1,
+                "created_at"   => $now
+            ],
+        ]);
 
-        $menu               = new Menu;
-        $menu->id_modul     = 0;
-        $menu->nm_menu      = 'Cetak by Kelas';
-        $menu->page         = "cetak-by-kelas";
-        $menu->urutan       = 2;
-        $menu->akses        = 1;
-        $menu->save();
+        $modul_2 = Modul::create([
+            "id_role"       => $role_id,
+            "nm_modul"      => "Buku Induk",
+            "route"         => "buku-induk" ,
+            "urutan"        => 1,
+            "akses"         => 1,
+            "created_at"    => $now
+        ]);
+
+        $modul_2->menus()->createMany([
+            [
+                "nm_menu"      => "Cari Siswa",
+                "page"         => "cari-siswa",
+                "urutan"       => 1,
+                "akses"        => 1,
+                "created_at"   => $now
+            ],
+            [
+                "nm_menu"      => "Cetak by Kelas",
+                "page"         => "cetak-by-kelas",
+                "urutan"       => 2,
+                "akses"        => 1,
+                "created_at"   => $now
+            ],
+        ]);
     }
 
     /**

@@ -18,8 +18,6 @@ class Menu extends Model
 
 	public $timestamps = true;
 
-    public $incrementing = false;
-    
     protected $fillable = [
         'id_modul',
         'nm_menu',
