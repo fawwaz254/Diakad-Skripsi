@@ -36,6 +36,8 @@
 <body class="theme-cyan">
 @elseif($theme_name == 'humas')
 <body class="theme-teal">
+@elseif($theme_name == 'rapor-buku-induk')
+<body class="theme-red">
 @endif
     <!-- Page Loader -->
     <div class="page-loader-wrapper">
