@@ -54,9 +54,9 @@ class CariSiswaController extends BaseController
                     'path' => 'siswa/cari-siswa/view-detail/'.$input->nis_nama_siswa
                 ];
       }
-  }
+    }
 
-  public function viewDetailCariSiswa(Request $request, $nis_nama_siswa){
+    public function viewDetailCariSiswa(Request $request, $nis_nama_siswa){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -64,7 +64,7 @@ class CariSiswaController extends BaseController
         $siswa = LibSiswa::fetchCariSiswaDetail($auth_data, $nis_nama_siswa);
   
         return view('pendidikan/siswa/cari-siswa/view-cari-siswa',compact('auth_data','nis_nama_siswa'));
-  }
+    }
 
     public function datatablesCariSiswa(Request $request, $nis_nama_siswa){
         $input = (object) $request->input();

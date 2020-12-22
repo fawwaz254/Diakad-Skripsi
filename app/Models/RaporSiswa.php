@@ -39,9 +39,17 @@ class RaporSiswa extends Model
 
     protected $guarded = [];
 
-
-
-
+    public function siswa(){
+        return $this->belongsTo(Siswa::class, 'id_siswa');
+    }
+    
+    public function deskripsi(){
+        return $this->belongsTo(RaporDeskripsi::class, 'id_rapor_deskripsi');
+    }
+    
+    public function semester(){
+        return $this->belongsTo(Semester::class, 'id_rapor_deskripsi');
+    }
 
 
 }
