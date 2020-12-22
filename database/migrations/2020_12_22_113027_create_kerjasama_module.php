@@ -22,7 +22,7 @@ class CreateKerjasamaModule extends Migration
             "id_role"       => $humasRoleId,
             "nm_modul"      => "Kerja Sama",
             "route"         => "kerja-sama" ,
-            "urutan"         => 3,
+            "urutan"        => 4,
             "akses"         => 1,
             "created_at"    => Carbon::now(env('APP_TIMEZONE', ''))
         ]);
@@ -45,7 +45,7 @@ class CreateKerjasamaModule extends Migration
             [
                 "nm_menu"      => "Berkas Kerja Sama",
                 "page"         => "/berkas",
-                "urutan"       => 2,
+                "urutan"       => 3,
                 "akses"        => 1,
                 "created_at"   => Carbon::now(env('APP_TIMEZONE', ''))
             ],
