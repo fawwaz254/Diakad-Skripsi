@@ -56,11 +56,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="modal-rapor" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">PRINT RAPOR</h4>
+                <h4 class="modal-title">PRINT RAPOR</h4>
             </div>
             <div class="modal-body">
                 <div class="modal-print"></div>
@@ -100,7 +100,7 @@
             { data: 'nm_jalur' , name:'nm_jalur'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float btn-print" target="_blank" href="'+ print_url + '/' + data.id + '">'
+                    return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float btn-print" target="_blank">'
                             + '    <i class="material-icons">print</i>' + '</a>';
                 }
             }
@@ -118,17 +118,16 @@
 
     $('#primary_table tbody').on('click', 'tr', function () {
         var data = table.row( this ).data();
-        console.log(data);
-        console.log('passed');
         
+        $(".modal-print").empty();
         $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">'
-                        + '<div class="btn btn-primary">Rapor Kelas 10 </div>' + data.nm_pengguna
+                        + '<div class="btn btn-primary">Rapor Kelas 10 </div>'
                         + '</div><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">'
-                        + '<div class="btn btn-primary">Rapor Kelas 11 </div>' + data.nis_siswa
+                        + '<div class="btn btn-primary">Rapor Kelas 11 </div>'
                         + '</div><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">'
-                        + '<div class="btn btn-primary">Rapor Kelas 12 </div>' + data.nm_kelas
+                        + '<div class="btn btn-primary">Rapor Kelas 12 </div>'
                         + '</div></div>');
-        $("#myModal").modal('show');
+        $("#modal-rapor").modal('show');
 
     } );
 </script>
