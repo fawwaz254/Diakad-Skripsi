@@ -39,6 +39,4 @@ class Modul extends Model
         return $this->hasMany(Menu::class, 'id_modul')->where('akses', 1)->orderBy('urutan', 'asc');
     }
 
-
-
 }

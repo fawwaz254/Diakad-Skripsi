@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -33,7 +33,7 @@ class PengajuanSiswaMagangController extends BaseController
       $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
 
-      return view('pendidikan/magang-siswa/pengajuan-siswa-magang/view-pengajuan-siswa-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
+      return view('humas/magang-siswa/pengajuan-siswa-magang/view-pengajuan-siswa-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
   }
 
   public function actionViewDetailPengajuanMagang(Request $request){
@@ -77,7 +77,7 @@ class PengajuanSiswaMagangController extends BaseController
         $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data, $id_rekanan_magang);
 
 
-        return view('pendidikan/magang-siswa/pengajuan-siswa-magang/view-detail-pengajuan-siswa-magang',compact('auth_data','id_periode_magang','id_rekanan_magang','data_periode_magang', 'nis_nama_siswa','data_rekanan_magang'));
+        return view('humas/magang-siswa/pengajuan-siswa-magang/view-detail-pengajuan-siswa-magang',compact('auth_data','id_periode_magang','id_rekanan_magang','data_periode_magang', 'nis_nama_siswa','data_rekanan_magang'));
 
     }
     public function datatablesPengajuanMagang(Request $request, $id_periode_magang,$id_rekanan_magang, $nis_nama_siswa){
@@ -150,7 +150,7 @@ class PengajuanSiswaMagangController extends BaseController
 
         $data_pengambilan_magang = LibMagangSiswa::fetchDataPengajuanSiswaMagangDetail($auth_data, $id);
 
-        return view('pendidikan/magang-siswa/pengajuan-siswa-magang/cancel-pengajuan-siswa-magang',compact('auth_data','data_pengambilan_magang','id'));
+        return view('humas/magang-siswa/pengajuan-siswa-magang/cancel-pengajuan-siswa-magang',compact('auth_data','data_pengambilan_magang','id'));
 
     }
 
