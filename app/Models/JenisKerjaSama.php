@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kerjasama;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,4 +21,9 @@ class JenisKerjaSama extends Model
         'updated_by',
         'deleted_by'
     ];
+
+    public function kerjasama()
+    {
+        return $this->hasMany(Kerjasama::class, 'id_jenis_kerjasama');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kerjasama;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -24,4 +25,9 @@ class Instansi extends Model
         'updated_by',
         'deleted_by'
     ];
+
+    public function kejasama()
+    {
+        return $this->hasMany(Kerjasama::class, 'id_instansi');
+    }
 }
