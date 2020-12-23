@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use App\Models\Instansi;
+use App\Models\JenisKerjaSama;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Kerjasama extends Model
+{
+    use SoftDeletes;
+
+    protected $table        = 'kerjasama';
+    protected $primaryKey   = 'id_kerjasama';
+    public $incrementing    = false;
+    public $timestamps      = true;
+
+    protected $fillable = [
+        'id_instansi',
+        'id_jenis_kerjasma',
+        'nm_kerjasama',
+        'tanggal_kerjasama',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by'
+    ];
+
+    public function instansi()
+    {
+        return $this->belongsTo(Instansi::class, 'id_instansi');
+    }
+
+    public function jenisKerjasama()
+    {
+        return $this->belongsTo(JenisKerjaSama::class, 'jenis_kerjasama');
+    }
+}
