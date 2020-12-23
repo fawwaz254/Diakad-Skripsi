@@ -56,4 +56,9 @@ class PengambilanMp extends Model
     {
         return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
     }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
 }

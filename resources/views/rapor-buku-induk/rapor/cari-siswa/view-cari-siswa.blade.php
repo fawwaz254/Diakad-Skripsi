@@ -62,12 +62,27 @@
             <div class="modal-header">
                 <h4 class="modal-title">PRINT RAPOR</h4>
             </div>
+            <form action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cari-siswa/print-rapor') }}" method="POST">
             <div class="modal-body">
-                <div class="modal-print"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Batal</button>
-            </div>
+                {{ csrf_field() }}
+                    <div class="row form-group">
+                        <div class="col">
+                            <label for="catatan">Catatan Wali Kelas</label><br>
+                            <textarea id="catatan" class="form-control" name="deskripsi_catatan_wali_kelas" placeholder="Tulis catatan"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="">Pilih Kelas</label>
+                        </div>
+                    </div>
+                    <div class="modal-print"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary waves-effect">Kirim</button>
+                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Batal</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -77,10 +92,9 @@
     var nis_nama_siswa = {!! json_encode($nis_nama_siswa) !!};
     
     var modul_url       = 'rapor';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'cari-siswa/datatables/' + nis_nama_siswa ;
-    var print_url      = role_url + '#' + modul_url + '/' + 'cari-siswa/view-detail-siswa'; // untuk print, tidak diarahkan ke url
-    console.log(datatable_url);
-    
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'cari-siswa/datatables/' + nis_nama_siswa;
+    var preview_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'cari-siswa/preview-rapor';
+    var print_url       = role_url + '#' + modul_url + '/' + 'cari-siswa/print-rapor';
     
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -118,16 +132,17 @@
 
     $('#primary_table tbody').on('click', 'tr', function () {
         var data = table.row( this ).data();
+        console.log(data);
         
         $(".modal-print").empty();
-        $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">'
-                        + '<div class="btn btn-primary">Rapor Kelas 10 </div>'
-                        + '</div><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">'
-                        + '<div class="btn btn-primary">Rapor Kelas 11 </div>'
-                        + '</div><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">'
-                        + '<div class="btn btn-primary">Rapor Kelas 12 </div>'
-                        + '</div></div>');
+        data.log_kelas.forEach(function (row) {
+              $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
+              $(".modal-print").append('<input type="radio" name="id_kelas" id="'+ row.id_kelas +'" value="' + row.id_kelas 
+                                        + '"><label for="'+ row.id_kelas +'">Kelas ' + row.tingkat + ' (' + row.nm_kelas + ')</label>');
+              $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
+              $(".modal-print").append('</div></div>');
+            });
         $("#modal-rapor").modal('show');
 
-    } );
+    });
 </script>

@@ -48,7 +48,7 @@ class RaporSiswa extends Model
     }
     
     public function semester(){
-        return $this->belongsTo(Semester::class, 'id_rapor_deskripsi');
+        return $this->belongsTo(Semester::class, 'id_semester');
     }
 
 

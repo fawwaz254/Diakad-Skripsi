@@ -11,6 +11,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('cari-siswa/{nis_nama_siswa?}', 'RaporBukuInduk\Rapor\CariSiswaController@viewCariSiswa');
             Route::post('post-view-cari-siswa', 'RaporBukuInduk\Rapor\CariSiswaController@actionViewCariSiswa');
             Route::get('cari-siswa/datatables/{nis_nama_siswa}', 'RaporBukuInduk\Rapor\CariSiswaController@datatablesCariSiswa');
+            Route::post('cari-siswa/print-rapor', 'RaporBukuInduk\Rapor\CariSiswaController@printRaporSiswa');
+            Route::post('cari-siswa/preview-rapor', 'RaporBukuInduk\Rapor\CariSiswaController@previewRaporSiswa');
         });
     });
 });
