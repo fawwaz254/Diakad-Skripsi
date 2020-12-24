@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Libraries\Keuangan;
+namespace App\Libraries\Humas;
 
 use App\Models\Alumni;
 use App\Models\AlumniMenunggu;

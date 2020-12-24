@@ -18,7 +18,7 @@ use App\Models\CalonSiswaFisik;
 use App\Models\AlumniKuliah;
 use App\Models\CalonSiswaSekolah;
 use App\Http\Controllers\Controller;
-use App\Libraries\Keuangan\LibAlumni;
+use App\Libraries\Humas\LibAlumni;
 use App\Libraries\Pendidikan\LibSiswa;
 use Yajra\Datatables\Datatables;
 
