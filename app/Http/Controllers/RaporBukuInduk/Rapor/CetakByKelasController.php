@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\Kelas;
 use App\Models\LogKelasSiswa;
 use App\Models\NilaiMp;
 use App\Models\PengambilanMp;
@@ -16,27 +17,27 @@ use App\Models\PresensiMpSiswa;
 use App\Models\RaporSiswa;
 use App\Models\Siswa as Siswa;
 
-use Auth;
 use PDF;
 use DB;
-use Session;
 use Validator;
 
-class CariSiswaController extends BaseController
+class CetakByKelasController extends BaseController
 {
-    public function viewCariSiswa(Request $request, $nis_nama_siswa = null){
+    public function viewCetakByKelas(Request $request, $id_kelas = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('rapor-buku-induk/rapor/cari-siswa/view-cari-siswa', compact('auth_data','nis_nama_siswa'));
+        $kelas = Kelas::get();
+
+    	return view('rapor-buku-induk/rapor/cetak-by-kelas/view-cetak-by-kelas', compact('auth_data','id_kelas', 'kelas'));
     }
 
-    public function actionViewCariSiswa(Request $request){
+    public function actionViewCetakByKelas(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
   
         $validator = Validator::make($request->all(), [
-            'nis_nama_siswa' =>'required'
+            'id_kelas' =>'required'
         ]);
   
         if($validator->fails()) {
@@ -48,12 +49,12 @@ class CariSiswaController extends BaseController
         else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'rapor/cari-siswa/' . $input->nis_nama_siswa
+                'path' => 'rapor/cetak-by-kelas/' . $input->id_kelas
             ];
         }
     }
 
-    public function datatablesCariSiswa(Request $request, $nis_nama_siswa){
+    public function datatablesCetakByKelas(Request $request, $id_kelas){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -66,79 +67,20 @@ class CariSiswaController extends BaseController
                                  ->where('jalur_siswa.is_jalur_aktif', '=', 1);
                         })
           ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
-          ->where(function ($query) use ($nis_nama_siswa) {
-                    $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('siswa.nisn_siswa', 'like', '%'.$nis_nama_siswa.'%');
+          ->where(function ($query) use ($id_kelas) {
+                    $query->where('kelas.id_kelas', $id_kelas);
              })
           ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
           ->get();
         
-        $data = $siswa->map(function($row){
-            $kelas_sekarang = [
-                'id_siswa' => $row->id_siswa,
-                'id_kelas' => $row->id_kelas,
-                'nm_kelas' => $row->nm_kelas,
-                'tingkat' => $row->tingkat,
-            ];
-            $log_kelas = LogKelasSiswa::select('log_kelas_siswa.id_siswa', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat')
-                                        ->join('kelas', 'kelas.id_kelas', 'log_kelas_siswa.id_kelas')
-                                        ->where('id_siswa', $row->id_siswa)->get();
-            $all_log_kelas = [];
-            if(empty($log_kelas))
-                $all_log_kelas[] = $log_kelas->toArray();
-            $all_log_kelas[] = $kelas_sekarang;
-            $row['log_kelas'] = $all_log_kelas;
-            return $row;
-        });
-        
-        return Datatables::of($data)
-                ->addColumn('action', function($item) use ($nis_nama_siswa) {
+        return Datatables::of($siswa)
+                ->addColumn('action', function($item) use ($id_kelas) {
                     $data = array(
                         'id' => $item->nis_siswa,
                     );
                     return $data;
                 })
                 ->make(true);
-    }
-
-    public function previewRaporSiswa(Request $request){
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        
-        $data = [
-            'id_siswa' => $input->id_siswa,
-            'id_kelas' => $input->id_kelas
-        ];
-
-        $validator = Validator::make($data, [
-            'id_siswa' =>'required|exists:siswa,id_siswa',
-            'id_kelas' =>'required|exists:kelas,id_kelas',
-        ]);
-
-        if($validator->fails()){
-            return [
-				'status' => 300, // FAILED
-				'message' => $validator->errors()->first()
-			];
-        }
-
-        // $pengambilanMp = PengambilanMp::where('id_siswa', $input->id_siswa)->get();
-        $pengambilanMp = PengambilanMp::where('id_siswa', $input->id_siswa)
-                                    ->where('kelas_mp.id_kelas', $input->id_kelas)
-                                    ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'pengambilan_mp.id_kelas_mp')
-                                    ->get();
-        
-        $data_nilai = [];
-        foreach($pengambilanMp as $row){
-            $data_nilai[] = [
-                'id_kelas_mp' => $row->id_kelas_mp,
-                'kelas_mp' => $row->kelas_mp->nm_kelas_mp,
-                'nilai_angka' => $row->nilai_angka,
-                'nilai_huruf' => $row->nilai_huruf,
-            ];
-        }
-        return !empty($data_nilai) ? $data_nilai : null;
     }
 
     public function printRaporSiswa(Request $request)
@@ -149,7 +91,7 @@ class CariSiswaController extends BaseController
         $id_kelas = $input->id_kelas;
         $catatan = $input->deskripsi_catatan_wali_kelas;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-        
+
         $data = [
             'id_siswa' => $id_siswa,
             'id_kelas' => $id_kelas
@@ -179,6 +121,12 @@ class CariSiswaController extends BaseController
                         ->join('mata_pelajaran', 'kelas_mp.id_mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran')
                         ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', 'mata_pelajaran.id_jenis_mata_pelajaran')
                         ->get();
+        if($pengambilanMpAll->isEmpty()){
+            return [
+				'status' => 300, // FAILED
+				'message' => 'Data akademik / mata pelajaran tidak ditemukan'
+			];
+        }
 
         $pengambilanMp = $pengambilanMpAll->first();
 
@@ -191,7 +139,7 @@ class CariSiswaController extends BaseController
         if(empty($data_rapor)){
             $data_rapor = new RaporSiswa();
         }
-
+        
         DB::beginTransaction();
         try{
         $data_rapor->id_rapor_siswa	    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -216,7 +164,7 @@ class CariSiswaController extends BaseController
             // something went wrong
             return [
                         'status' 	=> 200, // GAGAL
-                        'message'	=> 'Insert Data Siswa Gagal'
+                        'message'	=> 'Insert Data Siswa Gagal : ' . $e->getMessage()
                     ];
         } 
 
