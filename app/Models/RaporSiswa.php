@@ -22,6 +22,7 @@ class RaporSiswa extends Model
     
     protected $fillable = [
         'id_siswa',
+        'id_kelas',
         'id_semester',
         'id_rapor_deskripsi',
         'jumlah_sakit',
@@ -45,6 +46,10 @@ class RaporSiswa extends Model
     
     public function deskripsi(){
         return $this->belongsTo(RaporDeskripsi::class, 'id_rapor_deskripsi');
+    }
+    
+    public function kelas(){
+        return $this->belongsTo(Kelas::class, 'id_kelas');
     }
     
     public function semester(){

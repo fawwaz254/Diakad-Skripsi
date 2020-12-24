@@ -148,6 +148,7 @@ class CariSiswaController extends BaseController
         $id_siswa = $input->id_siswa;
         $id_kelas = $input->id_kelas;
         $catatan = $input->deskripsi_catatan_wali_kelas;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         
         $data = [
             'id_siswa' => $id_siswa,
@@ -183,39 +184,46 @@ class CariSiswaController extends BaseController
 
         $presensiMpSiswa = PresensiMpSiswa::where('id_siswa', $id_siswa)->get();
         $jumlahSakit = $presensiMpSiswa->where('kehadiran', 2)->count();
-        $jumlahIjin = $presensiMpSiswa->where('kehadiran', 3)->count();
+        $jumlahIzin = $presensiMpSiswa->where('kehadiran', 3)->count();
         $jumlahTanpaKeterangan = $presensiMpSiswa->where('kehadiran', 4)->count();
 
         // generate data rapor jika belum ada
         if(empty($data_rapor)){
+            DB::beginTransaction();
+
+            try{
             $data_rapor = new RaporSiswa();
-            $data_rapor->id_siswa = $id_siswa;
-            $data_rapor->id_kelas = $id_kelas;
-            $data_rapor->id_semester = !empty($pengambilanMp) ? $pengambilanMp->id_semester : null;
+            $data_rapor->id_rapor_siswa	    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $data_rapor->id_siswa           = $id_siswa;
+            $data_rapor->id_kelas           = $id_kelas;
+            $data_rapor->id_semester        = !empty($pengambilanMp) ? $pengambilanMp->id_semester : null;
             $data_rapor->id_rapor_deskripsi = null; // belum diisi
-            $data_rapor->jumlah_sakit = $jumlahSakit;
-            $data_rapor->jumlah_ijin = $jumlahIjin;
+            $data_rapor->jumlah_sakit       = $jumlahSakit;
+            $data_rapor->jumlah_izin        = $jumlahIzin;
             $data_rapor->jumlah_tanpa_keterangan = $jumlahTanpaKeterangan;
-            $data_rapor->id_prestasi_siswa = null; //belum diisi
+            $data_rapor->id_prestasi_siswa  = null; //belum diisi
             $data_rapor->deskripsi_catatan_wali_kelas = $catatan;
-            $data_rapor->nilai_kkm = !empty($pengambilanMp) ? $pengambilanMp->nilai_kkm : null;
-            $data_rapor->nilai_angka = !empty($pengambilanMp) ? $pengambilanMp->nilai_angka : null;
-            $data_rapor->nilai_huruf = !empty($pengambilanMp) ? $pengambilanMp->nilai_huruf : null;
-            $data_rapor->created_by = $input->auth_data->pengguna->id_pengguna;
-            // $data_rapor->save();
+            $data_rapor->nilai_kkm          = !empty($pengambilanMp) ? $pengambilanMp->nilai_kkm : null;
+            $data_rapor->nilai_angka        = !empty($pengambilanMp) ? $pengambilanMp->nilai_angka : null;
+            $data_rapor->nilai_huruf        = !empty($pengambilanMp) ? $pengambilanMp->nilai_huruf : null;
+            $data_rapor->created_by         = $input->auth_data->pengguna->id_pengguna;
+            $data_rapor->save();
+            DB::commit();
+            }
+            catch (\Exception $e) {
+                DB::rollback();
+                // something went wrong
+                return [
+                            'status' 	=> 200, // GAGAL
+                            'message'	=> 'Insert Data Siswa Gagal'
+                        ];
+            } 
         }
 
         // get all data detail rapor
         $data_detail_rapor = [];
-        foreach($pengambilanMpAll as $row){
-            $data_detail_rapor[] = [
-                'nilai_angka' => $row->nilai_angka,
-                'nilai_huruf' => $row->nilai_huruf,
-                'nilai_kkm' => $row->nilai_kkm,
-                'kd_mata_pelajaran' => $row->kd_mata_pelajaran,
-                'nm_mata_pelajaran' => $row->nm_mata_pelajaran,
-                'nm_jenis_mata_pelajaran' => $row->nm_jenis_mata_pelajaran
-            ];
+        if($pengambilanMpAll->isNotEmpty()){
+            $data_detail_rapor = $pengambilanMpAll->groupBy('nm_jenis_mata_pelajaran');
         }
         
         $data_siswa = Siswa::find($id_siswa);

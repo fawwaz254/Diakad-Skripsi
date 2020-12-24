@@ -13,6 +13,7 @@
 
         table {
             font-size: x-small;
+            border-collapse: collapse;
         }
 
         tfoot tr td {
@@ -20,25 +21,40 @@
             font-size: x-small;
         }
 
-
-        .presensi td{
-            padding-bottom: 9px;
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
+        .text-left {
+            text-align: left;
         }
 
-        .presensi tr td:last-child, .presensi tr th:last-child {
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+
+        .presensi td{
+            padding: 9px;
+            border: 1px solid #000000;
+            /* border-left: 1px solid #000000; */
+        }
+
+        .small {
+            font-size: x-small;
+        }
+
+        /* .presensi tr td:last-child, .presensi tr th:last-child {
             border-right: 1px solid #000000;
         }
 
         .presensi tr:last-child td{
             border-bottom: 1px solid #000000;
-        }
+        } */
 
         .presensi th{
-            padding-bottom: 9px;
-            border-top: 1px solid #000000;
-            border-left: 1px solid #000000;
+            padding: 9px;
+            border: 1px solid #000000;
+            /* border-left: 1px solid #000000; */
         }
 
         .gray {
@@ -71,29 +87,24 @@
             </td>
         </tr>
     </table>
-    
-    <div class="row">
-        <div class="col-6">
-            <table width="100%" style="margin-bottom: 30px;">
-                <tr>
-                    <td>No. NIS</td>
-                    <td>:</td>
-                    <td>{{ $data_siswa['nis_siswa'] }}</td>
-                </tr>
-                <tr>
-                    <td>Nama</td>
-                    <td>:</td>
-                    <td>{{ $data_siswa->pengguna['nm_pengguna'] }}</td>
-                </tr>
-                <tr>
-                    <td>Kelas</td>
-                    <td>:</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
-        <div class="col-6"></div>
-    </div>
+    <h5>Data Siswa</h5>
+    <table width="50%" style="margin-bottom: 30px;" class="">
+        <tr>
+            <td>No. NIS</td>
+            <td>:</td>
+            <td>{{ $data_siswa['nis_siswa'] }}</td>
+        </tr>
+        <tr>
+            <td>Nama</td>
+            <td>:</td>
+            <td>{{ $data_siswa->pengguna['nm_pengguna'] }}</td>
+        </tr>
+        <tr>
+            <td>Kelas</td>
+            <td>:</td>
+            <td>{{ $data_rapor->kelas['nm_kelas'] }}</td>
+        </tr>
+    </table>
 
     <!-- <table width="100%">
         <tr>
@@ -112,11 +123,12 @@
             <td></td>
         </tr>
     </table> -->
-    <table width="100%" style="border-width: 1px; border-color:#000000; text-align:left;">
-        <tr>
-            <th colspan="3">B. MUATAN LOKAL</th>
-            <td></td>
-            <td></td>
+    <table width="100%" class="presensi">
+        @if(!empty($data_detail_rapor))
+        <!-- loop for jenis_mata_pelajaran -->
+        @foreach($data_detail_rapor as $jenis_mata_pelajaran => $detail)
+        <tr class="gray">
+            <th colspan="6" class="text-left">{{ strtoupper($jenis_mata_pelajaran) }}</th>
         </tr>
         <tr>
             <th>No.</th>
@@ -124,17 +136,52 @@
             <th>Nilai KKM</th>
             <th>Nilai Angka</th>
             <th>Nilai Huruf</th>
+            <th>Deskripsi</th>
         </tr>
-        @foreach($data_detail_rapor as $key => $detail)
-        <tr>
-            <td>{{ $key }}</td>
-            <td>{{ $detail['nm_mata_pelajaran'] }}</td>
-            <td>{{ $detail['nilai_kkm'] }}</td>
-            <td>{{ $detail['nilai_angka'] }}</td>
-            <td>{{ $detail['nilai_huruf'] }}</td>
-        </tr>
+            <!-- loop for each detail_rapor based on jenis_mata_pelajaran -->
+            @foreach($detail as $key_detail => $detail_rapor)
+            <tr class="presensi">
+                <td style="width: 30px;">{{ $key_detail + 1 }}</td>
+                <td>{{ $detail_rapor['nm_mata_pelajaran'] }}</td>
+                <td class="text-right">{{ $detail_rapor['nilai_kkm'] }}</td>
+                <td class="text-right">{{ $detail_rapor['nilai_angka'] }}</td>
+                <td class="text-center">{{ $detail_rapor['nilai_huruf'] }}</td>
+                <td class="text-center">-- deskipsi --</td>
+            </tr>
+            @endforeach
         @endforeach
+        @endif
     </table>
+    <div>
+        <h5>Catatan Wali Kelas</h5>
+        <table style="border: 1px solid #000;" width="100%">
+            <tr>
+                <td style="padding: 10px;">
+                    <p class="small">{{ $data_rapor->deskripsi_catatan_wali_kelas }}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h5>Absensi</h5>
+        <table>
+            <tr>
+                <td>Izin</td>
+                <td>:</td>
+                <td>{{ $data_rapor->jumlah_izin }}</td>
+            </tr>
+            <tr>
+                <td>Sakit</td>
+                <td>:</td>
+                <td>{{ $data_rapor->jumlah_sakit }}</td>
+            </tr>
+            <tr>
+                <td>Tanpa Keterangan</td>
+                <td>:</td>
+                <td>{{ $data_rapor->jumlah_tanpa_keterangan }}</td>
+            </tr>
+        </table>
+    </div>
 </body>
 
 </html>
