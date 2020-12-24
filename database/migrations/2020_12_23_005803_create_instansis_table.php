@@ -19,6 +19,7 @@ class CreateInstansisTable extends Migration
             $table->string('nm_instansi');
             $table->string('bidang_usaha');
             $table->string('alamat');
+            $table->string('kontak');
             $table->string('website')->nullable();
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
