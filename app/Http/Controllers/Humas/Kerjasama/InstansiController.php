@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 
 class InstansiController extends Controller
 {
+    const RESOURCE_PATH = 'humas/kerjasama/';
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +16,7 @@ class InstansiController extends Controller
      */
     public function index()
     {
-        
+        return view('humas/kerjasama/instansi');
     }
 
     /**
