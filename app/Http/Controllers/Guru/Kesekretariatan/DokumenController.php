@@ -19,6 +19,8 @@ use App\Models\ArsipLoker as ArsipLoker;
 use App\Models\ArsipSubkategori as ArsipSubkategori;
 use App\Models\StatusPengguna;
 use App\Models\ArsipDokumenAkses;
+use App\Models\Guru;
+use App\Models\Staf;
 
 use Auth;
 use DB;
@@ -67,9 +69,13 @@ class DokumenController extends BaseController
                                     ->leftJoin('unit_kerja','unit_kerja.id_unit_kerja','=','arsip_dokumen.id_unit_kerja');
         
         if($request->segment(1) == 'guru'){
-            $list_data = $list_data->leftJoin('arsip_dokumen_akses', function($q){
+            $unit_kerja = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->pluck('id_unit_kerja')->first();
+            $list_data = $list_data->leftJoin('arsip_dokumen_akses', function($q) use ($unit_kerja){
                                 $q->on('arsip_dokumen_akses.id_arsip_dokumen', '=', 'arsip_dokumen.id_arsip_dokumen')
-                                    ->where('status_join_table', 2);
+                                    ->where(function($query) use ($unit_kerja){
+                                        $query->where('status_join_table', 2)
+                                              ->orWhere('arsip_dokumen_akses.id_unit_kerja',$unit_kerja);
+                                    });
                             })
                             ->where('arsip_kategori.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                             ->where(function($q){
@@ -77,9 +83,13 @@ class DokumenController extends BaseController
                                     ->orWhereNotNull('id_arsip_dokumen_akses');
                             });
         }else if($request->segment(1) == 'tendik'){
-            $list_data = $list_data->leftJoin('arsip_dokumen_akses', function($q){
+            $unit_kerja = Staf::where('id_pengguna',$auth_data->pengguna->id_pengguna)->pluck('id_unit_kerja')->first();
+            $list_data = $list_data->leftJoin('arsip_dokumen_akses', function($q) use ($unit_kerja){
                                 $q->on('arsip_dokumen_akses.id_arsip_dokumen', '=', 'arsip_dokumen.id_arsip_dokumen')
-                                    ->where('status_join_table', 1);
+                                    ->where(function($query) use ($unit_kerja){
+                                        $query->where('status_join_table', 1)
+                                              ->orWhere('arsip_dokumen_akses.id_unit_kerja',$unit_kerja);
+                                    });
                             })
                             ->where('arsip_kategori.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                             ->where(function($q){
@@ -178,7 +188,7 @@ class DokumenController extends BaseController
             $subkategori    = null;
             $dokumen        = null;
             $sub_dokumen    = null;
-            $dokumen_akses    = null;
+            $dokumen_akses  = null;
 
             $title          = "TAMBAH DATA DOKUMEN";
         }
@@ -198,6 +208,7 @@ class DokumenController extends BaseController
     }
 
     public function actionUploadDokumen(Request $request, $mode, $id = null){
+
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -251,7 +262,24 @@ class DokumenController extends BaseController
 
                     // is_public = 0
                     if($input->is_publik == 0) {
-                        foreach($input->status_pengguna as $status_pengguna) {
+
+                        //  add validasi checked status pengguna / unit kerja
+
+                        $validasi = false;
+
+                        if(isset($input->status_pengguna) || isset($input->unit_kerja)) $validasi = true;
+
+                        if(!$validasi){
+                             return [
+                                'status' => 300, // FAILED
+                                'message' => 'Anda harus mengisi status pengguna / unit kerja ketika anda memlih status akses dokumen terbatas'
+                            ];
+                        }
+
+                        else{
+
+                            if(isset($input->status_pengguna)){
+                            foreach($input->status_pengguna as $status_pengguna) {
                             $arsip_dokumen_akses                            = new ArsipDokumenAkses;
                             $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                             $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
@@ -260,17 +288,23 @@ class DokumenController extends BaseController
                             $arsip_dokumen_akses->created_at                = $now;
                             $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
                             $arsip_dokumen_akses->save();
-                        }
+                            }
+                            }
+                        
+                            if(isset($input->unit_kerja)){
+                            foreach($input->unit_kerja as $unit_kerja) {
+                                $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                                $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
+                                $arsip_dokumen_akses->status_join_table         = null;
+                                $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
+                                $arsip_dokumen_akses->created_at                = $now;
+                                $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                                $arsip_dokumen_akses->save();
+                            }
 
-                        foreach($input->unit_kerja as $unit_kerja) {
-                            $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                            $arsip_dokumen_akses->status_join_table         = null;
-                            $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
-                            $arsip_dokumen_akses->created_at                = $now;
-                            $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                            $arsip_dokumen_akses->save();
+                            }
+
                         }
 
                     }

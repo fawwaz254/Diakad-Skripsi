@@ -146,8 +146,6 @@ class InputDokumenController extends BaseController
 
     public function actionInputDokumen(Request $request, $mode, $id = null){
 
-
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -198,8 +196,21 @@ class InputDokumenController extends BaseController
                     $arsip->created_by				= $input->auth_data->pengguna->id_pengguna;
                     $arsip->save();
 
+                    $validasi = false;
+
+                    if(isset($input->status_pengguna) || isset($input->unit_kerja)) $validasi = true;
+
+                    if(!$validasi){
+                         return [
+                            'status' => 300, // FAILED
+                            'message' => 'Anda harus mengisi status pengguna / unit kerja ketika anda memlih status akses dokumen terbatas'
+                        ];
+                    }
+
                     // is_public = 0
                     if($input->is_publik == 0) {
+
+                        if(isset($input->status_pengguna)){
                         foreach($input->status_pengguna as $status_pengguna) {
                             $arsip_dokumen_akses                            = new ArsipDokumenAkses;
                             $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -210,7 +221,9 @@ class InputDokumenController extends BaseController
                             $arsip_dokumen_akses->created_by				= $input->auth_data->pengguna->id_pengguna;
                             $arsip_dokumen_akses->save();
                         }
+                        }
 
+                        if(isset($input->unit_kerja)){
                         foreach($input->unit_kerja as $unit_kerja) {
                             $arsip_dokumen_akses                            = new ArsipDokumenAkses;
                             $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -220,6 +233,7 @@ class InputDokumenController extends BaseController
                             $arsip_dokumen_akses->created_at 				= $now;
                             $arsip_dokumen_akses->created_by				= $input->auth_data->pengguna->id_pengguna;
                             $arsip_dokumen_akses->save();
+                        }
                         }
 
                     }
