@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-class BaseModelTraits {
+trait BaseModelTraits {
   public static function boot()
   {
       parent::boot();

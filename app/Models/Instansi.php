@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Kerjasama;
+use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Instansi extends Model
 {
     use SoftDeletes;
+    use BaseModelTraits;
 
     protected $table        = 'instansi';
     protected $primaryKey   = 'id_instansi';
