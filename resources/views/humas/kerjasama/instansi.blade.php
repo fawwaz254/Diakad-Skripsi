@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="block-header">
       <h2><a class="btn bg-blue waves-effect target-link"
-              href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/'.Request::segment(4).'/add')}}">
+              href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}">
               <i class="material-icons">note_add</i><span>Tambah Instansi</span></a></h2>
   </div>
   <div class="row clearfix">

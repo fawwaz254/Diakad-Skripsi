@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Humas\Kerjasama;
 use App\Models\Instansi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Libraries\Humas\LibKerjasama;
 
 class InstansiController extends Controller
 {
     const RESOURCE_PATH = 'humas/kerjasama/';
+    const FETCH_ATTRIBUTE = ['nm_instansi', 'bidang_usaha', 'kontak', 'website', 'alamat'];
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +19,7 @@ class InstansiController extends Controller
      */
     public function index()
     {
-        return view('humas/kerjasama/instansi');
+        return view( self::RESOURCE_PATH . 'instansi');
     }
 
     /**
@@ -26,7 +29,7 @@ class InstansiController extends Controller
      */
     public function create()
     {
-        //
+        return view(self::RESOURCE_PATH . 'createOrUpdate');
     }
 
     /**
@@ -37,7 +40,13 @@ class InstansiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->only(self::FETCH_ATTRIBUTE);
+        $instansi = LibKerjasama::storeInstansi($data);
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'kerjasama/instansi',
+            'message' => 'Instansi Created'
+        ];
     }
 
     /**
