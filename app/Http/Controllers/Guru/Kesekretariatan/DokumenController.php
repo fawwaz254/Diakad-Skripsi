@@ -178,6 +178,7 @@ class DokumenController extends BaseController
             $subkategori    = null;
             $dokumen        = null;
             $sub_dokumen    = null;
+            $dokumen_akses    = null;
 
             $title          = "TAMBAH DATA DOKUMEN";
         }
