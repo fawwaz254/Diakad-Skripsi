@@ -20,7 +20,7 @@ class Kerjasama extends Model
 
     protected $fillable = [
         'id_instansi',
-        'id_jenis_kerjasma',
+        'id_jenis_kerjasama',
         'nm_kerjasama',
         'tanggal_kerjasama',
         'status',
@@ -36,6 +36,6 @@ class Kerjasama extends Model
 
     public function jenisKerjasama()
     {
-        return $this->belongsTo(JenisKerjasama::class, 'jenis_kerjasama');
+        return $this->belongsTo(JenisKerjasama::class, 'id_jenis_kerjasama');
     }
 }
