@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Humas\Kerjasama;
 
-use App\Models\Instansi;
 use Illuminate\Http\Request;
+use App\Models\JenisKerjaSama;
 use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use Yajra\Datatables\Datatables;
 
-class InstansiController extends Controller
+class JenisKerjaSamaController extends Controller
 {
-    const RESOURCE_PATH = 'humas/kerjasama/instansi/';
-    const FETCH_ATTRIBUTE = ['nm_instansi', 'bidang_usaha', 'kontak', 'website', 'alamat'];
+    const RESOURCE_PATH = 'humas/kerjasama/jenis_kerjasama/';
+    const FETCH_ATTRIBUTE = ['nm_jenis_kerjasama'];
 
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class InstansiController extends Controller
      */
     public function index()
     {
-        return view( self::RESOURCE_PATH . 'index');
+        return view(self::RESOURCE_PATH . 'index');
     }
 
     /**
@@ -30,7 +30,7 @@ class InstansiController extends Controller
      */
     public function create()
     {
-        return view(self::RESOURCE_PATH . 'form_instansi');
+        return view(self::RESOURCE_PATH . 'form_jenis_kerjasama');
     }
 
     /**
@@ -42,69 +42,68 @@ class InstansiController extends Controller
     public function store(Request $request)
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
-        $instansi = LibKerjasama::storeInstansi($data);
+        LibKerjasama::storeJenisKerjasama($data);
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/instansi',
-            'message' => 'Instansi Created'
+            'path' => 'kerjasama/jenis',
+            'message' => 'Jenis Kerjasama Created'
         ];
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Instansi  $instansi
+     * @param  \App\Models\JenisKerjaSama  $jenisKerjasama
      * @return \Illuminate\Http\Response
      */
-    public function edit(Instansi $instansi)
+    public function edit(JenisKerjaSama $jenisKerjasama)
     {
-        return view(self::RESOURCE_PATH . 'form_instansi', compact('instansi'));
+        return view(self::RESOURCE_PATH . 'form_jenis_kerjasama', compact('jenisKerjasama'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Models\JenisKerjaSama  $jenisKerjasama
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Instansi $instansi)
+    public function update(Request $request, JenisKerjaSama $jenisKerjasama)
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
-        $instansi->update($data);
+        $jenisKerjasama->update($data);
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/instansi',
-            'message' => 'Update successfully'
+            'path' => 'kerjasama/jenis',
+            'message' => 'Jenis Kerjasama Updated'
         ];
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\JenisKerjaSama  $jenisKerjasama
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Instansi $instansi)
+    public function destroy(JenisKerjaSama $jenisKerjasama)
     {
-        $instansi->delete();
+        $jenisKerjasama->delete();
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/instansi',
-            'message' => 'Delete successfully'
+            'path' => 'kerjasama/jenis',
+            'message' => 'Jenis Kerjasama Deleted'
         ];
     }
 
     public function renderDatatables()
     {
-        $data_instansi = libKerjasama::getInstansi() ;
+        $data_jenisKerjasama = libKerjasama::getJenisKerjasama() ;
 
-        return Datatables::of($data_instansi)
-                ->addColumn('action', function($instansi){
-                    $data = array(
-                        'id' => $instansi->id_instansi
-                    );
-                    return $data;
+        return Datatables::of($data_jenisKerjasama)
+                ->addColumn('action', function($jenis_kerjasama){
+                    return [
+                        'id' => $jenis_kerjasama->id_jenis_kerjasama
+                    ];
                 })
                 ->make(true);
     }
