@@ -70,7 +70,13 @@ class InstansiController extends Controller
      */
     public function update(Request $request, Instansi $instansi)
     {
-        //
+        $data = $request->only(self::FETCH_ATTRIBUTE);
+        $instansi->update($data);
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'kerjasama/instansi',
+            'message' => 'Update successfully'
+        ];
     }
 
     /**
@@ -81,7 +87,12 @@ class InstansiController extends Controller
      */
     public function destroy(Instansi $instansi)
     {
-        //
+        $instansi->delete();
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'kerjasama/instansi',
+            'message' => 'Delete successfully'
+        ];
     }
 
     public function renderDatatables()
