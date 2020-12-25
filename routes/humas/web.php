@@ -140,7 +140,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 					Route::group(array('prefix' => 'instansi'), function() {
 						Route::get('/', 'InstansiController@index');
 						Route::get('/add', 'InstansiController@create');
-						Route::get('/edit/{instansi}', 'InstansiController@show');
+						Route::get('/edit/{instansi}', 'InstansiController@edit');
 						Route::post('/store', 'InstansiController@store');
 						Route::post('/update/{instansi}', 'InstansiController@update');
 						Route::post('/delete/{instansi}', 'InstansiController@destroy');

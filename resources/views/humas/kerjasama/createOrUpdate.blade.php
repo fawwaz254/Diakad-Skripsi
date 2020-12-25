@@ -28,23 +28,23 @@
                         <input type="hidden" name="id_instansi" value="{{ !empty($instansi) ? $instansi->id_instansi : ''}}">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <h2 class="card-inside-title"> Nama Instansi </h2>
-                          <input type="text" class="form-control" name="nm_instansi" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->calon_siswa->nm_c_siswa : ''}}" {{ !empty($instansi) ? 'readonly' : '' }} >
+                          <input type="text" class="form-control" name="nm_instansi" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->nm_instansi : ''}}" >
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <h2 class="card-inside-title"> Bidang Usaha </h2>
-                          <input type="text" class="form-control" name="bidang_usaha" required="" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->tahun_lulus : ''}}">
+                          <input type="text" class="form-control" name="bidang_usaha" required="" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->bidang_usaha : ''}}">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <h2 class="card-inside-title"> Kontak </h2>
-                          <input type="text" class="form-control" name="kontak" required="" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->calon_siswa->nomor_hp : ''}}">
+                          <input type="text" class="form-control" name="kontak" required="" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->kontak : ''}}">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <h2 class="card-inside-title"> website </h2>
-                          <input type="text" class="form-control" name="website" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->calon_siswa->nomor_hp : ''}}">
+                          <input type="text" class="form-control" name="website" aria-required="true" aria-invalid="true" value="{{(!empty($instansi))? $instansi->website : ''}}">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <h2 class="card-inside-title"> Alamat </h2>
-                          <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($instansi))? $instansi->calon_siswa->alamat_jalan : ''}} </textarea>
+                          <textarea class="form-control" name="alamat" required="" aria-required="true" aria-invalid="true"> {{(!empty($instansi))? $instansi->alamat : ''}} </textarea>
                         </div>
 
                         <div class="row clearfix">

@@ -51,17 +51,6 @@ class InstansiController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  Instansi  $instansi
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Instansi $instansi)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  Instansi  $instansi
@@ -69,7 +58,7 @@ class InstansiController extends Controller
      */
     public function edit(Instansi $instansi)
     {
-        //
+        return view(self::RESOURCE_PATH . 'createOrUpdate', compact('instansi'));
     }
 
     /**
