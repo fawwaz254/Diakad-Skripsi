@@ -146,6 +146,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 						Route::post('/delete/{instansi}', 'InstansiController@destroy');
 						Route::post('/datatables', 'InstansiController@renderDatatables');
 					});
+					
+					Route::group(array('prefix' => 'jenis'), function() {
+						Route::get('/', 'JenisKerjaSamaController@index');
+						Route::get('/add', 'JenisKerjaSamaController@create');
+						Route::get('/edit/{jenisKerjasama}', 'JenisKerjaSamaController@edit');
+						Route::post('/store', 'JenisKerjaSamaController@store');
+						Route::post('/update/{jenisKerjasama}', 'JenisKerjaSamaController@update');
+						Route::post('/delete/{jenisKerjasama}', 'JenisKerjaSamaController@destroy');
+						Route::post('/datatables', 'JenisKerjaSamaController@renderDatatables');
+					});
 				});
 		});
 });
