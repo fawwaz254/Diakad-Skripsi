@@ -32,8 +32,8 @@ class KerjasamaController extends Controller
      */
     public function create()
     {
-        $data_instansi = [];
-        $data_jenis_kerjasama = [];
+        $data_instansi = LibKerjasama::getInstansi();
+        $data_jenis_kerjasama = LibKerjasama::getJenisKerjasama();
         return view(self::RESOURCE_PATH . 'form_kerjasama', compact('data_instansi', 'data_jenis_kerjasama'));
     }
 
@@ -45,7 +45,13 @@ class KerjasamaController extends Controller
      */
     public function store(StoreKerjasama $request)
     {
-        
+        $data = $request->only(self::FETCH_ATTRIBUTE);
+        LibKerjasama::storeKerjasama($data);
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'kerjasama',
+            'message' => 'Kerjasama Created'
+        ];
     }
 
     /**
@@ -56,7 +62,9 @@ class KerjasamaController extends Controller
      */
     public function edit(Kerjasama $kerjasama)
     {
-        //
+        $data_instansi = LibKerjasama::getInstansi();
+        $data_jenis_kerjasama = LibKerjasama::getJenisKerjasama();
+        return view(self::RESOURCE_PATH . 'form_kerjasama', compact('data_instansi', 'data_jenis_kerjasama', 'kerjasama'));
     }
 
     /**
@@ -68,7 +76,13 @@ class KerjasamaController extends Controller
      */
     public function update(UpdateKerjasama $request, Kerjasama $kerjasama)
     {
-        //
+        $data = $request->only(self::FETCH_ATTRIBUTE);
+        $kerjasama->update($data);
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'kerjasama',
+            'message' => 'Kerjasama Updated'
+        ];
     }
 
     /**
@@ -79,7 +93,12 @@ class KerjasamaController extends Controller
      */
     public function destroy(Kerjasama $kerjasama)
     {
-        //
+        $kerjasama->delete();
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'kerjasama',
+            'message' => 'Kerjasama Deleted'
+        ];
     }
 
     public function renderDatatables()
@@ -89,6 +108,12 @@ class KerjasamaController extends Controller
         return Datatables::of($data_kerjasama)
                 ->editColumn('status', function($kerjasama){
                     return $kerjasama->status ? "Aktif" : "Tidak Aktif";
+                })
+                ->editColumn('instansi', function($kerjasama){
+                    return $kerjasama->instansi->nm_instansi;
+                })
+                ->editColumn('jenis_kerjasama', function($kerjasama){
+                    return $kerjasama->jenisKerjasama->nm_jenis_kerjasama;
                 })
                 ->addColumn('action', function($kerjasama){
                     return [
