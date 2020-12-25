@@ -23,6 +23,7 @@
                               <th>Alamat</th>
                               <th>Kontak</th>
                               <th>Website</th>
+                              <th>Action</th>
                             </tr>
                           </thead>
                       </table>
@@ -32,3 +33,48 @@
       </div>
   </div>
 </div>
+
+<script>
+    var modul_url       = '{{Request::segment(2)}}';
+    var menu_url       = '{{Request::segment(3)}}';
+
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
+    var edit_url        = role_url + '#' + modul_url + '/' + menu_url + '/edit';
+    var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/show';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/delete';
+
+    var primary_table = $('#primary_table').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: {
+            url: datatable_url,
+            type: 'POST'
+        },
+        columns: [
+            { data: null, searchable: false, orderable: false },
+            { data: 'nm_instansi' },
+            { data: 'bidang_usaha' },
+            { data: 'alamat' },
+            { data: 'kontak' },
+            { data: 'website' },
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> '+
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    '    <i class="material-icons">delete_forever</i>'+
+                    '</button>';
+                }
+            }
+        ]
+    });
+
+    primary_table.on( 'draw', function () {
+        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = start + i + 1;
+        } );
+    } ).draw();
+</script>

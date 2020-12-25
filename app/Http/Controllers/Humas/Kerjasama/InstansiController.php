@@ -6,6 +6,7 @@ use App\Models\Instansi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
+use Yajra\Datatables\Datatables;
 
 class InstansiController extends Controller
 {
@@ -96,6 +97,15 @@ class InstansiController extends Controller
 
     public function renderDatatables()
     {
+        $data_instansi = libKerjasama::getInstansi() ;
 
+        return Datatables::of($data_instansi)
+                ->addColumn('action', function($instansi){
+                    $data = array(
+                        'id' => $instansi->id_instansi
+                    );
+                    return $data;
+                })
+                ->make(true);
     }
 }

@@ -12,4 +12,9 @@ class LibKerjasama {
   {
     return Instansi::create($data);
   }
+
+  public static function getInstansi()
+  {
+    return Instansi::all();
+  }
 }
