@@ -137,6 +137,15 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				});
 		
 				Route::namespace('Humas\Kerjasama')->prefix('kerjasama')->group(function() {
+
+					Route::get('', 'KerjasamaController@index');
+					Route::get('/add', 'KerjasamaController@create');
+					Route::get('/edit/{jenisKerjasama}', 'KerjasamaController@edit');
+					Route::post('/store', 'KerjasamaController@store');
+					Route::post('/update/{jenisKerjasama}', 'KerjasamaController@update');
+					Route::post('/delete/{jenisKerjasama}', 'KerjasamaController@destroy');
+					Route::post('/datatables', 'KerjasamaController@renderDatatables');
+
 					Route::group(array('prefix' => 'instansi'), function() {
 						Route::get('/', 'InstansiController@index');
 						Route::get('/add', 'InstansiController@create');
