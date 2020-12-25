@@ -3,14 +3,16 @@
 namespace App\Models;
 
 use App\Models\Kerjasama;
+use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JenisKerjaSama extends Model
 {
     use SoftDeletes;
+    use BaseModelTraits;
 
-    protected $tabel        = 'jenis_kerjasama';
+    protected $table        = 'jenis_kerjasama';
     protected $primaryKey   = 'id_jenis_kerjasama';
     public $incrementing    = false;
     public $timestamps      = true;
