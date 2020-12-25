@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Instansi;
-use App\Models\JenisKerjaSama;
+use App\Models\JenisKerjasama;
 use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,6 +36,6 @@ class Kerjasama extends Model
 
     public function jenisKerjasama()
     {
-        return $this->belongsTo(JenisKerjaSama::class, 'jenis_kerjasama');
+        return $this->belongsTo(JenisKerjasama::class, 'jenis_kerjasama');
     }
 }

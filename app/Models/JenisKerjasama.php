@@ -7,7 +7,7 @@ use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class JenisKerjaSama extends Model
+class JenisKerjasama extends Model
 {
     use SoftDeletes;
     use BaseModelTraits;

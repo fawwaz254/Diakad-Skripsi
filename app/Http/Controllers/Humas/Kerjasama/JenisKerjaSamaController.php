@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Humas\Kerjasama;
 
 use Illuminate\Http\Request;
-use App\Models\JenisKerjaSama;
+use App\Models\JenisKerjasama;
 use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use Yajra\Datatables\Datatables;
@@ -53,10 +53,10 @@ class JenisKerjaSamaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\JenisKerjaSama  $jenisKerjasama
+     * @param  \App\Models\JenisKerjasama  $jenisKerjasama
      * @return \Illuminate\Http\Response
      */
-    public function edit(JenisKerjaSama $jenisKerjasama)
+    public function edit(JenisKerjasama $jenisKerjasama)
     {
         return view(self::RESOURCE_PATH . 'form_jenis_kerjasama', compact('jenisKerjasama'));
     }
@@ -65,10 +65,10 @@ class JenisKerjaSamaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\JenisKerjaSama  $jenisKerjasama
+     * @param  \App\Models\JenisKerjasama  $jenisKerjasama
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JenisKerjaSama $jenisKerjasama)
+    public function update(Request $request, JenisKerjasama $jenisKerjasama)
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $jenisKerjasama->update($data);
@@ -82,10 +82,10 @@ class JenisKerjaSamaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\JenisKerjaSama  $jenisKerjasama
+     * @param  \App\Models\JenisKerjasama  $jenisKerjasama
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JenisKerjaSama $jenisKerjasama)
+    public function destroy(JenisKerjasama $jenisKerjasama)
     {
         $jenisKerjasama->delete();
         return [

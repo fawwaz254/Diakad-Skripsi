@@ -3,7 +3,7 @@
 namespace App\Libraries\Humas;
 
 use App\Models\Instansi;
-use App\Models\JenisKerjaSama;
+use App\Models\JenisKerjasama;
 use Illuminate\Support\Facades\DB;
 
 
@@ -16,7 +16,7 @@ class LibKerjasama {
 
   public static function storeJenisKerjasama($data)
   {
-    return JenisKerjaSama::create($data);
+    return JenisKerjasama::create($data);
   }
 
   public static function getInstansi()
@@ -26,6 +26,6 @@ class LibKerjasama {
 
   public static function getJenisKerjasama()
   {
-    return JenisKerjaSama::all();
+    return JenisKerjasama::all();
   }
 }
