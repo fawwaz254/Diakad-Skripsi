@@ -97,7 +97,7 @@ class JenisKerjaSamaController extends Controller
 
     public function renderDatatables()
     {
-        $data_jenisKerjasama = libKerjasama::getJenisKerjasama() ;
+        $data_jenisKerjasama = LibKerjasama::getJenisKerjasama() ;
 
         return Datatables::of($data_jenisKerjasama)
                 ->addColumn('action', function($jenis_kerjasama){
