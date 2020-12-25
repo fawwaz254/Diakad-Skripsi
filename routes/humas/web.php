@@ -140,10 +140,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 					Route::get('', 'KerjasamaController@index');
 					Route::get('/add', 'KerjasamaController@create');
-					Route::get('/edit/{jenisKerjasama}', 'KerjasamaController@edit');
+					Route::get('/edit/{kerjasama}', 'KerjasamaController@edit');
 					Route::post('/store', 'KerjasamaController@store');
-					Route::post('/update/{jenisKerjasama}', 'KerjasamaController@update');
-					Route::post('/delete/{jenisKerjasama}', 'KerjasamaController@destroy');
+					Route::post('/update/{kerjasama}', 'KerjasamaController@update');
+					Route::post('/delete/{kerjasama}', 'KerjasamaController@destroy');
 					Route::post('/datatables', 'KerjasamaController@renderDatatables');
 
 					Route::group(array('prefix' => 'instansi'), function() {
