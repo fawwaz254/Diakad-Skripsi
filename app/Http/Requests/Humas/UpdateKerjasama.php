@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests\Humas;
 
+use App\Models\Instansi;
+use App\Models\JenisKerjasama;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateKerjasama extends FormRequest
@@ -24,8 +26,8 @@ class UpdateKerjasama extends FormRequest
     public function rules()
     {
         return [
-            "id_instansi"           => "sometimes | required | string | exists:" . Instansi::class . "id_instansi",
-            "id_jenis_kerjasama"    => "sometimes | required | string | exists:" . JenisKerjasama::class . "id_jenis_kerjasama",
+            "id_instansi"           => "sometimes | required | string | exists:instansi,id_instansi",
+            "id_jenis_kerjasama"    => "sometimes | required | string | exists:jenis_kerjasama,id_jenis_kerjasama",
             "nm_kerjasama"          => "sometimes | required | string",
             "tanggal_kerjasama"     => "sometimes | required | date",
             "status"                => "sometimes | required | boolean",

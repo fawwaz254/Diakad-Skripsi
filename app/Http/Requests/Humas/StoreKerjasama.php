@@ -26,8 +26,8 @@ class StoreKerjasama extends FormRequest
     public function rules()
     {
         return [
-            "id_instansi"           => "required | string | exists:" . Instansi::class . "id_instansi",
-            "id_jenis_kerjasama"    => "required | string | exists:" . JenisKerjasama::class . "id_jenis_kerjasama",
+            "id_instansi"           => "required | string | exists:instansi,id_instansi",
+            "id_jenis_kerjasama"    => "required | string | exists:jenis_kerjasama,id_jenis_kerjasama",
             "nm_kerjasama"          => "required | string",
             "tanggal_kerjasama"     => "required | date",
             "status"                => "required | boolean",
