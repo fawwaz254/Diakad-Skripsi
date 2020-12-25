@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Models\Instansi;
 use App\Models\JenisKerjaSama;
+use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kerjasama extends Model
 {
     use SoftDeletes;
+    use BaseModelTraits;
 
     protected $table        = 'kerjasama';
     protected $primaryKey   = 'id_kerjasama';
