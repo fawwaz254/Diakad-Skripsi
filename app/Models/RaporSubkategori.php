@@ -31,7 +31,9 @@ class RaporSubkategori extends Model
 
     protected $guarded = [];
 
-
+    public function kategori(){
+        return $this->belongsTo(RaporKategori::class, 'id_rapor_kategori');
+    }
 
 
 

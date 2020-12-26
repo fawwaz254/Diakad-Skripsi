@@ -34,9 +34,21 @@ class RaporDeskripsi extends Model
 
     protected $guarded = [];
 
+    public function subkategori(){
+        return $this->belongsTo(RaporSubkategori::class, 'id_rapor_subkategori');
+    
+    }
+    public function kelompok(){
+        return $this->belongsTo(RaporKelompokMp::class, 'id_rapor_kelompok_mp');
+    }
+    
+    public function subkelompok(){
+        return $this->belongsTo(RaporSubkelompokMp::class, 'id_rapor_subkelompok_mp');
+    }
 
-
-
+    public function ekstrakurikuler(){
+        return $this->belongsTo(Ekskul::class, 'id_ekstrakurikuler');
+    }
 
 
 }
