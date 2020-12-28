@@ -165,6 +165,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 						Route::post('/delete/{jenisKerjasama}', 'JenisKerjaSamaController@destroy');
 						Route::post('/datatables', 'JenisKerjaSamaController@renderDatatables');
 					});
+			
+					Route::group(array('prefix' => 'berkas'), function() {
+						Route::get('/', 'BerkasKerjasamaController@index');
+						Route::get('/add/{kerjasama}', 'BerkasKerjasamaController@create');
+						Route::get('/edit/{kerjasama}', 'BerkasKerjasamaController@edit');
+						Route::post('/store', 'BerkasKerjasamaController@store');
+						Route::post('/update/{jenisKerjasama}', 'BerkasKerjasamaController@update');
+						Route::post('/delete/{jenisKerjasama}', 'BerkasKerjasamaController@destroy');
+						Route::post('/datatables', 'BerkasKerjasamaController@renderDatatables');
+					});
 				});
 		});
 });
