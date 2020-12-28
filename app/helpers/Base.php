@@ -44,12 +44,13 @@ if (!function_exists('get_moduls')) {
  * create storeFileToCloud if doesnt exists, 
  * @param string $path,
  * @param File $file
- * @return array
+ * @param string $access
+ * @return string
  */
 if (!function_exists('storeFileToCloud')) {
-  function storeFileToCloud($path, $file)
+  function storeFileToCloud($path, $file, $access = 'public')
   {    
     $prefix = auth_data()->sekolah_data->nm_prefix;
-    return Storage::disk('spaces')->putFile("$prefix/$path/$id", $file, 'public');
+    return Storage::disk('spaces')->putFile("$prefix/$path/$id", $file, $access);
   }
 }
