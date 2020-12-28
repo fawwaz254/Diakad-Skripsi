@@ -45,4 +45,9 @@ class LibKerjasama {
   {
     return Kerjasama::with('instansi', 'jenisKerjasama', 'berkasKerjasama')->get();
   }
+
+  public static function findKerjasama($id)
+  {
+    return Kerjasama::findOrFail($id);
+  }
 }
