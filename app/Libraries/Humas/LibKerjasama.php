@@ -5,6 +5,7 @@ namespace App\Libraries\Humas;
 use App\Models\Instansi;
 use App\Models\Kerjasama;
 use App\Models\JenisKerjasama;
+use App\Models\BerkasKerjasama;
 use Illuminate\Support\Facades\DB;
 
 
@@ -25,6 +26,11 @@ class LibKerjasama {
     return Kerjasama::create($data);
   }
 
+  public static function storeBerkasKerjasama($data)
+  {
+    return BerkasKerjasama::create($data);
+  }
+
   public static function getInstansi()
   {
     return Instansi::all();
@@ -37,6 +43,6 @@ class LibKerjasama {
 
   public static function getKerjasama()
   {
-    return Kerjasama::with('instansi', 'jenisKerjasama')->get();
+    return Kerjasama::with('instansi', 'jenisKerjasama', 'berkasKerjasama')->get();
   }
 }
