@@ -40,34 +40,33 @@
                   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   </div>
               </div>
-              <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/'. Request::segment(3) . '/' .$kerjasama->id_kerjasama)}}">
-                  @forelse($kerjasama->berkasKerjasama as $berkas)
-                          {{csrf_field()}}
-                          <div class="row clearfix">
-                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <li>
-                                  <a href="{{ $berkas->path }}" target="_blank">
-                                  @if (in_array(pathinfo($berkas->nama_file, PATHINFO_EXTENSION), ['jpg','jpeg','bmp','png']))
-                                  <img style="height:7rem; width:auto;" src="{{ $berkas->path }}">
-                                  @else
-                                  {{ str_limit($berkas->nama_file, $limit = 50, $end = '...').pathinfo($berkas->nama_file, PATHINFO_EXTENSION) }}
-                                  @endif
-                                  </a>
-                                  <input type="hidden" class="form-control" name="id_berkas_kerjasama" required="" aria-required="true" aria-invalid="true" value="{{$berkas->id_berkas_kerjasama}}">
-                                  </li>
-                              </div>
-                              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                  <button class="btn btn-danger bg-red waves-effect" id="delete" type="submit"><i class="material-icons">delete_forever</i><span>Delete</span></button>
-                              </div>
-                          </div>
-                  @empty
+              @forelse($kerjasama->berkasKerjasama as $berkas)
+                  <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/'. Request::segment(3) . "/delete/$berkas->id_berkas_kerjasama")}}">
+                  {{csrf_field()}}
                       <div class="row clearfix">
                           <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                              <li><em>No files to display.</em></li>
+                              <li>
+                                <a href="{{ $berkas->path }}" target="_blank">
+                                  @if (in_array(pathinfo($berkas->nama_file, PATHINFO_EXTENSION), ['jpg','jpeg','bmp','png']))
+                                    <img style="height:7rem; width:auto;" src="{{ $berkas->path }}">
+                                  @else
+                                    {{ str_limit($berkas->nama_file, $limit = 50, $end = '...').pathinfo($berkas->nama_file, PATHINFO_EXTENSION) }}
+                                  @endif
+                                </a>
+                              </li>
+                          </div>
+                          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <button class="btn btn-danger bg-red waves-effect" id="delete" type="submit"><i class="material-icons">delete_forever</i><span>Delete</span></button>
                           </div>
                       </div>
-                  @endforelse
-              </form>
+                    </form>
+              @empty
+                  <div class="row clearfix">
+                      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <li><em>No files to display.</em></li>
+                      </div>
+                  </div>
+              @endforelse
           </div>
       </div>
   </div>
