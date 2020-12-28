@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Instansi;
 use App\Models\JenisKerjasama;
+use App\Models\BerkasKerjasama;
 use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,5 +38,10 @@ class Kerjasama extends Model
     public function jenisKerjasama()
     {
         return $this->belongsTo(JenisKerjasama::class, 'id_jenis_kerjasama');
+    }
+
+    public function berkasKerjasama()
+    {
+        return $this->hasMany(BerkasKerjasama::class, 'id_kerjasama')->orderBy('versi')->orderBy('created_at');
     }
 }
