@@ -16,17 +16,17 @@
                             class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
-                              <tr>
-                                <th> No</th>
-                                <th> Nama Kerjasama </th>
-                                <th> Instansi </th>
-                                <th> Jenis Kerjasama </th>
-                                <th> Tanggal Kerjasama </th>
-                                <th> Status </th>
-                                <th> Jumlah File </th>
-                                <th> Versi </th>
-                                <th> Action </th>
-                              </tr>
+                                <tr>
+                                    <th> No</th>
+                                    <th> Nama Kerjasama </th>
+                                    <th> Instansi </th>
+                                    <th> Jenis Kerjasama </th>
+                                    <th> Tanggal Kerjasama </th>
+                                    <th> Status </th>
+                                    <th> Jumlah File </th>
+                                    <th> Versi </th>
+                                    <th> Action </th>
+                                </tr>
                             </thead>
                         </table>
                     </div>
@@ -34,7 +34,7 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
   
   <script>
       var modul_url       = '{{Request::segment(2)}}';

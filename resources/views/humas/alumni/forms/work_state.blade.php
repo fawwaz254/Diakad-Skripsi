@@ -1,21 +1,26 @@
 <h2 class="status-header"> Data Instansi Tempat Bekerja </h2>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h2 class="card-inside-title"> Nama Instansi </h2>
-  <input type="text" class="form-control" name="nm_instansi" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni->bekerja))? $alumni->bekerja->nm_instansi : ''}}">
+	<h2 class="card-inside-title"> Nama Instansi </h2>
+	<input type="text" class="form-control" name="nm_instansi" required="" aria-required="true" aria-invalid="true"
+		value="{{(!empty($alumni->bekerja))? $alumni->bekerja->nm_instansi : ''}}">
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h2 class="card-inside-title"> Alamat instansi </h2>
-  <textarea class="form-control" name="alamat_instansi" required="" aria-required="true" aria-invalid="true"> {{(!empty($alumni->bekerja))? $alumni->bekerja->alamat_instansi : ''}} </textarea>
+	<h2 class="card-inside-title"> Alamat instansi </h2>
+	<textarea class="form-control" name="alamat_instansi" required="" aria-required="true"
+		aria-invalid="true"> {{(!empty($alumni->bekerja))? $alumni->bekerja->alamat_instansi : ''}} </textarea>
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h2 class="card-inside-title"> Kontak Instansi </h2>
-  <input type="text" class="form-control" name="kontak_instansi" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni->bekerja))? $alumni->bekerja->kontak_instansi : ''}}">
+	<h2 class="card-inside-title"> Kontak Instansi </h2>
+	<input type="text" class="form-control" name="kontak_instansi" required="" aria-required="true" aria-invalid="true"
+		value="{{(!empty($alumni->bekerja))? $alumni->bekerja->kontak_instansi : ''}}">
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h2 class="card-inside-title"> Bidang Usaha </h2>
-  <input type="text" class="form-control" name="bidang_usaha_instansi" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni->bekerja))? $alumni->bekerja->bidang_usaha_instansi : ''}}">
+	<h2 class="card-inside-title"> Bidang Usaha </h2>
+	<input type="text" class="form-control" name="bidang_usaha_instansi" required="" aria-required="true"
+		aria-invalid="true" value="{{(!empty($alumni->bekerja))? $alumni->bekerja->bidang_usaha_instansi : ''}}">
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-  <h2 class="card-inside-title"> Tahun Masuk </h2>
-  <input type="text" class="form-control" name="tahun_masuk_instansi" required="" aria-required="true" aria-invalid="true" value="{{(!empty($alumni->bekerja))? $alumni->bekerja->tahun_masuk_instansi : ''}}">
+	<h2 class="card-inside-title"> Tahun Masuk </h2>
+	<input type="text" class="form-control" name="tahun_masuk_instansi" required="" aria-required="true"
+		aria-invalid="true" value="{{(!empty($alumni->bekerja))? $alumni->bekerja->tahun_masuk_instansi : ''}}">
 </div>

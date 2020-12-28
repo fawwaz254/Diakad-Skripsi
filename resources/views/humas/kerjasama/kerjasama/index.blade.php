@@ -1,37 +1,37 @@
 <div class="container-fluid">
-  <div class="block-header">
-      <h2><a class="btn bg-blue waves-effect target-link"
-              href="{{url(Request::segment(1).'#'.Request::segment(2).'/add')}}">
-              <i class="material-icons">note_add</i><span>Tambah Kerjasama</span></a></h2>
-  </div>
-  <div class="row clearfix">
-      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <div class="card">
-              <div class="header">
-                  <h2>DATA INSTANSI</h2>
-              </div>
-              <div class="body">
-                  <div class="table-responsive">
-                      <table
-                          class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                          id="primary_table">
-                          <thead>
-                            <tr>
-                              <th> No</th>
-                              <th> Nama Kerjasama </th>
-                              <th> Instansi </th>
-                              <th> Jenis Kerjasama </th>
-                              <th> Tanggal Kerjasama </th>
-                              <th> Status </th>
-                              <th> Action </th>
-                            </tr>
-                          </thead>
-                      </table>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{url(Request::segment(1).'#'.Request::segment(2).'/add')}}">
+                <i class="material-icons">note_add</i><span>Tambah Kerjasama</span></a></h2>
+    </div>
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2>DATA KERJASAMA</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table
+                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                            id="primary_table">
+                            <thead>
+                                <tr>
+                                    <th> No</th>
+                                    <th> Nama Kerjasama </th>
+                                    <th> Instansi </th>
+                                    <th> Jenis Kerjasama </th>
+                                    <th> Tanggal Kerjasama </th>
+                                    <th> Status </th>
+                                    <th> Action </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>

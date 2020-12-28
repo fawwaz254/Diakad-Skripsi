@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-            href="{{url(Request::segment(1).'#'.Request::segment(2).'/add')}}">
+            href="{{url(Request::segment(1).'#'.Request::segment(2).'/tambah-alumni')}}">
                 <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
     </div>
     <div class="row clearfix">
