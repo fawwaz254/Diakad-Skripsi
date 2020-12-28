@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Humas\Kerjasama;
 use App\Models\Kerjasama;
 use Illuminate\Http\Request;
 use App\Models\BerkasKerjasama;
+use Yajra\Datatables\Datatables;
 use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use Yajra\Datatables\Datatables;
+use App\Http\Requests\Humas\StoreBerkasKerjasama;
 
 class BerkasKerjasamaController extends Controller
 {
@@ -43,7 +44,7 @@ class BerkasKerjasamaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBerkasKerjasama $request)
     {
         $uploadedFile   = storeFileToCloud('berkas_kerjasama', $request->id_kerjasama, $request->file);
 
