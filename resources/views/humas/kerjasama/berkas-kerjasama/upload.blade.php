@@ -22,13 +22,13 @@
                   <div class="row clearfix">
                       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                           <label>
-                              <input type="file" name="file" />
+                              <input id="input_file_field" type="file" name="file" />
                           </label>
                       </div>
                   </div>
                   <div class="row clearfix">
                       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                          <button class="btn btn-block bg-red waves-effect" id="upload" type="submit"><i class="material-icons">cloud_upload</i><span>Upload</span></button>
+                          <button class="btn btn-block bg-red waves-effect" disabled id="upload" type="submit"><i class="material-icons">cloud_upload</i><span>Upload</span></button>
                       </div>
                   </div>
               </form>
@@ -84,6 +84,12 @@ $(document).ready(function () {
       return true;
 
   });
+
+  $('#input_file_field').change(function(){
+      if ($('#input_file_field').get(0).files.length > 0) {
+          $('#upload').attr('disabled', false);
+      }
+  })
 
 });
 </script>

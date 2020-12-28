@@ -41,7 +41,7 @@
     var edit_url        = role_url + '#' + modul_url + '/edit';
     var detail_url      = role_url + '#' + modul_url + '/show';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/delete';
-    var upload_url      = role_url + '#' + modul_url + '/' + 'berkas/upload';
+    var upload_url      = role_url + '#' + modul_url + '/' + 'berkas/add';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -68,7 +68,7 @@
                     '</button>'+
                     '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" style="margin-left: 5px" href="'+ upload_url + '/' + data.id +'">'+
                     '    <i class="material-icons">cloud_upload</i>'+
-                    '</a>';;
+                    '</a>';
                 }
             }
         ]

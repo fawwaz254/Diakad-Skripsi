@@ -73,7 +73,7 @@
                       '</button>'+
                       '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" style="margin-left: 5px" href="'+ upload_url + '/' + data.id +'">'+
                       '    <i class="material-icons">cloud_upload</i>'+
-                      '</a>';;
+                      '</a>';
                   }
               }
           ]
