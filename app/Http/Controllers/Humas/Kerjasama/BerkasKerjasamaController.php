@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
+use Yajra\Datatables\Datatables;
 
 class BerkasKerjasamaController extends Controller
 {
