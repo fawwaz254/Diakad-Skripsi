@@ -55,3 +55,15 @@ if (!function_exists('storeFileToCloud')) {
     return Storage::disk('spaces')->putFile("$prefix/$path/$id", $file, $access);
   }
 }
+
+/**
+ * create removeFileFromCloud if doesnt exists, 
+ * @param string $filename,
+ * @return any
+ */
+if (!function_exists('removeFileFromCloud')) {
+  function removeFileFromCloud($filename)
+  {
+    return Storage::disk('spaces')->delete($filename);
+  }
+}
