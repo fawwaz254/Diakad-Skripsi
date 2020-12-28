@@ -8,6 +8,7 @@ use App\Models\BerkasKerjasama;
 use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 
 class BerkasKerjasamaController extends Controller
 {
@@ -44,7 +45,7 @@ class BerkasKerjasamaController extends Controller
     public function store(Request $request)
     {
         $uploadedFile   = storeFileToCloud('berkas_kerjasama', $request->id_kerjasama, $request->file);
-        
+
         $data = [
             'id_kerjasama'  => $request->id_kerjasama,
             'nama_file'     => $uploadedFile,
@@ -58,40 +59,6 @@ class BerkasKerjasamaController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\BerkasKerjasama  $berkasKerjasama
-     * @return \Illuminate\Http\Response
-     */
-    public function show(BerkasKerjasama $berkasKerjasama)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\BerkasKerjasama  $berkasKerjasama
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(BerkasKerjasama $berkasKerjasama)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\BerkasKerjasama  $berkasKerjasama
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, BerkasKerjasama $berkasKerjasama)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\BerkasKerjasama  $berkasKerjasama
@@ -99,7 +66,21 @@ class BerkasKerjasamaController extends Controller
      */
     public function destroy(BerkasKerjasama $berkasKerjasama)
     {
-        //
+        $id_kerjasama = $berkasKerjasama->id_kerjasama;
+        $isDeleted = removeFileFromCloud($berkasKerjasama->nama_file);
+        if(!$isDeleted){
+            return [
+                'status' => 300, // SUCCESS AND LOAD TABLE
+                'message' => 'Delete Berkas gagal'
+            ];
+        }
+        
+        $berkasKerjasama->delete();
+        return [
+            'status' => 202, // SUCCESS AND LOAD TABLE
+            'path' => "kerjasama/berkas/add/$id_kerjasama",
+            'message' => 'Delete File Dokumen successfully'
+        ];
     }
 
     public function renderDatatables()
@@ -128,14 +109,5 @@ class BerkasKerjasamaController extends Controller
                     ];
                 })
                 ->make(true);
-    }
-
-    private function fetchAndManipulateData($request)
-    {
-        $data = $request->only(self::FETCH_ATTRIBUTE);
-        $data['type']   = $request->file->extension();
-        $data['versi']  = 1;  // need discussion about versioning
-
-        return $data;
     }
 }
