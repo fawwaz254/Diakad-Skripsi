@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -28,7 +28,7 @@ class PeriodeMagangController extends BaseController
       $input = (object) $request->input();
       $auth_data = $input->auth_data;
 
-      return view('pendidikan/magang-siswa/periode-magang/view-periode-magang',compact('auth_data'));
+      return view('humas/magang-siswa/periode-magang/view-periode-magang',compact('auth_data'));
   }
 
   public function addPeriodeMagang(Request $request){
@@ -45,7 +45,7 @@ class PeriodeMagangController extends BaseController
 
       $id_periode_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-      return view('pendidikan/magang-siswa/periode-magang/add-periode-magang',compact('auth_data','data_magang','data_semester','id_periode_magang'));
+      return view('humas/magang-siswa/periode-magang/add-periode-magang',compact('auth_data','data_magang','data_semester','id_periode_magang'));
 
   }
 
@@ -63,7 +63,7 @@ class PeriodeMagangController extends BaseController
       $tgl_mulai = strftime( "%d %B %Y", strtotime($data_periode_magang->tgl_magang_mulai));
       $tgl_selesai = strftime( "%d %B %Y", strtotime($data_periode_magang->tgl_magang_selesai));
 
-      return view('pendidikan/magang-siswa/periode-magang/edit-periode-magang',compact('auth_data','data_magang','data_semester','data_periode_magang','tgl_mulai','tgl_selesai'));
+      return view('humas/magang-siswa/periode-magang/edit-periode-magang',compact('auth_data','data_magang','data_semester','data_periode_magang','tgl_mulai','tgl_selesai'));
 
   }
 

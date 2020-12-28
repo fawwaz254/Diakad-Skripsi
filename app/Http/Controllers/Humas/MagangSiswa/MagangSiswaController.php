@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -25,7 +25,7 @@ class MagangSiswaController extends BaseController
       $input = (object) $request->input();
       $auth_data = $input->auth_data;
 
-    return view('pendidikan/magang-siswa/nama-magang/view-magang',compact('auth_data'));
+    return view('humas/magang-siswa/nama-magang/view-magang',compact('auth_data'));
   }
   public function datatablesMagangSiswa(Request $request){
       $input = (object) $request->input();
@@ -52,7 +52,7 @@ class MagangSiswaController extends BaseController
 
       $id_magang = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-      return view('pendidikan/magang-siswa/nama-magang/add-magang',compact('auth_data','id_magang'));
+      return view('humas/magang-siswa/nama-magang/add-magang',compact('auth_data','id_magang'));
   }
 
   public function editMagangSiswa($id, Request $request){
@@ -62,7 +62,7 @@ class MagangSiswaController extends BaseController
 
       $data_magang = LibMagangSiswa::fetchDataMagangSiswa($auth_data, $id);
 
-      return view('pendidikan/magang-siswa/nama-magang/edit-magang',compact('auth_data','data_magang'));
+      return view('humas/magang-siswa/nama-magang/edit-magang',compact('auth_data','data_magang'));
 
   }
 
