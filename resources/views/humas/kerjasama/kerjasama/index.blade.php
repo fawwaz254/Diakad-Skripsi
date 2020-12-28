@@ -66,7 +66,7 @@
                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">delete_forever</i>'+
                     '</button>'+
-                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ upload_url + '/' + data.id +'">'+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" style="margin-left: 5px" href="'+ upload_url + '/' + data.id +'">'+
                     '    <i class="material-icons">cloud_upload</i>'+
                     '</a>';;
                 }
