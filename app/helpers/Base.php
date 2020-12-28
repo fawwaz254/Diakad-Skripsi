@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * create auth_data helper if doesnt exists
@@ -36,5 +37,19 @@ if (!function_exists('get_moduls')) {
   function get_moduls()
   {    
     return auth_data()->moduls;
+  }
+}
+
+/**
+ * create storeFileToCloud if doesnt exists, 
+ * @param string $path,
+ * @param File $file
+ * @return array
+ */
+if (!function_exists('storeFileToCloud')) {
+  function storeFileToCloud($path, $file)
+  {    
+    $prefix = auth_data()->sekolah_data->nm_prefix;
+    return Storage::disk('spaces')->putFile("$prefix/$path/$id", $file, 'public');
   }
 }
