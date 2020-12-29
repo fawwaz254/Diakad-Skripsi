@@ -39,9 +39,7 @@ class AlumniController extends Controller
      */
     public function index(Request $request)
     {
-        $input      = (object) $request->input();
-        $auth_data  = $input->auth_data;
-    	return view(self::RESOURCE_PATH . 'tracer-alumni',compact('auth_data'));
+    	return view(self::RESOURCE_PATH . 'tracer-alumni');
     }
 
     /**
@@ -51,11 +49,9 @@ class AlumniController extends Controller
      */
     public function create(Request $request)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
         $data_jurusan = Jurusan::all();
         $alumni = null;
-    	return view(self::RESOURCE_PATH . 'add-alumni',compact('auth_data', 'data_jurusan', 'alumni'));
+    	return view(self::RESOURCE_PATH . 'add-alumni',compact('data_jurusan', 'alumni'));
     }
 
     /**
@@ -66,14 +62,25 @@ class AlumniController extends Controller
      */
     public function store(Request $request)
     {
-        $idAlumni  = $this->storeAlumniAndReturnId($request);
-        $this->storePartialData($request, $idAlumni);
+        DB::beginTransaction();
+        try {
+            $idAlumni  = $this->storeAlumniAndReturnId($request);
+            $this->storePartialData($request, $idAlumni);
+    
+            DB::commit();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'alumni/',
+                'message' => 'Save successfully'
+            ];
+        } catch (\Throwable $th) {
+            DB::rollback();
 
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'alumni/',
-            'message' => 'Save successfully'
-        ];
+            return [
+                'status' => 300, // GAGAL
+                'message' => 'Failed to store alumni! '
+            ];
+        }
     }
 
     /**
@@ -84,24 +91,21 @@ class AlumniController extends Controller
      */
     public function show(Request $request, Alumni $alumni)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
         $alumni->load(['calon_siswa', 'calon_siswa.jurusan', $alumni->status]);
         $data_jurusan = Jurusan::all();
-    	return view(self::RESOURCE_PATH . 'add-alumni',compact('auth_data', 'data_jurusan', 'alumni'));
+    	return view(self::RESOURCE_PATH . 'add-alumni',compact('data_jurusan', 'alumni'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Alumni  $alumni
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Alumni $alumni)
     {
-        $auth       = (object) $request->input()['auth_data'];
-        $userId     = $auth->pengguna->id_pengguna;
+        $userId     = auth_data()->pengguna->id_pengguna;
         $calonSiswa = $alumni->calon_siswa;
         $pengguna   = $calonSiswa->siswa->pengguna;
 
@@ -110,10 +114,7 @@ class AlumniController extends Controller
 
         if($this->isAlumniStatusChanged($alumni, $request)){
             $status = $alumni->status;
-
-            $alumni->$status->update(['deleted_by' => $userId]);
             $alumni->$status->delete();
-
             $this->storePartialData($request, $alumni->id_alumni);
         } else {
             $this->updatePartialData($alumni, $request);
@@ -136,10 +137,6 @@ class AlumniController extends Controller
      */
     public function destroy(Request $request, Alumni $alumni)
     {
-        $auth       = (object) $request->input()['auth_data'];
-        $userId     = $auth->pengguna->id_pengguna;
-
-        $alumni->update(['deleted_by' => $userId]);
         $alumni->delete();
 
         return [
@@ -150,10 +147,8 @@ class AlumniController extends Controller
 
     public function renderDatatables(Request $request)
     {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
         $alumnis    = LibAlumni::getAlumnis();
+
         return Datatables::of($alumnis)
         ->editColumn('status', function($item){
             return ucfirst($item->status);
@@ -229,22 +224,21 @@ class AlumniController extends Controller
     }
 
     private function handlePartialCreationData($data, $request){
-        $auth       = (object) $request->input()['auth_data'];
-        $id         = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-        $userId     = $auth->pengguna->id_pengguna;
+        $id         = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId     = auth_data()->pengguna->id_pengguna;
 
         switch ($request->status) {
             case 'bekerja':
                 $data['id_alumni_bekerja']    = $id;
             break;
             case 'usaha':
-                $data['id_alumni_wirausaha']     = $id;
+                $data['id_alumni_wirausaha']  = $id;
             break;
             case 'kuliah':
-                $data['id_alumni_kuliah']   = $id;
+                $data['id_alumni_kuliah']     = $id;
             break;
             case 'menunggu':
-                $data['id_alumni_menunggu']         = $id;
+                $data['id_alumni_menunggu']   = $id;
             break;
         }
 
@@ -256,9 +250,8 @@ class AlumniController extends Controller
 
     private function storeStudent($request, $idPengguna, $idCalonSiswa)
     {
-        $auth       = (object) $request->input()['auth_data'];
-        $id         = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-        $userId     = $auth->pengguna->id_pengguna;
+        $id         = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId     = auth_data()->pengguna->id_pengguna;
 
         Siswa::insert([
             'id_siswa'      => $id, 
@@ -286,9 +279,8 @@ class AlumniController extends Controller
 
     private function storeAllDataThatRelatedToCalonSiswaAndReturnId($request)
     {
-        $auth   = (object) $request->input()['auth_data'];
-        $id     = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-        $userId = $auth->pengguna->id_pengguna;
+        $id     = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId = auth_data()->pengguna->id_pengguna;
 
         $data = [
             'id_c_siswa'    => $id,
@@ -321,13 +313,12 @@ class AlumniController extends Controller
     
     private function handleUserCreationData($data, $request)
     {
-        $auth   = (object) $request->input()['auth_data'];
-        $id     = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-        $userId = $auth->pengguna->id_pengguna;
+        $id     = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId = auth_data()->pengguna->id_pengguna;
         
         $data['username']               = str_replace(' ', '_', $request->nama_siswa);
         $data['id_status_pengguna']     = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
-        $data['id_sekolah']             = $auth->pengguna->id_sekolah;
+        $data['id_sekolah']             = auth_data()->pengguna->id_sekolah;
         $data['id_pengguna']            = $id;
         $data['created_by']             = $userId;
         $data['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
@@ -347,8 +338,7 @@ class AlumniController extends Controller
 
     private function handleStudentApplicantCreationData($data, $id, $request)
     {
-        $auth   = (object) $request->input()['auth_data'];
-        $userId = $auth->pengguna->id_pengguna;
+        $userId = auth_data()->pengguna->id_pengguna;
 
         $data['id_c_siswa']        = $id;        
         $data['id_penerimaan']     = 0;
@@ -370,9 +360,8 @@ class AlumniController extends Controller
 
     private function handleAlumniCreationData($data, $idCalonSiswa, $request)
     {
-        $auth       = (object) $request->input()['auth_data'];
-        $id         = $auth->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-        $userId     = $auth->pengguna->id_pengguna;
+        $id         = auth_data()->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+        $userId     = auth_data()->pengguna->id_pengguna;
 
         $data['id_alumni']  = $id;
         $data['id_c_siswa'] = $idCalonSiswa;
