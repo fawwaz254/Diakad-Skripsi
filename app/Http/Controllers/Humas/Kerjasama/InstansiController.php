@@ -44,7 +44,7 @@ class InstansiController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $instansi = LibKerjasama::storeInstansi($data);
-        return web_response(self::PATH);
+        return web_response(202, "Create Instansi successfully", self::PATH);
     }
 
     /**
@@ -69,7 +69,7 @@ class InstansiController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $instansi->update($data);
-        return web_response(self::PATH);
+        return web_response(202, "Update Instansi successfully", self::PATH);
     }
 
     /**
@@ -81,7 +81,7 @@ class InstansiController extends Controller
     public function destroy(Instansi $instansi)
     {
         $instansi->delete();
-        return web_response(self::PATH);
+        return web_response(203, "Delete Instansi successfully");
     }
 
     public function renderDatatables()

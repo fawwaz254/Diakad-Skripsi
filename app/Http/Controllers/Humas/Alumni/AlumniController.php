@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Humas\Alumni;
 
 use Error;
+use Exception;
 use Carbon\Carbon;
 use App\Models\Siswa;
 use App\Models\Alumni;
@@ -71,10 +72,10 @@ class AlumniController extends Controller
             $this->storePartialData($request, $idAlumni);
     
             DB::commit();
-            return web_response(self::PATH);
-        } catch (\Throwable $th) {
+            return web_response(202, "Save successfully", self::PATH);
+        } catch (\Exception $e) {
             DB::rollback();
-            return error_response($th->message);
+            return error_response($e);
         }
     }
 
@@ -120,13 +121,10 @@ class AlumniController extends Controller
             $this->updateAlumni($alumni, $request);
             
             DB::commit();
-            return web_response(self::PATH);
-
-
-
-        } catch (\Throwable $th) {
+            return web_response(202, "Update successfully", self::PATH);
+        } catch (\Exception $e) {
             DB::rollback();
-            return error_response($th->message);
+            return error_response($e);
         }
 
     }
@@ -140,8 +138,7 @@ class AlumniController extends Controller
     public function destroy(Request $request, Alumni $alumni)
     {
         $alumni->delete();
-
-        return web_response(null, "Delete Success", 203);    
+        return web_response(203, "Delete alumni successfully");    
     }
 
     public function renderDatatables(Request $request)

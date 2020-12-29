@@ -76,7 +76,7 @@ class BerkasKerjasamaController extends Controller
         }
         
         $berkasKerjasama->delete();
-        return web_response(self::PATH . $id_kerjasama, 'Delete File Dokumen successfully');
+        return web_response(202, 'Delete File Dokumen successfully', self::PATH . $id_kerjasama);
     }
 
     public function renderDatatables()

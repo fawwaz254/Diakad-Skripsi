@@ -44,7 +44,7 @@ class JenisKerjaSamaController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         LibKerjasama::storeJenisKerjasama($data);
-        return \web_response(self::PATH, 'Jenis Kerjasama Created');
+        return web_response(202, 'Jenis Kerjasama Created', self::PATH);
     }
 
     /**
@@ -69,7 +69,7 @@ class JenisKerjaSamaController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $jenisKerjasama->update($data);
-        return \web_response(self::PATH, 'Jenis Kerjasama Updated');
+        return \web_response(202, 'Jenis Kerjasama Updated', self::PATH);
     }
 
     /**
@@ -81,7 +81,7 @@ class JenisKerjaSamaController extends Controller
     public function destroy(JenisKerjasama $jenisKerjasama)
     {
         $jenisKerjasama->delete();
-        return \web_response(self::PATH, 'Jenis Kerjasama Deleted', 203);
+        return \web_response(203, 'Jenis Kerjasama Deleted');
     }
 
     public function renderDatatables()
