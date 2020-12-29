@@ -12,6 +12,7 @@ class JenisKerjaSamaController extends Controller
 {
     const RESOURCE_PATH = 'humas/kerjasama/jenis_kerjasama/';
     const FETCH_ATTRIBUTE = ['nm_jenis_kerjasama'];
+    const PATH = 'kerjasama/jenis';
 
     /**
      * Display a listing of the resource.
@@ -43,11 +44,7 @@ class JenisKerjaSamaController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         LibKerjasama::storeJenisKerjasama($data);
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/jenis',
-            'message' => 'Jenis Kerjasama Created'
-        ];
+        return \web_response(self::PATH, 'Jenis Kerjasama Created');
     }
 
     /**
@@ -72,11 +69,7 @@ class JenisKerjaSamaController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $jenisKerjasama->update($data);
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/jenis',
-            'message' => 'Jenis Kerjasama Updated'
-        ];
+        return \web_response(self::PATH, 'Jenis Kerjasama Updated');
     }
 
     /**
@@ -88,11 +81,7 @@ class JenisKerjaSamaController extends Controller
     public function destroy(JenisKerjasama $jenisKerjasama)
     {
         $jenisKerjasama->delete();
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/jenis',
-            'message' => 'Jenis Kerjasama Deleted'
-        ];
+        return \web_response(self::PATH, 'Jenis Kerjasama Deleted', 203);
     }
 
     public function renderDatatables()

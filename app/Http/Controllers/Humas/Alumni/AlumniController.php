@@ -2,28 +2,31 @@
 
 namespace App\Http\Controllers\Humas\Alumni;
 
+use Error;
 use Carbon\Carbon;
 use App\Models\Siswa;
 use App\Models\Alumni;
 use App\Models\Jurusan;
 use App\Models\Pengguna;
-use App\Models\AlumniMenunggu;
+use App\Models\AlumniKuliah;
 use Illuminate\Http\Request;
-use App\Models\AlumniWirausaha;
+use App\Models\AlumniBekerja;
+use App\Models\AlumniMenunggu;
 use App\Models\CalonSiswaBaru;
 use App\Models\CalonSiswaOrtu;
 use App\Models\StatusPengguna;
-use App\Models\AlumniBekerja;
+use App\Models\AlumniWirausaha;
 use App\Models\CalonSiswaFisik;
-use App\Models\AlumniKuliah;
-use App\Models\CalonSiswaSekolah;
-use App\Http\Controllers\Controller;
-use App\Libraries\Humas\LibAlumni;
-use App\Libraries\Pendidikan\LibSiswa;
 use Yajra\Datatables\Datatables;
+use App\Models\CalonSiswaSekolah;
+use App\Libraries\Humas\LibAlumni;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Libraries\Pendidikan\LibSiswa;
 
 class AlumniController extends Controller
 {
+    const PATH = 'alumni/';
     const RESOURCE_PATH = 'humas/alumni/';
     const FETCH_PENGGUNA = ['nama_siswa', 'nomor_hp', 'email'];
     const FETCH_STUDENT_APPLICANT = ['nama_siswa', 'nomor_hp'];
@@ -68,18 +71,10 @@ class AlumniController extends Controller
             $this->storePartialData($request, $idAlumni);
     
             DB::commit();
-            return [
-                'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'alumni/',
-                'message' => 'Save successfully'
-            ];
+            return web_response(self::PATH);
         } catch (\Throwable $th) {
             DB::rollback();
-
-            return [
-                'status' => 300, // GAGAL
-                'message' => 'Failed to store alumni! '
-            ];
+            return error_response($th->message);
         }
     }
 
@@ -108,25 +103,32 @@ class AlumniController extends Controller
         $userId     = auth_data()->pengguna->id_pengguna;
         $calonSiswa = $alumni->calon_siswa;
         $pengguna   = $calonSiswa->siswa->pengguna;
+        DB::beginTransaction();
 
-        $this->updateStudentApplicant($calonSiswa, $request);
-        $this->updateUser($pengguna, $request);
+        try {
+            $this->updateStudentApplicant($calonSiswa, $request);
+            $this->updateUser($pengguna, $request);
+    
+            if($this->isAlumniStatusChanged($alumni, $request)){
+                $status = $alumni->status;
+                $alumni->$status->delete();
+                $this->storePartialData($request, $alumni->id_alumni);
+            } else {
+                $this->updatePartialData($alumni, $request);
+            }
+    
+            $this->updateAlumni($alumni, $request);
+            
+            DB::commit();
+            return web_response(self::PATH);
 
-        if($this->isAlumniStatusChanged($alumni, $request)){
-            $status = $alumni->status;
-            $alumni->$status->delete();
-            $this->storePartialData($request, $alumni->id_alumni);
-        } else {
-            $this->updatePartialData($alumni, $request);
+
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return error_response($th->message);
         }
 
-        $this->updateAlumni($alumni, $request);
-        
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'alumni/',
-            'message' => 'Save successfully'
-        ];
     }
 
     /**
@@ -139,10 +141,7 @@ class AlumniController extends Controller
     {
         $alumni->delete();
 
-        return [
-            'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Success Delete Alumni '
-        ];        
+        return web_response(null, "Delete Success", 203);    
     }
 
     public function renderDatatables(Request $request)

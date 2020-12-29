@@ -12,6 +12,7 @@ class InstansiController extends Controller
 {
     const RESOURCE_PATH = 'humas/kerjasama/instansi/';
     const FETCH_ATTRIBUTE = ['nm_instansi', 'bidang_usaha', 'kontak', 'website', 'alamat'];
+    const PATH = 'kerjasama/instansi';
 
     /**
      * Display a listing of the resource.
@@ -43,11 +44,7 @@ class InstansiController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $instansi = LibKerjasama::storeInstansi($data);
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/instansi',
-            'message' => 'Instansi Created'
-        ];
+        return web_response(self::PATH);
     }
 
     /**
@@ -72,11 +69,7 @@ class InstansiController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $instansi->update($data);
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/instansi',
-            'message' => 'Update successfully'
-        ];
+        return web_response(self::PATH);
     }
 
     /**
@@ -88,11 +81,7 @@ class InstansiController extends Controller
     public function destroy(Instansi $instansi)
     {
         $instansi->delete();
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama/instansi',
-            'message' => 'Delete successfully'
-        ];
+        return web_response(self::PATH);
     }
 
     public function renderDatatables()
