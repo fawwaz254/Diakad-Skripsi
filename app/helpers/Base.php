@@ -1,6 +1,5 @@
 <?php
 
-use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;

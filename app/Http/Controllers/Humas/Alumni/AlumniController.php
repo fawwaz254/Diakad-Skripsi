@@ -27,7 +27,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 
 class AlumniController extends Controller
 {
-    const PATH = 'alumni/';
+    const PATH = 'alumni/tracer-alumni';
     const RESOURCE_PATH = 'humas/alumni/';
     const FETCH_PENGGUNA = ['nama_siswa', 'nomor_hp', 'email'];
     const FETCH_STUDENT_APPLICANT = ['nama_siswa', 'nomor_hp'];
