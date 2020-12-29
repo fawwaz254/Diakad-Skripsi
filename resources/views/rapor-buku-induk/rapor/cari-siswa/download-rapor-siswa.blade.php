@@ -166,7 +166,7 @@
                 <!-- loop for each detail_rapor based on kelompok -->
                 @foreach(collect($data_detail_rapor)->where('id_rapor_kelompok', $kel->id_rapor_kelompok) as $key => $detail)
                 <tr class="presensi">
-                    <td style="width: 30px;">{{ $key + 1 }}</td>
+                    <td>{{ $key + 1 }}</td>
                     <td>{{ $detail['nm_mata_pelajaran'] }}</td>
                     <td class="text-right">{{ $detail['nilai_kkm'] }}</td>
                     <td class="text-right">{{ $detail['nilai_angka'] }}</td>
@@ -178,26 +178,77 @@
                     <td class="text-center">-- deskripsi --</td>
                 </tr>
                 @endforeach
+                @if(collect($data_detail_rapor)->where('id_rapor_kelompok', $kel->id_rapor_kelompok)->isEmpty())
+                <tr class="presensi">
+                    <td>-</td>
+                    <td>-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                    <td class="text-center">-</td>
+                </tr>
+                @endif
             @endforeach
             <!-- end loop for format_rapor_kelompok -->
         </table>
         @elseif($kategori->nm_rapor_kategori == 'Praktek Kerja Lapangan')
         <table width="100%" class="presensi">
             <tr>
-                <th style="width: 30px;">No.</th>
+                <th style="width: 20px;">No.</th>
                 <th>Mitra DU/DI</th>
                 <th>Lokasi</th>
-                <th>Lamanya (bulan)</th>
+                <th>Lamanya</th>
                 <th>Keterangan</th>
             </tr>
+            @foreach($data_magang as $key => $magang)
+            @php
+                $start = date_create($magang['tgl_magang_mulai']);
+                $end = date_create($magang['tgl_magang_selesai']);
+                $diff = $start->diff($end);
+            @endphp
+            <tr>
+                <td>{{ $key +1 }}</td>
+                <td>{{ $magang['nm_rekanan_magang'] }}</td>
+                <td>{{ $magang['alamat_rekanan_magang'] }}</td>
+                <td>{{ $diff->format('%m Bulan %d Hari') }}</td>
+                <td>Nilai magang : {{ $magang['nilai_angka'] }}</td>
+            </tr>
+            @endforeach
+            @if($data_magang->isEmpty())
+            <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            @endif
         </table>
         @elseif($kategori->nm_rapor_kategori == 'Ekstrakurikuler')
         <table width="100%" class="presensi">
             <tr>
-                <th style="width: 30px;">No.</th>
+                <th style="width: 20px;">No.</th>
                 <th>Kegiatan Ekstrakurikuler</th>
                 <th>Keterangan</th>
             </tr>
+            @foreach($data_ekskul as $key => $ekskul)
+            <tr>
+                <td style="width: 20px;">{{ $key +1 }}</td>
+                <td>{{ $ekskul['nm_ekskul'] }}</td>
+                <td>{{ $ekskul['deskripsi_rapor'] }}</td>
+            </tr>
+            @endforeach
+            @if($data_ekskul->isEmpty())
+            <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            @endif
         </table>
         @elseif($kategori->nm_rapor_kategori == 'Prestasi')
         <table width="100%" class="presensi">
@@ -206,6 +257,35 @@
                 <th>Jenis Prestasi</th>
                 <th>Keterangan</th>
             </tr>
+            @foreach($data_prestasi as $key => $prestasi)
+            <tr>
+                <td style="width: 20px;">{{ $key +1 }}</td>
+                <td>
+                    @switch($prestasi['jenis_prestasi_siswa'])
+                        @case(1)
+                            Sains
+                            @break
+                        @case(2)
+                            Seni
+                            @break
+                        @case(3)
+                            Olahraga
+                            @break
+                        @case(4)
+                            Lain-lain
+                            @break
+                    @endswitch
+                </td>
+                <td>{{ $prestasi['nm_prestasi_siswa'] }}</td>
+            </tr>
+            @endforeach
+            @if($data_prestasi->isEmpty())
+            <tr>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            @endif
         </table>
         @elseif($kategori->nm_rapor_kategori == 'Ketidakhadiran')
         <table class="presensi">
@@ -233,7 +313,7 @@
         @elseif($kategori->nm_rapor_kategori == 'Tanggapan Orang Tua / Wali')
         <table style="border: 1px solid #000;" width="100%">
             <tr>
-                <td><br><br><br></td>
+                <td><br><br><br><br></td>
             </tr>
         </table>
         @endif
@@ -259,14 +339,14 @@
         <table width="100%" class="text-center">
             <tr>
                 <td>Mengetahui :</td>
-                <td>....., .............</td>
+                <td>........, ................</td>
             </tr>
             <tr>
                 <td>Orang Tua/Wali</td>
                 <td>Wali Kelas<td>
             </tr>
             <tr>
-                <td><br><br></td>
+                <td><br><br><br></td>
             </tr>
             <tr>
                 <td>__________________</td>
@@ -279,10 +359,10 @@
                 <td colspan="2" class="text-center">Kepala Sekolah</td>
             </tr>
             <tr>
-                <td colspan="2"><br><br></td>
+                <td colspan="2"><br><br><br></td>
             </tr>
             <tr>
-                <td colspan="2" class="text-center">-- Kepala Sekolah --</td>
+                <td colspan="2" class="text-center" style="text-decoration: underline;">-- Kepala Sekolah --</td>
             </tr>
         </table>
     </div>

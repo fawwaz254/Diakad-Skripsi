@@ -89,6 +89,8 @@ class InputNilaiMagangController extends BaseController
         $list_nilai = NilaiMagang::select('nilai_magang.id_pengambilan_magang','nilai_magang.id_komponen_magang','nilai_magang.besar_nilai_magang','komponen_magang.urutan_komponen_magang')->join('komponen_magang','nilai_magang.id_komponen_magang','=','komponen_magang.id_komponen_magang')
             ->where('komponen_magang.id_periode_magang','=',$id_periode_magang)
             ->get();
+
+        $nilai_magang_siswa = [];
         if($list_siswa){
             $nilai = $list_nilai->toArray();
             foreach ($nilai as $komponen => $nilaiMagang) {

@@ -74,7 +74,7 @@
                                         <option value="1" @if($prestasi->jenis_prestasi_siswa == 1) selected @endif>Sains</option>
                                         <option value="2" @if($prestasi->jenis_prestasi_siswa == 2) selected @endif>Seni</option>
                                         <option value="3" @if($prestasi->jenis_prestasi_siswa == 3) selected @endif>Olahraga</option>
-                                        <option value="99" @if($prestasi->jenis_prestasi_siswa == 99) selected @endif>Lain-Lain</option>
+                                        <option value="4" @if($prestasi->jenis_prestasi_siswa == 4) selected @endif>Lain-Lain</option>
                                     </select>
                                 </div>
                             </div>

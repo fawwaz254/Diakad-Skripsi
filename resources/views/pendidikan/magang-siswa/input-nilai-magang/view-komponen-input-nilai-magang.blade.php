@@ -54,7 +54,8 @@
                                         </td>
                                         @foreach($list_data as $nilai)
                                             <td>
-                                                <input type="text" name="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" value="{{$nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang]}}"/ style="width: 50%">
+                                                <input type="text" name="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" 
+                                                value="{{ !empty($nilai_magang_siswa) ? $nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang] : null }}" style="width: 50%">
                                             </td>
                                         @endforeach
                                         <td>
