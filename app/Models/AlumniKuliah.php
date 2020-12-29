@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\Alumni;
+use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AlumniKuliah extends Model
 {
     use SoftDeletes;
+    use BaseModelTraits;
 
     protected $table = 'alumni_kuliah';
     protected $primaryKey = 'id_alumni_kuliah';
