@@ -1,5 +1,6 @@
 <?php
 
+use Exception;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -78,7 +79,7 @@ if (!function_exists('web_response')) {
    * @param int $status,
    * @return array
    */
-  function web_response($path = null, $message = "Ok", $status = 202)
+  function web_response($status, $message = "Ok", $path = '', $link = '')
   {
     return [
       'status' => $status,
@@ -91,15 +92,30 @@ if (!function_exists('web_response')) {
 if (!function_exists('error_response')) {
   /**
    * return error response of web operation
-   * @param string $message,
+   * @param any $message ,
    * @param int $status,
    * @return array
    */
   function error_response($message, $status = 300)
   {
+    if($message instanceof Exception){
+      $message = isDebugMode() ? $message->getMessage() : 'Failed code '.$message->getLine();
+    }
+
     return [
       'status' => $status,
       'message' => $message
     ];
+  }
+}
+
+if (!function_exists('isDebugMode')) {
+  /**
+   * check is debug mode of the system active
+   * @return array
+   */
+  function isDebugMode()
+  {
+    return env('APP_DEBUG', 'true') == 'true';
   }
 }
