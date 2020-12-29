@@ -20,7 +20,7 @@ use App\Models\ArsipSubkategori as ArsipSubkategori;
 use App\Models\StatusPengguna;
 use App\Models\ArsipDokumenAkses;
 use App\Models\Guru;
-use App\Models\Staf;
+use App\Models\Staff;
 
 use Auth;
 use DB;
@@ -83,7 +83,7 @@ class DokumenController extends BaseController
                                     ->orWhereNotNull('id_arsip_dokumen_akses');
                             });
         }else if($request->segment(1) == 'tendik'){
-            $unit_kerja = Staf::where('id_pengguna',$auth_data->pengguna->id_pengguna)->pluck('id_unit_kerja')->first();
+            $unit_kerja = Staff::where('id_pengguna',$auth_data->pengguna->id_pengguna)->pluck('id_unit_kerja')->first();
             $list_data = $list_data->leftJoin('arsip_dokumen_akses', function($q) use ($unit_kerja){
                                 $q->on('arsip_dokumen_akses.id_arsip_dokumen', '=', 'arsip_dokumen.id_arsip_dokumen')
                                     ->where(function($query) use ($unit_kerja){
