@@ -12,6 +12,7 @@ use Yajra\Datatables\Datatables;
 
 class KerjasamaController extends Controller
 {
+    const PATH = "kerjasama/list";
     const RESOURCE_PATH = 'humas/kerjasama/kerjasama/';
     const FETCH_ATTRIBUTE = ['nm_kerjasama', 'id_instansi', 'id_jenis_kerjasama', 'tanggal_kerjasama', 'status'];
 
@@ -47,11 +48,7 @@ class KerjasamaController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         LibKerjasama::storeKerjasama($data);
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama',
-            'message' => 'Kerjasama Created'
-        ];
+        return web_response(202, "Kerjasama Created", self::PATH);
     }
 
     /**
@@ -78,11 +75,7 @@ class KerjasamaController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $kerjasama->update($data);
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama',
-            'message' => 'Kerjasama Updated'
-        ];
+        return web_response(202, "Kerjasama Updated", self::PATH);
     }
 
     /**
@@ -94,11 +87,7 @@ class KerjasamaController extends Controller
     public function destroy(Kerjasama $kerjasama)
     {
         $kerjasama->delete();
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'kerjasama',
-            'message' => 'Kerjasama Deleted'
-        ];
+        return web_response(203, "Kerjasama Deleted");
     }
 
     public function renderDatatables()

@@ -14,6 +14,7 @@ use App\Http\Requests\Humas\StoreBerkasKerjasama;
 
 class BerkasKerjasamaController extends Controller
 {
+    const PATH = "kerjasama/berkas/add/";
     const RESOURCE_PATH = 'humas/kerjasama/berkas-kerjasama/';
     const FETCH_ATTRIBUTE = ['version', 'file'];
 
@@ -71,18 +72,11 @@ class BerkasKerjasamaController extends Controller
         $id_kerjasama = $berkasKerjasama->id_kerjasama;
         $isDeleted = removeFileFromCloud($berkasKerjasama->nama_file);
         if(!$isDeleted){
-            return [
-                'status' => 300, // SUCCESS AND LOAD TABLE
-                'message' => 'Delete Berkas gagal'
-            ];
+            return error_response('Delete Berkas gagal');
         }
         
         $berkasKerjasama->delete();
-        return [
-            'status' => 202, // SUCCESS AND LOAD TABLE
-            'path' => "kerjasama/berkas/add/$id_kerjasama",
-            'message' => 'Delete File Dokumen successfully'
-        ];
+        return web_response(202, 'Delete File Dokumen successfully', self::PATH . $id_kerjasama);
     }
 
     public function renderDatatables()

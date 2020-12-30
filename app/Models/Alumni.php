@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\CalonSiswaBaru;
+use App\Traits\BaseModelTraits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Alumni extends Model
 {
     use SoftDeletes;
+    use BaseModelTraits;
 
     protected $table = 'alumni';
     protected $primaryKey = 'id_alumni';
