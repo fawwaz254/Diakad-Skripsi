@@ -108,7 +108,6 @@
                                 <tr>
                                     <td>Total Normal</td>
                                     <td></td>
-                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_normal[$date->format('d')]}}</td>
                                     @endforeach
@@ -116,14 +115,12 @@
                                 <tr>
                                     <td>Total Warning</td>
                                     <td></td>
-                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_warning[$date->format('d')]}}</td>
                                     @endforeach
                                 </tr>
                                 <tr>
                                     <td>Total pengisi</td>
-                                    <td></td>
                                     <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_pengisi[$date->format('d')]}}</td>

@@ -82,13 +82,11 @@
 							<label for="non-aktif"> Tidak Aktif </label>
 						</div>
 
-						<div class="row clearfix">
-							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-								<button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
-									<i class="material-icons">save</i><span> {{!empty($kerjasama)? 'Update' : 'Save'}}
-									</span>
-								</button>
-							</div>
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+							<button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
+								<i class="material-icons">save</i><span> {{!empty($kerjasama)? 'Update' : 'Save'}}
+								</span>
+							</button>
 						</div>
 					</form>
 				</div>
