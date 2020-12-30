@@ -85,7 +85,7 @@
                                         <option value="1">Sains</option>
                                         <option value="2">Seni</option>
                                         <option value="3">Olahraga</option>
-                                        <option value="99">Lain-Lain</option>
+                                        <option value="4">Lain-Lain</option>
                                     </select>
                                 </div>
                             </div>
