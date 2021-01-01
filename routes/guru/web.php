@@ -219,8 +219,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
             Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
-            Route::get('rekap-kesehatan/{id}/{bulan}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
-            Route::get('rekap-kesehatan/{id}/{bulan}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
             
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
             Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
@@ -281,8 +281,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             });
 
             Route::get('rekap-kesehatan', 'Guru\WaliKelas\RekapKesehatanController@viewRekapFormKesehatan');
-            Route::get('rekap-kesehatan/{bulan}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapFormKesehatan');
-            Route::get('rekap-kesehatan/{bulan}/download', 'Guru\WaliKelas\RekapKesehatanController@downloadRekapKesehatan');
+            Route::get('rekap-kesehatan/{bulan}/{tahun}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapFormKesehatan');
+            Route::get('rekap-kesehatan/{bulan}/{tahun}/download', 'Guru\WaliKelas\RekapKesehatanController@downloadRekapKesehatan');
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
             Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
                 

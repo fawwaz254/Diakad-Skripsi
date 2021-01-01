@@ -190,7 +190,7 @@ class FormKesehatanController extends BaseController{
             }
 
             if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 switch($request->segment(1)){
                     case 'tendik':
                         $status_join = 1; break;
@@ -205,8 +205,30 @@ class FormKesehatanController extends BaseController{
                 DB::beginTransaction();
                 
                 try {
+                    $batch_insert_pengisian_jawaban = array();
+                    foreach($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban){
+                        $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
+                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                        $batch_insert_pengisian_jawaban[] = array(
+                            'id_pengisian_jawaban'            => $id,
+                            'id_pengisian_kegiatan_harian'    => $pengisian_kegiatan_harian_id,
+                            'id_kegiatan_harian_pertanyaan'   => $id_pertanyaan,
+                            'id_kegiatan_harian_jawaban'      => $id_jawaban,
+                            'isi_jawaban_text'                => !empty($input->jawaban_text[$id_jawaban])? $input->jawaban_text[$id_jawaban] : null,
+                            'bobot_jawaban'                   => $kegiatan_harian_jawaban->bobot_jawaban,
+                            'warna_keadaan'                   => $kegiatan_harian_jawaban->warna_keadaan,
+                            'created_at'                      => $now,
+                            'updated_at'                      => $now
+                        );
+                    }
+
+                    PengisianJawaban::insert($batch_insert_pengisian_jawaban);
+
+                    $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
+
                     $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
-                    $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian   = $id;
+                    $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian   = $pengisian_kegiatan_harian_id;
                     $pengisian_kegiatan_harian->id_pengguna_pengisi            = $input->auth_data->pengguna->id_pengguna;
                     $pengisian_kegiatan_harian->status_join_table              = $status_join;
                     $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
@@ -215,25 +237,6 @@ class FormKesehatanController extends BaseController{
                     }else if($now->between($start_2, $end_2)){
                         $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
                     }
-                    $pengisian_kegiatan_harian->save();
-                    
-                    foreach($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban){
-                        $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
-                        $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
-                        $pengisian_jawaban                                  = new PengisianJawaban;
-                        $pengisian_jawaban->id_pengisian_jawaban            = $id;
-                        $pengisian_jawaban->id_pengisian_kegiatan_harian    = $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian;
-                        $pengisian_jawaban->id_kegiatan_harian_pertanyaan   = $id_pertanyaan;
-                        $pengisian_jawaban->id_kegiatan_harian_jawaban      = $id_jawaban;
-                        $pengisian_jawaban->isi_jawaban_text                = !empty($input->jawaban_text[$id_jawaban])? $input->jawaban_text[$id_jawaban] : null;
-                        $pengisian_jawaban->bobot_jawaban                   = $kegiatan_harian_jawaban->bobot_jawaban;
-                        $pengisian_jawaban->warna_keadaan                   = $kegiatan_harian_jawaban->warna_keadaan;
-                        $pengisian_jawaban->save();
-                    }
-
-                    $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian)->orderBy('bobot_jawaban', 'desc')->first();
-
                     $pengisian_kegiatan_harian->warna_keadaan = $pengisian_jawaban_terbobot->warna_keadaan;
                     if($pengisian_jawaban_terbobot->bobot_jawaban == 0){
                         $pengisian_kegiatan_harian->status_pengisian = 1;
