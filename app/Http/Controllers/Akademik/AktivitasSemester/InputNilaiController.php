@@ -128,7 +128,7 @@ class InputNilaiController extends BaseController
         $list_data = LibGuru::fetchDataKomponenNilai($auth_data, $id_kelas_mp);
 
         $jumlah_komponen = KomponenMp::select('komponen_mp.persentase_komponen_mp')->where('komponen_mp.id_kelas_mp','=',$id_kelas_mp)->sum('komponen_mp.persentase_komponen_mp');
-        $list_siswa = PengambilanMp::select('siswa.nis_siswa','pengguna.nm_pengguna','pengambilan_mp.nilai_angka','pengambilan_mp.nilai_huruf','siswa.id_siswa','pengambilan_mp.id_pengambilan_mp')
+        $list_siswa = PengambilanMp::select('siswa.nis_siswa','pengguna.nm_pengguna','pengambilan_mp.nilai_angka','pengambilan_mp.nilai_huruf','siswa.id_siswa','pengambilan_mp.id_pengambilan_mp', 'pengambilan_mp.id_kelas_mp')
             ->join('siswa','siswa.id_siswa','=','pengambilan_mp.id_siswa')
             ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
             ->where('pengambilan_mp.id_kelas_mp','=',$id_kelas_mp)->get();
@@ -222,7 +222,9 @@ class InputNilaiController extends BaseController
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($pengambilan_mp = PengambilanMp::with('nilai_mp')->where('id_kelas_mp', $input->id_kelas_mp)->first()){
+            $pengambilan_mp = PengambilanMp::with('nilai_mp')->where('id_kelas_mp', $input->id_kelas_mp)->first();
+
+            if(!empty($pengambilan_mp)){
                 if($check_nilai_mp = $pengambilan_mp->nilai_mp->first()){
                     return [
                         'status' => 300, // FAILED
@@ -346,9 +348,8 @@ class InputNilaiController extends BaseController
                     foreach($list_data as $dataKomponen => $data){
                         $nameInput = 'nilai'.$data->id_komponen_mp.'-'.$siswa->id_siswa;                    
                         $nilaiCount = ($input->$nameInput*($data->persentase_komponen_mp/100));
-                        $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]['raw']=$input->$nameInput;
-                        $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]['partial']=$nilaiCount;
-
+                        $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]['raw']= $input->$nameInput;
+                        $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]['partial']= $nilaiCount;
                     }
 
                     $namePengambilan = 'id_pengambilan_mp_'.$siswa->id_siswa;
@@ -393,8 +394,6 @@ class InputNilaiController extends BaseController
                                 $nilai_pengambilanMp->updated_at            = $now;
                                 $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                 $nilai_pengambilanMp->save();
-                                
-                                return redirect()->back();
                             }
                             else{
                                 $nilai_angka = 0;
@@ -427,13 +426,12 @@ class InputNilaiController extends BaseController
                                 $nilai_pengambilanMp->updated_at            = $now;
                                 $nilai_pengambilanMp->nilai_huruf           = $nilai_huruf;
                                 $nilai_pengambilanMp->save();
-
-                                return redirect()->back();
-
                             }
                         }
                     }
                 }
+
+                return redirect()->back();
             }
         }
     }

@@ -66,39 +66,45 @@ class CariSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa','siswa.nisn_siswa','pengguna.nm_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat','status_pengguna.nm_status_pengguna','jalur.nm_jalur')
-          ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-          ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-          ->join('status_pengguna','pengguna.id_status_pengguna','=','status_pengguna.id_status_pengguna')
-          ->join('jalur_siswa', function ($join) {
-                            $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
-                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
-                        })
-          ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
-          ->where(function ($query) use ($nis_nama_siswa) {
-                    $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('siswa.nisn_siswa', 'like', '%'.$nis_nama_siswa.'%');
-             })
-          ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-          ->get();
-        
-        $data = $siswa->map(function($row){
-            $kelas_sekarang = [
-                'id_siswa' => $row->id_siswa,
-                'id_kelas' => $row->id_kelas,
-                'nm_kelas' => $row->nm_kelas,
-                'tingkat' => $row->tingkat,
-            ];
-            $log_kelas = LogKelasSiswa::select('log_kelas_siswa.id_siswa', 'kelas.id_kelas', 'kelas.nm_kelas', 'kelas.tingkat')
-                                        ->join('kelas', 'kelas.id_kelas', 'log_kelas_siswa.id_kelas')
-                                        ->where('id_siswa', $row->id_siswa)->get();
-            $all_log_kelas = [];
-            if(empty($log_kelas))
-                $all_log_kelas[] = $log_kelas->toArray();
-            $all_log_kelas[] = $kelas_sekarang;
-            $row['log_kelas'] = $all_log_kelas;
-            return $row;
-        });
+            ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
+            ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
+            ->join('status_pengguna','pengguna.id_status_pengguna','=','status_pengguna.id_status_pengguna')
+            ->join('jalur_siswa', function ($join) {
+                                $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                                    ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+                            })
+            ->join('jalur','jalur_siswa.id_jalur','=','jalur.id_jalur')
+            ->where(function ($query) use ($nis_nama_siswa) {
+                        $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
+                        ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%')
+                        ->orWhere('siswa.nisn_siswa', 'like', '%'.$nis_nama_siswa.'%');
+                })
+            ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+            ->get();
+
+            
+            $data = $siswa->map(function($row){
+                $pengambilanMpSiswa = PengambilanMp::select('pengambilan_mp.id_semester', 
+                                                            'pengambilan_mp.id_siswa',
+                                                            'kelas_mp.id_kelas',
+                                                            'kelas.nm_kelas',
+                                                            'kelas.tingkat',
+                                                            'semester.nm_semester')
+                                                    ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'pengambilan_mp.id_kelas_mp')
+                                                    ->join('kelas', 'kelas.id_kelas', 'kelas_mp.id_kelas')
+                                                    ->join('semester', 'semester.id_semester', 'pengambilan_mp.id_semester')
+                                                    ->where('id_siswa', $row->id_siswa)
+                                                    ->groupBy('id_semester', 'id_siswa', 'id_kelas', 'nm_kelas', 'tingkat', 'nm_semester')
+                                                    ->get();
+                                                    
+                $all_log_kelas = [];
+                foreach($pengambilanMpSiswa as $kelas){
+                    $all_log_kelas[] = $kelas->toArray();
+                }
+
+                $row['log_kelas'] = $all_log_kelas;
+                return $row;
+            });
         
         return Datatables::of($data)
                 ->addColumn('action', function($item) use ($nis_nama_siswa) {

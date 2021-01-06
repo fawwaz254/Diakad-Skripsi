@@ -63,25 +63,25 @@
                 <h4 class="modal-title">PRINT RAPOR</h4>
             </div>
             <form action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cari-siswa/print-rapor') }}" target="_blank" method="POST">
-            <div class="modal-body">
-                {{ csrf_field() }}
-                    <div class="row form-group">
-                        <div class="col">
-                            <label for="catatan">Catatan Wali Kelas</label><br>
-                            <textarea id="catatan" class="form-control" name="deskripsi_catatan_wali_kelas" placeholder="Tulis catatan"></textarea>
+                <div class="modal-body">
+                    {{ csrf_field() }}
+                        <div class="row form-group">
+                            <div class="col">
+                                <label for="catatan">Catatan Wali Kelas</label><br>
+                                <textarea id="catatan" class="form-control" name="deskripsi_catatan_wali_kelas" placeholder="Tulis catatan"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label for="">Pilih Kelas</label>
+                        <div class="row">
+                            <div class="col">
+                                <label for="">Pilih Kelas</label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="modal-print"></div>
+                        <div class="modal-print"></div>
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <button type="submit" class="btn btn-primary waves-effect">Kirim</button>
                     <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Batal</button>
-                </div>
+                </div> -->
             </form>
         </div>
     </div>
@@ -137,9 +137,12 @@
         $(".modal-print").empty();
         data.log_kelas.forEach(function (row) {
               $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
-              $(".modal-print").append('<input type="radio" name="id_kelas" id="'+ row.id_kelas +'" value="' + row.id_kelas 
-                                        + '"><label for="'+ row.id_kelas +'">Kelas ' + row.tingkat + ' (' + row.nm_kelas + ')</label>');
+            //   $(".modal-print").append('<input type="radio" name="id_kelas" id="'+ row.id_kelas +'" value="' + row.id_kelas 
+            //                             + '"><label for="'+ row.id_kelas +'">Kelas ' + row.tingkat + ' Semester ' + row. nm_semester + ' (' + row.nm_kelas + ')</label>');
               $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
+              $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + row.id_kelas + '">');
+              $(".modal-print").append('<input type="hidden" name="id_semester" value="' + row.id_semester + '">');
+              $(".modal-print").append('<button type="submit" class="btn btn-primary waves-effect"> Kelas: ' + row.tingkat + ' Semester: ' + row.nm_semester + ' (' + row.nm_kelas + ')</button>');
               $(".modal-print").append('</div></div>');
             });
         $("#modal-rapor").modal('show');
