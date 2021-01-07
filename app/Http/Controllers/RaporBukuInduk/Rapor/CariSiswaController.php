@@ -157,6 +157,21 @@ class CariSiswaController extends BaseController
 
     public function printRaporSiswa(Request $request)
     {
+        $input = (object) $request->input();
+
+        $validator = Validator::make(collect($input)->toArray(), [
+            'id_siswa' =>'required|exists:siswa,id_siswa',
+            'id_kelas' =>'required|exists:kelas,id_kelas',
+            'id_semester' =>'required|exists:semester,id_semester',
+        ]);
+
+        if($validator->fails()){
+            return [
+				'status' => 300, // FAILED
+				'message' => $validator->errors()->first()
+			];
+        }
+        
         $print = new PrintRaporController($request);
         $pdf = $print->printRaporSiswa();
         return $pdf->stream();

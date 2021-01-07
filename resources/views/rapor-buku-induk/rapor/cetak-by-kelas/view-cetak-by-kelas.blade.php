@@ -74,10 +74,6 @@
                     </div>
                     <div class="modal-print"></div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary waves-effect">Kirim</button>
-                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Batal</button>
-                </div>
             </form>
         </div>
     </div>
@@ -129,11 +125,16 @@
     // kemungkinan tidak digunakan
     $('#primary_table tbody').on('click', 'tr', function () { 
         var data = table.row( this ).data();
-        console.log(data);
         
         $(".modal-print").empty();
-        $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + data.id_siswa + '">');
-        $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + data.id_kelas + '">');
+        data.log_kelas.forEach(function (row) {
+              $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
+              $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
+              $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + row.id_kelas + '">');
+              $(".modal-print").append('<input type="hidden" name="id_semester" value="' + row.id_semester + '">');
+              $(".modal-print").append('<button type="submit" class="btn btn-primary waves-effect"> Semester: ' + row.nm_semester + '</button>');
+              $(".modal-print").append('</div></div>');
+            });
         $("#modal-rapor").modal('show');
 
     });

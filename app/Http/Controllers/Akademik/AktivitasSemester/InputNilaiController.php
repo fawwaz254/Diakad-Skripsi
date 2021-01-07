@@ -380,8 +380,8 @@ class InputNilaiController extends BaseController
                                 }
                                 $nilai_huruf = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
                                     ->where('peraturan_nilai.is_mata_pelajaran','=','1')
-                                    ->where('peraturan_nilai.nilai_min_peraturan_nilai','<',$nilai_angka)
-                                    ->where('peraturan_nilai.nilai_max_peraturan_nilai','>',$nilai_angka)
+                                    ->where('peraturan_nilai.nilai_min_peraturan_nilai','<=',round($nilai_angka))
+                                    ->where('peraturan_nilai.nilai_max_peraturan_nilai','>=',round($nilai_angka))
                                     ->first();
                                 if($nilai_huruf){
                                     $nilai_huruf = $nilai_huruf['nm_standar_nilai'];
@@ -412,8 +412,8 @@ class InputNilaiController extends BaseController
                                 }
                                 $nilai_huruf = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')
                                         ->where('peraturan_nilai.is_mata_pelajaran','=','1')
-                                        ->where('peraturan_nilai.nilai_min_peraturan_nilai','<',$nilai_angka)
-                                        ->where('peraturan_nilai.nilai_max_peraturan_nilai','>',$nilai_angka)
+                                        ->where('peraturan_nilai.nilai_min_peraturan_nilai','<=',round($nilai_angka))
+                                        ->where('peraturan_nilai.nilai_max_peraturan_nilai','>=',round($nilai_angka))
                                         ->first();
                                 if($nilai_huruf){
                                     $nilai_huruf = $nilai_huruf['nm_standar_nilai'];

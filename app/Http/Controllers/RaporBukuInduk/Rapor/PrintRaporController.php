@@ -49,26 +49,7 @@ class PrintRaporController extends BaseController
         $id_kelas = $input->id_kelas;
         $id_semester = $input->id_semester;
         $catatan = $input->deskripsi_catatan_wali_kelas;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        
-        $data = [
-            'id_siswa' => $id_siswa,
-            'id_kelas' => $id_kelas,
-            'id_semester' => $id_semester
-        ];
-
-        $validator = Validator::make($data, [
-            'id_siswa' =>'required|exists:siswa,id_siswa',
-            'id_kelas' =>'required|exists:kelas,id_kelas',
-            'id_semester' =>'required|exists:semester,id_semester',
-        ]);
-
-        if($validator->fails()){
-            return [
-				'status' => 300, // FAILED
-				'message' => $validator->errors()->first()
-			];
-        }
+        $now = Carbon::now(env('APP_TIMEZONE', ''));        
 
         // get all data rapor by id_siswa, id_kelas
         $data_rapor = RaporSiswa::where([
@@ -80,34 +61,63 @@ class PrintRaporController extends BaseController
         $pengambilanMpAll = PengambilanMp::where('id_siswa', $id_siswa)
                         ->where('kelas_mp.id_kelas', $id_kelas)
                         ->where('pengambilan_mp.id_semester', $id_semester)
-                        ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'pengambilan_mp.id_kelas_mp')
-                        ->join('mata_pelajaran', 'kelas_mp.id_mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran')
-                        ->join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', 'mata_pelajaran.id_jenis_mata_pelajaran')
+                        ->join('kelas_mp', function($join){
+                            $join->on('kelas_mp.id_kelas_mp', '=', 'pengambilan_mp.id_kelas_mp');
+                            $join->whereNull('kelas_mp.deleted_at');
+                        })
+                        ->join('mata_pelajaran', function($join){
+                            $join->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran');
+                            $join->whereNull('mata_pelajaran.deleted_at');
+                        })
+                        ->join('jenis_mata_pelajaran', function($join){
+                            $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran');
+                            $join->whereNull('jenis_mata_pelajaran.deleted_at');
+                        })
                         ->get();
 
-        $presensiMpSiswa = PresensiMpSiswa::join('presensi_mp', 'presensi_mp.id_presensi_mp', 'presensi_mp_siswa.id_presensi_mp')
-                                            ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'presensi_mp.id_kelas_mp')
+        $presensiMpSiswa = PresensiMpSiswa::join('presensi_mp', function($join){
+                                                $join->on('presensi_mp.id_presensi_mp', '=', 'presensi_mp_siswa.id_presensi_mp');
+                                                $join->whereNull('presensi_mp.deleted_at');
+                                            })
+                                            ->join('kelas_mp', function($join){
+                                                $join->on('kelas_mp.id_kelas_mp', '=', 'presensi_mp.id_kelas_mp');
+                                                $join->whereNull('kelas_mp.deleted_at');
+                                            })
                                             ->where('id_siswa', $id_siswa)
+                                            ->where('id_kelas', $id_kelas)
+                                            ->where('id_semester', $id_semester)
                                             ->get();
         
         // Modul Nilai ekskul belum berjalan (29-dec), jadi masih input manual direct ke DB 
         $pengambilanEkskulAll = PengambilanEkskul::where('id_siswa', $id_siswa)
                                                 ->where('id_kelas', $id_kelas)
-                                                ->join('ekskul', 'ekskul.id_ekskul', 'pengambilan_ekskul.id_ekskul')
+                                                ->where('id_semester', $id_semester)
+                                                ->join('ekskul', function($join){
+                                                    $join->on('ekskul.id_ekskul', '=', 'pengambilan_ekskul.id_ekskul');
+                                                    $join->whereNull('ekskul.deleted_at');
+                                                })
                                                 ->get();
                         
         $presensiEkskulSiswa = PresensiEkskulPeserta::select('presensi_ekskul_peserta.*', 'ekskul.id_ekskul', 'ekskul.nm_ekskul')
-                                ->join('presensi_ekskul', 'presensi_ekskul.id_presensi_ekskul', 'presensi_ekskul_peserta.id_presensi_ekskul')
-                                ->join('ekskul', 'presensi_ekskul.id_ekskul', 'ekskul.id_ekskul')
+                                ->join('presensi_ekskul', function($join){
+                                    $join->on('presensi_ekskul.id_presensi_ekskul', '=', 'presensi_ekskul_peserta.id_presensi_ekskul');
+                                    $join->whereNull('presensi_ekskul.deleted_at');
+                                })
+                                ->join('ekskul', function($join){
+                                    $join->on('ekskul.id_ekskul', '=', 'presensi_ekskul.id_ekskul');
+                                    $join->whereNull('ekskul.deleted_at');
+                                })
                                 ->where('id_siswa', $id_siswa)
                                 ->where('id_kelas', $id_kelas)
                                 ->get();
+        // dd($pengambilanMpAll, $presensiMpSiswa, $pengambilanEkskulAll);
 
         DB::beginTransaction();
         try{
             // pengisian data rapor = Mapel
             foreach ($pengambilanMpAll as $mp){
                 // insert rapor_deskripsi first, then rapor_siswa
+                $rapor_siswa = null;
                 if($data_rapor->isNotEmpty())
                     $rapor_siswa = $data_rapor->shift();
 
@@ -164,6 +174,7 @@ class PrintRaporController extends BaseController
             // pengisian data rapor = Ekskul
             foreach($pengambilanEkskulAll as $ekskul){
                 // insert rapor_deskripsi first, then rapor_siswa
+                $rapor_siswa_ekskul = null;
                 if($data_rapor->isNotEmpty())
                     $rapor_siswa_ekskul = $data_rapor->shift();
 
@@ -275,10 +286,12 @@ class PrintRaporController extends BaseController
             $idPengambilanMp = $pengambilanMpAll->where('id_mata_pelajaran', $rapor->id_mata_pelajaran)->first()->id_pengambilan_mp;
             
             $allNilai = NilaiMp::where('id_pengambilan_mp', $idPengambilanMp)
-                            ->join('komponen_mp', 'komponen_mp.id_komponen_mp', 'nilai_mp.id_komponen_mp')
-                            ->withTrashed()
+                            ->join('komponen_mp', function($join){
+                                $join->on('komponen_mp.id_komponen_mp', 'nilai_mp.id_komponen_mp');
+                                $join->whereNull('komponen_mp.deleted_at');
+                            })
                             ->get();
-
+                            
             $nilai_komponen = []; // umumnya nilai pengetahuan & keterampilan
             foreach($allNilai as $nilai){
                 $nilai_komponen[$nilai->nm_komponen_mp] = $nilai->besar_nilai_mp;

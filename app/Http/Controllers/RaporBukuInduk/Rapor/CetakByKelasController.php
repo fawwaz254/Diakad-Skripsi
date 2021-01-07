@@ -73,7 +73,31 @@ class CetakByKelasController extends BaseController
           ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
           ->get();
         
-        return Datatables::of($siswa)
+        $data = $siswa->map(function($row){
+            $pengambilanMpSiswa = PengambilanMp::select('pengambilan_mp.id_semester', 
+                                                        'pengambilan_mp.id_siswa',
+                                                        'kelas_mp.id_kelas',
+                                                        'kelas.nm_kelas',
+                                                        'kelas.tingkat',
+                                                        'semester.nm_semester')
+                                                ->join('kelas_mp', 'kelas_mp.id_kelas_mp', 'pengambilan_mp.id_kelas_mp')
+                                                ->join('kelas', 'kelas.id_kelas', 'kelas_mp.id_kelas')
+                                                ->join('semester', 'semester.id_semester', 'pengambilan_mp.id_semester')
+                                                ->where('id_siswa', $row->id_siswa)
+                                                ->where('kelas_mp.id_kelas', $row->id_kelas)
+                                                ->groupBy('id_semester', 'id_siswa', 'id_kelas', 'nm_kelas', 'tingkat', 'nm_semester')
+                                                ->get();
+                                                
+            $all_log_kelas = [];
+            foreach($pengambilanMpSiswa as $kelas){
+                $all_log_kelas[] = $kelas->toArray();
+            }
+
+            $row['log_kelas'] = $all_log_kelas;
+            return $row;
+        });
+        
+        return Datatables::of($data)
                 ->addColumn('action', function($item) use ($id_kelas) {
                     $data = array(
                         'id' => $item->nis_siswa,
@@ -85,6 +109,21 @@ class CetakByKelasController extends BaseController
 
     public function printRaporSiswa(Request $request)
     {
+        $input = (object) $request->input();
+
+        $validator = Validator::make(collect($input)->toArray(), [
+            'id_siswa' =>'required|exists:siswa,id_siswa',
+            'id_kelas' =>'required|exists:kelas,id_kelas',
+            'id_semester' =>'required|exists:semester,id_semester',
+        ]);
+
+        if($validator->fails()){
+            return [
+				'status' => 300, // FAILED
+				'message' => $validator->errors()->first()
+			];
+        }
+
         $print = new PrintRaporController($request);
         $pdf = $print->printRaporSiswa();
         return $pdf->stream();

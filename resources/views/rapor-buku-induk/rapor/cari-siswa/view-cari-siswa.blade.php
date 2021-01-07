@@ -137,8 +137,6 @@
         $(".modal-print").empty();
         data.log_kelas.forEach(function (row) {
               $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
-            //   $(".modal-print").append('<input type="radio" name="id_kelas" id="'+ row.id_kelas +'" value="' + row.id_kelas 
-            //                             + '"><label for="'+ row.id_kelas +'">Kelas ' + row.tingkat + ' Semester ' + row. nm_semester + ' (' + row.nm_kelas + ')</label>');
               $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
               $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + row.id_kelas + '">');
               $(".modal-print").append('<input type="hidden" name="id_semester" value="' + row.id_semester + '">');
