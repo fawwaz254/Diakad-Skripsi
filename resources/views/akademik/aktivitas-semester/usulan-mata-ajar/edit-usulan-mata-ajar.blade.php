@@ -52,6 +52,7 @@
                                 aria-invalid="true" value="{{$kelas_mp->nm_semester}}  {{$kelas_mp->tahun_ajaran}}">
                                 <input type="hidden" name="id_semester" value="{{$kelas_mp->id_semester}}">
                                 <input type="hidden" name="id_mata_pelajaran" value="{{$kelas_mp->id_mata_pelajaran}}">
+                                <input type="hidden" name="id_kelas_mp" value="{{$kelas_mp->id_kelas_mp}}">
                             </div>
                         </div>
                          

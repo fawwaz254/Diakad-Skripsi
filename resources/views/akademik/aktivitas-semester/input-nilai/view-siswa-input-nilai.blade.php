@@ -63,6 +63,7 @@
                                                  <td>
                                                     <form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-komponen-nilai/tampil-nilai/'.$siswa->id_pengambilan_mp)}}">
                                                     {{csrf_field()}}
+                                                        <input type="hidden" name="id_kelas_mp" value="{{ $siswa->id_kelas_mp }}">
                                                         <button class=" btn btn-info btn-circle waves-effect waves-circle waves-float" type="submit" id="form-validation1">
                                                             <i class="material-icons">visibility</i>
                                                         </button>
