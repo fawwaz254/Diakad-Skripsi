@@ -21,7 +21,7 @@
                     <div class="card">
                             {{csrf_field()}}
                             <div class="header">
-                                <h2>Input Nilai </h2>
+                                <h2>Input Nilai : {{ $data_kelas->nm_mata_pelajaran .' - '. $data_kelas->nm_kelas }}</h2>
                             </div>
                             <div class="body">
                                 <div class="table-responsive">
@@ -52,7 +52,7 @@
                                                 <td>{{$siswa->nis_siswa}} - {{$siswa->nm_pengguna}}</td>
                                                 @foreach($list_data as $nilai)
                                                     <td>
-                                                        <input type="text" name="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" style="width: 50%;  margin:0px auto;">
+                                                        <input type="text" name="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" value="{{ collect($siswa->nilai_siswa_komponen)->where('id_komponen_mp', $nilai->id_komponen_mp)->first()['nilai_komponen_mp'] }}" style="width: 50%;  margin:0px auto;">
                                                     </td>
                                                 @endforeach
                                                 <td>
