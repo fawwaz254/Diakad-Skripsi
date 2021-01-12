@@ -80,6 +80,10 @@
             /* Safari 6.0 - 9.0 */
             filter: grayscale(100%);
         }
+
+        .page-break-before {
+            page-break-before: always;
+        }
     </style>
 
 </head>
@@ -324,7 +328,7 @@
             @endif
         </table>
         @elseif($kategori->kode_rapor_kategori == 'ketidakhadiran')
-        <table class="presensi">
+        <table class="presensi page-break-before">
             <tr>
                 <td>Izin</td>
                 <td>: {{ $presensi['izin'] }} Hari</td>
@@ -339,6 +343,7 @@
             </tr>
         </table>
         @elseif($kategori->kode_rapor_kategori == 'catatan_wali_kelas')
+        <!-- not used -->
         <table style="border: 1px solid #000;" width="100%">
             <tr>
                 <td style="padding: 10px;">
@@ -347,6 +352,7 @@
             </tr>
         </table>
         @elseif($kategori->kode_rapor_kategori == 'tanggapan_orang_tua_wali')
+        <!-- not used -->
         <table style="border: 1px solid #000;" width="100%">
             <tr>
                 <td><br><br><br><br></td>
@@ -356,7 +362,7 @@
     </div>
     @endforeach
     @if(collect($data_detail_rapor)->first()->nm_semester == 'Genap')
-    <div class="mb-2">
+    <div class="mb-2 page-break-before">
         <h5>Keputusan</h5>
         <p class="small">Berdasarkan hasil yang dicapai pada semester 1 dan 2, maka peserta didik ini ditetapkan :</p>
         <table>
@@ -371,7 +377,7 @@
         </table>
     </div>
     @endif
-    <div>
+    <div class="page-break-before">
         <table width="100%" class="text-center">
             <tr>
                 <td></td>
