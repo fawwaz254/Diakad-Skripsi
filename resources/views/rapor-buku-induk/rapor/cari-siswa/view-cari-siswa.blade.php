@@ -78,10 +78,6 @@
                         </div>
                         <div class="modal-print"></div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary waves-effect">Kirim</button>
-                    <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Batal</button>
-                </div> -->
             </form>
         </div>
     </div>

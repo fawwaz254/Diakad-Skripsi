@@ -81,8 +81,8 @@
             filter: grayscale(100%);
         }
 
-        .page-break-before {
-            page-break-before: always;
+        .avoid-page-break {
+            page-break-inside: avoid;
         }
     </style>
 
@@ -328,7 +328,7 @@
             @endif
         </table>
         @elseif($kategori->kode_rapor_kategori == 'ketidakhadiran')
-        <table class="presensi page-break-before">
+        <table class="presensi">
             <tr>
                 <td>Izin</td>
                 <td>: {{ $presensi['izin'] }} Hari</td>
@@ -362,7 +362,7 @@
     </div>
     @endforeach
     @if(collect($data_detail_rapor)->first()->nm_semester == 'Genap')
-    <div class="mb-2 page-break-before">
+    <div class="mb-2 avoid-page-break">
         <h5>Keputusan</h5>
         <p class="small">Berdasarkan hasil yang dicapai pada semester 1 dan 2, maka peserta didik ini ditetapkan :</p>
         <table>
@@ -377,16 +377,16 @@
         </table>
     </div>
     @endif
-    <div class="page-break-before">
+    <div class="avoid-page-break">
         <table width="100%" class="text-center">
             <tr>
-                <td></td>
                 <td>Mengetahui</td>
-                <td>Taman, 23 Deesember 2020</td>
+                <td></td>
+                <td>Taman, 23 Desember 2020</td>
             </tr>
             <tr>
                 <td>Orang Tua/Wali</td>
-                <td>Kepala Sekolah</td>
+                <td></td>
                 <td>Wali Kelas<td>
             </tr>
             <tr>
@@ -394,8 +394,34 @@
             </tr>
             <tr>
                 <td>__________________</td>
-                <td>__________________</td>
-                <td>__________________</td>
+                <td></td>
+                <td>
+                    <span style="text-decoration: underline;">{{ !empty($wali_kelas) ? $wali_kelas->nm_pengguna : null }}</span>
+                    <br>
+                    <span>{{ !empty($wali_kelas) ? $wali_kelas->nip_guru : null }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Mengetahui</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>Kepala Sekolah</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><br><br><br></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <span style="text-decoration: underline;">{{ $kepala_sekolah ?? "__________________" }}</span>
+                    <br>
+                    <span>{{ $nip_kepala_sekolah ?? null }}</span>
+                </td>
+                <td></td>
             </tr>
         </table>
     </div>

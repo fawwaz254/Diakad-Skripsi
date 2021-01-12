@@ -63,7 +63,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">PRINT RAPOR</h4>
             </div>
-            <form action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cetak-by-kelas/print-rapor') }}" method="POST">
+            <form action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cetak-by-kelas/print-rapor') }}" target="_blank" method="POST">
             <div class="modal-body">
                 {{ csrf_field() }}
                     <div class="row form-group">

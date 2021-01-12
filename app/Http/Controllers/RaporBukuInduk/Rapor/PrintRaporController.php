@@ -24,7 +24,7 @@ use App\Models\RaporKelompokMp;
 use App\Models\RaporSiswa;
 use App\Models\RaporSubkelompokMp;
 use App\Models\Siswa as Siswa;
-
+use App\Models\WaliKelas;
 use Auth;
 use PDF;
 use DB;
@@ -138,7 +138,7 @@ class PrintRaporController extends BaseController
                 $rapor_deskripsi->id_rapor_subkelompok_mp = !empty($rapor_subkelompok_mp) ? $rapor_subkelompok_mp->id_rapor_subkelompok_mp : null;
                 $rapor_deskripsi->id_ekstrakurikuler = null;
                 $rapor_deskripsi->predikat_rapor_deskripsi = $mp->nilai_huruf;
-                $rapor_deskripsi->deskripsi_rapor = 'Deskripsi.....';
+                $rapor_deskripsi->deskripsi_rapor = null;
                 $rapor_deskripsi->created_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor_deskripsi->save();
                 // end rapor_deskripsi
@@ -190,7 +190,7 @@ class PrintRaporController extends BaseController
                 $rapor_deskripsi_ekskul->id_rapor_subkelompok_mp = null;
                 $rapor_deskripsi_ekskul->id_ekstrakurikuler = $ekskul->id_ekskul;
                 $rapor_deskripsi_ekskul->predikat_rapor_deskripsi = $ekskul->nilai_huruf;
-                $rapor_deskripsi_ekskul->deskripsi_rapor = 'Deskripsi ekskul...';
+                $rapor_deskripsi_ekskul->deskripsi_rapor = null;
                 $rapor_deskripsi_ekskul->created_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor_deskripsi_ekskul->save();
                 // end rapor_deskripsi
@@ -339,8 +339,22 @@ class PrintRaporController extends BaseController
         ];
         
         $data_siswa = Siswa::find($id_siswa);
+        $wali_kelas = WaliKelas::join('guru', function($join){
+                                    $join->on('guru.id_guru', '=', 'wali_kelas.id_guru');
+                                    $join->whereNull('guru.deleted_at');
+                                })
+                                ->join('pengguna', function($join){
+                                    $join->on('pengguna.id_pengguna', '=', 'guru.id_pengguna');
+                                    $join->whereNull('pengguna.deleted_at');
+                                })
+                                ->where('id_kelas', $id_kelas)
+                                ->where('id_semester', $id_semester)
+                                ->first();
+                                
+        $kepala_sekolah = $auth_data->sekolah_data->nm_kepala_sekolah;
+        $nip_kepala_sekolah = $auth_data->sekolah_data->nip_kepala_sekolah;
 
-        $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp'))->setPaper('a4', 'potrait');
+        $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp', 'wali_kelas', 'kepala_sekolah', 'nip_kepala_sekolah'))->setPaper('a4', 'potrait');
         return $pdf;
     }
 }
