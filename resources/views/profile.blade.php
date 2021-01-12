@@ -25,11 +25,14 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <select class="form-control show-tick" name="role">
+                                        @php
+                                            $no = 1;
+                                        @endphp
                                             @foreach($roles as $role_pengguna)
                                             @if($role_pengguna->is_aktif == 1)
-                                            <option value="{{$role_pengguna->id_role}}" selected>{{$role_pengguna->nm_role}}</option>
+                                            <option value="{{$role_pengguna->id_role}}" selected>{{$no++}}. {{$role_pengguna->nm_role}}</option>
                                             @else
-                                            <option value="{{$role_pengguna->id_role}}">{{$role_pengguna->nm_role}}</option>
+                                            <option value="{{$role_pengguna->id_role}}">{{$no++}}. {{$role_pengguna->nm_role}}</option>
                                             @endif
                                             @endforeach
                                         </select>

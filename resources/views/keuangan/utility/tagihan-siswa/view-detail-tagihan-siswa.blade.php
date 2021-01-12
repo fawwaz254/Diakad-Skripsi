@@ -221,8 +221,8 @@
 
     primary_table.on( 'draw', function () {
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
+            cell.innerHTML = i + 1;
+            primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 </script>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CalonSiswaBaru;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,6 +42,11 @@ class Siswa extends Model
     public function pengguna()
     {
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
+    }
+
+    public function calon_siswa()
+    {
+        return $this->belongsTo(CalonSiswaBaru::class, 'id_c_siswa');
     }
 
     public function kelas()

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Pendidikan\MagangSiswa;
+namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -25,7 +25,7 @@ class RekananMagangController extends BaseController
       $input = (object) $request->input();
       $auth_data = $input->auth_data;
 
-    return view('pendidikan/magang-siswa/rekanan-magang/view-rekanan-magang',compact('auth_data'));
+    return view('humas/magang-siswa/rekanan-magang/view-rekanan-magang',compact('auth_data'));
   }
   public function editRekananMagang($id, Request $request){
       # code...
@@ -37,7 +37,7 @@ class RekananMagangController extends BaseController
       $tgl_mulai = strftime( "%d %B %Y", strtotime($data_rekanan_magang->tgl_awal_kerjasama));
       $tgl_selesai = strftime( "%d %B %Y", strtotime($data_rekanan_magang->tgl_akhir_kerjasama));
 
-      return view('pendidikan/magang-siswa/rekanan-magang/edit-rekanan-magang',compact('auth_data','data_rekanan_magang','tgl_mulai','tgl_selesai'));
+      return view('humas/magang-siswa/rekanan-magang/edit-rekanan-magang',compact('auth_data','data_rekanan_magang','tgl_mulai','tgl_selesai'));
 
   }
   public function datatablesRekananMagang(Request $request){
@@ -70,7 +70,7 @@ class RekananMagangController extends BaseController
 
       $id_rekanan_magang = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-      return view('pendidikan/magang-siswa/rekanan-magang/add-rekanan-magang',compact('auth_data','id_rekanan_magang'));
+      return view('humas/magang-siswa/rekanan-magang/add-rekanan-magang',compact('auth_data','id_rekanan_magang'));
   }
 
   public function actionRekananMagang(Request $request, $mode, $id = null){

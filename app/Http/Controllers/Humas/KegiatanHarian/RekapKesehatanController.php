@@ -32,7 +32,7 @@ class RekapKesehatanController extends BaseController{
     	return view('humas/kegiatan-harian/rekap-kesehatan/view-rekap-kesehatan',compact('auth_data'));
     }
 
-    public function viewRekapFormKesehatan(Request $request, $id_bulan = null){
+    public function viewRekapFormKesehatan(Request $request, $id_bulan = null, $tahun = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -40,7 +40,10 @@ class RekapKesehatanController extends BaseController{
         if(empty($id_bulan)){
             $id_bulan = $now->month;
         }
-        $tahun = $now->year;
+
+        if(empty($tahun)){
+            $tahun = $now->year;
+        }
         
         $start_month = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
@@ -51,12 +54,12 @@ class RekapKesehatanController extends BaseController{
 
         $data_pengguna = Pengguna::whereIn('status_join_table', [1,2])->orderBy('nm_pengguna')->get();
 
-        $data_pengisian = PengisianKegiatanHarian::whereBetween('tgl_pengisian', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
+        $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
 
-        return view('humas/kegiatan-harian/rekap-kesehatan/view-rekap-kesehatan-guru-tendik',compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian'));
+        return view('humas/kegiatan-harian/rekap-kesehatan/view-rekap-kesehatan-guru-tendik',compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun'));
     }
 
-    public function downloadRekapFormKesehatan(Request $request, $id_bulan = null){
+    public function downloadRekapFormKesehatan(Request $request, $id_bulan = null, $tahun = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -64,7 +67,10 @@ class RekapKesehatanController extends BaseController{
         if(empty($id_bulan)){
             $id_bulan = $now->month;
         }
-        $tahun = $now->year;
+
+        if(empty($tahun)){
+            $tahun = $now->year;
+        }
         
         $start_month = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
@@ -75,11 +81,11 @@ class RekapKesehatanController extends BaseController{
 
         $data_pengguna = Pengguna::whereIn('status_join_table', [1,2])->orderBy('nm_pengguna')->get();
 
-        $data_pengisian = PengisianKegiatanHarian::whereBetween('tgl_pengisian', [$start_month, $end_month])->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
+        $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
 
         return Excel::create('Download Data Rekap Kesehatan Guru & Tendik Bulan '. $bulan->nm_bulan, function ($excel) use ($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian) {
             $excel->sheet('New sheet', function ($sheet) use ($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian) {
-                $sheet->loadView('humas/kegiatan-harian/rekap-kesehatan/download-rekap-kesehatan-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian'));
+                $sheet->loadView('humas/kegiatan-harian/rekap-kesehatan/download-rekap-kesehatan-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun'));
             });
         })->download('xls');
     }

@@ -153,7 +153,7 @@ class TagihanSiswaController extends BaseController
                   foreach ($input->id_siswa as $id_siswa) {
                     $kelompok_biaya = Siswa::select('id_kelompok_biaya')->where('id_siswa','=',$id_siswa)->first();
 
-                    $detail_biaya_set = DetailBiaya::select('detail_biaya.id_detail_biaya', 'detail_biaya.besar_biaya')
+                    $detail_biaya_set = DetailBiaya::select('detail_biaya.id_detail_biaya', 'detail_biaya.besar_biaya', 'detail_biaya.keterangan_biaya')
                                           ->join('biaya_sekolah','biaya_sekolah.id_biaya_sekolah','=','detail_biaya.id_biaya_sekolah')
                                           ->where('biaya_sekolah.id_kelompok_biaya','=',$kelompok_biaya->id_kelompok_biaya)
                                           ->where('biaya_sekolah.id_semester','=',$input->id_semester)
@@ -205,7 +205,7 @@ class TagihanSiswaController extends BaseController
                         $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
                         $tagihanBiaya->denda_biaya          = 0;
                         $tagihanBiaya->is_tagih             = 1;
-                        $tagihanBiaya->keterangan           = "Tagihan Keuangan";
+                        $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
                         $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
                         $tagihanBiaya->save();
                     }                                                              

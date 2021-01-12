@@ -133,6 +133,22 @@ class InputNilaiController extends BaseController
             ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
             ->where('pengambilan_mp.id_kelas_mp','=',$id_kelas_mp)->get();
         $pengambilan_mp = PengambilanMp::where('pengambilan_mp.id_kelas_mp','=',$id_kelas_mp)->first();
+        $list_siswa = $list_siswa->map(function($row) use ($list_data){
+            $list_komponen = [];
+            foreach($list_data as $komponen){
+                $nilai = NilaiMp::where('id_komponen_mp', $komponen->id_komponen_mp)
+                                ->where('id_pengambilan_mp', $row->id_pengambilan_mp)
+                                ->first();
+                $list_komponen[] = [
+                    'id_komponen_mp' => $komponen->id_komponen_mp,
+                    'nilai_komponen_mp' => !empty($nilai) ? $nilai->besar_nilai_mp : 0
+                ];
+            }
+            $data = $row;
+            $data->nilai_siswa_komponen = $list_komponen;
+            return $data;
+        });
+        // dd($list_siswa, $list_data);
 
         return view('akademik/aktivitas-semester/input-nilai/view-siswa-input-nilai',compact('auth_data','data_kelas','id_semester','id_pengguna','list_data','jumlah_komponen','list_siswa','pengambilan_mp'));
 
@@ -224,7 +240,7 @@ class InputNilaiController extends BaseController
 
             $pengambilan_mp = PengambilanMp::with('nilai_mp')->where('id_kelas_mp', $input->id_kelas_mp)->first();
 
-            if(!empty($pengambilan_mp)){
+            if(!empty($pengambilan_mp) && $mode != 'input-nilai'){ // kecuali input-nilai
                 if($check_nilai_mp = $pengambilan_mp->nilai_mp->first()){
                     return [
                         'status' => 300, // FAILED
@@ -338,6 +354,21 @@ class InputNilaiController extends BaseController
                     ];
             }
             elseif($mode == 'input-nilai'){
+                $data_validation = $request->except(['_token', 'id_kelas_mp', 'primary_table_length', 'auth_data']); 
+                $key = [];
+                foreach($data_validation as $keydv => $dv){
+                    $key[$keydv] = 'numeric';
+                }
+
+                $validator = Validator::make($data_validation, $key);
+
+                if($validator->fails()){
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => 'Nilai harus berupa angka'
+                    ]; 
+                }
+
                 $list_data = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->get();
                 $list_siswa = PengambilanMp::select('siswa.nis_siswa','pengguna.nm_pengguna','pengambilan_mp.nilai_angka','pengambilan_mp.nilai_huruf','siswa.id_siswa','pengambilan_mp.id_pengambilan_mp')
                     ->join('siswa','siswa.id_siswa','=','pengambilan_mp.id_siswa')

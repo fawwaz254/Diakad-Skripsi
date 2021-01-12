@@ -110,7 +110,6 @@ class PrintRaporController extends BaseController
                                 ->where('id_siswa', $id_siswa)
                                 ->where('id_kelas', $id_kelas)
                                 ->get();
-        // dd($pengambilanMpAll, $presensiMpSiswa, $pengambilanEkskulAll);
 
         DB::beginTransaction();
         try{
@@ -242,6 +241,11 @@ class PrintRaporController extends BaseController
 
         if($data_rapor->isNotEmpty()){
             // delete old data_rapor remains
+            // delete rapor_siswa then rapor_deskripsi
+            $rapor_deskripsi_ids = $data_rapor->pluck('id_rapor_deskripsi');
+            $rapor_siswa_ids = $data_rapor->pluck('id_rapor_siswa');
+            $rapor_siswa_delete = RaporSiswa::whereIn('id_rapor_siswa', $rapor_siswa_ids)->delete();
+            $rapor_deskripsi_delete = RaporDeskripsi::whereIn('id_rapor_deskripsi', $rapor_deskripsi_ids)->delete();
         }
         
         $format_rapor_kategori = RaporKategori::orderBy('urutan_rapor_kategori')->get();
@@ -302,8 +306,6 @@ class PrintRaporController extends BaseController
             $data_detail_rapor[] = $rapor;
         }
 
-        // dd(count(collect($data_detail_rapor)->max('nilai_komponen')));
-
         $data_ekskul = RaporSiswa::select('*')
                                 ->join('rapor_deskripsi', 'rapor_siswa.id_rapor_deskripsi', 'rapor_deskripsi.id_rapor_deskripsi')
                                 ->join('ekskul', 'ekskul.id_ekskul', '=', 'rapor_deskripsi.id_ekstrakurikuler')
@@ -337,8 +339,6 @@ class PrintRaporController extends BaseController
         ];
         
         $data_siswa = Siswa::find($id_siswa);
-        
-        // dd($format_rapor_kelompok, $data_detail_rapor, $data_siswa, $presensi, $auth_data->sekolah_data->nm_sekolah);
 
         $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp'))->setPaper('a4', 'potrait');
         return $pdf;

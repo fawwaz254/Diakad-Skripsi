@@ -2,9 +2,43 @@
     $today = Carbon\Carbon::today('Asia/Jakarta');
 @endphp
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
-    </div>
-    <div class="row clearfix">
+    <div class="card">
+        <div class="header">
+            <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
+        </div>
+        <div class="body">
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="text-center"><b>Last updated: <br>{{date_format(date_create($last_siswa->created_at), 'd M Y H:i')}}</b></div>
+                    <div class="info-box bg-pink hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Total Siswa Aktif</div>
+                            <div class="number count-to" data-from="0" data-to="{{$count_siswa}}" data-speed="15" data-fresh-interval="20">{{number_format($count_siswa)}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                @foreach($data_tingkat as $tingkat)
+                @php
+                    $count_siswa_tingkat = \App\Models\Siswa::whereHas('kelas', function($q) use ($tingkat) { $q->where('tingkat', $tingkat->tingkat); })->whereNotNull('id_kelas')->count();
+                @endphp
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-teal hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Siswa kelas {{$tingkat->tingkat}}</div>
+                            <div class="number count-to" data-from="0" data-to="{{$count_siswa_tingkat}}" data-speed="15" data-fresh-interval="20">{{number_format($count_siswa_tingkat)}}</div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 </div>

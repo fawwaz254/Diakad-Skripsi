@@ -27,6 +27,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label>Tahun</label>
+                                    <select class="form-control show-tick" name="tahun">
+                                        @for($i=2015; $i<=2025; $i++)
+                                            <option {{($tahun == $i)? 'selected' : ''}} value="{{$i}}">{{$i}}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
                         </div>
@@ -43,7 +55,7 @@
                 <div class="header">
                     <h2>
                         REKAP MONITORING KESEHATAN GURU/TENDIK BULAN {{$bulan->nm_bulan}}
-                        <a target="_blank" href="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.$bulan->id_bulan.'/download')}}" class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download Excel</span></a>
+                        <a target="_blank" href="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.$bulan->id_bulan.'/'.$tahun.'/download')}}" class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download Excel</span></a>
                     </h2>
                 </div>
                 <div class="body">
@@ -108,7 +120,6 @@
                                 <tr>
                                     <td>Total Normal</td>
                                     <td></td>
-                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_normal[$date->format('d')]}}</td>
                                     @endforeach
@@ -116,14 +127,12 @@
                                 <tr>
                                     <td>Total Warning</td>
                                     <td></td>
-                                    <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_warning[$date->format('d')]}}</td>
                                     @endforeach
                                 </tr>
                                 <tr>
                                     <td>Total pengisi</td>
-                                    <td></td>
                                     <td></td>
                                     @foreach($dates as $date)
                                     <td>{{$total_pengisi[$date->format('d')]}}</td>
@@ -140,7 +149,7 @@
 
 <script>
 function filterAction(){
-    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('select[name=id_bulan]').val());
+    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
 }
 
 var primary_table = $('#primary_table').DataTable({

@@ -40,6 +40,9 @@
     var modul_url       = 'kesekretariatan';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'dokumen/datatables';
     var detail_url        = role_url + '#' + modul_url + '/' + 'dokumen/detail';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'upload-dokumen/edit';
+    var upload_url        = role_url + '#' + modul_url + '/' + 'upload-dokumen/upload';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-upload-dokumen/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -64,9 +67,18 @@
             { data: 'contact_person', name: 'arsip_dokumen.contact_person' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
+                    return '<a class="target-link btn btn-warning btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
                     '    <i class="material-icons">remove_red_eye</i>'+
-                    '</a>';
+                    '</a> '+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> '+
+                    '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ upload_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">cloud_upload</i>'+
+                    '</a> '+
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    '    <i class="material-icons">delete_forever</i>'+
+                    '</button> ';
                 }
             }
         ]

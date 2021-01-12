@@ -40,8 +40,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
             Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
-            Route::get('rekap-kesehatan/{id}/{bulan}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
-            Route::get('rekap-kesehatan/{id}/{bulan}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
             
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
             Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
@@ -73,11 +73,22 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         });
 
         Route::group(array('prefix' => 'kesekretariatan'), function () {
+
+            Route::group(array('prefix' => 'upload-dokumen'), function () {
+                Route::get('/', 'Guru\Kesekretariatan\DokumenController@manageInputDokumen');
+                Route::get('edit/{id}', 'Guru\Kesekretariatan\DokumenController@manageInputDokumen');
+                Route::get('upload/{id}', 'Guru\Kesekretariatan\DokumenController@uploadInputDokumen');
+            });
+
+            // action upload dokumen
+            Route::post('action-upload-dokumen/{mode}/{id}', 'Guru\Kesekretariatan\DokumenController@actionUploadDokumen');
+
+            // ajax sub kategori
+            Route::post('sub-kategori', 'Guru\Kesekretariatan\DokumenController@ajaxGetSubkategori');
         
             Route::group(array('prefix' => 'dokumen'), function () {
                 Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
-                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
-                
+                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');              
                 Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
             });
         });

@@ -22,6 +22,7 @@ class Pengguna extends Authenticatable
     public $incrementing = false;
     
     protected $fillable = [
+        'id_pengguna',
         'id_status_pengguna',
         'id_sekolah',
         'nm_pengguna',
@@ -69,6 +70,11 @@ class Pengguna extends Authenticatable
     public function status_pengguna()
     {
         return $this->belongsTo('App\Models\StatusPengguna', 'id_status_pengguna');
+    }
+
+    public function pengisian_kegiatan_harian()
+    {
+        return $this->hasMany(PengisianKegiatanHarian::class, 'id_pengguna');
     }
 
     public function status_join_to_text()
