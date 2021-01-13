@@ -191,11 +191,7 @@ class PrintRaporController extends BaseController
                     $rapor_deskripsi_ekskul->id_rapor_deskripsi = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 }
 
-                $deskripsi_nilai_ekskul = null;
-                $nm_standar_nilai = $standar_nilai->where('nm_standar_nilai', $ekskul->nilai_huruf)->first();
-                if($nm_standar_nilai != null){
-                    $deskripsi_nilai_ekskul = 'Melaksanakan kegiatan ' . $all_ekskul->where('id_ekskul', $ekskul->id_ekskul)->first()->nm_ekskul . ' dengan predikat ' . $nm_standar_nilai->keterangan_standar_nilai;
-                }
+                $deskripsi_nilai_ekskul = $ekskul->nilai_huruf;
 
                 $rapor_deskripsi_ekskul->id_rapor_subkategori = null;
                 $rapor_deskripsi_ekskul->id_rapor_kelompok_mp = null;
@@ -293,6 +289,9 @@ class PrintRaporController extends BaseController
         $data_detail_rapor = [];
         //--start URGENT CODE FOR SMK PEMUDA
         $format_urutan_mapel= ["Pendidikan Agama dan Budi Pekerti", "PPKN", "Matematika", "Sejarah Indonesia", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Arab"];
+        $i = 10;
+        $j = 20;
+        $k = 30;
         //--end URGENT CODE FOR SMK PEMUDA
         foreach($new_data_rapor as $new_rapor){
             $rapor = $new_rapor;
@@ -324,6 +323,16 @@ class PrintRaporController extends BaseController
                 if($mapel == $rapor->nm_mata_pelajaran){
                     $rapor->urutan = $urutan;
                 }
+            }
+            if($rapor->nm_rapor_kelompok_mp == 'Dasar Bidang Keahlian'){
+                $rapor->urutan = $i;
+                $i++;
+            } elseif($rapor->nm_rapor_kelompok_mp == 'Dasar Program Keahlian'){
+                $rapor->urutan = $j;
+                $j++;
+            } elseif($rapor->nm_rapor_kelompok_mp == 'Kompetensi Keahlian'){
+                $rapor->urutan = $k;
+                $k++;
             }
             //--end URGENT CODE FOR SMK PEMUDA
             

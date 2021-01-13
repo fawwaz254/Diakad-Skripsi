@@ -50,7 +50,8 @@ class FixDbData extends Command
         try {
             DB::beginTransaction();
             $this->info('Fixing database data...');
-            $this->fixDbData2();
+            // $this->fixDbData2();
+            $this->fixDbData7();
             $this->info('Fixing database data completed!');
             DB::commit();
         } catch(\Exception $e) {
@@ -128,12 +129,6 @@ class FixDbData extends Command
 
         $paduanSuara = $ekskul->where('nm_ekskul', 'Paduan Suara')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
         $hizbulWathan = $ekskul->where('nm_ekskul', 'Hizbul Wathan')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
-        $animasi = $ekskul->where('nm_ekskul', 'Animasi')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
-        $coding = $ekskul->where('nm_ekskul', 'Coding')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
-        $microStock = $ekskul->where('nm_ekskul', 'Microstock')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
-        $paskib = $ekskul->where('nm_ekskul', 'Paskibraka')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
-        $voly = $ekskul->where('nm_ekskul', 'Voly')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
-        $qiroah = $ekskul->where('nomor_sk_ekskul', 'qiroah-01')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
         $pengambilanEkskulAll = PengambilanEkskul::get();
 
         $nilaiPadus = [
@@ -341,5 +336,329 @@ class FixDbData extends Command
             }
         }
 
+    }
+
+    private function fixDbData5(){
+        $this->info('Insert Nilai Ekskul...');
+        // $this->info('Insert Nilai Ekskul & Nilai Pengambilan Ekskul to All Siswa...');
+        $semester = Semester::where('kode_semester', 20201)->where('id_sekolah', 'E3nJ115358553135b8b4ad12f588')->first();
+        $ekskul = Ekskul::get();
+        $dataSekolah = Sekolah::where('nm_singkat_sekolah', 'smkpemudakrian')->first();
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $animasi = $ekskul->where('nm_ekskul', 'Animasi')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $coding = $ekskul->where('nm_ekskul', 'Coding App')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $microStock = $ekskul->where('nm_ekskul', 'Microstock')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $paskib = $ekskul->where('nm_ekskul', 'Paskibraka')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $voly = $ekskul->where('nm_ekskul', 'Voly')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $qiroah = $ekskul->where('nomor_sk_ekskul', 'qiroah-01')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $pengambilanEkskulAll = PengambilanEkskul::get();
+
+        $nilaiPaskib = [
+            '12324' => 100, 
+            '12325' => 100,
+            '12326' => 100,
+            '12336' => 90,
+            '12339' => 100,
+            '12342' => 100,
+            '12352' => 100,
+            '12356' => 100,
+            '12358' => 90,
+            '12322' => 100,
+            '12335' => 100,
+            '12343' => 100,
+            '12191' => 90,
+            '12194' => 90,
+            '12195' => 90,
+            '12196' => 90,
+            '12202' => 100,
+            '12203' => 90,
+            '12231' => 90
+        ];
+        $i = 0;
+        $ekskulAnimasi = $pengambilanEkskulAll->where('id_ekskul', $animasi->id_ekskul);
+        $this->info('Insert Nilai Ekskul ' . $animasi->nm_ekskul);
+        foreach($ekskulAnimasi as $x){
+            $komponen = KomponenEkskul::where('id_ekskul', $x->id_ekskul)->get();
+            $siswa = Siswa::findOrFail($x->id_siswa);
+
+            $nilai = null;
+            if(collect($nilaiPaskib)->has($siswa->nis_siswa)){
+                $nilai = $nilaiPaskib[$siswa->nis_siswa];
+            }
+
+            foreach($komponen as $komp){
+                $nilaiEkskul = new NilaiEkskul();
+                $nilaiEkskul->id_nilai_ekskul = $dataSekolah->prefix.strtotime($now).uniqid();
+                $nilaiEkskul->id_pengambilan_ekskul = $x->id_pengambilan_ekskul;
+                $nilaiEkskul->id_komponen_ekskul = $komp->id_komponen_ekskul;
+                $nilaiEkskul->besar_nilai_ekskul = $nilai;
+                $nilaiEkskul->created_at = $now;
+                $nilaiEkskul->save();
+            }
+
+            if($nilai == 100){
+                $predikat = 'A';
+            } elseif($nilai == 90){
+                $predikat = 'B';
+            } else {
+                $predikat = 'C';
+            }
+
+            $x->nilai_angka = $nilai;
+            $x->nilai_huruf = $predikat;
+            $x->save();
+            $this->info('... ' . $i);
+            $i++;
+        }
+        
+        $ekskulCoding = $pengambilanEkskulAll->where('id_ekskul', $coding->id_ekskul);
+        $this->info('Insert Nilai Ekskul ' . $coding->nm_ekskul);
+        foreach($ekskulCoding as $x){
+            $komponen = KomponenEkskul::where('id_ekskul', $x->id_ekskul)->get();
+            $siswa = Siswa::findOrFail($x->id_siswa);
+
+            $nilai = null;
+            if(collect($nilaiPaskib)->has($siswa->nis_siswa)){
+                $nilai = $nilaiPaskib[$siswa->nis_siswa];
+            }
+
+            foreach($komponen as $komp){
+                $nilaiEkskul = new NilaiEkskul();
+                $nilaiEkskul->id_nilai_ekskul = $dataSekolah->prefix.strtotime($now).uniqid();
+                $nilaiEkskul->id_pengambilan_ekskul = $x->id_pengambilan_ekskul;
+                $nilaiEkskul->id_komponen_ekskul = $komp->id_komponen_ekskul;
+                $nilaiEkskul->besar_nilai_ekskul = $nilai;
+                $nilaiEkskul->created_at = $now;
+                $nilaiEkskul->save();
+            }
+
+            if($nilai == 100){
+                $predikat = 'A';
+            } elseif($nilai == 90){
+                $predikat = 'B';
+            } else {
+                $predikat = 'C';
+            }
+
+            $x->nilai_angka = $nilai;
+            $x->nilai_huruf = $predikat;
+            $x->save();
+        }
+        
+        $ekskulMicroStock = $pengambilanEkskulAll->where('id_ekskul', $microStock->id_ekskul);
+        $this->info('Insert Nilai Ekskul ' . $microStock->nm_ekskul);
+        foreach($ekskulMicroStock as $x){
+            $komponen = KomponenEkskul::where('id_ekskul', $x->id_ekskul)->get();
+            $siswa = Siswa::findOrFail($x->id_siswa);
+
+            $nilai = null;
+            if(collect($nilaiPaskib)->has($siswa->nis_siswa)){
+                $nilai = $nilaiPaskib[$siswa->nis_siswa];
+            }
+
+            foreach($komponen as $komp){
+                $nilaiEkskul = new NilaiEkskul();
+                $nilaiEkskul->id_nilai_ekskul = $dataSekolah->prefix.strtotime($now).uniqid();
+                $nilaiEkskul->id_pengambilan_ekskul = $x->id_pengambilan_ekskul;
+                $nilaiEkskul->id_komponen_ekskul = $komp->id_komponen_ekskul;
+                $nilaiEkskul->besar_nilai_ekskul = $nilai;
+                $nilaiEkskul->created_at = $now;
+                $nilaiEkskul->save();
+            }
+
+            if($nilai == 100){
+                $predikat = 'A';
+            } elseif($nilai == 90){
+                $predikat = 'B';
+            } else {
+                $predikat = 'C';
+            }
+
+            $x->nilai_angka = $nilai;
+            $x->nilai_huruf = $predikat;
+            $x->save();
+        }
+    }
+    
+    private function fixDbData6(){
+        $this->info('Insert Nilai Ekskul...');
+        // $this->info('Insert Nilai Ekskul & Nilai Pengambilan Ekskul to All Siswa...');
+        $semester = Semester::where('kode_semester', 20201)->where('id_sekolah', 'E3nJ115358553135b8b4ad12f588')->first();
+        $ekskul = Ekskul::get();
+        $dataSekolah = Sekolah::where('nm_singkat_sekolah', 'smkpemudakrian')->first();
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $paskib = $ekskul->where('nm_ekskul', 'Paskibraka')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $voly = $ekskul->where('nm_ekskul', 'Voly')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $qiroah = $ekskul->where('nomor_sk_ekskul', 'qiroah-01')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $pengambilanEkskulAll = PengambilanEkskul::get();
+
+        $nilaiPaskib = [
+            '12478' => 100, 
+            '12486' => 100,
+            '12487' => 100,
+            '12489' => 100,
+            '12492' => 100,
+            '12495' => 100,
+            '12440' => 100,
+            '12448' => 100,
+            '12325' => 100,
+            '12339' => 100,
+            '12194' => 100,
+            '12198' => 100,
+            '12203' => 100,
+        ];
+
+        $i = 0;
+        $ekskulPaskib = $pengambilanEkskulAll->where('id_ekskul', $paskib->id_ekskul);
+        $this->info('Insert Nilai Ekskul ' . $paskib->nm_ekskul);
+        foreach($ekskulPaskib as $x){
+            $komponen = KomponenEkskul::where('id_ekskul', $x->id_ekskul)->get();
+            $siswa = Siswa::findOrFail($x->id_siswa);
+
+            $nilai = null;
+            if(collect($nilaiPaskib)->has($siswa->nis_siswa)){
+                $nilai = $nilaiPaskib[$siswa->nis_siswa];
+            }
+
+            foreach($komponen as $komp){
+                $nilaiEkskul = new NilaiEkskul();
+                $nilaiEkskul->id_nilai_ekskul = $dataSekolah->prefix.strtotime($now).uniqid();
+                $nilaiEkskul->id_pengambilan_ekskul = $x->id_pengambilan_ekskul;
+                $nilaiEkskul->id_komponen_ekskul = $komp->id_komponen_ekskul;
+                $nilaiEkskul->besar_nilai_ekskul = $nilai;
+                $nilaiEkskul->created_at = $now;
+                $nilaiEkskul->save();
+            }
+
+            if($nilai == 100){
+                $predikat = 'A';
+            } elseif($nilai == 90){
+                $predikat = 'B';
+            } else {
+                $predikat = 'C';
+            }
+
+            $x->nilai_angka = $nilai;
+            $x->nilai_huruf = $predikat;
+            $x->save();
+            $this->info('... ' . $i);
+            $i++;
+        }
+        
+        $nilaiQiroah = [
+            '12389' => 90, 
+            '12326' => 90,
+            '12267' => 90,
+            '12306' => 90,
+            '12311' => 100,
+            '12194' => 100,
+            '12226' => 100,
+            '12230' => 90
+        ];
+
+        $i = 0;
+        $ekskulQiroah = $pengambilanEkskulAll->where('id_ekskul', $qiroah->id_ekskul);
+        $this->info('Insert Nilai Ekskul ' . $qiroah->nm_ekskul);
+        foreach($ekskulQiroah as $x){
+            $komponen = KomponenEkskul::where('id_ekskul', $x->id_ekskul)->get();
+            $siswa = Siswa::findOrFail($x->id_siswa);
+
+            $nilai = null;
+            if(collect($nilaiQiroah)->has($siswa->nis_siswa)){
+                $nilai = $nilaiQiroah[$siswa->nis_siswa];
+            }
+
+            foreach($komponen as $komp){
+                $nilaiEkskul = new NilaiEkskul();
+                $nilaiEkskul->id_nilai_ekskul = $dataSekolah->prefix.strtotime($now).uniqid();
+                $nilaiEkskul->id_pengambilan_ekskul = $x->id_pengambilan_ekskul;
+                $nilaiEkskul->id_komponen_ekskul = $komp->id_komponen_ekskul;
+                $nilaiEkskul->besar_nilai_ekskul = $nilai;
+                $nilaiEkskul->created_at = $now;
+                $nilaiEkskul->save();
+            }
+
+            if($nilai == 100){
+                $predikat = 'A';
+            } elseif($nilai == 90){
+                $predikat = 'B';
+            } else {
+                $predikat = 'C';
+            }
+
+            $x->nilai_angka = $nilai;
+            $x->nilai_huruf = $predikat;
+            $x->save();
+            $this->info('... ' . $i);
+            $i++;
+        }
+        
+        
+        
+        
+    }
+
+    private function fixDbData7(){
+        $this->info('Insert Nilai Ekskul...');
+        $ekskul = Ekskul::get();
+        $dataSekolah = Sekolah::where('nm_singkat_sekolah', 'smkpemudakrian')->first();
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $voly = $ekskul->where('nm_ekskul', 'Voly')->where('id_sekolah', $dataSekolah->id_sekolah)->first();
+        $pengambilanEkskulAll = PengambilanEkskul::get();
+
+        $nilaiVoly = [
+            '12494' => 90, 
+            '12437' => 90,
+            '12334' => 90,
+            '12469' => 90,
+            '12449' => 90,
+            '12389' => 100,
+            '12421' => 90,
+            '12423' => 90,
+            '12348' => 90,
+            '12263' => 100,
+            '12203' => 100,
+            '12239' => 90,
+        ];
+
+        $i = 0;
+        $ekskulVoly = $pengambilanEkskulAll->where('id_ekskul', $voly->id_ekskul);
+        $this->info('Insert Nilai Ekskul ' . $voly->nm_ekskul);
+        foreach($ekskulVoly as $x){
+            $komponen = KomponenEkskul::where('id_ekskul', $x->id_ekskul)->get();
+            $siswa = Siswa::findOrFail($x->id_siswa);
+
+            $nilai = null;
+            if(collect($nilaiVoly)->has($siswa->nis_siswa)){
+                $nilai = $nilaiVoly[$siswa->nis_siswa];
+            }
+
+            foreach($komponen as $komp){
+                $nilaiEkskul = new NilaiEkskul();
+                $nilaiEkskul->id_nilai_ekskul = $dataSekolah->prefix.strtotime($now).uniqid();
+                $nilaiEkskul->id_pengambilan_ekskul = $x->id_pengambilan_ekskul;
+                $nilaiEkskul->id_komponen_ekskul = $komp->id_komponen_ekskul;
+                $nilaiEkskul->besar_nilai_ekskul = $nilai;
+                $nilaiEkskul->created_at = $now;
+                $nilaiEkskul->save();
+            }
+
+            if($nilai == 100){
+                $predikat = 'A';
+            } elseif($nilai == 90){
+                $predikat = 'B';
+            } else {
+                $predikat = 'C';
+            }
+
+            $x->nilai_angka = $nilai;
+            $x->nilai_huruf = $predikat;
+            $x->save();
+            $this->info('... ' . $i);
+            $i++;
+        }
     }
 }
