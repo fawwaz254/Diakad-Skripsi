@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\Ekskul;
 use App\Models\LogKelasSiswa;
 use App\Models\NilaiMp;
 use App\Models\PengambilanEkskul;
@@ -24,6 +25,7 @@ use App\Models\RaporKelompokMp;
 use App\Models\RaporSiswa;
 use App\Models\RaporSubkelompokMp;
 use App\Models\Siswa as Siswa;
+use App\Models\StandarNilai;
 use App\Models\WaliKelas;
 use Auth;
 use PDF;
@@ -112,6 +114,9 @@ class PrintRaporController extends BaseController
                                 ->where('id_semester', $id_semester)
                                 ->get();
 
+        $standar_nilai = StandarNilai::get();
+        $all_ekskul = Ekskul::get();
+
         DB::beginTransaction();
         try{
             // pengisian data rapor = Mapel
@@ -164,7 +169,7 @@ class PrintRaporController extends BaseController
                 $rapor_siswa->id_prestasi_siswa  = null; //belum diisi
                 $rapor_siswa->deskripsi_catatan_wali_kelas = $catatan;
                 $rapor_siswa->nilai_kkm          = $mp->nilai_kkm;
-                $rapor_siswa->nilai_angka        = $mp->nilai_angka;
+                $rapor_siswa->nilai_angka        = round($mp->nilai_angka);
                 $rapor_siswa->nilai_huruf        = $mp->nilai_huruf;
                 $rapor_siswa->created_by         = $input->auth_data->pengguna->id_pengguna;
                 $rapor_siswa->save();
@@ -186,12 +191,18 @@ class PrintRaporController extends BaseController
                     $rapor_deskripsi_ekskul->id_rapor_deskripsi = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 }
 
+                $deskripsi_nilai_ekskul = null;
+                $nm_standar_nilai = $standar_nilai->where('nm_standar_nilai', $ekskul->nilai_huruf)->first();
+                if($nm_standar_nilai != null){
+                    $deskripsi_nilai_ekskul = 'Melaksanakan kegiatan ' . $all_ekskul->where('id_ekskul', $ekskul->id_ekskul)->first()->nm_ekskul . ' dengan predikat ' . $nm_standar_nilai->keterangan_standar_nilai;
+                }
+
                 $rapor_deskripsi_ekskul->id_rapor_subkategori = null;
                 $rapor_deskripsi_ekskul->id_rapor_kelompok_mp = null;
                 $rapor_deskripsi_ekskul->id_rapor_subkelompok_mp = null;
                 $rapor_deskripsi_ekskul->id_ekstrakurikuler = $ekskul->id_ekskul;
                 $rapor_deskripsi_ekskul->predikat_rapor_deskripsi = $ekskul->nilai_huruf;
-                $rapor_deskripsi_ekskul->deskripsi_rapor = null;
+                $rapor_deskripsi_ekskul->deskripsi_rapor = $deskripsi_nilai_ekskul;
                 $rapor_deskripsi_ekskul->created_by = $input->auth_data->pengguna->id_pengguna;
                 $rapor_deskripsi_ekskul->save();
                 // end rapor_deskripsi
@@ -222,7 +233,7 @@ class PrintRaporController extends BaseController
                 $rapor_siswa_ekskul->id_prestasi_siswa  = null; //belum diisi
                 $rapor_siswa_ekskul->deskripsi_catatan_wali_kelas = $catatan;
                 $rapor_siswa_ekskul->nilai_kkm          = null;
-                $rapor_siswa_ekskul->nilai_angka        = $ekskul->nilai_angka;
+                $rapor_siswa_ekskul->nilai_angka        = round($ekskul->nilai_angka);
                 $rapor_siswa_ekskul->nilai_huruf        = $ekskul->nilai_huruf;
                 $rapor_siswa_ekskul->created_by         = $input->auth_data->pengguna->id_pengguna;
                 $rapor_siswa_ekskul->save();
@@ -280,6 +291,9 @@ class PrintRaporController extends BaseController
         
         // get all data detail rapor based on new rapor_siswa
         $data_detail_rapor = [];
+        //--start URGENT CODE FOR SMK PEMUDA
+        $format_urutan_mapel= ["Pendidikan Agama dan Budi Pekerti", "PPKN", "Matematika", "Sejarah Indonesia", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Arab"];
+        //--end URGENT CODE FOR SMK PEMUDA
         foreach($new_data_rapor as $new_rapor){
             $rapor = $new_rapor;
             if($rapor->nm_matapelajaran == null && $rapor->nm_rapor_kelompok_mp != null){
@@ -304,6 +318,14 @@ class PrintRaporController extends BaseController
             }
             
             $rapor->nilai_komponen = $nilai_komponen;
+
+            //--start URGENT CODE FOR SMK PEMUDA
+            foreach($format_urutan_mapel as $urutan => $mapel){
+                if($mapel == $rapor->nm_mata_pelajaran){
+                    $rapor->urutan = $urutan;
+                }
+            }
+            //--end URGENT CODE FOR SMK PEMUDA
             
             $data_detail_rapor[] = $rapor;
         }
@@ -356,7 +378,7 @@ class PrintRaporController extends BaseController
         $kepala_sekolah = $auth_data->sekolah_data->nm_kepala_sekolah;
         $nip_kepala_sekolah = $auth_data->sekolah_data->nip_kepala_sekolah;
 
-        $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp', 'wali_kelas', 'kepala_sekolah', 'nip_kepala_sekolah'))->setPaper('a4', 'potrait');
+        $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp', 'wali_kelas', 'kepala_sekolah', 'nip_kepala_sekolah'))->setPaper('legal', 'potrait');
         return $pdf;
     }
 }

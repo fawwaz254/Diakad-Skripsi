@@ -52,6 +52,14 @@
         .mb-0 {
             margin-bottom: 0px;
         }
+        
+        .mb-05 {
+            margin-bottom: 5px;
+        }
+        
+        .mb-1 {
+            margin-bottom: 10px;
+        }
 
         .mb-2 {
             margin-bottom: 20px;
@@ -59,6 +67,10 @@
 
         .mt-2 {
             margin-top: 20px;
+        }
+        
+        .mt-4 {
+            margin-top: 40px;
         }
 
         /* .presensi tr td:last-child, .presensi tr th:last-child {
@@ -88,6 +100,9 @@
         .avoid-page-break {
             page-break-inside: avoid;
         }
+        @page{
+            margin: 3cm 1.5cm 3.2cm 1.5cm;
+        }
     </style>
 
 </head>
@@ -109,8 +124,8 @@
             </td>
         </tr>
     </table> -->
-    <h5>Data Siswa</h5>
-    <table width="100%" style="margin-bottom: 30px;" class="">
+    <h5 class="text-center">Data Siswa</h5>
+    <table width="100%" class="">
         <tr>
             <td width="30%">Nama Peserta Didik</td>
             <td>: {{ $data_siswa->pengguna['nm_pengguna'] }}</td>
@@ -135,8 +150,8 @@
     <hr>
     <h4 class="text-center mb-0">CAPAIAN HASIL BELAJAR</h4>
     @foreach($format_rapor_kategori as $kategori)
-    <div class="mb-2">
-        <h5>{{ $kategori->nm_rapor_kategori }}</h5>
+    <div class="mb-1 {{ $kategori->kode_rapor_kategori == 'nilai_akademik' ? null : 'avoid-page-break'}}">
+        <h5 class="mb-05">{{ $kategori->nm_rapor_kategori }}</h5>
         @if($kategori->kode_rapor_kategori == 'catatan_akademik')
         <table class="presensi" width="100%">
             <tr>
@@ -165,10 +180,10 @@
                     $no = 1;
                     $nm_rapor_kelompok_mp = null;
                 @endphp
-                @foreach(collect($data_detail_rapor)->where('id_rapor_kelompok', $kel->id_rapor_kelompok) as $key => $detail)
-                @php
-                $maxCol = count(collect($data_detail_rapor)->max('nilai_komponen'));
-                @endphp
+                @foreach(collect($data_detail_rapor)->where('id_rapor_kelompok', $kel->id_rapor_kelompok)->sortBy('urutan') as $key => $detail)
+                    @php
+                    $maxCol = count(collect($data_detail_rapor)->max('nilai_komponen'));
+                    @endphp
                     @if($detail['nm_rapor_kelompok_mp'] == null)
                     <tr class="presensi">
                         <td>{{ $no++ }}</td>
@@ -381,12 +396,12 @@
         </table>
     </div>
     @endif
-    <div class="avoid-page-break mt-2">
+    <div class="avoid-page-break mt-4">
         <table width="100%">
             <tr>
                 <td style="width: 35%;">Mengetahui:</td>
                 <td style="width: 35%;"></td>
-                <td style="width: 30%;">Krian, 23 Desember 2020</td>
+                <td style="width: 30%;">Sidoarjo, 23 Desember 2020</td>
             </tr>
             <tr>
                 <td>Orang Tua/Wali</td>
@@ -394,7 +409,7 @@
                 <td>Wali Kelas<td>
             </tr>
             <tr>
-                <td><br><br><br></td>
+                <td><br><br><br><br></td>
             </tr>
             <tr>
                 <td>__________________</td>
@@ -416,7 +431,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td><br><br><br></td>
+                <td><br><br><br><br></td>
             </tr>
             <tr>
                 <td></td>
