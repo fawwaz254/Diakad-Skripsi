@@ -62,7 +62,7 @@
             <div class="modal-header">
                 <h4 class="modal-title">PRINT RAPOR</h4>
             </div>
-            <form action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cari-siswa/print-rapor') }}" target="_blank" method="POST">
+            <form id="print" action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cari-siswa/print-rapor') }}" target="_blank" method="POST">
                 <div class="modal-body">
                     {{ csrf_field() }}
                         <div class="row form-group">
@@ -134,12 +134,21 @@
         data.log_kelas.forEach(function (row) {
               $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
               $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
-              $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + row.id_kelas + '">');
-              $(".modal-print").append('<input type="hidden" name="id_semester" value="' + row.id_semester + '">');
-              $(".modal-print").append('<button type="submit" class="btn btn-primary waves-effect"> Kelas: ' + row.tingkat + ' Semester: ' + row.nm_semester + ' (' + row.nm_kelas + ')</button>');
+              $(".modal-print").append('<input type="hidden" name="id_kelas" value="">');
+              $(".modal-print").append('<input type="hidden" name="id_semester" value="">');
+              $(".modal-print").append('<button type="button" onclick=submitForm(\'' + row.id_kelas + '\',\'' + row.id_semester + '\') class="btn btn-primary waves-effect"> Kelas: ' + row.tingkat + ' Semester: ' + row.nm_semester + ' (' + row.nm_kelas + ')</button>');
               $(".modal-print").append('</div></div>');
             });
         $("#modal-rapor").modal('show');
 
     });
+
+    function submitForm(kelas, semester) {
+        console.log(kelas, semester);
+        $('input[name="id_kelas"]').val(kelas);
+        $('input[name="id_semester"]').val(semester);
+
+        var form = $('form#print');
+        form.submit();
+    }
 </script>

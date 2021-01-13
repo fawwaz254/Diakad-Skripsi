@@ -57,6 +57,10 @@
             margin-bottom: 20px;
         }
 
+        .mt-2 {
+            margin-top: 20px;
+        }
+
         /* .presensi tr td:last-child, .presensi tr th:last-child {
             border-right: 1px solid #000000;
         }
@@ -90,7 +94,7 @@
 
 <body>
 
-    <table width="100%" style="margin-bottom: 30px;">
+    <!-- <table width="100%" style="margin-bottom: 30px;">
         <tr>
             <td width="60">
                 <img id="logo"
@@ -104,7 +108,7 @@
                 <hr>
             </td>
         </tr>
-    </table>
+    </table> -->
     <h5>Data Siswa</h5>
     <table width="100%" style="margin-bottom: 30px;" class="">
         <tr>
@@ -377,12 +381,12 @@
         </table>
     </div>
     @endif
-    <div class="avoid-page-break">
-        <table width="100%" class="text-center">
+    <div class="avoid-page-break mt-2">
+        <table width="100%">
             <tr>
-                <td>Mengetahui</td>
-                <td></td>
-                <td>Taman, 23 Desember 2020</td>
+                <td style="width: 35%;">Mengetahui:</td>
+                <td style="width: 35%;"></td>
+                <td style="width: 30%;">Krian, 23 Desember 2020</td>
             </tr>
             <tr>
                 <td>Orang Tua/Wali</td>
@@ -397,13 +401,13 @@
                 <td></td>
                 <td>
                     <span style="text-decoration: underline;">{{ !empty($wali_kelas) ? $wali_kelas->nm_pengguna : null }}</span>
-                    <br>
-                    <span>{{ !empty($wali_kelas) ? $wali_kelas->nip_guru : null }}</span>
+                    <!-- <br>
+                    <span></span> -->
                 </td>
             </tr>
             <tr>
                 <td></td>
-                <td>Mengetahui</td>
+                <td>Mengetahui:</td>
                 <td></td>
             </tr>
             <tr>
@@ -418,8 +422,8 @@
                 <td></td>
                 <td>
                     <span style="text-decoration: underline;">{{ $kepala_sekolah ?? "__________________" }}</span>
-                    <br>
-                    <span>{{ $nip_kepala_sekolah ?? null }}</span>
+                    <!-- <br>
+                    <span>{{ $nip_kepala_sekolah ?? null }}</span> -->
                 </td>
                 <td></td>
             </tr>

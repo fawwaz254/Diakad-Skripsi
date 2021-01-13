@@ -109,6 +109,7 @@ class PrintRaporController extends BaseController
                                 })
                                 ->where('id_siswa', $id_siswa)
                                 ->where('id_kelas', $id_kelas)
+                                ->where('id_semester', $id_semester)
                                 ->get();
 
         DB::beginTransaction();
@@ -273,7 +274,8 @@ class PrintRaporController extends BaseController
             ->where('rapor_deskripsi.id_ekstrakurikuler', '=', null)
             ->where([
                 'id_siswa' => $id_siswa,
-                'id_kelas' => $id_kelas
+                'id_kelas' => $id_kelas,
+                'rapor_siswa.id_semester' => $id_semester
             ])->get();
         
         // get all data detail rapor based on new rapor_siswa
