@@ -44,7 +44,7 @@ class PembayaranSiswaController extends BaseController
         $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $data_pembayaran_siswa = PembayaranBiaya::select('siswa.id_siswa', 'tagihan_biaya.id_tagihan_biaya', 'pembayaran_biaya.id_pembayaran_biaya', 'kelompok_biaya.nm_kelompok_biaya', 's_biaya.tahun_ajaran as tahun_ajaran_biaya', 's_biaya.nm_semester as nm_semester_biaya', 'jalur.nm_jalur', 'biaya.nm_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 's_bayar.tahun_ajaran as tahun_ajaran_bayar', 's_bayar.nm_semester as nm_semester_bayar', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembayaran_biaya.besar_pembayaran', 'pembayaran_biaya.tgl_pembayaran', 'bank.nm_bank', 'bank_via.nm_bank_via', 'pembayaran_biaya.nomor_transaksi')
+        $data_pembayaran_siswa = PembayaranBiaya::select('siswa.id_siswa', 'tagihan_biaya.id_tagihan_biaya', 'pembayaran_biaya.id_pembayaran_biaya', 'kelompok_biaya.nm_kelompok_biaya', 's_biaya.tahun_ajaran as tahun_ajaran_biaya', 's_biaya.nm_semester as nm_semester_biaya', 'jalur.nm_jalur', 'biaya.nm_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 's_bayar.tahun_ajaran as tahun_ajaran_bayar', 's_bayar.nm_semester as nm_semester_bayar', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembayaran_biaya.besar_pembayaran', 'pembayaran_biaya.tgl_pembayaran', 'bank.nm_bank', 'bank_via.nm_bank_via', 'pembayaran_biaya.nomor_transaksi', 'tagihan_biaya.keterangan')
                     ->join('tagihan_biaya', 'tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya')
                     ->join('siswa', 'siswa.id_siswa', '=', 'tagihan_biaya.id_siswa')
                     ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
@@ -66,6 +66,42 @@ class PembayaranSiswaController extends BaseController
                     ->get();
 
         return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));
+    }
+    
+    public function printBelumTerbayarPembayaranSiswa(Request $request, $id_pengguna)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_terbayar = PembayaranBiaya::select()
+                                ->join('tagihan_biaya', function($join){
+                                    $join->on('tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya');
+                                    $join->whereNull('tagihan_biaya.deleted_at');
+                                })->where('tagihan_biaya.id_siswa', $siswa->id_siswa)->pluck('id_tagihan_biaya')->toArray();
+                                // dd($data_terbayar);
+
+        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', 'tagihan_biaya.besar_biaya as besar_pembayaran')
+            ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
+            ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
+            ->join('kelompok_biaya', 'kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
+            ->join('semester', 'semester.id_semester', '=', 'biaya_sekolah.id_semester')
+            ->join('biaya', 'biaya.id_biaya', '=', 'detail_biaya.id_biaya')
+            ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
+            ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
+            // ->where('tagihan_biaya.is_tagih', '=', 1)
+            ->where('tagihan_biaya.is_request', '=', 0)
+            ->where('tagihan_biaya.id_siswa', '=', $siswa->id_siswa)
+            ->whereNotIn('tagihan_biaya.id_tagihan_biaya', $data_terbayar)
+            ->orderBy('bulan.id_bulan', 'asc')
+            ->orderBy('detail_biaya.id_jenis_detail_biaya', 'asc')
+            // ->orderBy('semester.kode_semester', 'asc')
+            ->get();
+        // dd($data_terbayar, $list_data);
+
+        return view('keuangan/utility/pembayaran-siswa/print-belum-terbayar-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'list_data'));
     }
 
     public function actionViewPembayaranSiswa(Request $request)
@@ -200,6 +236,13 @@ class PembayaranSiswaController extends BaseController
                 })
                 ->addColumn('sisa_tagihan', function ($item) {
                     return "Rp".number_format($item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran);
+                })
+                ->addColumn('checkbox', function ($item) {
+                    $data = array(
+                        'id_tagihan' => $item->id_tagihan_biaya,
+                        'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran
+                    );
+                    return $data;
                 })
                 ->addColumn('action', function ($item) use ($nis_nama_siswa) {
                     $data = array(
@@ -495,5 +538,79 @@ class PembayaranSiswaController extends BaseController
             'status' => 203, // SUCCESS AND LOAD TABLE
             'message' => 'Delete Tagihan Siswa successfully'
         ];
+    }
+
+    public function actionPembayaranSiswaMassal(Request $request){
+        $input = (object) $request->input();
+
+        $totalNilai = collect($request->data_pembayaran)->sum('nilai');
+        $request['total_pembayaran'] = $totalNilai;
+        $request['min_total_pembayaran'] = 0;
+        // dd($request->all());
+
+        $validator = Validator::make($request->all(), [
+            'data_pembayaran' => 'required',
+            'data_pembayaran.*.id'      => 'required',
+            'data_pembayaran.*.nilai'      => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => "Harap pilih tagihan yang ingin dibayar"
+            ];
+        } else {
+            // mengambil waktu sekarang
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $dataPembayaran = $input->data_pembayaran;
+
+            // looping save
+            foreach($dataPembayaran as $bayar){
+                $tagihanBiaya   = TagihanBiaya::find($bayar['id']);
+    
+                $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
+    
+                $besar_pembayaran_lama = PembayaranBiaya::where('id_tagihan_biaya', '=', $bayar['id'])
+                                            ->sum('besar_pembayaran');
+    
+                $besar_pelunasan = $besar_biaya - $besar_pembayaran_lama;
+    
+                if ($input->auth_data->pengguna->status_join_table == 1) {
+                    // get id_guru
+                    $staff = Staff::select('id_staff')
+                        ->where('id_pengguna', '=', $input->auth_data->pengguna->id_pengguna)
+                        ->first();
+    
+                    $id_staff_bayar = $staff->id_staff;
+                } else {
+                    $id_staff_bayar = null;
+                }
+    
+                $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($input->auth_data);
+    
+                $pembayaranBiaya                        = new PembayaranBiaya;
+                $pembayaranBiaya->id_pembayaran_biaya   = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pembayaranBiaya->id_tagihan_biaya      = $bayar['id'];
+                $pembayaranBiaya->id_staff_bayar        = $id_staff_bayar;
+                $pembayaranBiaya->id_semester_bayar     = $semester_aktif->id_semester;
+                $pembayaranBiaya->besar_pembayaran      = $besar_pelunasan;
+                // convert format date
+                $pembayaranBiaya->tgl_pembayaran        = (!empty($input->tgl_pembayaran))? $input->tgl_pembayaran : $now;
+                $pembayaranBiaya->keterangan            = "Langsung Lunas (Pembayaran Massal)";
+                $pembayaranBiaya->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $pembayaranBiaya->save();
+    
+                $tagihanBiaya->is_tagih     = 0;
+                $tagihanBiaya->updated_by   = $input->auth_data->pengguna->id_pengguna;
+                $tagihanBiaya->updated_at   = $now;
+                $tagihanBiaya->save();
+            }
+
+            return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Pembayaran Siswa successfully'
+            ];
+        }
     }
 }

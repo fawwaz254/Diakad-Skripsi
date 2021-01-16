@@ -88,7 +88,11 @@
             { data: null, searchable: false, orderable: false },
             { data: 'biaya_sekolah', name: 'kelompok_biaya.nm_kelompok_biaya' },
             { data: 'jenis_biaya', name: 'jenis_detail_biaya.nm_jenis_detail_biaya' },
-            { data: 'nm_biaya', name: 'biaya.nm_biaya' },
+            { data: 'nm_biaya', name: 'biaya.nm_biaya',
+                render: function(data, type, row){
+                    return row.nm_biaya + ' (' + row.keterangan_biaya + ')';
+                }
+            },
             { data: 'nm_biaya_internal', name: 'kelompok_biaya_internal.nm_kelompok_biaya_internal' },
             { data: 'besar_biaya', name: 'detail_biaya.besar_biaya' },
             { data: 'validasi_biaya', name: 'validasi_biaya', searchable: false, orderable: false },

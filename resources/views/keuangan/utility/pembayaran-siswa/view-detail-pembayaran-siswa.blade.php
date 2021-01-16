@@ -71,9 +71,18 @@
                                     <a class="btn btn-info waves-effect" target="_blank" href="{{url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d'))}}">
                                         <i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span>
                                     </a>
+                                    <a class="btn btn-danger waves-effect" target="_blank" href="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-belum-terbayar/'.$siswa->id_pengguna) }}">
+                                        <i class="material-icons">print</i><span>Cetak Tagihan Belum Terbayar</span>
+                                    </a>
+                                    <button class="btn btn-success waves-effect float-right" id="pay-button" onclick="paySelected()">
+                                        <i class="material-icons">point_of_sale</i><span>Bayar tagihan terpilih</span>
+                                    </button>
                                 </h2>
                             </div>
                             <div class="body">
+                                <div>
+                                    <h4 class="">Total Tagihan terpilih: Rp <span id="show-total"></span></h4>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tagihan">
                                         <thead>
@@ -83,6 +92,10 @@
                                                 <th>Besar Tagihan</th>
                                                 <th>Besar Pembayaran</th>
                                                 <th>Sisa Tagihan</th>
+                                                <th>
+                                                    <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
+                                                    <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
+                                                </th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -128,6 +141,7 @@
     var delete_tagihan_siswa        = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tagihan-siswa/delete';
     var delete_pembayaran_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/delete';
     var lunas_url                   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
+    var mass_payment_url            = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa-massal';
 
 
     // datatable jadwal UTS
@@ -145,6 +159,16 @@
             { data: 'besar_biaya', name: 'besar_biaya'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'sisa_tagihan', name: 'sisa_tagihan'},
+            { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
+                render: function (data){
+                    if(data.sisa_tagihan > 0){
+                        return '<input id="checkbox-' + data.id_tagihan + '"type="checkbox" name="besar_biaya[]" value="' + data.sisa_tagihan + '" class="filled-in checkbox" onclick="checkedCb();" data-id="' + data.id_tagihan + '">' +
+                        '<label for="checkbox-' + data.id_tagihan + '"></label>';
+                    } else {
+                        return '';
+                    }
+                }
+            },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     if(data.sisa_tagihan > 0){
@@ -194,7 +218,7 @@
             { data: 'semester_bayar', name: 'semester_bayar'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(\''+ delete_pembayaran_url +'\', this)" data-id="'+  data.id +'">'+
+                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" id="delete-khusus-button" onclick="deleteActionKhusus(\''+ delete_pembayaran_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">close</i>'+
                     '</button>';
                 }
@@ -348,4 +372,114 @@
             }
         });
     }
+
+    $('#checkbox_select_all_primary_table').change(function() {
+        var select_all_checked = this.checked;
+        var rows = primary_table_tagihan.rows({ 'search': 'applied' }).nodes();
+
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        
+        var sum = calc();
+        if(sum > 0){
+            var sumFormatted = String(sum).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            $('#show-total').text(sumFormatted);
+            $('#pay-button').removeAttr('disabled', 'disabled');
+        } else {
+            $('#pay-button').attr('disabled', 'disabled');
+            $('#show-total').text('0');
+        }
+    });
+
+    $('document').ready(function(){
+        var sum = 0;
+        $('#show-total').text(sum);
+        $('#pay-button').attr('disabled', 'disabled');
+    });
+
+    function calc(){
+        // Query for only the checked checkboxes and put the result in an array
+        var checked = Array.prototype.slice.call(document.querySelectorAll("input[type='checkbox']:checked.checkbox"));
+
+        var arrayChecked = checked.map(function(a){
+            return a.value;
+        });
+        var sum = 0;
+        if(arrayChecked.length > 0){
+            sum = arrayChecked.reduce(function(a, b){
+                return parseFloat(a) + parseFloat(b);
+            });
+        }
+        
+        return sum;
+    };
+    
+    function checkedCb(){
+        var sum = calc();
+        var sumFormatted = String(sum).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        $('#show-total').text(sumFormatted);
+        
+        if(sum > 0){
+            $('#pay-button').removeAttr('disabled', 'disabled');
+        } else {
+            $('#pay-button').attr('disabled', 'disabled');
+        }
+    }
+
+    function paySelected(){
+        var checked = Array.prototype.slice.call(document.querySelectorAll("input[type='checkbox']:checked.checkbox"));
+
+        var valueObj = checked.map(function(a){
+            var dataSet = {'nilai' : a.value, 'id': a.dataset.id};
+            return dataSet;
+        });
+
+        var sum = calc();
+        var sumFormatted = String(sum).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        $('#pay-button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "Total Pembayaran Tagihan = Rp " + sumFormatted,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, BAYAR!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    method: "POST",
+                    url: mass_payment_url,
+                    data: { data_pembayaran: valueObj},
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table_tagihan.ajax.reload(null, false);
+                            primary_table_riwayat_bayar.ajax.reload(null, false);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        var sum = 0;
+                        $('#show-total').text(sum);
+                    }
+                });
+            } else {
+                $('#pay-button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
 </script>

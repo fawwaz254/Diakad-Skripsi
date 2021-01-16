@@ -14,6 +14,7 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/pengeluaran/input/save')}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
+                        <input type="hidden" name="id_realisasi" value="{{ $pengeluaran->id_realisasi ?? null }}">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label>Tahun Ajaran</label>
                                 <select class="form-control show-tick" name="tahun">
@@ -29,26 +30,31 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Tanggal</label>
-                                        <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
+                                        <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" 
+                                        value="{{ isset($pengeluaran) ? $pengeluaran->tgl_realisasi : \Carbon\Carbon::now()->format('Y-m-d') }}">
                                     </div>
                                 </div>
                                 <label>Kategori</label>
                                 <select class="form-control show-tick" name="id_subkategori_rapb">
                                     @foreach($data_subkategori as $subkategori)
-                                    <option value="{{$subkategori->id_subkategori_rapb}}">{{$subkategori->kode_subkategori_rapb}} {{$subkategori->nm_subkategori_rapb}}</option>
+                                    <option value="{{$subkategori->id_subkategori_rapb}}"
+                                        @if(isset($rapb) && $subkategori->id_subkategori_rapb == $rapb->id_subkategori_rapb)
+                                            selected
+                                        @endif>
+                                        {{$subkategori->kode_subkategori_rapb}} {{$subkategori->nm_subkategori_rapb}}</option>
                                     @endforeach
                                 </select>
                                 <br>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Uraian</label>
-                                        <textarea class="form-control" name="nm_realisasi" rows="4" cols="100"></textarea>
+                                        <textarea class="form-control" name="nm_realisasi" rows="4" cols="100">{{ isset($pengeluaran) ? $pengeluaran->nm_realisasi : null }}</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Nilai</label>
-                                        <input type="number" class="form-control" name="dana_realisasi" required="">
+                                        <input type="number" class="form-control" name="dana_realisasi" required="" value="{{ $pengeluaran->dana_realisasi ?? null }}">
                                     </div>
                                 </div>
                             </div>

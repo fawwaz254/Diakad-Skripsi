@@ -226,20 +226,32 @@ class PengeluaranController extends BaseController
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
+        
+        if(empty($tgl_awal)){
+            $tgl_awal = Carbon::now()->subDays(30)->format('Y-m-d');
+        }
+        
+        if(empty($tgl_akhir)){
+            $tgl_akhir = Carbon::now()->format('Y-m-d');
+        }
 
-        return view('keuangan/sim/pengeluaran/view-menu-tampilkan', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
+        return view('keuangan/sim/pengeluaran/view-menu-tampilkan', compact('auth_data', 'data_semester', 'tgl_awal', 'tgl_akhir','tahun_akademik_semester'));
     }
 
     public function datatablesMenuTampilkan(Request $request){
         $input = (object) $request->input();
 
         $tahun = $input->tahun;
+        $tgl_awal = $input->tgl_awal;
+        $tgl_akhir = $input->tgl_akhir;
         $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
 
         $list_data = Realisasi::with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function($q){
             $q->where('tipe_kategori_rapb', 2);
-        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester]);
+        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
+        ->whereDate('tgl_realisasi', '>=', $tgl_awal)
+        ->whereDate('tgl_realisasi', '<=', $tgl_akhir);
 
         return Datatables::of($list_data)
                     ->editColumn('tgl_realisasi', function ($item) {
@@ -247,6 +259,12 @@ class PengeluaranController extends BaseController
                     })
                     ->editColumn('dana_realisasi', function ($item){
                         return 'Rp'.number_format($item->dana_realisasi);
+                    })
+                    ->addColumn('action', function($item) {
+                        $data = array(
+                            'id' => $item->id_realisasi,
+                        );
+                        return $data;
                     })
                     ->make(true);
     }
@@ -325,8 +343,12 @@ class PengeluaranController extends BaseController
 
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $realisasi                               = new Realisasi;
-                $realisasi->id_realisasi                 = $id;
+                if($input->id_realisasi){
+                    $realisasi                           = Realisasi::find($input->id_realisasi);
+                } else {
+                    $realisasi                               = new Realisasi;
+                    $realisasi->id_realisasi                 = $id;
+                }
                 $realisasi->id_semester_realisasi        = $id_semester;
                 $realisasi->id_rapb                      = $rapb->id_rapb;
                 if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
@@ -340,6 +362,8 @@ class PengeluaranController extends BaseController
                 $realisasi->dana_realisasi               = $input->dana_realisasi;
                 $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi),"Y-m-d");
                 $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                if($input->id_realisasi)
+                    $realisasi->updated_by               = $input->auth_data->pengguna->id_pengguna;
                 $realisasi->save();
 
                 DB::commit();
@@ -360,5 +384,46 @@ class PengeluaranController extends BaseController
                 ]);
             }
         }
+    }
+
+    public function editPengeluaran(Request $request, $id){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $pengeluaran = Realisasi::findOrFail($id);
+        $tahun_akademik_semester = Semester::find($pengeluaran->id_semester_realisasi)->thn_akademik_semester;
+        $rapb = Rapb::find($pengeluaran->id_rapb);
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        $data_subkategori = SubkategoriRapb::whereHas('kategori', function($q){
+            $q->where('tipe_kategori_rapb', 2);
+        })->get();
+
+        return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data', 'pengeluaran', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'rapb'));
+    }
+    
+    public function deletePengeluaran(Request $request, $id){
+        $input = (object) $request->input();
+
+        $pengeluaran = Realisasi::find($id);
+        $pengeluaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+        $pengeluaran->save();
+
+        $pengeluaran->delete();
+
+        return [
+            'status' => 203,
+            'message' => "Berhasil dihapus"
+        ];
+    }
+
+    public function printKwitansiPengeluaran(Request $request, $id){
+        $auth_data = $request->auth_data;
+
+        $pengeluaran = Realisasi::find($id);
+        // dd($pengeluaran);
+        // dd($auth_data);
+        return view('keuangan/sim/pengeluaran/print-kwitansi-pengeluaran', compact('auth_data', 'pengeluaran')); 
     }
 }

@@ -103,9 +103,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-siswa/view-detail-tagihan-siswa/{id_tagihan}/{nis_nama_siswa_asli}', 'Keuangan\Utility\PembayaranSiswaController@viewDetailTagihanPembayaranSiswa');
 
             Route::get('pembayaran-siswa/print-pembayaran/{id_pengguna}/{tgl_pembayaran}', 'Keuangan\Utility\PembayaranSiswaController@printPembayaranSiswa');
+            Route::get('pembayaran-siswa/print-belum-terbayar/{id_pengguna}', 'Keuangan\Utility\PembayaranSiswaController@printBelumTerbayarPembayaranSiswa');
 
             Route::post('action-tagihan-siswa/delete/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionDeleteTagihanSiswa');
             Route::post('action-pembayaran-siswa/{mode}/{id}', 'Keuangan\Utility\PembayaranSiswaController@actionPembayaranSiswa');
+            Route::post('action-pembayaran-siswa-massal', 'Keuangan\Utility\PembayaranSiswaController@actionPembayaranSiswaMassal');
 
             //MENU Pembayaran By Kelas
             // url: /keuangan/utility/pembayaran-by-kelas
@@ -308,14 +310,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('input', 'Keuangan\SIM\PengeluaranController@viewMenuInput');
                 Route::post('input/save', 'Keuangan\SIM\PengeluaranController@actionSaveInputPengeluaran');
+                Route::get('edit/{id}', 'Keuangan\SIM\PengeluaranController@editPengeluaran');
+                Route::post('delete/{id}', 'Keuangan\SIM\PengeluaranController@deletePengeluaran');
+
+                Route::get('tampilkan', 'Keuangan\SIM\PengeluaranController@viewMenuTampilkan');
+                Route::post('tampilkan/datatables', 'Keuangan\SIM\PengeluaranController@datatablesMenuTampilkan');
+
+                Route::get('print/{id}', 'Keuangan\SIM\PengeluaranController@printKwitansiPengeluaran');
+
+                Route::get('laporan', 'Keuangan\SIM\PengeluaranController@viewLaporanPengeluaran');
+                Route::get('laporan/datatables', 'Keuangan\SIM\PengeluaranController@datatablesLaporanPengeluaran');
 
                 Route::get('target', 'Keuangan\SIM\PengeluaranController@viewMenuTarget');
                 Route::post('target/datatables', 'Keuangan\SIM\PengeluaranController@datatablesMenuTarget');
                 Route::get('target/edit/{tahun}/{id}', 'Keuangan\SIM\PengeluaranController@viewMenuEditTarget');
                 Route::post('target/save', 'Keuangan\SIM\PengeluaranController@actionSaveEditTarget');
-
-                Route::get('tampilkan', 'Keuangan\SIM\PengeluaranController@viewMenuTampilkan');
-                Route::post('tampilkan/datatables', 'Keuangan\SIM\PengeluaranController@datatablesMenuTampilkan');
             });
 
             // MENU PEMBAYARAN ONLINE
