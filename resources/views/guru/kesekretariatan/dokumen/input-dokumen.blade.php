@@ -1,10 +1,10 @@
 <div class="container-fluid">
 @if(empty($dokumen->id_arsip_dokumen)) 
-    <form id="form-validation" method="POST"
-        action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-upload-dokumen/add/0')}}">
+    <form id="form-upload" method="POST"
+        action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-upload-dokumen/add/0')}}" enctype="multipart/form-data">
 @else 
-    <form id="form-validation" method="POST"
-        action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-upload-dokumen/edit/'.$dokumen->id_arsip_dokumen)}}">
+    <form id="form-upload" method="POST"
+        action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-upload-dokumen/edit/'.$dokumen->id_arsip_dokumen)}}" enctype="multipart/form-data">
 @endif
         {{csrf_field()}}
         <div class="row clearfix">
@@ -141,6 +141,39 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Dokumen
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>
+                                    <input type="file" name="file" />
+                                </label>
+                            </div>
+                        </div>
+                        @if($arsip_dokumen_file != null)
+                            @foreach($arsip_dokumen_file as $file)
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <li>
+                                        <a href="{{ Storage::disk('spaces')->url($file->nm_arsip_dokumen_file) }}" target="_blank">
+                                        @if (in_array(pathinfo($file->nm_arsip_dokumen_file, PATHINFO_EXTENSION), ['jpg','jpeg','bmp','png']))
+                                        <img style="height:7rem; width:auto;" src="{{ Storage::disk('spaces')->url($file->nm_arsip_dokumen_file) }}">
+                                        @else
+                                        {{ str_limit($file->nm_arsip_dokumen_file, $limit = 50, $end = '...').pathinfo($file->nm_arsip_dokumen_file, PATHINFO_EXTENSION) }}
+                                        @endif
+                                        </a>
+                                        </li>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <em>No files to display.</em>
+                                </div>
+                            </div>
+                        @endif
+                        <h2 class="card-inside-title">
                             Status Akses Dokumen
                         </h2>
                         <div class="row clearfix">
@@ -239,7 +272,6 @@
         </div>
     </form>
 </div>
-@include('scriptjs')
 <script type="text/javascript">
      $(function(){    
         $('.datepicker').bootstrapMaterialDatePicker({
@@ -252,6 +284,59 @@
     });
 </script>
 <script>
+$('#form-upload').submit(function(e) {
+        e.preventDefault();
+    }).validate({
+        highlight: function (input) {
+            $(input).addClass('is-danger');
+        },
+        unhighlight: function (input) {
+            $(input).removeClass('is-danger');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+
+            var formData = new FormData(form);
+            
+            setTimeout(() => {
+                $.ajax({
+                    url: form.action,
+                    type: form.method,
+                    enctype: 'multipart/form-data',
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        }else if(response.status == 204){
+                            loadURI(response.path);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled');
+                    }
+                });
+                
+            }, 1000);
+        }
+    });
+
 function subKategori(){
     $.ajax({
         url: '{{url(Request::segment(1).'/'.Request::segment(2).'/sub-kategori')}}',

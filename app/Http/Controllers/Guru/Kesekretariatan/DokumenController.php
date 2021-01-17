@@ -42,7 +42,7 @@ class DokumenController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $dokumen = ArsipDokumen::select('arsip_dokumen.id_arsip_dokumen','arsip_dokumen.kode_katalog','arsip_dokumen.nm_arsip_dokumen','arsip_dokumen.nomor_arsip_dokumen','arsip_dokumen.jumlah_halaman','arsip_dokumen.tgl_penyusunan','arsip_dokumen.tgl_penyusunan','unit_kerja.nm_unit_kerja','arsip_loker.nm_arsip_loker','arsip_pemilik.nm_arsip_pemilik','arsip_subkategori.nm_arsip_subkategori','arsip_kategori.nm_arsip_kategori','arsip_dokumen.id_arsip_dokumen')
+        $dokumen = ArsipDokumen::select('arsip_dokumen.id_arsip_dokumen','arsip_dokumen.kode_katalog','arsip_dokumen.nm_arsip_dokumen','arsip_dokumen.nomor_arsip_dokumen','arsip_dokumen.jumlah_halaman','arsip_dokumen.tgl_penyusunan','arsip_dokumen.tgl_penyusunan','unit_kerja.nm_unit_kerja', 'arsip_dokumen.contact_person', 'arsip_loker.nm_arsip_loker','arsip_pemilik.nm_arsip_pemilik','arsip_subkategori.nm_arsip_subkategori','arsip_kategori.nm_arsip_kategori','arsip_dokumen.id_arsip_dokumen')
                                     ->leftJoin('unit_kerja','unit_kerja.id_unit_kerja','=','arsip_dokumen.id_unit_kerja')
                                     ->join('arsip_loker','arsip_loker.id_arsip_loker','=','arsip_dokumen.id_arsip_loker')
                                     ->join('arsip_pemilik','arsip_pemilik.id_arsip_pemilik','=','arsip_pemilik.id_arsip_pemilik')
@@ -181,6 +181,8 @@ class DokumenController extends BaseController
                                 ->where('arsip_dokumen_akses.id_arsip_dokumen', '=', $dokumen->id_arsip_dokumen)
                                 ->get();
 
+            $arsip_dokumen_file = ArsipDokumenFile::where('id_arsip_dokumen','=',$id)->get();
+
             $title          = "EDIT DATA DOKUMEN";
             
         } else {
@@ -189,11 +191,12 @@ class DokumenController extends BaseController
             $dokumen        = null;
             $sub_dokumen    = null;
             $dokumen_akses  = null;
+            $arsip_dokumen_file = null;
 
             $title          = "TAMBAH DATA DOKUMEN";
         }
 
-        return view('guru/kesekretariatan/dokumen/input-dokumen',compact('auth_data','dokumen_akses','title','kategori','unit','loker','pemilik','subkategori','dokumen'));
+        return view('guru/kesekretariatan/dokumen/input-dokumen',compact('auth_data','dokumen_akses','title','kategori','unit','loker','pemilik','subkategori','dokumen', 'arsip_dokumen_file'));
     }
 
     public function ajaxGetSubkategori(Request $request) {
@@ -224,8 +227,8 @@ class DokumenController extends BaseController
             'jumlah_halaman'        => 'required',
             'tgl_penyusunan'        => 'required',
             'contact_person'        => 'required',
-            'is_publik'             => 'required' 
-
+            'is_publik'             => 'required',
+            'file'                  => 'file|nullable|max:2048|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
         ]);
 
         if($validator->fails() && $mode != 'delete' && $mode != 'upload' && $mode != 'delete-file') {
@@ -279,34 +282,54 @@ class DokumenController extends BaseController
                         else{
 
                             if(isset($input->status_pengguna)){
-                            foreach($input->status_pengguna as $status_pengguna) {
-                            $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                            $arsip_dokumen_akses->status_join_table         = $status_pengguna;
-                            $arsip_dokumen_akses->id_unit_kerja             = null;
-                            $arsip_dokumen_akses->created_at                = $now;
-                            $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                            $arsip_dokumen_akses->save();
-                            }
+                                foreach($input->status_pengguna as $status_pengguna) {
+                                    $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                                    $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                    $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
+                                    $arsip_dokumen_akses->status_join_table         = $status_pengguna;
+                                    $arsip_dokumen_akses->id_unit_kerja             = null;
+                                    $arsip_dokumen_akses->created_at                = $now;
+                                    $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                                    $arsip_dokumen_akses->save();
+                                }
                             }
                         
                             if(isset($input->unit_kerja)){
-                            foreach($input->unit_kerja as $unit_kerja) {
-                                $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                                $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                                $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                                $arsip_dokumen_akses->status_join_table         = null;
-                                $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
-                                $arsip_dokumen_akses->created_at                = $now;
-                                $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                                $arsip_dokumen_akses->save();
-                            }
+                                foreach($input->unit_kerja as $unit_kerja) {
+                                    $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                                    $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                    $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
+                                    $arsip_dokumen_akses->status_join_table         = null;
+                                    $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
+                                    $arsip_dokumen_akses->created_at                = $now;
+                                    $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                                    $arsip_dokumen_akses->save();
+                                }
 
                             }
 
                         }
 
+                    }
+
+                    // add uploaded file
+                    if(!empty(request()->file)){
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+    
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/sekretariat/'.$arsip->id_arsip_dokumen, request()->file, 'public');
+    
+                        // update $arsip
+                        $arsip->is_upload               = 1;
+                        $arsip->updated_at              = $now;
+                        $arsip->updated_by              = $input->auth_data->pengguna->id_pengguna;
+                        $arsip->save();
+    
+                        $arsipFile                             = new ArsipDokumenFile;
+                        $arsipFile->id_arsip_dokumen_file      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $arsipFile->id_arsip_dokumen           = $arsip->id_arsip_dokumen;
+                        $arsipFile->nm_arsip_dokumen_file      = $file;
+                        $arsipFile->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                        $arsipFile->save();
                     }
 
                     DB::commit();
@@ -401,7 +424,13 @@ class DokumenController extends BaseController
                 $validator = Validator::make($request->all(), [
                         'file' => 'file|required|max:2048|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
                     ]);
-
+                
+                if($validator->fails()){
+                    return [
+                        'status' => 300, // FAILED
+                        'message' => "Harap masukkan file"
+                    ];
+                }
 
                 $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
