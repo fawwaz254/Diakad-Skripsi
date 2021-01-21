@@ -142,6 +142,7 @@
     var delete_pembayaran_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/delete';
     var lunas_url                   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
     var mass_payment_url            = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa-massal';
+    var print_riwayat_pembayaran_url = base_url + '/' + role_url + '/' + modul_url + '/' + "pembayaran-siswa/print-pembayaran";
 
 
     // datatable jadwal UTS
@@ -220,7 +221,9 @@
                 render: function(data){
                     return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" id="delete-khusus-button" onclick="deleteActionKhusus(\''+ delete_pembayaran_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">close</i>'+
-                    '</button>';
+                    '</button>' +
+                    '<a class="btn btn-info waves-effect" target="_blank" href="' + print_riwayat_pembayaran_url + '/' + data.id_pengguna + '/' + data.tgl_pembayaran 
+                    + '"><i class="material-icons">print</i></a>';
                 }
             }
         ]

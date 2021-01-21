@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Keuangan\SIM;
 
+use App\Libraries\Keuangan\LibDataKeuangan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -422,8 +423,10 @@ class PengeluaranController extends BaseController
         $auth_data = $request->auth_data;
 
         $pengeluaran = Realisasi::find($id);
+
+        $terbilang = LibDataKeuangan::getTerbilang($pengeluaran->dana_realisasi);
         // dd($pengeluaran);
         // dd($auth_data);
-        return view('keuangan/sim/pengeluaran/print-kwitansi-pengeluaran', compact('auth_data', 'pengeluaran')); 
+        return view('keuangan/sim/pengeluaran/print-kwitansi-pengeluaran', compact('auth_data', 'pengeluaran', 'terbilang')); 
     }
 }

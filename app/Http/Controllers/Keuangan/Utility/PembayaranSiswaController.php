@@ -20,6 +20,7 @@ use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
 
 use Auth;
+use DateTime;
 use DB;
 use Session;
 use Validator;
@@ -313,9 +314,11 @@ class PembayaranSiswaController extends BaseController
                         return "-";
                     }
                 })
-                ->addColumn('action', function ($item) {
+                ->addColumn('action', function ($item) use ($id_pengguna){
                     $data = array(
-                        'id' => $item->id_pembayaran_biaya
+                        'id' => $item->id_pembayaran_biaya,
+                        'id_pengguna' => $id_pengguna,
+                        'tgl_pembayaran' => date_format(new DateTime($item->tgl_pembayaran), "Y-m-d")
                     );
                     return $data;
                 })

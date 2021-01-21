@@ -62,7 +62,7 @@
                             <td style="width: 5px;">:</td>
                             <td>{{ $auth_data->pengguna->nm_pengguna }}</td>
                         </tr>
-                        <tr>
+                        <tr style="vertical-align: top;">
                             <th>Untuk Pembayaran</th>
                             <td style="width: 5px;">:</td>
                             <td>{{ $pengeluaran->nm_realisasi }}</td>
@@ -75,7 +75,7 @@
                     </table>
                 </td>
                 <td style="width: 70%; vertical-align: top;">
-                    <table border="0" cellspacing="0" cellpadding="5" style="width: 100%;" class="text-left">
+                    <table border="0" cellspacing="0" cellpadding="5" style="width: 100%; vertical-align: top;" class="text-left">
                         <tr>
                             <th style="width: 25%;">No.</th>
                             <td style="width: 5px;">:</td>
@@ -85,7 +85,7 @@
                             <td>:</td>
                             <td>{{ $auth_data->pengguna->nm_pengguna }}</td>
                         </tr>
-                        <tr>
+                        <tr style="vertical-align: top;">
                             <th>Untuk Pembayaran</th>
                             <td>:</td>
                             <td>{{ $pengeluaran->nm_realisasi }}</td>
@@ -94,6 +94,11 @@
                             <th>Jumlah</th>
                             <td>:</td>
                             <td>{{ "Rp " . number_format($pengeluaran->dana_realisasi) }}</td>
+                        </tr>
+                        <tr style="vertical-align: top;">
+                            <th>Terbilang</th>
+                            <td>:</td>
+                            <td><i>{{ ucfirst(trim($terbilang)) }} rupiah</i></td>
                         </tr>
                     </table>
                     <div class="ttd">
