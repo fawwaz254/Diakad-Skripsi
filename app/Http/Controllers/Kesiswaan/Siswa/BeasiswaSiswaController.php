@@ -30,7 +30,7 @@ class BeasiswaSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('kesiswaan/siswa/beasiswa-siswa/view-beasiswa-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
+        return view('kesiswaan/siswa/beasiswa-siswa/view-beasiswa-siswa', compact('auth_data', 'id_kelas'));
     }
 
     public function addBeasiswaSiswa(Request $request)

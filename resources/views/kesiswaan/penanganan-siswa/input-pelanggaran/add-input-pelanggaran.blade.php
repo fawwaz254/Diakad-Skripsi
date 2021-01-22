@@ -142,9 +142,13 @@ $(function(){
 
 });
 
+var modul_url               = 'penanganan-siswa';
+var change_kelas_url        = base_url + '/' + role_url + '/' + modul_url + '/' + 'siswa-bykelas';
+var change_kategori_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'subkategori-bykategori';
+
 function changeKelas(el){
     $.ajax({
-        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/siswa-bykelas')}}',
+        url: change_kelas_url,
         type: 'POST',
         data: {
             kelas: $('select[name=kelas]').val()
@@ -162,7 +166,7 @@ function changeKelas(el){
 
 function changeKategori(el){
     $.ajax({
-        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/subkategori-bykategori')}}',
+        url: change_kategori_url,
         type: 'POST',
         data: {
             kategori: $('select[name=kategori]').val()
