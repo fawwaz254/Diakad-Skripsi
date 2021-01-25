@@ -114,7 +114,7 @@ class PenerimaanController extends BaseController {
                 })
                 ->addColumn('pengumuman', function($item){
                     // mengambil waktu sekarang
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
                     if(date_format(date_create($item->tgl_pengumuman),"Y-m-d H:i:s") <= $now) {
                         return "Publish";

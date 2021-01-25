@@ -18,9 +18,13 @@
                                 <select class="form-control show-tick" name="id_kurikulum">
                                     @foreach($kurikulum as $data)
                                         @if($data->id_kurikulum == $id_kurikulum)
-                                            <option value="{{$data->id_kurikulum}}" selected>{{$data->nm_kurikulum}}</option>
+                                            <option value="{{$data->id_kurikulum}}" selected>
+                                                {{ $data->tahun_kurikulum . ' - '. $data->nm_kurikulum . ' - ' . $data->nomor_sk_kurikulum }}
+                                            </option>
                                         @else
-                                            <option value="{{$data->id_kurikulum}}">{{$data->nm_kurikulum}}</option>
+                                            <option value="{{$data->id_kurikulum}}">
+                                                {{ $data->tahun_kurikulum . ' - '. $data->nm_kurikulum . ' - ' . $data->nomor_sk_kurikulum }}
+                                            </option>
                                         @endif
                                     @endforeach
                                 </select>
@@ -40,9 +44,8 @@
             </div>
         </div>
     </div>
-</div>
  @if($id_kurikulum != null)
-<div class="container-fluid">
+<!-- <div class="container-fluid"> -->
     <div class="row-clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -67,8 +70,9 @@
             </div>
         </div>
     </div>
-</div>
+<!-- </div> -->
 @endif
+</div>
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
