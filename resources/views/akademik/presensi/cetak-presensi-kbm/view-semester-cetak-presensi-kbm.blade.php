@@ -35,7 +35,7 @@
 
     var modul_url       = 'presensi';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-presensi-kbm/datatables/' + id_semester;
-    var print_url        = role_url + '/' + modul_url + '/' + 'cetak-presensi-kbm/print';
+    var print_url        = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-presensi-kbm/print';
     
     var primary_table = $('#primary_table').DataTable({
         processing: true,

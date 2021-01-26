@@ -135,7 +135,7 @@ class SettingPesertaEkskulController extends BaseController
                 ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
                 ->where('peserta_ekskul_set.id_peserta_ekskul_set', '=', $id_peserta_ekskul_set)->first();
 
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/edit-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'data_peserta'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/edit-setting-peserta-ekskul', compact('auth_data', 'data_peserta'));
     }
 
     public function setSettingPesertaEkskul(Request $request, $id_ekskul)

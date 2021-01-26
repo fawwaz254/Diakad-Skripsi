@@ -95,9 +95,12 @@
 </div>
 @include('scriptjs')
 <script>
+var modul_url               = 'penanganan-siswa';
+var change_kelas_url        = base_url + '/' + role_url + '/' + modul_url + '/' + 'siswa-bykelas';
+
 function changeKelas(el){
     $.ajax({
-        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/siswa-bykelas')}}',
+        url: change_kelas_url,
         type: 'POST',
         data: {
             kelas: $('select[name=kelas]').val()
