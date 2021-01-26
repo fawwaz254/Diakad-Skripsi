@@ -96,7 +96,7 @@
             { data: null, searchable: false, orderable: false },
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data, type, full, meta){
-                    return '<input id="checkbox-' + data.id_pengguna + '" type="checkbox" name="id_pengguna[]" class="filled-in" value="' + data.id_pengguna + '">'+
+                    return '<input id="checkbox-' + data.id_pengguna + '" type="checkbox" name="id_pengguna" class="filled-in" value="' + data.id_pengguna + '">'+
                     '<label for="checkbox-' + data.id_pengguna + '"></label>'; 
                 }
             },
