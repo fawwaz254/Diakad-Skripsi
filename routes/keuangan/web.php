@@ -316,7 +316,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('tampilkan', 'Keuangan\SIM\PengeluaranController@viewMenuTampilkan');
                 Route::post('tampilkan/datatables', 'Keuangan\SIM\PengeluaranController@datatablesMenuTampilkan');
 
-                Route::get('print/{id}', 'Keuangan\SIM\PengeluaranController@printKwitansiPengeluaran');
+                Route::get('print/{id}', 'Keuangan\SIM\PengeluaranController@printKuitansiPengeluaran');
 
                 Route::get('laporan', 'Keuangan\SIM\PengeluaranController@viewLaporanPengeluaran');
                 Route::get('laporan/datatables', 'Keuangan\SIM\PengeluaranController@datatablesLaporanPengeluaran');
@@ -347,12 +347,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::group(array('prefix' => 'pembayaran-siswa'), function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@viewPembayaranSiswa');
                 Route::get('datatables', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@datatablesPembayaranSiswa');
-
+                Route::get('print-simple/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@printSimplePembayaranSiswa');
+                Route::get('print-detail/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@printDetailPembayaranSiswa');
+                
                 Route::group(array('prefix' => 'bulanan'), function () {
                       Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@viewPembayaranSiswaBulanan');
                       Route::get('/dataPembayaranSiswaBulanan', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@dataPembayaranSiswaBulanan');
                 });
-
+                
                 Route::group(array('prefix' => 'tahunan'), function () {
                     Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaTahunanController@viewPembayaranSiswaTahunan');
                     Route::get('data/{year}', 'Keuangan\LaporanKeuangan\PembayaranSiswaTahunanController@dataPembayaranSiswaTahunan');
@@ -362,6 +364,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::group(array('prefix' => 'tagihan-siswa'), function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\TagihanSiswaController@viewTagihanSiswa');
                 Route::post('datatables', 'Keuangan\LaporanKeuangan\TagihanSiswaController@datatablesTagihanSiswa');
+                Route::get('print/{tahun}/{id_kelas}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@printTagihanSiswa');
             });
 
         });

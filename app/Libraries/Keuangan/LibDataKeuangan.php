@@ -931,11 +931,11 @@ class LibDataKeuangan
         else if ($number < 100)
             return self::getTerbilang($number / 10) . " puluh" . self::getTerbilang($number % 10);
         else if ($number < 200)
-            return "seratus" . self::getTerbilang($number - 100);
+            return " seratus" . self::getTerbilang($number - 100);
         else if ($number < 1000)
             return self::getTerbilang($number / 100) . " ratus" . self::getTerbilang($number % 100);
         else if ($number < 2000)
-            return "seribu" . self::getTerbilang($number - 1000);
+            return " seribu" . self::getTerbilang($number - 1000);
         else if ($number < 1000000)
             return self::getTerbilang($number / 1000) . " ribu" . self::getTerbilang($number % 1000);
         else if ($number < 1000000000)

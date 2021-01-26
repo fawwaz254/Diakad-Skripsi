@@ -35,6 +35,12 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
                         </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-orange waves-effect" onclick="printSimpleAction()"><i class="material-icons">print</i><span>Print Data Pembayaran (simple)</span></button>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-red waves-effect" onclick="printDetailAction()"><i class="material-icons">print</i><span>Print Data Pembayaran (detail)</span></button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,6 +96,8 @@
 <script>
     var modul_url               = 'laporan-keuangan';
     var datatable_url_belum     = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables';
+    var print_simple_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/print-simple';
+    var print_detail_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/print-detail';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -138,5 +146,35 @@
 
     function filterAction(){
         primary_table.ajax.reload(null, false);
+    }
+
+    function printSimpleAction(){
+        $('button').attr('disabled', 'disabled');
+        var start_date = $('input[name=start_date]').val();
+        var end_date = $('input[name=end_date]').val();
+        console.log(start_date, end_date);
+        
+        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
+            vex.dialog.alert("Tanggal Mulai atau Tanggal Selesai yang dipilih tidak valid");
+            $('button').removeAttr('disabled', 'disabled');
+        } else {
+            $('button').removeAttr('disabled', 'disabled');
+            window.open(print_simple_url + '/' + start_date + '/' + end_date, "_blank");
+        }
+    }
+    
+    function printDetailAction(){
+        $('button').attr('disabled', 'disabled');
+        var start_date = $('input[name=start_date]').val();
+        var end_date = $('input[name=end_date]').val();
+        console.log(start_date, end_date);
+        
+        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
+            vex.dialog.alert("Tanggal Mulai atau Tanggal Selesai yang dipilih tidak valid");
+            $('button').removeAttr('disabled', 'disabled');
+        } else {
+            $('button').removeAttr('disabled', 'disabled');
+            window.open(print_detail_url + '/' + start_date + '/' + end_date, "_blank");
+        }
     }
 </script>

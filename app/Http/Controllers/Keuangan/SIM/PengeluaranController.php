@@ -419,14 +419,14 @@ class PengeluaranController extends BaseController
         ];
     }
 
-    public function printKwitansiPengeluaran(Request $request, $id){
+    public function printKuitansiPengeluaran(Request $request, $id){
         $auth_data = $request->auth_data;
 
         $pengeluaran = Realisasi::find($id);
 
         $terbilang = LibDataKeuangan::getTerbilang($pengeluaran->dana_realisasi);
-        // dd($pengeluaran);
-        // dd($auth_data);
-        return view('keuangan/sim/pengeluaran/print-kwitansi-pengeluaran', compact('auth_data', 'pengeluaran', 'terbilang')); 
+        // dd($terbilang);
+        
+        return view('keuangan/sim/pengeluaran/print-kuitansi-pengeluaran', compact('auth_data', 'pengeluaran', 'terbilang')); 
     }
 }
