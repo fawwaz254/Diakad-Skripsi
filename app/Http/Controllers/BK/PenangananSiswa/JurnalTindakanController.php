@@ -41,18 +41,7 @@ class JurnalTindakanController extends BaseController
         return view('bk/penanganan-siswa/jurnal-tindakan/view-jurnal-tindakan', compact('auth_data','semester_aktif','data_semester','data_kelas'));
     }
 
-    public function ajaxGetSubkategori(Request $request) {
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        // ambil data all siswa
-        $subkategori = ArsipSubkategori::where('id_arsip_kategori','=',$input->kategori)->get();
-
-        return $subkategori;
-    }
-
-    public function actionViewJurnalTindakan(Request $request)
+    public function actionPostJurnalTindakan(Request $request)
     {
         # code...
         $input      = (object) $request->input();
@@ -72,7 +61,7 @@ class JurnalTindakanController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'bimbingan-konseling/penanganan-siswa/jurnal-tindakan/print/'.$input->id_semester.'/'.$input->id_kelas.'/'.$input->id_siswa
+                'path' => 'penanganan-siswa/jurnal-tindakan/print/'.$input->id_semester.'/'.$input->id_kelas.'/'.$input->id_siswa
             ];
         }
     }
@@ -83,10 +72,19 @@ class JurnalTindakanController extends BaseController
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
+        $sekolah_data = $auth_data->sekolah_data;
+
         $siswa      = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, $id_siswa);
 
+        $semester   = Semester::find($id_semester);
 
-        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan');
+        $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $siswa->id_pengguna);
+
+        // $list_data = LibSiswa::fetchPelanggaranKBM($auth_data, $siswa->id_pengguna);
+
+        // dd($list_data);
+
+        return view('bk/penanganan-siswa/jurnal-tindakan/print-jurnal-tindakan', compact('siswa', 'sekolah_data', 'semester', 'list_data'));
     }
 
 }

@@ -12,6 +12,7 @@ use App\Models\Sekolah;
 use App\Models\WaliMurid;
 
 use App\Models\Role;
+use App\Models\Pengguna;
 use App\Models\Siswa;
 use Yajra\Datatables\Datatables;
 
@@ -50,6 +51,8 @@ class SignInController extends BaseController
 
         if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true) && ! empty($id_sekolah)) {*/
 
+        // $pengguna = Pengguna::where('username', $input->username)->first();
+        // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
         if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true)) {
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();

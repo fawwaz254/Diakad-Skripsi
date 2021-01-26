@@ -29,34 +29,34 @@
 
 <body>
     <div class="page">
-        <h1 align="center">LAPORAN PRIBADI SISWA <br> SMP YPM 1 TAMAN</h1>
+        <h1 align="center">LAPORAN PRIBADI SISWA <br> {{strtoupper($sekolah_data->nm_sekolah)}}</h1>
         <table>
             <tr>
                 <td>Siswa</td>
                 <td>:</td>
-                <td>Fahri Riyandika Imam Arief Keenandra</td>
+                <td>{{$siswa->nm_pengguna}}</td>
                 <td width="300px"></td>
                 <td>Kelas</td>
                 <td>:</td>
-                <td>8 AA 9</td>
+                <td>{{$siswa->nm_kelas}}</td>
             </tr>
             <tr>
                 <td>Nomor Induk</td>
                 <td>:</td>
-                <td>0000000</td>
+                <td>{{$siswa->nis_siswa}}</td>
                 <td></td>
                 <td>Semester</td>
                 <td>:</td>
-                <td>Gasal</td>
+                <td>{{$semester->nm_semester}}</td>
             </tr>
             <tr>
                 <td>Jenis Kelamin</td>
                 <td>:</td>
-                <td>L</td>
+                <td>{{$siswa->jenis_kelamin}}</td>
                 <td></td>
                 <td>Tahun Pelajaran</td>
                 <td>:</td>
-                <td>2020/2021</td>
+                <td>{{$semester->tahun_ajaran}}</td>
             </tr>
         </table>
         <br>
@@ -74,57 +74,24 @@
                             <th>No.</th>
                             <th>Jenis Pelanggaran</th>
                             <th>Pelanggaran Tingkat</th>
+                            <th>Catatan Pelanggaran</th>
                             <th>Poin</th>
-                            <th>Frekuensi</th>
-                            <th>Jumlah</th>
                         </tr>
+                        @php
+                            $no = 1;
+                        @endphp
+                        @foreach($list_data as $data)
                         <tr>
-                            <td>1.</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td>{{$no++}}.</td>
+                            <td>{{$data->keterangan_subkategori_pelanggaran}}</td>
+                            <td>{{$data->nm_kategori_pelanggaran}}</td>
+                            <td>{{$data->catatan_pelanggaran}}</td>
+                            <td>{{$data->poin_subkategori_pelanggaran}}</td>
                         </tr>
+                        @endforeach
                         <tr>
-                            <td>2.</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>3.</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>4.</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>5.</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td colspan="5" align="center"><b>TOTAL</b></td>
-                            <td align="center"><b>0</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" align="center"><b>Kategori Pelanggaran</b></td>
-                            <td colspan="2" align="center"><b>Tidak Ada</b></td>
+                            <td colspan="4" align="center"><b>TOTAL</b></td>
+                            <td align="center"><b>{{$list_data->sum('poin_subkategori_pelanggaran')}}</b></td>
                         </tr>
                     </table>
                 </td>
@@ -142,9 +109,8 @@
             <tr>
                 <td></td>
                 <td>
-                    <fieldset>
-                        <p>1. Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam esse facere saepe quod officiis fugit sapiente nihil officia. Placeat qui temporibus corporis earum, porro a in non commodi veritatis animi.</p>
-                        <p>2. Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique qui doloribus accusantium nihil error quod aspernatur debitis cum tempora ea iusto ducimus, libero velit at maxime asperiores ut. Sit, minima?</p>
+                    <fieldset style="height: 90px;">
+                        <p></p>
                     </fieldset>
                 </td>
             </tr>
@@ -155,14 +121,14 @@
             <tr>
                 <td></td>
                 <td>
-                    <fieldset>
-                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aspernatur alias eaque doloribus, cupiditate harum maxime suscipit doloremque. Impedit, velit nam. Cumque nihil similique laborum saepe soluta dolorem maxime quod odio.</p>
+                    <fieldset style="height: 90px;">
+                        <p></p>
                     </fieldset>
                 </td>
             </tr>
         </table>
         <div class="ttd">
-            Sidoarjo, 15 Desember 2020 <br> Wali Kelas <br><br><br> Imam Arief
+            Sidoarjo, {{now('Asia/Jakarta')->format('d M Y')}}  <br> Wali Kelas <br><br><br> ....
         </div>
         <div class="clear"></div>
     </div>
