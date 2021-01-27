@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
+            <div class="card is-gap">
                 <div class="header">
                     <h2>
                         Setting Peserta Ekskul
@@ -41,9 +41,11 @@
                         </div>
                     </form>
                 </div>
+            </div>
 
                 @if($id_ekskul != null)
-                <div class="container-fluid">
+            <div class="card">
+                <div class="body">
                     <div class="block-header">
                         <h2>
                             <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#ekstrakurikuler/setting-peserta-ekskul/add/'.$id_ekskul)}}"><i class="material-icons">note_add</i><span>Tambah Peserta Ekskul</span></a>
@@ -51,24 +53,19 @@
                         </h2>
                     </div>
                     <div class="row clearfix">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="card">
-                                {{csrf_field()}}
-                                <div class="body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>NIS - Nama Siswa</th>
-                                                    <th>Kelas</th>
-                                                    <th>Status</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>
+                        <div class="body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>NIS - Nama Siswa</th>
+                                            <th>Kelas</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
                             </div>
                         </div>
                     </div>

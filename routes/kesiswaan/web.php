@@ -156,7 +156,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran/datatables-riwayat-bayar/{id_pengguna}', 'Kesiswaan\Siswa\PembayaranController@datatablesRiwayatBayarSiswa');
 
             //MENU SISWA AKTIF
-            // Route::get('siswa-aktif', 'Pendidikan\Siswa\SiswaAktifController@viewSiswaAktif');
+            Route::get('siswa-aktif', 'Pendidikan\Siswa\SiswaAktifController@viewSiswaAktif');
 
             //MENU INSERT-UPDATE SISWA
             Route::get('insert-update-siswa', 'Pendidikan\Siswa\InsertUpdateSiswaController@viewInsertUpdateSiswa');

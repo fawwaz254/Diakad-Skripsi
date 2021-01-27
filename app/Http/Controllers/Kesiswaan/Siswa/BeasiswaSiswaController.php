@@ -183,7 +183,7 @@ class BeasiswaSiswaController extends BaseController
                 $beasiswa->deleted_by     = $input->auth_data->pengguna->id_pengguna;
                 $beasiswa->save();
 
-                $prestasi->delete();
+                $beasiswa->delete();
 
                 return [
                         'status' => 203, // SUCCESS AND LOAD TABLE

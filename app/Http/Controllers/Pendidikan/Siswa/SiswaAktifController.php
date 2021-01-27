@@ -26,8 +26,9 @@ class SiswaAktifController extends BaseController
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
-		$jurusan = Jurusan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
+		$data_tingkat = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'asc')->get();
+		$data_jurusan = Jurusan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
 		
-		return view('pendidikan/siswa/siswa-aktif/view-siswa-aktif',compact('auth_data','jurusan'));
+		return view('pendidikan/siswa/siswa-aktif/view-siswa-aktif',compact('auth_data','data_jurusan', 'data_tingkat'));
 	}
 }
