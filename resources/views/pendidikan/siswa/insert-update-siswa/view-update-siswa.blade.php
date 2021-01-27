@@ -132,6 +132,23 @@
                             </div>
                         </div>
                         <br>
+
+                        <!-- Bahasa sehari hari yang digunakan -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Bahasa <br>
+                                    <small>Bahasa sehari-hari yang digunakan</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" value="{{$siswa->bahasa_sehari_hari}}" name="bahasa_sehari_hari" aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Bahasa sehari hari yang digunakan -->
+
+                        <br>
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -289,8 +306,8 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="alamat_provinsi" id="alamat_provinsi">
                                     <option value="{{ isset($siswa->alamat_provinsi) ? $siswa->alamat_provinsi : '' }}" selected="">{{ isset($siswa->nm_kota) ? $siswa->nm_kota : '' }}</option>
-                                        @foreach($provinsi as $provinsi)
-                                            <option value="{{$provinsi->id_provinsi}}">{{$provinsi->nm_provinsi}}</option>
+                                        @foreach($provinsi as $r)
+                                            <option value="{{$r->id_provinsi}}">{{$r->nm_provinsi}}</option>
                                         @endforeach
                                 </select>
                             </div>
@@ -317,6 +334,23 @@
                                 <input type="text" class="form-control" name="alamat_longitude" aria-required="true" aria-invalid="true" value="{{$siswa->alamat_longitude}}">
                             </div>
                         </div>
+                        <br>
+                        <!-- Status Orang Tua -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Status Orang Tua <br>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                               <select class="form-control show-tick" name="status_ortu" id="status_ortu">
+                                    <option value="1" {{$siswa->status_ortu == 1 ? 'selected' : ''}}>Masih Hidup</option>
+                                    <option value="2" {{$siswa->status_ortu == 2 ? 'selected' : ''}}>Wafat</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Status Orang Tua -->
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -592,6 +626,125 @@
                             </div>
                         </div>
                         <br>
+
+                        <!-- Alamat Ayah -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Alamat Jalan
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_jalan_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_jalan_ayah}}">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   RT <br>
+                                   <small>Nomor RT tempat tinggal ayah saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_rt_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->almat_rt_ayah}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   RW <br>
+                                   <small>Nomor RW tempat tinggal ayah saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_rw_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_rw_ayah}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Nama Dusun <br>
+                                   <small>Nama Dusun tempat tinggal ayah saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_dusun_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_dusun_ayah}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Nama Kelurahan/Desa <br>
+                                   <small>Nama Kelurahan atau desa tempat tinggal ayah saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_kelurahan_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_kelurahan_ayah}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Kecamatan <br>
+                                   <small>Nama kecamatan tempat tinggal ayah saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_kecamatan_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_kecamatan_ayah}}">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Kode Pos <br>
+                                   <small>Kode Pos tempat tinggal ayah saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_kodepos_ayah" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_kodepos_ayah}}">
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Alamat Kota
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <select class="form-control show-tick" name="alamat_kota_ayah" id="alamat_kota_ayah">
+                                    @foreach($kotaTinggal as $kota)
+                                        <option value="{{$kota->id_kota}}" {{$siswa->alamat_kota_ayah == $kota->id_kota ? 'selected' : ''}}>{{$kota->nm_kota}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Alamat Provinsi
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <select class="form-control show-tick" name="alamat_provinsi_ayah" id="alamat_provinsi_ayah">
+                                        @foreach($provinsi as $r)
+                                            <option value="{{$r->id_provinsi}}" {{$siswa->alamat_provinsi_ayah == $r->id_provinsi ? 'selected' : ''}}>{{$r->nm_provinsi}}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        
+                        <!-- Alamat Ayah -->
+
+                        <br>
                         <div class="demo-color-box bg-success">
                                 DATA IBU KANDUNG
                         </div>
@@ -689,6 +842,124 @@
                             </div>
                         </div>
                         <br>
+
+                        <!-- Alamat Ibu -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Alamat Jalan
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_jalan_ibu" aria-required="true" aria-invalid="true"  value="{{$siswa->alamat_jalan_ibu}}">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   RT <br>
+                                   <small>Nomor RT tempat tinggal ibu saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_rt_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->almat_rt_ibu}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   RW <br>
+                                   <small>Nomor RW tempat tinggal ibu saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_rw_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->alamat_rw_ibu}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Nama Dusun <br>
+                                   <small>Nama Dusun tempat tinggal ibu saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_dusun_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->alamat_dusun_ibu}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Nama Kelurahan/Desa <br>
+                                   <small>Nama Kelurahan atau desa tempat tinggal ibu saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_kelurahan_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->alamat_kelurahan_ibu}}">
+                            </div>
+                        </div>
+                         <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Kecamatan <br>
+                                   <small>Nama kecamatan tempat tinggal ibu saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_kecamatan_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->alamat_kecamatan_ibu}}">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Kode Pos <br>
+                                   <small>Kode Pos tempat tinggal ibu saat ini</small>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="text" class="form-control" name="alamat_kodepos_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->alamat_kodepos_ibu}}">
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Alamat Kota
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <select class="form-control show-tick" name="alamat_kota_ibu" id="alamat_kota_ibu">
+                                    @foreach($kotaTinggal as $kota)
+                                        <option value="{{$kota->id_kota}}" {{$siswa->alamat_kota_ibu == $kota->id_kota ? 'selected' : ''}}>{{$kota->nm_kota}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                    Alamat Provinsi
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <select class="form-control show-tick" name="alamat_provinsi_ibu" id="alamat_provinsi_ibu">
+                                        @foreach($provinsi as $r)
+                                            <option value="{{$r->id_provinsi}}"  {{$siswa->alamat_provinsi_ibu == $r->id_provinsi ? 'selected' : ''}}>{{$r->nm_provinsi}}</option>
+                                        @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        
+                        <!-- Alamat Ibu -->
+
                         <div class="demo-color-box bg-success">
                                 DATA WALI
                         </div>
