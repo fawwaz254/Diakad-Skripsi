@@ -115,7 +115,7 @@ class PembayaranSiswaController extends BaseController
                             'tagihan_biaya.keterangan', 
                             'detail_biaya.id_jenis_detail_biaya', 
                             'detail_biaya.id_bulan', 
-                            'biaya.nm_biaya', 
+                            'biaya.nm_biaya'
                             )
                                 ->join('tagihan_biaya', function($join){
                                     $join->on('tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya');
