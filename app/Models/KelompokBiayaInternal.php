@@ -29,4 +29,9 @@ class KelompokBiayaInternal extends Model
     ];
 
     protected $guarded = [];
+
+    public function detail_biaya_internal()
+    {
+        return $this->hasMany(DetailBiayaInternal::class, 'id_kelompok_biaya_internal');
+    }
 }

@@ -40,6 +40,9 @@
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Tahun Ajaran/kelas</span></button>
                         </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-orange waves-effect" onclick="printAction()"><i class="material-icons">print</i><span>Print Data Tagihan</span></button>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display nowrap" id="primary_table">
@@ -64,6 +67,7 @@
 <script>
 
 var datatable_url   = base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/datatables';
+var print_tagihan_url = base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/print';
 
 var primary_table = $('#primary_table').DataTable({
     processing: true,
@@ -105,5 +109,19 @@ primary_table.on( 'draw', function () {
 
 function filterAction(){
     primary_table.ajax.reload(null, false);
+}
+
+function printAction(){
+    $('button').attr('disabled', 'disabled');
+    var kelas = $('select[name=kelas]').val();
+    var ta_semester = $('select[name=tahun_akademik_semester]').val(); 
+    
+    if(kelas == null || ta_semester == null || kelas == '' || ta_semester == ''){
+        vex.dialog.alert("Kelas atau Tahun Ajaran yang dipilih tidak valid");
+        $('button').removeAttr('disabled', 'disabled');
+    } else {
+        $('button').removeAttr('disabled', 'disabled');
+        window.open(print_tagihan_url + '/' + ta_semester + '/' + kelas, "_blank");
+    }
 }
 </script>

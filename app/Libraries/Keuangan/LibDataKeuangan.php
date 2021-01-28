@@ -22,6 +22,7 @@ use App\Models\PengeluaranBiaya as PengeluaranBiaya;
 use App\Models\KategoriRapb as KategoriRapb;
 use App\Models\SubkategoriRapb as SubkategoriRapb;
 use App\Models\KetSubkategoriRapb as KetSubkategoriRapb;
+use App\Models\PembayaranBiaya;
 use App\Models\Semester as Semester;
 use App\Models\Rapb as Rapb;
 use App\Models\Realisasi as Realisasi;
@@ -32,6 +33,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Auth;
+use DateTime;
 use DB;
 
 class LibDataKeuangan
@@ -920,4 +922,210 @@ class LibDataKeuangan
         return $realisasiPembayaran;
     }
     /** ========== **/
+
+    /** Get Laporan Keuangan */
+    public static function fetchDataLaporanKeuangan($auth_data, $start_date = null, $end_date = null)
+    {
+        $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
+        $tempDataLaporan = [];
+
+        $dataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')->with(['tagihan_biaya.detail_biaya' => function ($q) {
+            $q->with('biaya');
+        }]);
+
+        if (!empty($start_date) && !empty($end_date)) {
+            $dataPembayaran = $dataPembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+        $allDataPembayaran = $dataPembayaran->get();
+
+        foreach($allDataPembayaran as $x){
+            $date = new DateTime($x->tgl_pembayaran);
+
+            if($x->tagihan_biaya->detail_biaya->id_bulan === null){ // untuk non-SPP
+                $keterangan = $x->tagihan_biaya->detail_biaya->biaya->nm_biaya . ' - ' . $x->tagihan_biaya->keterangan;
+                
+                $tempDataLaporan[] = [
+                    'tanggal' => $date->format('Y-m-d'),
+                    'keterangan' => $x->tagihan_biaya->siswa->pengguna->nm_pengguna .' - '. $keterangan,
+                    'nominal' => $x->besar_pembayaran,
+                    // 'tahun_ajaran' => ,
+                    'nm_tipe' => 'debit',
+                    'tipe' => 1, //penerimaan
+                ];
+            } else { // untuk SPP
+                $keterangan = $x->tagihan_biaya->detail_biaya->biaya->nm_biaya . ' - ' . Carbon::createFromFormat('m', $x->tagihan_biaya->detail_biaya->id_bulan)->format('F');
+
+                foreach($x->tagihan_biaya->detail_biaya->kelompok_biaya_internal->detail_biaya_internal as $spp){
+                    $tempDataLaporan[] = [
+                        'tanggal' => $date->format('Y-m-d'),
+                        'keterangan' => $x->tagihan_biaya->siswa->pengguna->nm_pengguna .' - '. $keterangan . ' (' .$spp->nm_detail_biaya_internal . ')',
+                        'nominal' => $spp->besar_biaya,
+                        // 'tahun_ajaran' => ,
+                        'nm_tipe' => 'debit',
+                        'tipe' => 1, //penerimaan
+                    ];
+                }
+            }
+        }
+        
+        $dataRealisasi = Realisasi::with('rapb.subkategori.kategori');
+        if (!empty($start_date) && !empty($end_date)) {
+            $dataRealisasi = $dataRealisasi->whereBetween('tgl_realisasi', [$start_date, $end_date]);
+        }
+        $allDataRealisasi = $dataRealisasi->get();
+
+        foreach($allDataRealisasi as $x){
+            $keterangan = $x->rapb->subkategori->kategori->nm_kategori_rapb . ' - ' . $x->nm_realisasi;
+            $tipe = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
+            $date = new DateTime($x->tgl_realisasi);
+            $tempDataLaporan[] = [
+                'tanggal' => $date->format('Y-m-d'),
+                'keterangan' => $keterangan,
+                'nominal' => $x->dana_realisasi,
+                // 'tahun_ajaran' => ,
+                'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
+                'tipe' => $tipe,
+            ];
+        }
+
+        // reordering by date descending
+        foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
+            $dataLaporan[] = $data;
+        }
+
+        $totalDebit = collect($dataLaporan)->where('tipe', 1)->sum('nominal');
+        $totalKredit = collect($dataLaporan)->where('tipe', 2)->sum('nominal');
+        
+        $data = [
+            'laporan' => collect($dataLaporan)->sortByDesc('tanggal'),
+            'total_debit' => $totalDebit,
+            'total_kredit' => $totalKredit
+        ];
+
+        return $data;
+    }
+    
+    public static function fetchDataLaporanKeuanganInternal($auth_data, $start_date = null, $end_date = null)
+    {
+        $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
+        $tempDataLaporan = [];
+
+        $allBiaya = Biaya::get();
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        if (!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+        $allDataPembayaran = $pembayaran->get();
+
+        foreach($allBiaya as $kategori){
+            $pembayaran = $allDataPembayaran->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', '=', $kategori->nm_biaya)->groupBy('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester');
+            
+            foreach($pembayaran as $ta => $value){
+                $string = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+
+                foreach($value as $data){
+                    $details = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal->detail_biaya_internal;
+                    $date           = new DateTime($data->tgl_pembayaran);
+                    $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
+                    $sum            = $value->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                            ->sum('besar_pembayaran');
+                    $count          = $value->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                            ->count();
+                    $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
+                    $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+
+                    if(count($details) > 0){
+                        foreach($details as $x){
+                            $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
+                                'tanggal' => $date->format('Y-m-d'),
+                                'nominal' => $x->besar_biaya * $count,
+                                'frekuensi' => $count,
+                                'tipe' => 1,
+                                'nm_tipe' => 'debit',
+                                'kategori' => $string,
+                                'keterangan' => $x->nm_detail_biaya_internal . ' ' . $count . 'x '. number_format($x->besar_biaya) .' (' . $tahun_ajaran . ')',
+                                'tahun_ajaran' => $tahun_ajaran
+                            ];
+                        }
+                    } else {
+                        $tempDataLaporan[$keyTempData] = [
+                            'tanggal' => $date->format('Y-m-d'),
+                            'nominal' => $sum,
+                            'frekuensi' => $count,
+                            'tipe' => 1,
+                            'nm_tipe' => 'debit',
+                            'kategori' => $string,
+                            'keterangan' => $ket_biaya . ' ' . $count . 'x (' . $tahun_ajaran . ')',
+                            'tahun_ajaran' => $tahun_ajaran
+                        ];
+                    }
+                }
+            }
+        }
+        
+        $dataRealisasi = Realisasi::with('rapb.subkategori.kategori');
+        if (!empty($start_date) && !empty($end_date)) {
+            $dataRealisasi = $dataRealisasi->whereBetween('tgl_realisasi', [$start_date, $end_date]);
+        }
+        $allDataRealisasi = $dataRealisasi->get();
+
+        foreach($allDataRealisasi as $x){
+            $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
+            $keterangan = $x->nm_realisasi;
+            $tipe       = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
+            $date       = new DateTime($x->tgl_realisasi);
+            $tempDataLaporan[] = [
+                'tanggal' => $date->format('Y-m-d'),
+                'nominal' => $x->dana_realisasi,
+                'frekuensi' => null,
+                'tipe' => $tipe,
+                'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
+                'kategori' => $kategori,
+                'keterangan' => ($keterangan == '-' || $keterangan == null) ? $kategori : $keterangan,
+                'tahun_ajaran' => null,
+            ];
+        }
+        
+        // reordering by date descending
+        foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
+            $dataLaporan[] = $data;
+        }
+
+        $totalDebit = collect($dataLaporan)->where('tipe', 1)->sum('nominal');
+        $totalKredit = collect($dataLaporan)->where('tipe', 2)->sum('nominal');
+        
+        $data = [
+            'laporan' => $dataLaporan,
+            'total_debit' => $totalDebit,
+            'total_kredit' => $totalKredit
+        ];
+
+        return $data;
+    }
+    /** ========== */
+
+
+    /** Merubah angka menjadi kalimat **/
+    public static function getTerbilang(int $number) {
+        $angka = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+
+        if ($number < 12)
+            return " " . $angka[$number];
+        else if ($number < 20)
+            return self::getTerbilang($number - 10) . " belas";
+        else if ($number < 100)
+            return self::getTerbilang($number / 10) . " puluh" . self::getTerbilang($number % 10);
+        else if ($number < 200)
+            return " seratus" . self::getTerbilang($number - 100);
+        else if ($number < 1000)
+            return self::getTerbilang($number / 100) . " ratus" . self::getTerbilang($number % 100);
+        else if ($number < 2000)
+            return " seribu" . self::getTerbilang($number - 1000);
+        else if ($number < 1000000)
+            return self::getTerbilang($number / 1000) . " ribu" . self::getTerbilang($number % 1000);
+        else if ($number < 1000000000)
+            return self::getTerbilang($number / 1000000) . " juta" . self::getTerbilang($number % 1000000);
+    }
+    /** =========== */
 }

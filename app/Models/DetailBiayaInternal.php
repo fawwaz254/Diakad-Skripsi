@@ -31,4 +31,8 @@ class DetailBiayaInternal extends Model
 
     protected $guarded = [];
 
+    public function kelompok_biaya_internal()
+    {
+        return $this->belongsTo(KelompokBiayaInternal::class, 'id_kelompok_biaya_internal');
+    }
 }

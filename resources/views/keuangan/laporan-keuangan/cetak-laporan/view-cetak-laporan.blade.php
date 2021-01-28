@@ -1,15 +1,10 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa')}}"><span>Pembayaran by tanggal</span></a>
-        <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa/bulanan')}}"><span>Pembayaran bulanan</span></a>
-        <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan-keuangan/pembayaran-siswa/tahunan')}}"><span>Pembayaran Tahunan</span></a></h2>
-    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        FILTER PEMBAYARAN SISWA
+                        FILTER LAPORAN KEUANGAN
                     </h2>
                 </div>
                 <div class="body">
@@ -36,10 +31,7 @@
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-orange waves-effect" onclick="printSimpleAction()"><i class="material-icons">print</i><span>Print Data Pembayaran (simple)</span></button>
-                        </div>
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-red waves-effect" onclick="printDetailAction()"><i class="material-icons">print</i><span>Print Data Pembayaran (detail)</span></button>
+                            <button class="btn btn-block bg-orange waves-effect" onclick="printLaporan()"><i class="material-icons">print</i><span>Cetak Laporan Keuangan</span></button>
                         </div>
                     </div>
                 </div>
@@ -50,7 +42,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card is-gap">
                 <div class="header">
-                    <h2>LAPORAN PEMBAYARAN</h2>
+                    <h2>LAPORAN KEUANGAN</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -59,15 +51,13 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Tanggal Bayar</th>
-                                    <th>NIS Siswa</th>
-                                    <th>Nama Siswa</th>
                                     <th>Keterangan</th>
-                                    <th>Jumlah Bayar</th>
+                                    <th>Debit</th>
+                                    <th>Kredit</th>
                                 </tr>
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -94,17 +84,16 @@
     });
 </script>
 <script>
-    var modul_url               = 'laporan-keuangan';
-    var datatable_url_belum     = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables';
-    var print_simple_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/print-simple';
-    var print_detail_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/print-detail';
+    var modul_url        = 'laporan-keuangan';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/datatables';
+    var print_laporan_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/print';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         ajax: {
-            url: datatable_url_belum,
+            url: datatable_url,
             type: 'GET',
             data: function(params){
                 params.start_date = encodeURIComponent($('input[name=start_date]').val());
@@ -113,24 +102,35 @@
         },
         columns: [
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
-            { data: 'tanggal_bayar', name:'tgl_pembayaran', searchable: false },
-            { data: 'tagihan_biaya.siswa.nis_siswa' },
-            { data: 'tagihan_biaya.siswa.pengguna.nm_pengguna' },
-            { data: 'keterangan_bayar', searchable: false, orderable: false },
-            { data: 'besar_pembayaran',
+            { data: 'tanggal_bayar', name:'tanggal', searchable: false },
+            { data: 'keterangan' },
+            { data: 'debit',
                 render: function(data){
-                    return 'Rp' +numeral(data).format('0,0');
+                    if(data != null){
+                        return 'Rp ' +numeral(data).format('0,0');
+                    } else {
+                        return null;
+                    }
+                }
+            },
+            { data: 'credit',
+                render: function(data){
+                    if(data != null){
+                        return 'Rp ' +numeral(data).format('0,0');
+                    } else {
+                        return null;
+                    }
                 }
             },
         ],
         fnDrawCallback: function ( row, data, start, end, display ) {
             var api = this.api();
             var json = api.ajax.json();
-            $( api.column( 4 ).footer() ).html(
-                'Total Pembayaran'
+            $( api.column( 3 ).footer() ).html(
+                'Total Debit: <br>Rp '+numeral(json.total_debit).format('0,0')
             );
-            $( api.column( 5 ).footer() ).html(
-                'Rp'+numeral(json.total).format('0,0')
+            $( api.column( 4 ).footer() ).html(
+                'Total Kredit: <br>Rp '+numeral(json.total_kredit).format('0,0')
             );
         }
     });
@@ -148,7 +148,7 @@
         primary_table.ajax.reload(null, false);
     }
 
-    function printSimpleAction(){
+    function printLaporan(){
         $('button').attr('disabled', 'disabled');
         var start_date = $('input[name=start_date]').val();
         var end_date = $('input[name=end_date]').val();
@@ -158,23 +158,8 @@
             vex.dialog.alert("Tanggal Mulai atau Tanggal Selesai yang dipilih tidak valid");
             $('button').removeAttr('disabled', 'disabled');
         } else {
+            window.open(print_laporan_url + '/' + start_date + '/' + end_date, "_blank");
             $('button').removeAttr('disabled', 'disabled');
-            window.open(print_simple_url + '/' + start_date + '/' + end_date, "_blank");
-        }
-    }
-    
-    function printDetailAction(){
-        $('button').attr('disabled', 'disabled');
-        var start_date = $('input[name=start_date]').val();
-        var end_date = $('input[name=end_date]').val();
-        console.log(start_date, end_date);
-        
-        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
-            vex.dialog.alert("Tanggal Mulai atau Tanggal Selesai yang dipilih tidak valid");
-            $('button').removeAttr('disabled', 'disabled');
-        } else {
-            $('button').removeAttr('disabled', 'disabled');
-            window.open(print_detail_url + '/' + start_date + '/' + end_date, "_blank");
         }
     }
 </script>

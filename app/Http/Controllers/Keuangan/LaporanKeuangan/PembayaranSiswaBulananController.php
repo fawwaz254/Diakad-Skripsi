@@ -63,6 +63,7 @@ class PembayaranSiswaBulananController extends BaseController
         	$collect[$key]['besar_pembayaran'] = $value->besar_pembayaran;
         	$collect[$key]['tingkat'] = $value->tagihan_biaya->siswa->kelas->tingkat;
         	$collect[$key]['jurusan'] = $value->tagihan_biaya->siswa->kelas->jurusan->nm_jurusan;
+        	$collect[$key]['id_siswa'] = $value->tagihan_biaya->siswa->id_siswa;
         }
 
         $collect = collect($collect);
@@ -72,12 +73,13 @@ class PembayaranSiswaBulananController extends BaseController
 		            return 'Kelas '.$item['tingkat'].' | Jurusan '.$item['jurusan'];
 
 		        })->map(function ($row) {
+                    $siswa = collect($row)->groupBy('id_siswa');
 
-                    return '('.$row->count('*').' Siswa) Rp'.number_format($row->sum('besar_pembayaran'));
+                    return '('.$siswa->count('*').' Siswa) Rp'.number_format($row->sum('besar_pembayaran'));
 
           		});
 
-        $total = '('.$collect->count('*').' Siswa) Rp'.number_format($collect->sum('besar_pembayaran'));
+        $total = '('.$collect->groupBy('id_siswa')->count('*').' Siswa) Rp'.number_format($collect->sum('besar_pembayaran'));
 
         $callback['grup'] = $grup;
         $callback['total'] = $total;

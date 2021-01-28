@@ -122,5 +122,62 @@ class TagihanSiswaController extends BaseController
                 ->make(true);
     }
 
+    public function printTagihanSiswa(Request $request, $tahun, $id_kelas){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $kelas_data = Kelas::find($id_kelas);
+
+        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+
+        $id_semester_mulai = $semester_mulai->id_semester;
+        $id_semester_selesai = $semester_selesai->id_semester;
+
+        $data_detail_biaya = DetailBiaya::with('bulan')->whereHas('biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
+            $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+        })->get();
+
+        $list_data = Siswa::with(['tagihan_biaya' => function($q) use ($data_detail_biaya){
+            $q->where('is_tagih', 1)
+                ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
+        }])
+        ->with('pengguna', 'kelas');
+
+        $list_data = $list_data->whereHas('kelas', function($q) use ($id_kelas){
+            $q->where('id_kelas', $id_kelas);
+        });
+
+        $all_data = $list_data->get();
+        $all_data = $all_data->map(function($data) use ($data_detail_biaya){
+            $tagihan = [];
+            
+            foreach($data->tagihan_biaya as $tagihan_siswa){
+                $tagihan_bulan['id_bulan'] = 13;
+                $tagihan_bulan['jenis_tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->biaya->nm_biaya;
+                $tagihan_bulan['judul'] = $tagihan_bulan['jenis_tagihan'];
+                $tagihan_bulan['biaya'] = 'Rp'.number_format($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->besar_biaya);
+
+                if($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->id_jenis_detail_biaya == 4){
+                    $tagihan_bulan['id_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->bulan->id_bulan;
+                    $tagihan_bulan['nm_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->bulan->nm_bulan;
+                    $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'];
+                }else{
+                    $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->keterangan_biaya;
+                }
+                $tagihan[] = $tagihan_bulan;
+            }
+
+            if(!empty($tagihan)){
+                $tagihan = collect($tagihan)->sortBy('id_bulan')->toArray();
+            }
+
+            $data['tagihan'] = $tagihan;
+            return $data; 
+        });
+
+        return view('keuangan/laporan-keuangan/tagihan-siswa/print-tagihan-siswa', compact('auth_data', 'semester_mulai', 'semester_selesai', 'all_data', 'kelas_data'));
+    }
+
 
 }

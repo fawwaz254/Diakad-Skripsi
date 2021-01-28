@@ -19,6 +19,10 @@
         .clear {
             clear: both;
         }
+
+        .avoid-break {
+            page-break-inside: avoid;
+        }
     </style>
     <style type="text/css" media="print">
         @page {
@@ -109,7 +113,7 @@
                 </td>
             </tr>
         </table>
-        <div class="ttd">
+        <div class="ttd avoid-break">
             {{$auth_data->sekolah_data->alamat_kecamatan}}, {{ \Carbon\Carbon::now()->format('j M Y') }} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>
