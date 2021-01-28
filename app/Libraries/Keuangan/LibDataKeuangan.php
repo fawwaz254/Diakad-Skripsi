@@ -1012,7 +1012,7 @@ class LibDataKeuangan
 
         $allBiaya = Biaya::get();
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -1025,6 +1025,7 @@ class LibDataKeuangan
                 $string = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
                 
                 foreach($value as $data){
+                    $details = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal->detail_biaya_internal;
                     $date           = new DateTime($data->tgl_pembayaran);
                     $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
                     $sum            = $value->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
@@ -1034,15 +1035,29 @@ class LibDataKeuangan
                     $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
                     $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
 
-                    $tempDataLaporan[$keyTempData] = [
-                        'tanggal' => $date->format('Y-m-d'),
-                        'nominal' => $sum,
-                        'frekuensi' => $count,
-                        'tipe' => 1,
-                        'nm_tipe' => 'debit',
-                        'keterangan' => $string . ((trim($ket_biaya) == "-" || $ket_biaya == null) ? null : ' - ' . $ket_biaya) . ' ' . $count . 'x (' . $tahun_ajaran . ')',
-                        'tahun_ajaran' => $tahun_ajaran
-                    ];
+                    if(count($details) > 0){
+                        foreach($details as $x){
+                            $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
+                                'tanggal' => $date->format('Y-m-d'),
+                                'nominal' => $x->besar_biaya * $count,
+                                'frekuensi' => $count,
+                                'tipe' => 1,
+                                'nm_tipe' => 'debit',
+                                'keterangan' => $string . ' - ' . $x->nm_detail_biaya_internal . ' ' . $count . 'x '. number_format($x->besar_biaya) .' (' . $tahun_ajaran . ')',
+                                'tahun_ajaran' => $tahun_ajaran
+                            ];
+                        }
+                    } else {
+                        $tempDataLaporan[$keyTempData] = [
+                            'tanggal' => $date->format('Y-m-d'),
+                            'nominal' => $sum,
+                            'frekuensi' => $count,
+                            'tipe' => 1,
+                            'nm_tipe' => 'debit',
+                            'keterangan' => $string . ((trim($ket_biaya) == "-" || $ket_biaya == null) ? null : ' - ' . $ket_biaya) . ' ' . $count . 'x (' . $tahun_ajaran . ')',
+                            'tahun_ajaran' => $tahun_ajaran
+                        ];
+                    }
                 }
             }
         }
@@ -1073,6 +1088,7 @@ class LibDataKeuangan
         foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
             $dataLaporan[] = $data;
         }
+        // dd($dataLaporan);
 
         $totalDebit = collect($dataLaporan)->where('tipe', 1)->sum('nominal');
         $totalKredit = collect($dataLaporan)->where('tipe', 2)->sum('nominal');
