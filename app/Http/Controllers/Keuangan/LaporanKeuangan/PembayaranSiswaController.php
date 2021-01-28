@@ -65,7 +65,7 @@ class PembayaranSiswaController extends BaseController
                             'kelas.nm_kelas', 
                             'pengguna.nm_pengguna',
                             DB::raw('DATE_FORMAT(pembayaran_biaya.tgl_pembayaran, "%d %b %Y") as tgl_pembayaran'), 
-                            DB::raw('SUM(pembayaran_biaya.besar_pembayaran) as total_pembayaran'), 
+                            DB::raw('SUM(pembayaran_biaya.besar_pembayaran) as total_pembayaran')
                             )
                                 ->join('tagihan_biaya', function($join){
                                     $join->on('tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya');
