@@ -97,7 +97,6 @@ class PembayaranSiswaController extends BaseController
         }
         $data_pembayaran = $list_data->groupBy('id_siswa', 'nis_siswa', 'nisn_siswa', 'nm_pengguna', 'kelas.nm_kelas', DB::raw('DATE_FORMAT(pembayaran_biaya.tgl_pembayaran, "%d %b %Y")'))->get();
         
-        // dd($list_data);
         return view('keuangan/laporan-keuangan/pembayaran-siswa/print-simple-pembayaran-siswa', compact('auth_data', 'data_pembayaran', 'start_date', 'end_date'));
     }
     
@@ -149,7 +148,6 @@ class PembayaranSiswaController extends BaseController
         $data_pembayaran = $list_data->get()->groupBy('id_siswa');
         $total_pembayaran = $list_data->sum('besar_pembayaran');
         
-        // dd($data_pembayaran);
         return view('keuangan/laporan-keuangan/pembayaran-siswa/print-detail-pembayaran-siswa', compact('auth_data', 'data_pembayaran', 'start_date', 'end_date', 'total_pembayaran'));
     }
 }

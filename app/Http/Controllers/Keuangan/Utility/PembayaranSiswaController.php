@@ -45,6 +45,17 @@ class PembayaranSiswaController extends BaseController
         $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
+        # printing purpose..
+        # default/struk
+        $type = 'default'; 
+        $lebar = null;
+        if(isset($input->type) && $input->type != null){
+            $type = $input->type;
+        }
+        if(isset($input->lebar) && $input->lebar != null){
+            $lebar = $input->lebar;
+        }
+
         $data_pembayaran_siswa = PembayaranBiaya::select('siswa.id_siswa', 'tagihan_biaya.id_tagihan_biaya', 'pembayaran_biaya.id_pembayaran_biaya', 'kelompok_biaya.nm_kelompok_biaya', 's_biaya.tahun_ajaran as tahun_ajaran_biaya', 's_biaya.nm_semester as nm_semester_biaya', 'jalur.nm_jalur', 'biaya.nm_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 's_bayar.tahun_ajaran as tahun_ajaran_bayar', 's_bayar.nm_semester as nm_semester_bayar', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembayaran_biaya.besar_pembayaran', 'pembayaran_biaya.tgl_pembayaran', 'bank.nm_bank', 'bank_via.nm_bank_via', 'pembayaran_biaya.nomor_transaksi', 'tagihan_biaya.keterangan')
                     ->join('tagihan_biaya', 'tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya')
                     ->join('siswa', 'siswa.id_siswa', '=', 'tagihan_biaya.id_siswa')
@@ -65,8 +76,15 @@ class PembayaranSiswaController extends BaseController
                     ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->whereDate('pembayaran_biaya.tgl_pembayaran', $tgl_pembayaran)
                     ->get();
-
-        return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));
+        
+        if($type == 'struk'){
+            if($lebar == null){
+                $lebar = 70; // in mm
+            }
+            return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa-struk', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa', 'lebar'));
+        } else {
+            return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));
+        }
     }
     
     public function printBelumTerbayarPembayaranSiswa(Request $request, $id_pengguna)

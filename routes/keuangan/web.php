@@ -344,6 +344,12 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         // url: /keuangan/laporan-keuangan
         Route::group(array('prefix' => 'laporan-keuangan'), function () {
             // MENU Cetak Laporan
+            Route::group(['prefix' => 'cetak-laporan'], function(){
+                Route::get('/', 'Keuangan\LaporanKeuangan\CetakLaporanController@viewCetakLaporan');
+                Route::get('datatables', 'Keuangan\LaporanKeuangan\CetakLaporanController@datatablesCetakLaporan');
+                Route::get('print/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporan');
+            });
+
             Route::group(array('prefix' => 'pembayaran-siswa'), function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@viewPembayaranSiswa');
                 Route::get('datatables', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@datatablesPembayaranSiswa');

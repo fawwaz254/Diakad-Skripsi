@@ -19,6 +19,10 @@
         .clear {
             clear: both;
         }
+
+        .avoid-page-break {
+            page-break-inside: avoid;
+        }
     </style>
     <style type="text/css" media="print">
         @page {
@@ -109,7 +113,7 @@
                 </td>
             </tr>
         </table>
-        <div class="ttd">
+        <div class="ttd avoid-page-break">
             {{$auth_data->sekolah_data->alamat_kecamatan}}, {{date_format(date_create($tgl_pembayaran), 'd M Y')}} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>

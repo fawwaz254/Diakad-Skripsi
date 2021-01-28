@@ -31,12 +31,12 @@ class PembayaranSiswaTahunanController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PembayaranBiaya::with('tagihan_biaya.kelas.jurusan');
-
+        $list_data = PembayaranBiaya::with('tagihan_biaya.siswa.kelas.jurusan');
+        
         if ($year !== null) {
             $list_data = $list_data->whereYear('tgl_pembayaran', $year);
         }
-
+        
         $temp_list_data = $list_data->get();
         $list_data = [];
         foreach ($temp_list_data as $key => $value){
@@ -44,17 +44,20 @@ class PembayaranSiswaTahunanController extends BaseController
                 'jumlah_pembayaran' => $value->besar_pembayaran,
                 'kelas' => $value->tagihan_biaya->kelas->tingkat,
                 'jurusan' => $value->tagihan_biaya->kelas->jurusan->nm_jurusan,
-                'tgl_bayar' => $value->tgl_pembayaran
+                'tgl_bayar' => $value->tgl_pembayaran,
+                'id_siswa' => $value->tagihan_biaya->siswa->id_siswa
             ];
         }
+        // dd($list_data);
         $groupedList = collect($list_data)->groupBy(function($item, $key){
             return 'Kelas '.$item['kelas'].' | Jurusan '.$item['jurusan'];
         });
         $listGrup = $groupedList->map(function($row){
-            return '('.$row->count('*').' Siswa) Rp'.number_format($row->sum('jumlah_pembayaran'));
+            $siswa = collect($row)->groupBy('id_siswa');
+            return '('.$siswa->count('*').' Siswa) Rp'.number_format($row->sum('jumlah_pembayaran'));
         });
         
-        $total = '('.$temp_list_data->count('*').' Siswa) Rp'.number_format($temp_list_data->sum('besar_pembayaran'));
+        $total = '('.collect($list_data)->groupBy('id_siswa')->count('*').' Siswa) Rp'.number_format($temp_list_data->sum('besar_pembayaran'));
         
         $data = [
             'listData' => $listGrup,

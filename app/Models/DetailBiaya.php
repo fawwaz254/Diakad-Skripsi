@@ -50,4 +50,9 @@ class DetailBiaya extends Model
     {
         return $this->belongsTo(Bulan::class, 'id_bulan');
     }
+
+    public function kelompok_biaya_internal()
+    {
+        return $this->belongsTo(KelompokBiayaInternal::class, 'id_kelompok_biaya_internal');
+    }
 }
