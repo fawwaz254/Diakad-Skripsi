@@ -1023,7 +1023,7 @@ class LibDataKeuangan
             
             foreach($pembayaran as $ta => $value){
                 $string = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
-                
+
                 foreach($value as $data){
                     $details = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal->detail_biaya_internal;
                     $date           = new DateTime($data->tgl_pembayaran);
@@ -1043,7 +1043,8 @@ class LibDataKeuangan
                                 'frekuensi' => $count,
                                 'tipe' => 1,
                                 'nm_tipe' => 'debit',
-                                'keterangan' => $string . ' - ' . $x->nm_detail_biaya_internal . ' ' . $count . 'x '. number_format($x->besar_biaya) .' (' . $tahun_ajaran . ')',
+                                'kategori' => $string,
+                                'keterangan' => $x->nm_detail_biaya_internal . ' ' . $count . 'x '. number_format($x->besar_biaya) .' (' . $tahun_ajaran . ')',
                                 'tahun_ajaran' => $tahun_ajaran
                             ];
                         }
@@ -1054,14 +1055,14 @@ class LibDataKeuangan
                             'frekuensi' => $count,
                             'tipe' => 1,
                             'nm_tipe' => 'debit',
-                            'keterangan' => $string . ((trim($ket_biaya) == "-" || $ket_biaya == null) ? null : ' - ' . $ket_biaya) . ' ' . $count . 'x (' . $tahun_ajaran . ')',
+                            'kategori' => $string,
+                            'keterangan' => $ket_biaya . ' ' . $count . 'x (' . $tahun_ajaran . ')',
                             'tahun_ajaran' => $tahun_ajaran
                         ];
                     }
                 }
             }
         }
-        // dd($tempDataLaporan);
         
         $dataRealisasi = Realisasi::with('rapb.subkategori.kategori');
         if (!empty($start_date) && !empty($end_date)) {
@@ -1070,17 +1071,19 @@ class LibDataKeuangan
         $allDataRealisasi = $dataRealisasi->get();
 
         foreach($allDataRealisasi as $x){
-            $keterangan = $x->rapb->subkategori->kategori->nm_kategori_rapb . ' - ' . $x->nm_realisasi;
+            $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
+            $keterangan = $x->nm_realisasi;
             $tipe       = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
             $date       = new DateTime($x->tgl_realisasi);
             $tempDataLaporan[] = [
                 'tanggal' => $date->format('Y-m-d'),
-                'keterangan' => $keterangan,
                 'nominal' => $x->dana_realisasi,
                 'frekuensi' => null,
-                'tahun_ajaran' => null,
-                'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
                 'tipe' => $tipe,
+                'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
+                'kategori' => $kategori,
+                'keterangan' => ($keterangan == '-' || $keterangan == null) ? $kategori : $keterangan,
+                'tahun_ajaran' => null,
             ];
         }
         
@@ -1088,7 +1091,6 @@ class LibDataKeuangan
         foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
             $dataLaporan[] = $data;
         }
-        // dd($dataLaporan);
 
         $totalDebit = collect($dataLaporan)->where('tipe', 1)->sum('nominal');
         $totalKredit = collect($dataLaporan)->where('tipe', 2)->sum('nominal');
