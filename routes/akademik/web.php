@@ -107,17 +107,29 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             //MENU Input Nilai
             Route::get('input-nilai', 'Akademik\AktivitasSemester\InputNilaiController@viewInputNilai');
             Route::post('post-view-input-nilai', 'Akademik\AktivitasSemester\InputNilaiController@actionInputNilai');
-            Route::get('input-nilai/view-guru-input-nilai/{id_guru}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewGuruInputNilai');
+            Route::get('input-nilai/view-guru-input-nilai/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewGuruInputNilai');
             Route::post('post-view-komponen-nilai', 'Akademik\AktivitasSemester\InputNilaiController@actionViewKelasKomponenNilai');
+            // view komponen
             Route::get('input-nilai/view-kelas/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewKelasKomponenNilai');
             Route::get('input-nilai/datatables/{id_kelas_mp}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesKomponenNilai');
-            Route::get('input-nilai/datatables-mapel/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesMataPelajaran');
+            // view add komponen
             Route::get('input-nilai/add/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@addKomponenNilai');
+            // view edit komponen
             Route::get('input-nilai/edit/{id_kelas_mp}/{id_pengguna}/{id_semester}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@editKomponenNilai');
+            Route::get('input-nilai/datatables-mapel/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesMataPelajaran');
+            // input nilai mapel
             Route::get('input-nilai/nilai-mapel/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewSiswaPerMapel');
 
+            // view subkomponen
+            Route::get('input-nilai/view-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewKelasSubKomponenNilai');
+            Route::get('input-nilai/datatables-subkomponen/{id_komponen_mp}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesSubKomponenNilai');
+            // view add subkomponen
+            Route::get('input-nilai/add-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@addSubKomponenNilai');
+            // view edit subkomponen
+            Route::get('input-nilai/edit-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@editSubKomponenNilai');
 
             Route::post('action-komponen-nilai/{mode}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@actionKomponenNilai');
+            Route::post('action-subkomponen-nilai/{mode}/{id?}', 'Akademik\AktivitasSemester\InputNilaiController@actionSubKomponenNilai');
         });
         
         Route::group(array('prefix' => 'ujian'), function () {

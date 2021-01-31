@@ -265,6 +265,7 @@ class PrintRaporController extends BaseController
                                             'rapor_kelompok_mp.id_rapor_kelompok', 
                                             'rapor_kelompok_mp.id_rapor_kelompok_mp', 
                                             'rapor_kelompok_mp.nm_rapor_kelompok_mp', 
+                                            'rapor_kelompok_mp.urutan_rapor_kelompok_mp', 
                                             'mp.id_mata_pelajaran', 
                                             'mp.nm_mata_pelajaran',
                                             'semester.nm_semester', 
@@ -287,12 +288,7 @@ class PrintRaporController extends BaseController
         
         // get all data detail rapor based on new rapor_siswa
         $data_detail_rapor = [];
-        //--start URGENT CODE FOR SMK PEMUDA
-        $format_urutan_mapel= ["Pendidikan Agama dan Budi Pekerti", "PPKN", "Matematika", "Sejarah Indonesia", "Bahasa Indonesia", "Bahasa Inggris", "Bahasa Arab"];
-        $i = 10;
         $j = 20;
-        $k = 30;
-        //--end URGENT CODE FOR SMK PEMUDA
         foreach($new_data_rapor as $new_rapor){
             $rapor = $new_rapor;
             if($rapor->nm_matapelajaran == null && $rapor->nm_rapor_kelompok_mp != null){
@@ -317,24 +313,12 @@ class PrintRaporController extends BaseController
             }
             
             $rapor->nilai_komponen = $nilai_komponen;
+            $rapor->urutan = $rapor->urutan_rapor_kelompok_mp;
 
-            //--start URGENT CODE FOR SMK PEMUDA
-            foreach($format_urutan_mapel as $urutan => $mapel){
-                if($mapel == $rapor->nm_mata_pelajaran){
-                    $rapor->urutan = $urutan;
-                }
-            }
-            if($rapor->nm_rapor_kelompok_mp == 'Dasar Bidang Keahlian'){
-                $rapor->urutan = $i;
-                $i++;
-            } elseif($rapor->nm_rapor_kelompok_mp == 'Dasar Program Keahlian'){
-                $rapor->urutan = $j;
+            if($rapor->nm_matapelajaran == null && $rapor->nm_rapor_kelompok_mp != null){
+                $rapor->urutan = $j + $rapor->urutan_rapor_kelompok_mp;
                 $j++;
-            } elseif($rapor->nm_rapor_kelompok_mp == 'Kompetensi Keahlian'){
-                $rapor->urutan = $k;
-                $k++;
             }
-            //--end URGENT CODE FOR SMK PEMUDA
             
             $data_detail_rapor[] = $rapor;
         }
