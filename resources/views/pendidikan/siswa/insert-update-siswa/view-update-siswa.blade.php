@@ -100,7 +100,11 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="datepicker form-control" name="tgl_lahir" aria-required="true" aria-invalid="true" value="{{$siswa->tgl_lahir}}">
+                                @if($siswa->tgl_lahir)
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir" aria-required="true" aria-invalid="true" value="{{date('d F Y', strtotime($siswa->tgl_lahir))}}" >
+                                @else
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir" aria-required="true" aria-invalid="true">
+                                @endif
                             </div>
                         </div>
                         <br>
@@ -562,7 +566,11 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                               <input type="text" class="datepicker form-control" name="tgl_lahir_ayah" aria-required="true" aria-invalid="true" value="{{$siswa->tgl_lahir_ayah}}">
+                                @if($siswa->tgl_lahir_ayah)
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir_ayah" aria-required="true" aria-invalid="true"  value="{{date('d F Y', strtotime($siswa->tgl_lahir_ayah))}}">
+                                @else
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir_ayah" aria-required="true" aria-invalid="true">
+                                @endif
                             </div>
                         </div>
                         <br>
@@ -778,7 +786,11 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                               <input type="text" class="datepicker form-control" name="tgl_lahir_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->tgl_lahir_ibu}}">
+                                @if($siswa->tgl_lahir_ibu)
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir_ibu" aria-required="true" aria-invalid="true"  value="{{date('d F Y', strtotime($siswa->tgl_lahir_ibu))}}">
+                                @else
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir_ibu" aria-required="true" aria-invalid="true">
+                                @endif
                             </div>
                         </div>
                         <br>
@@ -993,7 +1005,11 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                               <input type="text" class="datepicker form-control" name="tgl_lahir_wali" aria-required="true" aria-invalid="true" value="{{$siswa->tgl_lahir_wali}}">
+                                @if($siswa->tgl_lahir_wali)
+                                 <input type="text" class="datepicker form-control" name="tgl_lahir_wali" aria-required="true" aria-invalid="true"  value="{{date('d F Y', strtotime($siswa->tgl_lahir_wali))}}">
+                                @else
+                                  <input type="text" class="datepicker form-control" name="tgl_lahir_wali" aria-required="true" aria-invalid="true">
+                                @endif
                             </div>
                         </div>
                         <br>
