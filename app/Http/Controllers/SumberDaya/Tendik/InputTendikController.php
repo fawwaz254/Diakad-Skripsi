@@ -148,7 +148,7 @@ class InputTendikController extends BaseController{
             'nip_staff'              => 'required',
             /*'id_jabatan_pegawai'    => 'required',*/
             'id_unit_kerja'         => 'required',
-            'jenis_jabatan'         => 'required',
+            // 'jenis_jabatan'         => 'required',
             'id_status_pengguna'    => 'required'
         ]);
 

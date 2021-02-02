@@ -290,8 +290,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="jenis_jabatan" required >
-                                    <option value="" disabled selected >-- Pilih Jenis Jabatan  --</option>
+                               <select class="form-control show-tick" name="jenis_jabatan" >
+                                    <option value="" selected >-- Pilih Jenis Jabatan  --</option>
                                     <option value="1">Kepala Unit Sarana & Prasarana</option>
                                     <option value="2">Kepala Unit Keuangan</option>
                                     <option value="3">Staf Unit Sarana & Prasarana</option>

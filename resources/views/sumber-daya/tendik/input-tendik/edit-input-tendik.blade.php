@@ -292,8 +292,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="jenis_jabatan" required >
-                                    <option value="" disabled selected >-- Pilih Jenis Jabatan  --</option>
+                               <select class="form-control show-tick" name="jenis_jabatan" >
+                                    <option value="" selected >-- Pilih Jenis Jabatan  --</option>
                                     @if($tendik->jenis_jabatan == 1)
                                         <option value="1" selected >Kepala Unit Sarana & Prasarana</option>
                                     @else
