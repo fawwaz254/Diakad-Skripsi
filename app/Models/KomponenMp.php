@@ -32,7 +32,9 @@ class KomponenMp extends Model
 
     protected $guarded = [];
 
-
+    public function sub_komponen_mp(){
+        return $this->hasMany(SubKomponenMp::class, 'id_komponen_mp');
+    }
 
 
 

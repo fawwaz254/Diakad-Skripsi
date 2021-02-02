@@ -6,11 +6,17 @@
         <div class="demo-color-box bg-red" style="height: 350px">
             <h2>Tidak dapat meng-input nilai. Presentase Komponen Kurang dari 100%</h2>
         </div>
+    @elseif($jumlah_subkomponen < 1)
+        <div class="demo-color-box bg-red" style="height: 350px">
+            <h2>Tidak dapat meng-input nilai. <br>Sub Komponen Tidak Lengkap/Tidak Ditemukan</h2>
+        </div>
     @else
-        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-komponen-nilai/input-nilai/0')}}">
+        <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-subkomponen-nilai/input-nilai/0')}}">
             {{csrf_field()}}
             <!-- <input type="hidden" name="id_pengambilan_mp" id="id_pengambilan_mp" value="{{$pengambilan_mp->id_pengambilan_mp}}" /> -->
             <input type="hidden" name="id_kelas_mp" id="id_kelas_mp" value="{{$pengambilan_mp->id_kelas_mp}}" />
+            <input type="hidden" name="id_pengguna" id="id_pengguna" value="{{$id_pengguna}}" />
+            <input type="hidden" name="id_semester" id="id_semester" value="{{$id_semester}}" />
             <div class="col-xs-12 col-sm-4 col-md-4">
                 <div class="block-header">
                     <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
@@ -25,21 +31,29 @@
                             </div>
                             <div class="body">
                                 <div class="table-responsive">
-                                   <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                   <table class="table table-bordered table-striped table-hover dataTable display responsive wrap" id="primary_table">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
-                                                <th>NIS - Nama Siswa</th>
-                                                @foreach($list_data as $data)
-                                                    <th style="text-align:  center;">
-                                                        {{$data->nm_komponen_mp}}
-                                                        <br>
-                                                        ({{$data->persentase_komponen_mp}}%)
+                                                <th rowspan="2">No</th>
+                                                <th rowspan="2">NIS - Nama Siswa</th>
+                                                @foreach($list_data as $komponen => $sub_komponen)
+                                                    <th colspan="{{count($sub_komponen)}}" style="text-align:  center;">
+                                                        {{$komponen}}
                                                     </th>
                                                 @endforeach
-                                                <th>Nilai Angka</th>
-                                                <th>Nilai Huruf</th>
-                                                <th>Action</th>
+                                                <th rowspan="2">Nilai Angka <br>(Rata-rata)</th>
+                                                <th rowspan="2">Nilai Huruf</th>
+                                                <th rowspan="2">Action</th>
+                                            </tr>
+                                            <tr>
+                                                @foreach($list_data as $komponen => $sub_komponen)
+                                                    @foreach($sub_komponen as $sub)
+                                                        <th>
+                                                            {{ $sub->kd_subkomponen_mp }} <br> {{ $sub->nm_subkomponen_mp }}
+                                                        </th>
+                                                    @endforeach
+                                                @endforeach
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -50,10 +64,12 @@
                                             <tr>
                                                 <td>{{++$no}}</td>
                                                 <td>{{$siswa->nis_siswa}} - {{$siswa->nm_pengguna}}</td>
-                                                @foreach($list_data as $nilai)
-                                                    <td>
-                                                        <input type="text" name="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_mp}}-{{$siswa->id_siswa}}" value="{{ collect($siswa->nilai_siswa_komponen)->where('id_komponen_mp', $nilai->id_komponen_mp)->first()['nilai_komponen_mp'] }}" style="width: 50%;  margin:0px auto;">
-                                                    </td>
+                                                @foreach($list_data as $komponen)
+                                                    @foreach($komponen as $nilai)
+                                                        <td>
+                                                            <input type="text" class="form-control" name="nilai{{$nilai->id_subkomponen_mp}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_subkomponen_mp}}-{{$siswa->id_siswa}}" value="{{ collect($siswa->nilai_siswa_komponen)->where('id_subkomponen_mp', $nilai->id_subkomponen_mp)->first()['nilai_subkomponen_mp'] }}">
+                                                        </td>
+                                                    @endforeach
                                                 @endforeach
                                                 <td>
                                                     {{isset($siswa->nilai_angka) ? $siswa->nilai_angka : 0}}

@@ -8,7 +8,7 @@ use App\Models\KomponenMp as KomponenMp;
 use App\Models\WaliKelas as WaliKelas;
 use App\Models\HomeVisit as HomeVisit;
 use App\Models\JadwalKelasMp as JadwalKelasMp;
-
+use App\Models\SubKomponenMp;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
@@ -362,11 +362,21 @@ class LibGuru
         // get mode view
         if ($id == null) {
             $komponenMp = KomponenMp::select('komponen_mp.id_komponen_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'komponen_mp.nm_komponen_mp', 'komponen_mp.persentase_komponen_mp', 'komponen_mp.urutan_komponen_mp')
-                        ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'komponen_mp.id_kelas_mp')
-                        ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-                        ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                        ->join('kelas_mp', function($join){
+                            $join->on('kelas_mp.id_kelas_mp', '=', 'komponen_mp.id_kelas_mp');
+                            $join->whereNull('kelas_mp.deleted_at');
+                        })
+                        ->join('mata_pelajaran', function($join){
+                            $join->on('mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran');
+                            $join->whereNull('mata_pelajaran.deleted_at');
+                        })
+                        ->join('kelas', function($join){
+                            $join->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas');
+                            $join->whereNull('kelas.deleted_at');
+                        })
                         ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
                         ->orderBy('komponen_mp.urutan_komponen_mp', 'asc')
+                        ->with('sub_komponen_mp')
                         ->get();
         }
         // get mode edit
@@ -375,6 +385,29 @@ class LibGuru
         }
 
         return $komponenMp;
+    }
+    /** ========== **/
+    
+    /** Sub Komponen Nilai **/
+    public static function fetchDataSubKomponenNilai($auth_data, $id_komponen_mp, $id = null)
+    {
+        // get mode view
+        if ($id == null) {
+            $subKomponenMp = SubKomponenMp::select('komponen_mp.id_komponen_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'komponen_mp.nm_komponen_mp', 'komponen_mp.persentase_komponen_mp', 'komponen_mp.urutan_komponen_mp', 'subkomponen_mp.id_subkomponen_mp', 'subkomponen_mp.kd_subkomponen_mp', 'subkomponen_mp.nm_subkomponen_mp')
+                        ->join('komponen_mp', 'komponen_mp.id_komponen_mp', '=', 'subkomponen_mp.id_komponen_mp')
+                        ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'komponen_mp.id_kelas_mp')
+                        ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+                        ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                        ->where('komponen_mp.id_komponen_mp', '=', $id_komponen_mp)
+                        ->orderBy('komponen_mp.urutan_komponen_mp', 'asc')
+                        ->get();
+        }
+        // get mode edit
+        else {
+            $subKomponenMp = SubKomponenMp::find($id);
+        }
+
+        return $subKomponenMp;
     }
     /** ========== **/
 

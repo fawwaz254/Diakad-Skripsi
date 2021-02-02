@@ -40,8 +40,8 @@
 
     var modul_url       = 'aktivitas-semester';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-nilai/datatables-mapel/' + id_pengguna + '/' + id_semester;
-    var edit_url        = role_url + '#' + modul_url + '/' + 'input-nilai/view-kelas/'  + id_pengguna + '/' + id_semester;
-    var input_url        = role_url + '#' + modul_url + '/' + 'input-nilai/nilai-mapel/'  + id_pengguna + '/' + id_semester;
+    var edit_url        = role_url + '#' + modul_url + '/' + 'input-nilai/view-kelas';
+    var input_url        = role_url + '#' + modul_url + '/' + 'input-nilai/nilai-mapel';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -57,9 +57,9 @@
             { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-block bg-blue waves-effect" href="'+ edit_url + '/' + data.id +'">'+
+                    return '<a class="target-link btn btn-block bg-blue waves-effect" href="'+ edit_url + '/' + data.id + '/' + id_pengguna + '/' + id_semester + '">'+
                     '    Setting Komponen Nilai'+
-                    '</a><br><br>'+'<a class="target-link btn btn-block bg-blue waves-effect" href="'+ input_url + '/' + data.id +'">'+
+                    '</a><br><br>'+'<a class="target-link btn btn-block bg-blue waves-effect" href="'+ input_url + '/' + data.id  + '/' + id_pengguna + '/' + id_semester+'">'+
                     '    Input Nilai'+
                     '</a>';
                 }

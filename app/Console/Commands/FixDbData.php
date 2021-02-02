@@ -4,8 +4,10 @@ namespace App\Console\Commands;
 
 use App\Models\Ekskul;
 use App\Models\KomponenEkskul;
+use App\Models\MataPelajaran;
 use App\Models\NilaiEkskul;
 use App\Models\PengambilanEkskul;
+use App\Models\RaporKelompokMp;
 use App\Models\Sekolah;
 use App\Models\Semester;
 use App\Models\Siswa;
@@ -51,7 +53,7 @@ class FixDbData extends Command
             DB::beginTransaction();
             $this->info('Fixing database data...');
             // $this->fixDbData2();
-            $this->fixDbData7();
+            $this->fixDbData8();
             $this->info('Fixing database data completed!');
             DB::commit();
         } catch(\Exception $e) {
@@ -659,6 +661,23 @@ class FixDbData extends Command
             $x->save();
             $this->info('... ' . $i);
             $i++;
+        }
+    }
+
+    public function fixDbData8(){
+        $mapel = ['Pendidikan Agama dan Budi Pekerti', 'PPKN', 'Matematika', 'Sejarah Indonesia', 'Bahasa Indonesia', 'Bahasa Inggris', 'Bahasa Arab', 'Seni Budaya', 'Penjasorkes', 'Kemuhammadiyahan', 'Bahasa Daerah', 'Bahasa Mandarin', 'BP / BK', 'BP/BK'];
+
+        $raporKelompokMp = RaporKelompokMp::get();
+        $mapelData = MataPelajaran::get();
+        foreach($raporKelompokMp as $x){
+            $noUrut = null;
+            if($x->id_mata_pelajaran != null){
+                $nmMapel = $mapelData->where('id_mata_pelajaran', $x->id_mata_pelajaran)->first()->nm_mata_pelajaran;
+                $noUrut = array_search($nmMapel, $mapel);
+                
+                $x->urutan_rapor_kelompok_mp = $noUrut+1;
+                $x->save();
+            }
         }
     }
 }
