@@ -161,15 +161,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="kewarganegaraan" id="kewarganegaraan">
-                                    <option value="{{$siswa->kewarganegaraan}}">
-                                        @if($siswa->kewarganegaraan == "2")
-                                            WNA
-                                        @else
-                                            WNI
-                                        @endif
-                                    </option>
-                                    <option value="1">WNI</option>
-                                    <option value="2">WNA</option>
+                                    <option value="1" {{$siswa->kewarganegaraan==1 ? 'selected' : ''}}>WNI</option>
+                                    <option value="2" {{$siswa->kewarganegaraan==2 ? 'selected' : ''}}>WNA</option>
                                 </select>
                             </div>
                         </div>
