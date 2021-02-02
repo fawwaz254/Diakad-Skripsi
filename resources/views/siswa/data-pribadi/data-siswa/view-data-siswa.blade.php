@@ -339,22 +339,7 @@
                             </div>
                         </div>
                         <br>
-                        <!-- Status Orang Tua -->
-                        <div class="row clearfix">
-                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-                                <h2 class="card-inside-title">
-                                   Status Orang Tua <br>
-                                </h2>
-                            </div>
-                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                               <select class="form-control show-tick" name="status_ortu" id="status_ortu">
-                                    <option value="1" {{$siswa->status_ortu == 1 ? 'selected' : ''}}>Masih Hidup</option>
-                                    <option value="2" {{$siswa->status_ortu == 2 ? 'selected' : ''}}>Wafat</option>
-                                </select>
-                            </div>
-                        </div>
-                        <br>
-                        <!-- Status Orang Tua -->
+
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -548,6 +533,22 @@
                             </div>
                         </div>
                         <br>
+                        <!-- Status Ayah -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Status Ayah <br>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                               <select class="form-control show-tick" name="status_ayah" id="status_ayah">
+                                    <option value="1" {{$siswa->status_ayah == 1 ? 'selected' : ''}}>Masih Hidup</option>
+                                    <option value="2" {{$siswa->status_ayah == 2 ? 'selected' : ''}}>Wafat</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Status Ayah -->
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -768,6 +769,22 @@
                             </div>
                         </div>
                         <br>
+                        <!-- Status Ibu -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Status Ibu <br>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                               <select class="form-control show-tick" name="status_ibu" id="status_ibu">
+                                    <option value="1" {{$siswa->status_ibu == 1 ? 'selected' : ''}}>Masih Hidup</option>
+                                    <option value="2" {{$siswa->status_ibu == 2 ? 'selected' : ''}}>Wafat</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Status Ibu -->
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -987,6 +1004,22 @@
                             </div>
                         </div>
                         <br>
+                        <!-- Status Wali -->
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
+                                   Status Wali <br>
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                               <select class="form-control show-tick" name="status_wali" id="status_wali">
+                                    <option value="1" {{$siswa->status_wali == 1 ? 'selected' : ''}}>Masih Hidup</option>
+                                    <option value="2" {{$siswa->status_wali == 2 ? 'selected' : ''}}>Wafat</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <!-- Status Wali -->
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">

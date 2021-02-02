@@ -162,8 +162,8 @@ class DataSiswaController extends BaseController{
 					]);
 
     				DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
-    					'status_ortu'				=> $input->status_ortu,
 						'nm_ayah'					=> $input->nm_ayah,
+						'status_ayah'				=> $input->status_ayah,
 						'nik_ayah'					=> $input->nik_ayah,
 						'tgl_lahir_ayah'			=> date('Y-m-d', strtotime($input->tgl_lahir_ayah)),
 						'id_jenis_pendidikan_ayah'	=> $input->id_jenis_pendidikan_ayah,
@@ -180,6 +180,7 @@ class DataSiswaController extends BaseController{
 						'alamat_kota_ayah'			=> $input->alamat_kota_ayah,
 						'alamat_provinsi_ayah'		=> $input->alamat_provinsi_ayah,
 						'nm_ibu'					=> $input->nm_ibu,
+						'status_ibu'				=> $input->status_ibu,
 						'nik_ibu'					=> $input->nik_ibu,
 						'tgl_lahir_ibu'			    => date('Y-m-d', strtotime($input->tgl_lahir_ibu)),
 						'id_jenis_pendidikan_ibu'	=> $input->id_jenis_pendidikan_ibu,
@@ -196,6 +197,7 @@ class DataSiswaController extends BaseController{
 						'alamat_kota_ibu'			=> $input->alamat_kota_ibu,
 						'alamat_provinsi_ibu'		=> $input->alamat_provinsi_ibu,
 						'nm_wali'					=> $input->nm_wali,
+						'status_wali'				=> $input->status_wali,
 						'nik_wali'					=> $input->nik_wali,
 						'tgl_lahir_wali'			=> date('Y-m-d', strtotime($input->tgl_lahir_wali)),
 						'id_jenis_pendidikan_wali'	=> $input->id_jenis_pendidikan_wali,
