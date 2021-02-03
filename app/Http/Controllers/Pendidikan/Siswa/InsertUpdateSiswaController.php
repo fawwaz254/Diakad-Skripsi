@@ -103,6 +103,7 @@ class InsertUpdateSiswaController extends BaseController
 				'message' => 'NIS tidak ditemukan'
 			];
 		}
+
 		$agama = Agama::get();
 		$kebutuhanKhusus = KebutuhanKhusus::get();
 		$jenisTinggal = JenisTinggal::get();
