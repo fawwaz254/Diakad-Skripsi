@@ -40,15 +40,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="jenis_kelamin" id="jenis_kelamin">
-                                    <option value="{{$siswa->jenis_kelamin}}" selected>
-                                        @if($siswa->jenis_kelamin == "1")
-                                            Laki-Laki
-                                        @else
-                                            Perempuan
-                                        @endif
-                                    </option>
-                                    <option value="1">Laki-Laki</option>
-                                    <option value="2">Perempuan</option>
+                                    <option value="1" {{$siswa->jenis_kelamin == 1 ? 'selected' : ''}}>Laki-Laki</option>
+                                    <option value="2" {{$siswa->jenis_kelamin == 2 ? 'selected' : ''}}>Perempuan</option>
                                 </select>
                             </div>
                         </div>
