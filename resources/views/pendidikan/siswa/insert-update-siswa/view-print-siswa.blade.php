@@ -144,17 +144,17 @@
 		<tr>
 			<td>19.</td>
 			<td>Jarak tempat tinggal ke sekolah</td>
-			<td>: lebih dari 1 km</td>
+			<td>: {{$siswa->jarak_rumah_sekolah}} km</td>
 		</tr>
 		<tr>
 			<td>20.</td>
 			<td>Alat transportasi ke sekolah</td>
-			<td>: Kendaraan pribadi</td>
+			<td>: {{$siswa->nm_jenis_transportasi}}</td>
 		</tr>
 		<tr>
 			<td>21.</td>
 			<td>Waktu tempuh ke sekolah</td>
-			<td>: 30 - 60 menit</td>
+			<td>: {{($siswa->waktu_tempuh_sekolah_jam * 60)+$siswa->waktu_tempuh_sekolah_menit}} menit</td>
 		</tr>
 	</table>
 
@@ -163,22 +163,22 @@
 		<tr>
 			<td>22.</td>
 			<td>Golongan darah</td>
-			<td>: -</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td>23.</td>
 			<td>Penyakit yang pernah diderita</td>
-			<td>: -</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td>24.</td>
 			<td>Kelainan jasmani</td>
-			<td>: -</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td>25.</td>
 			<td>Tinggi dan berat badan</td>
-			<td>: 146 cm / 40 kg</td>
+			<td>: {{$siswa->tinggi_badan}} cm / {{$siswa->berat_badan}} kg</td>
 		</tr>
 		<tr>
 			<td>26.</td>

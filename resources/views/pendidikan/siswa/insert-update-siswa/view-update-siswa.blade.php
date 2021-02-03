@@ -185,9 +185,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="id_kebutuhan_khusus" id="id_kebutuhan_khusus">
-                                    <option value="{{ isset($siswa->id_kebutuhan_khusus) ? $siswa->id_kebutuhan_khusus : '' }}">{{ isset($siswa->nm_kebutuhan_khusus) ? $siswa->nm_kebutuhan_khusus : '' }}</option>
                                     @foreach($kebutuhanKhusus as $kebutuhan)
-                                        <option value="{{$kebutuhan->id_kebutuhan_khusus}}">{{$kebutuhan->nm_kebutuhan_khusus}}</option>
+                                        <option value="{{$kebutuhan->id_kebutuhan_khusus}}" {{$siswa->id_kebutuhan_khusus == $kebutuhan->id_kebutuhan_khusus ? 'selected' : ''}}>{{$kebutuhan->nm_kebutuhan_khusus}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -594,7 +593,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="id_kebutuhan_khusus_ayah" id="id_kebutuhan_khusus_ayah">
                                     @foreach($kebutuhanKhusus as $kebutuhan)
-                                        <option value="{{$kebutuhan->id_kebutuhan_khusus}}">{{$kebutuhan->nm_kebutuhan_khusus}}</option>
+                                        <option value="{{$kebutuhan->id_kebutuhan_khusus}}" {{$siswa->id_kebutuhan_khusus_ayah == $kebutuhan->id_kebutuhan_khusus ? 'selected' : ''}}>{{$kebutuhan->nm_kebutuhan_khusus}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -830,7 +829,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="id_kebutuhan_khusus_ibu" id="id_kebutuhan_khusus_ibu">
                                     @foreach($kebutuhanKhusus as $kebutuhan)
-                                        <option value="{{$kebutuhan->id_kebutuhan_khusus}}">{{$kebutuhan->nm_kebutuhan_khusus}}</option>
+                                        <option value="{{$kebutuhan->id_kebutuhan_khusus}}" {{$siswa->id_kebutuhan_khusus_ibu == $kebutuhan->id_kebutuhan_khusus ? 'selected' : ''}}>{{$kebutuhan->nm_kebutuhan_khusus}}</option>
                                     @endforeach
                                 </select>
                             </div>
