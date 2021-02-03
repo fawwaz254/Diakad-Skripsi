@@ -1142,7 +1142,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="jarak_rumah_sekolah" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="jarak_rumah_sekolah" aria-required="true" aria-invalid="true" value="{{$siswa->jarak_rumah_sekolah}}">
                             </div>
                         </div>
                         <br>
