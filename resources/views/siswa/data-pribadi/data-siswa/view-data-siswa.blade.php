@@ -398,15 +398,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="is_penerima_kps" id="is_penerima_kps">
-                                    <option value="{{$siswa->is_penerima_kps}}" selected>
-                                        @if($siswa->is_penerima_kps == '1')
-                                            Ya
-                                        @else
-                                            Tidak
-                                        @endif
-                                    </option>
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
+                                    <option value="1" {{$siswa->is_penerima_kps ==1 ? 'selected' : ''}}>Ya</option>
+                                    <option value="0" {{$siswa->is_penerima_kps ==0 ? 'selected' : ''}}>Tidak</option>
                                 </select>
                             </div>
                         </div>
