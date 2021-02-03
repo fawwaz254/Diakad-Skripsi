@@ -183,7 +183,7 @@
 		<tr>
 			<td>26.</td>
 			<td>Berkebutuhan khusus</td>
-			<td>: Tidak</td>
+			<td>: {{$siswa->nm_kebutuhan_khusus}}</td>
 		</tr>
 	</table>
 
@@ -197,22 +197,22 @@
 		<tr>
 			<td></td>
 			<td>a. Tamatan dari</td>
-			<td>: SD DARUL ULUM</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>b. Tanggal dan nomor ijazah</td>
-			<td>: 25 Juni 2016 / DN-05 dds</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>c. Tanggal dan nomor SKHUN</td>
-			<td>: 25 Juni 2016 / DN-05 dda</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>d. Lama belajar</td>
-			<td>: 6 Tahun</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td>28.</td>
@@ -237,12 +237,12 @@
 		<tr>
 			<td></td>
 			<td>a. Di kelas / Semester</td>
-			<td>: VII AA-9 / 1 (Satu)</td>
+			<td>:</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>b. Tanggal</td>
-			<td>: 18 Juli 2016</td>
+			<td>: {{$siswa->tgl_diterima}}</td>
 		</tr>
 	</table>
 
@@ -251,7 +251,7 @@
 		<tr>
 			<td>30.</td>
 			<td>Nomor KPS</td>
-			<td>: -</td>
+			<td>: {{$siswa->nomor_kps}}</td>
 		</tr>
 	</table>
 
@@ -260,22 +260,22 @@
 		<tr>
 			<td>31.</td>
 			<td>Nama</td>
-			<td>: Kasnadi</td>
+			<td>: {{$siswa->nm_ayah}}</td>
 		</tr>
 		<tr>
 			<td>32.</td>
 			<td>Tahun Lahir</td>
-			<td>: 1966</td>
+			<td>: {{date("Y", strtotime($siswa->tgl_lahir_ayah))}}</td>
 		</tr>
 		<tr>
 			<td>33.</td>
 			<td>Agama</td>
-			<td>: Islam</td>
+			<td>: </td>
 		</tr>
 		<tr>
 			<td>34.</td>
 			<td>Kewarganegaraan</td>
-			<td>: Indonesia</td>
+			<td>: </td>
 		</tr>
 		<tr>
 			<td>35.</td>

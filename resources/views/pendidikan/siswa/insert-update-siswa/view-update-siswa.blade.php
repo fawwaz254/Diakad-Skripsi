@@ -548,7 +548,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_pendidikan_ayah" id="id_jenis_pendidikan_ayah">
                                     @foreach($jenisPendidikan as $pendidikan)
-                                        <option value="{{$pendidikan->id_jenis_pendidikan}}">{{$pendidikan->nm_jenis_pendidikan}}</option>
+                                        <option value="{{$pendidikan->id_jenis_pendidikan}}" {{$siswa->id_jenis_pendidikan_ayah == $pendidikan->id_jenis_pendidikan ? 'selected' : ''}}>{{$pendidikan->nm_jenis_pendidikan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -563,7 +563,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_pekerjaan_ayah" id="id_jenis_pekerjaan_ayah">
                                     @foreach($jenisPekerjaan as $pekerjaan)
-                                        <option value="{{$pekerjaan->id_jenis_pekerjaan}}">{{$pekerjaan->nm_jenis_pekerjaan}}</option>
+                                        <option value="{{$pekerjaan->id_jenis_pekerjaan}}" {{$siswa->id_jenis_pekerjaan_ayah == $pekerjaan->id_jenis_pekerjaan ? 'selected' : ''}}>{{$pekerjaan->nm_jenis_pekerjaan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -578,7 +578,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_penghasilan_ayah" id="id_jenis_penghasilan_ayah">
                                     @foreach($jenisPenghasilan as $penghasilan)
-                                        <option value="{{$penghasilan->id_jenis_penghasilan}}">{{$penghasilan->nm_jenis_penghasilan}}</option>
+                                        <option value="{{$penghasilan->id_jenis_penghasilan}}" {{$siswa->id_jenis_penghasilan_ayah == $penghasilan->id_jenis_penghasilan ? 'selected' : ''}}>{{$penghasilan->nm_jenis_penghasilan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -784,7 +784,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_pendidikan_ibu" id="id_jenis_pendidikan_ibu">
                                     @foreach($jenisPendidikan as $pendidikan)
-                                        <option value="{{$pendidikan->id_jenis_pendidikan}}">{{$pendidikan->nm_jenis_pendidikan}}</option>
+                                        <option value="{{$pendidikan->id_jenis_pendidikan}}"  {{$siswa->id_jenis_pendidikan_ibu == $pendidikan->id_jenis_pendidikan ? 'selected' : ''}}>{{$pendidikan->nm_jenis_pendidikan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -799,7 +799,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_pekerjaan_ibu" id="id_jenis_pekerjaan_ibu">
                                     @foreach($jenisPekerjaan as $pekerjaan)
-                                        <option value="{{$pekerjaan->id_jenis_pekerjaan}}">{{$pekerjaan->nm_jenis_pekerjaan}}</option>
+                                        <option value="{{$pekerjaan->id_jenis_pekerjaan}}" {{$siswa->id_jenis_pekerjaan_ibu == $pekerjaan->id_jenis_pekerjaan ? 'selected' : ''}}>{{$pekerjaan->nm_jenis_pekerjaan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -814,7 +814,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_penghasilan_ibu" id="id_jenis_penghasilan_ibu">
                                     @foreach($jenisPenghasilan as $penghasilan)
-                                        <option value="{{$penghasilan->id_jenis_penghasilan}}">{{$penghasilan->nm_jenis_penghasilan}}</option>
+                                        <option value="{{$penghasilan->id_jenis_penghasilan}}" {{$siswa->id_jenis_penghasilan_ibu == $penghasilan->id_jenis_penghasilan ? 'selected' : ''}}>{{$penghasilan->nm_jenis_penghasilan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -1019,7 +1019,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_pendidikan_wali" id="id_jenis_pendidikan_wali">
                                     @foreach($jenisPendidikan as $pendidikan)
-                                        <option value="{{$pendidikan->id_jenis_pendidikan}}">{{$pendidikan->nm_jenis_pendidikan}}</option>
+                                        <option value="{{$pendidikan->id_jenis_pendidikan}}"  {{$siswa->id_jenis_pendidikan_wali == $pendidikan->id_jenis_pendidikan ? 'selected' : ''}}>{{$pendidikan->nm_jenis_pendidikan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -1034,7 +1034,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_pekerjaan_wali" id="id_jenis_pekerjaan_wali">
                                     @foreach($jenisPekerjaan as $pekerjaan)
-                                        <option value="{{$pekerjaan->id_jenis_pekerjaan}}">{{$pekerjaan->nm_jenis_pekerjaan}}</option>
+                                        <option value="{{$pekerjaan->id_jenis_pekerjaan}}" {{$siswa->id_jenis_pekerjaan_wali == $pekerjaan->id_jenis_pekerjaan ? 'selected' : ''}}>{{$pekerjaan->nm_jenis_pekerjaan}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -1049,7 +1049,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                  <select class="form-control show-tick" name="id_jenis_penghasilan_wali" id="id_jenis_penghasilan_wali">
                                     @foreach($jenisPenghasilan as $penghasilan)
-                                        <option value="{{$penghasilan->id_jenis_penghasilan}}">{{$penghasilan->nm_jenis_penghasilan}}</option>
+                                        <option value="{{$penghasilan->id_jenis_penghasilan}}" {{$siswa->id_jenis_penghasilan_wali == $penghasilan->id_jenis_penghasilan ? 'selected' : ''}}>{{$penghasilan->nm_jenis_penghasilan}}</option>
                                     @endforeach
                                 </select>
                             </div>
