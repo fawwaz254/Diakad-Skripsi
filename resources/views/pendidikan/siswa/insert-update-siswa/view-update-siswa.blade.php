@@ -364,11 +364,9 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="id_jenis_transportasi" id="id_jenis_transportasi">
-                                    <option value="{{ isset($siswa->id_jenis_transportasi) ? $siswa->id_jenis_transportasi : '' }}" selected>
-                                        {{ isset($siswa->nm_jenis_transportasi) ? $siswa->nm_jenis_transportasi : '' }}
-                                    </option>
+                                    <option value="">Pilih Mode Transportasi</option>
                                     @foreach($jenisTransportasi as $tranportasi)
-                                        <option value="{{$tranportasi->id_jenis_transportasi}}">{{$tranportasi->nm_jenis_transportasi}}</option>
+                                        <option value="{{$tranportasi->id_jenis_transportasi}}" {{$siswa->id_jenis_transportasi == $tranportasi->id_jenis_transportasi ? 'selected' : ''}}>{{$tranportasi->nm_jenis_transportasi}}</option>
                                     @endforeach
                                 </select>
                             </div>
