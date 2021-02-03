@@ -424,15 +424,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="is_punya_kip" id="is_punya_kip">
-                                    <option value="{{$siswa->is_punya_kip}}" selected="">
-                                        @if($siswa->is_punya_kip == "0")
-                                            Tidak
-                                        @else
-                                            Ya
-                                        @endif
-                                    </option>
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tidak</option>
+                                    <option value="1" {{$siswa->is_punya_kip == 1 ? 'selected' : ''}}>Ya</option>
+                                    <option value="0" {{$siswa->is_punya_kip == 0 ? 'selected' : ''}}>Tidak</option>
                                 </select>
                             </div>
                         </div>
