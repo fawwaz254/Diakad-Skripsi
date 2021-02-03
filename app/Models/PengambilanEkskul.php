@@ -45,4 +45,9 @@ class PengambilanEkskul extends Model
     {
         return $this->belongsTo('App\Models\Kelas', 'id_kelas');
     }
+
+    public function nilai_ekskul()
+    {
+        return $this->hasMany(NilaiEkskul::class, 'id_pengambilan_ekskul');
+    }
 }

@@ -31,7 +31,10 @@ class PembinaEkskulSet extends Model
 
     protected $guarded = [];
 
-
+    public function ekskul()
+    {
+        return $this->belongsTo(Ekskul::class, 'id_ekskul');
+    }
 
 
 

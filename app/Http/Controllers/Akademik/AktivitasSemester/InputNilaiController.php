@@ -786,7 +786,7 @@ class InputNilaiController extends BaseController
                                     if(empty($nilaiMp)){ // if empty, then create new record
                                         $nilaiMp                = new NilaiMp;
                                         $nilaiMp->id_nilai_mp   = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                                        $is_new_komponen = 0;
+                                        $is_new_komponen = 1;
                                     }
     
                                     $nilaiMp->id_pengambilan_mp     = $siswa->id_pengambilan_mp;

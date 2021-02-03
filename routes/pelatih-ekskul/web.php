@@ -17,6 +17,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@datatablesSiswaInputAbsensiEkskul');
             Route::post('input-absensi-ekskul/action/{mode}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
             Route::post('input-absensi-ekskul/action/{mode}/{id}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+
+            // MENU Rekap Absensi Ekskul
+            Route::get('rekap-absensi-ekskul', 'PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController@viewRekapAbsensiEkskul');
+            Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController@viewDetailRekapAbsensiEkskul');
+            Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController@printRekapAbsensiEkskul');
         });
 
         Route::group(array('prefix' => 'kesekretariatan'), function () {

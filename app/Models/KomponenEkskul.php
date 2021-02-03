@@ -33,9 +33,15 @@ class KomponenEkskul extends Model
 
     protected $guarded = [];
 
-
-
-
+    public function ekskul()
+    {
+        return $this->belongsTo(Ekskul::class, 'id_ekskul');
+    }
+    
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
 
 
 }
