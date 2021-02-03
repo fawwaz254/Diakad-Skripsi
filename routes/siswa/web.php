@@ -8,6 +8,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
         Route::group(array('prefix' => 'data-pribadi'), function() {
 
         	Route::get('data-siswa', 'Siswa\DataPribadi\DataSiswaController@viewDataSiswa');
+        	Route::get('data-siswa/view-print-siswa/{nis_nama_siswa}', 'Siswa\DataPribadi\DataSiswaController@viewPrintSiswa');
         	Route::post('data-siswa/{id}', 'Siswa\DataPribadi\DataSiswaController@actionUpdateSiswa');
 
         });

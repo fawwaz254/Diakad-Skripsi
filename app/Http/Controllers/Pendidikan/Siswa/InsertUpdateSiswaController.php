@@ -29,6 +29,7 @@ use App\Models\JenisPenghasilan as JenisPenghasilan;
 use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
+use App\Models\CalonSiswaBeasiswa;
 
 use App\Libraries\Pendidikan\LibSiswa;
 
@@ -128,8 +129,29 @@ class InsertUpdateSiswaController extends BaseController
 		$auth_data = $input->auth_data;
 
 		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa',$siswa->id_c_siswa)->get();
 
-		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa'));
+		$data_beasiswa[0]['urutan_1'] = '61.';
+		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
+		$data_beasiswa[0]['urutan_3'] = ': ';
+
+		if($beasiswa){
+			foreach ($beasiswa as $key => $value) {
+			if($key==0){
+				$data_beasiswa[$key]['urutan_1'] = '61.';
+				$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
+				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
+			}
+			else{
+				$data_beasiswa[$key]['urutan_1'] = '';
+				$data_beasiswa[$key]['urutan_2'] = '';
+				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
+			}
+			}
+
+		}
+
+		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa'));
 
 	}
 

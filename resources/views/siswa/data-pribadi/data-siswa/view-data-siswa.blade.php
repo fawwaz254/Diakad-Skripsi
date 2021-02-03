@@ -4,6 +4,11 @@
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+             <a href="{{url(Request::segment(1).'/'.Request::segment(2).'/data-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
+                <i class="material-icons">print</i>
+                <span>Print Data Siswa</span>
+            </a>
+            <p></p>
             <div class="card">
                 <div class="header">
                     <h2>
