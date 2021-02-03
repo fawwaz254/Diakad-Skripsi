@@ -139,7 +139,7 @@
 		<tr>
 			<td>18.</td>
 			<td>Jenis Tinggal</td>
-			<td>: Bersama Orang Tua</td>
+			<td>: {{$siswa->nm_jenis_tinggal}}</td>
 		</tr>
 		<tr>
 			<td>19.</td>
