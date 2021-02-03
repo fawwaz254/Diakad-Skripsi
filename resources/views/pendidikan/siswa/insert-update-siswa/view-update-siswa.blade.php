@@ -127,9 +127,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="id_agama" id="id_agama">
-                                    <option value="{{ isset($siswa->id_agama) ? $siswa->id_agama : '' }}" selected="">{{ isset($siswa->nm_agama) ? $siswa->nm_agama : '' }}</option>
                                     @foreach($agama as $agama)
-                                        <option value="{{$agama->id_agama}}">{{$agama->nm_agama}}</option>
+                                         <option value="{{$agama->id_agama}}" {{$siswa->id_agama == $agama->id_agama ? 'selected' : ''}}>{{$agama->nm_agama}}</option>
                                     @endforeach
                                 </select>
                             </div>
