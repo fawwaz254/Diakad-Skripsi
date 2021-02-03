@@ -3,7 +3,13 @@
         <!-- <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#magang-siswa/nama-magang')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2> -->
     </div>
     <div class="row clearfix">
+
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <a href="{{url(Request::segment(1).'/'.Request::segment(2).'/insert-update-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
+                <i class="material-icons">print</i>
+                <span>Print Data Siswa</span>
+            </a>
+            <p></p>
             <div class="card">
                 <div class="header">
                     <h2>

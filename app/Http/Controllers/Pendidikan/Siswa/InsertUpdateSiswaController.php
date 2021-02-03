@@ -122,6 +122,17 @@ class InsertUpdateSiswaController extends BaseController
 		return view('pendidikan/siswa/insert-update-siswa/view-update-siswa',compact('auth_data','nis_nama_siswa','siswa','agama','kebutuhanKhusus','jenisTinggal','jenisTransportasi','jenisPip','jenisPendidikan','jenisPenghasilan','jenisPekerjaan','tingkatPrestasi','kotaLahir','kota','provinsi','kotaTinggal'));
 	}
 
+	public function viewPrintSiswa(Request $request, $nis_nama_siswa){
+
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
+
+		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+
+		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa'));
+
+	}
+
 	public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
 	{
 		$input = (object) $request->input();
