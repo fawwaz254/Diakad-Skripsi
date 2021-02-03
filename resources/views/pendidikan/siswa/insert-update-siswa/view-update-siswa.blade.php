@@ -730,7 +730,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_ibu" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nm_ibu" aria-required="true" aria-invalid="true" value="{{$siswa->nm_ibu}}">
                             </div>
                         </div>
                         <br>
@@ -757,7 +757,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_ibu" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nik_ibu" aria-invalid="true" value="{{$siswa->nik_ibu}}">
                             </div>
                         </div>
                         <br>
@@ -965,7 +965,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_wali" aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nm_wali" aria-required="true" aria-invalid="true" value="{{$siswa->nm_wali}}">
                             </div>
                         </div>
                         <br>
@@ -992,7 +992,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nik_wali"aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="nik_wali"aria-invalid="true" value="{{$siswa->nik_wali}}">
                             </div>
                         </div>
                         <br>
@@ -1123,7 +1123,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="tinggi_badan" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="tinggi_badan" aria-required="true" aria-invalid="true" value="{{$siswa->tinggi_badan}}">
                             </div>
                         </div>
                         <br>
@@ -1135,7 +1135,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="berat_badan" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="berat_badan" aria-required="true" aria-invalid="true" value="{{$siswa->berat_badan}}">
                             </div>
                         </div>
                         <br>
@@ -1159,10 +1159,10 @@
                                 </h2>
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <input type="number" class="form-control" name="waktu_tempuh_sekolah_jam" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="waktu_tempuh_sekolah_jam" aria-required="true" aria-invalid="true" value="{{$siswa->waktu_tempuh_sekolah_jam}}">
                             </div>
                              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <input type="number" class="form-control" name="waktu_tempuh_sekolah_menit" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="waktu_tempuh_sekolah_menit" aria-required="true" aria-invalid="true" value="{{$siswa->waktu_tempuh_sekolah_menit}}">
                             </div>
                         </div>
                         <br>
@@ -1173,7 +1173,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="number" class="form-control" name="dari_x_bersaudara" aria-required="true" aria-invalid="true" value="">
+                                <input type="number" class="form-control" name="dari_x_bersaudara" aria-required="true" aria-invalid="true" value="{{$siswa->dari_x_bersaudara}}">
                             </div>
                         </div>
                         <br>
