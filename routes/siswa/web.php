@@ -4,14 +4,21 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'siswa'), function() {
         Route::get('welcome', 'Siswa\WelcomeController@indexWelcome');
 
+        /** ==== MODUL DATA PRIBADI ==== **/
+        Route::group(array('prefix' => 'data-pribadi'), function() {
+
+        	Route::get('data-siswa', 'Siswa\DataPribadi\DataSiswaController@viewDataSiswa');
+        	Route::get('data-siswa/view-print-siswa/{nis_nama_siswa}', 'Siswa\DataPribadi\DataSiswaController@viewPrintSiswa');
+        	Route::post('data-siswa/{id}', 'Siswa\DataPribadi\DataSiswaController@actionUpdateSiswa');
+
+        });
+
         /** ==== MODUL AKADEMIK ==== **/
 		Route::group(array('prefix' => 'akademik'), function() {
 
 			// MENU Kalender Akademik
 			Route::get('kalender-akademik', 'Siswa\Akademik\KalenderAkademikController@viewKalenderAkademik');
 			Route::get('kalender-akademik/datatables', 'Siswa\Akademik\KalenderAkademikController@datatablesKalenderAkademik');
-
-
 
 			// MENU Jadwal KBM
 			Route::get('jadwal-kbm', 'Siswa\Akademik\JadwalKBMController@viewJadwalKBM');

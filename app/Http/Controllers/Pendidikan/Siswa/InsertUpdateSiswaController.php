@@ -29,6 +29,7 @@ use App\Models\JenisPenghasilan as JenisPenghasilan;
 use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
+use App\Models\CalonSiswaBeasiswa;
 
 use App\Libraries\Pendidikan\LibSiswa;
 
@@ -103,6 +104,7 @@ class InsertUpdateSiswaController extends BaseController
 				'message' => 'NIS tidak ditemukan'
 			];
 		}
+
 		$agama = Agama::get();
 		$kebutuhanKhusus = KebutuhanKhusus::get();
 		$jenisTinggal = JenisTinggal::get();
@@ -117,9 +119,40 @@ class InsertUpdateSiswaController extends BaseController
 		$provinsi = Provinsi::get();
 		
 		$kotaLahir = Kota::where('id_kota','=',$siswa->id_kota_lahir)->first();
-		// dd($siswa);
 
 		return view('pendidikan/siswa/insert-update-siswa/view-update-siswa',compact('auth_data','nis_nama_siswa','siswa','agama','kebutuhanKhusus','jenisTinggal','jenisTransportasi','jenisPip','jenisPendidikan','jenisPenghasilan','jenisPekerjaan','tingkatPrestasi','kotaLahir','kota','provinsi','kotaTinggal'));
+	}
+
+	public function viewPrintSiswa(Request $request, $nis_nama_siswa){
+
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
+
+		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
+		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa',$siswa->id_c_siswa)->get();
+
+		$data_beasiswa[0]['urutan_1'] = '61.';
+		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
+		$data_beasiswa[0]['urutan_3'] = ': ';
+
+		if($beasiswa){
+			foreach ($beasiswa as $key => $value) {
+			if($key==0){
+				$data_beasiswa[$key]['urutan_1'] = '61.';
+				$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
+				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
+			}
+			else{
+				$data_beasiswa[$key]['urutan_1'] = '';
+				$data_beasiswa[$key]['urutan_2'] = '';
+				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
+			}
+			}
+
+		}
+
+		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa'));
+
 	}
 
 	public function viewCariUpdateSiswa(Request $request, $nis_nama_siswa)
@@ -362,7 +395,7 @@ class InsertUpdateSiswaController extends BaseController
 							'nisn_siswa'			=> $input->nisn_siswa,
 							'id_agama'				=> $input->id_agama,
 							'id_kota_lahir'			=> $input->id_kota_lahir,
-							'tgl_lahir'				=> $input->tgl_lahir,
+							'tgl_lahir'				=> date('Y-m-d', strtotime($input->tgl_lahir)),
 							'nomor_identitas'		=> $input->nik_siswa,
 							'nomor_akta_lahir'		=> $input->nomor_akta_lahir,
 							'kewarganegaraan'		=> $input->kewarganegaraan,
@@ -395,28 +428,50 @@ class InsertUpdateSiswaController extends BaseController
 							'nm_tertera_kip'		=> $input->nm_tertera_kip,
 							'is_layak_pip'			=> $input->is_layak_pip,
 							'id_jenis_layak_pip'	=> $input->id_jenis_layak_pip,
+							'bahasa_sehari_hari'	=> $input->bahasa_sehari_hari,
 							'updated_at' 			=> $now,
 							'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 						]);
 
 	    				DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
 							'nm_ayah'					=> $input->nm_ayah,
+							'status_ayah'				=> $input->status_ayah,
 							'nik_ayah'					=> $input->nik_ayah,
-							'tgl_lahir_ayah'			=> $input->tgl_lahir_ayah,
+							'tgl_lahir_ayah'			=> date('Y-m-d', strtotime($input->tgl_lahir_ayah)),
 							'id_jenis_pendidikan_ayah'	=> $input->id_jenis_pendidikan_ayah,
 							'id_jenis_pekerjaan_ayah'	=> $input->id_jenis_pekerjaan_ayah,
 							'id_jenis_penghasilan_ayah'	=> $input->id_jenis_penghasilan_ayah,
 							'id_kebutuhan_khusus_ayah'	=> $input->id_kebutuhan_khusus_ayah,
+							'alamat_jalan_ayah'			=> $input->alamat_jalan_ayah,
+							'alamat_dusun_ayah'			=> $input->alamat_dusun_ayah,
+							'alamat_kelurahan_ayah'		=> $input->alamat_kelurahan_ayah,
+							'almat_rt_ayah'				=> $input->alamat_rt_ayah,
+							'alamat_rw_ayah'			=> $input->alamat_rw_ayah,
+							'alamat_kecamatan_ayah'		=> $input->alamat_kecamatan_ayah,
+							'alamat_kodepos_ayah'		=> $input->alamat_kodepos_ayah,
+							'alamat_kota_ayah'			=> $input->alamat_kota_ayah,
+							'alamat_provinsi_ayah'		=> $input->alamat_provinsi_ayah,
 							'nm_ibu'					=> $input->nm_ibu,
+							'status_ibu'				=> $input->status_ibu,
 							'nik_ibu'					=> $input->nik_ibu,
-							'tgl_lahir_ibu'			    => $input->tgl_lahir_ibu,
+							'tgl_lahir_ibu'			    => date('Y-m-d', strtotime($input->tgl_lahir_ibu)),
 							'id_jenis_pendidikan_ibu'	=> $input->id_jenis_pendidikan_ibu,
 							'id_jenis_pekerjaan_ibu'	=> $input->id_jenis_pekerjaan_ibu,
 							'id_jenis_penghasilan_ibu'	=> $input->id_jenis_penghasilan_ibu,
 							'id_kebutuhan_khusus_ibu'	=> $input->id_kebutuhan_khusus_ibu,
+							'alamat_jalan_ibu'			=> $input->alamat_jalan_ibu,
+							'alamat_dusun_ibu'			=> $input->alamat_dusun_ibu,
+							'alamat_kelurahan_ibu'		=> $input->alamat_kelurahan_ibu,
+							'almat_rt_ibu'			    => $input->alamat_rt_ibu,
+							'alamat_rw_ibu'			    => $input->alamat_rw_ibu,
+							'alamat_kecamatan_ibu'		=> $input->alamat_kecamatan_ibu,
+							'alamat_kodepos_ibu'		=> $input->alamat_kodepos_ibu,
+							'alamat_kota_ibu'			=> $input->alamat_kota_ibu,
+							'alamat_provinsi_ibu'		=> $input->alamat_provinsi_ibu,
 							'nm_wali'					=> $input->nm_wali,
+							'status_wali'				=> $input->status_wali,
 							'nik_wali'					=> $input->nik_wali,
-							'tgl_lahir_wali'			=> $input->tgl_lahir_wali,
+							'tgl_lahir_wali'			=> date('Y-m-d', strtotime($input->tgl_lahir_wali)),
 							'id_jenis_pendidikan_wali'	=> $input->id_jenis_pendidikan_wali,
 							'id_jenis_pekerjaan_wali'	=> $input->id_jenis_pekerjaan_wali,
 							'id_jenis_penghasilan_wali'	=> $input->id_jenis_penghasilan_wali,

@@ -1,10 +1,14 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#siswa/cari-siswa/view-detail/'.$nis_nama_siswa_asli)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#siswa/cari-siswa/view-detail/'.$nis_nama_siswa_asli)}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
+        <a href="{{url(Request::segment(1).'/siswa/insert-update-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
+            <i class="material-icons">print</i>
+            <span>Print Data Siswa</span>
+        </a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
+            <div class="card is-gap">
                 {{csrf_field()}}
                 <div class="header">
                     <h2>
@@ -16,7 +20,7 @@
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
-            <div class="card">
+            <div class="card is-gap">
                 <div class="body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">

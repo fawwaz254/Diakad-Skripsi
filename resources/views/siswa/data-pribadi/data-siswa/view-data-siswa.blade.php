@@ -3,9 +3,8 @@
         <!-- <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#magang-siswa/nama-magang')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2> -->
     </div>
     <div class="row clearfix">
-
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <a href="{{url(Request::segment(1).'/'.Request::segment(2).'/insert-update-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
+             <a href="{{url(Request::segment(1).'/'.Request::segment(2).'/data-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
                 <i class="material-icons">print</i>
                 <span>Print Data Siswa</span>
             </a>
@@ -17,7 +16,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-insert-update-siswa/update/'.$siswa->nis_siswa)}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/data-siswa/'.$siswa->nis_siswa)}}">
                         {{csrf_field()}}
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <div class="demo-color-box bg-success">
@@ -99,7 +98,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                @if($siswa->tgl_lahir)
+                                 @if($siswa->tgl_lahir)
                                  <input type="text" class="datepicker form-control" name="tgl_lahir" aria-required="true" aria-invalid="true" value="{{date('d F Y', strtotime($siswa->tgl_lahir))}}" >
                                 @else
                                  <input type="text" class="datepicker form-control" name="tgl_lahir" aria-required="true" aria-invalid="true">
@@ -128,7 +127,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="id_agama" id="id_agama">
                                     @foreach($agama as $agama)
-                                         <option value="{{$agama->id_agama}}" {{$siswa->id_agama == $agama->id_agama ? 'selected' : ''}}>{{$agama->nm_agama}}</option>
+                                        <option value="{{$agama->id_agama}}" {{$siswa->id_agama == $agama->id_agama ? 'selected' : ''}}>{{$agama->nm_agama}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -329,6 +328,7 @@
                             </div>
                         </div>
                         <br>
+
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
@@ -1002,7 +1002,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                @if($siswa->tgl_lahir_wali)
+                               @if($siswa->tgl_lahir_wali)
                                  <input type="text" class="datepicker form-control" name="tgl_lahir_wali" aria-required="true" aria-invalid="true"  value="{{date('d F Y', strtotime($siswa->tgl_lahir_wali))}}">
                                 @else
                                   <input type="text" class="datepicker form-control" name="tgl_lahir_wali" aria-required="true" aria-invalid="true">
@@ -1082,7 +1082,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" value="{{$siswa->nomor_telp_ortu}}" name="nomor_telp_ortu" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_telp_ortu" aria-required="true" aria-invalid="true" value="{{$siswa->nomor_telp_ortu}}">
                             </div>
                         </div>
                         <br>
@@ -1094,7 +1094,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" value="{{$siswa->nomor_hp_ortu}}"  name="nomor_hp_ortu" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_hp_ortu" aria-required="true" aria-invalid="true" value="{{$siswa->nomor_hp_ortu}}">
                             </div>
                         </div>
                         <br>
@@ -1106,7 +1106,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" value="{{$siswa->email_ortu}}"  name="email_ortu" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="email_ortu" aria-required="true" aria-invalid="true" value="{{$siswa->email_ortu}}">
                             </div>
                         </div>
                         <br>

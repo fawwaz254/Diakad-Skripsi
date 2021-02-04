@@ -152,6 +152,7 @@
                                     <th>Alamat</th>
                                     <th>Telp. Siswa</th>
                                     <th>Telp. Orang Tua</th>
+                                    <th>Print Biodata</th>
                                 </tr>
                             </thead>
                         </table>
@@ -174,6 +175,7 @@
 
     var modul_url       = 'siswa';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-siswa/datatables/' + id_jurusan + '/' + id_kelas +'/' + thn_masuk_siswa+'/' + id_jalur+'/' + id_status_pengguna;
+    var print_url       = base_url + '/' + role_url + '/' + modul_url + '/insert-update-siswa/view-print-siswa' ;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -200,7 +202,14 @@
             { data: 'asal_sekolah', name: 'asal_sekolah' },
             { data: 'alamat', name: 'alamat' },
             { data: 'nomor_hp', name: 'nomor_hp' },
-            { data: 'nomor_hp_ortu', name: 'nomor_hp_ortu' }
+            { data: 'nomor_hp_ortu', name: 'nomor_hp_ortu' },
+            { data: 'nis_siswa',  searchable: false, orderable: false,
+                render: function(data){
+                    return '<a class="btn bg-red btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ print_url + '/' + data + '">'+
+                    '    <i class="material-icons">print</i>'+
+                    '</a>';
+                }
+            },
         ]
     });
 
