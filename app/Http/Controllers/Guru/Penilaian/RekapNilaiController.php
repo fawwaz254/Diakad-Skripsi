@@ -13,6 +13,7 @@ use App\Models\PengambilanMp as PengambilanMp;
 use App\Models\PeraturanNilai as PeraturanNilai;
 use App\Models\NilaiMp as NilaiMp;
 use App\Libraries\SumberDaya\LibGuru;
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\NilaiMpSubKomponen;
 use App\Models\SubKomponenMp;
 use Auth;
@@ -32,8 +33,9 @@ class RekapNilaiController extends BaseController
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         // get all data kelas_mp by id_pengguna guru
-        $data_kelas = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna);
+        $data_kelas = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
         /** groupping by tahun_ajaran and nm_semester */
         $grup_semester_kelas = $data_kelas->groupBy('tahun_ajaran')->transform(function($item, $k) {

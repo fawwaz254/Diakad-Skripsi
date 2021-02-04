@@ -35,8 +35,9 @@ class InputNilaiController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         // get all data kelas_mp by id_pengguna guru
-        $data_kelas = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna);
+        $data_kelas = LibGuru::fetchDataKelasGuru($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
         /** groupping by tahun_ajaran and nm_semester */
         $grup_semester_kelas = $data_kelas->groupBy('tahun_ajaran')->transform(function($item, $k) {
