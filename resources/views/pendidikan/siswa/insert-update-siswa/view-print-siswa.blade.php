@@ -16,7 +16,7 @@
 	 width: 30%;
 	}	
 </style>
-<title>Hello, world!</title>
+<title>Biodata Siswa {{$siswa->nis_siswa}}</title>
 </head>
 <body>
 
