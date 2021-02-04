@@ -48,6 +48,19 @@ use Validator;
 
 class Apiv1Controller extends BaseController
 {
+
+    public function sendTestNotif(Request $request, $id_pengguna = '-'){
+        $pengguna = Pengguna::find($id_pengguna);
+        $send_data = array(
+            'title' => 'Informasi',
+            'body' => 'Putra/Putri Anda melakukan pelanggaran',
+            'priority' => 'high',
+            'screen1' => 'RiwayatPelanggaran1',
+            'screen2' => 'RiwayatPelanggaranKBM'
+        );
+        
+        return LibGlobal::sendNotification($pengguna->api_token, $send_data);
+    }
     
     public function actionSignIn(Request $request)
     {
