@@ -348,9 +348,10 @@ class LibGuru
     /** Kelas Mata Pelajaran **/
     public static function fetchDataKelasMp($auth_data, $id_kelas_mp)
     {
-        $kelasMp = KelasMp::select('kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas')
+        $kelasMp = KelasMp::select('kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'semester.nm_semester', 'semester.tahun_ajaran')
                         ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
                         ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                        ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
                         ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
                         ->first();
 

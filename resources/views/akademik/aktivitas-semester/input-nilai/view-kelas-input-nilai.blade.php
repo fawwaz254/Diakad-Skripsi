@@ -45,7 +45,7 @@
     var edit_url        = base_url + '/' + role_url + '#' + modul_url + '/' + 'input-nilai/edit/' + id_pengguna + '/' + id_semester + '/' + id_kelas_mp;
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-komponen-nilai/delete';
     // add subkomponen
-    var add_url         = base_url + '/' + role_url + '#' + modul_url + '/' + 'input-nilai/view-sub-komponen'
+    var add_url         = base_url + '/' + role_url + '#' + modul_url + '/' + 'input-nilai/view-sub-komponen';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
