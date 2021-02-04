@@ -4,7 +4,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => 'guru'), function () {
         Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
 
-        /** ==== MODUL BIDATA ==== **/
+        /** ==== MODUL BIODATA ==== **/
         Route::group(array('prefix' => 'biodata'), function () {
             // MENU Data Pribadi
             Route::get('data-pribadi', 'Guru\Biodata\DataPribadiController@viewDataPribadi');
@@ -99,6 +99,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-komponen-nilai/{mode}/{id}', 'Guru\Penilaian\KomponenNilaiController@actionKomponenNilai');
 
+                // MENU Sub Komponen Nilai
+                Route::get('komponen-nilai/view-sub-komponen/{id_kelas_mp}/{id_komponen_mp}', 'Guru\Penilaian\KomponenNilaiController@viewKelasSubKomponenNilai');
+                Route::get('komponen-nilai/datatables-subkomponen/{id_komponen_mp}', 'Guru\Penilaian\KomponenNilaiController@datatablesSubKomponenNilai');
+                Route::get('komponen-nilai/add-sub-komponen/{id_kelas_mp}/{id_komponen_mp}', 'Guru\Penilaian\KomponenNilaiController@addSubKomponenNilai');
+                Route::get('komponen-nilai/edit-sub-komponen/{id_kelas_mp}/{id_komponen_mp}/{id}', 'Guru\Penilaian\KomponenNilaiController@editSubKomponenNilai');
+
+                Route::post('action-subkomponen-nilai/{mode}/{id?}', 'Guru\Penilaian\KomponenNilaiController@actionSubKomponenNilai');
+
             // MENU Input Nilai KBM/Try Out
             Route::get('input-nilai', 'Guru\Penilaian\InputNilaiController@viewInputNilai');
             Route::post('post-view-input-nilai', 'Guru\Penilaian\InputNilaiController@actionViewKelasInputNilai');
@@ -111,6 +119,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             */
 
             Route::post('action-input-nilai/{mode}/{id}', 'Guru\Penilaian\InputNilaiController@actionInputNilai');
+
+            // MENU Rekap Nilai
+            Route::get('rekap-nilai', 'Guru\Penilaian\RekapNilaiController@viewRekapNilai');
+            Route::get('rekap-nilai/detail/{id_kelas_mp}', 'Guru\Penilaian\RekapNilaiController@viewDetailRekapNilai');
+            Route::get('rekap-nilai/print/{id_kelas_mp}', 'Guru\Penilaian\RekapNilaiController@printRekapNilai');
         });
 
 
@@ -290,7 +303,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
         });
 
-        // MENU JADWAL KELAS
+        // MODUL KELAS DARING
         Route::group(array('prefix' => 'kelas-daring'), function () {
             Route::group(array('prefix' => 'jadwal-kelas'), function () {
                 Route::get('/', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasDaring');
@@ -357,6 +370,36 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 
                 Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
             });
+        });
+
+        // MODUL PEMBINA EKSKUL
+        Route::group(['prefix' => 'pembina-ekskul'], function(){
+            // Menu Rekap Absensi Ekskul
+            Route::get('rekap-absensi-ekskul', 'Guru\PembinaEkskul\RekapAbsensiEkskulController@viewRekapAbsensiEkskul');
+            Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\RekapAbsensiEkskulController@viewDetailRekapAbsensiEkskul');
+            Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\RekapAbsensiEkskulController@printRekapAbsensiEkskul');
+
+            // Menu Komponen Nilai Ekskul
+            Route::get('komponen-nilai-ekskul', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@viewKomponenNilaiEkskul');
+            Route::post('post-view-komponen-nilai', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@postViewKomponenNilaiEkskul');
+            Route::get('komponen-nilai-ekskul/list/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@viewListKomponenNilaiEkskul');
+            Route::get('komponen-nilai-ekskul/datatables/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@datatablesKomponenNilaiEkskul');
+            Route::get('komponen-nilai-ekskul/add/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@addKomponenNilaiEkskul');
+            Route::get('komponen-nilai-ekskul/edit/{id_semester}/{id_ekskul}/{id}', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@editKomponenNilaiEkskul');
+
+            Route::post('action-komponen-nilai-ekskul/{mode}/{id?}', 'Guru\PembinaEkskul\KomponenNilaiEkskulController@actionKomponenNilaiEkskul');
+
+            // Menu Input Nilai Ekskul
+            Route::get('input-nilai-ekskul', 'Guru\PembinaEkskul\InputNilaiEkskulController@viewInputNilaiEkskul');
+            Route::post('post-view-input-nilai', 'Guru\PembinaEkskul\InputNilaiEkskulController@postViewInputNilaiEkskul');
+            Route::get('input-nilai-ekskul/detail/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputNilaiEkskulController@viewDetailInputNilaiEkskul');
+
+            Route::post('input-nilai-ekskul/save', 'Guru\PembinaEkskul\InputNilaiEkskulController@saveInputNilaiEkskul');
+
+            // Menu Rekap Nilai Ekskul
+            Route::get('rekap-nilai-ekskul', 'Guru\PembinaEkskul\RekapNilaiEkskulController@viewRekapNilaiEkskul');
+            Route::get('rekap-nilai-ekskul/detail/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\RekapNilaiEkskulController@viewDetailRekapNilaiEkskul');
+            Route::get('rekap-nilai-ekskul/print/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\RekapNilaiEkskulController@printRekapNilaiEkskul');
         });
     });
 });

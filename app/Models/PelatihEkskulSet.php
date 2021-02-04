@@ -35,4 +35,9 @@ class PelatihEkskulSet extends Model
     {
         return $this->belongsTo('App\Models\Ekskul', 'id_ekskul');
     }
+    
+    public function pelatih_ekskul()
+    {
+        return $this->belongsTo(PelatihEkskul::class, 'id_pelatih_ekskul');
+    }
 }

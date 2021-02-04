@@ -33,7 +33,10 @@ class PelatihEkskul extends Model
     protected $guarded = [];
 
 
-
+    public function pengguna()
+    {
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
+    }
 
 
 

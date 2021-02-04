@@ -8,6 +8,8 @@ use App\Models\KomponenMp as KomponenMp;
 use App\Models\WaliKelas as WaliKelas;
 use App\Models\HomeVisit as HomeVisit;
 use App\Models\JadwalKelasMp as JadwalKelasMp;
+use App\Models\KomponenEkskul;
+use App\Models\PembinaEkskulSet;
 use App\Models\SubKomponenMp;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
@@ -346,9 +348,10 @@ class LibGuru
     /** Kelas Mata Pelajaran **/
     public static function fetchDataKelasMp($auth_data, $id_kelas_mp)
     {
-        $kelasMp = KelasMp::select('kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas')
+        $kelasMp = KelasMp::select('kelas_mp.id_kelas_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'semester.nm_semester', 'semester.tahun_ajaran')
                         ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
                         ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                        ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
                         ->where('kelas_mp.id_kelas_mp', '=', $id_kelas_mp)
                         ->first();
 
@@ -408,6 +411,34 @@ class LibGuru
         }
 
         return $subKomponenMp;
+    }
+    /** ========== **/
+
+    /** Komponen Nilai EKSKUL **/
+    public static function fetchDataKomponenNilaiEkskul($auth_data, $id_semester, $id_ekskul, $id = null)
+    {
+        // get mode view
+        if ($id == null) {
+            $komponenEkskul = KomponenEkskul::select('komponen_ekskul.id_komponen_ekskul', 'ekskul.nm_ekskul', 'komponen_ekskul.nm_komponen_ekskul', 'komponen_ekskul.persentase_komponen_ekskul', 'komponen_ekskul.urutan_komponen_ekskul')
+                        ->join('ekskul', function($join){
+                            $join->on('ekskul.id_ekskul', '=', 'komponen_ekskul.id_ekskul');
+                            $join->whereNull('ekskul.deleted_at');
+                        })
+                        ->join('semester', function($join){
+                            $join->on('semester.id_semester', '=', 'komponen_ekskul.id_semester');
+                            $join->whereNull('semester.deleted_at');
+                        })
+                        ->where('komponen_ekskul.id_ekskul', '=', $id_ekskul)
+                        ->where('komponen_ekskul.id_semester', '=', $id_semester)
+                        ->orderBy('komponen_ekskul.urutan_komponen_ekskul', 'asc')
+                        ->get();
+        }
+        // get mode edit
+        else {
+            $komponenEkskul = KomponenEkskul::with('semester', 'ekskul')->find($id);
+        }
+
+        return $komponenEkskul;
     }
     /** ========== **/
 
@@ -533,6 +564,20 @@ class LibGuru
                 ->get();
 
         return $kelasKosong;
+    }
+    /** ========== **/
+
+    /** EKSKUL GURU PEMBINA EKSKUL BY id_pengguna **/
+    public static function fetchDataEkskulGuru($auth_data, $id_pengguna)
+    {
+        // get id_guru
+        $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
+        $id_guru = $guru->id_guru;
+
+        // untuk pembina apakah ada semester/tahun_ajaran ?
+        $ekskulGuru = PembinaEkskulSet::with('ekskul')->where('id_guru', $id_guru)->where('is_aktif', 1)->get();
+
+        return $ekskulGuru;
     }
     /** ========== **/
 }
