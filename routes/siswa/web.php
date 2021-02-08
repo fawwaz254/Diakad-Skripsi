@@ -4,6 +4,33 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'siswa'), function() {
         Route::get('welcome', 'Siswa\WelcomeController@indexWelcome');
 
+        /** ==== MODUL SKPI ==== **/
+        Route::group(array('prefix' => 'skpi'), function() {
+
+        	Route::group(array('prefix' => 'data-kegiatan-siswa'), function() {
+
+        		Route::get('/', 'Siswa\SKPI\DataKegiatanSiswaController@viewDataKegiatanSiswa');
+        		Route::get('add', 'Siswa\SKPI\DataKegiatanSiswaController@viewAddDataKegiatanSiswa');
+        		Route::get('edit/{id}', 'Siswa\SKPI\DataKegiatanSiswaController@viewEditDataKegiatanSiswa');
+        		Route::post('action/{mode}/{id}', 'Siswa\SKPI\DataKegiatanSiswaController@actionDataKegiatanSiswa');
+
+        		Route::get('datatables', 'Siswa\SKPI\DataKegiatanSiswaController@datatablesDataKegiatanSiswa');
+
+        	});
+
+        	Route::group(array('prefix' => 'data-prestasi-siswa'), function() {
+
+        		Route::get('/', 'Siswa\SKPI\DataPrestasiSiswaController@viewDataPrestasiSiswa');
+        		Route::get('add', 'Siswa\SKPI\DataPrestasiSiswaController@viewAddDataPrestasiSiswa');
+        		Route::get('edit/{id}', 'Siswa\SKPI\DataPrestasiSiswaController@viewEditDataPrestasiSiswa');
+        		Route::post('action/{mode}/{id}', 'Siswa\SKPI\DataPrestasiSiswaController@actionDataPrestasiSiswa');
+
+        		Route::get('datatables', 'Siswa\SKPI\DataPrestasiSiswaController@datatablesDataPrestasiSiswa');
+
+        	});
+
+        });
+
         /** ==== MODUL AKADEMIK ==== **/
 		Route::group(array('prefix' => 'akademik'), function() {
 
