@@ -4,6 +4,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => 'kesiswaan'), function () {
         Route::get('welcome', 'Kesiswaan\WelcomeController@indexWelcome');
 
+        /** ==== MODUL SKPI ==== **/
+
+        Route::group(array('prefix' => 'skpi'), function () {
+
+             Route::get('approve-prestasi-siswa', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
+
+        });
+
         /** ==== MODUL Ekstrakurikuler ==== **/
         Route::group(array('prefix' => 'ekstrakurikuler'), function () {
 
