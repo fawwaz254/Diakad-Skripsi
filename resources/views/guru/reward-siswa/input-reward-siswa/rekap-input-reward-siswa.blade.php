@@ -4,7 +4,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>DATA PELANGGARAN SISWA MP</h2>
+                        <h2>DATA REWARD SISWA</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
