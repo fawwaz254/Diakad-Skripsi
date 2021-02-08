@@ -8,8 +8,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
         Route::group(array('prefix' => 'skpi'), function () {
 
-             Route::get('approve-prestasi-siswa', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
-
+            Route::get('approve-prestasi-siswa', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/datatables', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
+            Route::get('approve-prestasi-siswa/print-skpi/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@PrintSkpi');
+            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
+            Route::post('approve-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
         });
 
         /** ==== MODUL Ekstrakurikuler ==== **/

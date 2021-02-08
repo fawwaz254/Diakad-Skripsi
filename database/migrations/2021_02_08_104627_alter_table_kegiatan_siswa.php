@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTablePrestasiSiswa extends Migration
+class AlterTableKegiatanSiswa extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AlterTablePrestasiSiswa extends Migration
      */
     public function up()
     {
-        Schema::table('prestasi_siswa', function (Blueprint $table) {
+        Schema::table('kegiatan_siswa', function (Blueprint $table) {
 
-            $table->tinyInteger('status')->default('0')->after('link_sertif_prestasi_siswa')->comment('0 = belum diapprove, 1 = sudah diapprove');
+            $table->tinyInteger('status')->default('0')->after('nm_kegiatan_scan_sertif')->comment('0 = belum diapprove, 1 = sudah diapprove');
             $table->string('approved_by', 40)->nullable()->after('status');
             $table->dateTime('approved_at')->nullable()->after('approved_by');
 

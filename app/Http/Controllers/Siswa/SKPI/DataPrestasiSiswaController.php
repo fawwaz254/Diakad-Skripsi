@@ -211,6 +211,8 @@ class DataPrestasiSiswaController extends BaseController
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
+            'prestasi_siswa.link_sertif_prestasi_siswa',
+            'prestasi_siswa.status',
             'p1.nm_pengguna as nm_siswa',
             'siswa.nisn_siswa',
             'siswa.nis_siswa',
@@ -245,6 +247,20 @@ class DataPrestasiSiswaController extends BaseController
                 ->addColumn('semester', function ($item) {
                     return $item->nm_semester.' ('.$item->tahun_ajaran.')';
                 })
+                ->addColumn('keterangan', function ($item) {
+                            if ($item->status == 0) {
+                                $status = 'Belum Diapprove';
+                                $color = 'pink';
+                            } elseif ($item->status== 1) {
+                                $status = 'Sudah Diapprove';
+                                $color = 'teal';
+                            }
+                            $data = array(
+                                'status' => $status,
+                                'color'  => $color
+                            );
+                            return $data;
+                        })
                 ->addColumn('jenis_prestasi', function ($item) {
                     if ($item->jenis_prestasi_siswa == 1) {
                         return "Sains";
@@ -273,7 +289,8 @@ class DataPrestasiSiswaController extends BaseController
                 ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_prestasi_siswa,
-                        'link_sertifikat'=>$item->link_sertif_prestasi_siswa
+                        'link_sertifikat'=>$item->link_sertif_prestasi_siswa,
+                        'status'=>$item->status
                     );
                     return $data;
                 })
