@@ -162,7 +162,9 @@ class DataKegiatanSiswaController extends BaseController{
         ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->get();
 
         return Datatables::of($list_data)
                         ->addColumn('keterangan', function ($item) {

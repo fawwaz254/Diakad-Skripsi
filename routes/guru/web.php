@@ -290,6 +290,12 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
 
             Route::get('approve-prestasi-siswa', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/datatables', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
+            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
+            Route::post('approve-prestasi-siswa/{data}/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/print-skpi/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@PrintSkpi');
         });
 
         // MENU JADWAL KELAS

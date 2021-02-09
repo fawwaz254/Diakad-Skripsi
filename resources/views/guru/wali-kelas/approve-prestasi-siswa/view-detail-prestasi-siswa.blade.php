@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/skpi/approve-prestasi-siswa/print-skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
+            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/wali-kelas/approve-prestasi-siswa/print-skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
         </h2>
     </div>
     <div class="row clearfix">
