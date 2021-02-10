@@ -13,21 +13,40 @@ use Cloudder;
 class LibGlobal
 {
 	static function sendNotification($token, $payload){
-		$api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
+		// $api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
+		$api_key = 'MjNlNTliYzQtY2EzYS00NjlkLWEwZTktYjc4ZGZiZDI1MTQz'; // OneSignal RESTAPI KEY
+		$app_id = '8c075562-351e-4fdf-9b1d-1448a3a79503'; // OneSignal APP_ID
     
+		// $fields = array (
+		// 	'to' => $token, 
+		// 	'priority' => 'high', 
+		// 	'content_available' => true, 
+		// 	'data' => $payload
+		// );
+		
 		$fields = array (
-			'to' => $token, 
-			'priority' => 'high', 
-			'content_available' => true, 
-			'data' => $payload
+			'included_segments' => null,
+			'app_id' => $app_id,
+			'contents' => ['id'=> $payload['body'], 'en'=> $payload['body']],
+			'headings' => ['id'=> $payload['title'], 'en'=> $payload['title']],
+			'data' => $payload,
+			'url' => null,
+			'chrome_web_image' => null,
+			'include_player_ids' => [$token]
 		);
 
+		// $headers = array (
+		// 	'Authorization: key='.$api_key, 
+		// 	'Content-Type: application/json'
+		// );
+		
 		$headers = array (
-			'Authorization: key='.$api_key, 
-			'Content-Type: application/json'
+			'Content-Type: application/json; charset=utf-8',
+        	'Authorization: Basic ' . $api_key
 		);
 
-		$url = 'https://fcm.googleapis.com/fcm/send';
+		// $url = 'https://fcm.googleapis.com/fcm/send';
+		$url = 'https://onesignal.com/api/v1/notifications';
 
 		$ch = curl_init ();
 		curl_setopt ( $ch, CURLOPT_URL, $url );
@@ -41,7 +60,7 @@ class LibGlobal
 		$result = curl_exec ( $ch );
 		curl_close ( $ch );
 
-		return 200;
+		return $result;
 	}
 	// Fungsi singkat nama
 	/* FIKRIE 16-04-2016 */
