@@ -47,6 +47,7 @@ table {
 	</tr>
 </table>
 
+@if($prestasi->count()>0)
 <h6  style="margin-top: 30px;">Prestasi</h6>
 <table>
   <thead>
@@ -86,8 +87,9 @@ table {
   	@endforeach
   </tbody>
 </table>
+@endif
 
-
+@if($kegiatan->count()>0)
 <h6 style="margin-top: 30px;">Kegiatan</h6>
 <table >
   <thead>
@@ -109,6 +111,7 @@ table {
   	@endforeach
   </tbody>
 </table>
+@endif
 
 </div>
 
