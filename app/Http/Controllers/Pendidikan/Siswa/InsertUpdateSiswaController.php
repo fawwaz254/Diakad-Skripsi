@@ -32,7 +32,7 @@ use App\Models\Provinsi as Provinsi;
 use App\Models\CalonSiswaBeasiswa;
 
 use App\Libraries\Pendidikan\LibSiswa;
-
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 use Auth;
 use DB;
@@ -131,6 +131,8 @@ class InsertUpdateSiswaController extends BaseController
 		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
 		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa',$siswa->id_c_siswa)->get();
 
+		$semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
 		$data_beasiswa[0]['urutan_1'] = '61.';
 		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
 		$data_beasiswa[0]['urutan_3'] = ': ';
@@ -151,7 +153,7 @@ class InsertUpdateSiswaController extends BaseController
 
 		}
 
-		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa'));
+		return view('pendidikan/siswa/insert-update-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa','semester_aktif'));
 
 	}
 

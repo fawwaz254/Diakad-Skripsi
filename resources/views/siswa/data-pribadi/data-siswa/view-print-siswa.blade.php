@@ -21,7 +21,7 @@
 <body>
 
 <div class="container">
-<h4 class="text-center" style="margin-top: 40px;">LEMBAR DATA PRIBADI PESERTA DIDIK <br> TAHUN PELAJARAN : 2016/2017</h4>
+<h4 class="text-center" style="margin-top: 40px;">LEMBAR DATA PRIBADI PESERTA DIDIK <br> TAHUN PELAJARAN : {{$semester_aktif->tahun_ajaran}}</h4>
 
 <ol type="A" style="margin-top: 30px;">
 	<li style="font-weight: 500;">KETERANGAN TENTANG DIRI PESERTA DIDIK</li>

@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 use App\Models\Pengguna as Pengguna;
 use App\Models\Agama as Agama;
@@ -84,6 +85,8 @@ class DataSiswaController extends BaseController{
 		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
 		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa',$siswa->id_c_siswa)->get();
 
+		$semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
 		$data_beasiswa[0]['urutan_1'] = '61.';
 		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
 		$data_beasiswa[0]['urutan_3'] = ': ';
@@ -104,7 +107,7 @@ class DataSiswaController extends BaseController{
 
 		}
 
-		return view('siswa/data-pribadi/data-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa'));
+		return view('siswa/data-pribadi/data-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa', 'semester_aktif'));
 
 	}
 
