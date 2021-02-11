@@ -4,6 +4,21 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'humas'), function() {
 			Route::get('welcome', 'Humas\WelcomeController@indexWelcome');
 
+		/** ==== MODUL BURSA KERJA ==== **/
+		Route::group(array('prefix' => 'bursa-kerja'), function() {
+
+			Route::group(array('prefix' => 'lowongan-kerja'), function() {
+
+				Route::get('/', 'Humas\BursaKerja\LowonganKerjaController@viewLowonganKerja');
+				Route::get('add', 'Humas\BursaKerja\LowonganKerjaController@viewAddEditLowonganKerja');
+				Route::get('edit/{id}', 'Humas\BursaKerja\LowonganKerjaController@viewAddEditLowonganKerja');
+				Route::post('datatables', 'Humas\BursaKerja\LowonganKerjaController@showDatatablesLowonganKerja');
+				Route::post('action/{mode}', 'Humas\BursaKerja\LowonganKerjaController@actionLowonganKerja');
+
+			});
+
+		});
+
         /** ==== MODUL KEGIATAN HARIAN ==== **/
 			Route::group(array('prefix' => 'kegiatan-harian'), function() {
 			
