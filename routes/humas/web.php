@@ -12,8 +12,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				Route::get('/', 'Humas\BursaKerja\LowonganKerjaController@viewLowonganKerja');
 				Route::get('add', 'Humas\BursaKerja\LowonganKerjaController@viewAddEditLowonganKerja');
 				Route::get('edit/{id}', 'Humas\BursaKerja\LowonganKerjaController@viewAddEditLowonganKerja');
-				Route::post('datatables', 'Humas\BursaKerja\LowonganKerjaController@showDatatablesLowonganKerja');
+				Route::get('datatables', 'Humas\BursaKerja\LowonganKerjaController@showDatatablesLowonganKerja');
 				Route::post('action/{mode}', 'Humas\BursaKerja\LowonganKerjaController@actionLowonganKerja');
+				Route::post('action/delete/{id}', 'Humas\BursaKerja\LowonganKerjaController@actionDeleteLowonganKerja');
 
 			});
 

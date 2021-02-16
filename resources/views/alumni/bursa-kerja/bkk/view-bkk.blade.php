@@ -1,15 +1,11 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}">
-                <i class="material-icons">note_add</i><span>Tambah Lowongan Kerja</span></a></h2>
-    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
                     <h2>DATA LOWONGAN KERJA</h2>
                 </div>
+                {{csrf_field()}}
                 <div class="body">
                     <div class="table-responsive">
                         <table
@@ -36,8 +32,7 @@
     var menu_url       = '{{Request::segment(3)}}';
 
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + menu_url + '/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
+    var detail_url        = role_url + '#' + modul_url + '/' + menu_url + '/detail';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -68,22 +63,17 @@
                     
                 }
             },
-
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
                     '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+                    '</a> '
                 }
             }
         ],
         columnDefs: [
             { className: 'text-center', targets: [2] },
         ]
-
     });
 
     primary_table.on( 'draw', function () {

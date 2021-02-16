@@ -9,6 +9,7 @@ use App\Models\LowonganKerja;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Storage;
 
 use Auth;
 use DB;
@@ -31,7 +32,7 @@ class LowonganKerjaController extends BaseController{
         $auth_data = $input->auth_data;
 
         if(!empty($id)){
-            $item = KegiatanHarian::find($id);
+            $item = LowonganKerja::find($id);
         }else{
             $item = null;
         }
@@ -81,11 +82,18 @@ class LowonganKerjaController extends BaseController{
             if($mode == 'add') {
 
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-
+                
                 $lowongan_kerja                             = new LowonganKerja;
                 $lowongan_kerja->id_lowongan_kerja          = $id;
                 $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja;
                 $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja;
+
+                if(!empty(request()->file)){
+                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/humas/'.$id, request()->file, 'public');
+                    $lowongan_kerja->poster_lowongan_kerja   = $file;
+                }
+
                 $lowongan_kerja->created_by                 = $input->auth_data->pengguna->id_pengguna;
                 $lowongan_kerja->save();
 
@@ -102,6 +110,13 @@ class LowonganKerjaController extends BaseController{
                 $lowongan_kerja                             = LowonganKerja::find($input->id_lowongan_kerja);
                 $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja;
                 $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja;
+
+                if(!empty(request()->file)){
+                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/humas/'.$input->id_lowongan_kerja, request()->file, 'public');
+                    $lowongan_kerja->poster_lowongan_kerja   = $file;
+                }
+
                 $lowongan_kerja->updated_by                 = $input->auth_data->pengguna->id_pengguna;
                 $lowongan_kerja->save();
 
@@ -113,22 +128,24 @@ class LowonganKerjaController extends BaseController{
                 
             }
 
-            elseif ($mode == 'delete') {
-
-                $lowongan_kerja               = LowonganKerja::find($input->id_lowongan_kerja);
-                $lowongan_kerja->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                $lowongan_kerja->save();
-
-                $lowongan_kerja->delete();
-
-                return [
-                    'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Lowongan Kerja successfully'
-                ];
-                
-            }
-
         }
+
+    }
+
+    public function actionDeleteLowonganKerja(Request $request, $id){
+
+        $input = (object) $request->input();
+
+        $lowongan_kerja               = LowonganKerja::findOrFail($id);
+        $lowongan_kerja->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+        $lowongan_kerja->save();
+
+        $lowongan_kerja->delete();
+
+        return [
+            'status' => 203, // SUCCESS AND LOAD TABLE
+            'message' => 'Delete Lowongan Kerja successfully'
+        ];
 
     }
 
@@ -140,8 +157,25 @@ class LowonganKerjaController extends BaseController{
 
     	return Datatables::of($list_data)
                            ->addColumn('action', function($item){
+                                if($item->poster_lowongan_kerja){
+                                    $poster =  Storage::disk('spaces')->url($item->poster_lowongan_kerja);
+                                    $ext = pathinfo($item->poster_lowongan_kerja, PATHINFO_EXTENSION);
+                                    if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                                        $note = 'file';
+                                    }
+                                    else{
+                                        $note= 'image';
+                                    }
+                                }
+                                else{
+                                    $poster = null;
+                                    $note = null;
+                                }
+
                                 $data = array(
-                                    'id' => $item->id_lowongan_kerja
+                                    'id' => $item->id_lowongan_kerja,
+                                    'poster' => $poster,
+                                    'note' => $note
                                 );
                                 return $data;
                             })
