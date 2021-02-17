@@ -160,7 +160,7 @@ class LibDataAkademik
 
         // get mode view
         if ($id == null){
-            $kalenderAkademik = JadwalKegiatan::select('jadwal_kegiatan.id_jadwal_kegiatan','kegiatan.nm_kegiatan', 'kegiatan.deskripsi_kegiatan', 'semester.tahun_ajaran', 'semester.nm_semester', 'jadwal_kegiatan.tgl_mulai', 'jadwal_kegiatan.tgl_selesai')
+            $kalenderAkademik = JadwalKegiatan::select('jadwal_kegiatan.id_jadwal_kegiatan','kegiatan.nm_kegiatan', 'kegiatan.deskripsi_kegiatan', 'jadwal_kegiatan.deskripsi', 'semester.tahun_ajaran', 'semester.nm_semester', 'jadwal_kegiatan.tgl_mulai', 'jadwal_kegiatan.tgl_selesai')
                     ->join('kegiatan','kegiatan.id_kegiatan','=','jadwal_kegiatan.id_kegiatan')
                     ->join('semester','semester.id_semester','=','jadwal_kegiatan.id_semester')
                     ->where('jadwal_kegiatan.id_semester','=',$id_semester)

@@ -63,4 +63,9 @@ class Siswa extends Model
     {
         return $this->belongsTo(WaliMurid::class, 'id_wali_murid');
     }
+
+    public function pengajuan_wisuda()
+    {
+        return $this->hasOne(PengajuanWisuda::class, 'id_siswa');
+    }
 }

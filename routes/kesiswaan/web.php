@@ -313,5 +313,17 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-penerimaan/{mode}/{id}', 'PPDB\Pendaftaran\PenerimaanController@actionPenerimaan');
         });
+        
+        /** ==== MODUL IJAZAH ==== **/
+        Route::group(array('prefix' => 'ijazah'), function () {
+            // MENU Data Pengambilan Ijazah
+            Route::get('pengambilan-ijazah', 'Kesiswaan\Ijazah\PengambilanIjazahController@viewPengambilanIjazah');
+            Route::get('pengambilan-ijazah/datatables', 'Kesiswaan\Ijazah\PengambilanIjazahController@datatablesPengambilanIjazah');
+            Route::get('pengambilan-ijazah/add', 'Kesiswaan\Ijazah\PengambilanIjazahController@addPengambilanIjazah');
+            Route::get('pengambilan-ijazah/edit/{id}', 'Kesiswaan\Ijazah\PengambilanIjazahController@editPengambilanIjazah');
+            Route::get('pengambilan-ijazah/print/{id}', 'Kesiswaan\Ijazah\PengambilanIjazahController@printPengambilanIjazah');
+
+            Route::post('action-pengambilan-ijazah/{mode}/{id}', 'Kesiswaan\Ijazah\PengambilanIjazahController@actionPengambilanIjazah');
+        });
     });
 });

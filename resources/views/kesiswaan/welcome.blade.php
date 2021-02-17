@@ -10,6 +10,10 @@
             <div class="row clearfix">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="text-center"><b>Last updated: <br>{{date_format(date_create($last_siswa->created_at), 'd M Y H:i')}}</b></div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
                         <div class="icon">
                             <i class="material-icons">person</i>
@@ -17,6 +21,28 @@
                         <div class="content">
                             <div class="text">Total Siswa Aktif</div>
                             <div class="number count-to" data-from="0" data-to="{{$count_siswa}}" data-speed="15" data-fresh-interval="20">{{number_format($count_siswa)}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-pink hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Siswa Laki-laki</div>
+                            <div class="number count-to" data-from="0" data-to="{{ $jenis_kelamin->where('jenis_kelamin', 1)->first()->user_count }}" data-speed="15" data-fresh-interval="20">{{number_format( $jenis_kelamin->where('jenis_kelamin', 1)->first()->user_count) }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box bg-pink hover-expand-effect">
+                        <div class="icon">
+                            <i class="material-icons">person</i>
+                        </div>
+                        <div class="content">
+                            <div class="text">Siswa Perempuan</div>
+                            <div class="number count-to" data-from="0" data-to="{{ $jenis_kelamin->where('jenis_kelamin', 2)->first()->user_count }}" data-speed="15" data-fresh-interval="20">{{ number_format($jenis_kelamin->where('jenis_kelamin', 2)->first()->user_count) }}</div>
                         </div>
                     </div>
                 </div>

@@ -718,4 +718,40 @@ class LibSiswa
         return $pelanggaranKBM;
     }
     /** ========== **/
+
+    /** LIST SISWA YANG SUDAH LULUS **/
+    public static function fetchDataSiswaLulus($auth_data, $id_siswa = null)
+    {
+        $siswaLulus = Siswa::select('siswa.nis_siswa', 
+                                'siswa.id_siswa',
+                                'pengguna.nm_pengguna as nm_siswa', 
+                                'pengajuan_wisuda.nomor_sk_kelulusan', 
+                                'pengajuan_wisuda.tgl_sk_kelulusan', 
+                                'pengajuan_wisuda.nomor_ijasah', 
+                                'pengajuan_wisuda.tgl_kelulusan', 
+                                'pengajuan_wisuda.ipk', 
+                                'pengajuan_wisuda.status_wisuda',
+                                'periode_wisuda.nm_periode_wisuda')
+                    ->join('pengguna', function($join){
+                        $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna');
+                        $join->whereNull('pengguna.deleted_at');
+                    })
+                    ->join('pengajuan_wisuda', function($join){
+                        $join->on('siswa.id_siswa', '=', 'pengajuan_wisuda.id_siswa');
+                        $join->whereNull('pengajuan_wisuda.deleted_at');
+                    })
+                    ->join('periode_wisuda', function($join){
+                        $join->on('pengajuan_wisuda.id_periode_wisuda', '=', 'periode_wisuda.id_periode_wisuda');
+                        $join->whereNull('periode_wisuda.deleted_at');
+                    })
+                    ->whereNull('siswa.id_kelas');
+        if($id_siswa != null){
+            $dataSiswaLulus = $siswaLulus->where('siswa.id_siswa', '=', $id_siswa)->first();
+        } else {
+            $dataSiswaLulus = $siswaLulus->get();
+        }
+        
+        return $dataSiswaLulus;
+    }
+    /** ========== **/
 }

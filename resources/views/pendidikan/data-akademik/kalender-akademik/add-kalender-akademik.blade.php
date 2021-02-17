@@ -54,6 +54,15 @@
                                     aria-invalid="true">
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Keterangan / Deskripsi
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="deskripsi"
+                                    aria-invalid="true">
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

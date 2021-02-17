@@ -73,7 +73,7 @@
                                         aria-invalid="true">
                                 </div>
                             </div>
-                            <h2 class="card-inside-title">
+                            <!-- <h2 class="card-inside-title">
                                 Jam Tatap Muka
                             </h2>
                             <div class="row clearfix">
@@ -117,7 +117,7 @@
                                     <input type="number" class="form-control" name="kredit_simulasi" required="" aria-required="true"
                                         aria-invalid="true" value="0">
                                 </div>
-                            </div>
+                            </div> -->
                             <h2 class="card-inside-title">
                                 Tingkat Semester
                             </h2>

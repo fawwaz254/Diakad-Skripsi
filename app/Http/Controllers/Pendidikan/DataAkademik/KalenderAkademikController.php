@@ -143,7 +143,8 @@ class KalenderAkademikController extends BaseController{
             'id_kegiatan' => 'required',
             'id_semester' => 'required',
             'tgl_mulai' => 'required',
-            'tgl_selesai' => 'required'
+            'tgl_selesai' => 'required',
+            'deskripsi' => 'nullable|string'
         ]);
 
         if($validator->fails() && $mode != 'delete') {
@@ -174,6 +175,7 @@ class KalenderAkademikController extends BaseController{
                     $jadwalKegiatan->id_jadwal_kegiatan         = $id;
                     $jadwalKegiatan->id_kegiatan                = $input->id_kegiatan;
                     $jadwalKegiatan->id_semester                = $input->id_semester;
+                    $jadwalKegiatan->deskripsi                  = $input->deskripsi;
                     // convert format date
                     $jadwalKegiatan->tgl_mulai                  = date_format(date_create($input->tgl_mulai),"Y-m-d");
                     $jadwalKegiatan->tgl_selesai                = date_format(date_create($input->tgl_selesai),"Y-m-d");
@@ -192,6 +194,7 @@ class KalenderAkademikController extends BaseController{
                 $jadwalKegiatan                             = JadwalKegiatan::find($id);
                 $jadwalKegiatan->id_kegiatan                = $input->id_kegiatan;
                 $jadwalKegiatan->id_semester                = $input->id_semester;
+                $jadwalKegiatan->deskripsi                  = $input->deskripsi;
                 // convert format date
                 $jadwalKegiatan->tgl_mulai                  = date_format(date_create($input->tgl_mulai),"Y-m-d");
                 $jadwalKegiatan->tgl_selesai                = date_format(date_create($input->tgl_selesai),"Y-m-d");
