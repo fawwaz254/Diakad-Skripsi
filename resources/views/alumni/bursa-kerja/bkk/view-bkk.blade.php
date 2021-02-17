@@ -65,14 +65,14 @@
             },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
+                    return '<a class="target-link btn btn-info" href="'+ detail_url + '/' + data.id +'">'+
+                    '    Lihat Detail'+
                     '</a> '
                 }
             }
         ],
         columnDefs: [
-            { className: 'text-center', targets: [2] },
+            { className: 'text-center', targets: [2,3] },
         ]
     });
 
