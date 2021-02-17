@@ -26,6 +26,7 @@
         </div>
     </div>
 </div>
+
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];

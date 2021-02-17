@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Kesiswaan\SKPI;
+namespace App\Http\Controllers\Guru\WaliKelas;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -12,11 +12,13 @@ use App\Models\Siswa as Siswa;
 use App\Models\KegiatanSiswa;
 use App\Models\PrestasiSiswa;
 use App\Models\TingkatPrestasiSiswa;
+use App\Models\Guru;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\SumberDaya\LibGuru;
 
 use Auth;
 use DB;
@@ -30,7 +32,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('kesiswaan/skpi/approve-prestasi-siswa/view-approve-prestasi-siswa',compact('auth_data'));
+    	return view('guru/wali-kelas/approve-prestasi-siswa/view-approve-prestasi-siswa',compact('auth_data'));
 
     }
 
@@ -39,38 +41,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa',compact('auth_data'));
-
-    }
-
-    public function printSkpi(Request $request,$id){
-
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $data = Siswa::findOrFail($id);
-        $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
-
-        $prestasi = PrestasiSiswa::where('prestasi_siswa.id_siswa',$id)
-                    ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
-                    ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-                    ->where('prestasi_siswa.status',1)
-                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->get();
-
-        $kegiatan = KegiatanSiswa::where('kegiatan_siswa.id_siswa',$id)
-                    ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
-                    ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
-                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-                    ->where('kegiatan_siswa.status',1)
-                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->get();
-
-        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi',compact('auth_data','siswa','prestasi','kegiatan'));
+    	return view('guru/wali-kelas/approve-prestasi-siswa/view-detail-prestasi-siswa',compact('auth_data'));
 
     }
 
@@ -162,8 +133,8 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->orderBy('semester.thn_akademik_semester', 'desc')
         ->orderBy('semester.nm_semester', 'desc')
         ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->where('prestasi_siswa.id_siswa',$id)
         ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('prestasi_siswa.id_siswa',$id)
         ->get();
 
         return Datatables::of($list_data)
@@ -219,6 +190,37 @@ class ApprovePrestasiSiswaController extends BaseController{
                 ->make(true);
     }
 
+    public function printSkpi(Request $request,$id){
+
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data = Siswa::findOrFail($id);
+        $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data->nis_siswa);
+
+        $prestasi = PrestasiSiswa::where('prestasi_siswa.id_siswa',$id)
+                    ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')      
+                    ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('prestasi_siswa.status',1)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->get();
+
+        $kegiatan = KegiatanSiswa::where('kegiatan_siswa.id_siswa',$id)
+                    ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
+                    ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('kegiatan_siswa.status',1)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->get();
+
+        return view('guru/wali-kelas/approve-prestasi-siswa/print-skpi',compact('auth_data','siswa','prestasi','kegiatan'));
+
+    }
+
     public function actionApprovePrestasiSiswa(Request $request,$data,$id){
 
     	$input = (object) $request->input();
@@ -264,24 +266,42 @@ class ApprovePrestasiSiswaController extends BaseController{
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa')
-				->whereHas('kegiatan_siswa',function($q) use($auth_data){
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
-                })
-				->orWhereHas('prestasi_siswa',function($q) use($auth_data){
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
-                })
-                ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-				->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-				->withCount([
-					'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
-					'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
-					'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
-					'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
-				])
-				->get();
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-        return Datatables::of($data)
+        $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa')
+        				->whereHas('kegiatan_siswa',function($q) use($wali_kelas,$auth_data){
+        					$q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas,'pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+        				})
+						->orWhereHas('prestasi_siswa',function($q) use($wali_kelas,$auth_data){
+        					$q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas,'pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+        				})
+						->withCount([
+								'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
+								'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
+								'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
+								'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+						])
+	                    ->join('pengguna', function ($q) {
+	                        $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+	                            ->whereNull('pengguna.deleted_at');
+	                    })
+	                    ->leftJoin('calon_siswa_baru', function ($q) {
+	                        $q->on('calon_siswa_baru.id_c_siswa', '=', 'siswa.id_c_siswa')
+	                            ->whereNull('calon_siswa_baru.deleted_at');
+	                    })
+	                    ->join('status_pengguna', function ($q) {
+	                        $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+	                            ->whereNull('status_pengguna.deleted_at');
+	                    })
+	                    ->join('kelas', function ($q) {
+	                        $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+	                            ->whereNull('kelas.deleted_at');
+	                    })
+	                    ->get();
+
+		return Datatables::of($data)
         					->addColumn('prestasi', function ($item) {
 			                    $data = array(
 			                        'prestasi_siswa_not_approved' => $item->prestasi_siswa_not_approved,
@@ -303,7 +323,6 @@ class ApprovePrestasiSiswaController extends BaseController{
 			                    return $data;
 			                })
 		                	->make(true);
-
 
     }
 

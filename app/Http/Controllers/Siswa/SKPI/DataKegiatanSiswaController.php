@@ -153,6 +153,7 @@ class DataKegiatanSiswaController extends BaseController{
         $list_data = KegiatanSiswa::Select(
         			'kegiatan_siswa.id_kegiatan_siswa',
         			'kegiatan_siswa.nm_kegiatan_siswa',
+                    'kegiatan_siswa.status',
         			'kegiatan_siswa.tgl_kegiatan_siswa',
         			'kegiatan_siswa.nm_kegiatan_scan_sertif',
         			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
@@ -161,13 +162,30 @@ class DataKegiatanSiswaController extends BaseController{
         ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->get();
 
         return Datatables::of($list_data)
+                        ->addColumn('keterangan', function ($item) {
+                            if ($item->status == 0) {
+                                $status = 'Belum Diapprove';
+                                $color = 'pink';
+                            } elseif ($item->status== 1) {
+                                $status = 'Sudah Diapprove';
+                                $color = 'teal';
+                            }
+                            $data = array(
+                                'status' => $status,
+                                'color'  => $color
+                            );
+                            return $data;
+                        })
         				->addColumn('action', function($item){
 		                    $data = array(
 		                        'id' => $item->id_kegiatan_siswa,
-		                        'link_sertifikat'=>$item->nm_kegiatan_scan_sertif
+		                        'link_sertifikat'=>$item->nm_kegiatan_scan_sertif,
+                                'status'=>$item->status
 		                    );
 		                    return $data;
 		                })

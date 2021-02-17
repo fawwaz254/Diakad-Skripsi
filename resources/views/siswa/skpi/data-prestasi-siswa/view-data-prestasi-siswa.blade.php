@@ -22,6 +22,7 @@
                                         <th>Jenis Prestasi</th>
                                         <th>Peringkat</th>
                                         <th>Link Sertifikat</th>
+                                        <th>Status</th>
                                         <th>Semester</th>
                                         <th>Kelas</th>
                                         <th>Lokasi</th>
@@ -64,9 +65,14 @@
             { data: 'peringkat_prestasi_siswa', name: 'peringkat_prestasi_siswa' },
             { data: 'action', name: 'link_sertifikat', searchable: false, orderable: false,
                 render:function(data){
-                    return '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="'+ data.link_sertifikat +'">'+
+                    return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" target="_blank" href="'+ data.link_sertifikat +'">'+
                     '    <i class="material-icons">link</i>'+
                     '</a>';
+                }
+            },
+            { data: 'keterangan', name: 'keterangan', searchable: false, orderable: false,
+                render:function(data){
+                    return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
                 }
             },
             { data: 'semester', name: 'semester' },
@@ -78,12 +84,18 @@
             { data: 'nm_guru_pendamping', name: 'nm_guru_pendamping' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button> ';
+                    if(data.status==0){
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ edit_url + '/' + data.id +'">'+
+                        '    <i class="material-icons">edit</i>'+
+                        '</a> '+
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                        '    <i class="material-icons">delete_forever</i>'+
+                        '</button> ';
+                    }
+                    else{
+                        return '-';
+                    }
+                    
                 }
             }
         ],
