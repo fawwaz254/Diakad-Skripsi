@@ -42,12 +42,7 @@
                         <h2 class="card-inside-title">
                             Deskripsi Lowongan Kerja
                         </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <textarea id="editor1" class="editor1" name="deskripsi_lowongan_kerja" required="">
-                          {{(!empty($item))? $item->deskripsi_lowongan_kerja : ''}}
-                        </textarea>
-
+                          {!! $item->deskripsi_lowongan_kerja !!}
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
