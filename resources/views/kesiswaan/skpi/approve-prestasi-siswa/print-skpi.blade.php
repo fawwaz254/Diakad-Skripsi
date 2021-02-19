@@ -96,6 +96,8 @@ table {
     <tr>
        <th>No</th>
         <th>Nama Kegiatan</th>
+        <th>Lokasi</th>
+        <th>Penyelenggara</th>
         <th>Tingkat Kegiatan</th>
         <th>Tanggal</th>
     </tr>
@@ -105,6 +107,8 @@ table {
   		<tr>
   			<td>{{$loop->iteration}}</td>
   			<td>{{$r->nm_kegiatan_siswa}}</td>
+        <td>{{$r->lokasi_kegiatan_siswa}}</td>
+        <td>{{$r->penyelenggara_kegiatan_siswa}}</td>
   			<td>{{$r->nm_tingkat_prestasi_siswa}}</td>
             <td>{{date("d F Y", strtotime($r->tgl_kegiatan_siswa))}}</td>
   		</tr>

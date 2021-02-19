@@ -21,11 +21,27 @@
                                 <input type="text" class="form-control" name="nm_kegiatan_siswa" required="" value="{{$kegiatan->nm_kegiatan_siswa}}" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
-                            Tingkat Kegiatan
-                        </h2>
+
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <h2 class="card-inside-title">
+                                   Lokasi
+                                </h2>
+                                <input type="text" value="{{$kegiatan->lokasi_kegiatan_siswa}}" class="form-control" name="lokasi_kegiatan_siswa" required="" aria-required="true" aria-invalid="true">
+                            </div>
+
+                             <div class="col-md-4">
+                                <h2 class="card-inside-title">
+                                   Penyelenggara
+                                </h2>
+                                <input type="text" value="{{$kegiatan->penyelenggara_kegiatan_siswa}}" class="form-control" name="penyelenggara_kegiatan_siswa" required="" aria-required="true" aria-invalid="true">
+                            </div>
+
+                            <div class="col-md-4">
+                            <h2 class="card-inside-title">
+                                Tingkat Kegiatan
+                            </h2>
                                 <select class="form-control show-tick" name="id_tingkat_prestasi_siswa" required="">
                                 	@foreach($tingkat as $r)
                                         <option value="{{$r->id_tingkat_prestasi_siswa}}" {{$kegiatan->id_tingkat_prestasi_siswa == $r->id_tingkat_prestasi_siswa ? 'selected' : ''}}>{{$r->nm_tingkat_prestasi_siswa}}</option>
@@ -33,6 +49,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <h2 class="card-inside-title">
                             Tanggal Kegiatan
                         </h2>

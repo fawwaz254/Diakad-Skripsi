@@ -20,6 +20,8 @@
                                         <th>Nama Kegiatan</th>
                                         <th>Tingkat Kegiatan</th>
                                         <th>Tanggal</th>
+                                        <th>Lokasi</th>
+                                        <th>Penyelenggara</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -54,6 +56,8 @@
             { data: 'nm_kegiatan_siswa', name: 'nm_kegiatan_siswa' },
             { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'tgl_kegiatan_siswa', name: 'tgl_kegiatan_siswa'},
+            { data: 'lokasi_kegiatan_siswa', name: 'lokasi_kegiatan_siswa'},
+            { data: 'penyelenggara_kegiatan_siswa', name: 'penyelenggara_kegiatan_siswa'},
             { data: 'action', name: 'nm_kegiatan_siswa', searchable: false, orderable: false,
                 render:function(data){
                     return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" target="_blank" href="'+ data.link_sertifikat +'">'+

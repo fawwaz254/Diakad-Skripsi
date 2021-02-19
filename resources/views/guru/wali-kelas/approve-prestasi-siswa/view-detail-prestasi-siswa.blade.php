@@ -53,6 +53,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Kegiatan</th>
+                                        <th>Lokasi</th>
+                                        <th>Penyelenggara</th>
                                         <th>Tingkat Kegiatan</th>
                                         <th>Tanggal</th>
                                         <th>Link Sertifikat</th>
@@ -155,6 +157,8 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_kegiatan_siswa', name: 'nm_kegiatan_siswa' },
+            { data: 'lokasi_kegiatan_siswa', name: 'lokasi_kegiatan_siswa' },
+            { data: 'penyelenggara_kegiatan_siswa', name: 'penyelenggara_kegiatan_siswa' },
             { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'tgl_kegiatan_siswa', name: 'tgl_kegiatan_siswa'},
             { data: 'action', name: 'nm_kegiatan_siswa', searchable: false, orderable: false,

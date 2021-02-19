@@ -86,6 +86,8 @@ class ApprovePrestasiSiswaController extends BaseController{
         			'kegiatan_siswa.nm_kegiatan_siswa',
         			'kegiatan_siswa.status',
         			'kegiatan_siswa.tgl_kegiatan_siswa',
+                    'kegiatan_siswa.lokasi_kegiatan_siswa',
+                    'kegiatan_siswa.penyelenggara_kegiatan_siswa',
         			'kegiatan_siswa.nm_kegiatan_scan_sertif',
         			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa'
         			)
