@@ -65,6 +65,8 @@ class DataKegiatanSiswaController extends BaseController{
 
         $validator = Validator::make($request->all(), [
             'nm_kegiatan_siswa' => 'required',
+            'lokasi_kegiatan_siswa' => 'required',
+            'penyelenggara_kegiatan_siswa' => 'required',
             'id_tingkat_prestasi_siswa' => 'required',
             'tgl_kegiatan_siswa' => 'required',
             'link_sertifikat' => 'required'
@@ -89,6 +91,8 @@ class DataKegiatanSiswaController extends BaseController{
         		$kegiatan->id_kelas = $siswa->id_kelas;
         		$kegiatan->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
         		$kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
+                $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
+                $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
         		$kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
         		$kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
         		$kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
@@ -110,6 +114,8 @@ class DataKegiatanSiswaController extends BaseController{
         		$kegiatan->id_kelas = $siswa->id_kelas;
         		$kegiatan->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
         		$kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
+                $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
+                $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
         		$kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
         		$kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
         		$kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
@@ -155,6 +161,8 @@ class DataKegiatanSiswaController extends BaseController{
         			'kegiatan_siswa.nm_kegiatan_siswa',
                     'kegiatan_siswa.status',
         			'kegiatan_siswa.tgl_kegiatan_siswa',
+                    'kegiatan_siswa.lokasi_kegiatan_siswa',
+                    'kegiatan_siswa.penyelenggara_kegiatan_siswa',
         			'kegiatan_siswa.nm_kegiatan_scan_sertif',
         			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
         			)
