@@ -4,6 +4,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => 'tendik'), function () {
         Route::get('welcome', 'Tendik\WelcomeController@indexWelcome');
 
+        /** ==== MODUL BIODATA ==== **/
+        Route::group(array('prefix' => 'biodata'), function () {
+            Route::get('data-pribadi', 'Tendik\Biodata\DataPribadiController@viewDataPribadi');
+             Route::post('action-input-tendik/{mode}/{id}', 'Tendik\Biodata\DataPribadiController@actionInputTendik');
+        });
+
+
         /** ==== MODUL GURU PIKET ==== **/
         Route::group(array('prefix' => 'guru-piket'), function () {
             // MENU Monitoring kelas kosong
