@@ -24,7 +24,15 @@ class WelcomeController extends BaseController{
 
         $last_siswa = Siswa::select('created_at')->orderBy('created_at', 'desc')->first();
 
-        return view('kesiswaan/welcome', compact('auth_data', 'data_tingkat', 'count_siswa', 'last_siswa'));
+        $jenis_kelamin = Siswa::select('jenis_kelamin', DB::raw('count(*) as user_count'))
+                                ->join('calon_siswa_baru', function($join){
+                                    $join->on('calon_siswa_baru.id_c_siswa', 'siswa.id_c_siswa');
+                                    $join->whereNull('calon_siswa_baru.deleted_at');
+                                })
+                                ->groupBy('jenis_kelamin')
+                                ->get();
+
+        return view('kesiswaan/welcome', compact('auth_data', 'data_tingkat', 'count_siswa', 'last_siswa', 'jenis_kelamin'));
     }
 
 }

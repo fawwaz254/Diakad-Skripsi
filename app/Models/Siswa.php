@@ -73,4 +73,9 @@ class Siswa extends Model
     {
         return $this->hasMany(PrestasiSiswa::class, 'id_siswa');
     }
+    
+    public function pengajuan_wisuda()
+    {
+        return $this->hasOne(PengajuanWisuda::class, 'id_siswa');
+    }
 }
