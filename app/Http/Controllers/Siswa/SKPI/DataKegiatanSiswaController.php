@@ -164,7 +164,7 @@ class DataKegiatanSiswaController extends BaseController{
                     'kegiatan_siswa.lokasi_kegiatan_siswa',
                     'kegiatan_siswa.penyelenggara_kegiatan_siswa',
         			'kegiatan_siswa.nm_kegiatan_scan_sertif',
-        			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+        			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa'
         			)
         ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
         ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
