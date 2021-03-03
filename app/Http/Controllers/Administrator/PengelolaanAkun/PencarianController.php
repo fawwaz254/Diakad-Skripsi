@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
+use App\Models\LogResetPassword;
 use App\Models\Pengguna as Pengguna;
 use App\Models\Staff as Staff;
 use App\Models\Guru as Guru;
@@ -129,15 +130,21 @@ class PencarianController extends BaseController
                   ->where('pengguna.id_pengguna','=',$id_pengguna)
                   ->first();
 
+        $now = Carbon::now('Asia/Jakarta');
+        $three_month_old = Carbon::now('Asia/Jakarta')->subMonths(3);
         // convert format date
+        $last_reset_password = LogResetPassword::where('id_pengguna', $pengguna->id_pengguna)
+                                                    ->whereDate('created_at', '<', $now)
+                                                    ->whereDate('created_at', '>', $three_month_old)
+                                                    ->orderBy('created_at', 'desc')->get();
         if ( ! empty($pengguna->last_time_password)) {
-            $last_time_password = strftime( "%A, %d %B %Y %H:%M:%S", strtotime($pengguna->last_time_password));
+            $last_time_password = strftime( "%d %B %Y %H:%M", strtotime($pengguna->last_time_password));
         }
         else {
             $last_time_password = " ";
         }
         if ( ! empty($pengguna->last_time_login)) {
-            $last_time_login = strftime( "%A, %d %B %Y %H:%M:%S", strtotime($pengguna->last_time_login));
+            $last_time_login = strftime( "%d %B %Y %H:%M", strtotime($pengguna->last_time_login));
         }
         else {
             $last_time_login = " ";
@@ -167,7 +174,7 @@ class PencarianController extends BaseController
 
             $tipe_akun = "Tenaga Pendidik";
 
-            return view('administrator/pengelolaan-akun/pencarian/view-detail-pencarian',compact('auth_data','id_pengguna','username_nama_cari','pengguna','role_pengguna_set','unit_kerja_set','id_unit_kerja','tipe_akun','last_time_password','last_time_login','status_online','id_pengguna_auth'));
+            return view('administrator/pengelolaan-akun/pencarian/view-detail-pencarian',compact('auth_data','id_pengguna','username_nama_cari','pengguna','role_pengguna_set','unit_kerja_set','id_unit_kerja','tipe_akun','last_time_password', 'last_reset_password','last_time_login','status_online','id_pengguna_auth'));
         }
         elseif ($pengguna->status_join_table == 2) {
             $unit_kerja_set  = LibDataSumberDaya::fetchDataUnitKerja($auth_data);
@@ -178,7 +185,7 @@ class PencarianController extends BaseController
 
             $tipe_akun = "Guru";
 
-            return view('administrator/pengelolaan-akun/pencarian/view-detail-pencarian',compact('auth_data','id_pengguna','username_nama_cari','pengguna','role_pengguna_set','unit_kerja_set','id_unit_kerja','tipe_akun','last_time_password','last_time_login','status_online','id_pengguna_auth'));
+            return view('administrator/pengelolaan-akun/pencarian/view-detail-pencarian',compact('auth_data','id_pengguna','username_nama_cari','pengguna','role_pengguna_set','unit_kerja_set','id_unit_kerja','tipe_akun','last_time_password', 'last_reset_password','last_time_login','status_online','id_pengguna_auth'));
         }
         else {
             if ($pengguna->status_join_table == 3) {
@@ -191,7 +198,7 @@ class PencarianController extends BaseController
                 $tipe_akun = "Pelatih Ekskul";
             }
 
-            return view('administrator/pengelolaan-akun/pencarian/view-detail-pencarian',compact('auth_data','id_pengguna','username_nama_cari','pengguna','role_pengguna_set', 'tipe_akun','last_time_password','last_time_login','status_online','id_pengguna_auth'));
+            return view('administrator/pengelolaan-akun/pencarian/view-detail-pencarian',compact('auth_data','id_pengguna','username_nama_cari','pengguna','role_pengguna_set', 'tipe_akun','last_time_password', 'last_reset_password','last_time_login','status_online','id_pengguna_auth'));
         }
     }
 
@@ -343,6 +350,12 @@ class PencarianController extends BaseController
                 $pengguna->updated_at           = $now;
                 $pengguna->save();
 
+                $log = new LogResetPassword;
+                $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $log->id_pengguna       = $pengguna->id_pengguna;
+                $log->created_by           = $input->auth_data->pengguna->id_pengguna;
+                $log->save();
+
                 return [
                     'status' => 203,
                     'message' => 'Reset Password successfully'
@@ -365,6 +378,12 @@ class PencarianController extends BaseController
                 $pengguna->updated_by           = $input->auth_data->pengguna->id_pengguna;
                 $pengguna->updated_at           = $now;
                 $pengguna->save();
+
+                $log = new LogResetPassword;
+                $log->id_log_reset_password = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $log->id_pengguna       = $pengguna->id_pengguna;
+                $log->created_by           = $input->auth_data->pengguna->id_pengguna;
+                $log->save();
             }
 
             DB::commit();

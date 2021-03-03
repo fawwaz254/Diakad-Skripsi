@@ -84,8 +84,14 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 50%">Terakhir Ganti Password</td>
-                                    <td style="width: 50%">{{$last_time_password}}</td>
+                                    <td style="width: 50%">History Reset Password 3 bulan terakhir</td>
+                                    <td style="width: 50%">
+                                    <ol style="padding-left: 20px;">
+                                    @foreach($last_reset_password as $item)
+                                    <li>{{$item->cast_created_at()}}</li>
+                                    @endforeach
+                                    </ol>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td style="width: 50%">Terakhir Login</td>
