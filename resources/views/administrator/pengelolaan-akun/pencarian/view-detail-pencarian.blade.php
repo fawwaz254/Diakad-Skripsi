@@ -84,7 +84,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="width: 50%">History Reset Password 3 bulan terakhir</td>
+                                    <td style="width: 50%">History Reset Password</td>
                                     <td style="width: 50%">
                                     <ol style="padding-left: 20px;">
                                     @foreach($last_reset_password as $item)

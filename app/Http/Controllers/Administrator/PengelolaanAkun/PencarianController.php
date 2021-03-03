@@ -130,12 +130,12 @@ class PencarianController extends BaseController
                   ->where('pengguna.id_pengguna','=',$id_pengguna)
                   ->first();
 
-        $now = Carbon::now('Asia/Jakarta');
-        $three_month_old = Carbon::now('Asia/Jakarta')->subMonths(3);
+        // $now = Carbon::now('Asia/Jakarta');
+        // $three_month_old = Carbon::now('Asia/Jakarta')->subMonths(3);
         // convert format date
         $last_reset_password = LogResetPassword::where('id_pengguna', $pengguna->id_pengguna)
-                                                    ->whereDate('created_at', '<', $now)
-                                                    ->whereDate('created_at', '>', $three_month_old)
+                                                    // ->whereDate('created_at', '<', $now)
+                                                    // ->whereDate('created_at', '>', $three_month_old)
                                                     ->orderBy('created_at', 'desc')->get();
         if ( ! empty($pengguna->last_time_password)) {
             $last_time_password = strftime( "%d %B %Y %H:%M", strtotime($pengguna->last_time_password));
