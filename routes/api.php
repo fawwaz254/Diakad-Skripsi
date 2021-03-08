@@ -77,6 +77,16 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('detail/get', 'Apiv1Controller@actionGetDetailInputJadwal');
             Route::post('{mode}/submit', 'Apiv1Controller@actionInputJadwal');
         });
+        Route::group(array('prefix' => 'monitoring-kesehatan'), function () {
+            Route::post('get', 'Apiv1Controller@viewAddFormKesehatan');
+            Route::post('delete', 'Apiv1Controller@deletemonitoringkesehatan');
+            Route::post('post', 'Apiv1Controller@postmonitoringkesehatan');
+            Route::post('getdataform', 'Apiv1Controller@getdatamonitoringkesehatan');
+            Route::post('view/{id}', 'Apiv1Controller@viewDetailFormKesehatan');
+            Route::post('view-siswa/{id}', 'Apiv1Controller@viewDetailRekapKesehatan');
+            Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
+
+        });
 
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
             Route::post('get', 'Apiv1Controller@actionGetMonitoringKelasKosong');
