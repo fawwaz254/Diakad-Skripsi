@@ -8,12 +8,7 @@
         </div>
         <div class="body">
             <div class="row clearfix">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="text-center"><b>Last updated: <br>{{date_format(date_create($last_siswa->created_at), 'd M Y H:i')}}</b></div>
-                </div>
-            </div>
-            <div class="row clearfix">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
                         <div class="icon">
                             <i class="material-icons">person</i>
@@ -24,7 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
                         <div class="icon">
                             <i class="material-icons">person</i>
@@ -35,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box bg-pink hover-expand-effect">
                         <div class="icon">
                             <i class="material-icons">person</i>
@@ -50,9 +45,11 @@
             <div class="row clearfix">
                 @foreach($data_tingkat as $tingkat)
                 @php
-                    $count_siswa_tingkat = \App\Models\Siswa::whereHas('kelas', function($q) use ($tingkat) { $q->where('tingkat', $tingkat->tingkat); })->whereNotNull('id_kelas')->count();
+                    $count_siswa_tingkat = \App\Models\Siswa::with('pengguna')->whereHas('pengguna.status_pengguna', function($q){
+                                    $q->where('aktif_status_pengguna', 1);
+                                })->whereHas('kelas', function($q) use ($tingkat) { $q->where('tingkat', $tingkat->tingkat); })->whereNotNull('id_kelas')->count();
                 @endphp
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="info-box bg-teal hover-expand-effect">
                         <div class="icon">
                             <i class="material-icons">person</i>

@@ -20,7 +20,9 @@ class WelcomeController extends BaseController{
         $auth_data = $input->auth_data;
 
         $data_tingkat = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'asc')->get();
-        $count_siswa = Siswa::whereNotNull('id_kelas')->count();
+        $count_siswa = Siswa::with('pengguna')->whereHas('pengguna.status_pengguna', function($q){
+            $q->where('aktif_status_pengguna', 1);
+        })->whereNotNull('id_kelas')->count();
 
         $last_siswa = Siswa::select('created_at')->orderBy('created_at', 'desc')->first();
 
@@ -28,6 +30,9 @@ class WelcomeController extends BaseController{
                                 ->join('calon_siswa_baru', function($join){
                                     $join->on('calon_siswa_baru.id_c_siswa', 'siswa.id_c_siswa');
                                     $join->whereNull('calon_siswa_baru.deleted_at');
+                                })
+                                ->with('pengguna')->whereHas('pengguna.status_pengguna', function($q){
+                                    $q->where('aktif_status_pengguna', 1);
                                 })
                                 ->groupBy('jenis_kelamin')
                                 ->get();
