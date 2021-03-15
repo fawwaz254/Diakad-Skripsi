@@ -20,6 +20,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
         Route::post('save', 'Apiv1Controller@actionSaveToken');
     });
 
+    Route::post('notifikasi/read', 'Apiv1Controller@actionNotifikasiUpdate');
     Route::post('notifikasi/get', 'Apiv1Controller@actionGetNotifikasi');
 
     Route::group(array('prefix' => 'guru'), function () {
