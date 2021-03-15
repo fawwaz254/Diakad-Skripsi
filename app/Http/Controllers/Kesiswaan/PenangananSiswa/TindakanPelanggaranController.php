@@ -436,15 +436,25 @@ class TindakanPelanggaranController extends BaseController{
 
                         $token_wali_murid = $wali_murid->pengguna->api_token;
                         if(!empty($token_wali_murid)){
+                            $message = 'Putra/Putri Anda melakukan pelanggaran';
+
                             $send_data = array(
                                 'title' => 'Informasi',
-                                'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                'body' => $message,
                                 'priority' => 'high',
                                 'screen1' => 'RiwayatPelanggaran1',
                                 'screen2' => 'RiwayatPelanggaranNonKBM'
                             );
                             
-                            LibGlobal::sendNotification($token_wali_murid, $send_data);
+                            $notifikasi = array(
+                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                'isi_notifikasi' => $message,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                            );
+
+                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                         }
                     }
                 }
@@ -482,15 +492,24 @@ class TindakanPelanggaranController extends BaseController{
 
                         $token_wali_murid = $wali_murid->pengguna->api_token;
                         if(!empty($token_wali_murid)){
+                            $message = 'Putra/Putri Anda melakukan pelanggaran';
                             $send_data = array(
                                 'title' => 'Informasi',
-                                'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                'body' => $message,
                                 'priority' => 'high',
                                 'screen1' => 'RiwayatPelanggaran1',
                                 'screen2' => 'RiwayatPelanggaranKBM'
                             );
+
+                            $notifikasi = array(
+                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                'isi_notifikasi' => $message,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                            );
                             
-                            LibGlobal::sendNotification($token_wali_murid, $send_data);
+                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                         }
                     }
                 }

@@ -18,6 +18,7 @@ use App\Models\Ruangan;
 use App\Models\KelasMp;
 use App\Models\KomplainSarpras;
 use App\Models\Kota;
+use App\Models\NotifikasiPengguna;
 use App\Models\Pengguna;
 use App\Models\PresensiHarian;
 use App\Models\PresensiHarianSiswa;
@@ -51,19 +52,6 @@ use Validator;
 
 class Apiv1Controller extends BaseController
 {
-
-    public function sendTestNotif(Request $request, $id_pengguna = '-'){
-        $pengguna = Pengguna::find($id_pengguna);
-        $send_data = array(
-            'title' => 'Informasi Baru',
-            'body' => 'Naeef melakukan pelanggaran',
-            'priority' => 'high',
-            'screen1' => 'RiwayatPelanggaran1',
-            'screen2' => 'RiwayatPelanggaranKBM'
-        );
-        
-        return LibGlobal::sendNotification($pengguna->api_token, $send_data);
-    }
     
     public function actionSignIn(Request $request)
     {
@@ -2365,15 +2353,24 @@ $validator = Validator::make($request->all(), $syarat);
 
                             $token_wali_murid = $wali_murid->pengguna->api_token;
                             if(!empty($token_wali_murid)){
+                                $message = 'Putra/Putri Anda melakukan pelanggaran';
                                 $send_data = array(
                                     'title' => 'Informasi',
-                                    'body' => 'Putra/Putri Anda melakukan pelanggaran',
+                                    'body' => $message,
                                     'priority' => 'high',
                                     'screen1' => 'RiwayatPelanggaran1',
                                     'screen2' => 'RiwayatPelanggaranKBM'
                                 );
 
-                                LibGlobal::sendNotification($token_wali_murid, $send_data);
+                                $notifikasi = array(
+                                    'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                    'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                    'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                    'isi_notifikasi' => $message,
+                                    'created_by' => $input->auth_data->pengguna->id_pengguna
+                                );
+
+                                LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                             }
                         }
                     }
@@ -3087,6 +3084,23 @@ $validator = Validator::make($request->all(), $syarat);
             'message' 	=> '',
             'data' => array(
                 'prestasi' => $list_data
+            )
+        ]);
+    }
+
+    public function actionGetNotifikasi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = NotifikasiPengguna::select('id_notifikasi_pengguna', 'isi_notifikasi', 'link_url', 'status', 'created_at')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->take('10')->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status_code' 	=> 200,
+            'status_text' 	=> 'Success',
+            'message' 	=> '',
+            'data' => array(
+                'notif' => $list_data
             )
         ]);
     }
