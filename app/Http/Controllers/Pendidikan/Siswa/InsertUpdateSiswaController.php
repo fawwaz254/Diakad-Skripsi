@@ -33,6 +33,7 @@ use App\Models\CalonSiswaBeasiswa;
 
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\LibGlobal;
 
 use Auth;
 use DB;
@@ -336,6 +337,14 @@ class InsertUpdateSiswaController extends BaseController
 		    					'created_by' 				=> $input->auth_data->pengguna->id_pengguna
 		    				]
 		    			);
+
+						LibGlobal::insertUpdateUserInCenter([
+							[
+								"id_pengguna" => $id_pengguna,
+								"id_sekolah" => $input->auth_data->pengguna->id_sekolah,
+								"username" => $input->nis_siswa
+							]
+						]);
 		    			DB::commit();
 		    			return [
 			                    'status' => 202, // SUCCESS AND LOAD PAGE
@@ -497,6 +506,13 @@ class InsertUpdateSiswaController extends BaseController
 							'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 						]);
 
+						LibGlobal::insertUpdateUserInCenter([
+							[
+								"id_pengguna" => $input->id_pengguna,
+								"id_sekolah" => $input->auth_data->pengguna->id_sekolah,
+								"username" => $input->nis_siswa
+							]
+						]);
 	    				DB::commit();
 		    			return [
 							'status' => 200, // SUCCESS AND LOAD TABLE

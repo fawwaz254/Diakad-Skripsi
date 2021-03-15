@@ -16,7 +16,7 @@ use App\Models\Pengguna;
 use App\Models\Siswa;
 use Yajra\Datatables\Datatables;
 
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use DB;
 use Session;
 

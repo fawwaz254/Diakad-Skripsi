@@ -12,6 +12,24 @@ use Cloudder;
 
 class LibGlobal
 {
+	static function insertUpdateUserInCenter($pengguna){
+		// $pengguna[] = [
+        //     "id_pengguna" => "A8bT515358553655b8b4b05a6d86",
+        //     "id_sekolah" => "A8bT515358553135b8b4ad12f588",
+        //     "username" => "admin"
+        // ];
+
+        $client = new \GuzzleHttp\Client();
+        $response = $client->request('POST', 'https://center.diakad.id/api/insertuser', [
+            'json' => [
+                "api_name" => "CENTRE DIAKAD",
+                "api_key" => "base64:+aUPwXFZXgNiGOx1Q3Ctq4bLDMnwztfB1cj3te+A9yo=",
+                "pengguna" => $pengguna
+            ]
+        ]);
+        return $response->getBody();
+	}
+
 	static function sendNotification($token, $payload){
 		// $api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
 		$api_key = 'MjNlNTliYzQtY2EzYS00NjlkLWEwZTktYjc4ZGZiZDI1MTQz'; // OneSignal RESTAPI KEY

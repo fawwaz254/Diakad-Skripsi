@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Libraries\SumberDaya\LibDataSumberDaya;
 use App\Libraries\SumberDaya\LibTendik;
+use App\Libraries\LibGlobal;
 
 use Auth;
 use DB;
@@ -258,6 +259,14 @@ class InputTendikController extends BaseController{
                 $rolePengguna->is_aktif                 = 1;
                 $rolePengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $rolePengguna->save();
+
+                LibGlobal::insertUpdateUserInCenter([
+                    [
+                        "id_pengguna" => $pengguna->id_pengguna,
+                        "id_sekolah" => $pengguna->id_sekolah,
+                        "username" => $pengguna->username
+                    ]
+                ]);
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'tendik/input-tendik',
@@ -360,7 +369,13 @@ class InputTendikController extends BaseController{
                 $staff->updated_at               = $now;
                 $staff->save();
 
-
+                LibGlobal::insertUpdateUserInCenter([
+                    [
+                        "id_pengguna" => $pengguna->id_pengguna,
+                        "id_sekolah" => $pengguna->id_sekolah,
+                        "username" => $pengguna->username
+                    ]
+                ]);
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'tendik/input-tendik',

@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\SumberDaya\LibDataSumberDaya;
 use App\Libraries\SumberDaya\LibGuru;
+use App\Libraries\LibGlobal;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -276,6 +277,14 @@ class InputGuruController extends BaseController{
                 $rolePengguna->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $rolePengguna->save();
 
+                LibGlobal::insertUpdateUserInCenter([
+                    [
+                        "id_pengguna" => $pengguna->id_pengguna,
+                        "id_sekolah" => $pengguna->id_sekolah,
+                        "username" => $pengguna->username
+                    ]
+                ]);
+
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'guru/input-guru',
@@ -377,6 +386,13 @@ class InputGuruController extends BaseController{
                 $guru->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $guru->save();
 
+                LibGlobal::insertUpdateUserInCenter([
+                    [
+                        "id_pengguna" => $pengguna->id_pengguna,
+                        "id_sekolah" => $pengguna->id_sekolah,
+                        "username" => $pengguna->username
+                    ]
+                ]);
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
