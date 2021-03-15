@@ -3104,4 +3104,46 @@ $validator = Validator::make($request->all(), $syarat);
             )
         ]);
     }
+
+    public function actionNotifikasiUpdate(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'id' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => $validator->errors()->first()
+            ]);
+        } else {
+            DB::beginTransaction();
+        
+            try {
+
+                $item = NotifikasiPengguna::find($input->id);
+                $item->status = 0;
+                $item->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status_code' 	=> 200,
+                    'status_text' 	=> 'Success',
+                    'message' 	=> 'Notifikasi read'
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status_code' 	=> 300,
+                    'status_text' 	=> 'Failed',
+                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                ]);
+            }
+        }
+    }
 }
