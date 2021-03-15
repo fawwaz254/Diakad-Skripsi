@@ -2,13 +2,8 @@
 
 namespace App\Libraries;
 
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
-use Auth;
-use DB;
 use Cloudder;
+use App\Models\NotifikasiPengguna;
 
 class LibGlobal
 {
@@ -30,7 +25,7 @@ class LibGlobal
         return $response->getBody();
 	}
 
-	static function sendNotification($token, $payload){
+	static function sendNotification($token, $payload, $notifikasi = null){
 		// $api_key = 'AAAA_AQhHeg:APA91bFTVFqKHe-ov_KZy3pvZmZ7ZrrFw69mN-yG_SR_2BgvvfaFr4csjQXhkI2STQ55a_--79hyQSB-iicFF-ERFP3W8R3byO36ycA4QwoxaPMFsCmUMnlGsDp5YvnODCfnP5ZC5AR3';
 		$api_key = 'MjNlNTliYzQtY2EzYS00NjlkLWEwZTktYjc4ZGZiZDI1MTQz'; // OneSignal RESTAPI KEY
 		$app_id = '8c075562-351e-4fdf-9b1d-1448a3a79503'; // OneSignal APP_ID
@@ -77,6 +72,16 @@ class LibGlobal
 
 		$result = curl_exec ( $ch );
 		curl_close ( $ch );
+
+		if(!empty($notifikasi)){
+			$notifikasi_pengguna = new NotifikasiPengguna;
+			$notifikasi_pengguna->id_notifikasi_pengguna 	= $notifikasi['id'];
+			$notifikasi_pengguna->id_pengguna 				= $notifikasi['id_pengguna'];
+			$notifikasi_pengguna->id_sekolah 				= $notifikasi['id_sekolah'];
+			$notifikasi_pengguna->isi_notifikasi			= $notifikasi['isi_notifikasi'];
+			$notifikasi_pengguna->created_by				= $notifikasi['created_by'];
+			$notifikasi_pengguna->save();
+		}
 
 		return $result;
 	}

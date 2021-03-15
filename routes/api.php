@@ -15,11 +15,12 @@
 
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 
-Route::get('v1/test-notif/{id_pengguna}', 'Apiv1Controller@sendTestNotif');
 Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function () {
     Route::group(array('prefix' => 'token'), function () {
         Route::post('save', 'Apiv1Controller@actionSaveToken');
     });
+
+    Route::post('notifikasi/get', 'Apiv1Controller@actionGetNotifikasi');
 
     Route::group(array('prefix' => 'guru'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
