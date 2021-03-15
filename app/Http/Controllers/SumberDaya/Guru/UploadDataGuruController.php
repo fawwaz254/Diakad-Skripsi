@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\SumberDaya\LibDataSumberDaya;
 use App\Libraries\SumberDaya\LibGuru;
-
+use App\Libraries\LibGlobal;
 use Illuminate\Support\Facades\Hash;
 
 use Excel;
@@ -100,7 +100,8 @@ class UploadDataGuruController extends BaseController
                 }
                 if(!empty($arr)){
                    DB::beginTransaction();
-                	try {
+				   try {
+						$pengguna_center = [];
                 		foreach ($arr as $data) {
                 			
 							DB::table('pengguna')->insert(
@@ -141,7 +142,14 @@ class UploadDataGuruController extends BaseController
 								]
 							);
 
+							$pengguna_center[] = [
+								"id_pengguna" => $data['id_pengguna'],
+								"id_sekolah" => $data['id_sekolah'],
+								"username" => $data['nip']
+							];
                 		}
+
+						LibGlobal::insertUpdateUserInCenter($pengguna_center);
                 		DB::commit();
                 		return [
 		                    'status' => 202, // SUCCESS AND LOAD CONTENT

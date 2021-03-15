@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pendidikan\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
+use App\Libraries\LibGlobal;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -1268,6 +1269,7 @@ class UploadDataSiswaController extends BaseController
 					}
 					DB::beginTransaction();
 					try {
+						$pengguna_center = [];
 						foreach ($arr as $data_siswa) {
                 			DB::table('calon_siswa_baru')->insert(
 							    [
@@ -1486,7 +1488,14 @@ class UploadDataSiswaController extends BaseController
 								]
 							);
 
+							$pengguna_center[] = [
+								"id_pengguna" => $data_siswa['id_pengguna'],
+								"id_sekolah" => $data_siswa['id_sekolah'],
+								"username" => $data_siswa['nis']
+							];
                 		}
+						
+						LibGlobal::insertUpdateUserInCenter($pengguna_center);
 						DB::commit();
 						return [
 							'status' => 202, // SUCCESS AND LOAD CONTENT
