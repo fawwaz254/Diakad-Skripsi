@@ -37,7 +37,7 @@
                      </div>
                      <div class="row clearfix">
                          <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                            <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Filter</span></button>
                         </div>
                     </div>
                 </form>
@@ -65,7 +65,7 @@
 
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_kelas = {!! json_encode($kelas->id_kelas) !!};
+    var id_kelas = '{{$kelas->id_kelas}}';
 
     var modul_url       = 'siswa';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-wali-murid/datatables/' + id_kelas;

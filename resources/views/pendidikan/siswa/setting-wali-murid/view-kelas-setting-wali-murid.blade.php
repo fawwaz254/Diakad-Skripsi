@@ -9,19 +9,23 @@
                 </div>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active">
+                        <li role="presentation" class="{{!empty($act)? '' : 'active'}}">
                             <a href="#data-wali-murid" data-toggle="tab" aria-expanded="true">
                                 <i class="material-icons">create</i> Data Wali Murid
                             </a>
                         </li>
-                        <li role="presentation">
+                        <li role="presentation" class="{{!empty($act)? 'active' : ''}}">
                             <a href="#tambah-data-wali-murid" data-toggle="tab">
                                 <i class="material-icons">edit</i> Tambah Data Wali Murid
                             </a>
                         </li>
                     </ul>
                      <div class="tab-content">
+                        @if(!empty($act))
+                        <div role="tabpanel" class="tab-pane fade" id="data-wali-murid">
+                        @else
                         <div role="tabpanel" class="tab-pane fade active in" id="data-wali-murid">
+                        @endif
                             <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-view-setting-wali-murid')}}">
                                 {{csrf_field()}}
                                 <h2 class="card-inside-title">
@@ -47,7 +51,11 @@
                                 </div>
                             </form>
                         </div>
+                        @if(!empty($act))
+                        <div role="tabpanel" class="tab-pane fade active in" id="tambah-data-wali-murid">
+                        @else
                         <div role="tabpanel" class="tab-pane fade" id="tambah-data-wali-murid">
+                        @endif
                             <form id="form-validation1" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-wali-murid/add/'.$id_wali_murid)}}" autocomplete="off">
                                     {{csrf_field()}}
                                 <h2 class="card-inside-title">
@@ -123,6 +131,7 @@
                 success: function(response) {
                     if(response.status == 200){
                         vex.dialog.alert(response.message);
+                        clearInput();
                     }else if(response.status == 201){
                         vex.dialog.alert(response.message);
                         window.location.href = response.link;
@@ -144,4 +153,11 @@
             });
         }
     });
+
+    function clearInput(){
+        $('input[name=nm_wali_murid]').val('');
+        $('input[name=nomor_hp_wali_murid]').val('');
+        $('input[name=gelar_depan]').val('');
+        $('input[name=gelar_belakang]').val('');
+    }
 </script>

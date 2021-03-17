@@ -32,6 +32,7 @@ class SettingWaliMuridController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $id_wali_murid      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -39,7 +40,12 @@ class SettingWaliMuridController extends BaseController
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_kelas', 'id_wali_murid'));
+        $act = null;
+        if(!empty($request->segment(4))){
+            $act = $request->segment(4);
+        }
+
+        return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_kelas', 'id_wali_murid', 'act'));
     }
 
     public function viewUploadSettingWaliMurid(Request $request, $id_kelas)
@@ -118,14 +124,13 @@ class SettingWaliMuridController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = Siswa::where('id_siswa', '=', $id)->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->first();
-        $data_wali_murid = WaliMurid::where('is_aktif', '=', 1)->get();
 
         //sudah punya wali murid, edit
-        if ($siswa->id_wali_murid != null) {
+        if (!empty($siswa->id_wali_murid)) {
             $wali_murid = WaliMurid::where('id_wali_murid', '=', $siswa->id_wali_murid)->first();
         }
 
-        return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid', 'data_wali_murid'));
+        return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid'));
     }
 
     public function datatablesWaliMurid(Request $request, $id_kelas)
@@ -154,13 +159,27 @@ class SettingWaliMuridController extends BaseController
             ->make(true);
     }
 
+    public function actionGetWaliMurid(Request $request){
+        if(!empty($request->q)){
+            $data_wali_murid = WaliMurid::select('id_wali_murid', 'id_pengguna', 'nm_wali_murid', 'nomor_hp_wali_murid')
+                                            ->where(function($q) use ($request){
+                                                $q->where('nm_wali_murid', 'LIKE', '%'.$request->q.'%')
+                                                ->orwhere('nomor_hp_wali_murid', 'LIKE', '%'.$request->q.'%');
+                                            })->where('is_aktif', 1)->take(15)->get();
+        }else{
+            $data_wali_murid = WaliMurid::select('id_wali_murid', 'id_pengguna', 'nm_wali_murid', 'nomor_hp_wali_murid')->take(15)->where('is_aktif', 1)->get();
+        }
+
+        return $data_wali_murid;
+    }
+
     public function actionSettingWaliMurid(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-                'nomor_hp_wali_murid' => 'required'
-            ]);
+            'nomor_hp_wali_murid' => 'required'
+        ]);
 
         if ($validator->fails() && $mode != 'delete') {
             return [
@@ -174,101 +193,16 @@ class SettingWaliMuridController extends BaseController
             // ACTION ADD
             if ($mode == 'edit') {
                 $siswa = Siswa::where('id_siswa', '=', $id)->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->first();
-                //sudah punya wali murid, edit
-                if ($siswa->id_wali_murid != null) {
-                    $data_waliMurid = WaliMurid::where('id_wali_murid', '=', $siswa->id_wali_murid)->first();
+                $data_waliMurid = WaliMurid::where('nomor_hp_wali_murid', '=', $input->nomor_hp_wali_murid)->first();
+                $siswa_waliMurid				    = Siswa::find($id);
+                $siswa_waliMurid->id_wali_murid	    = $data_waliMurid->id_wali_murid;
+                $siswa_waliMurid->is_orang_tua      = $input->is_orang_tua;
+                $siswa_waliMurid->save();
 
-                    $waliMurid 						= WaliMurid::find($siswa->id_wali_murid);
-                    $waliMurid->nm_wali_murid 		= $input->nm_wali_murid;
-                    $waliMurid->nomor_hp_wali_murid	= $input->nomor_hp_wali_murid;
-                    $waliMurid->is_aktif			= 1;
-                    $waliMurid->updated_by			= $input->auth_data->pengguna->id_pengguna;
-                    $waliMurid->updated_at			= $now;
-                    $waliMurid->save();
-
-                    $pengguna 						= Pengguna::find($data_waliMurid->id_pengguna);
-                    $pengguna->nm_pengguna			= $input->nm_wali_murid;
-                    $pengguna->username	            = $input->nomor_hp_wali_murid;
-                    $pengguna->password 			    = Hash::make($input->nomor_hp_wali_murid);
-                    $pengguna->must_change_password	= 1;
-                    $pengguna->status_join_table	    = 4;
-                    $pengguna->updated_at			    = $now;
-                    $pengguna->updated_by			    = $input->auth_data->pengguna->id_pengguna;
-                    $pengguna->save();
-
-                    return [
-                            'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'path' => 'siswa/setting-wali-murid/view-kelas/'.$siswa->id_kelas,
-                            'message' => 'Update Data Wali Murid Berhasil!'
-                        ];
-                }
-                //belum punya data wali murid
-                else {
-                    $data_waliMurid = WaliMurid::where('nomor_hp_wali_murid', '=', $input->nomor_hp_wali_murid)->first();
-                    //data wali murid belum ada
-                    if ($data_waliMurid == null) {
-                        //generate id_pengguna untuk wali murid
-                        $id_pengguna 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                        $id_wali_murid		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                        $status_pengguna	= StatusPengguna::where('status_join_table', '=', '4')->where('aktif_status_pengguna', '=', '1')->first();
-
-                        $waliMurid 						= new WaliMurid;
-                        $waliMurid->id_wali_murid		    = $id_wali_murid;
-                        $waliMurid->id_pengguna			= $id_pengguna;
-                        $waliMurid->nm_wali_murid 		= $input->nm_wali_murid;
-                        $waliMurid->nomor_hp_wali_murid	= $input->nomor_hp_wali_murid;
-                        $waliMurid->is_aktif			    = 1;
-                        $waliMurid->created_by			= $input->auth_data->pengguna->id_pengguna;
-                        $waliMurid->created_at			= $now;
-                        $waliMurid->save();
-
-                        $pengguna 						= new Pengguna;
-                        $pengguna->id_pengguna			= $id_pengguna;
-                        $pengguna->id_status_pengguna	= $status_pengguna->id_status_pengguna;
-                        $pengguna->id_sekolah			= $input->auth_data->pengguna->id_sekolah;
-                        $pengguna->nm_pengguna			= $input->nm_wali_murid;
-                        $pengguna->username         	= $input->nomor_hp_wali_murid;
-                        $pengguna->password 			= Hash::make($input->nomor_hp_wali_murid);
-                        $pengguna->must_change_password	= 1;
-                        $pengguna->status_join_table	= 4;
-                        $pengguna->created_by			= $input->auth_data->pengguna->id_pengguna;
-                        $pengguna->created_at			= $now;
-                        $pengguna->save();
-
-                        $rolePengguna                   = new RolePengguna;
-                        $rolePengguna->id_role          = 4;
-                        $rolePengguna->id_pengguna      = $id_pengguna;
-                        $rolePengguna->keterangan_role_pengguna = "Input Wali Murid";
-                        $rolePengguna->is_aktif         = 1;
-                        $rolePengguna->created_by           = $input->auth_data->pengguna->id_pengguna;
-                        $rolePengguna->created_at           = $now;
-                        $rolePengguna->save();
-
-                        $siswa_waliMurid				      = Siswa::find($id);
-                        $siswa_waliMurid->is_orang_tua      = $input->is_orang_tua;
-                        $siswa_waliMurid->id_wali_murid	  = $id_wali_murid;
-                        $siswa_waliMurid->save();
-
-                        return [
-                                'status' => 202, // SUCCESS AND LOAD CONTENT
-                                'path' => 'siswa/setting-wali-murid/view-kelas/'.$siswa->id_kelas,
-                                'message' => 'Update Data Wali Murid Berhasil!'
-                            ];
-                    }
-                    //data wali murid sudah ada
-                    else {
-                        $siswa_waliMurid				    = Siswa::find($id);
-                        $siswa_waliMurid->id_wali_murid	= $data_waliMurid->id_wali_murid;
-                        $siswa_waliMurid->is_orang_tua    = $input->is_orang_tua;
-                        $siswa_waliMurid->save();
-
-                        return [
-                                'status' => 202, // SUCCESS AND LOAD CONTENT
-                                'path' => 'siswa/setting-wali-murid/view-kelas/'.$siswa->id_kelas,
-                                'message' => 'Update Data Wali Murid Berhasil!'
-                            ];
-                    }
-                }
+                return [
+                    'status' => 200, // SUCCESS AND LOAD CONTENT
+                    'message' => 'Update Data Wali Murid Berhasil!'
+                ];
             } elseif ($mode == 'add') {
                 $wali_murid = WaliMurid::where('nomor_hp_wali_murid', '=', $input->nomor_hp_wali_murid)->first();
 

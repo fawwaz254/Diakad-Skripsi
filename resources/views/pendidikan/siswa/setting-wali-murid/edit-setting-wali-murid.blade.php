@@ -11,39 +11,29 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-wali-murid/edit/'.$siswa->id_siswa)}}" autocomplete="off">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-wali-murid/edit/'.$siswa->id_siswa)}}">
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    No. HP Wali Murid
+                                    Nama dan HP Wali Murid
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" id="realtxt" onkeyup="searchSel()" class="form-control">
+                                        <!-- <input type="text" id="realtxt" onkeyup="searchSel()" class="form-control"> -->
                                         <select class="form-control show-tick" id="nomor_hp_wali_murid" name="nomor_hp_wali_murid">
-                                            @foreach($data_wali_murid as $data)
-                                                <option value="{{$data->nomor_hp_wali_murid}}">{{$data->nomor_hp_wali_murid}}</option>
-                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
-                                <h2 class="card-inside-title">
-                                    Nama Wali Murid
-                                </h2>
-                                <div class="row clearfix">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div style="width:90%; position: relative; display: inline-block;">
-                                            <input type="text" class="form-control" name="nm_wali_murid" aria-required="true" aria-invalid="true" value="@if($siswa->id_wali_murid != null) {{$wali_murid->nm_wali_murid}} @endif">
-                                        </div>
-                                    </div>
-                                </div>
+                                <p>
+                                    Tidak menemukan nama dan nomor wali murid? <a target="_blank" href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}">Tambah wali murid</a>
+                                </p>
                                 <h2 class="card-inside-title">
                                     Sebagai Orangtua atau Wali
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        @if($siswa->id_wali_murid != null)
+                                        @if(!empty($wali_murid))
                                             <select class="form-control show-tick" name="is_orang_tua">
                                                 @if($wali_murid->is_orang_tua == 1)
                                                     <option value="1" selected="">Orangtua Kandung</option>
@@ -80,16 +70,36 @@
 </div>
 @include('scriptjs')
 <script type="text/javascript">
-    function searchSel() {
-  var input=document.getElementById('realtxt').value.toLowerCase();
-  var output=document.getElementById('nomor_hp_wali_murid').options;
-  for(var i=0;i<output.length;i++) {
-    if(output[i].value.indexOf(input)==0){
-      output[i].selected=true;
-    }
-    if(document.getElementById('realtxt').value==''){
-      output[0].selected=true;
-    }
-  }
-}
+    // function searchSel() {
+    //     var input = document.getElementById('realtxt').value.toLowerCase();
+    //     var output = document.getElementById('nomor_hp_wali_murid').options;
+    //     for (var i = 0; i < output.length; i++) {
+    //         if (output[i].value.indexOf(input) == 0) {
+    //             output[i].selected = true;
+    //         }
+    //         if (document.getElementById('realtxt').value == '') {
+    //             output[0].selected = true;
+    //         }
+    //     }
+    // }
+
+    $('#nomor_hp_wali_murid').select2({
+        minimumInputLength: 2,
+        ajax: {
+            url: base_url + '/kesiswaan/siswa/wali-murid/get-data',
+            type: "GET",
+            delay: 300,
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.nm_wali_murid + ' (' + item.nomor_hp_wali_murid + ')',
+                            value: item.nomor_hp_wali_murid,
+                            id: item.nomor_hp_wali_murid
+                        }
+                    })
+                };
+            }
+        }
+    });
 </script>
