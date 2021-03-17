@@ -183,6 +183,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             //MENU Setting Wali Murid
             Route::get('setting-wali-murid', 'Pendidikan\Siswa\SettingWaliMuridController@viewSettingWaliMurid');
+            Route::get('setting-wali-murid/add', 'Pendidikan\Siswa\SettingWaliMuridController@viewSettingWaliMurid');
             Route::post('post-view-setting-wali-murid', 'Pendidikan\Siswa\SettingWaliMuridController@actionViewSettingWaliMurid');
             Route::get('setting-wali-murid/view-kelas/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@viewKelasWaliMurid');
             Route::get('setting-wali-murid/datatables/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@datatablesWaliMurid');
@@ -193,6 +194,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('setting-wali-murid/upload/{id_kelas}', 'Pendidikan\Siswa\SettingWaliMuridController@uploadFileExcel');
 
             Route::post('action-setting-wali-murid/{mode}/{id}', 'Pendidikan\Siswa\SettingWaliMuridController@actionSettingWaliMurid');
+
+            Route::get('wali-murid/get-data', 'Pendidikan\Siswa\SettingWaliMuridController@actionGetWaliMurid');
 
             //MENU Setting Kelas Siswa
             Route::get('setting-kelas-siswa', 'Pendidikan\Siswa\SettingKelasSiswaController@viewSettingKelasSiswa');
