@@ -23,8 +23,8 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
     Route::group(array('prefix' => 'guru'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
-            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
-            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+            Route::post('get', 'Apiv1Controller@geteditprofile');
+            Route::post('submit', 'Apiv1Controller@submiteditprofile');
         });
 
         Route::post('kota/get', 'Apiv1Controller@actionGetKota');
@@ -110,8 +110,8 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
     
     Route::group(array('prefix' => 'tendik'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
-            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
-            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+            Route::post('get', 'Apiv1Controller@geteditprofile');
+            Route::post('submit', 'Apiv1Controller@submiteditprofile');
         });
 
         Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
@@ -146,8 +146,8 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
     Route::group(array('prefix' => 'wali-murid'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
-            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
-            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+            Route::post('get', 'Apiv1Controller@geteditprofile');
+            Route::post('submit', 'Apiv1Controller@submiteditprofile');
         });
 
         Route::post('siswa/get', 'Apiv1Controller@actionGetWaliMuridSiswa');
@@ -192,8 +192,8 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
     Route::group(array('prefix' => 'siswa'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
-            Route::post('get', 'Apiv1Controller@actionGetDataPribadi');
-            Route::post('submit', 'Apiv1Controller@actionDataPribadi');
+            Route::post('get', 'Apiv1Controller@geteditprofile');
+            Route::post('submit', 'Apiv1Controller@submiteditprofile');
         });
 
         Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
