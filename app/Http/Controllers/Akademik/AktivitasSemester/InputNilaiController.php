@@ -595,6 +595,7 @@ class InputNilaiController extends BaseController
                     $subKomponenMp->id_komponen_mp          = $input->id_komponen_mp;
                     $subKomponenMp->kd_subkomponen_mp       = $input->kd_subkomponen_mp;
                     $subKomponenMp->nm_subkomponen_mp       = $input->nm_subkomponen_mp;
+                    // penambahan id_type
                     $subKomponenMp->created_by              = $input->auth_data->pengguna->id_pengguna;
                     $subKomponenMp->save();
 
@@ -636,6 +637,7 @@ class InputNilaiController extends BaseController
                 $subKomponenMp->id_komponen_mp          = $input->id_komponen_mp;
                 $subKomponenMp->kd_subkomponen_mp       = $input->kd_subkomponen_mp;
                 $subKomponenMp->nm_subkomponen_mp       = $input->nm_subkomponen_mp;
+                // penambahan id_type
                 $subKomponenMp->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $subKomponenMp->save();
 
@@ -719,7 +721,7 @@ class InputNilaiController extends BaseController
                             foreach($list_subkomponen as $data){ // tiap subkomponen
                                 $nameInput = 'nilai'.$data->id_subkomponen_mp.'-'.$siswa->id_siswa;
                                 if(!isset($input->$nameInput)){
-                                    dd($nameInput, $siswa);
+                                    dd($nameInput, $siswa); // for debugging
                                 }
                                 $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp][$data->id_subkomponen_mp]['raw'] = $input->$nameInput;
                             }

@@ -10,6 +10,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Ekskul;
+use App\Models\Kota;
 use App\Models\LogKelasSiswa;
 use App\Models\NilaiMp;
 use App\Models\PengambilanEkskul;
@@ -28,8 +29,8 @@ use App\Models\Siswa as Siswa;
 use App\Models\StandarNilai;
 use App\Models\WaliKelas;
 use Auth;
+use Illuminate\Support\Facades\DB;
 use PDF;
-use DB;
 use Session;
 use Validator;
 
@@ -50,6 +51,7 @@ class PrintRaporController extends BaseController
         $id_siswa = $input->id_siswa;
         $id_kelas = $input->id_kelas;
         $id_semester = $input->id_semester;
+        $keputusan = $input->keputusan;
         $catatan = $input->deskripsi_catatan_wali_kelas;
         $now = Carbon::now(env('APP_TIMEZONE', ''));        
 
@@ -117,6 +119,8 @@ class PrintRaporController extends BaseController
         $standar_nilai = StandarNilai::get();
         $all_ekskul = Ekskul::get();
 
+        $text_keputusan = RaporDeskripsi::KEPUTUSAN[$keputusan];
+
         DB::beginTransaction();
         try{
             // pengisian data rapor = Mapel
@@ -139,13 +143,17 @@ class PrintRaporController extends BaseController
                 if(empty($rapor_kelompok_mp) && !empty($rapor_subkelompok_mp))
                     $rapor_kelompok_mp = RaporKelompokMp::find($rapor_subkelompok_mp->id_rapor_kelompok_mp);
 
-                $rapor_deskripsi->id_rapor_subkategori = null;
-                $rapor_deskripsi->id_rapor_kelompok_mp = !empty($rapor_kelompok_mp) ? $rapor_kelompok_mp->id_rapor_kelompok_mp : null;
-                $rapor_deskripsi->id_rapor_subkelompok_mp = !empty($rapor_subkelompok_mp) ? $rapor_subkelompok_mp->id_rapor_subkelompok_mp : null;
-                $rapor_deskripsi->id_ekstrakurikuler = null;
-                $rapor_deskripsi->predikat_rapor_deskripsi = $mp->nilai_huruf;
-                $rapor_deskripsi->deskripsi_rapor = null;
-                $rapor_deskripsi->created_by = $input->auth_data->pengguna->id_pengguna;
+                $rapor_deskripsi->id_rapor_subkategori      = null;
+                $rapor_deskripsi->id_rapor_kelompok_mp      = !empty($rapor_kelompok_mp) ? $rapor_kelompok_mp->id_rapor_kelompok_mp : null;
+                $rapor_deskripsi->id_rapor_subkelompok_mp   = !empty($rapor_subkelompok_mp) ? $rapor_subkelompok_mp->id_rapor_subkelompok_mp : null;
+                $rapor_deskripsi->id_ekstrakurikuler        = null;
+                $rapor_deskripsi->predikat_rapor_deskripsi  = $mp->nilai_huruf;
+                $rapor_deskripsi->deskripsi_rapor           = $text_keputusan; // ini akan diisi kenaikan kelas (rapor smt GENAP)
+                if(empty($rapor_deskripsi->created_by)){
+                    $rapor_deskripsi->created_by            = $input->auth_data->pengguna->id_pengguna;
+                } else {
+                    $rapor_deskripsi->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                }
                 $rapor_deskripsi->save();
                 // end rapor_deskripsi
 
@@ -171,7 +179,11 @@ class PrintRaporController extends BaseController
                 $rapor_siswa->nilai_kkm          = $mp->nilai_kkm;
                 $rapor_siswa->nilai_angka        = round($mp->nilai_angka);
                 $rapor_siswa->nilai_huruf        = $mp->nilai_huruf;
-                $rapor_siswa->created_by         = $input->auth_data->pengguna->id_pengguna;
+                if(empty($rapor_siswa->created_by)){
+                    $rapor_siswa->created_by         = $input->auth_data->pengguna->id_pengguna;
+                } else {
+                    $rapor_siswa->updated_by         = $input->auth_data->pengguna->id_pengguna;
+                }
                 $rapor_siswa->save();
                 // end rapor_siswa
             }
@@ -242,7 +254,7 @@ class PrintRaporController extends BaseController
             DB::rollback();
             // something went wrong
             return [
-                        'status' 	=> 200, // GAGAL
+                        'status' 	=> 300, // GAGAL
                         'message'	=> 'Insert Data Rapor Siswa Gagal'
                     ];
         }
@@ -271,14 +283,26 @@ class PrintRaporController extends BaseController
                                             'semester.nm_semester', 
                                             'semester.thn_akademik_semester', 
                                             'semester.tahun_ajaran')
-            ->join('rapor_deskripsi', 'rapor_siswa.id_rapor_deskripsi', 'rapor_deskripsi.id_rapor_deskripsi')
-            ->leftJoin('rapor_subkategori', 'rapor_deskripsi.id_rapor_subkategori', 'rapor_subkategori.id_rapor_subkategori')
-            ->join('rapor_kelompok_mp', 'rapor_deskripsi.id_rapor_kelompok_mp', 'rapor_kelompok_mp.id_rapor_kelompok_mp')
+            ->join('rapor_deskripsi', function($join){
+                $join->on('rapor_siswa.id_rapor_deskripsi', 'rapor_deskripsi.id_rapor_deskripsi');
+                $join->whereNull('rapor_deskripsi.deleted_at');
+            })
+            ->leftJoin('rapor_subkategori', function($join) {
+                $join->on('rapor_deskripsi.id_rapor_subkategori', 'rapor_subkategori.id_rapor_subkategori');
+                $join->whereNull('rapor_subkategori.deleted_at');
+            })
+            ->join('rapor_kelompok_mp', function($join) {
+                $join->on('rapor_deskripsi.id_rapor_kelompok_mp', 'rapor_kelompok_mp.id_rapor_kelompok_mp');
+                $join->whereNull('rapor_kelompok_mp.deleted_at');
+            })
             ->leftJoin('mata_pelajaran as mp', function($join){
                 $join->on('rapor_kelompok_mp.id_mata_pelajaran', '=', 'mp.id_mata_pelajaran');
                 $join->where('rapor_kelompok_mp.id_mata_pelajaran', '!=', null);
             })
-            ->join('semester', 'rapor_siswa.id_semester', 'semester.id_semester')
+            ->join('semester', function($join){
+                $join->on('rapor_siswa.id_semester', 'semester.id_semester');
+                $join->whereNull('semester.deleted_at');
+            })
             ->where('rapor_deskripsi.id_ekstrakurikuler', '=', null)
             ->where([
                 'id_siswa' => $id_siswa,
@@ -370,8 +394,14 @@ class PrintRaporController extends BaseController
                                 
         $kepala_sekolah = $auth_data->sekolah_data->nm_kepala_sekolah;
         $nip_kepala_sekolah = $auth_data->sekolah_data->nip_kepala_sekolah;
+        $kota = Kota::find($auth_data->sekolah_data->alamat_kota);
 
-        $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp', 'wali_kelas', 'kepala_sekolah', 'nip_kepala_sekolah'))->setPaper('legal', 'potrait');
-        return $pdf;
+        $pdf = PDF::loadView('rapor-buku-induk/rapor/cari-siswa/download-rapor-siswa', compact('auth_data', 'data_detail_rapor', 'data_siswa', 'data_ekskul', 'data_magang', 'data_prestasi', 'presensi', 'format_rapor_kategori', 'format_rapor_kelompok', 'format_rapor_kelompok_mp', 'wali_kelas', 'kepala_sekolah', 'nip_kepala_sekolah', 'kota'))->setPaper('legal', 'potrait');
+        
+        return [
+            'status' 	=> 200, // SUCCESS
+            'message'	=> 'Insert Data Rapor Siswa Berhasil',
+            'pdf' => $pdf
+        ];
     }
 }

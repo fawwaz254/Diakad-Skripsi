@@ -60,21 +60,38 @@
 <div class="modal fade" id="modal-rapor" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">PRINT RAPOR</h4>
-            </div>
-            <form id='print' action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cetak-by-kelas/print-rapor') }}" target="_blank" method="POST">
-            <div class="modal-body">
-                {{ csrf_field() }}
-                    <div class="row form-group">
-                        <div class="col">
-                            <label for="catatan">Catatan Wali Kelas</label><br>
-                            <textarea id="catatan" class="form-control" name="deskripsi_catatan_wali_kelas" placeholder="Tulis catatan"></textarea>
+            <div class="card">
+                <div class="modal-header">
+                    <h4 class="modal-title">PRINT RAPOR</h4>
+                </div>
+                <form id='print' action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cetak-by-kelas/print-rapor') }}" target="_blank" method="POST">
+                    <div class="modal-body">
+                    {{ csrf_field() }}
+                        <h2 class="card-inside-title">
+                            Catatan Wali Kelas
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea id="catatan" class="form-control" name="deskripsi_catatan_wali_kelas" placeholder="Tulis catatan"></textarea>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="modal-print"></div>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button type="submit" class="btn btn-primary btn-block waves-effect"><span><i class="material-icons">print</i></span> Cetak</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-print"></div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -122,28 +139,36 @@
 
     var table = $('#primary_table').DataTable();
 
-    // kemungkinan tidak digunakan
     $('#primary_table tbody').on('click', 'tr', function () { 
         var data = table.row( this ).data();
         
         $(".modal-print").empty();
-        data.log_kelas.forEach(function (row) {
-              $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
-              $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
-              $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + row.id_kelas + '">');
-              $(".modal-print").append('<input type="hidden" name="id_semester" value="">');
-              $(".modal-print").append('<button type="submit" onclick=submitForm(\'' + row.id_semester + '\') class="btn btn-primary waves-effect"> Semester: ' + row.nm_semester + '</button>');
-              $(".modal-print").append('</div></div>');
-            });
+        $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + data.log_kelas[0].id_siswa + '">');
+        $(".modal-print").append('<input type="hidden" name="id_kelas" value="' + data.log_kelas[0].id_kelas + '">');
+        $(".modal-print").append('<h2 class="card-inside-title">Pilih Semester</h2>');
+        $(".modal-print").append('<select class="option-print form-control" id="id_semester" name="id_semester" onchange="changeSemester()">');
+        data.log_kelas.forEach(function(row){
+            $(".option-print").append('<option value="'+ row.id_semester +'">'+ row.nm_semester +'</option>');
+        })
+        $(".modal-print").append('<h2 class="card-inside-title keputusan" style="display: none;">Keputusan</h2>');
+        $(".modal-print").append('<select name="keputusan" id="keputusan-select" class="form-control keputusan" disabled style="display: none;">');
+        $("#keputusan-select").append('<option value="1">Naik kelas</option><option value="2">Lulus</option><option value="0">Tinggal kelas</option>');
+        
         $("#modal-rapor").modal('show');
 
     });
 
-    function submitForm(semester) {
-        console.log(semester);
-        $('input[name="id_semester"]').val(semester);
+    function changeSemester(){
+        var txt_smt = $("select[name='id_semester'] option:selected").text();
 
-        var form = $('form#print');
-        form.submit();
+        if(txt_smt == 'Genap' || txt_smt == 'genap' || txt_smt == 'GENAP'){
+            $('.keputusan').css('display', 'block');
+            $('.keputusan').attr('required', 'required');
+            $('.keputusan').removeAttr('disabled');
+        } else {
+            $('.keputusan').css('display', 'none');
+            $('.keputusan').removeAttr('required');
+            $('.keputusan').attr('disabled', 'disabled');
+        }
     }
 </script>
