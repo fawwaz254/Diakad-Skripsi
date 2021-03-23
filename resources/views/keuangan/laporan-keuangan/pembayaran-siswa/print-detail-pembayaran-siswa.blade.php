@@ -54,7 +54,7 @@
             @foreach($data_pembayaran as $siswa)
             <tr>
                 <th colspan="6" style="text-align: left; background:lightyellow">
-                    {{ $siswa->first()->nis_siswa . ' - ' . $siswa->first()->nm_pengguna  }}
+                    {{ $siswa->first()->nis_siswa . ' - ' . $siswa->first()->nm_pengguna . ' - KELAS ' . $siswa->first()->nm_kelas }}
                 </th>
             </tr>
             <tr>
