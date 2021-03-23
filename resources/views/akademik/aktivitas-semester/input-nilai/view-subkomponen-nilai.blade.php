@@ -21,6 +21,7 @@
                                         <th>No</th>
                                         <th>KD Sub Komponen</th>
                                         <th>Nama Sub Komponen</th>
+                                        <th>Tipe Sub Komponen</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -59,6 +60,7 @@
             { data: null, searchable: false, orderable: false },
             { data: 'kd_subkomponen_mp', name: 'kd_subkomponen_mp' },
             { data: 'nm_subkomponen_mp', name: 'nm_subkomponen_mp' },
+            { data: 'type_subkomponen_mp', name: 'type_subkomponen_mp' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

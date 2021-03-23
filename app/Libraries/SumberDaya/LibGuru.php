@@ -396,7 +396,7 @@ class LibGuru
     {
         // get mode view
         if ($id == null) {
-            $subKomponenMp = SubKomponenMp::select('komponen_mp.id_komponen_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'komponen_mp.nm_komponen_mp', 'komponen_mp.persentase_komponen_mp', 'komponen_mp.urutan_komponen_mp', 'subkomponen_mp.id_subkomponen_mp', 'subkomponen_mp.kd_subkomponen_mp', 'subkomponen_mp.nm_subkomponen_mp')
+            $subKomponenMp = SubKomponenMp::select('komponen_mp.id_komponen_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'kelas.nm_kelas', 'komponen_mp.nm_komponen_mp', 'komponen_mp.persentase_komponen_mp', 'komponen_mp.urutan_komponen_mp', 'subkomponen_mp.id_subkomponen_mp', 'subkomponen_mp.kd_subkomponen_mp', 'subkomponen_mp.nm_subkomponen_mp', 'subkomponen_mp.type_subkomponen_mp')
                         ->join('komponen_mp', 'komponen_mp.id_komponen_mp', '=', 'subkomponen_mp.id_komponen_mp')
                         ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'komponen_mp.id_kelas_mp')
                         ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
