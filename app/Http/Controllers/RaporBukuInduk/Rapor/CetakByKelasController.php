@@ -115,6 +115,7 @@ class CetakByKelasController extends BaseController
             'id_siswa' =>'required|exists:siswa,id_siswa',
             'id_kelas' =>'required|exists:kelas,id_kelas',
             'id_semester' =>'required|exists:semester,id_semester',
+            'keputusan' => 'nullable|in:0,1,2'
         ]);
 
         if($validator->fails()){
@@ -126,6 +127,11 @@ class CetakByKelasController extends BaseController
 
         $print = new PrintRaporController($request);
         $pdf = $print->printRaporSiswa();
-        return $pdf->stream();
+        
+        if($pdf['status'] == 200){
+            return $pdf['pdf']->stream();
+        } else {
+            return $pdf;
+        }
     }
 }

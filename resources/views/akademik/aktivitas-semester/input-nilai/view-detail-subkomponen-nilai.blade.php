@@ -27,6 +27,18 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
+                            Tipe Sub Komponen <small><b>* Tipe Ujian untuk penilaian UTS,UAS, dll.</b></small>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select name="type_subkomponen_mp" id="type_subkomponen_mp" class="form-control" required>
+                                    <option value="" selected disabled>-- Pilih Tipe --</option>
+                                    <option value="0" {{ isset($data_subkomponen_mp) && $data_subkomponen_mp->type_subkomponen_mp === 0 ? 'selected' : null }}>Kompetensi Dasar</option>
+                                    <option value="1" {{ isset($data_subkomponen_mp) && $data_subkomponen_mp->type_subkomponen_mp == 1 ? 'selected' : null }}>Ujian</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
                             Nama Sub Komponen
                         </h2>
                         <div class="row clearfix">

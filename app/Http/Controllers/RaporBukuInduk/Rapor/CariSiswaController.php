@@ -174,6 +174,11 @@ class CariSiswaController extends BaseController
         
         $print = new PrintRaporController($request);
         $pdf = $print->printRaporSiswa();
-        return $pdf->stream();
+
+        if($pdf['status'] == 200){
+            return $pdf['pdf']->stream();
+        } else {
+            return $pdf;
+        }
     }
 }

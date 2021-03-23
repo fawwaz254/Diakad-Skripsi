@@ -108,7 +108,6 @@
 </head>
 
 <body>
-
     <!-- <table width="100%" style="margin-bottom: 30px;">
         <tr>
             <td width="60">
@@ -383,17 +382,7 @@
     @if(collect($data_detail_rapor)->first()->nm_semester == 'Genap')
     <div class="mb-2 avoid-page-break">
         <h5>Keputusan</h5>
-        <p class="small">Berdasarkan hasil yang dicapai pada semester 1 dan 2, maka peserta didik ini ditetapkan :</p>
-        <table>
-            <tr>
-                <td>Naik ke kelas</td>
-                <td>:</td>
-            </tr>
-            <tr>
-                <td>Tinggal di kelas</td>
-                <td>:</td>
-            </tr>
-        </table>
+        <p class="small">Berdasarkan hasil yang dicapai pada semester ganjil dan genap, maka peserta didik ini ditetapkan : <b>{{ collect($data_detail_rapor)->first()->deskripsi_rapor }}</b></p>
     </div>
     @endif
     <div class="avoid-page-break mt-4">
@@ -401,7 +390,7 @@
             <tr>
                 <td style="width: 35%;">Mengetahui:</td>
                 <td style="width: 35%;"></td>
-                <td style="width: 30%;">Sidoarjo, 23 Desember 2020</td>
+                <td style="width: 30%;">{{ !empty($kota) ? $kota->nm_kota . ', ' : null }} {{ indonesiaDate(date('Y-m-d')) }}</td>
             </tr>
             <tr>
                 <td>Orang Tua/Wali</td>
