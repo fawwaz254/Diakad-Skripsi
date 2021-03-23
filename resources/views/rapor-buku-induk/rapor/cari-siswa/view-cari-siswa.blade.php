@@ -59,26 +59,38 @@
 <div class="modal fade" id="modal-rapor" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">PRINT RAPOR</h4>
-            </div>
-            <form id="print" action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cari-siswa/print-rapor') }}" target="_blank" method="POST">
-                <div class="modal-body">
-                    {{ csrf_field() }}
-                        <div class="row form-group">
-                            <div class="col">
-                                <label for="catatan">Catatan Wali Kelas</label><br>
+            <div class="card">
+                <div class="modal-header">
+                    <h4 class="modal-title">PRINT RAPOR</h4>
+                </div>
+                <form id="print" action="{{ url(Request::segment(1).'/'.Request::segment(2).'/cari-siswa/print-rapor') }}" target="_blank" method="POST">
+                    <div class="modal-body">
+                        {{ csrf_field() }}
+                        <h2 class="card-inside-title">
+                            Catatan Wali Kelas
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <textarea id="catatan" class="form-control" name="deskripsi_catatan_wali_kelas" placeholder="Tulis catatan"></textarea>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <label for="">Pilih Kelas</label>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="modal-print"></div>
                             </div>
                         </div>
-                        <div class="modal-print"></div>
-                </div>
-            </form>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button type="submit" class="btn btn-primary btn-block waves-effect"><span><i class="material-icons">print</i></span> Cetak</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -91,6 +103,7 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'cari-siswa/datatables/' + nis_nama_siswa;
     var preview_url     = base_url + '/' + role_url + '/' + modul_url + '/' + 'cari-siswa/preview-rapor';
     var print_url       = role_url + '#' + modul_url + '/' + 'cari-siswa/print-rapor';
+    var dataLog         = null;
     
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -128,17 +141,28 @@
 
     $('#primary_table tbody').on('click', 'tr', function () {
         var data = table.row( this ).data();
-        console.log(data);
+        var id_kelas_opt = null;
+        dataLog = data; // set global dataLog
         
         $(".modal-print").empty();
-        data.log_kelas.forEach(function (row) {
-              $(".modal-print").append('<div class="row"><div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">');
-              $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + row.id_siswa + '">');
-              $(".modal-print").append('<input type="hidden" name="id_kelas" value="">');
-              $(".modal-print").append('<input type="hidden" name="id_semester" value="">');
-              $(".modal-print").append('<button type="button" onclick=submitForm(\'' + row.id_kelas + '\',\'' + row.id_semester + '\') class="btn btn-primary waves-effect"> Kelas: ' + row.tingkat + ' Semester: ' + row.nm_semester + ' (' + row.nm_kelas + ')</button>');
-              $(".modal-print").append('</div></div>');
-            });
+        $(".modal-print").append('<input type="hidden" name="id_siswa" value="' + data.id_siswa + '">');
+        $(".modal-print").append('<h2 class="card-inside-title">Pilih Kelas</h2>');
+        $(".modal-print").append('<select class="option-kelas form-control" id="id_kelas" name="id_kelas" required onchange="changeKelas()">');
+        $(".option-kelas").append('<option value="" disabled selected>-- Pilih Kelas --</option>');
+        data.log_kelas.forEach(function(row){
+            if(row.id_kelas != id_kelas_opt){
+                $(".option-kelas").append('<option value="'+ row.id_kelas +'">'+ row.nm_kelas +'</option>');
+                id_kelas_opt = row.id_kelas;
+            }
+        })
+        $(".modal-print").append('<h2 class="card-inside-title">Pilih Semester</h2>');
+        $(".modal-print").append('<select class="option-semester form-control" id="id_semester" name="id_semester" required onchange="changeSemester()">');
+        $(".option-semester").append('<option value="" selected disabled>-- Pilih Semester --</option>');
+        
+        $(".modal-print").append('<h2 class="card-inside-title keputusan" style="display: none;">Keputusan</h2>');
+        $(".modal-print").append('<select name="keputusan" id="keputusan-select" class="form-control keputusan" disabled style="display: none;">');
+        $("#keputusan-select").append('<option value="1">Naik kelas</option><option value="2">Lulus</option><option value="0">Tinggal kelas</option>');
+        
         $("#modal-rapor").modal('show');
 
     });
@@ -150,5 +174,39 @@
 
         var form = $('form#print');
         form.submit();
+    }
+
+    function changeKelas(){
+        // console.log(dataLog); // global var dataLog
+        var id_kelas = $('#id_kelas').val();
+        // console.log(id_kelas);
+        $('#id_semester').empty();
+    
+        $('#id_semester').append($("<option>")
+            .attr("value", null)
+            .attr('selected', 'selected')
+            .attr('disabled', 'disabled')
+            .text("-- Pilih Semester --")
+        );
+
+        dataLog.log_kelas.forEach(function(row){
+            if(row.id_kelas == id_kelas){
+                $("#id_semester").append('<option value="'+ row.id_semester +'">'+ row.nm_semester +'</option>');
+            }
+        })
+    }
+
+    function changeSemester(){
+        var txt_smt = $("select[name='id_semester'] option:selected").text();
+
+        if(txt_smt == 'Genap' || txt_smt == 'genap' || txt_smt == 'GENAP'){
+            $('.keputusan').css('display', 'block');
+            $('.keputusan').attr('required', 'required');
+            $('.keputusan').removeAttr('disabled');
+        } else {
+            $('.keputusan').css('display', 'none');
+            $('.keputusan').removeAttr('required');
+            $('.keputusan').attr('disabled', 'disabled');
+        }
     }
 </script>

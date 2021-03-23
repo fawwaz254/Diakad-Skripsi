@@ -12,6 +12,12 @@ class RaporDeskripsi extends Model
 {
     use SoftDeletes;
 
+    const KEPUTUSAN = [
+        'Tinggal Kelas',
+        'Naik Kelas',
+        'Lulus'
+    ];
+
     protected $table = 'rapor_deskripsi';
 
     protected $primaryKey = 'id_rapor_deskripsi';

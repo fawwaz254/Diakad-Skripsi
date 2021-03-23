@@ -118,3 +118,30 @@ if (!function_exists('isDebugMode')) {
     return env('APP_DEBUG', 'true') == 'true';
   }
 }
+
+if (!function_exists('indonesiaDate')) {
+  /**
+   * convert 'Y-m-d' date to 'd F Y' format
+   * @return string
+   */
+  function indonesiaDate($date)
+  {
+    $months = [
+      1 => 'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember'
+    ];
+
+    $split = explode('-', $date);
+	  return $split[2] . ' ' . $months[ (int)$split[1] ] . ' ' . $split[0];
+  }
+}

@@ -228,6 +228,16 @@ class InputNilaiController extends BaseController
         $list_data = LibGuru::fetchDataSubKomponenNilai($auth_data, $id_komponen_mp);
 
         return Datatables::of($list_data)
+                ->editColumn('type_subkomponen_mp', function($item){
+                    if($item->type_subkomponen_mp === 0){
+                        $type = 'Kompetensi Dasar';
+                    } elseif($item->type_subkomponen_mp == 1){
+                        $type = 'Ujian';
+                    } else {
+                        $type = 'Belum diset';
+                    }
+                    return $type;
+                })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_subkomponen_mp
@@ -563,6 +573,7 @@ class InputNilaiController extends BaseController
         $validator = Validator::make($request->all(), [
             'nm_subkomponen_mp' => 'required',
             'kd_subkomponen_mp' => 'required',
+            'type_subkomponen_mp' => 'required|in:0,1',
             // dari type hidden
             'id_komponen_mp' => 'required',
             'id_kelas_mp' => 'required',
@@ -595,6 +606,7 @@ class InputNilaiController extends BaseController
                     $subKomponenMp->id_komponen_mp          = $input->id_komponen_mp;
                     $subKomponenMp->kd_subkomponen_mp       = $input->kd_subkomponen_mp;
                     $subKomponenMp->nm_subkomponen_mp       = $input->nm_subkomponen_mp;
+                    $subKomponenMp->type_subkomponen_mp     = $input->type_subkomponen_mp;
                     $subKomponenMp->created_by              = $input->auth_data->pengguna->id_pengguna;
                     $subKomponenMp->save();
 
@@ -636,6 +648,7 @@ class InputNilaiController extends BaseController
                 $subKomponenMp->id_komponen_mp          = $input->id_komponen_mp;
                 $subKomponenMp->kd_subkomponen_mp       = $input->kd_subkomponen_mp;
                 $subKomponenMp->nm_subkomponen_mp       = $input->nm_subkomponen_mp;
+                $subKomponenMp->type_subkomponen_mp     = $input->type_subkomponen_mp;
                 $subKomponenMp->updated_by              = $input->auth_data->pengguna->id_pengguna;
                 $subKomponenMp->save();
 
@@ -666,6 +679,7 @@ class InputNilaiController extends BaseController
                 }
             }
             elseif($mode == 'input-nilai'){
+                // VALIDATE BASIC
                 $validate_input = $input;
                 $validator = Validator::make($request->only('id_kelas_mp', 'id_pengguna', 'id_semester'), [
                     // dari type hidden
@@ -680,13 +694,20 @@ class InputNilaiController extends BaseController
                     ]; 
                 }
 
+                // VALIDATE NILAI
                 $data_validation = $request->except(['_token', 'id_kelas_mp', 'id_pengguna', 'id_semester', 'primary_table_length', 'auth_data']); 
                 $key = [];
                 foreach($data_validation as $keydv => $dv){
-                    $key[$keydv] = 'numeric';
+                    $key[$keydv] = 'numeric|max:100';
                 }
+                $messages = [];
+                foreach($data_validation as $keydv => $dv){
+                    $messages[$keydv . '.max'] = 'Nilai maksimal :max';
+                }
+                // dd($messages);
                 
-                $validator = Validator::make($data_validation, $key);
+                $validator = Validator::make($data_validation, $key, $messages);
+                // dd($data_validation, $validator->errors());
 
                 if($validator->fails()){
                     return [
@@ -719,15 +740,23 @@ class InputNilaiController extends BaseController
                             foreach($list_subkomponen as $data){ // tiap subkomponen
                                 $nameInput = 'nilai'.$data->id_subkomponen_mp.'-'.$siswa->id_siswa;
                                 if(!isset($input->$nameInput)){
-                                    dd($nameInput, $siswa);
+                                    dd($nameInput, $siswa); // for debugging
                                 }
                                 $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp][$data->id_subkomponen_mp]['raw'] = $input->$nameInput;
+                                $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp][$data->id_subkomponen_mp]['type'] = $data->type_subkomponen_mp;
                             }
                             
                             $c_nilai_akhir = collect($nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_mp]);
-    
-                            $nilai_per_komponen[$siswa->id_siswa][$komponen->id_komponen_mp]['raw'] = round($c_nilai_akhir->sum('raw')/$c_nilai_akhir->count(), 2);
+                            $nilai_type_ujian = $c_nilai_akhir->where('type', 1);
+                            $nilai_type_kd = $c_nilai_akhir->where('type', 0);
+
+                            // SUM nilai based ON type of subkomponen_mp
+                            $rawNilaiKd = round($nilai_type_kd->sum('raw')/$nilai_type_kd->count(), 2);
+                            $rawNilai = round(($nilai_type_ujian->sum('raw') + $rawNilaiKd)/($nilai_type_ujian->count() + 1));
+
+                            $nilai_per_komponen[$siswa->id_siswa][$komponen->id_komponen_mp]['raw'] = $rawNilai;
                             $nilai_per_komponen[$siswa->id_siswa][$komponen->id_komponen_mp]['persentase'] = $komponen->persentase_komponen_mp;
+                            $nilai_per_komponen[$siswa->id_siswa][$komponen->id_komponen_mp]['komponen'] = $komponen->nm_komponen_mp;
                         }
     
                         $namePengambilan = 'id_pengambilan_mp_'.$siswa->id_siswa;
