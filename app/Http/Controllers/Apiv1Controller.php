@@ -3197,8 +3197,7 @@ $validator = Validator::make($request->all(), $syarat);
                     'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
                 ]);
             }
-            
-        ]);
+        }
     }
     public function submiteditprofile(Request $request, $mode, $id = null) {
 
