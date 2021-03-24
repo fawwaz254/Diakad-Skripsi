@@ -72,7 +72,7 @@
             <div class="row" style="background-color:#f7f7f7;margin-right:0;margin-left:0;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;padding-top:25px;padding-bottom:25px ">
                     <div class="row">
                             <div class="col-xs-12 align-center">
-                                <span style="color:#a7a7a7">Official Website : <a href="https://www.{{env('APP_NAME', 'diakad')}}.id" target="_blank">{{strtoupper(env('APP_NAME', 'diakad'))}}</a></span><br class="visible-xs-block"><span style="color:#a7a7a7" id="khusus-footer">Powered By <a href="https://www.solusimaster.com" target="_blank">PT Digital Solusi Master</a></span>
+                                <span style="color:#a7a7a7">Official Website : <a href="https://www.{{env('APP_NAME', 'diakad')}}.id" target="_blank">{{strtoupper(env('APP_NAME', 'diakad'))}}</a></span><br class="visible-xs-block"><span style="color:#a7a7a7" id="khusus-footer">Powered By <a href="https://dsmartedu.com" target="_blank">DSM SMART EDU</a></span>
                             </div>
                         </div>
             </div>
