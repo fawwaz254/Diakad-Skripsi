@@ -37,7 +37,7 @@ class NotifikasiPengguna extends Model
     }
 
     public function getCreatedAtAttribute($value){
-        return date_format(date_create($value), 'd M Y H:i');
+        return \Carbon\Carbon::createFromTimeStamp(strtotime($value))->diffForHumans();
     }
 
     public function pengguna(){
