@@ -13,9 +13,9 @@
         @endphp
 
         @if($theme_name != '')
-        <title><?=str_replace('-', ' ', strtoupper($theme_name))?> - Sekolah Berbasis Teknologi</title>
+        <title><?=str_replace('-', ' ', strtoupper($theme_name))?> - Sekolah Berbasis Teknologi by DSM SMART EDU</title>
         @else
-        <title>{{strtoupper(env('APP_NAME', 'diakad'))}} - Sekolah Berbasis Teknologi</title>
+        <title>{{strtoupper(env('APP_NAME', 'diakad'))}} - Sekolah Berbasis Teknologi by DSM SMART EDU</title>
         @endif
 
         <!-- Favicon-->
