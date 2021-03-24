@@ -3187,9 +3187,8 @@ $validator = Validator::make($request->all(), $syarat);
             DB::beginTransaction();
         
             try {
-                $pengguna                           = new Pengguna;
-                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                $pengguna->id_status_pengguna       = $input->id_status_pengguna;
+                $pengguna                           =  Pengguna::find($input->auth_data->pengguna->id_pengguna);
+                // $pengguna->id_status_pengguna       = $input->id_status_pengguna;
                 $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
                 // $pengguna->password                 = Hash::make($input->nip_staff);
@@ -3204,9 +3203,10 @@ $validator = Validator::make($request->all(), $syarat);
                 $pengguna->save();
 
                 if($request->segment(3)=="guru"){
-                    $guru                           = new Guru;
-                $guru->id_guru                 = $id;
-                $guru->id_pengguna              = $pengguna->id_pengguna;
+                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+// dd($input->jenis_kelamin);
+                    $guru                           =  Guru::where("id_pengguna","=",$input->auth_data->pengguna->id_pengguna)->first();
+            //    dd($guru);
                 $guru->id_unit_kerja            = $input->id_unit_kerja;
                 /*$guru->id_jabatan_pegawai       = $input->id_jabatan_pegawai;*/
                 $guru->jenis_kelamin            = $input->jenis_kelamin;
@@ -3234,7 +3234,7 @@ $validator = Validator::make($request->all(), $syarat);
                 
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $staff                           = new Staff;
+                $staff                           = Staff::find($input->auth_data->pengguna->id_pengguna);;
                 $staff->id_staff                 = $id;
                 $staff->id_pengguna              = $pengguna->id_pengguna;
                 $staff->id_unit_kerja            = $input->id_unit_kerja;
@@ -3262,7 +3262,7 @@ $validator = Validator::make($request->all(), $syarat);
                 }elseif($request->segment(3)=="wali-murid"){
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $staff                           = new WaliMurid;
+                $staff                           =  WaliMurid::find($input->auth_data->pengguna->id_pengguna);;
                 $staff->id_staff                 = $id;
                 $staff->id_pengguna              = $pengguna->id_pengguna;
                 $staff->id_unit_kerja            = $input->id_unit_kerja;
@@ -3290,7 +3290,7 @@ $validator = Validator::make($request->all(), $syarat);
                 }elseif($request->segment(3)=="siswa"){
                         $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
     
-                    $staff                           = new Siswa;
+                    $staff                           = Siswa::find($input->auth_data->pengguna->id_pengguna);
                     $staff->id_staff                 = $id;
                     $staff->id_pengguna              = $pengguna->id_pengguna;
                     $staff->id_unit_kerja            = $input->id_unit_kerja;
@@ -3324,7 +3324,6 @@ $validator = Validator::make($request->all(), $syarat);
         'status_text' 	=> 'Success',
         'message' => 'Update data pribadi successfully'
     ]);
-    DB::rollback();
 } catch (\Exception $e) {
     DB::rollback();
     // something went wrong
