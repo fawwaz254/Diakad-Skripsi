@@ -16,6 +16,8 @@ class TagihanBiaya extends Model
 
     protected $primaryKey = 'id_tagihan_biaya';
 
+    protected $keyType = 'string';
+
     public $timestamps = true;
 
     public $incrementing = false;

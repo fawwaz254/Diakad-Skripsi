@@ -18,6 +18,8 @@ class PembayaranBiaya extends Model
 
     public $timestamps = true;
 
+    protected $keyType = 'string';
+
     public $incrementing = false;
     
     protected $fillable = [
