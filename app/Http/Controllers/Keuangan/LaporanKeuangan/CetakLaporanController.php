@@ -125,7 +125,6 @@ class CetakLaporanController extends BaseController
             $start_year = Carbon::parse($start_date)->format('Y');
             $end_year = Carbon::parse($end_date)->format('Y');
             $data_laporan = LibDataKeuangan::fetchDataLaporanPembayaranSiswaPerBulan($auth_data, $start_year, $end_year);
-            // dd($data_laporan);
             
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/print-cetak-laporan-pembayaran-siswa-by-bulan', compact('auth_data', 'data_laporan', 'start_year', 'end_year'));
         }

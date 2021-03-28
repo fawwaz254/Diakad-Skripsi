@@ -92,7 +92,7 @@
             @endphp
             <tr>
                 <td>{{ $key+1 }}</td>
-                <td>{{ $date->format('d F Y') }}</td>
+                <td>{{ indonesiaDate($value['tanggal'])  }}</td>
                 <td>{{ $value['keterangan'] }}</td>
                 @if($value['tipe'] == 1)
                     <td style="text-align: right;">Rp {{ number_format($value['nominal']) }}</td>
@@ -114,7 +114,7 @@
                 <tr>
                     <td style="width: 50%;"></td>
                     <td>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
-                        {{ \Carbon\Carbon::now()->format('j M Y') }}
+                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                     </td>
                 </tr>
                 <tr></tr>

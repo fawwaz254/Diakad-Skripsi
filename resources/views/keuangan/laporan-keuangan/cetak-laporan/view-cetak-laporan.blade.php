@@ -105,8 +105,13 @@
             vex.dialog.alert("Tanggal Awal atau Tanggal Akhir yang dipilih tidak valid");
             $('button').removeAttr('disabled', 'disabled');
         } else {
-            window.open(print_laporan_url + '/' + 'print-arus-kas' + '/' + start_date + '/' + end_date, "_blank");
-            $('button').removeAttr('disabled', 'disabled');
+            if(end_date < start_date){
+                vex.dialog.alert("Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal");
+                $('button').removeAttr('disabled', 'disabled');
+            } else {
+                window.open(print_laporan_url + '/' + 'print-arus-kas' + '/' + start_date + '/' + end_date, "_blank");
+                $('button').removeAttr('disabled', 'disabled');
+            }
         }
     }
 </script>

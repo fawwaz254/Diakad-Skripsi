@@ -91,6 +91,7 @@ class PembayaranSiswaController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -102,7 +103,7 @@ class PembayaranSiswaController extends BaseController
                                 })->where('tagihan_biaya.id_siswa', $siswa->id_siswa)->pluck('id_tagihan_biaya')->toArray();
                                 // dd($data_terbayar);
 
-        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', 'tagihan_biaya.besar_biaya as besar_pembayaran')
+        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', 'tagihan_biaya.besar_biaya as besar_pembayaran')
             ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
             ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
             ->join('kelompok_biaya', 'kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
@@ -110,13 +111,28 @@ class PembayaranSiswaController extends BaseController
             ->join('biaya', 'biaya.id_biaya', '=', 'detail_biaya.id_biaya')
             ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
             ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
-            // ->where('tagihan_biaya.is_tagih', '=', 1)
             ->where('tagihan_biaya.is_request', '=', 0)
             ->where('tagihan_biaya.id_siswa', '=', $siswa->id_siswa)
-            ->whereNotIn('tagihan_biaya.id_tagihan_biaya', $data_terbayar)
-            ->orderBy('bulan.id_bulan', 'asc')
+            ->whereNotIn('tagihan_biaya.id_tagihan_biaya', $data_terbayar);
+
+            if($request->type == 2){
+                $list_data->where(function($q) use ($now){
+                    $q->where('detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                    $q->orWhere(function($w) use ($now){
+                        $w->where('detail_biaya.id_jenis_detail_biaya', 4);
+                        if($now->format('n') <= 6){
+                            $w->where('detail_biaya.id_bulan', '<=', $now->format('n'));
+                            $w->orWhere('detail_biaya.id_bulan', '>', 6);
+                        } else {
+                            $w->where('detail_biaya.id_bulan', '>', 6);
+                            $w->where('detail_biaya.id_bulan', '<=', $now->format('n'));
+                        }
+                    });
+                });
+            }
+
+            $list_data = $list_data->orderBy('bulan.id_bulan', 'asc')
             ->orderBy('detail_biaya.id_jenis_detail_biaya', 'asc')
-            // ->orderBy('semester.kode_semester', 'asc')
             ->get();
         // dd($data_terbayar, $list_data);
 
@@ -131,7 +147,7 @@ class PembayaranSiswaController extends BaseController
 
         $validator = Validator::make($request->all(), [
           'nis_nama_siswa' =>'required'
-      ]);
+        ]);
 
         if ($validator->fails()) {
             return [
