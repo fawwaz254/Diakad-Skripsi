@@ -46,7 +46,7 @@ class PembayaranSiswaController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         # printing purpose..
-        # default/struk
+        # option = default/struk
         $type = 'default'; 
         $lebar = null;
         if(isset($input->type) && $input->type != null){

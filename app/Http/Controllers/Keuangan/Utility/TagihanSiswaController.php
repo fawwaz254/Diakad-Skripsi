@@ -168,25 +168,26 @@ class TagihanSiswaController extends BaseController
                                                     ->where('id_detail_biaya', '=', $detail_biaya->id_detail_biaya)
                                                     ->first();
 
+                                                    // dd($tagihan_set);
                             if($input->is_insert_replace == "3"){ // UPDATE
                                 $pembayaran = PembayaranBiaya::where('id_tagihan_biaya', $tagihan_set->id_tagihan_biaya)->first();
 
-                                if($tagihan_set){ // kalau tagihan ditemukan maka update(bisa edit/hapus)
+                                if(!empty($tagihan_set)){ // kalau tagihan ditemukan maka update(bisa edit/hapus)
                                     if(empty($pembayaran)){ // jika TIDAK ADA pembayaran
                                         $tagihan_set->keterangan        = $detail_biaya->keterangan_biaya;
                                         $tagihan_set->besar_biaya       = $detail_biaya->besar_biaya;
+                                        $tagihan_set->updated_by        = $input->auth_data->pengguna->id_pengguna;
                                         $tagihan_set->deleted_at        = $detail_biaya->deleted_at;
                                         $tagihan_set->save();
                                     } 
-                                    // else { // jika ADA pembayaran
-                                    //     $tagihan_set->keterangan    = $detail_biaya->keterangan_biaya;
-                                    //     $tagihan_set->besar_biaya   = $detail_biaya->besar_biaya;
-                                    //     $tagihan_set->deleted_at    = $detail_biaya->deleted_at;
-                                    //     $tagihan_set->save();
-                                    //     if(!empty($detail_biaya->deleted_at)){
-                                    //         $pembayaran->delete();
-                                    //     }
-                                    // }
+                                    else { // jika ADA pembayaran hanya update keterangan
+                                        $tagihan_set->keterangan    = $detail_biaya->keterangan_biaya;
+                                        $tagihan_set->updated_by    = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_set->save();
+                                        // if(!empty($detail_biaya->deleted_at)){
+                                        //     $pembayaran->delete();
+                                        // }
+                                    }
                                 } else { // kalau tagihan dari detail biaya tidak ditemukan maka tambah baru
                                     $siswa = Siswa::find($id_siswa);
                                 
