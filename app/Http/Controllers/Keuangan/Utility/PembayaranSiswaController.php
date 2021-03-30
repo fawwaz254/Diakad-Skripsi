@@ -131,7 +131,7 @@ class PembayaranSiswaController extends BaseController
                 });
             }
 
-            $list_data = $list_data->orderBy('bulan.id_bulan', 'asc')
+        $list_data = $list_data->orderBy('bulan.id_bulan', 'asc')
             ->orderBy('detail_biaya.id_jenis_detail_biaya', 'asc')
             ->get();
         // dd($data_terbayar, $list_data);
