@@ -76,7 +76,7 @@
         <table border="0" style="width: 100%;">
             <tr>
                 <td></td>
-                <td><b>TAGIHAN PER TANGGAL {{ \Carbon\Carbon::now()->format('j M Y') }}</b></td>
+                <td><b>TAGIHAN PER TANGGAL {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</b></td>
             </tr>
             <tr>
                 <td></td>
@@ -114,7 +114,7 @@
             </tr>
         </table>
         <div class="ttd avoid-break">
-            {{$auth_data->sekolah_data->alamat_kecamatan}}, {{ \Carbon\Carbon::now()->format('j M Y') }} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
+            {{$auth_data->sekolah_data->alamat_kecamatan}}, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>
     </div>

@@ -1103,6 +1103,175 @@ class LibDataKeuangan
 
         return $data;
     }
+    
+    public static function fetchDataLaporanPembayaranSiswaPerSiswa($auth_data, $start_date = null, $end_date = null)
+    {
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        if (!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+        $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.siswa.id_siswa');
+        
+        $listData = [];
+        $ketTagihan = '';
+        $idBiaya = null;
+        foreach($allDataPembayaran as $idSiswa => $siswa){
+            $tagihanBiayaSiswa = $siswa->first()->tagihan_biaya;
+
+            $summ = [];
+            foreach($siswa->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya') as $idBiaya => $rwytBayar){
+                $item = $rwytBayar->first();
+
+                if($idBiaya != $item->tagihan_biaya->detail_biaya->biaya->id_biaya){
+                    $ketTagihan = ''; // reset
+                }
+                $idBiaya = $item->tagihan_biaya->detail_biaya->biaya->id_biaya;
+                $ketTagihan = $ketTagihan . (empty($ketTagihan) ? '' : ', ') . $item->tagihan_biaya->keterangan;
+
+                $summ[] = [
+                    'id_siswa' => $idSiswa,
+                    'id_biaya' => $idBiaya,
+                    'nis_siswa' => $item->tagihan_biaya->siswa->nis_siswa,
+                    'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
+                    'kelas_siswa' => $item->tagihan_biaya->siswa->kelas->nm_kelas,
+                    'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
+                    'frekuensi_pembayaran' => $rwytBayar->count(),
+                    'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                    'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
+                    'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
+                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran
+                ];
+            }
+
+            $listData[] = [
+                'id_siswa' => $idSiswa,
+                'nis_siswa' => $tagihanBiayaSiswa->siswa->nis_siswa,
+                'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
+                'kelas_siswa' => $tagihanBiayaSiswa->siswa->kelas->nm_kelas,
+                'summary' => $summ
+            ];
+        }
+
+        $allPembayaranBiaya = $pembayaran->get()->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya');
+        $summaryData = [];
+        foreach($allPembayaranBiaya as $idBiaya => $biaya){
+            $summaryData[] = [
+                'id_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
+                'nm_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                'frekuensi' => $biaya->count(),
+                'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
+                'total_pembayaran' => $biaya->sum('besar_pembayaran')
+            ];
+        }
+
+        $result = [
+            'data' => $listData,
+            'summary' => $summaryData,
+            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya')
+        ];
+
+        return $result;
+    }
+    
+    public static function fetchDataLaporanPembayaranSiswaPerTanggal($auth_data, $start_date, $end_date)
+    {
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        if (!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+        $allDataPembayaran = $pembayaran->get()->groupBy(function($pay){
+            return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
+        });
+        
+        $listData = [];
+        foreach($allDataPembayaran as $tanggal => $rwytBayar){
+            $detail = [];
+            foreach($rwytBayar->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya') as $x){
+                $detail[] = [
+                    'id_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
+                    'nama_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                    'frekuensi' => collect($x)->count(),
+                    'nominal_pembayaran' => collect($x)->sum('besar_pembayaran')
+                ];
+            }
+
+            $listData[] = [
+               'tanggal_pembayaran' => $tanggal,
+               'total_pembayaran' => collect($detail)->sum('nominal_pembayaran'),
+               'detail' => $detail
+            ];
+        }
+
+        $result = [
+            'data' => $listData,
+            'kategori_biaya' => $pembayaran->get()->pluck('tagihan_biaya.detail_biaya.biaya.nm_biaya', 'tagihan_biaya.detail_biaya.biaya.id_biaya')
+        ];
+
+        return $result;
+    }
+    
+    public static function fetchDataLaporanPembayaranSiswaPerBulan($auth_data, $start_year, $end_year)
+    {
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+
+        if (!empty($start_year) && !empty($end_year)) {
+            $pembayaran = $pembayaran->where(function($month) use ($start_year, $end_year){
+                $month->whereYear('tgl_pembayaran', '>=', $start_year);
+                $month->whereYear('tgl_pembayaran', '<=', $end_year);
+            });
+        }
+        $allDataPembayaran = $pembayaran->get()->groupBy(function($pay){
+            return Carbon::parse($pay->tgl_pembayaran)->format('Y-m');
+        });
+
+        $listData = [];
+        foreach($allDataPembayaran as $rwytBayarPerTgl){            
+            $details = [];
+
+            $rwytDetail = $rwytBayarPerTgl->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya');
+
+            foreach($rwytDetail as $dtl){
+                $details[] = [
+                    'id_biaya' => $dtl->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
+                    'nm_biaya' => $dtl->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                    'frekuensi' => $dtl->count(),
+                    'total_pembayaran' => $dtl->sum('besar_pembayaran')
+                ];
+            }
+            
+            $tglPembayaran = Carbon::parse($rwytBayarPerTgl->first()->tgl_pembayaran);
+            $listData[] = [
+                'kode_bulan' => $tglPembayaran->format('m'),
+                'tahun' => $tglPembayaran->format('Y'),
+                'frekuensi' => $rwytBayarPerTgl->count(),
+                'total_pembayaran' => $rwytBayarPerTgl->sum('besar_pembayaran'),
+                'details' => $details
+            ];
+        }
+        $tempResult = [];
+        $bulan = Bulan::orderBy('id_bulan')->get();
+        $diffYear = $end_year - $start_year;
+        for($i=0; $i <= $diffYear; $i++){
+            foreach($bulan as $b){
+                $dataPerMonth = collect($listData)->where('kode_bulan', $b->kode_bulan)->where('tahun', $i + $start_year)->first();
+                $tempResult[] = [
+                    'kode_bulan' => $b->kode_bulan,
+                    'bulan' => $b->nm_bulan,
+                    'tahun' => $dataPerMonth['tahun'] ?? $i + $start_year,
+                    'frekuensi' => $dataPerMonth['frekuensi'] ?? 0,
+                    'total_pembayaran' => $dataPerMonth['total_pembayaran'] ?? 0,
+                    'details' => $dataPerMonth['details'] ?? []
+                ];
+            }
+        }
+
+        $result = [
+            'data' => $tempResult,
+            'kategori_biaya' => $pembayaran->get()->pluck('tagihan_biaya.detail_biaya.biaya.nm_biaya', 'tagihan_biaya.detail_biaya.biaya.id_biaya')
+        ];
+
+        return $result;
+    }
     /** ========== */
 
 
@@ -1111,7 +1280,7 @@ class LibDataKeuangan
         $angka = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
 
         if ($number < 12)
-            return " " . $angka[$number];
+            return $angka[$number] != "" ? " " . $angka[$number] : "";
         else if ($number < 20)
             return self::getTerbilang($number - 10) . " belas";
         else if ($number < 100)
@@ -1126,6 +1295,10 @@ class LibDataKeuangan
             return self::getTerbilang($number / 1000) . " ribu" . self::getTerbilang($number % 1000);
         else if ($number < 1000000000)
             return self::getTerbilang($number / 1000000) . " juta" . self::getTerbilang($number % 1000000);
+        else if ($number < 1000000000000)
+            return self::getTerbilang($number / 1000000000) . " milyar" . self::getTerbilang($number % 1000000000);
+        else if ($number < 1000000000000000)
+            return self::getTerbilang($number / 1000000000000) . " trilyun" . self::getTerbilang($number % 1000000000000);
     }
     /** =========== */
 }

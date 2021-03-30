@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
-
+use App\Models\KelompokBiaya;
 use Auth;
 use DB;
 use Session;
@@ -24,8 +24,9 @@ class DetailBiayaInternalController extends BaseController{
         $auth_data = $input->auth_data;
 
         $data_kelompok_biaya_internal = LibDataKeuangan::fetchDataBiayaInternal($auth_data);
+        $data_kelompok_biaya = KelompokBiaya::orderBy('nm_kelompok_biaya', 'asc')->get();
 
-    	return view('keuangan/data-keuangan/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data', 'data_kelompok_biaya_internal'));
+    	return view('keuangan/data-keuangan/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data', 'data_kelompok_biaya_internal', 'data_kelompok_biaya'));
 
     }
 
@@ -66,6 +67,23 @@ class DetailBiayaInternalController extends BaseController{
         if(!empty($input->kelompok_biaya_internal)){
             $list_data = $list_data->where('kelompok_biaya_internal.id_kelompok_biaya_internal', $input->kelompok_biaya_internal);
         }
+
+        if(!empty($input->kelompok_biaya)){
+            $kelBiaya = KelompokBiaya::select()
+                            ->join('biaya_sekolah', function($join){
+                                $join->on('biaya_sekolah.id_kelompok_biaya', '=', 'kelompok_biaya.id_kelompok_biaya');
+                                $join->whereNull('biaya_sekolah.deleted_at');
+                            })->join('detail_biaya', function($join){
+                                $join->on('detail_biaya.id_biaya_sekolah', '=', 'biaya_sekolah.id_biaya_sekolah');
+                                $join->whereNull('detail_biaya.deleted_at');
+                            })
+                            ->where('kelompok_biaya.id_kelompok_biaya', $input->kelompok_biaya)
+                            ->get()
+                            ->pluck('id_kelompok_biaya_internal')->unique()->all();
+            
+            $list_data = $list_data->get()->whereIn('kelompok_biaya_internal.id_kelompok_biaya_internal', $kelBiaya);
+        }
+        
 
         return Datatables::of($list_data)
                 ->addColumn('nm_biaya_internal', function($item){

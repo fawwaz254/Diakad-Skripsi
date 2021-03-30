@@ -72,9 +72,12 @@
                                         <i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span>
                                     </a> -->
                                     <button class="btn btn-info waves-effect" id="print-button" data-toggle="modal" data-target="#modal-print"><i class="material-icons">print</i><span>Cetak Pembayaran Hari ini</span></button>
-                                    <a class="btn btn-danger waves-effect" target="_blank" href="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-belum-terbayar/'.$siswa->id_pengguna) }}">
+                                    <!-- <a class="btn btn-danger waves-effect" target="_blank" href="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-belum-terbayar/'.$siswa->id_pengguna) }}">
                                         <i class="material-icons">print</i><span>Cetak Tagihan Belum Terbayar</span>
-                                    </a>
+                                    </a> -->
+                                    <button class="btn btn-success waves-effect float-right" id="unpaid-bills-button" data-toggle="modal" data-target="#modal-print-unpaid-bills">
+                                        <i class="material-icons">print</i><span>Cetak Tagihan Belum Terbayar</span>
+                                    </button>
                                     <button class="btn btn-success waves-effect float-right" id="pay-button" onclick="paySelected()">
                                         <i class="material-icons">point_of_sale</i><span>Bayar tagihan terpilih</span>
                                     </button>
@@ -135,9 +138,9 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Cetak PEMBAYARAN</h4>
+                <h4 class="modal-title">CETAK PEMBAYARAN HARI INI</h4>
             </div>
-            <form id="print" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d')) }}" target="_blank" method="GET">
+            <form id="print-unpaid" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d')) }}" target="_blank" method="GET">
                 <div class="modal-body">
                     <div class="row form-group">
                         <div class="col">
@@ -162,6 +165,33 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="submit">Cetak Pembayaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- END modal print -->
+<!-- START modal print UNPAID BILLS -->
+<div class="modal fade" id="modal-print-unpaid-bills" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">CETAK TAGIHAN BELUM TERBAYAR</h4>
+            </div>
+            <form id="print" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-belum-terbayar/'.$siswa->id_pengguna) }}" target="_blank" method="GET">
+                <div class="modal-body">
+                    <div class="row form-group">
+                        <div class="col">
+                            <label for="catatan" class="form-control">Pilih Jenis</label>
+                            <select class="form-control" name="type">
+                                <option value="1">Seluruh tagihan selama 1 tahun ajaran</option>
+                                <option value="2">Hanya tagihan hingga bulan ini</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Cetak Tagihan Belum Terbayar</button>
                 </div>
             </form>
         </div>

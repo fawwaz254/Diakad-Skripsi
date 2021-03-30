@@ -59,6 +59,36 @@ class AuthGlobalController extends BaseController
         return view('search-result', compact('auth_data', 'search'));
     }
 
+    public function actionByPassChangePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'is_agree' => 'required|in:1',
+        ], [
+            'is_agree.required' => 'Silahkan klik centang pernyataan potensi menggunakan PASSWORD DEFAULT'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // Failed
+                'message' => $validator->errors()->first()
+            ];
+        }
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $input = (object) $request->input();
+        $pengguna = $input->auth_data->pengguna;
+
+        $pengguna->must_change_password = 0;
+        $pengguna->last_time_password   = $now;
+        $pengguna->save();
+        
+        return [
+            'status' => 201, // SUCCESS AND REDIRECT
+            'link' => url('/'),
+            'message' => 'Use default password successfully'
+        ];
+    }
+
     public function actionChangePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
