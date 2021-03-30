@@ -12,7 +12,11 @@
         <!-- User Info -->
         <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{auth_data()->sekolah_data->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
+                @if(!empty(auth_data()->pengguna->path_foto_pengguna))
+                <img src="{{Storage::disk('spaces')->url(auth_data()->pengguna->path_foto_pengguna)}}" height="50" />
+                @else
                 <img src="https://ui-avatars.com/api/?size=100&name={{auth_data()->pengguna->nm_pengguna}}" height="50" />
+                @endif
             </div>
             <div class="info-container">
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{auth_data()->pengguna->nm_pengguna}}

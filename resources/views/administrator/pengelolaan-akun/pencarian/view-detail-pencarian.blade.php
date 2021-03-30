@@ -20,7 +20,11 @@
                                 </tr>
                                 <tr>
                                     <th colspan="2" style="text-align: center;">
-                                        <img src="" style="height: 270px; width: 180px">
+                                        @if(!empty($pengguna->path_foto_pengguna))
+                                        <img src="{{Storage::disk('spaces')->url($pengguna->path_foto_pengguna)}}" style="height: 270px; width: 180px">
+                                        @else
+                                        <img src="{{asset('media/blank-user.png')}}" style="height: 270px; width: 180px">
+                                        @endif
                                     </th>
                                 </tr>
                                 <tr>

@@ -122,7 +122,7 @@ class PencarianController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.username', 'pengguna.nm_pengguna', 'pengguna.email_afiliasi', 'pengguna.email_pengguna', 'pengguna.nomor_hp_pengguna', 'pengguna.status_join_table', 'role_pengguna.id_role', 'pengguna.last_time_password', 'pengguna.last_time_login', 'pengguna.is_online', DB::raw("(SELECT COUNT(*) FROM role_pengguna WHERE role_pengguna.id_pengguna = pengguna.id_pengguna AND role_pengguna.deleted_at IS NULL) AS total_role"))
+        $pengguna = Pengguna::select('pengguna.path_foto_pengguna', 'pengguna.id_pengguna', 'pengguna.username', 'pengguna.nm_pengguna', 'pengguna.email_afiliasi', 'pengguna.email_pengguna', 'pengguna.nomor_hp_pengguna', 'pengguna.status_join_table', 'role_pengguna.id_role', 'pengguna.last_time_password', 'pengguna.last_time_login', 'pengguna.is_online', DB::raw("(SELECT COUNT(*) FROM role_pengguna WHERE role_pengguna.id_pengguna = pengguna.id_pengguna AND role_pengguna.deleted_at IS NULL) AS total_role"))
                   ->join('role_pengguna', function ($join) {
                                     $join->on('role_pengguna.id_pengguna', '=', 'pengguna.id_pengguna')
                                          ->where('role_pengguna.is_aktif', '=', 1);
