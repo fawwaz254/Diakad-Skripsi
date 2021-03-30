@@ -25,6 +25,9 @@
 
 <ol type="A" style="margin-top: 30px;">
 	<li style="font-weight: 500;">KETERANGAN TENTANG DIRI PESERTA DIDIK</li>
+	@if(!empty($siswa->path_foto_pengguna))
+	<img src="{{Storage::disk('spaces')->url($siswa->path_foto_pengguna)}}" style="position: absolute; right: 10%; height: 270px; width: 180px">
+	@endif
 	<table style="width: 100%;">
 		<tr>
 			<td>1.</td>
@@ -118,7 +121,6 @@
 			<td>: {{$siswa->bahasa_sehari_hari}}</td>
 		</tr>
 	</table>
-
 	<li style="font-weight: 500;margin-top: 30px;">KETERANGAN TEMPAT TINGGAL</li>
 	<table style="width: 100%;">
 		<tr>

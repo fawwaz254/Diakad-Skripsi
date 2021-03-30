@@ -113,7 +113,7 @@ class UpdateFotoController extends BaseController
                     if (!empty($item->path_foto_pengguna)) {
                         return Storage::disk('spaces')->url($item->path_foto_pengguna);
                     } else {
-                        return asset('media/user.png');
+                        return asset('media/blank-user.png');
                     }
                 })
                 ->addColumn('thn_masuk_siswa', function ($item) {
