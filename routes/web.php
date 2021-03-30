@@ -97,6 +97,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => '{global}'), function () {
         Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
         Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
+        Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
 
         Route::get('/', 'AuthGlobalController@indexDashboard');
         Route::get('search', 'AuthGlobalController@indexSearch');

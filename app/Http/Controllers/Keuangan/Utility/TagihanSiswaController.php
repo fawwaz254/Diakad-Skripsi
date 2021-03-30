@@ -150,65 +150,101 @@ class TagihanSiswaController extends BaseController
                 DB::beginTransaction();
 
                 try {
-                  foreach ($input->id_siswa as $id_siswa) {
-                    $kelompok_biaya = Siswa::select('id_kelompok_biaya')->where('id_siswa','=',$id_siswa)->first();
+                    foreach ($input->id_siswa as $id_siswa) {
+                        $kelompok_biaya = Siswa::select('id_kelompok_biaya')->where('id_siswa','=',$id_siswa)->first();
 
-                    $detail_biaya_set = DetailBiaya::select('detail_biaya.id_detail_biaya', 'detail_biaya.besar_biaya', 'detail_biaya.keterangan_biaya')
-                                          ->join('biaya_sekolah','biaya_sekolah.id_biaya_sekolah','=','detail_biaya.id_biaya_sekolah')
-                                          ->where('biaya_sekolah.id_kelompok_biaya','=',$kelompok_biaya->id_kelompok_biaya)
-                                          ->where('biaya_sekolah.id_semester','=',$input->id_semester)
-                                          ->get();
+                        $detail_biaya_set = DetailBiaya::withTrashed()
+                                            ->select('detail_biaya.id_detail_biaya', 'detail_biaya.besar_biaya', 'detail_biaya.keterangan_biaya', 'detail_biaya.deleted_at')
+                                            ->join('biaya_sekolah','biaya_sekolah.id_biaya_sekolah','=','detail_biaya.id_biaya_sekolah')
+                                            ->where('biaya_sekolah.id_kelompok_biaya', '=', $kelompok_biaya->id_kelompok_biaya)
+                                            ->where('biaya_sekolah.id_semester', '=', $input->id_semester)
+                                            ->get();
 
-                    foreach ($detail_biaya_set as $detail_biaya) {
-                      $tagihan_set = TagihanBiaya::select('id_tagihan_biaya')
-                                          ->where('id_siswa','=',$id_siswa)
-                                          ->where('id_detail_biaya','=',$detail_biaya->id_detail_biaya)
-                                          ->first();
+                        // detail biaya ambil sekalian yg with_trashed, kalau detail tersebut adalah trashed, maka tagihan juga di trashed
+                        // hanya ada update dan insert
+                        foreach ($detail_biaya_set as $detail_biaya) {
+                            $tagihan_set = TagihanBiaya::withTrashed()->select('id_tagihan_biaya')
+                                                    ->where('id_siswa','=',$id_siswa)
+                                                    ->where('id_detail_biaya', '=', $detail_biaya->id_detail_biaya)
+                                                    ->first();
 
-                      if ($input->is_insert_replace == "1") {
-                        if ($tagihan_set) {
-                            continue;
-                        //   return [
-                        //           'status' => 203, // GAGAL
-                        //           'message' => 'Generate Tagihan Siswa Gagal, Detail Biaya Sudah Ada!'
-                        //       ];
-                        }
-                      }
-                      // delete tagihan lama
-                      elseif ($input->is_insert_replace == "2") {
+                                                    // dd($tagihan_set);
+                            if($input->is_insert_replace == "3"){ // UPDATE
+                                $pembayaran = PembayaranBiaya::where('id_tagihan_biaya', $tagihan_set->id_tagihan_biaya)->first();
 
-                        $pembayaranBiaya            = PembayaranBiaya::find($tagihan_set->id_tagihan_biaya);
-
-                        if($pembayaranBiaya) {
-                          return [
-                                  'status' => 203, // GAGAL
-                                  'message' => 'Generate Tagihan Siswa Gagal, Tagihan Pernah Dibayarkan!'
-                              ];
-                        }
-                        else {
-                          $tagihanBiaya               = TagihanBiaya::find($tagihan_set->id_tagihan_biaya);
-                          $tagihanBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-                          $tagihanBiaya->save();
-
-                          $tagihanBiaya->delete();
-                        }
-
-                      }
-
-                        $siswa = Siswa::find($id_siswa);
-                        
-                        $tagihanBiaya                       = new TagihanBiaya;
-                        $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                        $tagihanBiaya->id_siswa             = $id_siswa;
-                        $tagihanBiaya->id_kelas             = $siswa->id_kelas;
-                        $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
-                        $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
-                        $tagihanBiaya->denda_biaya          = 0;
-                        $tagihanBiaya->is_tagih             = 1;
-                        $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
-                        $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
-                        $tagihanBiaya->save();
-                    }                                                              
+                                if(!empty($tagihan_set)){ // kalau tagihan ditemukan maka update(bisa edit/hapus)
+                                    if(empty($pembayaran)){ // jika TIDAK ADA pembayaran
+                                        $tagihan_set->keterangan        = $detail_biaya->keterangan_biaya;
+                                        $tagihan_set->besar_biaya       = $detail_biaya->besar_biaya;
+                                        $tagihan_set->updated_by        = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_set->deleted_at        = $detail_biaya->deleted_at;
+                                        $tagihan_set->save();
+                                    } 
+                                    else { // jika ADA pembayaran hanya update keterangan
+                                        $tagihan_set->keterangan    = $detail_biaya->keterangan_biaya;
+                                        $tagihan_set->updated_by    = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_set->save();
+                                        // if(!empty($detail_biaya->deleted_at)){
+                                        //     $pembayaran->delete();
+                                        // }
+                                    }
+                                } else { // kalau tagihan dari detail biaya tidak ditemukan maka tambah baru
+                                    $siswa = Siswa::find($id_siswa);
+                                
+                                    $tagihanBiaya                       = new TagihanBiaya;
+                                    $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                    $tagihanBiaya->id_siswa             = $id_siswa;
+                                    $tagihanBiaya->id_kelas             = $siswa->id_kelas;
+                                    $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
+                                    $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
+                                    $tagihanBiaya->denda_biaya          = 0;
+                                    $tagihanBiaya->is_tagih             = 1;
+                                    $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
+                                    $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
+                                    $tagihanBiaya->save();
+                                }
+                            } else {
+                                if ($input->is_insert_replace == "1") { // INSERT
+                                    if ($tagihan_set) {
+                                        continue;
+                                    }
+                                }
+                                // delete tagihan lama
+                                elseif ($input->is_insert_replace == "2") { // REPLACE
+        
+                                    $pembayaranBiaya            = PembayaranBiaya::where('id_tagihan_biaya', $tagihan_set->id_tagihan_biaya)->first();
+        
+                                    if($pembayaranBiaya) {
+                                        return [
+                                                'status' => 203, // GAGAL
+                                                'message' => 'Generate Tagihan Siswa Gagal, Tagihan Pernah Dibayarkan!'
+                                            ];
+                                    }
+                                    else {
+                                        $tagihanBiaya               = TagihanBiaya::find($tagihan_set->id_tagihan_biaya);
+                                        $tagihanBiaya->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihanBiaya->save();
+            
+                                        $tagihanBiaya->delete();
+                                    }
+        
+                                }
+        
+                                $siswa = Siswa::find($id_siswa);
+                                
+                                $tagihanBiaya                       = new TagihanBiaya;
+                                $tagihanBiaya->id_tagihan_biaya     = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $tagihanBiaya->id_siswa             = $id_siswa;
+                                $tagihanBiaya->id_kelas             = $siswa->id_kelas;
+                                $tagihanBiaya->id_detail_biaya      = $detail_biaya->id_detail_biaya;
+                                $tagihanBiaya->besar_biaya          = $detail_biaya->besar_biaya;
+                                $tagihanBiaya->denda_biaya          = 0;
+                                $tagihanBiaya->is_tagih             = 1;
+                                $tagihanBiaya->keterangan           = $detail_biaya->keterangan_biaya;
+                                $tagihanBiaya->created_by           = $input->auth_data->pengguna->id_pengguna;
+                                $tagihanBiaya->save();
+                            }
+                        }                                                              
                   }
 
                   DB::commit();
@@ -217,7 +253,7 @@ class TagihanSiswaController extends BaseController
                   return [
                       'status' => 202, // SUCCESS AND LOAD CONTENT
                       'path' => 'utility/tagihan-siswa/view-detail-tagihan-siswa/'.$input->thn_masuk_siswa.'/'.$input->id_semester.'/'.$input->id_kelompok_biaya.'/'.$input->id_jalur.'/'.$input->is_insert_replace,
-                      'message' => 'Generate Tagihan Siswa successfully'
+                      'message' => $input->is_insert_replace == '3' ? 'Update Tagihan Siswa successfully' : 'Generate Tagihan Siswa successfully'
                   ];
 
                 } catch (\Exception $e) {
@@ -226,7 +262,7 @@ class TagihanSiswaController extends BaseController
 
                     return [
                                 'status' => 203, // GAGAL
-                                'message' => 'Generate Tagihan Siswa Gagal!'
+                                'message' => 'Generate Tagihan Siswa Gagal! ' . $e->getMessage()
                             ];
                 }  
             }

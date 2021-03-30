@@ -70,11 +70,14 @@
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Insert/Replace Tagihan <small>* Replace digunakan untuk menghapus Tagihan Lama dan mengganti dengan Tagihan Baru</small>
+                                    Insert/Replace Tagihan 
+                                    <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan mengganti dengan Tagihan Baru <br>
+                                    * UPDATE digunakan untuk memperbarui Tagihan yang BELUM TERBAYAR</small>
                                 </h2>
                                 <select class="form-control show-tick" name="is_insert_replace" >
                                   <option value="1">Insert Tagihan</option>
-                                  <option value="2">Replace Tagihan</option>
+                                  <!-- <option value="2">Replace Tagihan</option> -->
+                                  <option value="3">Update Tagihan</option>
                                 </select>
                             </div>
                         </div>

@@ -8,7 +8,9 @@ use Illuminate\Routing\Controller as BaseController;
 
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
-
+use App\Models\Biaya;
+use App\Models\Bulan;
+use App\Models\DetailBiaya;
 use App\Models\Siswa as Siswa;
 use App\Models\Staff as Staff;
 use App\Models\TagihanBiaya as TagihanBiaya;
@@ -31,8 +33,9 @@ class CetakLaporanController extends BaseController
         # code..
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $bulan = Bulan::orderBy('id_bulan')->get();
 
-        return view('keuangan/laporan-keuangan/cetak-laporan/view-cetak-laporan', compact('auth_data', 'nis_nama_siswa'));
+        return view('keuangan/laporan-keuangan/cetak-laporan/view-cetak-laporan', compact('auth_data', 'nis_nama_siswa', 'bulan'));
     }
 
     public function datatablesCetakLaporan(Request $request){
@@ -69,7 +72,7 @@ class CetakLaporanController extends BaseController
                 ->make(true);
     }
 
-    public function printCetakLaporan(Request $request, $start_date, $end_date)
+    public function printCetakLaporanKas(Request $request, $start_date, $end_date)
     {
         # code..
         $input = (object) $request->input();
@@ -79,6 +82,52 @@ class CetakLaporanController extends BaseController
         $data_laporan = LibDataKeuangan::fetchDataLaporanKeuanganInternal($auth_data, $start_date, $end_date);
 
         return view('keuangan/laporan-keuangan/cetak-laporan/print-cetak-laporan', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
+    }
+    
+    public function printCetakLaporanPembayaranSiswa(Request $request, $jenis, $start_date, $end_date)
+    {
+        # code..
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make([
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'jenis' => $jenis
+        ], [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'jenis' => 'required|in:siswa,tanggal,bulan'
+        ], [
+            'end_date.after_or_equal' => 'Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal',
+            'jenis.in' => 'Tidak valid'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        // fetch laporan keuangan
+        if($jenis == 'siswa'){            
+            $data_laporan = LibDataKeuangan::fetchDataLaporanPembayaranSiswaPerSiswa($auth_data, $start_date, $end_date);
+
+            return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/print-cetak-laporan-pembayaran-siswa-by-siswa', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
+        } 
+        elseif($jenis == 'tanggal'){
+            $data_laporan = LibDataKeuangan::fetchDataLaporanPembayaranSiswaPerTanggal($auth_data, $start_date, $end_date);
+            
+            return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/print-cetak-laporan-pembayaran-siswa-by-tanggal', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
+        } 
+        elseif ($jenis == 'bulan'){
+            $start_year = Carbon::parse($start_date)->format('Y');
+            $end_year = Carbon::parse($end_date)->format('Y');
+            $data_laporan = LibDataKeuangan::fetchDataLaporanPembayaranSiswaPerBulan($auth_data, $start_year, $end_year);
+            
+            return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/print-cetak-laporan-pembayaran-siswa-by-bulan', compact('auth_data', 'data_laporan', 'start_year', 'end_year'));
+        }
     }
     
 }

@@ -11,17 +11,34 @@
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title">
-                                    Biaya Internal
-                                </h2>
-                                <select class="form-control show-tick" name="kelompok_biaya_internal">
-                                    <option value="">Semua Biaya Internal</option>
-                                    @foreach($data_kelompok_biaya_internal as $data)
-                                    <option value="{{$data->id_kelompok_biaya_internal}}">
-                                        {{$data->nm_kelompok_biaya_internal}}
-                                    </option>
-                                    @endforeach
-                                </select>
+                                <div class="row clearfix">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <h2 class="card-inside-title">
+                                            Biaya Internal
+                                        </h2>
+                                        <select class="form-control show-tick" name="kelompok_biaya_internal">
+                                            <option value="">Semua Biaya Internal</option>
+                                            @foreach($data_kelompok_biaya_internal as $data)
+                                            <option value="{{$data->id_kelompok_biaya_internal}}">
+                                                {{$data->nm_kelompok_biaya_internal}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <h2 class="card-inside-title">
+                                            Kelompok Biaya
+                                        </h2>
+                                        <select class="form-control show-tick" name="kelompok_biaya">
+                                            <option value="">Semua Kelompok Biaya</option>
+                                            @foreach($data_kelompok_biaya as $data)
+                                            <option value="{{$data->id_kelompok_biaya}}">
+                                                {{$data->nm_kelompok_biaya}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Ubah Kelompok Biaya</span></button>
@@ -62,6 +79,7 @@
             type: 'GET',
             data: function(params){
                 params.kelompok_biaya_internal = $('select[name=kelompok_biaya_internal]').val();
+                params.kelompok_biaya = $('select[name=kelompok_biaya]').val();
             }
         },
         columns: [

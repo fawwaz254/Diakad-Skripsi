@@ -111,15 +111,22 @@
                         <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Insert/Replace Tagihan <small>* Replace digunakan untuk menghapus Tagihan Lama dan mengganti dengan Tagihan Baru</small>
+                                    Insert/Replace Tagihan <small>* REPLACE digunakan untuk menghapus Tagihan Lama dan mengganti dengan Tagihan Baru <br>
+                                    * UPDATE digunakan untuk memperbarui tagihan yg belum terbayar</small>
                                 </h2>
                                 <select class="form-control show-tick" name="is_insert_replace" >
                                 @if($is_insert_replace == "1")
                                     <option value="1" selected >Insert Tagihan</option>
-                                    <option value="2">Replace Tagihan</option>
-                                @else
+                                    <!-- <option value="2">Replace Tagihan</option> -->
+                                    <option value="3">Update Tagihan</option>
+                                @elseif($is_insert_replace == "2")
                                     <option value="1">Insert Tagihan</option>
-                                    <option value="2" selected >Replace Tagihan</option>
+                                    <!-- <option value="2" selected >Replace Tagihan</option> -->
+                                    <option value="3">Update Tagihan</option>
+                                @elseif($is_insert_replace == "3")
+                                    <option value="1">Insert Tagihan</option>
+                                    <!-- <option value="2" >Replace Tagihan</option> -->
+                                    <option value="3" selected>Update Tagihan</option>
                                 @endif
                                 </select>
                             </div>
