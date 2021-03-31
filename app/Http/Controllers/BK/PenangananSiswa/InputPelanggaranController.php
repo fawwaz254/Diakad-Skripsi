@@ -17,6 +17,7 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
+use App\Libraries\LibGlobal;
 
 use Auth;
 use DB;
@@ -243,6 +244,33 @@ class InputPelanggaranController extends BaseController
                 $pelanggaranSiswa->is_sudah_tindakan            = 0;
                 $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
+
+                $token_wali_murid = $wali_murid->pengguna->api_token;
+                if(!empty($siswa->id_wali_murid)){
+                    $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+                    
+                    $token_wali_murid = $wali_murid->pengguna->api_token;
+                    if(!empty($token_wali_murid)){
+                        $message = 'Putra/Putri Anda melanggar peraturan sekolah';
+                        $send_data = array(
+                            'title' => 'Informasi',
+                            'body' => $message,
+                            'priority' => 'high',
+                            'screen1' => 'MainMenu',
+                            'screen2' => 'MainMenu'
+                        );
+
+                        $notifikasi = array(
+                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                            'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                            'isi_notifikasi' => $message,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                        );
+                        
+                        LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                    }
+                }
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
