@@ -10,6 +10,7 @@ use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 use App\Models\Guru as Guru;
 use App\Models\Siswa as Siswa;
 use App\Models\KategoriPelanggaran;
+use App\Models\WaliMurid;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
