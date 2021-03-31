@@ -267,7 +267,6 @@ class InputPelanggaranController extends BaseController
                 $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $presensiMpPelanggaran->save();
 
-                $token_wali_murid = $wali_murid->pengguna->api_token;
                 if(!empty($siswa->id_wali_murid)){
                     $wali_murid = WaliMurid::find($siswa->id_wali_murid);
                     

@@ -242,7 +242,6 @@ class InputPelanggaranController extends BaseController{
                 $pelanggaranSiswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $pelanggaranSiswa->save();
 
-                $token_wali_murid = $wali_murid->pengguna->api_token;
                 if(!empty($siswa->id_wali_murid)){
                     $wali_murid = WaliMurid::find($siswa->id_wali_murid);
                     
