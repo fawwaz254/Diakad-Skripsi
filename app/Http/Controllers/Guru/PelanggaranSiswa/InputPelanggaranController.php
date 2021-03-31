@@ -11,6 +11,7 @@ use App\Models\KategoriPelanggaran;
 use App\Models\PresensiMp as PresensiMp;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\Siswa as Siswa;
+use App\Models\WaliMurid;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
