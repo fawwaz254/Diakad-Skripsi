@@ -53,7 +53,7 @@ class InputPelanggaranController extends BaseController{
 
         $id_pelanggaran_siswa = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('guru/guru-piket/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_semester','data_siswa','data_kategori','id_pelanggaran_siswa', 'data_kelas'));
+        return view('guru/guru-piket/input-pelanggaran/add-input-pelanggaran',compact('auth_data','data_semester','data_kategori','id_pelanggaran_siswa', 'data_kelas'));
 
     }
 
