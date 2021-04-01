@@ -38,16 +38,20 @@ class TagihanBiaya extends Model
 
     public function detail_biaya()
     {
-        return $this->belongsTo('App\Models\DetailBiaya', 'id_detail_biaya');
+        return $this->belongsTo(DetailBiaya::class, 'id_detail_biaya');
     }
 
     public function siswa()
     {
-        return $this->belongsTo('App\Models\Siswa', 'id_siswa');
+        return $this->belongsTo(Siswa::class, 'id_siswa');
     }
 
     public function kelas()
     {
-        return $this->belongsTo('App\Models\Kelas', 'id_kelas');
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
+
+    public function scopeIsTagih($query){
+        return $query->where('is_tagih', 1)->where('is_request', 0);
     }
 }
