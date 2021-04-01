@@ -17,7 +17,7 @@ class Pengguna extends Authenticatable
     public const GURU = 2;
     public const SISWA = 3;
     public const WALI_MURID = 4;
-    public const PEMBINA_EKSKUL = 5;
+    public const PELATIH_EKSKUL = 5;
 
     protected $table = 'pengguna';
 
@@ -64,7 +64,7 @@ class Pengguna extends Authenticatable
     }
 
     public function getIsPembinaEkskulAttribute(){
-        return $this->status_join_table === self::PEMBINA_EKSKUL;
+        return $this->status_join_table === self::PELATIH_EKSKUL;
     }
 
     public function fullname()
