@@ -38,12 +38,12 @@ class DetailBiaya extends Model
 
     public function biaya_sekolah()
     {
-        return $this->belongsTo('App\Models\BiayaSekolah', 'id_biaya_sekolah');
+        return $this->belongsTo(BiayaSekolah::class, 'id_biaya_sekolah');
     }
 
     public function biaya()
     {
-        return $this->belongsTo('App\Models\Biaya', 'id_biaya');
+        return $this->belongsTo(Biaya::class, 'id_biaya');
     }
 
     public function bulan()
@@ -54,5 +54,9 @@ class DetailBiaya extends Model
     public function kelompok_biaya_internal()
     {
         return $this->belongsTo(KelompokBiayaInternal::class, 'id_kelompok_biaya_internal');
+    }
+
+    public function scopeIsValid($query){
+        return $query->where('validasi_biaya', 1);
     }
 }

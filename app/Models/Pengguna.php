@@ -13,6 +13,12 @@ class Pengguna extends Authenticatable
 {
     use SoftDeletes;
 
+    public const PEGAWAI = 1;
+    public const GURU = 2;
+    public const SISWA = 3;
+    public const WALI_MURID = 4;
+    public const PEMBINA_EKSKUL = 5;
+
     protected $table = 'pengguna';
 
     protected $primaryKey = 'id_pengguna';
@@ -40,6 +46,26 @@ class Pengguna extends Authenticatable
     ];
 
     protected $guarded = [];
+
+    public function getIsPegawaiAttribute(){
+        return $this->status_join_table === self::PEGAWAI;
+    }
+
+    public function getIsGuruAttribute(){
+        return $this->status_join_table === self::GURU;
+    }
+
+    public function getIsSiswaAttribute(){
+        return $this->status_join_table === self::SISWA;
+    }
+
+    public function getIsWaliMuridAttribute(){
+        return $this->status_join_table === self::WALI_MURID;
+    }
+
+    public function getIsPembinaEkskulAttribute(){
+        return $this->status_join_table === self::PEMBINA_EKSKUL;
+    }
 
     public function fullname()
     {

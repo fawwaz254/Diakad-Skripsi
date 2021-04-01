@@ -15,6 +15,10 @@
 
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 
+Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v2'), function () {
+    Route::post('get-tagihan/by', 'Api\v2\KeuanganController@getTagihanBy');
+});
+
 Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function () {
     Route::group(array('prefix' => 'token'), function () {
         Route::post('save', 'Apiv1Controller@actionSaveToken');
