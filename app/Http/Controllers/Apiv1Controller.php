@@ -85,6 +85,12 @@ class Apiv1Controller extends BaseController
                 $pengguna->api_key = $api_key;
                 $pengguna->save();
 
+                if(!empty($pengguna->path_foto_pengguna)){
+                    $foto_pengguna = Storage::disk('spaces')->url($pengguna->path_foto_pengguna);
+                }else{
+                    $foto_pengguna = asset('media/blank-user.png');
+                }
+
                 $data_pengguna = array(
                     'id_pengguna' => $pengguna->id_pengguna,
                     'id_status_pengguna' => $pengguna->id_status_pengguna,
@@ -96,6 +102,8 @@ class Apiv1Controller extends BaseController
                     'path_actor' => $pengguna->path_join_to_text(),
                     'gelar_depan' => $pengguna->gelar_depan,
                     'gelar_belakang' => $pengguna->gelar_belakang,
+                    'gelar_belakang' => $pengguna->gelar_belakang,
+                    'foto_pengguna' => $foto_pengguna,
                     'is_magang' => Setting::where('key_setting', 'is_pkl_online')->first()->value,
                     'api_key' => $pengguna->api_key
                 );
