@@ -116,7 +116,7 @@ class Apiv1Controller extends BaseController
                     'data' => array(
                         'pengguna' => $data_pengguna
                     )
-                ]);
+                ], 200, [], JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
             } else {
                 return response()->json([
                     'status_code' 	=> 300,
