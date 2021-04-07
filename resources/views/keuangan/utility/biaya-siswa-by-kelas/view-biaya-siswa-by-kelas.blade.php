@@ -61,8 +61,8 @@
                                                         <label for="primary_checkbox_all" style="margin-bottom: -10px;"></label>
                                                     </th>
                                                     <th>NIS Siswa</th>
-                                                    <th>NISN Siswa</th>
                                                     <th>Nama Siswa</th>
+                                                    <th>Gender</th>
                                                     <th>Kelas</th>
                                                 </tr>
                                             </thead>
@@ -105,8 +105,8 @@
                                                         <label for="secondary_checkbox_all" style="margin-bottom: -10px;"></label>
                                                     </th>
                                                     <th>NIS Siswa</th>
-                                                    <th>NISN Siswa</th>
                                                     <th>Nama Siswa</th>
+                                                    <th>Gender</th>
                                                     <th>Kelas</th>
                                                     <th>Kelompok Biaya</th>
                                                 </tr>
@@ -299,8 +299,8 @@
                 }
             },
             { data: 'nis_siswa', name: 'siswa.nis_siswa' },
-            { data: 'nisn_siswa', name: 'siswa.nisn_siswa' },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
+            { data: 'jenis_kelamin', name: 'calon_siswa_baru.jenis_kelamin' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
         ]
     });
@@ -334,8 +334,8 @@
                 }
             },
             { data: 'nis_siswa', name: 'siswa.nis_siswa' },
-            { data: 'nisn_siswa', name: 'siswa.nisn_siswa' },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
+            { data: 'jenis_kelamin', name: 'calon_siswa_baru.jenis_kelamin' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'kelompok_biaya', name: 'kelompok_biaya.nm_kelompok_biaya' }
         ]
