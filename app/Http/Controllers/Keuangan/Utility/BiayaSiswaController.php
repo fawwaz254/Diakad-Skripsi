@@ -92,6 +92,15 @@ class BiayaSiswaController extends BaseController{
                     );
                     return $data;
                 })
+                ->editColumn('jenis_kelamin', function ($item) {
+                    if($item->jenis_kelamin == 1){
+                        return 'Laki-Laki';
+                    }else if($item->jenis_kelamin == 2){
+                        return 'Perempuan';
+                    }else{
+                        return 'Belum diset';
+                    }
+                })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_siswa
@@ -121,6 +130,15 @@ class BiayaSiswaController extends BaseController{
                         'id_siswa' => $item->id_siswa
                     );
                     return $data;
+                })
+                ->editColumn('jenis_kelamin', function ($item) {
+                    if($item->jenis_kelamin == 1){
+                        return 'Laki-Laki';
+                    }else if($item->jenis_kelamin == 2){
+                        return 'Perempuan';
+                    }else{
+                        return 'Belum diset';
+                    }
                 })
                 ->addColumn('kelompok_biaya', function($item){
                     if($item->status_kelompok_biaya == 1){

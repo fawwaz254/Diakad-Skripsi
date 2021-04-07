@@ -266,7 +266,7 @@ class LibDataKeuangan
 
         // get mode view
         if ($id == null) {
-            $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.id_kelompok_biaya', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'kelompok_biaya.nm_kelompok_biaya', 'kelompok_biaya.status_kelompok_biaya')
+            $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.id_kelompok_biaya', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'kelompok_biaya.nm_kelompok_biaya', 'kelompok_biaya.status_kelompok_biaya', 'calon_siswa_baru.jenis_kelamin')
                                 ->leftJoin('kelompok_biaya', function ($q) {
                                     $q->on('kelompok_biaya.id_kelompok_biaya', '=', 'siswa.id_kelompok_biaya')
                                         ->whereNull('kelompok_biaya.deleted_at');
@@ -282,6 +282,10 @@ class LibDataKeuangan
                                 ->join('status_pengguna', function ($q) {
                                     $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                                         ->whereNull('status_pengguna.deleted_at');
+                                })
+                                ->leftJoin('calon_siswa_baru', function ($q) {
+                                    $q->on('calon_siswa_baru.id_c_siswa', '=', 'siswa.id_c_siswa')
+                                        ->whereNull('calon_siswa_baru.deleted_at');
                                 })
                                 ->where('status_pengguna.aktif_status_pengguna', '=', 1)
                                 ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
@@ -305,7 +309,7 @@ class LibDataKeuangan
         }
         // get mode edit
         else {
-            $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.id_kelompok_biaya', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'kelompok_biaya.nm_kelompok_biaya', 'kelompok_biaya.status_kelompok_biaya')
+            $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.id_kelompok_biaya', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'kelompok_biaya.nm_kelompok_biaya', 'kelompok_biaya.status_kelompok_biaya', 'calon_siswa_baru.jenis_kelamin')
                                 ->leftJoin('kelompok_biaya', function ($q) {
                                     $q->on('kelompok_biaya.id_kelompok_biaya', '=', 'siswa.id_kelompok_biaya')
                                         ->whereNull('kelompok_biaya.deleted_at');
@@ -321,6 +325,10 @@ class LibDataKeuangan
                                 ->join('status_pengguna', function ($q) {
                                     $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                                         ->whereNull('status_pengguna.deleted_at');
+                                })
+                                ->leftJoin('calon_siswa_baru', function ($q) {
+                                    $q->on('calon_siswa_baru.id_c_siswa', '=', 'siswa.id_c_siswa')
+                                        ->whereNull('calon_siswa_baru.deleted_at');
                                 })
                                 ->where('siswa.id_siswa', '=', $id)
                                 ->first();
