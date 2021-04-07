@@ -3133,13 +3133,13 @@ $validator = Validator::make($request->all(), $syarat);
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         if($request->segment(3)=="guru"){
-            $datapernikahan = Guru::select("id_guru","id_pengguna","id_unit_kerja","jenis_kelamin","tgl_lahir","nm_ibu_kandung","alamat_jalan","alamat_rt","alamat_rw","alamat_dusun","alamat_kelurahan","alamat_kecamatan","alamat_kodepos","alamat_kota","alamat_provinsi","id_agama","npwp_ptk","kewarganegaraan","status_kawin","nm_pasangan_ptk","nomor_hp","email")->where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
+            $data_actor = Guru::select("id_guru","id_pengguna","id_unit_kerja","jenis_kelamin","tgl_lahir","nm_ibu_kandung","alamat_jalan","alamat_rt","alamat_rw","alamat_dusun","alamat_kelurahan","alamat_kecamatan","alamat_kodepos","alamat_kota","alamat_provinsi","id_agama","npwp_ptk","kewarganegaraan","status_kawin","nm_pasangan_ptk","nomor_hp","email")->where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
         }elseif($request->segment(3)=="tendik"){
-            $datapernikahan = Staff::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
+            $data_actor = Staff::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
         }elseif($request->segment(3)=="wali-murid"){
-            $datapernikahan = WaliMurid::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
+            $data_actor = WaliMurid::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
         }elseif($request->segment(3)=="siswa"){
-            $datapernikahan = Siswa::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
+            $data_actor = Siswa::where('id_pengguna','=',$auth_data->pengguna->id_pengguna)->get()->first();
         } 
         $kota = Kota::select("id_kota","id_provinsi","nm_kota")->where('kota.is_aktif','=',1)->get();
         $provinsi = Provinsi::select("id_provinsi","nm_provinsi")->where('provinsi.is_aktif','=',1)->get();
@@ -3150,7 +3150,7 @@ $validator = Validator::make($request->all(), $syarat);
             'status_text' 	=> 'Success',
             'message' 	=> '',
             'data' => array(
-                'data_guru' => $datapernikahan,
+                'data_actor' => $data_actor,
                 'provinsi' => $provinsi,
                 'kota' => $kota,
                 'agama' => $agama,
