@@ -10,11 +10,13 @@ use Yajra\Datatables\Datatables;
 use App\Models\PresensiMp as PresensiMp;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\Siswa as Siswa;
+use App\Models\WaliMurid;
 use App\Models\RewardSiswa;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
+use App\Libraries\LibGlobal;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibSiswa;
@@ -180,6 +182,54 @@ class InputRewardSiswaController extends BaseController
                     // convert format date
                     $reward_siswa->created_by                   = $input->auth_data->pengguna->id_pengguna;
                     $reward_siswa->save();
+
+                    $token_siswa = $siswa->pengguna->api_token;
+                    if(!empty($token_siswa)){
+                        $message = 'Kamu telah tercatat mendapatkan reward dari guru';
+                        $send_data = array(
+                            'title' => 'Informasi',
+                            'body' => $message,
+                            'priority' => 'high',
+                            'screen1' => '',
+                            'screen2' => ''
+                        );
+
+                        $notifikasi = array(
+                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id_pengguna' => $siswa->pengguna->id_pengguna,
+                            'id_sekolah' => $siswa->pengguna->id_sekolah,
+                            'isi_notifikasi' => $message,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                        );
+
+                        LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
+                    }
+                    
+                    if(!empty($siswa->id_wali_murid)){
+                        $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                        $token_wali_murid = $wali_murid->pengguna->api_token;
+                        if(!empty($token_wali_murid)){
+                            $message = 'Putra/Putri Anda telah tercatat mendapatkan reward dari guru';
+                            $send_data = array(
+                                'title' => 'Informasi',
+                                'body' => $message,
+                                'priority' => 'high',
+                                'screen1' => '',
+                                'screen2' => ''
+                            );
+
+                            $notifikasi = array(
+                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                'isi_notifikasi' => $message,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                            );
+
+                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                        }
+                    }
                 }
 
                 return [

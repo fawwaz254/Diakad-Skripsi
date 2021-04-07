@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
+use App\Libraries\LibGlobal;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
 
@@ -18,6 +19,7 @@ use App\Models\Bank as Bank;
 use App\Models\BankVia as BankVia;
 use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
+use App\Models\WaliMurid;
 
 use Auth;
 use DateTime;
@@ -486,6 +488,58 @@ class PembayaranSiswaController extends BaseController
                     $tagihanBiaya->updated_at   = $now;
                     $tagihanBiaya->save();
                 }
+                
+                $id_siswa = $tagihanBiaya->id_siswa;
+
+                if($siswa = Siswa::find($id_siswa)){
+                    $token_siswa = $siswa->pengguna->api_token;
+                    if(!empty($token_siswa)){
+                        $message = 'Kamu melakukan pembayaran tagihan';
+                        $send_data = array(
+                            'title' => 'Informasi',
+                            'body' => $message,
+                            'priority' => 'high',
+                            'screen1' => '',
+                            'screen2' => ''
+                        );
+
+                        $notifikasi = array(
+                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id_pengguna' => $siswa->pengguna->id_pengguna,
+                            'id_sekolah' => $siswa->pengguna->id_sekolah,
+                            'isi_notifikasi' => $message,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                        );
+
+                        LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
+                    }
+                    
+                    if(!empty($siswa->id_wali_murid)){
+                        $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                        $token_wali_murid = $wali_murid->pengguna->api_token;
+                        if(!empty($token_wali_murid)){
+                            $message = 'Putra/Putri Anda melakukan pembayaran tagihan';
+                            $send_data = array(
+                                'title' => 'Informasi',
+                                'body' => $message,
+                                'priority' => 'high',
+                                'screen1' => '',
+                                'screen2' => ''
+                            );
+
+                            $notifikasi = array(
+                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                'isi_notifikasi' => $message,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                            );
+
+                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                        }
+                    }
+                }
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -531,6 +585,58 @@ class PembayaranSiswaController extends BaseController
                 $tagihanBiaya->updated_by   = $input->auth_data->pengguna->id_pengguna;
                 $tagihanBiaya->updated_at   = $now;
                 $tagihanBiaya->save();
+
+                $id_siswa = $tagihanBiaya->id_siswa;
+
+                if($siswa = Siswa::find($id_siswa)){
+                    $token_siswa = $siswa->pengguna->api_token;
+                    if(!empty($token_siswa)){
+                        $message = 'Kamu melakukan pembayaran tagihan';
+                        $send_data = array(
+                            'title' => 'Informasi',
+                            'body' => $message,
+                            'priority' => 'high',
+                            'screen1' => '',
+                            'screen2' => ''
+                        );
+
+                        $notifikasi = array(
+                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id_pengguna' => $siswa->pengguna->id_pengguna,
+                            'id_sekolah' => $siswa->pengguna->id_sekolah,
+                            'isi_notifikasi' => $message,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                        );
+
+                        LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
+                    }
+                    
+                    if(!empty($siswa->id_wali_murid)){
+                        $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                        $token_wali_murid = $wali_murid->pengguna->api_token;
+                        if(!empty($token_wali_murid)){
+                            $message = 'Putra/Putri Anda melakukan pembayaran tagihan';
+                            $send_data = array(
+                                'title' => 'Informasi',
+                                'body' => $message,
+                                'priority' => 'high',
+                                'screen1' => '',
+                                'screen2' => ''
+                            );
+
+                            $notifikasi = array(
+                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                'isi_notifikasi' => $message,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                            );
+
+                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                        }
+                    }
+                }
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD CONTENT
@@ -603,6 +709,7 @@ class PembayaranSiswaController extends BaseController
             $dataPembayaran = $input->data_pembayaran;
 
             // looping save
+            $id_siswa = '-';
             foreach($dataPembayaran as $bayar){
                 $tagihanBiaya   = TagihanBiaya::find($bayar['id']);
     
@@ -642,6 +749,58 @@ class PembayaranSiswaController extends BaseController
                 $tagihanBiaya->updated_by   = $input->auth_data->pengguna->id_pengguna;
                 $tagihanBiaya->updated_at   = $now;
                 $tagihanBiaya->save();
+
+                $id_siswa = $tagihanBiaya->id_siswa;
+            }
+
+            if($siswa = Siswa::find($id_siswa)){
+                $token_siswa = $siswa->pengguna->api_token;
+                if(!empty($token_siswa)){
+                    $message = 'Kamu melakukan pembayaran tagihan';
+                    $send_data = array(
+                        'title' => 'Informasi',
+                        'body' => $message,
+                        'priority' => 'high',
+                        'screen1' => '',
+                        'screen2' => ''
+                    );
+
+                    $notifikasi = array(
+                        'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                        'id_pengguna' => $siswa->pengguna->id_pengguna,
+                        'id_sekolah' => $siswa->pengguna->id_sekolah,
+                        'isi_notifikasi' => $message,
+                        'created_by' => $input->auth_data->pengguna->id_pengguna
+                    );
+
+                    LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
+                }
+                
+                if(!empty($siswa->id_wali_murid)){
+                    $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+
+                    $token_wali_murid = $wali_murid->pengguna->api_token;
+                    if(!empty($token_wali_murid)){
+                        $message = 'Putra/Putri Anda melakukan pembayaran tagihan';
+                        $send_data = array(
+                            'title' => 'Informasi',
+                            'body' => $message,
+                            'priority' => 'high',
+                            'screen1' => '',
+                            'screen2' => ''
+                        );
+
+                        $notifikasi = array(
+                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                            'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                            'isi_notifikasi' => $message,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                        );
+
+                        LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                    }
+                }
             }
 
             return [
