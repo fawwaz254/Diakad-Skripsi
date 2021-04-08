@@ -82,7 +82,7 @@
                 Copyright &copy;2018 
             </div>
             <div class="version">
-                Made with <span style="color: #e25555;">&hearts;</span> by @solusimaster
+                Made with <span style="color: #e25555;">&hearts;</span> by <a href="https://dsmartedu.com">@dsmartedu</a>
             </div>
         </div>
         <!-- #Footer -->
