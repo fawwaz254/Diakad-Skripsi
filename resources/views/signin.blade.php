@@ -20,7 +20,7 @@
                                 <img class="hidden-md hidden-lg" src="https://diakad.sgp1.cdn.digitaloceanspaces.com/x-image-resources/{{env('APP_NAME', 'diakad')}}-logo.png" alt="Logo Diakad" style="height: 90px;" />
                                 <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" />
                                 <br>
-                                <strong>{{$sekolah->nm_sekolah}}</strong>
+                                {{$sekolah->nm_sekolah}}
                             </div>
                             <div class="row clearfix">
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
