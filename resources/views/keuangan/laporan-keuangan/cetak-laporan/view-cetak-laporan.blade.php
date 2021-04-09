@@ -25,30 +25,26 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 PEMBAYARAN SISWA
                             </h2>
+                            <ul>
+                                <li><a onclick="printPembayaranSiswa('siswa')" >Rekap per Siswa</a></li>
+                                <li><a onclick="printPembayaranSiswa('tanggal')">Rekap per Tanggal</a></li>
+                                <li><a onclick="printPembayaranSiswa('bulan')">Rekap per Bulan</a></li>
+                            </ul>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <button onclick="printPembayaranSiswa('siswa')" class="btn btn-block btn-primary"><span><i class="material-icons">print</i></span> Rekap per Siswa</button>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <button onclick="printPembayaranSiswa('tanggal')" class="btn btn-block btn-primary"><span><i class="material-icons">print</i></span> Rekap per Tanggal</button>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <button onclick="printPembayaranSiswa('bulan')" class="btn btn-block btn-primary"><span><i class="material-icons">print</i></span> Rekap per Bulan</button>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 KELUAR MASUK KAS
                             </h2>
+                            <ul>
+                                <li><a onclick="printKas()" >Rekap Detail</a></li>
+                            </ul>
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <button onclick="printKas()" class="btn btn-block btn-primary"><span><i class="material-icons">print</i></span> Rekap Detail</button>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            
                         </div>
                     </div>
                 </div>
