@@ -1030,10 +1030,13 @@ class LibDataKeuangan
             $pembayaran = $allDataPembayaran->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', '=', $kategori->nm_biaya)->groupBy('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester');
             
             foreach($pembayaran as $ta => $value){
-                $string = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                $stringNmBiaya = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
 
                 foreach($value as $data){
-                    $details = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal->detail_biaya_internal;
+                    // Get Biaya Internal (kelompok_biaya_internal)
+                    $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
+
+                    // === var for $tempDataLaporan
                     $date           = new DateTime($data->tgl_pembayaran);
                     $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
                     $sum            = $value->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
@@ -1042,16 +1045,19 @@ class LibDataKeuangan
                                             ->count();
                     $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
                     $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+                    // ===
 
-                    if(count($details) > 0){
-                        foreach($details as $x){
+                    if(!empty($biayaInternal)){
+                        $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
+                        
+                        foreach($detailBiayaInternal as $x){
                             $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
                                 'tanggal' => $date->format('Y-m-d'),
                                 'nominal' => $x->besar_biaya * $count,
                                 'frekuensi' => $count,
                                 'tipe' => 1,
                                 'nm_tipe' => 'debit',
-                                'kategori' => $string,
+                                'kategori' => $stringNmBiaya,
                                 'keterangan' => $x->nm_detail_biaya_internal . ' ' . $count . 'x '. number_format($x->besar_biaya) .' (' . $tahun_ajaran . ')',
                                 'tahun_ajaran' => $tahun_ajaran
                             ];
@@ -1063,7 +1069,7 @@ class LibDataKeuangan
                             'frekuensi' => $count,
                             'tipe' => 1,
                             'nm_tipe' => 'debit',
-                            'kategori' => $string,
+                            'kategori' => $stringNmBiaya,
                             'keterangan' => $ket_biaya . ' ' . $count . 'x (' . $tahun_ajaran . ')',
                             'tahun_ajaran' => $tahun_ajaran
                         ];
