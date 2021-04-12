@@ -169,6 +169,7 @@ class TagihanSiswaController extends BaseController
                                                     ->first();
 
                                                     // dd($tagihan_set);
+                                                    // dd($input);
                             if($input->is_insert_replace == "3"){ // UPDATE
                                 $pembayaran = PembayaranBiaya::where('id_tagihan_biaya', $tagihan_set->id_tagihan_biaya)->first();
 
@@ -177,7 +178,10 @@ class TagihanSiswaController extends BaseController
                                         $tagihan_set->keterangan        = $detail_biaya->keterangan_biaya;
                                         $tagihan_set->besar_biaya       = $detail_biaya->besar_biaya;
                                         $tagihan_set->updated_by        = $input->auth_data->pengguna->id_pengguna;
-                                        $tagihan_set->deleted_at        = $detail_biaya->deleted_at;
+                                        if(!empty($detail_biaya->deleted_at)){
+                                            $tagihan_set->deleted_at        = $now;
+                                            $tagihan_set->deleted_by        = $input->auth_data->pengguna->id_pengguna;
+                                        }
                                         $tagihan_set->save();
                                     } 
                                     else { // jika ADA pembayaran hanya update keterangan
