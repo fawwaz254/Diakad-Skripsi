@@ -75,12 +75,12 @@
             <tr>
                 <td>{{$no++}}.</td>
                 <td>{{ $tagihan['judul'] }}</td>
-                <td>{{ $tagihan['biaya'] }}</td>
+                <td>{{ 'Rp ' . number_format($tagihan['belum_bayar']) }}</td>
             </tr>
             @endforeach
             <tr>
                 <td colspan="2" align="center"><b>TOTAL</b></td>
-                <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_biaya->sum('besar_biaya'))}}</b></td>
+                <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_biaya->sum('besar_biaya') - collect($siswa->tagihan)->sum('sudah_bayar') )}}</b></td>
             </tr>
         </table>
         @endforeach

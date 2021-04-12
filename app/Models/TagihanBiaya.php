@@ -54,4 +54,8 @@ class TagihanBiaya extends Model
     public function scopeIsTagih($query){
         return $query->where('is_tagih', 1)->where('is_request', 0);
     }
+
+    public function pembayaran(){
+        return $this->hasMany(PembayaranBiaya::class, 'id_tagihan_biaya');
+    }
 }
