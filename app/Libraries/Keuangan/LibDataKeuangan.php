@@ -1015,6 +1015,12 @@ class LibDataKeuangan
     
     public static function fetchDataLaporanKeuanganInternal($auth_data, $start_date = null, $end_date = null)
     {
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
         $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
         $tempDataLaporan = [];
 
@@ -1024,7 +1030,12 @@ class LibDataKeuangan
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
-        $allDataPembayaran = $pembayaran->get();
+
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+        }else{
+            $allDataPembayaran = $pembayaran->get();
+        }
 
         // find Pembayaran in each Biaya
         foreach($allBiaya as $kategori){
@@ -1091,7 +1102,125 @@ class LibDataKeuangan
         if (!empty($start_date) && !empty($end_date)) {
             $dataRealisasi = $dataRealisasi->whereBetween('tgl_realisasi', [$start_date, $end_date]);
         }
-        $allDataRealisasi = $dataRealisasi->get();
+        
+        if($print_setting == 'self'){
+            $allDataRealisasi = $dataRealisasi->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+        }else{
+            $allDataRealisasi = $dataRealisasi->get();
+        }
+
+        foreach($allDataRealisasi as $x){
+            $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
+            $keterangan = $x->nm_realisasi;
+            $tipe       = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
+            $date       = new DateTime($x->tgl_realisasi);
+            $tempDataLaporan[] = [
+                'tanggal' => $date->format('Y-m-d'),
+                'nominal' => $x->dana_realisasi,
+                'frekuensi' => null,
+                'tipe' => $tipe,
+                'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
+                'kategori' => $kategori,
+                'keterangan' => ($keterangan == '-' || $keterangan == null) ? $kategori : $keterangan,
+                'tahun_ajaran' => null,
+            ];
+        }
+        
+        // reordering by date descending
+        foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
+            $dataLaporan[] = $data;
+        }
+
+        $totalDebit = collect($dataLaporan)->where('tipe', 1)->sum('nominal');
+        $totalKredit = collect($dataLaporan)->where('tipe', 2)->sum('nominal');
+        
+        $data = [
+            'laporan' => $dataLaporan,
+            'total_debit' => $totalDebit,
+            'total_kredit' => $totalKredit
+        ];
+
+        return $data;
+    }
+
+    public static function fetchDataLaporanKeuanganReguler($auth_data, $start_date = null, $end_date = null)
+    {
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
+        $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
+        $tempDataLaporan = [];
+
+        $allBiaya = Biaya::get();
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester');
+        if (!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+        }else{
+            $allDataPembayaran = $pembayaran->get();
+        }
+
+        // find Pembayaran in each Biaya
+        foreach($allBiaya as $kategori){
+            // pembayaran for this Biaya per TA
+            $pembayaran = $allDataPembayaran->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', '=', $kategori->nm_biaya)->groupBy('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester');
+            
+            foreach($pembayaran as $ta => $value){
+                $stringNmBiaya = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+
+                // loop each pembayaran
+                $val = $value;
+                foreach($value as $data){
+                    // Get Biaya Internal (kelompok_biaya_internal)
+                    $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
+                    // === var for $tempDataLaporan
+                    $date           = new DateTime($data->tgl_pembayaran);
+                    $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
+                    $count          = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                        ->filter(function($q) use ($date){
+                                            $qDate = new DateTime($q->tgl_pembayaran);
+                                            return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                                        })->count();
+                    $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
+                    $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+                    // ===
+
+                    $nominal = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)->filter(function($q) use ($date){
+                        $qDate = new DateTime($q->tgl_pembayaran);
+                        return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                    });
+
+                    $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
+                        'tanggal' => $date->format('Y-m-d'),
+                        'nominal' => $nominal->sum('besar_pembayaran'),
+                        'frekuensi' => $count,
+                        'tipe' => 1,
+                        'nm_tipe' => 'debit',
+                        'kategori' => $stringNmBiaya,
+                        'keterangan' => $keyTempData . ' ' . $count . 'x (' . $tahun_ajaran . ')',
+                        'tahun_ajaran' => $tahun_ajaran
+                    ];
+                }
+            }
+        }
+        
+        $dataRealisasi = Realisasi::with('rapb.subkategori.kategori');
+        if (!empty($start_date) && !empty($end_date)) {
+            $dataRealisasi = $dataRealisasi->whereBetween('tgl_realisasi', [$start_date, $end_date]);
+        }
+
+        if($print_setting == 'self'){
+            $allDataRealisasi = $dataRealisasi->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+        }else{
+            $allDataRealisasi = $dataRealisasi->get();
+        }
 
         foreach($allDataRealisasi as $x){
             $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
@@ -1129,11 +1258,22 @@ class LibDataKeuangan
     
     public static function fetchDataLaporanPembayaranSiswaPerSiswa($auth_data, $start_date = null, $end_date = null)
     {
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
         $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
-        $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.siswa.id_siswa');
+
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy('tagihan_biaya.siswa.id_siswa');
+        }else{
+            $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.siswa.id_siswa');
+        }
         
         $listData = [];
         $ketTagihan = '';
@@ -1198,13 +1338,25 @@ class LibDataKeuangan
     
     public static function fetchDataLaporanPembayaranSiswaPerTanggal($auth_data, $start_date, $end_date)
     {
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
         $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
-        $allDataPembayaran = $pembayaran->get()->groupBy(function($pay){
-            return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
-        });
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy(function($pay){
+                return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
+            });
+        }else{
+            $allDataPembayaran = $pembayaran->get()->groupBy(function($pay){
+                return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
+            });
+        }
         
         $listData = [];
         foreach($allDataPembayaran as $tanggal => $rwytBayar){
@@ -1235,6 +1387,12 @@ class LibDataKeuangan
     
     public static function fetchDataLaporanPembayaranSiswaPerBulan($auth_data, $start_year, $end_year)
     {
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
         $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
 
         if (!empty($start_year) && !empty($end_year)) {
@@ -1243,9 +1401,16 @@ class LibDataKeuangan
                 $month->whereYear('tgl_pembayaran', '<=', $end_year);
             });
         }
-        $allDataPembayaran = $pembayaran->get()->groupBy(function($pay){
-            return Carbon::parse($pay->tgl_pembayaran)->format('Y-m');
-        });
+
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy(function($pay){
+                return Carbon::parse($pay->tgl_pembayaran)->format('Y-m');
+            });
+        }else{
+            $allDataPembayaran = $pembayaran->get()->groupBy(function($pay){
+                return Carbon::parse($pay->tgl_pembayaran)->format('Y-m');
+            });
+        }
 
         $listData = [];
         foreach($allDataPembayaran as $rwytBayarPerTgl){            

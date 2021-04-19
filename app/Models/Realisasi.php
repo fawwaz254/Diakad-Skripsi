@@ -36,7 +36,7 @@ class Realisasi extends Model
         return $this->belongsTo(Rapb::class, 'id_rapb');
     }
 
-
-
-
+    public function scopeIsInputByPengguna($query, $id_pengguna){
+        return $query->where('realisasi.created_by', $id_pengguna);
+    }
 }

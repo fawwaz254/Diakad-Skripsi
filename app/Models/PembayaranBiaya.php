@@ -44,4 +44,8 @@ class PembayaranBiaya extends Model
     {
         return $this->belongsTo('App\Models\TagihanBiaya', 'id_tagihan_biaya');
     }
+
+    public function scopeIsInputByPengguna($query, $id_pengguna){
+        return $query->where('pembayaran_biaya.created_by', $id_pengguna);
+    }
 }

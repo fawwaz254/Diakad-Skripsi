@@ -65,7 +65,7 @@
         <table cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
-                <td colspan=6><h1 align="center">LAPORAN KEUANGAN<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
+                <td colspan=6><h1 align="center">{{$judul}}<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
         <table>
