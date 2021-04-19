@@ -25,14 +25,25 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Setting cetak</h2>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio" name="print_setting" value="all" id="all" onchange="changeSettingSession()"
+                                {{ !empty(session('setting_print_keuangan')) && session('setting_print_keuangan') == 'all' ? 'checked' : ''  }} />
+                            <label for="all"> Input dari semua staff keuangan </label>
+                            <input class="with-gap radio-col-light-green form-control validate" type="radio" name="print_setting" value="self" id="self" onchange="changeSettingSession()"
+                                {{ !empty(session('setting_print_keuangan')) && session('setting_print_keuangan') == 'self' ? 'checked' : ''  }} />
+                            <label for="self"> Input dari pengguna sendiri </label>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 PEMBAYARAN SISWA
                             </h2>
                             <ul>
-                                <li><a onclick="printPembayaranSiswa('siswa')" >Rekap per Siswa</a></li>
-                                <li><a onclick="printPembayaranSiswa('tanggal')">Rekap per Tanggal</a></li>
-                                <li><a onclick="printPembayaranSiswa('bulan')">Rekap per Bulan</a></li>
+                                <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('siswa')" >Rekap per Siswa</a></li>
+                                <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('tanggal')">Rekap per Tanggal</a></li>
+                                <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('bulan')">Rekap per Bulan (Laporan Tahunan)</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -40,7 +51,8 @@
                                 KELUAR MASUK KAS
                             </h2>
                             <ul>
-                                <li><a onclick="printKas()" >Rekap Detail</a></li>
+                                <li><a style="cursor: pointer;" onclick="printKas('detail-reguler')">Rekap Detail Reguler</a></li>
+                                <li><a style="cursor: pointer;" onclick="printKas('detail-internal')">Rekap Detail (Sesuai biaya internal)</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -65,7 +77,7 @@
 </script>
 <script>
     var modul_url        = 'laporan-keuangan';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/datatables';
+    var setting_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan/setting';
     var print_laporan_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-laporan';
 
 </script>
@@ -75,7 +87,6 @@
         $('button').attr('disabled', 'disabled');
         var start_date = $('input[name=start_date]').val();
         var end_date = $('input[name=end_date]').val();
-        console.log(start_date, end_date, jenis);
         
         if(start_date == null || end_date == null || start_date == '' || end_date == ''){
             vex.dialog.alert("Tanggal Awal atau Tanggal Akhir yang dipilih tidak valid");
@@ -91,11 +102,10 @@
         }
     }
 
-    function printKas(){
+    function printKas(jenis){
         $('button').attr('disabled', 'disabled');
         var start_date = $('input[name=start_date]').val();
         var end_date = $('input[name=end_date]').val();
-        console.log(start_date, end_date);
 
         if(start_date == null || end_date == null || start_date == '' || end_date == ''){
             vex.dialog.alert("Tanggal Awal atau Tanggal Akhir yang dipilih tidak valid");
@@ -105,9 +115,22 @@
                 vex.dialog.alert("Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal");
                 $('button').removeAttr('disabled', 'disabled');
             } else {
-                window.open(print_laporan_url + '/' + 'print-arus-kas' + '/' + start_date + '/' + end_date, "_blank");
+                window.open(print_laporan_url + '/' + 'print-arus-kas' + '/' + jenis + '/' + start_date + '/' + end_date, "_blank");
                 $('button').removeAttr('disabled', 'disabled');
             }
         }
+    }
+
+    function changeSettingSession(){
+        $.ajax({
+            type: "POST",
+            data: {
+                print_setting: $('input[name=print_setting]:checked').val()
+            },
+            url: setting_url,
+            success: function (response) {
+                console.log('Success ' + response);
+            },
+        });
     }
 </script>
