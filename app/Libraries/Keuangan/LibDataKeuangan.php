@@ -200,7 +200,7 @@ class LibDataKeuangan
 
         // get mode view
         if ($id == null) {
-            $detailBiaya = DetailBiaya::select('detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'b_internal.nm_biaya as nm_biaya_internal', 'kelompok_biaya_internal.nm_kelompok_biaya_internal', 'detail_biaya.validasi_biaya', 'detail_biaya.besar_biaya', 'detail_biaya.keterangan_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'jalur.nm_jalur')
+            $detailBiaya = DetailBiaya::select('detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'b_internal.nm_biaya as nm_biaya_internal', 'detail_biaya.id_kelompok_biaya_internal', 'kelompok_biaya_internal.nm_kelompok_biaya_internal', 'detail_biaya.validasi_biaya', 'detail_biaya.besar_biaya', 'detail_biaya.keterangan_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'jalur.nm_jalur')
                                 ->join('biaya_sekolah', function ($q) {
                                     $q->on('biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
                                         ->whereNull('biaya_sekolah.deleted_at');
@@ -237,6 +237,7 @@ class LibDataKeuangan
                                     $q->on('b_internal.id_biaya', '=', 'kelompok_biaya_internal.id_biaya')
                                         ->whereNull('b_internal.deleted_at');
                                 })
+                                ->with('detail_internal')
                                 ->where('biaya_sekolah.validasi_biaya_sekolah', '=', 1)
                                 ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                                 ->orderBy('semester.thn_akademik_semester', 'desc')

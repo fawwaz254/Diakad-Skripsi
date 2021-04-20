@@ -56,6 +56,18 @@ class DetailBiaya extends Model
         return $this->belongsTo(KelompokBiayaInternal::class, 'id_kelompok_biaya_internal');
     }
 
+    public function detail_internal()
+    {
+        return $this->hasManyThrough(
+            DetailBiayaInternal::class,
+            KelompokBiayaInternal::class,
+            'id_kelompok_biaya_internal', // Foreign key on users table...
+            'id_kelompok_biaya_internal', // Foreign key on posts table...
+            'id_kelompok_biaya_internal', // Local key on countries table...
+            'id_kelompok_biaya_internal' // Local key on users table...
+        );
+    }
+
     public function scopeIsValid($query){
         return $query->where('validasi_biaya', 1);
     }

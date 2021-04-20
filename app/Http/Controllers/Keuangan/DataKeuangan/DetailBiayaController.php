@@ -120,14 +120,20 @@ class DetailBiayaController extends BaseController{
 
         return Datatables::of($list_data)
                 ->addColumn('biaya_sekolah', function($item){
-                    return $item->nm_kelompok_biaya." (".$item->tahun_ajaran." ".$item->nm_semester.")";
+                    return $item->nm_kelompok_biaya;
                 })
-                ->addColumn('nm_biaya_internal', function($item){
-                    if ( ! empty($item->nm_kelompok_biaya_internal)) {
-                        return $item->nm_kelompok_biaya_internal." (".$item->nm_biaya_internal.")";
+                ->editColumn('nm_biaya', function ($item) {
+                    if ($item->id_jenis_detail_biaya == 4) {
+                        return $item->nm_biaya." (".$item->nm_bulan.")";
+                    } else {
+                        return $item->nm_biaya." ".$item->keterangan_biaya;
                     }
-                    else {
-                        return "-";
+                })  
+                ->addColumn('nm_biaya_internal', function($item){
+                    if($item->detail_internal->first()){
+                        return $item->nm_kelompok_biaya_internal . ' ('.number_format($item->detail_internal->sum('besar_biaya')).')';
+                    }else{
+                        return '-';
                     }
                 })
                 ->addColumn('validasi_biaya', function($item){
