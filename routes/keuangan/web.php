@@ -46,11 +46,34 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             // MENU Data Biaya Sekolah
             // url: /keuangan/data-keuangan/biaya-sekolah
-            Route::get('biaya-sekolah', 'Keuangan\DataKeuangan\BiayaSekolahController@viewBiayaSekolah');
-            Route::get('biaya-sekolah/datatables', 'Keuangan\DataKeuangan\BiayaSekolahController@datatablesBiayaSekolah');
-            Route::get('biaya-sekolah/add', 'Keuangan\DataKeuangan\BiayaSekolahController@addBiayaSekolah');
-            Route::get('biaya-sekolah/edit/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@editBiayaSekolah');
-            Route::get('biaya-sekolah/copy', 'Keuangan\DataKeuangan\BiayaSekolahController@copyBiayaSekolah');
+
+            Route::group(array('prefix' => 'biaya-sekolah'), function () {
+
+                  Route::get('', 'Keuangan\DataKeuangan\BiayaSekolahController@viewBiayaSekolah');
+                  Route::get('datatables', 'Keuangan\DataKeuangan\BiayaSekolahController@datatablesBiayaSekolah');
+                  Route::get('add', 'Keuangan\DataKeuangan\BiayaSekolahController@addBiayaSekolah');
+                  Route::get('edit/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@editBiayaSekolah');
+                  Route::get('copy', 'Keuangan\DataKeuangan\BiayaSekolahController@copyBiayaSekolah');
+
+                  Route::group(array('prefix' => 'detail-biaya'), function () {
+
+                        Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaController@viewDetailBiaya2');
+                        Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@datatablesDetailBiaya2');
+                        Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@addDetailBiaya2');
+                        Route::get('edit/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@editDetailBiaya2');
+                        Route::post('action-detail-biaya/{mode}/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@actionDetailBiaya2');
+
+                        Route::group(array('prefix' => 'detail-biaya-internal'), function () {
+
+                              Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@viewDetailBiayaInternal2');
+                              Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@datatablesDetailBiayaInternal2');
+                              Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@addDetailBiayaInternal2');
+
+                        });
+
+                  });
+
+            });
 
             Route::post('action-biaya-sekolah/{mode}/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@actionBiayaSekolah');
 

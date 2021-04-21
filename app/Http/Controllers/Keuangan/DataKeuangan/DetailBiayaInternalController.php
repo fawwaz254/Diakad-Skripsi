@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Keuangan\DataKeuangan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\DetailBiaya;
 use App\Models\DetailBiayaInternal as DetailBiayaInternal;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -18,6 +19,24 @@ use Validator;
 
 class DetailBiayaInternalController extends BaseController{
 
+    public function viewDetailBiayaInternal2(Request $request,$id){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $detail_biaya = DetailBiaya::find($id);
+
+        if($detail_biaya->id_kelompok_biaya_internal){
+            $id_kelompok_biaya_internal = $detail_biaya->id_kelompok_biaya_internal;
+        }
+        else{
+            $id_kelompok_biaya_internal = 0;
+        }
+
+        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data','id_kelompok_biaya_internal'));
+
+    }
+
     public function viewDetailBiayaInternal(Request $request){
         # code...
         $input = (object) $request->input();
@@ -27,6 +46,20 @@ class DetailBiayaInternalController extends BaseController{
         $data_kelompok_biaya = KelompokBiaya::orderBy('nm_kelompok_biaya', 'asc')->get();
 
     	return view('keuangan/data-keuangan/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data', 'data_kelompok_biaya_internal', 'data_kelompok_biaya'));
+
+    }
+
+    public function addDetailBiayaInternal2(Request $request,$id){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $id_detail_biaya_internal = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/detail-biaya-internal/add-detail-biaya-internal',compact('auth_data','id_detail_biaya_internal'));
 
     }
 
@@ -57,6 +90,35 @@ class DetailBiayaInternalController extends BaseController{
 
         return view('keuangan/data-keuangan/detail-biaya-internal/edit-detail-biaya-internal',compact('auth_data','data_biaya_internal','data_detail_biaya_internal'));
 
+    }
+
+    public function datatablesDetailBiayaInternal2(Request $request,$id){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = LibDataKeuangan::fetchDataDetailBiayaInternal($auth_data, null, "1");
+
+        if($id==0){
+            $list_data = $list_data->whereNull('detail_biaya_internal.id_kelompok_biaya_internal');
+        }
+
+        else{
+            $list_data = $list_data->where('detail_biaya_internal.id_kelompok_biaya_internal',$id);
+        }
+
+        return Datatables::of($list_data)
+                ->addColumn('nm_biaya_internal', function($item){
+                    return $item->nm_kelompok_biaya_internal." (".$item->nm_biaya.")";
+                })
+                ->addColumn('besar_biaya', function($item){
+                    return "Rp".number_format($item->besar_biaya);
+                })
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_detail_biaya_internal
+                    );
+                    return $data;
+                })
+                ->make(true);
     }
 
     public function datatablesDetailBiayaInternal(Request $request){
