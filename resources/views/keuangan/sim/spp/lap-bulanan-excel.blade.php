@@ -3,7 +3,7 @@
 
 <head>
     <title></title>
-    <style type="text/css">
+    <!-- <style type="text/css">
         table {
             border-collapse: collapse;
             table-layout: fixed;
@@ -32,7 +32,7 @@
         .text-right{
             text-align: right;
         }
-    </style>
+    </style> -->
 </head>
 
 @php
@@ -143,7 +143,7 @@
         <tr valign=top>
             <td class="no-bordered" colspan=5></td>
             <td class="text-bold" colspan=2>Saldo Kas Bulan Lalu</td>
-            <td class="text-right">{{ $tutup_buku_kas_bulan_lalu->kas_akhir_bulan }}</td>
+            <td class="text-right">{{ number_format($tutup_buku_kas_bulan_lalu->kas_akhir_bulan) }}</td>
         </tr>
         <tr valign=top>
             <td class="no-bordered" colspan=5></td>
@@ -160,8 +160,7 @@
 
     <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0 style="background-color: #ffffff; word-wrap:break-word;">
         <tr valign=top>
-            <td>NO</td>
-            <td colspan=2>PENGELUARAN</td>
+            <td colspan=3>PENGELUARAN</td>
             <td>TARGET</td>
             <td>REALISASI</td>
             <td>PROSENTASE ( % )</td>

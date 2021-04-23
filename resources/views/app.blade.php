@@ -223,6 +223,15 @@
                 }
             });
         });
+
+        // const evtSource = new EventSource(base_url + '/api/testing' , { withCredentials: true } );
+        // evtSource.onmessage = function(event) {
+        //     const newElement = document.createElement("p");
+        //     const eventList = document.getElementById("khusus-login");
+            
+        //     newElement.textContent = "message: " + event.data;
+        //     eventList.appendChild(newElement);
+        // }
     </script>
     @yield('js')
 </html>
