@@ -18,7 +18,7 @@ class AddingRouteOnMenuUpdateFotoModulSiswaKesiswaan extends Migration
     {
         $menu = Menu::find(243);
         $menu->page = 'update-foto';
-        $menu->updated_at = Carbon::now('Asia/Jakarta');
+        $menu->updated_at = Carbon::now(env('APP_TIMEZONE', ''));
         $menu->save();
     }
 

@@ -130,7 +130,7 @@ class PencarianController extends BaseController
                   ->where('pengguna.id_pengguna','=',$id_pengguna)
                   ->first();
 
-        // $now = Carbon::now('Asia/Jakarta');
+        // $now = Carbon::now(env('APP_TIMEZONE', ''));
         // $three_month_old = Carbon::now('Asia/Jakarta')->subMonths(3);
         // convert format date
         $last_reset_password = LogResetPassword::where('id_pengguna', $pengguna->id_pengguna)

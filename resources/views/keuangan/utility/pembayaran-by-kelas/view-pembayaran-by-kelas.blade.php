@@ -1,4 +1,7 @@
 <style>
+    .tdbg-0{
+        background: white;
+    }
     .tdbg-1{
         background: #efee9d;
     }
@@ -120,16 +123,22 @@
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                             <thead>
                                 <tr>
-                                    <th>No. </th>
-                                    <th>NIS</th>
-                                    <th>NISN</th>
-                                    <th>Nama</th>
+                                    <th rowspan=2>No. </th>
+                                    <th rowspan=2>NIS</th>
+                                    <th rowspan=2>NISN</th>
+                                    <th rowspan=2>Nama</th>
+                                    <th colspan=12>SPP</th>
+                                    @foreach($data_ket_tagihan as $ket)
+                                        <th class="tdbg-0" rowspan=2>{!! $ket->title_biaya !!}</th>
+                                    @endforeach
+                                </tr>
+                                <tr>
                                     @foreach($data_bulan_tagihan as $bulan)
-                                    @if(!empty($bulan->id_bulan))
-                                    <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
-                                    @else
-                                    <th class="tdbg">{{$bulan->nm_biaya}}</th>
-                                    @endif
+                                        @if(!empty($bulan->id_bulan))
+                                        <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
+                                        @else
+                                        <th class="tdbg">{{$bulan->nm_biaya}}</th>
+                                        @endif
                                     @endforeach
                                 </tr>
                             </thead>
@@ -144,32 +153,60 @@
                                     <td>{{$siswa->nisn_siswa}}</td>
                                     <td>{{$siswa->pengguna->nm_pengguna}}</td>
                                     @foreach($data_bulan_tagihan as $bulan)
-                                    @php
-                                        $tagihan = $data_tagihan->where('id_siswa', $siswa->id_siswa)->where('id_bulan', $bulan->id_bulan)->first();
-                                    @endphp
-                                    @if(!empty($tagihan) > 0)
-                                        @if($tagihan->is_tagih == 1)
                                         @php
-                                            $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                            $tagihan = $data_tagihan->where('id_siswa', $siswa->id_siswa)->where('id_bulan', $bulan->id_bulan)->first();
                                         @endphp
-                                        <td>
-                                            @if($tagihan->is_request == 0)
-                                            <button class="btn btn-block bg-black waves-effect" onclick="takeAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button>
-                                            @else
-                                            Rp{{number_format($tagihan_bulanan)}}<br><b>Online</b>
+                                        @if(!empty($tagihan) > 0)
+                                            @if($tagihan->is_tagih == 1)
+                                            @php
+                                                $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                            @endphp
+                                            <td>
+                                                @if($tagihan->is_request == 0)
+                                                <button class="btn btn-block bg-black waves-effect" onclick="takeAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button>
+                                                @else
+                                                Rp{{number_format($tagihan_bulanan)}}<br><b>Online</b>
+                                                @endif
+                                            </td>
+                                            @elseif($tagihan->is_tagih == 0)
+                                            <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                                <br>
+                                                <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
+                                                    <i class="material-icons" style="left: -7px; top: -7px;">close</i>
+                                                </button>
+                                            </td>
                                             @endif
-                                        </td>
-                                        @elseif($tagihan->is_tagih == 0)
-                                        <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
-                                            <br>
-                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
-                                                <i class="material-icons" style="left: -7px; top: -7px;">close</i>
-                                            </button>
-                                        </td>
+                                        @else
+                                        <td></td>
                                         @endif
-                                    @else
-                                    <td></td>
-                                    @endif
+                                    @endforeach
+                                    @foreach($data_ket_tagihan as $ket)
+                                        @php
+                                            $tagihan = $data_tagihan_non_bulanan->where('id_siswa', $siswa->id_siswa)->where('id_detail_biaya', $ket->id_detail_biaya)->first();
+                                        @endphp
+                                        @if(!empty($tagihan) > 0)
+                                            @if($tagihan->is_tagih == 1)
+                                            @php
+                                                $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                            @endphp
+                                            <td>
+                                                @if($tagihan->is_request == 0)
+                                                <button class="btn btn-block bg-black waves-effect" onclick="takeAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button>
+                                                @else
+                                                Rp{{number_format($tagihan_bulanan)}}<br><b>Online</b>
+                                                @endif
+                                            </td>
+                                            @elseif($tagihan->is_tagih == 0)
+                                            <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                                <br>
+                                                <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
+                                                    <i class="material-icons" style="left: -7px; top: -7px;">close</i>
+                                                </button>
+                                            </td>
+                                            @endif
+                                        @else
+                                        <td></td>
+                                        @endif
                                     @endforeach
                                 </tr>
                                 @endforeach

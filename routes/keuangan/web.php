@@ -346,7 +346,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Cetak Laporan
             Route::group(['prefix' => 'cetak-laporan'], function(){
                 Route::get('/', 'Keuangan\LaporanKeuangan\CetakLaporanController@viewCetakLaporan');
-                Route::get('datatables', 'Keuangan\LaporanKeuangan\CetakLaporanController@datatablesCetakLaporan');
                 Route::get('print-arus-kas/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanKas');
                 Route::get('print-pembayaran-siswa/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanPembayaranSiswa');
 

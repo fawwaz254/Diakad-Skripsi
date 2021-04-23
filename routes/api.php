@@ -1,6 +1,7 @@
 <?php
 
 // use Illuminate\Http\Request;
+use App\Models\Sekolah;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,44 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+Route::get('testing', function(){
+    header("Cache-Control: no-cache");
+    header("Content-Type: text/event-stream");
+
+    // $counter = rand(1, 10);
+    while (true) {
+        $counter = rand(1, 10);
+        // Every second, send a "ping" event.
+
+        // echo "event: ping\n";
+        $curDate = date(DATE_ISO8601);
+        // echo 'data: {"time": "' . $curDate . '"}';
+        // echo "\n\n";
+
+        // Send a simple message at random intervals.
+
+        // $counter--;
+
+        $sekolah = new Sekolah;
+        $sekolah->id_sekolah = $counter . $curDate;
+        $sekolah->nm_sekolah = $curDate;
+        $sekolah->save();
+        // if (!$counter) {
+            echo 'data: This is a message at time ' . $curDate . "\n\n";
+        //     $counter = rand(1, 10);
+        // }
+
+        ob_end_flush();
+        flush();
+
+        // Break the loop if the client aborted the connection (closed the page)
+
+        if ( connection_aborted() ) break;
+
+        sleep(1);
+    }
+});
 
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 
