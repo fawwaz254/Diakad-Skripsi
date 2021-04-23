@@ -16,7 +16,7 @@ class HideModulBiodataInRoleSiswa extends Migration
      */
     public function up()
     {
-        $now = Carbon::now('Asia/Jakarta');
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         $modul = Modul::find(12);
         $modul->akses = 0;
         $modul->updated_at = $now;

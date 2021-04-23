@@ -32,7 +32,7 @@ class FormKesehatanController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now('Asia/Jakarta');
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         $start_1 = Carbon::createFromTimeString('00:00');
         $end_1 = Carbon::createFromTimeString('07:00');
 
@@ -53,7 +53,7 @@ class FormKesehatanController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $now = Carbon::now('Asia/Jakarta');
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
         $start_1 = Carbon::createFromTimeString('00:00');
         $end_1 = Carbon::createFromTimeString('07:00');
 
