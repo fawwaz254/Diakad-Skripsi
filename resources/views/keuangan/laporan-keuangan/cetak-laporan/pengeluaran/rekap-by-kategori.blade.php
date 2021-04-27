@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Laporan Keuangan Pembayaran Siswa</title>
+    <title>Cetak Laporan Keuangan</title>
 
     <style>
         .page {
-            width: 1200px;
+            width: 900px;
         }
         
         .ttd {
@@ -54,78 +54,86 @@
     </style>
     <style type="text/css" media="print">
         @page {
-            size: landscape;
+            size: A4;
         }
     </style>
 </head>
 
 <body>
     <div class="page">
+        
         <table cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
-                <td colspan=6><h1 align="center">LAPORAN PEMBAYARAN SISWA PER KELAS<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
+                <td colspan=6><h1 align="center">LAPORAN PEMBAYARAN PENGELUARAN PER KATEGORI<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
         <table>
             <tr>
             @if($start_date != $end_date)
-                <td colspan="3"><b>TANGGAL   {{ strtoupper(indonesiaDate($start_date)) }} - {{ strtoupper(indonesiaDate($end_date)) }}</b></td>
+                <td colspan="3"><b>TANGGAL   {{ \Carbon\Carbon::createFromFormat('Y-m-d', $start_date)->format('d M Y') }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d', $end_date)->format('d M Y') }}</b></td>
             @else
-                <td colspan="3"><b>TANGGAL   {{ strtoupper(indonesiaDate($start_date)) }}</b></td>
+                <td colspan="3"><b>TANGGAL   {{ \Carbon\Carbon::createFromFormat('Y-m-d', $start_date)->format('d M Y') }}</b></td>
             @endif
             </tr>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:small" class="mb-2">
+        <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
+        @if(isset($data_laporan['data']))
+            @foreach($data_laporan['data'] as $nm_kategori => $kategori_laporan)
+            <tr>
+                <th colspan="6" style="text-align: left; background:lightyellow">
+                    {{ $nm_kategori }}
+                </th>
+            </tr>
             <tr>
                 <th style="width: 10px;">No.</th>
-                <th>Kelas</th>
-                <th>Frekuensi Bayar</th>
-                <th>Jumlah Pembayaran</th>
+                <th>Keterangan</th>
+                <th>Tanggal Pengeluaran</th>
+                <th>Nominal</th>
             </tr>
-            @php 
+            @php
                 $no = 1;
             @endphp
-        @if(isset($data_laporan['data']))
-            @foreach($data_laporan['data']->groupBy('tagihan_biaya.kelas.nm_kelas') as $kelas => $laporan)
-            <tr>
-                <td>{{ $no++ }}</td>
-                <td>{{ $kelas }}</td>
-                <td style="text-align: right;">{{ $laporan->count('id_pembayaran_siswa') }}x</td>
-                <td style="text-align: right;">{{ 'Rp ' . number_format($laporan->sum('besar_pembayaran')) }}</td>
-            </tr>
+                @foreach($kategori_laporan as $laporan)
+                <tr>
+                    <td>{{ $no++ }}</td>
+                    <td>{{ $laporan->nm_realisasi }}</td>
+                    <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $laporan->tgl_realisasi)->format('d M Y') }}</td>
+                    <td style="text-align: right;">{{ number_format($laporan->dana_realisasi) }}</td>
+                </tr>
+                @endforeach
+                <tr>
+                    <th colspan="3">TOTAL</th>
+                    <th>{{ number_format($kategori_laporan->sum('dana_realisasi')) }}</th>
+                </tr>
+                <tr><td colspan="4"></td></tr>
             @endforeach
             <tr>
-                <th colspan="2" style="text-align: right;">TOTAL</th>
-                <th style="text-align: right;">{{ $data_laporan['data']->count('id_pembayaran_siswa') . ' x' }}</th>
-                <th style="text-align: right;">{{ 'Rp ' . number_format($data_laporan['data']->sum('besar_pembayaran')) }}</th>
+                <th colspan="3">GRAND TOTAL</th>
+                <th>{{ number_format($data_laporan['total_data']) }}</th>
             </tr>
         @endif
         </table>
         <div class="avoid-break mt-4 mb-4">
             <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
                 <tr>
-                    <td style="width: 50%;"></td>
+                    <td style="width: 50%;">Mengetahui</td>
                     <td>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
                     </td>
                 </tr>
                 <tr></tr>
-                <tr>
-                    <td></td>
-                    <td>Mengetahui</td>
-                </tr>
                 <tr style="vertical-align: top;">
-                    <td>
-                        Bendahara
-                        <br><br><br><br> 
-                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
-                    </td>
                     <td>
                         Kepala Sekolah
                         <br><br><br><br>
                         <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                    </td>
+                    <td>
+                        Keuangan
+                        <br><br><br><br> 
+                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>
             </table>

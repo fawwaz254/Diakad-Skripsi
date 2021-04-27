@@ -50,15 +50,22 @@
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
-                                KELUAR MASUK KAS
+                                KAS KELUAR
+                            </h2>
+                            <ul>
+                                <li><a style="cursor: pointer;" onclick="printKeluar('kategori')">Rekap per Kategori</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                KAS KELUAR & MASUK
                             </h2>
                             <ul>
                                 <li><a style="cursor: pointer;" onclick="printKas('detail-reguler')">Rekap Detail Reguler</a></li>
                                 <li><a style="cursor: pointer;" onclick="printKas('detail-internal')">Rekap Detail (Sesuai biaya internal)</a></li>
+                                <li><a style="cursor: pointer;" onclick="printBulanan('yayasan')">Rekap Harian format tipe 1</a></li>
+                                <li><a style="cursor: pointer;" onclick="printBulanan('yayasan')">Rekap Bulanan format tipe 1</a></li>
                             </ul>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            
                         </div>
                     </div>
                 </div>
@@ -99,6 +106,25 @@
                 $('button').removeAttr('disabled', 'disabled');
             } else {
                 window.open(print_laporan_url + '/' + 'print-pembayaran-siswa' + '/' + jenis + '/' + start_date + '/' + end_date, "_blank");
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        }
+    }
+
+    function printKeluar(jenis){
+        $('button').attr('disabled', 'disabled');
+        var start_date = $('input[name=start_date]').val();
+        var end_date = $('input[name=end_date]').val();
+
+        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
+            vex.dialog.alert("Tanggal Awal atau Tanggal Akhir yang dipilih tidak valid");
+            $('button').removeAttr('disabled', 'disabled');
+        } else {
+            if(end_date < start_date){
+                vex.dialog.alert("Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal");
+                $('button').removeAttr('disabled', 'disabled');
+            } else {
+                window.open(print_laporan_url + '/' + 'print-pengeluaran' + '/' + jenis + '/' + start_date + '/' + end_date, "_blank");
                 $('button').removeAttr('disabled', 'disabled');
             }
         }

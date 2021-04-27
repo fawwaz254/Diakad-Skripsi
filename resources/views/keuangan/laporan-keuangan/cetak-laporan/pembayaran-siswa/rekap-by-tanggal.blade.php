@@ -65,15 +65,15 @@
         <table cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
-                <td colspan=6><h1 align="center">LAPORAN PEMBAYARAN SISWA PER BULAN<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
+                <td colspan=6><h1 align="center">LAPORAN PEMBAYARAN SISWA PER TANGGAL<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
         <table>
             <tr>
-            @if($start_year != $end_year)
-                <td><b>TAHUN   {{ $start_year }} - {{ $end_year }}</b></td>
+            @if($start_date != $end_date)
+                <td colspan="3"><b>TANGGAL   {{ strtoupper(indonesiaDate($start_date)) }} - {{ strtoupper(indonesiaDate($end_date)) }}</b></td>
             @else
-                <td><b>TAHUN   {{ $start_year }}</b></td>
+                <td colspan="3"><b>TANGGAL   {{ strtoupper(indonesiaDate($start_date)) }}</b></td>
             @endif
             </tr>
         </table>
@@ -81,74 +81,57 @@
         <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:small" class="mb-2">
             <tr>
                 <th style="width: 10px;">No.</th>
-                @if($start_year != $end_year)
-                    <th>TAHUN</th>
-                @endif
-                <th>BULAN</th>
+                <th>Tanggal</th>
                 @if(isset($data_laporan['kategori_biaya']))
-                    @foreach($data_laporan['kategori_biaya'] as $biaya)
-                        <th style="width: 10%;">{{ strtoupper($biaya) }}</th>
-                    @endforeach
+                @foreach($data_laporan['kategori_biaya'] as $biaya)
+                    <th style="width: 10%;">{{ strtoupper($biaya) }}</th>
+                @endforeach
                 @endif
-                <th>JUMLAH</th>
+                <th>Jumlah</th>
             </tr>
             @php 
                 $no = 1;
-                $year_count = 1;
             @endphp
             @if(isset($data_laporan['data']))
-                @foreach($data_laporan['data'] as $data)
-                <tr>
-                    <td>{{ $no++ }}</td>
-                    @if($start_year != $end_year)
-                        @if(($no-2) % 12 == 0)
-                        <td rowspan="12" style="text-align: center;">{{ $data['tahun'] }}</td>
-                        @endif
-                    @endif
-                    <td>{{ $data['bulan'] }}</td>
-                    @if(isset($data_laporan['kategori_biaya']))
-                        @foreach($data_laporan['kategori_biaya'] as $idBiaya => $biaya)
-                            <td style="text-align: right;">{{ 
-                                collect($data['details'])->where('id_biaya', $idBiaya)->first() ? 'Rp ' . number_format(collect($data['details'])->where('id_biaya', $idBiaya)->first()['total_pembayaran']) : '-' 
-                            }}</td>
-                        @endforeach
-                    @endif
-                    <td style="text-align: right;"><b>{{ 'Rp ' . number_format($data['total_pembayaran']) }}</b></td>
-                </tr>
+            @foreach($data_laporan['data'] as $tgl)
+            <tr>
+                <td>{{ $no++ }}</td>
+                <td>{{ $tgl['tanggal_pembayaran'] }}</td>
+                @if(isset($data_laporan['kategori_biaya']))
+                @foreach($data_laporan['kategori_biaya'] as $idBiaya => $biaya)
+                    <td>{{ 
+                        collect($tgl['detail'])->where('id_biaya', $idBiaya)->first() ? 'Rp ' . number_format(collect($tgl['detail'])->where('id_biaya', $idBiaya)->first()['nominal_pembayaran']) : '-' 
+                    }}</td>
                 @endforeach
+                @endif
+                <td style="text-align: right;"><b>{{ 'Rp ' . number_format($tgl['total_pembayaran']) }}</b></td>
+            </tr>
+            @endforeach
             @endif
             <tr>
-                @if($start_year != $end_year)
-                <th colspan="{{ count($data_laporan['kategori_biaya']) + 3 }}">Total</th>
-                @else
                 <th colspan="{{ count($data_laporan['kategori_biaya']) + 2 }}">Total</th>
-                @endif
                 <th style="text-align: right;">{{ 'Rp ' . number_format(collect($data_laporan['data'])->sum('total_pembayaran')) }}</th>
             </tr>
         </table>
         <div class="avoid-break mt-4 mb-4">
             <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
                 <tr>
-                    <td style="width: 50%;"></td>
+                    <td style="width: 50%;">Mengetahui</td>
                     <td>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
                     </td>
                 </tr>
                 <tr></tr>
-                <tr>
-                    <td></td>
-                    <td>Mengetahui</td>
-                </tr>
                 <tr style="vertical-align: top;">
-                    <td>
-                        Bendahara
-                        <br><br><br><br> 
-                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
-                    </td>
                     <td>
                         Kepala Sekolah
                         <br><br><br><br>
                         <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                    </td>
+                    <td>
+                        Keuangan
+                        <br><br><br><br> 
+                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>
             </table>
