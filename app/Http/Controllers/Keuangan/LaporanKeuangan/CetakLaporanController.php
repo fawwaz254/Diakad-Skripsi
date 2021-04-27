@@ -170,4 +170,40 @@ class CetakLaporanController extends BaseController
         }
     }
     
+
+    public function printCetakLaporanBulanan(Request $request, $jenis, $start_date, $end_date)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make([
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'jenis' => $jenis
+        ], [
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'jenis' => 'required|in:full,harian'
+        ], [
+            'end_date.after_or_equal' => 'Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal',
+            'jenis.in' => 'Tidak valid'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        if($jenis == 'full'){
+            // fetch laporan keuangan
+            $data_laporan = LibCetakKeuangan::fetchLaporanBulananFull($auth_data, $start_date, $end_date);
+        } else if($jenis == 'harian'){
+            // fetch laporan keuangan
+            $data_laporan = LibCetakKeuangan::fetchLaporanKasReguler($auth_data, $start_date, $end_date);
+        }
+
+        return view('keuangan/laporan-keuangan/cetak-laporan/pemasukan-pengeluaran/laporan-bulanan-full', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
+    }
 }
