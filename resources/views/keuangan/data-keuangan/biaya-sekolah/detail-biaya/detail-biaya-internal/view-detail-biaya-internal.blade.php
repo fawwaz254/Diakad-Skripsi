@@ -29,13 +29,15 @@
     </div>
 </div>
 
+<input type="hidden" id="id_d" value="{{Request::segment(6)}}">
+
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var id_kelompok_biaya_internal = <?php echo $id_kelompok_biaya_internal; ?>;
+    var id_detail_biaya = $('#id_d').val();
     var modul_url       = 'data-keuangan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'biaya-sekolah/detail-biaya/detail-biaya-internal/datatables/'+id_kelompok_biaya_internal;
-    var edit_url        = role_url + '#' + modul_url + '/' + 'detail-biaya-internal/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-detail-biaya-internal/delete';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'biaya-sekolah/detail-biaya/detail-biaya-internal/datatables/'+id_detail_biaya;
+    var edit_url        = role_url + '#' + modul_url + '/' + 'biaya-sekolah/detail-biaya/detail-biaya-internal/edit';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'biaya-sekolah/detail-biaya/detail-biaya-internal/action-detail-biaya-internal/'+id_detail_biaya+'/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,

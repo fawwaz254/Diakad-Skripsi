@@ -16,8 +16,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('nama-biaya/edit/{id}', 'Keuangan\DataKeuangan\NamaBiayaController@editNamaBiaya');
 
             Route::post('action-nama-biaya/{mode}/{id}', 'Keuangan\DataKeuangan\NamaBiayaController@actionNamaBiaya');
-
-            // MENU Data Biaya Internal
             // url: /keuangan/data-keuangan/biaya-internal
             Route::get('biaya-internal', 'Keuangan\DataKeuangan\BiayaInternalController@viewBiayaInternal');
             Route::get('biaya-internal/datatables', 'Keuangan\DataKeuangan\BiayaInternalController@datatablesBiayaInternal');
@@ -68,6 +66,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                               Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@viewDetailBiayaInternal2');
                               Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@datatablesDetailBiayaInternal2');
                               Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@addDetailBiayaInternal2');
+                              Route::get('edit/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@editDetailBiayaInternal2');
+                              Route::post('action-detail-biaya-internal/{id_detail_biaya}/{mode}/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@actionDetailBiayaInternal2');
 
                         });
 
