@@ -63,8 +63,8 @@
                             <ul>
                                 <li><a style="cursor: pointer;" onclick="printKas('detail-reguler')">Rekap Detail Reguler</a></li>
                                 <li><a style="cursor: pointer;" onclick="printKas('detail-internal')">Rekap Detail (Sesuai biaya internal)</a></li>
-                                <li><a style="cursor: pointer;" onclick="printBulanan('yayasan')">Rekap Harian format tipe 1</a></li>
-                                <li><a style="cursor: pointer;" onclick="printBulanan('yayasan')">Rekap Bulanan format tipe 1</a></li>
+                                <li><a style="cursor: pointer;" onclick="printBulanan('full')">Laporan Bulanan dengan Tunggakan</a></li>
+                                <li><a style="cursor: pointer;" onclick="printBulanan('harian')">Laporan Bulanan per Hari per Kategori</a></li>
                             </ul>
                         </div>
                     </div>
@@ -144,6 +144,32 @@
                 $('button').removeAttr('disabled', 'disabled');
             } else {
                 window.open(print_laporan_url + '/' + 'print-arus-kas' + '/' + jenis + '/' + start_date + '/' + end_date, "_blank");
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        }
+    }
+
+    function printBulanan(jenis){
+        $('button').attr('disabled', 'disabled');
+        var start_date = $('input[name=start_date]').val();
+        var end_date = $('input[name=end_date]').val();
+
+        if(start_date == null || end_date == null || start_date == '' || end_date == ''){
+            vex.dialog.alert("Tanggal Awal atau Tanggal Akhir yang dipilih tidak valid");
+            $('button').removeAttr('disabled', 'disabled');
+        } else {
+            if(end_date < start_date){
+                vex.dialog.alert("Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal");
+                $('button').removeAttr('disabled', 'disabled');
+            } else {
+                var s = new Date(start_date);
+                var e = new Date(end_date);
+                
+                if(s.getMonth() == e.getMonth() && s.getFullYear() == e.getFullYear()){
+                    window.open(print_laporan_url + '/' + 'print-laporan-bulanan' + '/' + jenis + '/' + start_date + '/' + end_date, "_blank");
+                }else{
+                    vex.dialog.alert("Laporan ini hanya dapat dicetak dalam rentang waktu 1 bulan");
+                }
                 $('button').removeAttr('disabled', 'disabled');
             }
         }

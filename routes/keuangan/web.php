@@ -349,6 +349,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('print-pengeluaran/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanPengeluaran');
                 Route::get('print-arus-kas/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanKas');
                 Route::get('print-pembayaran-siswa/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanPembayaranSiswa');
+                Route::get('print-laporan-bulanan/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanBulanan');
 
                 Route::post('setting', 'Keuangan\LaporanKeuangan\CetakLaporanController@actionSetSettingCetak');
             });

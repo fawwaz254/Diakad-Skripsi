@@ -372,7 +372,7 @@ class AdmisiSiswaController extends BaseController
 
                 DB::commit();
                 return [
-                  'status' => 202, // SUCCESS AND LOAD CONTENT
+                  'status' => 200, // SUCCESS
                   'message' => 'Generate Admisi Berhasil',
                   'path' => 'data-kesiswaan/admisi-siswa/generate'
           ];
