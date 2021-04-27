@@ -93,7 +93,7 @@
                                 <span style="text-decoration: underline;"> {{ $auth_data->sekolah_data->nm_kepala_sekolah }} </span>
                             </td>
                             <td class="ttd">
-                                Bendahara 
+                                Keuangan 
                                 <br><br><br><br> 
                                 <span style="text-decoration: underline;"> {{ $auth_data->pengguna->nm_pengguna }} </span>
                             </td>

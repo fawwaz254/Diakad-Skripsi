@@ -132,26 +132,22 @@
         <div class="avoid-break mt-4 mb-4">
             <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
                 <tr>
-                    <td style="width: 50%;"></td>
+                    <td style="width: 50%;">Mengetahui</td>
                     <td>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
                     </td>
                 </tr>
                 <tr></tr>
-                <tr>
-                    <td></td>
-                    <td>Mengetahui</td>
-                </tr>
                 <tr style="vertical-align: top;">
-                    <td>
-                        Bendahara
-                        <br><br><br><br> 
-                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
-                    </td>
                     <td>
                         Kepala Sekolah
                         <br><br><br><br>
                         <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                    </td>
+                    <td>
+                        Keuangan
+                        <br><br><br><br> 
+                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>
             </table>

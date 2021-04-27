@@ -97,6 +97,47 @@ class LibCetakKeuangan{
 
         return $data;
     }
+
+    public static function fetchLaporanPengeluaranByKategori($auth_data, $start_date = null, $end_date = null)
+    {
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
+        $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
+        $tempDataLaporan = [];
+
+        $allBiaya = Biaya::get();
+
+        $dataRealisasi = Realisasi::query()
+                                    ->with('rapb.subkategori.kategori')
+                                    ->whereHas('rapb.subkategori.kategori', function($q){
+                                        $q->where('tipe_kategori_rapb', 2);
+                                    });
+
+        if (!empty($start_date) && !empty($end_date)) {
+            $dataRealisasi = $dataRealisasi->whereBetween('tgl_realisasi', [$start_date, $end_date]);
+        }
+
+        if($print_setting == 'self'){
+            $allDataRealisasi = $dataRealisasi->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->sortBy('tgl_realisasi')->sortBy('rapb.subkategori.kode_subkategori_rapb');
+        }else{
+            $allDataRealisasi = $dataRealisasi->get()->sortBy('tgl_realisasi')->sortBy('rapb.subkategori.kode_subkategori_rapb');
+        }
+
+        $totalLaporan = $allDataRealisasi->sum('dana_realisasi');
+        
+        $data = [
+            'data' => $allDataRealisasi->groupBy(function ($item, $key){
+                return $item->rapb->subkategori->kode_subkategori_rapb.' '.$item->rapb->subkategori->nm_subkategori_rapb;
+            }),
+            'total_data' => $totalLaporan,
+        ];
+
+        return $data;
+    }
     
     public static function fetchLaporanKasInternal($auth_data, $start_date = null, $end_date = null)
     {
