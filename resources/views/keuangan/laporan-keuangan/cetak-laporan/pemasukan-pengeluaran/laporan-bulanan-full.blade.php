@@ -3,36 +3,63 @@
 
 <head>
     <title></title>
-    <!-- <style type="text/css">
-        table {
-            border-collapse: collapse;
-            table-layout: fixed;
+    <style>
+        .page {
+            width: 1200px;
         }
-
-        table td {
-            width: 100px;
-            word-wrap: break-word;
-            font-size: 12px;
-        }
-
-        table.is-bordered td {
-            border: solid 1px #fab;
-        }
-
-        td.no-bordered{
-            border: none !important;
-        }
-
-        .text-center{
-            text-align: center;
-        }
-        .text-bold{
-            font-weight: bold;
-        }
-        .text-right{
+        
+        .ttd {
+            margin-top: 30px;
             text-align: right;
         }
-    </style> -->
+        
+        .clear {
+            clear: both;
+        }
+
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+
+        .mb-0 {
+            margin-bottom: 0px;
+        }
+        
+        .mb-05 {
+            margin-bottom: 5px;
+        }
+        
+        .mb-1 {
+            margin-bottom: 10px;
+        }
+
+        .mb-2 {
+            margin-bottom: 20px;
+        }
+
+        .mt-2 {
+            margin-top: 20px;
+        }
+        
+        .mt-4 {
+            margin-top: 40px;
+        }
+
+        .mb-4 {
+            margin-bottom: 40px;
+        }
+
+        td {
+            font-size: 12px;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    </style>
+    <style type="text/css" media="print">
+        @page {
+            size: landscape;
+        }
+    </style>
 </head>
 
 @php
@@ -53,13 +80,13 @@
 <body>
     <table width="100%">
         <tr valign=top>
-            <td class="text-center text-bold"><h3>LAPORAN BULANAN KAS SEKOLAH DI LINGKUNGAN YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF TAMAN SEPANJANG</h3></td>
+            <td><center><h3 style="margin: 4px;">LAPORAN BULANAN KAS SEKOLAH</h3></center></td>
         </tr>
     </table>
     <table width="100%">
         <tr valign=top>
-            <td><h4 class="text-bold">Nama Sekolah: {{$sekolah->nm_sekolah}}</h4></td>
-            <td><h4 class="text-bold text-right">Bulan: {{$bulan->nm_bulan}} {{$tahun}}</h4></td>
+            <td><h4 style="margin: 4px;" class="text-bold">Nama Sekolah: {{$sekolah->nm_sekolah}}</h4></td>
+            <td><h4 style="margin: 4px; float:right;">Bulan: {{$bulan->nm_bulan}} {{$tahun}}</h4></td>
         </tr>
     </table>
     <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0 style="background-color: #ffffff; word-wrap:break-word;">
@@ -166,7 +193,6 @@
         </tr>
     </table>
     <br>
-    <br>
 
     <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0 style="background-color: #ffffff; word-wrap:break-word;">
         <tr valign=top>
@@ -213,16 +239,30 @@
     <br>
     <br>
 
-    <table width="100%">
-        <tr valign=top>
-            <td>KEPALA SMP YPM 1 TAMAN</td>
-            <td>TU KEUANGAN</td>
-        </tr>
-        <tr valign=top>
-            <td>Dra. Hj. INDAH MURFIDAH</td>
-            <td>NUR ICHSAN</td>
-        </tr>
-    </table>
+    <div class="avoid-break mt-4 mb-4">
+            <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
+                <tr>
+                    <td style="width: 50%;">Mengetahui</td>
+                    <td>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
+                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
+                    </td>
+                </tr>
+                <tr></tr>
+                <tr style="vertical-align: top;">
+                    <td>
+                        Kepala Sekolah
+                        <br><br><br><br>
+                        <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                    </td>
+                    <td>
+                        Keuangan
+                        <br><br><br><br> 
+                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="clear"></div>
 </body>
 <script>
     window.print();
