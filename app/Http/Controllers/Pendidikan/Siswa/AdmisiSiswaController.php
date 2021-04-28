@@ -258,7 +258,8 @@ class AdmisiSiswaController extends BaseController
 
             try {
                 // ambil status_pengguna CUTI
-                $status_pengguna_cuti = StatusPengguna::where('kode_status_pengguna', '=', 'CUTI')
+                // Sementara dibuat AKTIF
+                $status_pengguna_cuti = StatusPengguna::where('kode_status_pengguna', '=', 'AKTIF')
                                       ->where('status_join_table', '=', 3)
                                       ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                                       ->first();
