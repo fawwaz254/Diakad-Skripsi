@@ -71,7 +71,7 @@
     $tutup_buku_tahun_ini = $data_laporan['tutup_buku_tahun_ini'];
     $tutup_buku_kas_bulan_ini = $data_laporan['tutup_buku_kas_bulan_ini'];
     $tutup_buku_kas_bulan_lalu = $data_laporan['tutup_buku_kas_bulan_lalu'];
-
+    $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
 
     $data_realisasi_pemasukan = collect($data_realisasi->where('tipe_kategori_rapb', 1)->all());
     $data_realisasi_pengeluaran = collect($data_realisasi->where('tipe_kategori_rapb', 2)->all());
@@ -80,13 +80,13 @@
 <body>
     <table width="100%">
         <tr valign=top>
-            <td><center><h3 style="margin: 4px;">LAPORAN BULANAN KAS SEKOLAH</h3></center></td>
+            <td><center><h3 style="margin: 0;">LAPORAN BULANAN KAS SEKOLAH DI LINGKUNGAN<br>{{strtoupper($sekolah->nm_yayasan_sekolah)}}</h3></center></td>
         </tr>
     </table>
     <table width="100%">
         <tr valign=top>
-            <td><h4 style="margin: 4px;" class="text-bold">Nama Sekolah: {{$sekolah->nm_sekolah}}</h4></td>
-            <td><h4 style="margin: 4px; float:right;">Bulan: {{$bulan->nm_bulan}} {{$tahun}}</h4></td>
+            <td><h4 style="margin: 0;" class="text-bold">Nama Sekolah: {{$sekolah->nm_sekolah}}</h4></td>
+            <td><h4 style="margin: 0; float:right;">Bulan: {{$bulan->nm_bulan}} {{$tahun}}</h4></td>
         </tr>
     </table>
     <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0 style="background-color: #ffffff; word-wrap:break-word;">
@@ -206,6 +206,21 @@
             $no = 1;
         @endphp
         @foreach($data_realisasi_pengeluaran as $realisasi)
+        @if($subkategori_non_kbm['status'] && $realisasi->kode_subkategori_rapb == 'K.5.3' && $realisasi->nm_subkategori_rapb == 'Beban Pembelajaran Non KBM')
+        <tr valign=top>
+            <td>{{$no++}}.</td>
+            <td>Lainnya :</td>
+            <td>K.5.3 Beban Pembelajaran Non KBM</td>
+            <td class="text-right">{{number_format($realisasi->dana_perkiraan_rapb)}}</td>
+            <td class="text-right">{{number_format($subkategori_non_kbm['total_bayar'])}}</td>
+            @if($realisasi->dana_perkiraan_rapb == 0)
+            <td class="text-right">0%</td>
+            @else
+            <td class="text-right">{{round($subkategori_non_kbm['total_bayar']/$realisasi->dana_perkiraan_rapb * 100, 2)}}%</td>
+            @endif
+            <td></td>
+        </tr>
+        @else
         <tr valign=top>
             <td>{{$no++}}.</td>
             <td>{{$realisasi->nm_kategori_rapb}} :</td>
@@ -219,6 +234,7 @@
             @endif
             <td></td>
         </tr>
+        @endif
         @endforeach
         <tr valign=top>
             <td colspan=3>JUMLAH</td>

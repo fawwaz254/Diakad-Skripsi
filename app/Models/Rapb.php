@@ -37,7 +37,9 @@ class Rapb extends Model
         return $this->belongsTo(SubkategoriRapb::class, 'id_subkategori_rapb');
     }
 
-
+    public function scopeIsInputByPengguna($query, $id_pengguna){
+        return $query->where('rapb.created_by', $id_pengguna);
+    }
 
 
 }
