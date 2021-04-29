@@ -7,6 +7,7 @@ use App\Models\Bulan as Bulan;
 use App\Models\Biaya;
 use App\Models\Kelas;
 use App\Models\PembayaranBiaya;
+use App\Models\PembayaranTunggakan;
 use App\Models\Rapb;
 use App\Models\Realisasi;
 use App\Models\Semester;
@@ -139,28 +140,34 @@ class LibCetakKeuangan{
                             ORDER BY kelas.tingkat', 
                         [$id_bulan_lalu, $id_semester, $tahun, $id_bulan]);
 
-        $list_data_pembayaran_old_years = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_tahun_lalu
-                            FROM pembayaran_biaya
-                            JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya
-                                AND tagihan_biaya.deleted_at IS NULL
-                            JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
-                                AND kelas.deleted_at IS NULL
-                            JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
-                                AND detail_biaya.id_jenis_detail_biaya = 4
-                                AND detail_biaya.id_bulan = ?
-                                AND detail_biaya.deleted_at IS NULL
-                            JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
-                                AND biaya_sekolah.deleted_at IS NULL
-                            JOIN semester ON semester.id_semester = biaya_sekolah.id_semester
-                                AND semester.kode_semester < ?
-                                AND semester.deleted_at IS NULL
-                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
-                                AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
-                                AND pembayaran_biaya.deleted_at IS NULL
-                                '.$where_personal.'
-                            GROUP BY kelas.tingkat
-                            ORDER BY kelas.tingkat', 
-                        [$id_bulan_lalu, $kode_semester_mulai, $tahun, $id_bulan]);
+        // List data tunggakan
+        $pembayaran_tunggakan_bulan_ini = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
+                                                        ->where('id_semester_selesai', $semester_selesai->id_semester)
+                                                        ->whereMonth('tgl_pembayaran', $id_bulan)
+                                                        ->isInputByPengguna($auth_data->pengguna->id_pengguna)->sum('besar_pembayaran');
+
+        // $list_data_pembayaran_old_years = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_tahun_lalu
+        //                     FROM pembayaran_biaya
+        //                     JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya
+        //                         AND tagihan_biaya.deleted_at IS NULL
+        //                     JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
+        //                         AND kelas.deleted_at IS NULL
+        //                     JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
+        //                         AND detail_biaya.id_jenis_detail_biaya = 4
+        //                         AND detail_biaya.id_bulan = ?
+        //                         AND detail_biaya.deleted_at IS NULL
+        //                     JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
+        //                         AND biaya_sekolah.deleted_at IS NULL
+        //                     JOIN semester ON semester.id_semester = biaya_sekolah.id_semester
+        //                         AND semester.kode_semester < ?
+        //                         AND semester.deleted_at IS NULL
+        //                     WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
+        //                         AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
+        //                         AND pembayaran_biaya.deleted_at IS NULL
+        //                         '.$where_personal.'
+        //                     GROUP BY kelas.tingkat
+        //                     ORDER BY kelas.tingkat', 
+        //                 [$id_bulan_lalu, $kode_semester_mulai, $tahun, $id_bulan]);
 
 
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
@@ -195,8 +202,10 @@ class LibCetakKeuangan{
                         $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = (!empty($pembayaran_old_month)? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
                     }
                     
-                    $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years)? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
+                    // $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
+                    // $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years)? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = $pembayaran_tunggakan_bulan_ini;
+                    $pembayaran_tunggakan_bulan_ini = 0;
                     
                     $tutup_buku_bulanan_biaya->updated_by          = $auth_data->pengguna->id_pengguna;
                     $tutup_buku_bulanan_biaya->save();
@@ -226,8 +235,10 @@ class LibCetakKeuangan{
                         $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = (!empty($pembayaran_old_month)? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
                     }
 
-                    $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years)? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
+                    // $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
+                    // $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years)? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = $pembayaran_tunggakan_bulan_ini;
+                    $pembayaran_tunggakan_bulan_ini = 0;
 
                     $tutup_buku_bulanan_biaya->created_by                   = $auth_data->pengguna->id_pengguna;
                     $tutup_buku_bulanan_biaya->save();

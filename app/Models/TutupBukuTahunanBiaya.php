@@ -31,9 +31,7 @@ class TutupBukuTahunanBiaya extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function scopeIsInputByPengguna($query, $id_pengguna){
+        return $query->where('tutup_buku_tahunan_biaya.created_by', $id_pengguna);
+    }
 }

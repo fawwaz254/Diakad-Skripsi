@@ -25,6 +25,7 @@ use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\Staff;
 use App\Models\SubkategoriRapb;
+use App\Models\PembayaranTunggakan;
 use App\Models\TagihanBiaya;
 use App\Models\TutupBukuBulananBiaya;
 use App\Models\TutupBukuBulananKas;
@@ -761,7 +762,7 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'data_bulan', 'data_realisasi'));
     }
 
-    public function viewMenuTunggakan(Request $request)
+    public function viewMenuTunggakan(Request $request, $tahun_akademik_semester = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -772,8 +773,23 @@ class SppController extends BaseController
         }
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+
+        $tutup_buku_tahunan = TutupBukuTahunanBiaya::where('id_semester_mulai', $semester_mulai->id_semester)
+                                                        ->where('id_semester_selesai', $semester_selesai->id_semester)
+                                                        ->isInputByPengguna($auth_data->pengguna->id_pengguna)->firstOrFail();
+
+        $data_pembayaran_tunggakan = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
+                                                        ->where('id_semester_selesai', $semester_selesai->id_semester)
+                                                        ->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+
+        $sisa_tunggakan = $tutup_buku_tahunan->jml_tunggakan_biaya - $data_pembayaran_tunggakan->sum('besar_pembayaran');
+
+        $data_bulan = Bulan::orderBy('id_bulan')->get();
         
-        return view('keuangan/sim/spp/view-menu-tunggakan', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
+        return view('keuangan/sim/spp/view-menu-tunggakan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'tutup_buku_tahunan', 'data_pembayaran_tunggakan', 'sisa_tunggakan', 'data_bulan'));
     }
 
     public function viewMenuSetting(Request $request)
@@ -1278,6 +1294,63 @@ class SppController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/spp/penerimaan',
+                    'message' => 'Success'
+                ]);
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                return response()->json([
+                    'status' => 300,
+                    'status_text' => 'Failed',
+                    'message' => 'Failed'
+                ]);
+            }
+        }
+    }
+
+    public function actionSaveInputTunggakan(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'tahun_akademik_semester' =>'required',
+            'tgl_pembayaran' =>'required',
+            'keterangan' =>'required',
+            'besar_pembayaran' =>'required',
+        ]);
+  
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }else{
+            $now = Carbon::today();
+
+            $tahun_akademik_semester = $input->tahun_akademik_semester;
+            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+            
+            DB::beginTransaction();
+            try {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $pembayaran_tunggakan                               = new PembayaranTunggakan;
+                $pembayaran_tunggakan->id_pembayaran_tunggakan      = $id;
+                $pembayaran_tunggakan->id_semester_mulai            = $semester_mulai->id_semester;
+                $pembayaran_tunggakan->id_semester_selesai          = $semester_selesai->id_semester;
+                $pembayaran_tunggakan->besar_pembayaran             = $input->besar_pembayaran;
+                $pembayaran_tunggakan->tgl_pembayaran               = date_format(date_create($input->tgl_pembayaran),"Y-m-d");
+                $pembayaran_tunggakan->keterangan                   = $input->keterangan;
+                $pembayaran_tunggakan->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pembayaran_tunggakan->save();
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => 202,
+                    'status_text' => 'Success',
+                    'path' => 'sim/spp/tunggakan/'.$tahun_akademik_semester,
                     'message' => 'Success'
                 ]);
             } catch (\Exception $e) {
