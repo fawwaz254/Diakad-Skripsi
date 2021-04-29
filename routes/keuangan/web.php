@@ -287,6 +287,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('penerimaan', 'Keuangan\SIM\SppController@viewMenuPenerimaan');
                 Route::get('tunggakan', 'Keuangan\SIM\SppController@viewMenuTunggakan');
+                Route::get('tunggakan/{tahun_akademik}', 'Keuangan\SIM\SppController@viewMenuTunggakan');
+                Route::post('tunggakan/save', 'Keuangan\SIM\SppController@actionSaveInputTunggakan');
 
                 Route::get('setting', 'Keuangan\SIM\SppController@viewMenuSetting');
                 Route::post('setting/datatables', 'Keuangan\SIM\SppController@datatablesMenuSetting');
