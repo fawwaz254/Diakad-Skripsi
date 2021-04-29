@@ -304,7 +304,7 @@ class LibCetakKeuangan{
             }
 
             $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
-    
+
             if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first()){
                 $tutup_buku_bulanan_kas_now->updated_by                   = $auth_data->pengguna->id_pengguna;
             }else{
@@ -336,16 +336,22 @@ class LibCetakKeuangan{
             $q->where('tipe_kategori_rapb', 2);
         })->get()->pluck('id_subkategori_rapb');
 
-        $data_realisasi = Realisasi::selectRaw('
+        $data_realisasi = Rapb::selectRaw('
                                         nm_kategori_rapb, 
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
                                         tipe_kategori_rapb,
                                         SUM(dana_realisasi) as total_realisasi,
                                         dana_perkiraan_rapb')
-                                    ->leftJoin('rapb', function($q){
+                                    ->leftJoin('realisasi', function($q) use ($id_bulan, $tahun, $print_setting, $auth_data){
                                         $q->on('realisasi.id_rapb', '=', 'rapb.id_rapb')
-                                            ->whereNull('rapb.deleted_at');
+                                            ->whereNull('realisasi.deleted_at')
+                                            ->whereMonth('realisasi.tgl_realisasi', $id_bulan)
+                                            ->whereYear('realisasi.tgl_realisasi', $tahun);
+
+                                        if($print_setting == 'self'){
+                                            $q->where('realisasi.created_by', $auth_data->pengguna->id_pengguna);
+                                        }
                                     })
                                     ->join('subkategori_rapb', function($q){
                                         $q->on('subkategori_rapb.id_subkategori_rapb', '=' ,'rapb.id_subkategori_rapb')
@@ -355,12 +361,12 @@ class LibCetakKeuangan{
                                         $q->on('kategori_rapb.id_kategori_rapb', '=' ,'subkategori_rapb.id_kategori_rapb')
                                             ->whereNull('kategori_rapb.deleted_at');
                                     })
-                                    ->whereMonth('tgl_realisasi', $id_bulan)
-                                    ->whereYear('tgl_realisasi', $tahun);
+                                    ->where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])
+                                    ->orderBy('subkategori_rapb.kode_subkategori_rapb');
 
         if($print_setting == 'self'){
-            $data_realisasi = $data_realisasi->where('realisasi.created_by', $auth_data->pengguna->id_pengguna);
-        }
+            $data_realisasi = $data_realisasi->isInputByPengguna($auth_data->pengguna->id_pengguna);
+        }                            
 
         $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
         $bulan = Bulan::find($id_bulan);
@@ -370,6 +376,59 @@ class LibCetakKeuangan{
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->firstOrFail();
         $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
         
+        // START SHOW Beban Non-KBM
+        $subkategori_non_kbm = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.3')->where('nm_subkategori_rapb', 'Beban Pembelajaran Non KBM')->first();
+            
+        if($subkategori_non_kbm){
+            $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
+                                                ->whereMonth('tgl_pembayaran', $id_bulan)
+                                                ->whereYear('tgl_pembayaran', $tahun)
+                                                ->whereHas('tagihan_biaya.detail_biaya', function($q){
+                                                    $q->where('id_jenis_detail_biaya', 4);
+                                                });
+            if($print_setting == 'self'){
+                $pembayaran_non_kbm = $pembayaran_non_kbm->where('pembayaran_biaya.created_by', $auth_data->pengguna->id_pengguna)->get();   
+            }else{
+                $pembayaran_non_kbm = $pembayaran_non_kbm->get();   
+            }
+            $temp_data_bayar_non_kbm = [];
+            $total_bayar_non_kbm = 0;
+
+            foreach($pembayaran_non_kbm as $data){
+                // Get Biaya Internal (kelompok_biaya_internal)
+                $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
+                
+                if(!empty($biayaInternal)){
+                    $tingkat        = $data->tagihan_biaya->kelas->tingkat;
+                    
+                    $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
+                    
+                    foreach($detailBiayaInternal as $x){
+                        if($x->nm_detail_biaya_internal != 'SPP MURNI'){
+                            if(!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])){
+                                $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
+                            }else{
+                                $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
+                            }
+    
+                            $total_bayar_non_kbm += $x->besar_biaya;
+                        }
+                    }
+                }
+            }
+
+            $subkategori_non_kbm = [
+                'status' => true,
+                'total_bayar' => $total_bayar_non_kbm,
+                'data' => $temp_data_bayar_non_kbm
+            ];
+        }else{
+            $subkategori_non_kbm = [
+                'status' => false,
+            ];
+        }
+        // END SHOW BEBAN NON-KBM
+
         $data = [
             'data_tutup_buku_bulanan_biaya' => $data_tutup_buku_bulanan_biaya,
             'data_realisasi' => $data_realisasi,
@@ -378,7 +437,8 @@ class LibCetakKeuangan{
             'sekolah' => $sekolah,
             'tutup_buku_tahun_ini' => $tutup_buku_tahun_ini,
             'tutup_buku_kas_bulan_ini' => $tutup_buku_kas_bulan_ini,
-            'tutup_buku_kas_bulan_lalu' => $tutup_buku_kas_bulan_lalu
+            'tutup_buku_kas_bulan_lalu' => $tutup_buku_kas_bulan_lalu,
+            'subkategori_non_kbm' => $subkategori_non_kbm
         ];
 
         return $data;
@@ -495,12 +555,68 @@ class LibCetakKeuangan{
         }
 
         $totalLaporan = $allDataRealisasi->sum('dana_realisasi');
+
+        // START SHOW Beban Non-KBM
+        $subkategori_non_kbm = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.3')->where('nm_subkategori_rapb', 'Beban Pembelajaran Non KBM')->first();
+            
+        if($subkategori_non_kbm){
+            $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
+                                                ->whereBetween('tgl_pembayaran', [$start_date, $end_date])
+                                                ->whereHas('tagihan_biaya.detail_biaya', function($q){
+                                                    $q->where('id_jenis_detail_biaya', 4);
+                                                });
+            if($print_setting == 'self'){
+                $pembayaran_non_kbm = $pembayaran_non_kbm->where('pembayaran_biaya.created_by', $auth_data->pengguna->id_pengguna)->get();   
+            }else{
+                $pembayaran_non_kbm = $pembayaran_non_kbm->get();   
+            }
+            $temp_data_bayar_non_kbm = [];
+            $total_bayar_non_kbm = 0;
+
+            foreach($pembayaran_non_kbm as $data){
+                // Get Biaya Internal (kelompok_biaya_internal)
+                $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
+                
+                if(!empty($biayaInternal)){
+                    $tingkat        = $data->tagihan_biaya->kelas->tingkat;
+                    
+                    $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
+                    
+                    foreach($detailBiayaInternal as $x){
+                        if($x->nm_detail_biaya_internal != 'SPP MURNI'){
+                            if(!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])){
+                                $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
+                            }else{
+                                $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
+                            }
+    
+                            $total_bayar_non_kbm += $x->besar_biaya;
+                        }
+                    }
+                }
+            }
+
+            $subkategori_non_kbm = [
+                'status' => true,
+                'total_bayar' => $total_bayar_non_kbm,
+                'data' => $temp_data_bayar_non_kbm
+            ];
+        }else{
+            $subkategori_non_kbm = [
+                'status' => false,
+            ];
+        }
+
+        // dd($temp_data_bayar_non_kbm);
+        // END SHOW BEBAN NON-KBM
         
         $data = [
             'data' => $allDataRealisasi->groupBy(function ($item, $key){
                 return $item->rapb->subkategori->kode_subkategori_rapb.' '.$item->rapb->subkategori->nm_subkategori_rapb;
             }),
             'total_data' => $totalLaporan,
+            'subkategori_non_kbm' => $subkategori_non_kbm,
+            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat')
         ];
 
         return $data;

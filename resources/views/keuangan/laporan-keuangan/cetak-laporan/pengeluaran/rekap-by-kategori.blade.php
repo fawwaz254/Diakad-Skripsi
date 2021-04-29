@@ -88,29 +88,64 @@
             </tr>
             <tr>
                 <th style="width: 10px;">No.</th>
-                <th>Keterangan</th>
+                <th colspan="3">Keterangan</th>
                 <th>Tanggal Pengeluaran</th>
                 <th>Nominal</th>
             </tr>
             @php
                 $no = 1;
+                $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
             @endphp
                 @foreach($kategori_laporan as $laporan)
                 <tr>
                     <td>{{ $no++ }}</td>
-                    <td>{{ $laporan->nm_realisasi }}</td>
+                    <td colspan="3">{{ $laporan->nm_realisasi }}</td>
                     <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $laporan->tgl_realisasi)->format('d M Y') }}</td>
                     <td style="text-align: right;">{{ number_format($laporan->dana_realisasi) }}</td>
                 </tr>
                 @endforeach
                 <tr>
-                    <th colspan="3">TOTAL</th>
+                    <th colspan="5">TOTAL</th>
                     <th>{{ number_format($kategori_laporan->sum('dana_realisasi')) }}</th>
                 </tr>
-                <tr><td colspan="4"></td></tr>
+                <tr><td colspan="6"></td></tr>
+
             @endforeach
+            @if($subkategori_non_kbm['status'])
             <tr>
-                <th colspan="3">GRAND TOTAL</th>
+                <th colspan="6" style="text-align: left; background:lightyellow">
+                    Beban Pembelajaran Non KBM
+                </th>
+            </tr>
+            <tr>
+                <th style="width: 10px;">No.</th>
+                <th>Keterangan</th>
+                @foreach($data_laporan['tingkat'] as $tingkat)
+                <th>{{$tingkat}}</th>
+                @endforeach
+                <th>Total</th>
+            </tr>
+            @php
+                $no = 1;
+            @endphp
+                @foreach($subkategori_non_kbm['data'] as $nm_bayar => $data_bayar_non_kbm)
+                <tr>
+                    <td>{{ $no++ }}</td>
+                    <td>{{ $nm_bayar }}</td>
+                    @foreach($data_laporan['tingkat'] as $tingkat)
+                    <td style="text-align: right;">{{ number_format($data_bayar_non_kbm[$tingkat]) }}</td>
+                    @endforeach
+                    <td>{{ number_format(collect($data_bayar_non_kbm)->sum()) }}</td>
+                </tr>
+                @endforeach
+                <tr>
+                    <th colspan="5">TOTAL</th>
+                    <th>{{ number_format($subkategori_non_kbm['total_bayar']) }}</th>
+                </tr>
+                <tr><td colspan="6"></td></tr>
+            @endif
+            <tr>
+                <th colspan="5">GRAND TOTAL</th>
                 <th>{{ number_format($data_laporan['total_data']) }}</th>
             </tr>
         @endif
