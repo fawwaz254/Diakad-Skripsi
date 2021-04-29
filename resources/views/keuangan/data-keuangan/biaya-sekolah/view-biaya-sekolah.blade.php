@@ -80,6 +80,8 @@
     var edit_url        = role_url + '#' + modul_url + '/' + 'biaya-sekolah/edit';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-biaya-sekolah/delete';
 
+    var detail_biaya_url = role_url + '#' + modul_url + '/' + 'biaya-sekolah/detail-biaya';
+
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -102,7 +104,10 @@
             { data: 'keterangan_biaya_sekolah', name: 'biaya_sekolah.keterangan_biaya_sekolah' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    return   '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ detail_biaya_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">remove_red_eye</i>'+
+                    '</a> '+
+                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
                     '    <i class="material-icons">edit</i>'+
                     '</a> '+
                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
