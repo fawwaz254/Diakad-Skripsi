@@ -106,10 +106,10 @@ class LibCetakKeuangan{
                                 AND kelas.deleted_at IS NULL
                             JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
                                 AND detail_biaya.id_jenis_detail_biaya = 4
-                                AND detail_biaya.id_bulan = ?
+                                AND detail_biaya.id_bulan >= ?
                                 AND detail_biaya.deleted_at IS NULL
                             JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
-                                AND biaya_sekolah.id_semester = ?
+                                AND biaya_sekolah.id_semester IN (?, ?)
                                 AND biaya_sekolah.deleted_at IS NULL
                             WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
@@ -117,7 +117,7 @@ class LibCetakKeuangan{
                                 '.$where_personal.'
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat', 
-                        [$id_bulan, $id_semester, $tahun, $id_bulan]);
+                        [$id_bulan, $id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
 
         $list_data_pembayaran_old_month = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_bulan_lalu
                             FROM pembayaran_biaya
@@ -127,10 +127,10 @@ class LibCetakKeuangan{
                                 AND kelas.deleted_at IS NULL
                             JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
                                 AND detail_biaya.id_jenis_detail_biaya = 4
-                                AND detail_biaya.id_bulan = ?
+                                AND detail_biaya.id_bulan < ?
                                 AND detail_biaya.deleted_at IS NULL
                             JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
-                                AND biaya_sekolah.id_semester = ?
+                                AND biaya_sekolah.id_semester IN (?, ?)
                                 AND biaya_sekolah.deleted_at IS NULL
                             WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
@@ -138,7 +138,7 @@ class LibCetakKeuangan{
                                 '.$where_personal.'
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat', 
-                        [$id_bulan_lalu, $id_semester, $tahun, $id_bulan]);
+                        [$id_bulan, $id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
 
         // List data tunggakan
         $pembayaran_tunggakan_bulan_ini = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
@@ -322,6 +322,63 @@ class LibCetakKeuangan{
             $tutup_buku_bulanan_kas_now->save();
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
+            // START SHOW Beban Non-KBM
+            $subkategori_non_kbm = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.3')->where('nm_subkategori_rapb', 'Beban Pembelajaran Non KBM')->first();
+                
+            if($subkategori_non_kbm){
+                $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
+                                                    ->whereMonth('tgl_pembayaran', $id_bulan)
+                                                    ->whereYear('tgl_pembayaran', $tahun)
+                                                    ->whereHas('tagihan_biaya.detail_biaya', function($q){
+                                                        $q->where('id_jenis_detail_biaya', 4);
+                                                    });
+                if($print_setting == 'self'){
+                    $pembayaran_non_kbm = $pembayaran_non_kbm->where('pembayaran_biaya.created_by', $auth_data->pengguna->id_pengguna)->get();   
+                }else{
+                    $pembayaran_non_kbm = $pembayaran_non_kbm->get();   
+                }
+                $temp_data_bayar_non_kbm = [];
+                $total_bayar_non_kbm = 0;
+
+                foreach($pembayaran_non_kbm as $data){
+                    // Get Biaya Internal (kelompok_biaya_internal)
+                    $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
+                    
+                    if(!empty($biayaInternal)){
+                        $tingkat        = $data->tagihan_biaya->kelas->tingkat;
+                        
+                        $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
+                        
+                        foreach($detailBiayaInternal as $x){
+                            if($x->nm_detail_biaya_internal != 'SPP MURNI'){
+                                if(!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])){
+                                    $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
+                                }else{
+                                    $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
+                                }
+        
+                                $total_bayar_non_kbm += $x->besar_biaya;
+                            }
+                        }
+                    }
+                }
+
+                $subkategori_non_kbm = [
+                    'status' => true,
+                    'total_bayar' => $total_bayar_non_kbm,
+                    'data' => $temp_data_bayar_non_kbm
+                ];
+                // Penambahan Pengeluaran post Beban non-KBM
+                $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   += $total_bayar_non_kbm;
+                $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
+                $tutup_buku_bulanan_kas_now->save();
+            }else{
+                $subkategori_non_kbm = [
+                    'status' => false,
+                ];
+            }
+            // END SHOW BEBAN NON-KBM
+
             DB::commit();
             
         } catch (\Exception $e) {
@@ -376,59 +433,6 @@ class LibCetakKeuangan{
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->firstOrFail();
         $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
         
-        // START SHOW Beban Non-KBM
-        $subkategori_non_kbm = SubkategoriRapb::where('kode_subkategori_rapb', 'K.5.3')->where('nm_subkategori_rapb', 'Beban Pembelajaran Non KBM')->first();
-            
-        if($subkategori_non_kbm){
-            $pembayaran_non_kbm = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
-                                                ->whereMonth('tgl_pembayaran', $id_bulan)
-                                                ->whereYear('tgl_pembayaran', $tahun)
-                                                ->whereHas('tagihan_biaya.detail_biaya', function($q){
-                                                    $q->where('id_jenis_detail_biaya', 4);
-                                                });
-            if($print_setting == 'self'){
-                $pembayaran_non_kbm = $pembayaran_non_kbm->where('pembayaran_biaya.created_by', $auth_data->pengguna->id_pengguna)->get();   
-            }else{
-                $pembayaran_non_kbm = $pembayaran_non_kbm->get();   
-            }
-            $temp_data_bayar_non_kbm = [];
-            $total_bayar_non_kbm = 0;
-
-            foreach($pembayaran_non_kbm as $data){
-                // Get Biaya Internal (kelompok_biaya_internal)
-                $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
-                
-                if(!empty($biayaInternal)){
-                    $tingkat        = $data->tagihan_biaya->kelas->tingkat;
-                    
-                    $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
-                    
-                    foreach($detailBiayaInternal as $x){
-                        if($x->nm_detail_biaya_internal != 'SPP MURNI'){
-                            if(!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])){
-                                $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
-                            }else{
-                                $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
-                            }
-    
-                            $total_bayar_non_kbm += $x->besar_biaya;
-                        }
-                    }
-                }
-            }
-
-            $subkategori_non_kbm = [
-                'status' => true,
-                'total_bayar' => $total_bayar_non_kbm,
-                'data' => $temp_data_bayar_non_kbm
-            ];
-        }else{
-            $subkategori_non_kbm = [
-                'status' => false,
-            ];
-        }
-        // END SHOW BEBAN NON-KBM
-
         $data = [
             'data_tutup_buku_bulanan_biaya' => $data_tutup_buku_bulanan_biaya,
             'data_realisasi' => $data_realisasi,
@@ -981,21 +985,26 @@ class LibCetakKeuangan{
         }
 
         $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas');
+        $allDataPembayaranTunggakan = PembayaranTunggakan::query();
 
         if (!empty($start_date) && !empty($end_date)) {
             $allDataPembayaran = $allDataPembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+            $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
 
         if($print_setting == 'self'){
             $allDataPembayaran = $allDataPembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+            $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
         }else{
             $allDataPembayaran = $allDataPembayaran->get();
+            $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->get();
         }
 
         $result = [
             'data' => $allDataPembayaran,
             'dates' => CarbonPeriod::create($start_date, $end_date),
-            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat')
+            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
+            'data_tunggakan' => $allDataPembayaranTunggakan
         ];
 
         return $result;

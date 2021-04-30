@@ -127,6 +127,7 @@
             </tr>
             @php
                 $no = 1;
+                $data_laporan['total_data'] += $subkategori_non_kbm['total_bayar'];
             @endphp
                 @foreach($subkategori_non_kbm['data'] as $nm_bayar => $data_bayar_non_kbm)
                 <tr>
