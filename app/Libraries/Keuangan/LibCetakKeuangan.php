@@ -57,6 +57,9 @@ class LibCetakKeuangan{
             $id_semester = $id_semester_mulai;
         }
 
+        $id_semester_mulai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'1')->first()->id_semester;
+        $id_semester_selesai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'2')->first()->id_semester;
+
         $kode_semester_mulai = $semester_mulai->kode_semester;
 
         if($print_setting == 'self'){
@@ -174,7 +177,13 @@ class LibCetakKeuangan{
 
         DB::beginTransaction();
         try {
-            $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
+            if($id_bulan_lalu < 7){
+                // Semester lama kurang dari bulan 7
+                $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu])->first();
+            }else{
+                // Semester ini mulai bulan 7
+                $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
+            }
 
             foreach($list_data_jml_siswa as $i => $data) {
                 $tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
@@ -253,9 +262,6 @@ class LibCetakKeuangan{
     
             /* INSERT TUTUP BUKU TAHUNAN BIAYA */
             $pembayaran_tunggakan_tahun_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
-    
-            $id_semester_mulai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'1')->first()->id_semester;
-            $id_semester_selesai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'2')->first()->id_semester;
     
             $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
     
