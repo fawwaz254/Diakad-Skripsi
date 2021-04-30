@@ -128,7 +128,10 @@
             <td class="text-right">{{number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya + $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu)}}</td>
         </tr>
         @endforeach
-        <tr valign=top style="margin-top: 2px;">
+        <tr valign=top>
+            <td colspan="8"></td>
+        </tr>
+        <tr valign=top>
             <td>JUMLAH = {{number_format($data_tutup_buku_bulanan_biaya->sum('jml_siswa'))}}</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') )}}</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') )}}</td>
@@ -142,7 +145,7 @@
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') )}}</td>
         </tr>
         <tr valign=top>
-            <td class="no-bordered" colspan=3></td>
+            <td style="border: none;" colspan=3></td>
 
             <td>Tunggakan tahun lalu</td>
 
@@ -153,7 +156,7 @@
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         <tr valign=top>
-            <td class="no-bordered" colspan=3></td>
+            <td style="border: none;" colspan=3></td>
 
             <td class="test-bold">TOTAL</td>
 
@@ -164,25 +167,24 @@
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         <tr valign=top>
-            <td class="no-bordered" colspan=5></td>
+            <td style="border: none;" colspan=5></td>
             <td class="text-bold" colspan=2>Jumlah Pemasukan</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         @foreach($data_realisasi_pemasukan as $realisasi)
         <tr valign=top>
-            <td class="no-bordered" colspan=5></td>
-            <td class="text-right">{{$realisasi->kode_subkategori_rapb}}</td>
-            <td>{{$realisasi->nm_subkategori_rapb}}</td>
+            <td style="border: none;" colspan=5></td>
+            <td colspan=2>&nbsp;&nbsp;&nbsp;{{$realisasi->nm_subkategori_rapb}}</td>
             <td class="text-right">{{number_format($realisasi->total_realisasi)}}</td>
         </tr>
         @endforeach
         <tr valign=top>
-            <td class="no-bordered" colspan=5></td>
+            <td style="border: none;" colspan=5></td>
             <td class="text-bold" colspan=2>Saldo Kas Bulan Lalu</td>
             <td class="text-right">{{ number_format($tutup_buku_kas_bulan_lalu->kas_akhir_bulan) }}</td>
         </tr>
         <tr valign=top>
-            <td class="no-bordered" colspan=5></td>
+            <td style="border: none;" colspan=5></td>
             <td class="text-bold" colspan=2>Kas tersedia dalam bulan ini</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + 
                                     $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + 
@@ -252,9 +254,8 @@
         </tr>
     </table>
     <br>
-    <br>
 
-    <div class="avoid-break mt-4 mb-4">
+    <div class="avoid-break">
             <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
                 <tr>
                     <td style="width: 50%;">Mengetahui</td>
@@ -266,12 +267,12 @@
                 <tr style="vertical-align: top;">
                     <td>
                         Kepala Sekolah
-                        <br><br><br><br>
+                        <br><br><br>
                         <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
                     <td>
                         Keuangan
-                        <br><br><br><br> 
+                        <br><br><br> 
                         <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>
