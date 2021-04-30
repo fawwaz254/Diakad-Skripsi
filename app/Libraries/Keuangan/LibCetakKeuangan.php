@@ -192,6 +192,14 @@ class LibCetakKeuangan{
                     'id_bulan' => $id_bulan,
                     'tingkat' => $data->tingkat
                 ])->first();
+
+                if($id_bulan_lalu < 7){
+                    // Semester lama kurang dari bulan 7
+                    $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat])->first();
+                }else{
+                    // Semester ini mulai bulan 7
+                    $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat])->first();
+                }
                 
                 if($tutup_buku_bulanan_biaya) {
                     $tutup_buku_bulanan_biaya->jml_siswa            = $data->jml_siswa;
@@ -202,13 +210,20 @@ class LibCetakKeuangan{
                     $pembayaran = collect($list_data_pembayaran)->firstWhere('tingkat', $data->tingkat);
                     $tutup_buku_bulanan_biaya->jml_pembayaran_biaya    = (!empty($pembayaran)? $pembayaran->jml_pembayaran_biaya : 0);
 
-                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya    = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
+                    // $tutup_buku_bulanan_biaya->jml_tunggakan_biaya    = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
                     
                     if($id_bulan == 7){
                         $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = 0;
+                        $tutup_buku_bulanan_biaya->jml_tunggakan_biaya              = 0;
                     }else{
                         $pembayaran_old_month = collect($list_data_pembayaran_old_month)->firstWhere('tingkat', $data->tingkat);
                         $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = (!empty($pembayaran_old_month)? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
+                        
+                        if(!empty($tutup_buku_bulanan_biaya_old)){
+                            $tutup_buku_bulanan_biaya->jml_tunggakan_biaya               = $tutup_buku_bulanan_biaya_old->jml_tunggakan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
+                        }else{
+                            $tutup_buku_bulanan_biaya->jml_tunggakan_biaya               = 0;
+                        }
                     }
                     
                     // $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);

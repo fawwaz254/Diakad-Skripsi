@@ -128,7 +128,7 @@
             <td class="text-right">{{number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya + $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu)}}</td>
         </tr>
         @endforeach
-        <tr valign=top>
+        <tr valign=top style="margin-top: 2px;">
             <td>JUMLAH = {{number_format($data_tutup_buku_bulanan_biaya->sum('jml_siswa'))}}</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') )}}</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') )}}</td>
