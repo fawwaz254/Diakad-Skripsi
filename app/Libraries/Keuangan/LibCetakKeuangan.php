@@ -274,8 +274,12 @@ class LibCetakKeuangan{
                 $tutup_buku_tahunan_biaya_now->id_semester_selesai          = $id_semester_selesai;
                 $tutup_buku_tahunan_biaya_now->created_by                   = $auth_data->pengguna->id_pengguna;
             }
-            
-            $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
+
+            if($id_bulan_lalu < 7){
+                $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
+            }else{
+                $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
+            }
             $tutup_buku_tahunan_biaya_now->save();
             /* END INSERT TUTUP BUKU TAHUNAN BIAYA */
     
