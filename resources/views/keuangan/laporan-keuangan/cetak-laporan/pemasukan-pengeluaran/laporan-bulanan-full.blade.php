@@ -68,7 +68,6 @@
     $bulan = $data_laporan['bulan'];
     $tahun = $data_laporan['tahun'];
     $sekolah = $data_laporan['sekolah'];
-    $tutup_buku_tahun_ini = $data_laporan['tutup_buku_tahun_ini'];
     $tutup_buku_kas_bulan_ini = $data_laporan['tutup_buku_kas_bulan_ini'];
     $tutup_buku_kas_bulan_lalu = $data_laporan['tutup_buku_kas_bulan_lalu'];
     $subkategori_non_kbm = $data_laporan['subkategori_non_kbm'];
@@ -148,9 +147,9 @@
             <td>Tunggakan tahun lalu</td>
 
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
-            <td class="text-right">{{number_format( $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
+            <td class="text-right">{{number_format( $tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya )}}</td>
 
-            <td class="text-right">{{number_format( $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
+            <td class="text-right">{{number_format( $tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya )}}</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         <tr valign=top>
@@ -159,9 +158,9 @@
             <td class="test-bold">TOTAL</td>
 
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya )}}</td>
 
-            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_tahun_ini->jml_tunggakan_biaya )}}</td>
+            <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_tagihan_biaya') - $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_tunggakan_biaya') + $tutup_buku_kas_bulan_ini->sisa_tunggakan_biaya )}}</td>
             <td class="text-right">{{number_format( $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') )}}</td>
         </tr>
         <tr valign=top>

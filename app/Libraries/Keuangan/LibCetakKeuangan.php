@@ -259,28 +259,24 @@ class LibCetakKeuangan{
                 'id_semester_selesai' => $id_semester_selesai,
                 'id_bulan' => $id_bulan
             ])->get();
-    
-            /* INSERT TUTUP BUKU TAHUNAN BIAYA */
-            $pembayaran_tunggakan_tahun_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
-    
-            $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
-    
-            if($tutup_buku_tahunan_biaya_now = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first()){
-                $tutup_buku_tahunan_biaya_now->updated_by                   = $auth_data->pengguna->id_pengguna;
-            }else{
-                $tutup_buku_tahunan_biaya_now = new TutupBukuTahunanBiaya;
-                $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya  = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                $tutup_buku_tahunan_biaya_now->id_semester_mulai            = $id_semester_mulai;
-                $tutup_buku_tahunan_biaya_now->id_semester_selesai          = $id_semester_selesai;
-                $tutup_buku_tahunan_biaya_now->created_by                   = $auth_data->pengguna->id_pengguna;
-            }
 
-            if($id_bulan_lalu < 7){
-                $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
-            }else{
-                $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
-            }
-            $tutup_buku_tahunan_biaya_now->save();
+            $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
+    
+            /* INSERT SISA TUNGGAKAN TAHUN LALU */
+            // $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
+    
+            // if($tutup_buku_tahunan_biaya_now = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first()){
+            //     $tutup_buku_tahunan_biaya_now->updated_by                   = $auth_data->pengguna->id_pengguna;
+            // }else{
+            //     $tutup_buku_tahunan_biaya_now = new TutupBukuTahunanBiaya;
+            //     $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya  = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            //     $tutup_buku_tahunan_biaya_now->id_semester_mulai            = $id_semester_mulai;
+            //     $tutup_buku_tahunan_biaya_now->id_semester_selesai          = $id_semester_selesai;
+            //     $tutup_buku_tahunan_biaya_now->created_by                   = $auth_data->pengguna->id_pengguna;
+            // }
+
+            // $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $total_pembayaran_tunggakan_semester_ini;
+            // $tutup_buku_tahunan_biaya_now->save();
             /* END INSERT TUTUP BUKU TAHUNAN BIAYA */
     
             /* INSERT TUTUP BUKU BULANAN KAS */
@@ -325,10 +321,11 @@ class LibCetakKeuangan{
                 $tutup_buku_bulanan_kas_now->id_bulan                     = $id_bulan;
                 $tutup_buku_bulanan_kas_now->created_by                   = $auth_data->pengguna->id_pengguna;
             }
-            $tutup_buku_bulanan_kas_now->kas_spp                = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu;
+            $tutup_buku_bulanan_kas_now->kas_spp                = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
             $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
             $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
             $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
+            $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya   = $tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
             $tutup_buku_bulanan_kas_now->save();
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
@@ -435,7 +432,7 @@ class LibCetakKeuangan{
         $bulan = Bulan::find($id_bulan);
         $sekolah = $auth_data->sekolah_data;
 
-        $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->firstOrFail();
+        // $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->firstOrFail();
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->firstOrFail();
         if($id_bulan_lalu < 7){
             // Semester lama kurang dari bulan 7
@@ -451,7 +448,7 @@ class LibCetakKeuangan{
             'bulan' => $bulan,
             'tahun' => $tahun,
             'sekolah' => $sekolah,
-            'tutup_buku_tahun_ini' => $tutup_buku_tahun_ini,
+            // 'tutup_buku_tahun_ini' => $tutup_buku_tahun_ini,
             'tutup_buku_kas_bulan_ini' => $tutup_buku_kas_bulan_ini,
             'tutup_buku_kas_bulan_lalu' => $tutup_buku_kas_bulan_lalu,
             'subkategori_non_kbm' => $subkategori_non_kbm
