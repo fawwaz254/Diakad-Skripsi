@@ -395,10 +395,6 @@ class LibCetakKeuangan{
 
         $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan ])->orderBy('tingkat')->get();
 
-        $subkategori_rapb = SubkategoriRapb::whereHas('kategori', function($q){
-            $q->where('tipe_kategori_rapb', 2);
-        })->get()->pluck('id_subkategori_rapb');
-
         $data_realisasi = Rapb::selectRaw('
                                         nm_kategori_rapb, 
                                         kode_subkategori_rapb,
@@ -437,7 +433,13 @@ class LibCetakKeuangan{
 
         $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->firstOrFail();
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->firstOrFail();
-        $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
+        if($id_bulan_lalu < 7){
+            // Semester lama kurang dari bulan 7
+            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
+        }else{
+            // Semester ini mulai bulan 7
+            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
+        }
         
         $data = [
             'data_tutup_buku_bulanan_biaya' => $data_tutup_buku_bulanan_biaya,
