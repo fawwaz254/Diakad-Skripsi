@@ -239,13 +239,13 @@
         <tr valign=top>
             <td colspan=3>JUMLAH</td>
             <td class="text-right">{{number_format($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb'))}}</td>
-            <td class="text-right">{{number_format($data_realisasi_pengeluaran->sum('total_realisasi'))}}</td>
+            <td class="text-right">{{number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran)}}</td>
             @if($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') == 0)
             <td class="text-right">0%</td>
             @else
-            <td class="text-right">{{round($data_realisasi_pengeluaran->sum('total_realisasi')/$data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') * 100, 2)}}%</td>
+            <td class="text-right">{{round($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran/$data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') * 100, 2)}}%</td>
             @endif
-            <td class="text-right">{{number_format($data_realisasi_pengeluaran->sum('total_realisasi'))}}</td>
+            <td class="text-right">{{number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran)}}</td>
         </tr>
         <tr valign=top>
             <td colspan=6>SALDO AKHIR BULAN</td>
