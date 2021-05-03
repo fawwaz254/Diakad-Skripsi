@@ -147,11 +147,19 @@
                                     $no = 1;
                                 @endphp
                                 @foreach($data_siswa as $siswa)
+                                @if($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
                                 <tr>
+                                @else
+                                <tr style="background-color: #f4433663;">
+                                @endif
                                     <td>{{$no++}}</td>
                                     <td>{{$siswa->nis_siswa}}</td>
                                     <td>{{$siswa->nisn_siswa}}</td>
+                                    @if($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
                                     <td>{{$siswa->pengguna->nm_pengguna}}</td>
+                                    @else
+                                    <td>{{$siswa->pengguna->nm_pengguna}}<br>(Mutasi/Keluar)</td>
+                                    @endif
                                     @foreach($data_bulan_tagihan as $bulan)
                                         @php
                                             $tagihan = $data_tagihan->where('id_siswa', $siswa->id_siswa)->where('id_bulan', $bulan->id_bulan)->first();
