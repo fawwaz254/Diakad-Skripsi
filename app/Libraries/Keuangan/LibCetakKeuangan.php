@@ -101,6 +101,21 @@ class LibCetakKeuangan{
                             ORDER BY kelas.tingkat', 
                         [$id_bulan, $id_semester]);
 
+        $periode_bulan_sekolah = collect([7,8,9,10,11,12,1,2,3,4,5,6]);
+
+        if($id_bulan < 7){
+            $index_splice = $id_bulan + 5;
+            $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+            $index_periode_bulan_ini->all();
+        }else{
+            $index_splice = $id_bulan - 7;
+            $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+            $index_periode_bulan_ini->all();
+        }
+
+        $where_bayar_bulan_ini_dan_kedepannya = 'AND detail_biaya.id_bulan IN ('.$index_periode_bulan_ini->implode(',').')';
+        $where_bayar_bulan_lalu_dan_belakangnya = 'AND detail_biaya.id_bulan IN ('.$periode_bulan_sekolah->implode(',').')';
+
         $list_data_pembayaran = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya
                             FROM pembayaran_biaya
                             JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya
@@ -109,7 +124,7 @@ class LibCetakKeuangan{
                                 AND kelas.deleted_at IS NULL
                             JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
                                 AND detail_biaya.id_jenis_detail_biaya = 4
-                                AND detail_biaya.id_bulan >= ?
+                                '.$where_bayar_bulan_ini_dan_kedepannya.'
                                 AND detail_biaya.deleted_at IS NULL
                             JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
                                 AND biaya_sekolah.id_semester IN (?, ?)
@@ -120,7 +135,7 @@ class LibCetakKeuangan{
                                 '.$where_personal.'
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat', 
-                        [$id_bulan, $id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
+                        [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
 
         $list_data_pembayaran_old_month = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_bulan_lalu
                             FROM pembayaran_biaya
@@ -130,7 +145,7 @@ class LibCetakKeuangan{
                                 AND kelas.deleted_at IS NULL
                             JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
                                 AND detail_biaya.id_jenis_detail_biaya = 4
-                                AND detail_biaya.id_bulan < ?
+                                '.$where_bayar_bulan_lalu_dan_belakangnya.'
                                 AND detail_biaya.deleted_at IS NULL
                             JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
                                 AND biaya_sekolah.id_semester IN (?, ?)
@@ -141,7 +156,7 @@ class LibCetakKeuangan{
                                 '.$where_personal.'
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat', 
-                        [$id_bulan, $id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
+                        [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
 
         // List data tunggakan
         $pembayaran_tunggakan_bulan_ini = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)

@@ -120,12 +120,10 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                        <table class="table table-bordered table-striped table-hover dataTable" id="primary_table">
                             <thead>
                                 <tr>
-                                    <th rowspan=2>No. </th>
                                     <th rowspan=2>NIS</th>
-                                    <th rowspan=2>NISN</th>
                                     <th rowspan=2>Nama</th>
                                     <th colspan=12>SPP</th>
                                     @foreach($data_ket_tagihan as $ket)
@@ -150,11 +148,9 @@
                                 @if($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
                                 <tr>
                                 @else
-                                <tr style="background-color: #f4433663;">
+                                <tr style="background-color: #ffc109;">
                                 @endif
-                                    <td>{{$no++}}</td>
                                     <td>{{$siswa->nis_siswa}}</td>
-                                    <td>{{$siswa->nisn_siswa}}</td>
                                     @if($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
                                     <td>{{$siswa->pengguna->nm_pengguna}}</td>
                                     @else
@@ -308,5 +304,15 @@ $(function(){
         weekStart: 1,
         time: false
     });
+});
+
+var primary_table = $('#primary_table').DataTable({
+    ordering: false,
+    scrollX: true,
+    fixedColumns:   {
+        leftColumns: 2
+    },
+    scrollCollapse: true,
+    paging: false
 });
 </script>
