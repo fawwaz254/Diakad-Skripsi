@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Tendik\KegiatanHarian;
 
+use App\Jobs\PengisianMonkes;
+
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -202,9 +204,9 @@ class FormKesehatanController extends BaseController{
                         $status_join = 0; break;
                 }
                 
-                DB::beginTransaction();
+                // DB::beginTransaction();
                 
-                try {
+                // try {
                     $batch_insert_pengisian_jawaban = array();
                     foreach($input->jawaban_pertanyaan as $id_pertanyaan => $id_jawaban){
                         $kegiatan_harian_jawaban = KegiatanHarianJawaban::find($id_jawaban);
@@ -223,57 +225,60 @@ class FormKesehatanController extends BaseController{
                         );
                     }
 
-                    PengisianJawaban::insert($batch_insert_pengisian_jawaban);
+                    // $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
+                    $pengisian_jawaban_terbobot = collect($batch_insert_pengisian_jawaban)->sortByDesc('bobot_jawaban')->first();
 
-                    $pengisian_jawaban_terbobot = PengisianJawaban::where('id_pengisian_kegiatan_harian', $pengisian_kegiatan_harian_id)->orderBy('bobot_jawaban', 'desc')->first();
-
-                    $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
-                    $pengisian_kegiatan_harian->id_pengisian_kegiatan_harian   = $pengisian_kegiatan_harian_id;
-                    $pengisian_kegiatan_harian->id_pengguna_pengisi            = $input->auth_data->pengguna->id_pengguna;
-                    $pengisian_kegiatan_harian->status_join_table              = $status_join;
-                    $pengisian_kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
-                    if ($now->between($start_1, $end_1)){
-                        $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
-                    }else if($now->between($start_2, $end_2)){
-                        $pengisian_kegiatan_harian->tgl_pengisian              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
-                    }
-                    $pengisian_kegiatan_harian->warna_keadaan = $pengisian_jawaban_terbobot->warna_keadaan;
-                    if($pengisian_jawaban_terbobot->bobot_jawaban == 0){
-                        $pengisian_kegiatan_harian->status_pengisian = 1;
-                    }else if($pengisian_jawaban_terbobot->bobot_jawaban < 5){
-                        $pengisian_kegiatan_harian->status_pengisian = 3;
+                    if($pengisian_jawaban_terbobot['bobot_jawaban'] == 0){
+                        $status_pengisian = 1;
+                    }else if($pengisian_jawaban_terbobot['bobot_jawaban'] < 5){
+                        $status_pengisian = 3;
                     }else{
-                        $pengisian_kegiatan_harian->status_pengisian = 2;
+                        $status_pengisian = 2;
                     }
-                    $pengisian_kegiatan_harian->save();
+                    
+                    $insert_pengisian_kegiatan = array();
+                    // $pengisian_kegiatan_harian                                 = new PengisianKegiatanHarian;
+                    $insert_pengisian_kegiatan['id_pengisian_kegiatan_harian']   = $pengisian_kegiatan_harian_id;
+                    $insert_pengisian_kegiatan['id_pengguna_pengisi']            = $input->auth_data->pengguna->id_pengguna;
+                    $insert_pengisian_kegiatan['status_join_table']              = $status_join;
+                    $insert_pengisian_kegiatan['warna_keadaan']                  = $pengisian_jawaban_terbobot['warna_keadaan'];
+                    $insert_pengisian_kegiatan['status_pengisian']               = $status_pengisian;
+                    $insert_pengisian_kegiatan['created_by']                     = $input->auth_data->pengguna->id_pengguna;
+                    if ($now->between($start_1, $end_1)){
+                        $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today(env('APP_TIMEZONE', ''))->format('Y-m-d');
+                    }else if($now->between($start_2, $end_2)){
+                        $insert_pengisian_kegiatan['tgl_pengisian']              = Carbon::today(env('APP_TIMEZONE', ''))->addDays(1)->format('Y-m-d');
+                    }
 
-                    if($pengisian_kegiatan_harian->status_pengisian == 2){
+                    if($status_pengisian == 2){
                         if($status_join == 3){
                             $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan, istirahat yg cukup dan konsumsi makanan yang tingkatkan imun.';
                         }else{
                             $message = 'Menurut Duta Sehat, Anda disarankan istirahat di rumah. Pastikan tetap mematuhi protokol kesehatan dan membuat pernyataaan lalu mengunggahnya.';
                         }
-                    }else if($pengisian_kegiatan_harian->status_pengisian == 3){
+                    }else if($status_pengisian == 3){
                         $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Dengan catatan mohon untuk kegiatan spriritualnya ditingkatkan.';
                     }else{
                         $message = 'Alhamdulillah, Anda bisa melanjutkan aktivitas. Pastikan tetap mematuhi protokol kesehatan.';
                     }
 
-                    DB::commit();
+                    PengisianMonkes::dispatch($insert_pengisian_kegiatan, $batch_insert_pengisian_jawaban);
+                    // DB::commit();
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'kegiatan-harian/mengisi-form-kesehatan',
                         'message' => $message
                     ];
-                } catch (\Exception $e) {
-                    DB::rollback();
+                // } catch (\Exception $e) {
+                //     DB::rollback();
 
-                    return [
-                        'status' => 300, // FAILED
-                        'message' => 'Oopss'
-                    ];
-                }
+                //     return [
+                //         'status' => 300, // FAILED
+                //         'message' => 'Oopss'
+                //     ];
+                // }
+
             }
             elseif($mode == 'delete'){
                 $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->first();
