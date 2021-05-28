@@ -20,6 +20,7 @@
                                         <th>Nama Prestasi</th>
                                         <th>Tingkat Prestasi</th>
                                         <th>Jenis Prestasi</th>
+                                        <th>Jenis Lomba</th>
                                         <th>Peringkat</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
@@ -62,6 +63,7 @@
             { data: 'nm_prestasi_siswa', name: 'nm_prestasi_siswa' },
             { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'jenis_prestasi', name: 'jenis_prestasi' },
+            { data: 'jenis_lomba_siswa', name: 'jenis_lomba_siswa' },
             { data: 'peringkat_prestasi_siswa', name: 'peringkat_prestasi_siswa' },
             { data: 'action', name: 'link_sertifikat', searchable: false, orderable: false,
                 render:function(data){

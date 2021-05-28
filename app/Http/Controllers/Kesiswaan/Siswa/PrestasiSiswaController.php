@@ -100,6 +100,7 @@ class PrestasiSiswaController extends BaseController
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
+            'prestasi_siswa.jenis_lomba_siswa',
             'p1.nm_pengguna as nm_siswa',
             'siswa.nisn_siswa',
             'siswa.nis_siswa',
@@ -127,7 +128,8 @@ class PrestasiSiswaController extends BaseController
         ->orderBy('prestasi_siswa.created_at', 'desc')
         ->orderBy('semester.thn_akademik_semester', 'desc')
         ->orderBy('semester.nm_semester', 'desc')
-        ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+        ->where('prestasi_siswa.status',1)
+        // ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
         ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
@@ -178,6 +180,7 @@ class PrestasiSiswaController extends BaseController
             'nm_prestasi_siswa' => 'required',
             'id_siswa' => 'required',
             'id_semester' => 'required',
+            'jenis_lomba_siswa' => 'required',
             'id_tingkat_prestasi_siswa' => 'required',
             'jenis_prestasi_siswa' => 'required',
             'lokasi_prestasi_siswa' => 'required', 'penyelenggara_prestasi_siswa' => 'required',
@@ -205,13 +208,17 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
                     $prestasi->id_ekskul                      = $input->id_ekskul;
                     $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+                    $prestasi->jenis_lomba_siswa              = $input->jenis_lomba_siswa;
                     $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
                     $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
                     $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
                     $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
-                    $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
+                    $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
                     $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
                     $prestasi->created_at                     = $now;
+                    $prestasi->status = 1;
+                    $prestasi->approved_by = $auth_data->pengguna->id_pengguna;
+                    $prestasi->approved_at = $now;
                     $prestasi->save();
 
                     $token_siswa = $siswa->pengguna->api_token;
@@ -238,28 +245,30 @@ class PrestasiSiswaController extends BaseController
                     
                     if(!empty($siswa->id_wali_murid)){
                         $wali_murid = WaliMurid::find($siswa->id_wali_murid);
+                        if($wali_murid){
+                            $token_wali_murid = $wali_murid->pengguna->api_token;
+                            if(!empty($token_wali_murid)){
+                                $message = 'Putra/Putri Anda telah tercatat mendapatkan prestasi';
+                                $send_data = array(
+                                    'title' => 'Informasi',
+                                    'body' => $message,
+                                    'priority' => 'high',
+                                    'screen1' => '',
+                                    'screen2' => ''
+                                );
 
-                        $token_wali_murid = $wali_murid->pengguna->api_token;
-                        if(!empty($token_wali_murid)){
-                            $message = 'Putra/Putri Anda telah tercatat mendapatkan prestasi';
-                            $send_data = array(
-                                'title' => 'Informasi',
-                                'body' => $message,
-                                'priority' => 'high',
-                                'screen1' => '',
-                                'screen2' => ''
-                            );
+                                $notifikasi = array(
+                                    'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                    'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                    'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                    'isi_notifikasi' => $message,
+                                    'created_by' => $input->auth_data->pengguna->id_pengguna
+                                );
 
-                            $notifikasi = array(
-                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
-                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
-                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
-                                'isi_notifikasi' => $message,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
-                            );
-
-                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                                LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                            }
                         }
+                        
                     }
 
                     return [
@@ -285,11 +294,12 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
                     $prestasi->id_ekskul                      = $input->id_ekskul;
                     $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+                    $prestasi->jenis_lomba_siswa              = $input->jenis_lomba_siswa;
                     $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
                     $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
                     $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
                     $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
-                    $prestasi->tgl_prestasi_siswa             = date_format(date_create($input->tgl_prestasi_siswa), "Y-m-d");
+                    $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
                     $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
                     $prestasi->updated_at                     = $now;
                     $prestasi->save();

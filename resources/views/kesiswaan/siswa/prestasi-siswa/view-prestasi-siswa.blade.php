@@ -20,6 +20,7 @@
                                         <th>Nama Prestasi</th>
                                         <th>Tingkat Prestasi</th>
                                         <th>Jenis Prestasi</th>
+                                        <th>Jenis Lomba</th>
                                         <th>Peringkat</th>
                                         <th>Nama Siswa</th>
                                         <th>NISN</th>
@@ -63,6 +64,7 @@
             { data: 'nm_prestasi_siswa', name: 'nm_prestasi_siswa' },
             { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'jenis_prestasi', name: 'jenis_prestasi' },
+            { data: 'jenis_lomba_siswa', name: 'jenis_lomba_siswa' },
             { data: 'peringkat_prestasi_siswa', name: 'peringkat_prestasi_siswa' },
             { data: 'nm_siswa', name: 'nm_siswa' },
             { data: 'nisn_siswa', name: 'nisn_siswa' },
