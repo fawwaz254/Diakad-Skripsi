@@ -82,7 +82,7 @@
 
                         <div class="row">
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <h2 class="card-inside-title">
                                     Guru Pendamping
                                 </h2>
@@ -94,7 +94,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <h2 class="card-inside-title">
                                     Jenis Ekskul
                                 </h2>
@@ -103,6 +103,17 @@
                                     @foreach($ekskul as $r)
                                         <option value="{{$r->id_ekskul}}" {{$prestasi->id_ekskul == $r->id_ekskul ? 'selected' : ''}}>{{$r->nm_ekskul}}</option>
                                     @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <h2 class="card-inside-title">
+                                    Jenis Lomba
+                                </h2>
+                                <select class="form-control show-tick" name="jenis_lomba_siswa">
+                                    <option value="">Pilih Jenis Lomba</option>
+                                    <option value="Individu" {{$prestasi->jenis_lomba_siswa == 'Individu' ? 'selected' : ''}}>Individu</option>
+                                    <option value="Kelompok" {{$prestasi->jenis_lomba_siswa == 'Kelompok' ? 'selected' : ''}}>Kelompok</option>
                                 </select>
                             </div>
 

@@ -136,6 +136,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.status',
+            'prestasi_siswa.jenis_lomba_siswa',
             'p1.nm_pengguna as nm_siswa',
             'siswa.nisn_siswa',
             'siswa.nis_siswa',

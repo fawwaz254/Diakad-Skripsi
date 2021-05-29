@@ -89,6 +89,17 @@
                                     </select>
                                 </div>
                             </div>
+
+                            <h2 class="card-inside-title">
+                                Jenis Lomba
+                            </h2>
+                            <select class="form-control show-tick" name="jenis_lomba_siswa">
+                                <option value="">Pilih Jenis Lomba</option>
+                                <option value="Individu">Individu</option>
+                                <option value="Kelompok">Kelompok</option>
+                            </select>
+
+
                             <h2 class="card-inside-title">
                                 Lokasi Prestasi
                             </h2>
@@ -171,16 +182,15 @@
 </div>
 @include('scriptjs')
 <script>
-$(function(){    
-    $('.datepicker').bootstrapMaterialDatePicker({
-        format: 'DD MMMM YYYY HH:mm:00',
-        //lang : 'id',
-        clearButton: true,
-        weekStart: 1,
-        time: true
+  $(function(){
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'DD MMMM YYYY',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
     });
-
-});
 
 function changeKelas(el){
     $.ajax({
@@ -199,4 +209,5 @@ function changeKelas(el){
         }
     });
 }
+
 </script>

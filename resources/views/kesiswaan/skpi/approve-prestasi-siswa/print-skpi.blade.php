@@ -56,6 +56,7 @@ table {
         <th>Nama Prestasi</th>
         <th>Tingkat Prestasi</th>
         <th>Jenis Prestasi</th>
+        <th>Jenis Lomba</th>
         <th>Peringkat</th>
         <th>Lokasi</th>
         <th>Penyelenggara</th>
@@ -79,6 +80,7 @@ table {
             Lain lain
             @endif 
             </td>
+            <td>{{$r->jenis_lomba_siswa}}</td>
             <td>{{$r->peringkat_prestasi_siswa}}</td>
             <td>{{$r->lokasi_prestasi_siswa}}</td>
             <td>{{$r->penyelenggara_prestasi_siswa}}</td>

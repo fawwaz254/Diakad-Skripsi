@@ -92,6 +92,7 @@ class DataPrestasiSiswaController extends BaseController
             'lokasi_prestasi_siswa' => 'required',
             'penyelenggara_prestasi_siswa' => 'required',
             'jenis_prestasi_siswa' => 'required',
+            'jenis_lomba_siswa'=>'required',
             'id_tingkat_prestasi_siswa' => 'required',
             'tgl_prestasi_siswa' => 'required',
             'link_sertifikat' => 'required'
@@ -117,6 +118,7 @@ class DataPrestasiSiswaController extends BaseController
                 $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
                 $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
                 $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
+                $prestasi->jenis_lomba_siswa = $input->jenis_lomba_siswa;
                 $prestasi->nm_prestasi_siswa = $input->nm_prestasi_siswa;
                 $prestasi->lokasi_prestasi_siswa = $input->lokasi_prestasi_siswa;
                 $prestasi->penyelenggara_prestasi_siswa = $input->penyelenggara_prestasi_siswa;
@@ -153,6 +155,7 @@ class DataPrestasiSiswaController extends BaseController
                $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
                $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
                $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
+               $prestasi->jenis_lomba_siswa = $input->jenis_lomba_siswa;
                $prestasi->nm_prestasi_siswa = $input->nm_prestasi_siswa;
                $prestasi->lokasi_prestasi_siswa = $input->lokasi_prestasi_siswa;
                $prestasi->penyelenggara_prestasi_siswa = $input->penyelenggara_prestasi_siswa;
@@ -213,6 +216,7 @@ class DataPrestasiSiswaController extends BaseController
             'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.link_sertif_prestasi_siswa',
             'prestasi_siswa.status',
+            'prestasi_siswa.jenis_lomba_siswa',
             'p1.nm_pengguna as nm_siswa',
             'siswa.nisn_siswa',
             'siswa.nis_siswa',

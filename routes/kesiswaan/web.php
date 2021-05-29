@@ -246,6 +246,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-prestasi-siswa/{mode}/{id}', 'Kesiswaan\Siswa\PrestasiSiswaController@actionPrestasiSiswa');
 
+            //MENU Kegiatan Siswa
+            Route::get('kegiatan-siswa', 'Kesiswaan\Siswa\KegiatanSiswaController@viewKegiatanSiswa');
+            Route::get('kegiatan-siswa/datatables', 'Kesiswaan\Siswa\KegiatanSiswaController@datatablesKegiatanSiswa');
+            Route::get('kegiatan-siswa/add', 'Kesiswaan\Siswa\KegiatanSiswaController@addKegiatanSiswa');
+            Route::get('kegiatan-siswa/edit/{id}', 'Kesiswaan\Siswa\KegiatanSiswaController@editKegiatanSiswa');
+
+            Route::post('action-kegiatan-siswa/{mode}/{id}', 'Kesiswaan\Siswa\KegiatanSiswaController@actionKegiatanSiswa');
+
             //MENU Beasiswa Siswa
             Route::get('beasiswa-siswa', 'Kesiswaan\Siswa\BeasiswaSiswaController@viewBeasiswaSiswa');
             Route::get('beasiswa-siswa/datatables', 'Kesiswaan\Siswa\BeasiswaSiswaController@datatablesBeasiswaSiswa');
