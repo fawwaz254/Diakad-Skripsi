@@ -1,4 +1,7 @@
 <?php
+use Illuminate\Support\Facades\Route;
+
+
 // ROLE KEUANGAN
 Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => 'keuangan'), function () {
@@ -124,6 +127,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-siswa/datatables-tagihan/{id_pengguna}/{nis_nama_siswa}', 'Keuangan\Utility\PembayaranSiswaController@datatablesTagihanPembayaranSiswa');
             Route::get('pembayaran-siswa/datatables-riwayat-bayar/{id_pengguna}', 'Keuangan\Utility\PembayaranSiswaController@datatablesRiwayatBayarSiswa');
             Route::get('pembayaran-siswa/view-detail-tagihan-siswa/{id_tagihan}/{nis_nama_siswa_asli}', 'Keuangan\Utility\PembayaranSiswaController@viewDetailTagihanPembayaranSiswa');
+            Route::get('pembayaran-siswa/view-diskon-tagihan-siswa/{id_tagihan}/{nis_nama_siswa_asli}', 'Keuangan\Utility\PembayaranSiswaController@viewDiskonTagihanPembayaranSiswa');
 
             Route::get('pembayaran-siswa/print-pembayaran/{id_pengguna}/{tgl_pembayaran}', 'Keuangan\Utility\PembayaranSiswaController@printPembayaranSiswa');
             Route::get('pembayaran-siswa/print-belum-terbayar/{id_pengguna}', 'Keuangan\Utility\PembayaranSiswaController@printBelumTerbayarPembayaranSiswa');

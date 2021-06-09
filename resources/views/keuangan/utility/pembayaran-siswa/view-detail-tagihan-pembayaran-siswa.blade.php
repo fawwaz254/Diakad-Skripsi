@@ -46,9 +46,14 @@
                             <tr>
                                 <td style="width: 50%">Besar Tagihan</td>
                                 <td style="width: 50%">Rp{{number_format($tagihan->besar_biaya)}}</td>
-                            </tr><tr>
+                            </tr>
+                            <tr>
                                 <td style="width: 50%">Denda Tagihan</td>
                                 <td style="width: 50%">Rp{{number_format($tagihan->denda_biaya)}}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 50%">Potongan Tagihan</td>
+                                <td style="width: 50%">Rp{{number_format($tagihan->potongan_biaya)}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%">Keterangan</td>

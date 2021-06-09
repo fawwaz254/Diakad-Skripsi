@@ -14,13 +14,9 @@ use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Keuangan\LibDataKeuangan;
-
-use Auth;
-use DB;
-use Session;
-use Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class TagihanSiswaController extends BaseController
 {

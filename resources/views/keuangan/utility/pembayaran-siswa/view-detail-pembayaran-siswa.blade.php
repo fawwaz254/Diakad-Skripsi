@@ -100,6 +100,7 @@
                                                 <th>Besar Tagihan</th>
                                                 <th>Besar Pembayaran</th>
                                                 <th>Sisa Tagihan</th>
+                                                <th>Diskon</th>
                                                 <th>
                                                     <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
                                                     <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
@@ -205,13 +206,14 @@
 @include('scriptjs')
 <script>
 
-    var id_pengguna = {!! json_encode($siswa->id_pengguna) !!};
-    var nis_nama_siswa = {!! json_encode($nis_nama_siswa_asli) !!};
+    var id_pengguna = <?= json_encode($siswa->id_pengguna) ?>;
+    var nis_nama_siswa = <?= json_encode($nis_nama_siswa_asli) ?>;
 
     var modul_url                   = 'utility';
     var datatable_tagihan_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables-tagihan/' + id_pengguna + '/' + nis_nama_siswa;
     var datatable_riwayat_bayar_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'pembayaran-siswa/datatables-riwayat-bayar/' + id_pengguna;
     var detail_tagihan_siswa_url    = role_url + '#' + modul_url + '/' + 'pembayaran-siswa/view-detail-tagihan-siswa';
+    var diskon_tagihan_siswa_url    = role_url + '#' + modul_url + '/' + 'pembayaran-siswa/view-diskon-tagihan-siswa';
     var delete_tagihan_siswa        = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tagihan-siswa/delete';
     var delete_pembayaran_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/delete';
     var lunas_url                   = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
@@ -234,6 +236,7 @@
             { data: 'besar_biaya', name: 'besar_biaya'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'sisa_tagihan', name: 'sisa_tagihan'},
+            { data: 'diskon_tagihan', name: 'diskon_tagihan'},
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data){
                     if(data.sisa_tagihan > 0){
@@ -246,19 +249,25 @@
             },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
+                    var htmlaction;
                     if(data.sisa_tagihan > 0){
-                        return '<button class="btn btn-warning waves-effect waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
+                        htmlaction = '<button class="btn btn-warning waves-effect waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
                         '    <span>Lunas</span>'+
                         '</button>'+
                         '<a class="target-link btn btn-info waves-effect waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
                         '    <span>Cicilan</span>'+
+                        '</a> '+
+                        '<a class="target-link btn btn-danger waves-effect waves-float" href="'+ diskon_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
+                        '    <span>Atur Diskon</span>'+
                         '</a> ';
                         // '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTagihan(this)" data-id="'+data.id+'">'+
                         // '    <span>Hapus Tagihan</span>'+
                         // '</button>';
                     }else{
-                        return '';
+                        htmlaction = '';
                     }
+
+                    return htmlaction;
                 }
             }
         ],
