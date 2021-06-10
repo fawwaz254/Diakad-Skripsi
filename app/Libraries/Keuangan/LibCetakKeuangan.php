@@ -19,7 +19,7 @@ use App\Models\TutupBukuTahunanBiaya;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use DateTime;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class LibCetakKeuangan{
 
@@ -911,7 +911,9 @@ class LibCetakKeuangan{
         $ketTagihan = '';
         $idBiaya = null;
         foreach($allDataPembayaran as $idSiswa => $siswa){
+            // dd($siswa);
             $tagihanBiayaSiswa = $siswa->first()->tagihan_biaya;
+            // dd($tagihanBiayaSiswa);
 
             $summ = [];
             foreach($siswa->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya') as $idBiaya => $rwytBayar){
@@ -930,6 +932,7 @@ class LibCetakKeuangan{
                     'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
                     'kelas_siswa' => $item->tagihan_biaya->siswa->kelas->nm_kelas,
                     'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
+                    'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan_biaya'),
                     'frekuensi_pembayaran' => $rwytBayar->count(),
                     'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
@@ -943,6 +946,7 @@ class LibCetakKeuangan{
                 'nis_siswa' => $tagihanBiayaSiswa->siswa->nis_siswa,
                 'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
                 'kelas_siswa' => $tagihanBiayaSiswa->siswa->kelas->nm_kelas,
+                'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan_biaya'),
                 'summary' => $summ
             ];
         }
@@ -955,7 +959,8 @@ class LibCetakKeuangan{
                 'nm_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                 'frekuensi' => $biaya->count(),
                 'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
-                'total_pembayaran' => $biaya->sum('besar_pembayaran')
+                'total_pembayaran' => $biaya->sum('besar_pembayaran'),
+                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan_biaya')
             ];
         }
 
@@ -991,7 +996,7 @@ class LibCetakKeuangan{
         $result = [
             'data' => $allDataPembayaran
         ];
-
+        // dd($result);
         return $result;
     }
 
@@ -1059,13 +1064,15 @@ class LibCetakKeuangan{
                     'id_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
                     'nama_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'frekuensi' => collect($x)->count(),
-                    'nominal_pembayaran' => collect($x)->sum('besar_pembayaran')
+                    'nominal_pembayaran' => collect($x)->sum('besar_pembayaran'),
+                    'potongan_biaya' => collect($x)->sum('tagihan_biaya.potongan_biaya')
                 ];
             }
 
             $listData[] = [
                'tanggal_pembayaran' => $tanggal,
                'total_pembayaran' => collect($detail)->sum('nominal_pembayaran'),
+               'total_potongan' => collect($detail)->sum('potongan_biaya'),
                'detail' => $detail
             ];
         }
@@ -1116,7 +1123,8 @@ class LibCetakKeuangan{
                     'id_biaya' => $dtl->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
                     'nm_biaya' => $dtl->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'frekuensi' => $dtl->count(),
-                    'total_pembayaran' => $dtl->sum('besar_pembayaran')
+                    'total_pembayaran' => $dtl->sum('besar_pembayaran'),
+                    'potongan_biaya' => $dtl->sum('tagihan_biaya.potongan_biaya')
                 ];
             }
             
@@ -1126,6 +1134,7 @@ class LibCetakKeuangan{
                 'tahun' => $tglPembayaran->format('Y'),
                 'frekuensi' => $rwytBayarPerTgl->count(),
                 'total_pembayaran' => $rwytBayarPerTgl->sum('besar_pembayaran'),
+                'potongan_biaya' => $rwytBayarPerTgl->sum('tagihan_biaya.potongan_biaya'),
                 'details' => $details
             ];
         }
@@ -1141,6 +1150,7 @@ class LibCetakKeuangan{
                     'tahun' => $dataPerMonth['tahun'] ?? $i + $start_year,
                     'frekuensi' => $dataPerMonth['frekuensi'] ?? 0,
                     'total_pembayaran' => $dataPerMonth['total_pembayaran'] ?? 0,
+                    'total_potongan' => collect($listData)->where('kode_bulan', $b->kode_bulan)->where('tahun', $i + $start_year)->sum('potongan_biaya'),
                     'details' => $dataPerMonth['details'] ?? []
                 ];
             }

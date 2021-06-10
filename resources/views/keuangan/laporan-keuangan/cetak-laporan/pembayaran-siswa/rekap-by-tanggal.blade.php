@@ -87,6 +87,7 @@
                     <th style="width: 10%;">{{ strtoupper($biaya) }}</th>
                 @endforeach
                 @endif
+                <th>Potongan</th>
                 <th>Jumlah</th>
             </tr>
             @php 
@@ -99,17 +100,26 @@
                 <td>{{ $tgl['tanggal_pembayaran'] }}</td>
                 @if(isset($data_laporan['kategori_biaya']))
                 @foreach($data_laporan['kategori_biaya'] as $idBiaya => $biaya)
-                    <td>{{ 
-                        collect($tgl['detail'])->where('id_biaya', $idBiaya)->first() ? 'Rp ' . number_format(collect($tgl['detail'])->where('id_biaya', $idBiaya)->first()['nominal_pembayaran']) : '-' 
-                    }}</td>
+                    <td>
+                    @if(collect($tgl['detail'])->where('id_biaya', $idBiaya)->first())
+                        {{ 'Rp ' . number_format(collect($tgl['detail'])->where('id_biaya', $idBiaya)->first()['nominal_pembayaran']) }}
+                        @if(collect($tgl['detail'])->where('id_biaya', $idBiaya)->first()['potongan_biaya'])
+                        <br>
+                        <small>Potongan : {{ 'Rp ' . number_format(collect($tgl['detail'])->where('id_biaya', $idBiaya)->first()['potongan_biaya']) }}</small>
+                        @endif
+                    @else
+                    {{ "-" }}
+                    @endif
+                    </td>
                 @endforeach
                 @endif
+                <td style="text-align: right;"><b>{{ 'Rp ' . number_format($tgl['total_potongan']) }}</b></td>
                 <td style="text-align: right;"><b>{{ 'Rp ' . number_format($tgl['total_pembayaran']) }}</b></td>
             </tr>
             @endforeach
             @endif
             <tr>
-                <th colspan="{{ count($data_laporan['kategori_biaya']) + 2 }}">Total</th>
+                <th colspan="{{ count($data_laporan['kategori_biaya']) + 3 }}">Total</th>
                 <th style="text-align: right;">{{ 'Rp ' . number_format(collect($data_laporan['data'])->sum('total_pembayaran')) }}</th>
             </tr>
         </table>

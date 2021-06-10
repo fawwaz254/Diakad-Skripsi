@@ -13,11 +13,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\Keuangan\LibDataKeuangan;
 use App\Models\KelompokBiaya;
 use App\Models\KelompokBiayaInternal;
-
-use Auth;
-use DB;
-use Session;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class DetailBiayaInternalController extends BaseController{
 

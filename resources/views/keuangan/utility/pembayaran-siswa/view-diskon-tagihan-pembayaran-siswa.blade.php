@@ -40,6 +40,10 @@
                                 <td style="width: 50%">{{$tagihan->nm_biaya}}</td>
                             </tr>
                             <tr>
+                                <td style="width: 50%">Keterangan Biaya</td>
+                                <td style="width: 50%">{{$tagihan->keterangan_biaya}}</td>
+                            </tr>
+                            <tr>
                                 <td style="width: 50%">Jenis Biaya</td>
                                 <td style="width: 50%">{{$jenis_biaya}}</td>
                             </tr>
@@ -84,6 +88,18 @@
                                 <input type="text" class="datepicker form-control" name="tgl_potongan" required="" aria-required="true" aria-invalid="true" value="{{ $tagihan->tgl_potongan ? date_format(date_create($tagihan->tgl_potongan), 'd F Y H:i:s') : null }}">
                             </div>
                         </div>
+                        <hr>
+                        @foreach($detail_biaya_internal as $x)
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label for="">
+                                    {{ $x->nm_detail_biaya_internal }}
+                                </label>
+                                <input type="text" class="form-control" name="{{ 'potongan_internal[' . $x->id_detail_biaya_internal . ']' }}" required="" aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        @endforeach
+                        <hr>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="hidden" class="form-control" name="nis_siswa" required="" aria-required="true" aria-invalid="true" value="{{$siswa->nis_siswa}}">

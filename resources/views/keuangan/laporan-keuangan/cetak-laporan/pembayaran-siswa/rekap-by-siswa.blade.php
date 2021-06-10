@@ -87,6 +87,7 @@
                     <th style="width: 10%;">{{ strtoupper($biaya) }}</th>
                 @endforeach
                 @endif
+                <th>Potongan</th>
                 <th>Jumlah</th>
             </tr>
             @php 
@@ -102,10 +103,21 @@
                 @foreach($data_laporan['kategori_biaya'] as $idBiaya => $biaya)
                     @php
                         $payment = collect($siswa['summary'])->where('id_biaya', $idBiaya)->first();
+                        $discount = collect($siswa['summary'])->where('id_biaya', $idBiaya)->first();
+                        
                     @endphp
-                    <td>{{ $payment ? 'Rp ' . number_format($payment['total_nominal_pembayaran']) : '-' }}</td>
+                    <td>
+                        {{ $payment ? 'Rp ' . number_format($payment['total_nominal_pembayaran']) : '-' }}
+                        @if($discount)
+                        @if($discount['total_potongan_biaya'])
+                        <br>
+                        <small>Potongan : Rp {{ number_format($discount['total_potongan_biaya']) }}</small>
+                        @endif
+                        @endif
+                    </td>
                 @endforeach
                 @endif
+                <td>{{ 'Rp ' . number_format($siswa['potongan_biaya']) }}</td>
                 <td><b>{{ 'Rp ' . number_format(collect($siswa['summary'])->sum('total_nominal_pembayaran')) }}</b></td>
             </tr>
             @endforeach
@@ -124,7 +136,11 @@
             </tr>
             @endforeach
             <tr>
-                <th colspan="2">TOTAL</th>
+                <th colspan="2">TOTAL POTONGAN</th>
+                <th style="text-align: right;">{{ 'Rp '. number_format(collect($data_laporan['summary'])->sum('total_potongan_biaya')) }}</th>
+            </tr>
+            <tr>
+                <th colspan="2">TOTAL PEMBAYARAN</th>
                 <th style="text-align: right;">{{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_pembayaran')) }}</th>
             </tr>
         </table>
