@@ -90,6 +90,7 @@
                         <th style="width: 10%;">{{ strtoupper($biaya) }}</th>
                     @endforeach
                 @endif
+                <th>POTONGAN</th>
                 <th>JUMLAH</th>
             </tr>
             @php 
@@ -113,15 +114,16 @@
                             }}</td>
                         @endforeach
                     @endif
+                    <td style="text-align: right;"><b>{{ 'Rp ' . number_format($data['total_potongan']) }}</b></td>
                     <td style="text-align: right;"><b>{{ 'Rp ' . number_format($data['total_pembayaran']) }}</b></td>
                 </tr>
                 @endforeach
             @endif
             <tr>
                 @if($start_year != $end_year)
-                <th colspan="{{ count($data_laporan['kategori_biaya']) + 3 }}">Total</th>
+                <th colspan="{{ count($data_laporan['kategori_biaya']) + 4 }}">Total</th>
                 @else
-                <th colspan="{{ count($data_laporan['kategori_biaya']) + 2 }}">Total</th>
+                <th colspan="{{ count($data_laporan['kategori_biaya']) + 3 }}">Total</th>
                 @endif
                 <th style="text-align: right;">{{ 'Rp ' . number_format(collect($data_laporan['data'])->sum('total_pembayaran')) }}</th>
             </tr>

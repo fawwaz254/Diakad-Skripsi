@@ -9,7 +9,7 @@ use App\Libraries\Keuangan\LibCetakKeuangan;
 use App\Models\Bulan;
 
 use Carbon\Carbon;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class CetakLaporanController extends BaseController
 {
