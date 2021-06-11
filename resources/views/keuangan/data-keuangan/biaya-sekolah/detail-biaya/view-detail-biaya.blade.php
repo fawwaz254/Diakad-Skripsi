@@ -1,5 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link m-b-15" href="{{url(Request::segment(1).'#data-keuangan/biaya-sekolah')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-keuangan/biaya-sekolah/detail-biaya/add/'.Request::segment(5))}}"><i class="material-icons">note_add</i><span>Tambah Detail Biaya</span></a></h2>
     </div>
     <div class="row clearfix">

@@ -111,6 +111,7 @@
                 <tr><td colspan="6"></td></tr>
 
             @endforeach
+        @if(isset($subkategori_non_kbm))
             @if($subkategori_non_kbm['status'])
             <tr>
                 <th colspan="6" style="text-align: left; background:lightyellow">
@@ -149,6 +150,7 @@
                 <th colspan="5">GRAND TOTAL</th>
                 <th>{{ number_format($data_laporan['total_data']) }}</th>
             </tr>
+        @endif
         @endif
         </table>
         <div class="avoid-break mt-4 mb-4">
