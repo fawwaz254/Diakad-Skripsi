@@ -248,7 +248,7 @@
                     item.parent('td').replaceWith(
                         '<td class="tdbg-' + response.data.month + '">' + response.data.date + 
                         '    <br>'+
-                        '    <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="' + response.data.id + '">'+
+                        '    <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="' + response.data.id + '" style="width: 25px; height: 25px;">'+
                         '        <i class="material-icons">close</i>'+
                         '    </button>'+
                         '</td>'
