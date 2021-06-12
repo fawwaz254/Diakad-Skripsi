@@ -17,9 +17,9 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Jobs\CopyBiayaSekolah;
 
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Session;
-use Validator;
 
 class BiayaSekolahController extends BaseController
 {

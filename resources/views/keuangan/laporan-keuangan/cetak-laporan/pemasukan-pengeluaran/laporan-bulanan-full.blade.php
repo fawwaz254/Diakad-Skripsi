@@ -181,7 +181,7 @@
         <tr valign=top>
             <td style="border: none;" colspan=5></td>
             <td class="text-bold" colspan=2>Saldo Kas Bulan Lalu</td>
-            <td class="text-right">{{ number_format($tutup_buku_kas_bulan_lalu->kas_akhir_bulan) }}</td>
+            <td class="text-right">{{ number_format(($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0)) }}</td>
         </tr>
         <tr valign=top>
             <td style="border: none;" colspan=5></td>
@@ -190,7 +190,7 @@
                                     $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu') + 
                                     $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu') +
                                     $data_realisasi_pemasukan->sum('total_realisasi') + 
-                                    $tutup_buku_kas_bulan_lalu->kas_akhir_bulan )}}</td>
+                                    ($tutup_buku_kas_bulan_lalu->kas_akhir_bulan ?? 0) )}}</td>
         </tr>
     </table>
     <br>

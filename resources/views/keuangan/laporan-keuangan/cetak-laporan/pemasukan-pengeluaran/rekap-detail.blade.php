@@ -93,7 +93,13 @@
             <tr>
                 <td>{{ $key+1 }}</td>
                 <td>{{ indonesiaDate($value['tanggal'])  }}</td>
-                <td>{{ $value['keterangan'] }}</td>
+                <td>
+                    {{ $value['keterangan'] }}
+                    @if($value['potongan'])
+                    <br>
+                    <small>Potongan : Rp {{ number_format($value['potongan']) }}</small>
+                    @endif
+                </td>
                 @if($value['tipe'] == 1)
                     <td style="text-align: right;">Rp {{ number_format($value['nominal']) }}</td>
                     <td></td>

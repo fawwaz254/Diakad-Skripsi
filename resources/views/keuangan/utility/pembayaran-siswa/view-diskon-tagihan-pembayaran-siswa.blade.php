@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td style="width: 50%">Potongan Tagihan</td>
-                                <td style="width: 50%">Rp{{number_format($tagihan->potongan_biaya)}}</td>
+                                <td style="width: 50%">Rp{{number_format($tagihan->total_potongan)}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%">Keterangan</td>
@@ -77,7 +77,7 @@
                                 <label for="">
                                     Besar Potongan
                                 </label>
-                                <input type="number" class="form-control" name="besar_potongan" required="" aria-required="true" aria-invalid="true" value="{{ $tagihan->potongan_biaya }}">
+                                <input type="number" class="form-control" name="besar_potongan" required="" aria-required="true" aria-invalid="true" value="{{ $tagihan->total_potongan }}">
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -85,21 +85,25 @@
                                 <label for="">
                                     Tanggal Pemberian Potongan
                                 </label>
-                                <input type="text" class="datepicker form-control" name="tgl_potongan" required="" aria-required="true" aria-invalid="true" value="{{ $tagihan->tgl_potongan ? date_format(date_create($tagihan->tgl_potongan), 'd F Y H:i:s') : null }}">
+                                <input type="text" class="datepicker form-control" name="tgl_potongan" required="" aria-required="true" aria-invalid="true" value="{{ $tagihan->tanggal_potongan ? date_format(date_create($tagihan->tgl_potongan), 'd F Y H:i:s') : null }}">
                             </div>
                         </div>
+                        @if($detail_biaya_internal->isNotEmpty())
+                        <h5>Detail Biaya Internal</h5>
                         <hr>
                         @foreach($detail_biaya_internal as $x)
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label for="">
-                                    {{ $x->nm_detail_biaya_internal }}
+                                    {{ $x->nm_detail_biaya_internal }} <br>
+                                    <small>Nominal : Rp {{ number_format($x->besar_biaya) }}</small>
                                 </label>
-                                <input type="text" class="form-control" name="{{ 'potongan_internal[' . $x->id_detail_biaya_internal . ']' }}" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="{{ 'potongan_internal[' . $x->id_detail_biaya_internal . ']' }}" required="" aria-required="true" aria-invalid="true" value="{{ $detail_potongan_biaya->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)->first()->potongan_biaya ?? 0 }}">
                             </div>
                         </div>
                         @endforeach
                         <hr>
+                        @endif
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="hidden" class="form-control" name="nis_siswa" required="" aria-required="true" aria-invalid="true" value="{{$siswa->nis_siswa}}">

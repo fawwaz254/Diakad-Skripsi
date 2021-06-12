@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnDiscountToTagihan extends Migration
+class AddColumnIdPotonganBiayaToTagihanBiaya extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,7 @@ class AddColumnDiscountToTagihan extends Migration
     public function up()
     {
         Schema::table('tagihan_biaya', function (Blueprint $table) {
-            $table->float('potongan_biaya', 10, 0)->nullable()->after('besar_biaya');
-            $table->dateTime('tgl_potongan')->nullable()->after('potongan_biaya');
+            $table->string('id_potongan_biaya', 40)->nullable()->after('denda_biaya');
         });
     }
 
