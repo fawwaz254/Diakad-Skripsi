@@ -58,4 +58,8 @@ class TagihanBiaya extends Model
     public function pembayaran(){
         return $this->hasMany(PembayaranBiaya::class, 'id_tagihan_biaya');
     }
+    
+    public function potongan(){
+        return $this->belongsTo(PotonganBiaya::class, 'id_potongan_biaya');
+    }
 }

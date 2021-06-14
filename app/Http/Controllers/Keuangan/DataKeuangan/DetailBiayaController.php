@@ -18,8 +18,8 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Validator;
 use Session;
-use Validator;
 
 class DetailBiayaController extends BaseController{
 

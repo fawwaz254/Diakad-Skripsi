@@ -81,7 +81,7 @@ class TagihanSiswaController extends BaseController
                     ->with('pembayaran')
                     ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
             }])
-            ->with('pengguna', 'kelas');
+            ->with('pengguna', 'kelas','tagihan_biaya.potongan');
 
             if(!empty($kelas)){
                 $list_data = $list_data->whereHas('kelas', function($q) use ($kelas){
@@ -97,12 +97,16 @@ class TagihanSiswaController extends BaseController
                     $sumPembayaran = $item->tagihan_biaya->sum(function($sum){
                                             return $sum->pembayaran->sum('besar_pembayaran');
                                         });
-                    return 'Rp'.number_format($item->tagihan_biaya->sum('besar_biaya') - $sumPembayaran);
+                    $diskonTagihan = $item->tagihan_biaya->sum(function($sum){
+                        return $sum->potongan->total_potongan ?? 0;
+                    });
+                    return 'Rp'.number_format($item->tagihan_biaya->sum('besar_biaya') - $sumPembayaran - $diskonTagihan);
                 })
                 ->addColumn('tagihan_bulan', function ($item) use ($data_detail_biaya) {
                     $array_tagihan_bulan = array();
                     foreach($item->tagihan_biaya as $tagihan){
-                        $nominal = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->besar_biaya - $tagihan->pembayaran->sum('besar_pembayaran');
+                        // dd($tagihan);
+                        $nominal = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->besar_biaya - $tagihan->pembayaran->sum('besar_pembayaran') - ($tagihan->potongan->total_potongan ?? 0);
 
                         $tagihan_bulan['id_bulan'] = 13;
                         $tagihan_bulan['jenis_tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->biaya->nm_biaya;
@@ -149,7 +153,7 @@ class TagihanSiswaController extends BaseController
                 ->with('pembayaran')
                 ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
         }])
-        ->with('pengguna', 'kelas');
+        ->with('pengguna', 'kelas', 'tagihan_biaya.potongan');
 
         $list_data = $list_data->whereHas('kelas', function($q) use ($id_kelas){
             $q->where('id_kelas', $id_kelas);
@@ -160,12 +164,13 @@ class TagihanSiswaController extends BaseController
             $tagihan = [];
             
             foreach($data->tagihan_biaya as $tagihan_siswa){
-                $nominal = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->besar_biaya - $tagihan_siswa->pembayaran->sum('besar_pembayaran');
+                $nominal = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->besar_biaya - $tagihan_siswa->pembayaran->sum('besar_pembayaran') - ($tagihan_siswa->potongan->total_potongan ?? 0);
                 
                 $tagihan_bulan['id_bulan'] = 13;
                 $tagihan_bulan['jenis_tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->biaya->nm_biaya;
                 $tagihan_bulan['judul'] = $tagihan_bulan['jenis_tagihan'];
                 $tagihan_bulan['belum_bayar'] = $nominal;
+                $tagihan_bulan['total_potongan'] = ($tagihan_siswa->potongan->total_potongan ?? 0);
                 $tagihan_bulan['sudah_bayar'] = $tagihan_siswa->pembayaran->sum('besar_pembayaran');
                 $tagihan_bulan['tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->besar_biaya;
 

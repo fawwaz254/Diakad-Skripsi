@@ -94,14 +94,14 @@
                 <td>{{ $no++ }}</td>
                 <td>{{ $kelas }}</td>
                 <td style="text-align: right;">{{ $laporan->count('id_pembayaran_siswa') }}x</td>
-                <td style="text-align: right;">{{ 'Rp ' . number_format($laporan->sum('tagihan_biaya.potongan_biaya')) }}</td>
+                <td style="text-align: right;">{{ 'Rp ' . number_format($laporan->sum('tagihan_biaya.potongan.total_potongan')) }}</td>
                 <td style="text-align: right;">{{ 'Rp ' . number_format($laporan->sum('besar_pembayaran')) }}</td>
             </tr>
             @endforeach
             <tr>
                 <th colspan="2" style="text-align: right;">TOTAL</th>
                 <th style="text-align: right;">{{ $data_laporan['data']->count('id_pembayaran_siswa') . ' x' }}</th>
-                <th style="text-align: right;">{{ 'Rp ' . number_format($data_laporan['data']->sum('tagihan_biaya.potongan_biaya')) }}</th>
+                <th style="text-align: right;">{{ 'Rp ' . number_format($data_laporan['data']->sum('tagihan_biaya.potongan.total_potongan')) }}</th>
                 <th style="text-align: right;">{{ 'Rp ' . number_format($data_laporan['data']->sum('besar_pembayaran')) }}</th>
             </tr>
         @endif

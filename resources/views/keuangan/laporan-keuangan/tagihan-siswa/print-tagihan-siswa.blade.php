@@ -80,7 +80,7 @@
             @endforeach
             <tr>
                 <td colspan="2" align="center"><b>TOTAL</b></td>
-                <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_biaya->sum('besar_biaya') - collect($siswa->tagihan)->sum('sudah_bayar') )}}</b></td>
+                <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_biaya->sum('besar_biaya') - collect($siswa->tagihan)->sum('sudah_bayar') - collect($siswa->tagihan)->sum('total_potongan') )}}</b></td>
             </tr>
         </table>
         @endforeach
