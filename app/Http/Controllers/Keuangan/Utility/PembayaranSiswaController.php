@@ -17,11 +17,14 @@ use App\Models\Staff as Staff;
 use App\Models\Bank as Bank;
 use App\Models\BankVia as BankVia;
 use App\Models\DetailBiayaInternal;
+use App\Models\DetailPotonganBiaya;
 use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
+use App\Models\PotonganBiaya;
 use App\Models\WaliMurid;
 
 use DateTime;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -251,7 +254,7 @@ class PembayaranSiswaController extends BaseController
         $siswa = Siswa::where('id_pengguna', '=', $id_pengguna)->first();
         $id_siswa = $siswa->id_siswa;
 
-        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.potongan_biaya',  'tagihan_biaya.tgl_potongan', 'tagihan_biaya.keterangan', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"))
+        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'tagihan_biaya.id_potongan_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"), 'potongan_biaya.total_potongan')
                                 ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
                                 ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
                                 ->join('kelompok_biaya', 'kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
@@ -259,7 +262,7 @@ class PembayaranSiswaController extends BaseController
                                 ->join('biaya', 'biaya.id_biaya', '=', 'detail_biaya.id_biaya')
                                 ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
                                 ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
-                                // ->where('tagihan_biaya.is_tagih', '=', 1)
+                                ->leftJoin('potongan_biaya', 'potongan_biaya.id_potongan_biaya', '=', 'tagihan_biaya.id_potongan_biaya')
                                 ->where('tagihan_biaya.is_request', '=', 0)
                                 ->where('tagihan_biaya.id_siswa', '=', $id_siswa)
                                 ->orderBy('bulan.id_bulan', 'asc')
@@ -295,15 +298,15 @@ class PembayaranSiswaController extends BaseController
                     return "Rp".number_format($item->besar_pembayaran);
                 })
                 ->addColumn('sisa_tagihan', function ($item) {
-                    return "Rp".number_format($item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->potongan_biaya);
+                    return "Rp".number_format($item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan);
                 })
                 ->addColumn('diskon_tagihan', function ($item) {
-                    return "Rp".number_format($item->potongan_biaya);
+                    return "Rp".number_format($item->total_potongan);
                 })
                 ->addColumn('checkbox', function ($item) {
                     $data = array(
                         'id_tagihan' => $item->id_tagihan_biaya,
-                        'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->potongan_biaya
+                        'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan
                     );
                     return $data;
                 })
@@ -312,7 +315,7 @@ class PembayaranSiswaController extends BaseController
                         'id' => $item->id_tagihan_biaya,
                         'id_asli' => $nis_nama_siswa,
                         'besar_pembayaran' => $item->besar_pembayaran,
-                        'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->potongan_biaya
+                        'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan
                     );
                     return $data;
                 })
@@ -435,16 +438,47 @@ class PembayaranSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tagihan = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'siswa.nis_siswa', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.keterangan_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'jalur.nm_jalur', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.potongan_biaya', 'tagihan_biaya.tgl_potongan', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', 'detail_biaya.id_kelompok_biaya_internal', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"))
-                        ->join('siswa', 'siswa.id_siswa', '=', 'tagihan_biaya.id_siswa')
-                        ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
-                        ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
-                        ->leftJoin('jalur', 'jalur.id_jalur', '=', 'biaya_sekolah.id_jalur')
-                        ->join('kelompok_biaya', 'kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
-                        ->join('semester', 'semester.id_semester', '=', 'biaya_sekolah.id_semester')
-                        ->join('biaya', 'biaya.id_biaya', '=', 'detail_biaya.id_biaya')
-                        ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
-                        ->leftJoin('bulan', 'bulan.id_bulan', '=', 'detail_biaya.id_bulan')
+        $tagihan = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'siswa.nis_siswa', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.keterangan_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'jalur.nm_jalur', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.id_potongan_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.id_potongan_biaya', 'potongan_biaya.total_potongan', 'potongan_biaya.tanggal_potongan', 'tagihan_biaya.keterangan', 'detail_biaya.id_kelompok_biaya_internal', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"))
+                        ->join('siswa', function($join) {
+                            $join->on('siswa.id_siswa', '=', 'tagihan_biaya.id_siswa');
+                            $join->whereNull('siswa.deleted_at');
+                        })
+                        ->join('detail_biaya', function($join){
+                            $join->on('detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya');
+                            $join->whereNull('detail_biaya.deleted_at');
+                        })
+                        ->join('biaya_sekolah', function($join) {
+                            $join->on('biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah');
+                            $join->whereNull('biaya_sekolah.deleted_at');
+                        })
+                        ->leftJoin('jalur', function($join) {
+                            $join->on('jalur.id_jalur', '=', 'biaya_sekolah.id_jalur');
+                            $join->whereNull('jalur.deleted_at');
+                        })
+                        ->join('kelompok_biaya', function($join) {
+                            $join->on('kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya');
+                            $join->whereNull('kelompok_biaya.deleted_at');
+                        })
+                        ->join('semester', function($join) {
+                            $join->on('semester.id_semester', '=', 'biaya_sekolah.id_semester');
+                            $join->whereNull('semester.deleted_at');
+                        })
+                        ->join('biaya', function($join) {
+                            $join->on('biaya.id_biaya', '=', 'detail_biaya.id_biaya');
+                            $join->whereNull('biaya.deleted_at');
+                        })
+                        ->leftJoin('jenis_detail_biaya', function($join) {
+                            $join->on('jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya');
+                            $join->whereNull('jenis_detail_biaya.deleted_at');
+                        })
+                        ->leftJoin('bulan', function($join) {
+                            $join->on('bulan.id_bulan', '=', 'detail_biaya.id_bulan');
+                            $join->whereNull('bulan.deleted_at');
+                        })
+                        ->leftJoin('potongan_biaya', function($join) {
+                            $join->on('potongan_biaya.id_potongan_biaya', '=', 'tagihan_biaya.id_potongan_biaya');
+                            $join->whereNull('potongan_biaya.deleted_at');
+                        })
                         ->where('tagihan_biaya.id_tagihan_biaya', '=', $idTagihan)
                         ->first();
 
@@ -457,9 +491,11 @@ class PembayaranSiswaController extends BaseController
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $tagihan->nis_siswa);
 
         $detail_biaya_internal = DetailBiayaInternal::where('id_kelompok_biaya_internal', $tagihan->id_kelompok_biaya_internal)->get();
+
+        $detail_potongan_biaya = DetailPotonganBiaya::where('id_potongan_biaya', $tagihan->id_potongan_biaya)->get();
         // dd($detail_biaya_internal);
 
-        return view('keuangan/utility/pembayaran-siswa/view-diskon-tagihan-pembayaran-siswa', compact('auth_data', 'tagihan', 'jenis_biaya', 'siswa', 'nis_nama_siswa_asli', 'detail_biaya_internal'));
+        return view('keuangan/utility/pembayaran-siswa/view-diskon-tagihan-pembayaran-siswa', compact('auth_data', 'tagihan', 'jenis_biaya', 'siswa', 'nis_nama_siswa_asli', 'detail_biaya_internal', 'detail_potongan_biaya'));
     }
 
     // Action POST
@@ -719,10 +755,12 @@ class PembayaranSiswaController extends BaseController
                 $validator = Validator::make($data, [
                     'id_tagihan_biaya'      => 'required|exists:tagihan_biaya,id_tagihan_biaya',
                     'besar_potongan'        => 'required|numeric',
-                    'tgl_potongan'          => 'required|date'
+                    'tgl_potongan'          => 'required|date',
+                    'potongan_internal'     => 'nullable',
+                    'potongan_internal.'   => 'nullable|exists:detail_biaya_internal,id_detail_biaya_internal',
+                    'potongan_internal.*'   => 'nullable|numeric',
                 ]);
-                
-                if ($validator->fails() && $mode != 'delete' && $mode != 'lunas' && $mode != 'diskon') {
+                if ($validator->fails()) {
                     return [
                         'status' => 300, // FAILED
                         'message' => $validator->errors()->first()
@@ -740,16 +778,90 @@ class PembayaranSiswaController extends BaseController
                     ];
                 }
 
-                $tagihanBiaya->potongan_biaya   = $input->besar_potongan;
-                $tagihanBiaya->tgl_potongan     = date_format(date_create($input->tgl_potongan), 'Y-m-d H:i:s');
-                $tagihanBiaya->updated_by       = $input->auth_data->pengguna->id_pengguna;
-                $tagihanBiaya->save();
+                // checking sum of $input->potongan_internal is EQUAL with $input->besar_potongan
+                if(!empty($input->potongan_internal)){
+                    if($input->besar_potongan != collect($input->potongan_internal)->sum()){
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Potongan detail biaya tidak sesuai dengan besar potongan!'
+                        ];
+                    }
 
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'utility/pembayaran-siswa/view-detail-siswa/'.$input->nis_siswa.'/'.$input->nis_nama_siswa_asli,
-                    'message' => 'Save Discount successfully'
-                ];
+                    foreach($input->potongan_internal as $idInternal => $potonganInternal){
+                        $bInternal = DetailBiayaInternal::find($idInternal);
+                        if($potonganInternal > $bInternal->besar_biaya){
+                            return [
+                                'status' => 300, // FAILED
+                                'message' => 'Potongan detail biaya melebihi nominal Detail Biaya Internal!'
+                            ];
+                        }
+                    }
+                }
+                
+                // === START INPUT DATA ===
+                DB::beginTransaction();
+                try {
+                    $uuid = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+    
+                    // check if id_potongan_biaya exist
+                    if($tagihanBiaya->id_potongan_biaya){
+                        $potongan = PotonganBiaya::find($tagihanBiaya->id_potongan_biaya);
+                        $potongan->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                    } else {
+                        $potongan = new PotonganBiaya();
+                        $potongan->id_potongan_biaya = $uuid;
+                        $potongan->created_by  = $input->auth_data->pengguna->id_pengguna;
+                    }
+                    $potongan->total_potongan       = $input->besar_potongan;
+                    $potongan->tanggal_potongan     = date_format(date_create($input->tgl_potongan), 'Y-m-d H:i:s');
+                    $potongan->save();
+    
+                    if(!empty($input->potongan_internal)){
+                        $detailPotonganBiaya     = DetailPotonganBiaya::where('id_potongan_biaya', $potongan->id_potongan_biaya)->get();
+    
+                        foreach($input->potongan_internal as $idBiayaInternal => $disc){
+                            if($detailPotonganBiaya->isNotEmpty()){
+                                $detailPotongan = $detailPotonganBiaya->shift();
+                                $detailPotongan->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                            } else {
+                                $detailPotongan = new DetailPotonganBiaya();
+                                $detailPotongan->id_detail_potongan_biaya   = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $detailPotongan->id_potongan_biaya          = $potongan->id_potongan_biaya;
+                                $detailPotongan->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                            }
+                            
+                            $detailPotongan->id_detail_biaya_internal   = $idBiayaInternal;
+                            $detailPotongan->potongan_biaya             = $disc;
+                            $detailPotongan->save();
+                        }
+    
+                        if($detailPotonganBiaya->isNotEmpty())
+                        {
+                            foreach($detailPotonganBiaya as $x){
+                                $x->forceDelete();
+                            }
+                        }
+                    }
+    
+                    $tagihanBiaya->id_potongan_biaya    = $potongan->id_potongan_biaya;
+                    $tagihanBiaya->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                    $tagihanBiaya->save();
+                    DB::commit();
+
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'utility/pembayaran-siswa/view-detail-siswa/'.$input->nis_siswa.'/'.$input->nis_nama_siswa_asli,
+                        'message' => 'Save Discount successfully'
+                    ];
+
+                } catch (Exception $e) {
+                    DB::rollback();
+                    // something went wrong
+                    return [
+                        'status' 	=> 300, // GAGAL
+                        'message'	=> 'Save Discount Failed ' . (env('APP_DEBUG', false) ? $e->getMessage() : null)
+                    ];
+                }
             } 
             elseif ($mode == 'delete') {
                 // make object to find id

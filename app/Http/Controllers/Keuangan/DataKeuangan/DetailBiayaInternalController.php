@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
+use App\Models\BiayaSekolah;
 use App\Models\KelompokBiaya;
 use App\Models\KelompokBiayaInternal;
 use Illuminate\Support\Facades\Validator;
@@ -22,8 +23,13 @@ class DetailBiayaInternalController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data'));
+        $detail_biaya = DetailBiaya::find($id);
+        $biaya_sekolah = null;
+        if($detail_biaya){
+            $biaya_sekolah = BiayaSekolah::with('kelompok','semester')->find($detail_biaya->id_biaya_sekolah);
+        }
 
+        return view('keuangan/data-keuangan/biaya-sekolah/detail-biaya/detail-biaya-internal/view-detail-biaya-internal',compact('auth_data', 'biaya_sekolah'));
     }
 
     public function viewDetailBiayaInternal(Request $request){

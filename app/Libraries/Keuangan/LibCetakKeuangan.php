@@ -334,8 +334,8 @@ class LibCetakKeuangan{
             $tutup_buku_bulanan_kas_now->kas_spp                = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
             $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
             $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
-            $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
-            $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya   = $tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
+            $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
+            $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya   = ($tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya ?? 0) - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
             $tutup_buku_bulanan_kas_now->save();
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
@@ -446,12 +446,12 @@ class LibCetakKeuangan{
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->firstOrFail();
         if($id_bulan_lalu < 7){
             // Semester lama kurang dari bulan 7
-            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
+            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu])->first();
         }else{
             // Semester ini mulai bulan 7
-            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->firstOrFail();
+            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
         }
-        
+
         $data = [
             'data_tutup_buku_bulanan_biaya' => $data_tutup_buku_bulanan_biaya,
             'data_realisasi' => $data_realisasi,
@@ -658,7 +658,7 @@ class LibCetakKeuangan{
 
         $allBiaya = Biaya::get();
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.potongan.detail_potongan', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -696,11 +696,31 @@ class LibCetakKeuangan{
 
                     if(!empty($biayaInternal)){
                         $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
-                        
+                        $nominal = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)->filter(function($q) use ($date){
+                            $qDate = new DateTime($q->tgl_pembayaran);
+                            return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                        });
+                        $nominalPembayaran = $nominal->sum('besar_pembayaran');
+                        // dd($nominal);
                         foreach($detailBiayaInternal as $x){
+                            // dd($x, $data);
+                            $potongan = $data->tagihan_biaya->potongan;
+                            $sisa = $nominalPembayaran -= ($x->besar_biaya - $potongan->detail_potongan
+                                                    ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
+                                                    ->sum('potongan_biaya'));
                             $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
                                 'tanggal' => $date->format('Y-m-d'),
-                                'nominal' => $x->besar_biaya * $count,
+                                'nominal' => ($sisa > ($x->besar_biaya - $potongan->detail_potongan
+                                                    ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
+                                                    ->sum('potongan_biaya'))) 
+                                                ? ($x->besar_biaya - $potongan->detail_potongan
+                                                    ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
+                                                    ->sum('potongan_biaya')) 
+                                                : $x->besar_biaya + $sisa,
+                                'potongan' => $potongan->detail_potongan
+                                                ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
+                                                ->sum('potongan_biaya')
+                                                                    ,
                                 'frekuensi' => $count,
                                 'tipe' => 1,
                                 'nm_tipe' => 'debit',
@@ -709,6 +729,7 @@ class LibCetakKeuangan{
                                 'tahun_ajaran' => $tahun_ajaran
                             ];
                         }
+                        // dd($tempDataLaporan);
                     } else {
                         $nominal = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)->filter(function($q) use ($date){
                             $qDate = new DateTime($q->tgl_pembayaran);
@@ -718,6 +739,10 @@ class LibCetakKeuangan{
                         $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
                             'tanggal' => $date->format('Y-m-d'),
                             'nominal' => $nominal->sum('besar_pembayaran'),
+                            'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
+                                            ->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                            ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
+                                            ->sum('tagihan_biaya.potongan.total_potongan'),
                             'frekuensi' => $count,
                             'tipe' => 1,
                             'nm_tipe' => 'debit',
@@ -749,6 +774,7 @@ class LibCetakKeuangan{
             $tempDataLaporan[] = [
                 'tanggal' => $date->format('Y-m-d'),
                 'nominal' => $x->dana_realisasi,
+                'potongan' => null,
                 'frekuensi' => null,
                 'tipe' => $tipe,
                 'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
@@ -788,7 +814,7 @@ class LibCetakKeuangan{
 
         $allBiaya = Biaya::get();
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.potongan', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -832,6 +858,10 @@ class LibCetakKeuangan{
                     $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
                         'tanggal' => $date->format('Y-m-d'),
                         'nominal' => $nominal->sum('besar_pembayaran'),
+                        'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
+                                        ->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                        ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
+                                        ->sum('tagihan_biaya.potongan.total_potongan'),
                         'frekuensi' => $count,
                         'tipe' => 1,
                         'nm_tipe' => 'debit',
@@ -862,6 +892,7 @@ class LibCetakKeuangan{
             $tempDataLaporan[] = [
                 'tanggal' => $date->format('Y-m-d'),
                 'nominal' => $x->dana_realisasi,
+                'potongan' => null,
                 'frekuensi' => null,
                 'tipe' => $tipe,
                 'nm_tipe' => $tipe == 1 ? 'debit' : 'kredit',
@@ -896,7 +927,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -932,7 +963,7 @@ class LibCetakKeuangan{
                     'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
                     'kelas_siswa' => $item->tagihan_biaya->siswa->kelas->nm_kelas,
                     'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
-                    'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan_biaya'),
+                    'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
                     'frekuensi_pembayaran' => $rwytBayar->count(),
                     'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
@@ -946,7 +977,7 @@ class LibCetakKeuangan{
                 'nis_siswa' => $tagihanBiayaSiswa->siswa->nis_siswa,
                 'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
                 'kelas_siswa' => $tagihanBiayaSiswa->siswa->kelas->nm_kelas,
-                'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan_biaya'),
+                'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan.total_potongan'),
                 'summary' => $summ
             ];
         }
@@ -960,7 +991,7 @@ class LibCetakKeuangan{
                 'frekuensi' => $biaya->count(),
                 'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
                 'total_pembayaran' => $biaya->sum('besar_pembayaran'),
-                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan_biaya')
+                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan')
             ];
         }
 
@@ -981,7 +1012,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas');
+        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan');
 
         if (!empty($start_date) && !empty($end_date)) {
             $allDataPembayaran = $allDataPembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
@@ -1042,7 +1073,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -1065,7 +1096,7 @@ class LibCetakKeuangan{
                     'nama_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'frekuensi' => collect($x)->count(),
                     'nominal_pembayaran' => collect($x)->sum('besar_pembayaran'),
-                    'potongan_biaya' => collect($x)->sum('tagihan_biaya.potongan_biaya')
+                    'potongan_biaya' => collect($x)->sum('tagihan_biaya.potongan.total_potongan')
                 ];
             }
 
@@ -1093,7 +1124,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
 
         if (!empty($start_year) && !empty($end_year)) {
             $pembayaran = $pembayaran->where(function($month) use ($start_year, $end_year){
@@ -1124,7 +1155,7 @@ class LibCetakKeuangan{
                     'nm_biaya' => $dtl->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'frekuensi' => $dtl->count(),
                     'total_pembayaran' => $dtl->sum('besar_pembayaran'),
-                    'potongan_biaya' => $dtl->sum('tagihan_biaya.potongan_biaya')
+                    'potongan_biaya' => $dtl->sum('tagihan_biaya.potongan.total_potongan')
                 ];
             }
             
@@ -1134,7 +1165,7 @@ class LibCetakKeuangan{
                 'tahun' => $tglPembayaran->format('Y'),
                 'frekuensi' => $rwytBayarPerTgl->count(),
                 'total_pembayaran' => $rwytBayarPerTgl->sum('besar_pembayaran'),
-                'potongan_biaya' => $rwytBayarPerTgl->sum('tagihan_biaya.potongan_biaya'),
+                'potongan_biaya' => $rwytBayarPerTgl->sum('tagihan_biaya.potongan.total_potongan'),
                 'details' => $details
             ];
         }
