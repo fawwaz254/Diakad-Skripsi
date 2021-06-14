@@ -445,4 +445,47 @@ class PembayaranOnlineController extends BaseController
 
         return $data_siswa;
     }
+
+
+    public function actionCheckExp(Request $request){
+        $now = Carbon::now('Asia/Jakarta')->format('Y-m-d');
+
+        DB::beginTransaction();
+        try {
+            $exp_trs = [];
+            foreach(PembayaranTrs::where('status_pembayaran', 0)->get() as $trs){
+                $exp_date = $trs->created_at->addDays(1);
+
+                if($now > $exp_date){
+                    $trs->status_pembayaran = 10;
+                    $trs->save();
+
+                    $exp_trs[] = $trs->nomor_transaksi;
+
+                    $data_transaksi_detail = PembayaranTrsDetail::where('id_pembayaran_trs', $trs->id_pembayaran_trs)->get();
+
+                    foreach($data_transaksi_detail as $transaksi_detail){
+                        $tagihan_biaya = TagihanBiaya::find($transaksi_detail->id_tagihan_biaya);
+                        $tagihan_biaya->is_request = 0;
+                        $tagihan_biaya->save();
+                    }
+                }
+            }
+            DB::commit();
+
+            return response()->json([
+                'status_code' 	=> 200,
+                'status_text' 	=> 'Success',
+                'message' => json_encode($exp_trs)
+            ]);;
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return response()->json([
+                'status_code' 	=> 300,
+                'status_text' 	=> 'Failed',
+                'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+            ]);
+        }
+    }
 }

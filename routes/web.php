@@ -61,6 +61,8 @@ Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewD
 Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
 Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionCallback');
 
+Route::get('check/payment/expired', 'Keuangan\SIM\PembayaranOnlineController@actionCheckExp');
+
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
 
