@@ -4,8 +4,24 @@ Route::group(array('middleware'=> ['token_staff']), function () {
     Route::group(array('prefix' => 'kesiswaan'), function () {
         Route::get('welcome', 'Kesiswaan\WelcomeController@indexWelcome');
 
-        /** ==== MODUL SKPI ==== **/
+         /** ==== MODUL MONITORING KESEHATAN ==== **/
+         Route::group(array('prefix' => 'monitoring-kesehatan'), function() {
 
+            // MENU Rekap Kesehatan Siswa
+            Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
+            Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
+            Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+            
+            Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
+            
+                
+            Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
+            Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+        });
+
+        /** ==== MODUL SKPI ==== **/
         Route::group(array('prefix' => 'skpi'), function () {
 
             Route::get('approve-prestasi-siswa', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
