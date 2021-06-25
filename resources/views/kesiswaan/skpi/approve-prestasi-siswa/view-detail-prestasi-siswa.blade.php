@@ -1,7 +1,11 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/skpi/approve-prestasi-siswa/print-skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
+            @if(Request::segment(1)=='guru')
+            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/wali-kelas/approve-prestasi-siswa/print/skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
+            @else
+            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/skpi/approve-prestasi-siswa/print/skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
+            @endif
         </h2>
     </div>
     <div class="row clearfix">
@@ -77,11 +81,14 @@
 
     var modul_url       = '{{Request::segment(2)}}';
     var id_siswa        = '{{Request::segment(4)}}';
+    var param        = '{{Request::segment(5)}}';
 
     // datatable prestasi
 
-    var datatable_url_prestasi   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/prestasi/datatables/'+id_siswa;
+    var datatable_url_prestasi   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/prestasi/datatables/'+id_siswa+'/'+param;
     var approve_prestasi =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/prestasi';
+    var reject_prestasi =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/prestasi';
+    var edit_prestasi =  base_url + '/' + role_url + '#' + modul_url + '/' + 'edit-prestasi-siswa';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -119,13 +126,21 @@
             { data: 'nm_guru_pendamping', name: 'nm_guru_pendamping' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
+                    html = '';
+                    html += ' <a class="btn btn-warning" href="'+ edit_prestasi + '/' + data.id +'">'+
+                        'Edit'+
+                        '</a> '
                     if(data.status==0){
-                         return '<button class="btn btn-info" onclick="approveAction(\''+ approve_prestasi +'\', this)" data-id="'+  data.id +'">'+
+                        html += '<button class="btn btn-info" onclick="approveAction(\''+ approve_prestasi +'\', this)" data-id="'+  data.id +'">'+
                         'Aprrove'+
                         '</button>';
+                         html += ' <button class="btn btn-danger" onclick="rejectAction(\''+ reject_prestasi +'\', this)" data-id="'+  data.id +'">'+
+                        'Reject'+
+                        '</button>';
+                         return html;
                         }
                     else{
-                        return '-';
+                        return html;
                     }
                    
                 }
@@ -145,8 +160,10 @@
 
     // datatable kegiatan
 
-    var datatable_url_kegiatan   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/kegiatan/datatables/'+id_siswa;
+    var datatable_url_kegiatan   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/kegiatan/datatables/'+id_siswa+'/'+param;
     var approve_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/kegiatan';
+    var reject_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/kegiatan';
+    var edit_kegiatan =  base_url + '/' + role_url + '#' + modul_url + '/' + 'edit-kegiatan-siswa';
 
         var primary_table2 = $('#primary_table2').DataTable({
         processing: true,
@@ -177,13 +194,21 @@
             },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    if(data.status==0){
-                        return '<button class="btn btn-info" onclick="approveAction(\''+ approve_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    html = '';
+                    html += ' <a class="target-link btn btn-warning" href="'+ edit_kegiatan + '/' + data.id +'">'+
+                        'Edit'+
+                        '</a> '
+                    if(data.status==0){ 
+                    html += '<button class="btn btn-info" onclick="approveAction(\''+ approve_kegiatan +'\', this)" data-id="'+  data.id +'">'+
                     'Aprrove'+
                     '</button>';
+                    html += ' <button class="btn btn-danger" onclick="rejectAction(\''+ reject_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    'Reject'+
+                    '</button>';
+                        return html;
                     }
                     else{
-                        return '-';
+                        return html;
                     }
                 }
             }
@@ -203,6 +228,56 @@
 </script>
 
 <script type="text/javascript">
+
+     function rejectAction(reject_url, element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "For Reject this",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, reject it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: reject_url + '/' + item.attr('data-id'),
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            if(response.from == 'prestasi'){
+                                primary_table.ajax.reload(null, false);
+                            }
+                            else{
+                                primary_table2.ajax.reload(null, false);
+                            }
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
     
     function approveAction(approve_url, element){
         var item = $(element);

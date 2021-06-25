@@ -26,11 +26,23 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::get('approve-prestasi-siswa', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
             Route::get('approve-prestasi-siswa/datatables', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
-            Route::get('approve-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
-            Route::get('approve-prestasi-siswa/print-skpi/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@PrintSkpi');
-            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
-            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
+            Route::get('approve-prestasi-siswa/print/skpi/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@PrintSkpi');
+            
+
+            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
+
+
             Route::post('approve-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
+            Route::post('reject-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionRejectPrestasiSiswa');
+
+            Route::get('edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@editPrestasiSiswa');
+            Route::get('edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@editKegiatanSiswa');
+
+            Route::post('action-edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditPrestasiSiswa');
+            Route::post('action-edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditKegiatanSiswa');
+
         });
 
         /** ==== MODUL Ekstrakurikuler ==== **/
