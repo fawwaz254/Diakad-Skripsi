@@ -183,6 +183,7 @@ class PrestasiSiswaController extends BaseController
             'jenis_lomba_siswa' => 'required',
             'id_tingkat_prestasi_siswa' => 'required',
             'jenis_prestasi_siswa' => 'required',
+            'link_sertifikat' => 'required',
             'lokasi_prestasi_siswa' => 'required', 'penyelenggara_prestasi_siswa' => 'required',
             'peringkat_prestasi_siswa' => 'required' ,'tgl_prestasi_siswa' => 'required'
         ]);
@@ -214,6 +215,7 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
                     $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
                     $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
+                    $prestasi->link_sertif_prestasi_siswa     = $input->link_sertifikat;
                     $prestasi->created_by                     = $input->auth_data->pengguna->id_pengguna;
                     $prestasi->created_at                     = $now;
                     $prestasi->status = 1;
@@ -299,6 +301,7 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
                     $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
                     $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
+                    $prestasi->link_sertif_prestasi_siswa     = $input->link_sertifikat;
                     $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
                     $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
                     $prestasi->updated_at                     = $now;

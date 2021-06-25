@@ -305,13 +305,29 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-kesehatan/{bulan}/{tahun}/download', 'Guru\WaliKelas\RekapKesehatanController@downloadRekapKesehatan');
                 
 
-            Route::get('approve-prestasi-siswa', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
-            Route::get('approve-prestasi-siswa/datatables', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
-            Route::get('approve-prestasi-siswa/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
-            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
-            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
-            Route::post('approve-prestasi-siswa/{data}/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
-            Route::get('approve-prestasi-siswa/print-skpi/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@PrintSkpi');
+            Route::get('approve-prestasi-siswa', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/datatables', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
+            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
+            Route::get('approve-prestasi-siswa/print/skpi/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@PrintSkpi');
+            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
+            Route::post('approve-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
+            Route::post('reject-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionRejectPrestasiSiswa');
+
+            Route::get('edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@editPrestasiSiswa');
+            Route::get('edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@editKegiatanSiswa');
+
+            Route::post('action-edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditPrestasiSiswa');
+            Route::post('action-edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditKegiatanSiswa');
+
+            // Route::get('approve-prestasi-siswa', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
+            // Route::get('approve-prestasi-siswa/datatables', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
+            // Route::get('approve-prestasi-siswa/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');
+            // Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
+            // Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
+
+            // Route::post('approve-prestasi-siswa/{data}/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
+            // Route::get('approve-prestasi-siswa/print-skpi/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@PrintSkpi');
         });
 
         // MODUL KELAS DARING

@@ -10,6 +10,9 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Siswa as Siswa;
 use App\Models\KegiatanSiswa;
+use App\Models\Ekskul;
+use App\Models\Semester;
+use App\Models\Guru;
 use App\Models\PrestasiSiswa;
 use App\Models\TingkatPrestasiSiswa;
 use Carbon\Carbon;
@@ -17,6 +20,8 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\SumberDaya\LibGuru;
 
 use Auth;
 use DB;
@@ -34,12 +39,12 @@ class ApprovePrestasiSiswaController extends BaseController{
 
     }
 
-    public function viewDetailPrestasiSiswa(Request $request){
+    public function viewDetailPrestasiSiswa(Request $request,$id,$param){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa',compact('auth_data'));
+    	return view('kesiswaan/skpi/approve-prestasi-siswa/view-detail-prestasi-siswa',compact('auth_data','param'));
 
     }
 
@@ -74,7 +79,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 
     }
 
-    public function datatablesKegiatanApprovePrestasiSiswa(Request $request,$id){
+    public function datatablesKegiatanApprovePrestasiSiswa(Request $request,$id,$param){
 
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -96,8 +101,10 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->where('p1.id_pengguna', '=', $siswa->id_pengguna)
         ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->get();
+        ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+
+        if($param == 0) $list_data = $list_data->where('status','!=',0)->get();
+        else $list_data = $list_data->where('status',0)->get();
 
         return Datatables::of($list_data)
         				->addColumn('keterangan', function ($item) {
@@ -108,6 +115,10 @@ class ApprovePrestasiSiswaController extends BaseController{
 		                        $status = 'Sudah Diapprove';
 		                        $color = 'teal';
 		                    }
+                            elseif ($item->status== 10) {
+                                $status = 'Reject';
+                                $color = 'red';
+                            }
 		                    $data = array(
 		                        'status' => $status,
 		                        'color'	 => $color
@@ -126,7 +137,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 
     }
 
-    public function datatablesPrestasiApprovePrestasiSiswa(Request $request,$id)
+    public function datatablesPrestasiApprovePrestasiSiswa(Request $request,$id,$param)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -166,8 +177,11 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->orderBy('semester.nm_semester', 'desc')
         ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->where('prestasi_siswa.id_siswa',$id)
-        ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->get();
+        ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+
+        if($param == 0) $list_data = $list_data->where('status','!=',0)->get();
+        else $list_data = $list_data->where('status',0)->get();
+        
 
         return Datatables::of($list_data)
                 ->addColumn('semester', function ($item) {
@@ -191,6 +205,10 @@ class ApprovePrestasiSiswaController extends BaseController{
                     } elseif ($item->status== 1) {
                         $status = 'Sudah Diapprove';
                         $color = 'teal';
+                    }
+                    elseif ($item->status== 10) {
+                        $status = 'Reject';
+                        $color = 'red';
                     }
                     $data = array(
                         'status' => $status,
@@ -262,51 +280,335 @@ class ApprovePrestasiSiswaController extends BaseController{
 
     }
 
+    public function actionRejectPrestasiSiswa(Request $request,$data,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        if($data=='prestasi'){
+
+            $from = 'prestasi';
+
+            $prestasi = PrestasiSiswa::findOrFail($id);
+            $prestasi->status = 10;
+            $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->approved_at = $now;
+
+            $prestasi->save();
+
+        }
+
+        elseif($data=='kegiatan'){
+
+            $from = 'kegiatan';
+
+            $kegiatan = KegiatanSiswa::findOrFail($id);
+            $kegiatan->status = 10;
+            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_at = $now;
+
+            $kegiatan->save();
+
+        }
+
+         return [
+                'status' => 203, // SUCCESS AND LOAD TABLE
+                'message' => 'Reject Succesfully',
+                'from'    => $from
+                ];
+
+    }
+
+
     public function datatablesApprovePrestasiSiswa(Request $request){
 
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $param = $input->param;
 
-        $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa')
-				->whereHas('kegiatan_siswa',function($q) use($auth_data){
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+        if($input->role=='guru'){
+
+            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+
+            $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa')
+                ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param,$wali_kelas){
+                    if($param == 0){
+                        $q->where('status','!=',0);
+                    }
+                    else{
+                        $q->where('status',0);
+                    }
+                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah,'siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                  
                 })
-				->orWhereHas('prestasi_siswa',function($q) use($auth_data){
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+                ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param,$wali_kelas){
+                    if($param == 0){
+                        $q->where('status','!=',0);
+                    }
+                    else{
+                        $q->where('status',0);
+                    }
+                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah,'siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                    
                 })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-				->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-				->withCount([
-					'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
-					'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
-					'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
-					'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
-				])
-				->get();
+                ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                ->withCount([
+                    'kegiatan_siswa as kegiatan_siswa_reject' => function($q){ $q->where('status',10); },
+                    'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
+                    'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
+                    'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
+                    'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
+                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                ])
+                ->get();
 
-        return Datatables::of($data)
-        					->addColumn('prestasi', function ($item) {
-			                    $data = array(
-			                        'prestasi_siswa_not_approved' => $item->prestasi_siswa_not_approved,
-			                        'prestasi_siswa_approved' => $item->prestasi_siswa_approved
-			                    );
-			                    return $data;
-			                })
-			                ->addColumn('kegiatan', function ($item) {
-			                    $data = array(
-			                        'kegiatan_siswa_not_approved' => $item->kegiatan_siswa_not_approved,
-			                        'kegiatan_siswa_approved' => $item->kegiatan_siswa_approved
-			                    );
-			                    return $data;
-			                })
-							->addColumn('action', function ($item) {
-			                    $data = array(
-			                        'id' => $item->id_siswa
-			                    );
-			                    return $data;
-			                })
-		                	->make(true);
+        }
 
+        else{
+
+            $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa')
+                ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param){
+                    if($param == 0){
+                        $q->where('status','!=',0);
+                    }
+                    else{
+                        $q->where('status',0);
+                    }
+                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+                  
+                })
+                ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param){
+                    if($param == 0){
+                        $q->where('status','!=',0);
+                    }
+                    else{
+                        $q->where('status',0);
+                    }
+                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+                    
+                })
+                ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                ->withCount([
+                    'kegiatan_siswa as kegiatan_siswa_reject' => function($q){ $q->where('status',10); },
+                    'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
+                    'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
+                    'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
+                    'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
+                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                ])
+                ->get();
+
+        }
+
+        if($param == 0){
+             return Datatables::of($data)
+                            ->addColumn('prestasi',function($item){
+                                return '<button class="btn bg-pink">'.$item->prestasi_siswa_reject.' reject</button>
+                                <button class="btn bg-teal">'.$item->prestasi_siswa_approved.' approved</button>';
+                            })
+                            ->addColumn('kegiatan',function($item){
+                                 return '<button class="btn bg-pink">'.$item->kegiatan_siswa_reject.' reject</button>
+                                <button class="btn bg-teal">'.$item->kegiatan_siswa_approved.' approved</button>';
+                            })
+                            ->addColumn('action', function ($item) {
+                                $data = array(
+                                    'id' => $item->id_siswa,
+                                    'id2' => 1
+                                );
+                                return $data;
+                            })
+                             ->rawColumns(['prestasi','kegiatan'])
+                            ->make(true);
+        }
+
+        else{
+             return Datatables::of($data)
+                            ->addColumn('prestasi',function($item){
+                                return '<button class="btn bg-pink">'.$item->prestasi_siswa_not_approved.' belum di approve</button>';
+                            })
+                            ->addColumn('kegiatan',function($item){
+                                 return '<button class="btn bg-pink">'.$item->kegiatan_siswa_not_approved.' belum di approve</button>';
+                            })
+                            ->addColumn('action', function ($item) {
+                                $data = array(
+                                    'id' => $item->id_siswa
+                                );
+                                return $data;
+                            })
+                             ->rawColumns(['prestasi','kegiatan'])
+                            ->make(true);
+        }
+
+
+    }
+
+    public function editPrestasiSiswa(Request $request,$id){
+
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $prestasi = PrestasiSiswa::join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_prestasi_siswa', '=', $id)->first();
+
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        return view('kesiswaan/skpi/approve-prestasi-siswa/edit-prestasi-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'data_tingkat_prestasi', 'data_ekskul', 'data_guru', 'prestasi'));
+
+    }
+
+    public function actionEditPrestasiSiswa(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+            'nm_prestasi_siswa' => 'required',
+            'peringkat_prestasi_siswa' => 'required',
+            'lokasi_prestasi_siswa' => 'required',
+            'penyelenggara_prestasi_siswa' => 'required',
+            'jenis_prestasi_siswa' => 'required',
+            'jenis_lomba_siswa'=>'required',
+            'id_tingkat_prestasi_siswa' => 'required',
+            'tgl_prestasi_siswa' => 'required',
+            'link_sertifikat' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            $prestasi                                 = PrestasiSiswa::find($id);
+            $prestasi->id_semester                    = $input->id_semester;
+            $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
+            $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
+            $prestasi->id_ekskul                      = $input->id_ekskul;
+            $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
+            $prestasi->jenis_lomba_siswa              = $input->jenis_lomba_siswa;
+            $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;
+            $prestasi->lokasi_prestasi_siswa          = $input->lokasi_prestasi_siswa;
+            $prestasi->penyelenggara_prestasi_siswa   = $input->penyelenggara_prestasi_siswa;
+            $prestasi->peringkat_prestasi_siswa       = $input->peringkat_prestasi_siswa;
+            $prestasi->tgl_prestasi_siswa             = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
+            $prestasi->link_sertif_prestasi_siswa     = $input->link_sertifikat;
+            $prestasi->updated_by                     = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->updated_at                     = $now;
+            $prestasi->save();
+
+            $prestasi->save();
+
+            if($auth_data->pengguna->status_join_table==2){
+                $path = 'wali-kelas/edit-prestasi-siswa/'.$id;
+            }
+
+            else{
+                $path = 'skpi/edit-prestasi-siswa/'.$id;
+            }
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => $path,
+                'message' => 'Edit Prestasi successfully'
+            ];
+
+
+        }
+
+
+    }
+
+    public function editKegiatanSiswa(Request $request,$id){
+
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $tingkat = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+
+        $kegiatan = KegiatanSiswa::join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_kegiatan_siswa', '=', $id)->first();
+
+        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+        return view('kesiswaan/skpi/approve-prestasi-siswa/edit-kegiatan-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'tingkat', 'kegiatan'));
+
+    }
+
+    public function actionEditKegiatanSiswa(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+            'nm_kegiatan_siswa' => 'required',
+            'id_siswa' => 'required',
+            'id_semester' => 'required',
+            'lokasi_kegiatan_siswa' => 'required',
+            'penyelenggara_kegiatan_siswa' => 'required',
+            'id_tingkat_prestasi_siswa' => 'required',
+            'tgl_kegiatan_siswa' => 'required',
+            'link_sertifikat' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            $kegiatan = KegiatanSiswa::find($id);
+
+            $kegiatan->id_semester = $input->id_semester;
+            $kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
+            $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
+            $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
+            $kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
+            $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
+            $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
+            $kegiatan->updated_at = $now;
+            $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->save();
+
+            if($auth_data->pengguna->status_join_table==2){
+                $path = 'wali-kelas/edit-kegiatan-siswa/'.$id;
+            }
+
+            else{
+                $path = 'skpi/edit-kegiatan-siswa/'.$id;
+            }
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => $path,
+                'message' => 'Edit Prestasi successfully'
+            ];
+
+        }
 
     }
 

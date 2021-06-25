@@ -123,6 +123,16 @@
                                     <input type="text" class="datepicker form-control" name="tgl_prestasi_siswa" required="" aria-required="true" aria-invalid="true" value="{{$prestasi->tgl_prestasi_siswa}}">
                                 </div>
                             </div>
+
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">            
+                                    <h2 class="card-inside-title">
+                                        Link Sertifikat
+                                    </h2>
+                                    <input type="text" class="form-control" value="{{$prestasi->link_sertif_prestasi_siswa}}" name="link_sertifikat" required="" aria-required="true" aria-invalid="true">
+                                </div>
+                            </div>
+
                              <h2 class="card-inside-title">
                                 Ekstrakurikuler <small><b>* Tidak Wajib Diisi. Hanya Diisi Bila Prestasi Berhubungan dengan Ekstrakurikuler</b></small>
                             </h2>

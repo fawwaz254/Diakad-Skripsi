@@ -183,6 +183,10 @@ class DataKegiatanSiswaController extends BaseController{
                                 $status = 'Sudah Diapprove';
                                 $color = 'teal';
                             }
+                            elseif ($item->status== 10) {
+                                $status = 'Ditolak';
+                                $color = 'red';
+                            }
                             $data = array(
                                 'status' => $status,
                                 'color'  => $color
