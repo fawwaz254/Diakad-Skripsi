@@ -66,9 +66,7 @@ class Sekolah extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function kota(){
+        return $this->belongsTo(Kota::class, 'alamat_kota', 'id_kota');
+    }
 }

@@ -22,6 +22,9 @@ table {
 .biodata tr td{
 	border: 1px solid white;
 }
+.header, .header tr td{
+	border: none;
+}
 
 .avoid-break {
     page-break-inside: avoid;
@@ -41,126 +44,144 @@ table {
 
 <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
       <tr>
-          <td style="border: none;" colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
-          <td style="border: none;" colspan=6><h1 align="center">Yayasan Pendidikan & Sosial Ma’arif <br>{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1><h3 align="center">TERAKREDITASI  :  A ( UNGGUL )<br>NSS : 204050214055     NDS  :  2005020203          NPSN : 20501762</h3></td>
+          <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:160px;" /></td>
+          <td colspan=6><h1 align="center">{{ strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah) }}<br>{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1><h3 align="center">TERAKREDITASI  :  A ( UNGGUL )<br>NSS : 204050214055     NDS  :  2005020203          NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}</h3></td>
       </tr>
       <tr>
-          <td style="border: none;" colspan=7><p align="center">Alamat :  Jln. Megare, 30 NgelomTlp. (031) 7860725 – 7881783KecamatanTaman  KabupatenSidoarjo, KodePos 61257 E-mail : smpypm1taman@yahoo.comWebsite : smpypm1sepanjang.sch.id</p></td>
+          <td colspan=7><p align="center">Alamat :  {{ $auth_data->sekolah_data->alamat_jalan }} {{ $auth_data->sekolah_data->alamat_kelurahan }} Tlp. {{ $auth_data->sekolah_data->nomor_telp_sekolah }} – {{ $auth_data->sekolah_data->nomor_fax_sekolah }} Kecamatan {{ $auth_data->sekolah_data->alamat_kecamatan }}  Kabupaten {{ $auth_data->sekolah_data->kota->nm_kota }}, Kode Pos {{ $auth_data->sekolah_data->alamat_kodepos }} <br>E-mail : {{ $auth_data->sekolah_data->email_sekolah }} Website : {{ $auth_data->sekolah_data->website_sekolah }}</p></td>
       </tr>
   </table>
+  <hr>
 <h4 class="text-center" style="margin-top: 30px;text-decoration: underline;">SURAT KETERANGAN PENDAMPING IJAZAH</h4>
-<h5 class="text-center">Nomor : 001/F/SMP YPM 1/SK/VI/2021</h5>
+<h5 class="text-center">Nomor : </h5>
 <hr>
-<p class="text-center">Surat Keterangan Pendamping Ijazah yang dikeluarkan oleh SMP YPM 1 Taman Sidoarjo sebagai pelengkap ijazah yang menerangkan capaian pembelajaran dan prestasi dari pemegang ijazah selama masa studi</p>
+<p class="text-center">Surat Keterangan Pendamping Ijazah yang dikeluarkan oleh {{ $auth_data->sekolah_data->nm_sekolah }} sebagai pelengkap ijazah yang menerangkan capaian pembelajaran dan prestasi dari pemegang ijazah selama masa studi</p>
 <hr>
 <div class="container" style="margin-top: 40px;">
 
 <h5  style="margin-top: 30px;">I.	INFORMASI TENTANG IDENTITAS  DIRI PEMEGANG SKPI</h5>
 <table>
 	<tr>
+    <td style="width: 5%;">1.A1</td>
 		<td style="width: 30%;">Nama Lengkap </td>
 		<td>: {{$siswa->nm_c_siswa}}</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">1.A2</td>
 		<td style="width: 30%;">Tempat, Tanggal Lahir </td>
-		<td>: {{$siswa->nis_siswa}}</td>
+		<td>: {{ $siswa->calon_siswa->kota_lahir? $siswa->calon_siswa->kota_lahir->nm_kota : ''}}, {{ date_format(date_create($siswa->calon_siswa->tgl_lahir), 'd M Y') }}</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">1.A3</td>
 		<td style="width: 30%;">No. Induk Sekolah dan Nasional </td>
 		<td>: {{$siswa->nis_siswa}}</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">1.A4</td>
 		<td style="width: 30%;">Tahun Masuk </td>
-		<td>: {{$siswa->nis_siswa}}</td>
+		<td>: {{$siswa->thn_masuk_siswa}}</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">1.A5</td>
 		<td style="width: 30%;">Tahun Keluar </td>
-		<td>: {{$siswa->nis_siswa}}</td>
+		<td>: {{ date_format(date_create(), 'Y') }}</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">1.A6</td>
 		<td style="width: 30%;">Nomor Seri Ijazah </td>
-		<td>: {{$siswa->nm_kelas}}</td>
+		<td>: </td>
 	</tr>
 </table>
 
 <h5  style="margin-top: 30px;">II.	INFORMASI TENTANG IDENTITAS PENYELENGGARA </h5>
 <table>
 	<tr>
+    <td style="width: 5%;">2.A1</td>
 		<td style="width: 30%;">Nama Satuan Pendidikan </td>
-		<td>: SMP YPM 1 Taman</td>
+		<td>: {{ $auth_data->sekolah_data->nm_sekolah }}</td>
 	</tr>
 	<tr>
-		<td style="width: 30%;">Surat  Izin Operasional Sekolah </td>
-		<td>: SK. 421.3/1572/438.5.1/2020</td>
+    <td style="width: 5%;">2.A2</td>
+    <td style="width: 30%;">Surat  Izin Operasional Sekolah </td>
+    <td>: {{ $auth_data->sekolah_data->nomor_sk_izin_operasional }}</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A3</td>
 		<td style="width: 30%;">Jenis dan Jenjang Pendidikan</td>
 		<td>: Pendidikan Formal/Sekolah Menengah Pertama</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A4</td>
 		<td style="width: 30%;">Status Akreditasi</td>
 		<td>: A (Unggul)</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A5</td>
 		<td style="width: 30%;">Nomor SK Akreditasi</td>
 		<td>: </td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A6</td>
 		<td style="width: 30%;">Jenjang Kualifikasi Sesuai KKNI</td>
 		<td>: Level 1</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A7</td>
 		<td style="width: 30%;">Persyaratan Penerimaan </td>
 		<td>: Lulus SD dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A8</td>
 		<td style="width: 30%;">Bahasa Pengantar Sekolah </td>
 		<td>: Bahasa Indonesia</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A9</td>
 		<td style="width: 30%;">Lama Studi Reguler </td>
 		<td>: Tiga Tahun (3 Tahun)</td>
 	</tr>
 	<tr>
+    <td style="width: 5%;">2.A10</td>
 		<td style="width: 30%;">Jenis dan Jenjang Pendidikan Lanjutan</td>
 		<td>: SMA/Sederajat</td>
 	</tr>
 </table>
 
 <h5  style="margin-top: 30px;">III.	INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN </h5>
+<h6  style="margin-top: 15px;">A.	CAPAIAN PERMBELAJARAN</h6>
 <table>
   <tr>
-    <td style="width: 10%;">3.A1</td>
+    <td style="width: 5%;">3.A1</td>
     <td>Bertaqwa kepada Tuhan Yang Maha Esa dan menjunjung tinggi sikap religius</td>
   </tr>
   <tr>
-    <td style="width: 10%;">3.A2</td>
+    <td style="width: 5%;">3.A2</td>
     <td>Mampu mengintegrasikan keilmuan dan etika yang berkarakter</td>
   </tr>
   <tr>
-    <td style="width: 10%;">3.A3</td>
+    <td style="width: 5%;">3.A3</td>
     <td>Memiliki kemampuan hidup mandiri, kerjasama, disiplin, tanggung jawab, dan tenggang rasa terhadap sesama</td>
   </tr>
   <tr>
-    <td style="width: 10%;">3.A4</td>
+    <td style="width: 5%;">3.A4</td>
     <td>Terampil dalam aktivitas rumah tangga dasar</td>
   </tr>
   <tr>
-    <td style="width: 10%;">3.A5</td>
+    <td style="width: 5%;">3.A5</td>
     <td>Terampil dalam aktivitas perawatan dasar</td>
   </tr>
   <tr>
-    <td style="width: 10%;">3.A6</td>
+    <td style="width: 5%;">3.A6</td>
     <td>Menguasai konsep komunikasi dan terampil dalam komunikasi personal</td>
   </tr>
   <tr>
-    <td style="width: 10%;">3.A7</td>
+    <td style="width: 5%;">3.A7</td>
     <td>Bekerjasama dan memiliki kepekaan sosial serta kepedulian terhadap masyarakat dan lingkungannya</td>
   </tr>
 </table>
 
 @if($prestasi->count()>0)
-<h6  style="margin-top: 30px;">Prestasi</h6>
+<h6  style="margin-top: 15px;">B.	CAPAIAN PRESTASI</h6>
 <table>
   <thead>
     <tr>
@@ -204,7 +225,7 @@ table {
 @endif
 
 @if($kegiatan->count()>0)
-<h6 style="margin-top: 30px;">Kegiatan</h6>
+<h6  style="margin-top: 15px;">C.	MACAM KEGIATAN</h6>
 <table >
   <thead>
     <tr>
