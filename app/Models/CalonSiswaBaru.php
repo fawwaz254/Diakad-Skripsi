@@ -108,6 +108,11 @@ class CalonSiswaBaru extends Model
         return $this->hasOne(Siswa::class, 'id_c_siswa');
     }
 
+    public function kota_lahir()
+    {
+        return $this->belongsTo(Kota::class, 'id_kota_lahir');
+    }
+
 
 
 }
