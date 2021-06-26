@@ -126,23 +126,27 @@ if (!function_exists('indonesiaDate')) {
      */
     function indonesiaDate($date)
     {
-        $months = [
-            1 => 'Januari',
-            'Februari',
-            'Maret',
-            'April',
-            'Mei',
-            'Juni',
-            'Juli',
-            'Agustus',
-            'September',
-            'Oktober',
-            'November',
-            'Desember'
-        ];
-
-        $split = explode('-', $date);
-        return $split[2] . ' ' . $months[(int)$split[1]] . ' ' . $split[0];
+        if(!empty($date)){
+            $months = [
+                1 => 'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei',
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember'
+            ];
+    
+            $split = explode('-', $date);
+            return $split[2] . ' ' . $months[(int)$split[1]] . ' ' . $split[0];
+        }else{
+            return '';
+        }
     }
 }
 

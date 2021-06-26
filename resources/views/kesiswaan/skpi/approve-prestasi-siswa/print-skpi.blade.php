@@ -19,8 +19,8 @@ table {
   border-collapse: collapse;
 }
 
-.biodata tr td{
-	border: 1px solid white;
+table.bg-color tr td{
+	background-color: rgb(162, 219, 250, 0.6);
 }
 .header, .header tr td{
 	border: none;
@@ -30,12 +30,14 @@ table {
     page-break-inside: avoid;
 }
 .mt-4 {
-            margin-top: 40px;
-        }
-
-        .mb-4 {
-            margin-bottom: 40px;
-        }
+    margin-top: 40px;
+}
+.mb-4 {
+    margin-bottom: 40px;
+}
+@media print {
+  .break-after {page-break-after: always;}
+}
 </style>
 
 <title>SKPI Siswa</title>
@@ -45,7 +47,12 @@ table {
 <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
       <tr>
           <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:160px;" /></td>
-          <td colspan=6><h1 align="center">{{ strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah) }}<br>{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1><h3 align="center">TERAKREDITASI  :  A ( UNGGUL )<br>NSS : 204050214055     NDS  :  2005020203          NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}</h3></td>
+          <td colspan=6><h1 align="center">{{ strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah) }}<br>{{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1>
+          <h3 align="center">TERAKREDITASI  :  A ( UNGGUL )
+          @if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
+          <br>NSS : 204050214055     NDS  :  2005020203          NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}
+          @endif
+          </h3></td>
       </tr>
       <tr>
           <td colspan=7><p align="center">Alamat :  {{ $auth_data->sekolah_data->alamat_jalan }} {{ $auth_data->sekolah_data->alamat_kelurahan }} Tlp. {{ $auth_data->sekolah_data->nomor_telp_sekolah }} – {{ $auth_data->sekolah_data->nomor_fax_sekolah }} Kecamatan {{ $auth_data->sekolah_data->alamat_kecamatan }}  Kabupaten {{ $auth_data->sekolah_data->kota->nm_kota }}, Kode Pos {{ $auth_data->sekolah_data->alamat_kodepos }} <br>E-mail : {{ $auth_data->sekolah_data->email_sekolah }} Website : {{ $auth_data->sekolah_data->website_sekolah }}</p></td>
@@ -53,14 +60,18 @@ table {
   </table>
   <hr>
 <h4 class="text-center" style="margin-top: 30px;text-decoration: underline;">SURAT KETERANGAN PENDAMPING IJAZAH</h4>
-<h5 class="text-center">Nomor : </h5>
+<h5 class="text-center">Nomor : 
+@if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+448/C-3/WH-2/VI/2021
+@endif
+</h5>
 <hr>
 <p class="text-center">Surat Keterangan Pendamping Ijazah yang dikeluarkan oleh {{ $auth_data->sekolah_data->nm_sekolah }} sebagai pelengkap ijazah yang menerangkan capaian pembelajaran dan prestasi dari pemegang ijazah selama masa studi</p>
 <hr>
 <div class="container" style="margin-top: 40px;">
 
 <h5  style="margin-top: 30px;">I.	INFORMASI TENTANG IDENTITAS  DIRI PEMEGANG SKPI</h5>
-<table>
+<table class="bg-color">
 	<tr>
     <td style="width: 5%;">1.A1</td>
 		<td style="width: 30%;">Nama Lengkap </td>
@@ -69,7 +80,7 @@ table {
 	<tr>
     <td style="width: 5%;">1.A2</td>
 		<td style="width: 30%;">Tempat, Tanggal Lahir </td>
-		<td>: {{ $siswa->calon_siswa->kota_lahir? $siswa->calon_siswa->kota_lahir->nm_kota : ''}}, {{ date_format(date_create($siswa->calon_siswa->tgl_lahir), 'd M Y') }}</td>
+		<td>: {{ $siswa->calon_siswa->kota_lahir? $siswa->calon_siswa->kota_lahir->nm_kota : ''}}, {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
 	</tr>
 	<tr>
     <td style="width: 5%;">1.A3</td>
@@ -93,63 +104,80 @@ table {
 	</tr>
 </table>
 
+@php
+  $no = 0;
+@endphp
 <h5  style="margin-top: 30px;">II.	INFORMASI TENTANG IDENTITAS PENYELENGGARA </h5>
-<table>
+<table class="bg-color break-after">
 	<tr>
-    <td style="width: 5%;">2.A1</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Nama Satuan Pendidikan </td>
 		<td>: {{ $auth_data->sekolah_data->nm_sekolah }}</td>
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A2</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
     <td style="width: 30%;">Surat  Izin Operasional Sekolah </td>
     <td>: {{ $auth_data->sekolah_data->nomor_sk_izin_operasional }}</td>
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A3</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Jenis dan Jenjang Pendidikan</td>
+    @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+		<td>: Pendidikan Formal/Sekolah Menengah Atas</td>
+    @else
 		<td>: Pendidikan Formal/Sekolah Menengah Pertama</td>
+    @endif
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A4</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Status Akreditasi</td>
 		<td>: A (Unggul)</td>
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A5</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Nomor SK Akreditasi</td>
 		<td>: </td>
 	</tr>
+  @if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
 	<tr>
-    <td style="width: 5%;">2.A6</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Jenjang Kualifikasi Sesuai KKNI</td>
 		<td>: Level 1</td>
 	</tr>
+  @endif
 	<tr>
-    <td style="width: 5%;">2.A7</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Persyaratan Penerimaan </td>
+    @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+		<td>: Lulus SMP/Mts dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
+    @else
 		<td>: Lulus SD dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
+    @endif
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A8</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Bahasa Pengantar Sekolah </td>
 		<td>: Bahasa Indonesia</td>
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A9</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Lama Studi Reguler </td>
 		<td>: Tiga Tahun (3 Tahun)</td>
 	</tr>
 	<tr>
-    <td style="width: 5%;">2.A10</td>
+    <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Jenis dan Jenjang Pendidikan Lanjutan</td>
+    @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+		<td>: Perguruan Tinggi</td>
+    @else
 		<td>: SMA/Sederajat</td>
+    @endif
 	</tr>
 </table>
 
-<h5  style="margin-top: 30px;">III.	INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN </h5>
+<h5 style="margin-top: 30px;">III.	INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN </h5>
 <h6  style="margin-top: 15px;">A.	CAPAIAN PERMBELAJARAN</h6>
-<table>
+<table class="bg-color">
   <tr>
     <td style="width: 5%;">3.A1</td>
     <td>Bertaqwa kepada Tuhan Yang Maha Esa dan menjunjung tinggi sikap religius</td>
@@ -182,24 +210,22 @@ table {
 
 @if($prestasi->count()>0)
 <h6  style="margin-top: 15px;">B.	CAPAIAN PRESTASI</h6>
-<table>
+<table class="bg-color">
   <thead>
     <tr>
-        <th>No</th>
-        <th>Nama Prestasi</th>
-        <th>Tingkat Prestasi</th>
-        <th>Jenis Prestasi</th>
-        <th>Jenis Lomba</th>
-        <th>Peringkat</th>
-        <th>Lokasi</th>
-        <th>Penyelenggara</th>
-        <th>Tanggal</th>
+        <td></td>
+        <td>Nama Prestasi</td>
+        <td>Tingkat Prestasi</td>
+        <td>Jenis Prestasi</td>
+        <td>Lokasi</td>
+        <td>Penyelenggara</td>
+        <td>Tanggal</td>
     </tr>
   </thead>
   <tbody>
   	@foreach($prestasi as $r)
   		<tr>
-  			<td>{{$loop->iteration}}</td>
+  			<td>3.B{{$loop->iteration}}</td>
   			<td>{{$r->nm_prestasi_siswa}}</td>
   			<td>{{$r->nm_tingkat_prestasi_siswa}}</td>
   			<td>
@@ -213,11 +239,9 @@ table {
             Lain lain
             @endif 
             </td>
-            <td>{{$r->jenis_lomba_siswa}}</td>
-            <td>{{$r->peringkat_prestasi_siswa}}</td>
             <td>{{$r->lokasi_prestasi_siswa}}</td>
             <td>{{$r->penyelenggara_prestasi_siswa}}</td>
-            <td>{{date("d F Y", strtotime($r->tgl_prestasi_siswa))}}</td>
+            <td>{{ indonesiaDate($r->tgl_prestasi_siswa)  }}</td>
   		</tr>
   	@endforeach
   </tbody>
@@ -226,10 +250,10 @@ table {
 
 @if($kegiatan->count()>0)
 <h6  style="margin-top: 15px;">C.	MACAM KEGIATAN</h6>
-<table >
+<table class="bg-color">
   <thead>
     <tr>
-       <th>No</th>
+        <th></th>
         <th>Nama Kegiatan</th>
         <th>Lokasi</th>
         <th>Penyelenggara</th>
@@ -240,7 +264,7 @@ table {
   <tbody>
   	@foreach($kegiatan as $r)
   		<tr>
-  			<td>{{$loop->iteration}}</td>
+  			<td>3.C{{$loop->iteration}}</td>
   			<td>{{$r->nm_kegiatan_siswa}}</td>
         <td>{{$r->lokasi_kegiatan_siswa}}</td>
         <td>{{$r->penyelenggara_kegiatan_siswa}}</td>
