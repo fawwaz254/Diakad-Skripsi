@@ -18,10 +18,6 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
-
-table.bg-color tr td{
-	background-color: rgb(162, 219, 250, 0.6);
-}
 .header, .header tr td{
 	border: none;
 }
@@ -39,7 +35,19 @@ table.bg-color tr td{
   .break-after {page-break-after: always;}
 }
 </style>
-
+@if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
+<style>
+table.bg-color tr td{
+	background-color: rgb(162, 219, 250, 0.6);
+}
+</style>
+@else
+<style>
+table.bg-color tr td{
+	background-color: rgb(102, 222, 147, 0.6);
+}
+</style>
+@endif
 <title>SKPI Siswa</title>
 </head>
 <body>
@@ -136,7 +144,7 @@ table.bg-color tr td{
 	<tr>
     <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Nomor SK Akreditasi</td>
-		<td>: </td>
+		<td>: 599/BAN-SM/SK/2019</td>
 	</tr>
   @if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
 	<tr>
