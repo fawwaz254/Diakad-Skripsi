@@ -225,6 +225,8 @@ table.bg-color tr td{
         <td>Nama Prestasi</td>
         <td>Tingkat Prestasi</td>
         <td>Jenis Prestasi</td>
+        <th>Jenis Lomba</th>
+        <th>Peringkat</th>
         <td>Lokasi</td>
         <td>Penyelenggara</td>
         <td>Tanggal</td>
@@ -247,6 +249,8 @@ table.bg-color tr td{
             Lain lain
             @endif 
             </td>
+            <td>{{$r->jenis_lomba_siswa}}</td>
+            <td>{{$r->peringkat_prestasi_siswa}}</td>
             <td>{{$r->lokasi_prestasi_siswa}}</td>
             <td>{{$r->penyelenggara_prestasi_siswa}}</td>
             <td>{{ indonesiaDate($r->tgl_prestasi_siswa)  }}</td>

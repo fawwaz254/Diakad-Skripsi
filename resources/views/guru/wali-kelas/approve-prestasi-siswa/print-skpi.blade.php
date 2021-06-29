@@ -18,10 +18,6 @@ table {
   width: 100%;
   border-collapse: collapse;
 }
-
-.biodata tr td{
-	border: 1px solid white;
-}
 .header, .header tr td{
 	border: none;
 }
@@ -30,14 +26,28 @@ table {
     page-break-inside: avoid;
 }
 .mt-4 {
-            margin-top: 40px;
-        }
-
-        .mb-4 {
-            margin-bottom: 40px;
-        }
+    margin-top: 40px;
+}
+.mb-4 {
+    margin-bottom: 40px;
+}
+@media print {
+  .break-after {page-break-after: always;}
+}
 </style>
-
+@if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
+<style>
+table.bg-color tr td{
+	background-color: rgb(162, 219, 250, 0.6);
+}
+</style>
+@else
+<style>
+table.bg-color tr td{
+	background-color: rgb(102, 222, 147, 0.6);
+}
+</style>
+@endif
 <title>SKPI Siswa</title>
 </head>
 <body>
@@ -69,7 +79,7 @@ table {
 <div class="container" style="margin-top: 40px;">
 
 <h5  style="margin-top: 30px;">I.	INFORMASI TENTANG IDENTITAS  DIRI PEMEGANG SKPI</h5>
-<table>
+<table class="bg-color">
 	<tr>
     <td style="width: 5%;">1.A1</td>
 		<td style="width: 30%;">Nama Lengkap </td>
@@ -106,7 +116,7 @@ table {
   $no = 0;
 @endphp
 <h5  style="margin-top: 30px;">II.	INFORMASI TENTANG IDENTITAS PENYELENGGARA </h5>
-<table>
+<table class="bg-color break-after">
 	<tr>
     <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Nama Satuan Pendidikan </td>
@@ -134,7 +144,7 @@ table {
 	<tr>
     <td style="width: 5%;">2.A{{$no++}}</td>
 		<td style="width: 30%;">Nomor SK Akreditasi</td>
-		<td>: </td>
+		<td>: 599/BAN-SM/SK/2019</td>
 	</tr>
   @if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
 	<tr>
@@ -173,9 +183,9 @@ table {
 	</tr>
 </table>
 
-<h5  style="margin-top: 30px;">III.	INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN </h5>
+<h5 style="margin-top: 30px;">III.	INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN </h5>
 <h6  style="margin-top: 15px;">A.	CAPAIAN PERMBELAJARAN</h6>
-<table>
+<table class="bg-color">
   <tr>
     <td style="width: 5%;">3.A1</td>
     <td>Bertaqwa kepada Tuhan Yang Maha Esa dan menjunjung tinggi sikap religius</td>
@@ -208,24 +218,24 @@ table {
 
 @if($prestasi->count()>0)
 <h6  style="margin-top: 15px;">B.	CAPAIAN PRESTASI</h6>
-<table>
+<table class="bg-color">
   <thead>
     <tr>
-        <th>No</th>
-        <th>Nama Prestasi</th>
-        <th>Tingkat Prestasi</th>
-        <th>Jenis Prestasi</th>
+        <td></td>
+        <td>Nama Prestasi</td>
+        <td>Tingkat Prestasi</td>
+        <td>Jenis Prestasi</td>
         <th>Jenis Lomba</th>
         <th>Peringkat</th>
-        <th>Lokasi</th>
-        <th>Penyelenggara</th>
-        <th>Tanggal</th>
+        <td>Lokasi</td>
+        <td>Penyelenggara</td>
+        <td>Tanggal</td>
     </tr>
   </thead>
   <tbody>
   	@foreach($prestasi as $r)
   		<tr>
-  			<td>{{$loop->iteration}}</td>
+  			<td>3.B{{$loop->iteration}}</td>
   			<td>{{$r->nm_prestasi_siswa}}</td>
   			<td>{{$r->nm_tingkat_prestasi_siswa}}</td>
   			<td>
@@ -252,10 +262,10 @@ table {
 
 @if($kegiatan->count()>0)
 <h6  style="margin-top: 15px;">C.	MACAM KEGIATAN</h6>
-<table >
+<table class="bg-color">
   <thead>
     <tr>
-       <th>No</th>
+        <th></th>
         <th>Nama Kegiatan</th>
         <th>Lokasi</th>
         <th>Penyelenggara</th>
@@ -266,7 +276,7 @@ table {
   <tbody>
   	@foreach($kegiatan as $r)
   		<tr>
-  			<td>{{$loop->iteration}}</td>
+  			<td>3.C{{$loop->iteration}}</td>
   			<td>{{$r->nm_kegiatan_siswa}}</td>
         <td>{{$r->lokasi_kegiatan_siswa}}</td>
         <td>{{$r->penyelenggara_kegiatan_siswa}}</td>
