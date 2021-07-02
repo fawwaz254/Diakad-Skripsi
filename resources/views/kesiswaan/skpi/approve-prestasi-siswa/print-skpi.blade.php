@@ -35,7 +35,7 @@ table {
   .break-after {page-break-after: always;}
 }
 </style>
-@if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
+@if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
 <style>
 table.bg-color tr td{
 	background-color: rgb(162, 219, 250, 0.6);
@@ -108,7 +108,7 @@ table.bg-color tr td{
 	<tr>
     <td style="width: 5%;">1.A6</td>
 		<td style="width: 30%;">Nomor Seri Ijazah </td>
-		<td>: </td>
+		<td>: {{$siswa->pengajuan_wisuda ? $siswa->pengajuan_wisuda->nomor_ijasah : ''}}</td>
 	</tr>
 </table>
 
@@ -225,8 +225,8 @@ table.bg-color tr td{
         <td>Nama Prestasi</td>
         <td>Tingkat Prestasi</td>
         <td>Jenis Prestasi</td>
-        <th>Jenis Lomba</th>
-        <th>Peringkat</th>
+        <td>Jenis Lomba</td>
+        <td>Peringkat</td>
         <td>Lokasi</td>
         <td>Penyelenggara</td>
         <td>Tanggal</td>
@@ -265,12 +265,12 @@ table.bg-color tr td{
 <table class="bg-color">
   <thead>
     <tr>
-        <th></th>
-        <th>Nama Kegiatan</th>
-        <th>Lokasi</th>
-        <th>Penyelenggara</th>
-        <th>Tingkat Kegiatan</th>
-        <th>Tanggal</th>
+        <td></td>
+        <td>Nama Kegiatan</td>
+        <td>Lokasi</td>
+        <td>Penyelenggara</td>
+        <td>Tingkat Kegiatan</td>
+        <td>Tanggal</td>
     </tr>
   </thead>
   <tbody>
