@@ -87,8 +87,13 @@ table.bg-color tr td{
 	</tr>
 	<tr>
     <td style="width: 5%;">1.A2</td>
+    @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+		<td style="width: 30%;">Tanggal Lahir </td>
+		<td>: {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
+    @else
 		<td style="width: 30%;">Tempat, Tanggal Lahir </td>
 		<td>: {{ $siswa->calon_siswa->kota_lahir? $siswa->calon_siswa->kota_lahir->nm_kota : ''}}, {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
+    @endif
 	</tr>
 	<tr>
     <td style="width: 5%;">1.A3</td>
