@@ -304,7 +304,13 @@ table.bg-color tr td{
         <tr style="vertical-align: top;">
             <td style="border: none;" >
                 Kepala Sekolah
+                @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <br>
+                <img src="{{asset('media/ttd/smawh2.png')}}" alt="TTD" style="height:90px;" />
+                <br>
+                @else
                 <br><br><br><br>
+                @endif
                 <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
             </td>
         </tr>
