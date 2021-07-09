@@ -333,28 +333,30 @@ class ApprovePrestasiSiswaController extends BaseController{
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-            $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa')
-                ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param,$wali_kelas){
-                    if($param == 0){
-                        $q->where('status','!=',0);
-                    }
-                    else{
-                        $q->where('status',0);
-                    }
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah,'siswa.id_kelas'=>$wali_kelas->id_kelas]);
+            $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa','nm_pengguna','nm_kelas')
+                // ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param,$wali_kelas){
+                //     if($param == 0){
+                //         $q->where('status','!=',0);
+                //     }
+                //     else{
+                //         $q->where('status',0);
+                //     }
+                //     $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah,'siswa.id_kelas'=>$wali_kelas->id_kelas]);
                   
-                })
-                ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param,$wali_kelas){
-                    if($param == 0){
-                        $q->where('status','!=',0);
-                    }
-                    else{
-                        $q->where('status',0);
-                    }
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah,'siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                // })
+                // ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param,$wali_kelas){
+                //     if($param == 0){
+                //         $q->where('status','!=',0);
+                //     }
+                //     else{
+                //         $q->where('status',0);
+                //     }
+                //     $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah,'siswa.id_kelas'=>$wali_kelas->id_kelas]);
                     
-                })
+                // })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                ->whereNotNull('kelas.id_kelas')
+                ->leftJoin('kelas','siswa.id_kelas','kelas.id_kelas')
                 ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                 ->withCount([
                     'kegiatan_siswa as kegiatan_siswa_reject' => function($q){ $q->where('status',10); },
@@ -363,36 +365,37 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
                     'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
                     'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
-                ])
-                ->get();
+                ]);
 
         }
 
         else{
 
-            $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa')
-                ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param){
-                    if($param == 0){
-                        $q->where('status','!=',0);
-                    }
-                    else{
-                        $q->where('status',0);
-                    }
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+            $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa','nm_pengguna','nm_kelas')
+                // ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param){
+                //     if($param == 0){
+                //         $q->where('status','!=',0);
+                //     }
+                //     else{
+                //         $q->where('status',0);
+                //     }
+                //     $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
                   
-                })
-                ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param){
-                    if($param == 0){
-                        $q->where('status','!=',0);
-                    }
-                    else{
-                        $q->where('status',0);
-                    }
-                    $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
+                // })
+                // ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param){
+                //     if($param == 0){
+                //         $q->where('status','!=',0);
+                //     }
+                //     else{
+                //         $q->where('status',0);
+                //     }
+                //     $q->where(['pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
                     
-                })
+                // })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                 ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                ->whereNotNull('kelas.id_kelas')
+                ->leftJoin('kelas','siswa.id_kelas','kelas.id_kelas')
                 ->withCount([
                     'kegiatan_siswa as kegiatan_siswa_reject' => function($q){ $q->where('status',10); },
                     'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
@@ -400,8 +403,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
                     'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
                     'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
-                ])
-                ->get();
+                ]);
 
         }
 

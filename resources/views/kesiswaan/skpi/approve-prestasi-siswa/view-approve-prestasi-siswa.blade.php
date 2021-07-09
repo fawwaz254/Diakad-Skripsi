@@ -25,6 +25,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama</th>
+                                        <th>Kelas</th>
                                         <th>Prestasi</th>
                                         <th>Kegiatan</th>
                                         <th>Action</th>
@@ -44,6 +45,7 @@
     var modul_url       = '{{Request::segment(2)}}';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/datatables';
     var detail_url        = role_url + '#' + modul_url + '/' + 'approve-prestasi-siswa';
+    var print_url =   base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi'; 
 
     function datatable(id){
 
@@ -77,14 +79,20 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_c_siswa', name: 'nm_c_siswa' },
+            { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'prestasi', name: 'prestasi', searchable: false, orderable: false},
             { data: 'kegiatan', name: 'kegiatan', searchable: false, orderable: false},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ detail_url + '/' + data.id + '/' + $('#param').val() + '">'+
                     '    <i class="material-icons">edit</i>'+
-                    '</a> '}
+                    '</a> '+
+                    '<a target="_blank" class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" href="'+ print_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">print</i>'+
+                    '</a>';
+                }
+                  
             }
         ]
     });
