@@ -56,17 +56,30 @@
                             </tr>
                         </table>
                     </div>
+                    <br>
+                    <div>
+                        <label>Tagihan dan riwayat dari Tahun Ajaran</label>
+                        <select class="form-control" name="tahun" onchange="changeTahunAjaran()">
+                        @foreach($data_semester as $semester)
+                            @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                            <option value="{{$semester->thn_akademik_semester}}" selected>{{$semester->tahun_ajaran}} (Aktif)</option>
+                            @else
+                            <option value="{{$semester->thn_akademik_semester}}">{{$semester->tahun_ajaran}}</option>
+                            @endif>
+                        @endforeach
+                        </select>
+                    </div>
                     <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active">
-                                <a href="#tagihan" data-toggle="tab" aria-expanded="true">
-                                    <i class="material-icons">money_off</i> TAGIHAN SISWA
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#riwayat_bayar" data-toggle="tab">
-                                    <i class="material-icons">attach_money</i> RIWAYAT BAYAR
-                                </a>
-                            </li>
+                        <li role="presentation" class="active">
+                            <a href="#tagihan" data-toggle="tab" aria-expanded="true">
+                                <i class="material-icons">money_off</i> TAGIHAN SISWA
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#riwayat_bayar" data-toggle="tab">
+                                <i class="material-icons">attach_money</i> RIWAYAT BAYAR
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="tagihan">
@@ -115,7 +128,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="riwayat_bayar">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_riwayat_bayar">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_riwayat_bayar" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -228,7 +241,10 @@
         pageLength: 100,
         ajax: {
             url: datatable_tagihan_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(params){
+                params.tahun_ajaran = $('select[name=tahun]').val();
+            }
         },
         columns: [
             { data: null, searchable: false, orderable: false },
@@ -291,7 +307,10 @@
         pageLength: 100,
         ajax: {
             url: datatable_riwayat_bayar_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(params){
+                params.tahun_ajaran = $('select[name=tahun]').val();
+            }
         },
         columns: [
             { data: null, searchable: false, orderable: false },
@@ -579,9 +598,10 @@
             }
         });
     });
-        
-    function printAction(){
-        console.log();
+
+    function changeTahunAjaran(){
+        primary_table_tagihan.ajax.reload(null, false);
+        primary_table_riwayat_bayar.ajax.reload(null, false);
     }
 
 </script>
