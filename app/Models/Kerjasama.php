@@ -24,6 +24,7 @@ class Kerjasama extends Model
         'id_jenis_kerjasama',
         'nm_kerjasama',
         'tanggal_kerjasama',
+        'tanggal_akhir_kerjasama',
         'status',
         'created_by',
         'updated_by',

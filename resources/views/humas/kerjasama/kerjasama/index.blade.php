@@ -21,7 +21,8 @@
                                     <th> Nama Kerjasama </th>
                                     <th> Instansi </th>
                                     <th> Jenis Kerjasama </th>
-                                    <th> Tanggal Kerjasama </th>
+                                    <th> Tanggal Awal Kerjasama </th>
+                                    <th> Tanggal Akhir Kerjasama </th>
                                     <th> Status </th>
                                     <th> Action </th>
                                 </tr>
@@ -57,6 +58,7 @@
             { data: 'instansi' },
             { data: 'jenis_kerjasama' },
             { data: 'tanggal_kerjasama' },
+            { data: 'tanggal_akhir_kerjasama' },
             { data: 'status' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
