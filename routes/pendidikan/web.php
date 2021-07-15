@@ -277,6 +277,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		/** ==== MODUL LAPORAN AKADEMIK ==== **/
 		Route::group(array('prefix' => 'laporan-akademik'), function() {
 
+			Route::group(array('prefix' => 'jurnal-guru'), function() {
+				Route::get('/', 'Pendidikan\LaporanAkademik\JurnalGuruController@viewJurnalGuru');
+				Route::get('/{id_guru}/{id_semester}', 'Pendidikan\LaporanAkademik\JurnalGuruController@viewJurnalGuru');
+				Route::get('datatables', 'Pendidikan\LaporanAkademik\JurnalGuruController@datatablesJurnalGuru');
+				Route::get('add', 'Pendidikan\LaporanAkademik\JurnalGuruController@addJurnalGuru');
+				Route::get('edit/{id}', 'Pendidikan\LaporanAkademik\JurnalGuruController@editJurnalGuru');
+				Route::post('action/{mode}/{id}', 'PendidikanLaporanAkademik\JurnalGuruController@actionJurnalGuru');
+			});
+
+
 			Route::get('absensi-siswa', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
 
 			//MENU ABSENSI SISWA
