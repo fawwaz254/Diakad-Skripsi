@@ -38,7 +38,13 @@
                         primary_table.ajax.reload(null, false);
                     }else if(response.status == 204){
                         loadURI(response.path);
-                    }else if(response.status == 300){
+                    }
+                    else if(response.status == 205){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                        $('#modalMaster').modal('hide');
+                    }
+                    else if(response.status == 300){
                         vex.dialog.alert(response.message);
                     }
                 },

@@ -89,6 +89,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				Route::get('nama-magang/edit/{id}', 'Humas\MagangSiswa\MagangSiswaController@editMagangSiswa');
 	
 				Route::post('action-nama-magang/{mode}/{id}', 'Humas\MagangSiswa\MagangSiswaController@actionMagang');
+
+				// Menu Laporan Magang
+				Route::get('laporan-magang', 'Humas\MagangSiswa\LaporanMagangController@viewLaporanMagang');
+				Route::get('laporan-magang/datatables', 'Humas\MagangSiswa\LaporanMagangController@datatablesLaporanMagang');
 	
 				//MENU Periode Magang
 				Route::get('periode-magang', 'Humas\MagangSiswa\PeriodeMagangController@viewPeriodeMagang');
@@ -105,6 +109,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				Route::get('rekanan-magang/edit/{id}', 'Humas\MagangSiswa\RekananMagangController@editRekananMagang');
 	
 				Route::post('action-rekanan-magang/{mode}/{id}', 'Humas\MagangSiswa\RekananMagangController@actionRekananMagang');
+
+				// Menu Pengajuan Magang
+				Route::get('pengajuan-magang', 'Humas\MagangSiswa\PengajuanMagangController@viewPengajuanMagang');
+				Route::get('pengajuan-magang/datatables', 'Humas\MagangSiswa\PengajuanMagangController@datatablesPengajuanMagang');
+				Route::get('pengajuan-magang/add/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\PengajuanMagangController@addPengajuanMagang');
+				Route::get('pengajuan-magang/datatables-list-siswa/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\PengajuanMagangController@datatablesListSiswa');
+				Route::post('pengajuan-magang/action-pengajuan-magang', 'Humas\MagangSiswa\PengajuanMagangController@actionPengajuanMagang');
 	
 				//MENU Pengajuan Siswa Magang
 				Route::get('pengajuan-siswa-magang', 'Humas\MagangSiswa\PengajuanSiswaMagangController@viewPengajuanSiswaMagang');

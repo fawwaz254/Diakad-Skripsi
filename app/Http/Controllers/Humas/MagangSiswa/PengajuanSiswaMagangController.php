@@ -80,7 +80,7 @@ class PengajuanSiswaMagangController extends BaseController
         return view('humas/magang-siswa/pengajuan-siswa-magang/view-detail-pengajuan-siswa-magang',compact('auth_data','id_periode_magang','id_rekanan_magang','data_periode_magang', 'nis_nama_siswa','data_rekanan_magang'));
 
     }
-    public function datatablesPengajuanMagang(Request $request, $id_periode_magang,$id_rekanan_magang, $nis_nama_siswa){
+  public function datatablesPengajuanMagang(Request $request, $id_periode_magang,$id_rekanan_magang, $nis_nama_siswa){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibMagangSiswa::fetchDataPengajuanSiswaMagang($auth_data, $id_periode_magang, $id_rekanan_magang,$nis_nama_siswa);
@@ -143,7 +143,7 @@ class PengajuanSiswaMagangController extends BaseController
                 ->make(true);
     }
 
-     public function cancelPengajuanMagang(Request $request, $id){
+  public function cancelPengajuanMagang(Request $request, $id){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -152,7 +152,7 @@ class PengajuanSiswaMagangController extends BaseController
 
         return view('humas/magang-siswa/pengajuan-siswa-magang/cancel-pengajuan-siswa-magang',compact('auth_data','data_pengambilan_magang','id'));
 
-    }
+  }
 
     public function actionPengajuanMagang(Request $request, $mode, $id = null, $id_siswa = null, $id_periode_magang = null,$id_rekanan_magang = null){
 
