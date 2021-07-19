@@ -4,6 +4,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'siswa'), function() {
         Route::get('welcome', 'Siswa\WelcomeController@indexWelcome');
 
+        Route::group(array('prefix' => 'bursa-kerja'), function() {
+
+			Route::group(array('prefix' => 'bkk'), function() {
+
+				Route::get('/', 'Alumni\BursaKerja\BKKController@viewBkk');
+				Route::get('detail/{id}', 'Alumni\BursaKerja\BKKController@viewDetailBkk');
+				Route::get('datatables', 'Alumni\BursaKerja\BKKController@showDatatablesBkk');
+
+			});
+
+		});
+
         /** ==== MODUL DATA PRIBADI ==== **/
         Route::group(array('prefix' => 'data-pribadi'), function() {
 
