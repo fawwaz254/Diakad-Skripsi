@@ -52,11 +52,11 @@
                                         @foreach($list_data as $nilai)
                                             <td>
                                                 <input type="text" name="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" 
-                                                value="{{ !empty($nilai_magang_siswa) ? $nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang] : '' }}" style="width: 50%">
+                                                value="{{ isset($nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang]) ? $nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang] : '' }}" style="width: 50%">
                                             </td>
                                         @endforeach
                                         <td>
-                                            {{isset($siswa->nilai_angka) ? $siswa->nilai_angka : 0}}
+                                            {{isset($siswa->nilai_angka) ? $siswa->nilai_angka : '-'}}
                                         </td>
                                     </tr>
                                     @endforeach
@@ -70,7 +70,9 @@
     </form>
 </div>
 <script type="text/javascript">
+
     $(document).ready(function() {
         var table = $('#primary_table').DataTable();
-    } );
+    });
+
 </script>

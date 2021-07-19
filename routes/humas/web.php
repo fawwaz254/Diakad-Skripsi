@@ -93,6 +93,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				// Menu Laporan Magang
 				Route::get('laporan-magang', 'Humas\MagangSiswa\LaporanMagangController@viewLaporanMagang');
 				Route::get('laporan-magang/datatables', 'Humas\MagangSiswa\LaporanMagangController@datatablesLaporanMagang');
+				Route::get('laporan-magang/print/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@printLaporanMagang');
 	
 				//MENU Periode Magang
 				Route::get('periode-magang', 'Humas\MagangSiswa\PeriodeMagangController@viewPeriodeMagang');
