@@ -35,6 +35,12 @@
     .tdbg-12{
         background: #a0c1b8;
     }
+
+    table.is-fixed td{
+        height: 75px;
+        max-height: 75px;
+        min-height: 75px;
+    }
 </style>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -113,9 +119,10 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover dataTable" id="primary_table">
+                        <table class="table is-fixed table-bordered table-striped table-hover dataTable" id="primary_table">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>NIS</th>
                                     <th>Nama</th>
                                     @foreach($data_bulan_tagihan as $bulan)
@@ -127,6 +134,9 @@
                                     @endforeach
                                 </tr>
                             </thead>
+                            @php
+                                $no = 1;
+                            @endphp
                             <tbody>
                                 @foreach($data_siswa as $siswa)
                                 @if($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
@@ -134,6 +144,7 @@
                                 @else
                                 <tr style="background-color: #ffc109;">
                                 @endif
+                                    <td>{{$no++}}</td>
                                     <td>{{$siswa->nis_siswa}}</td>
                                     @if($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
                                     <td>{{$siswa->pengguna->nm_pengguna}}</td>
@@ -270,7 +281,7 @@ var primary_table = $('#primary_table').DataTable({
     ordering: false,
     scrollX: true,
     fixedColumns:   {
-        leftColumns: 2
+        leftColumns: 3
     },
     scrollCollapse: true,
     paging: false
