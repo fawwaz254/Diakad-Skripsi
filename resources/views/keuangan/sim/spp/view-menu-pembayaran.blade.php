@@ -159,9 +159,9 @@
                                         @elseif($tagihan->is_tagih == 0)
                                         <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
                                             <br>
-                                            <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
-                                                <i class="material-icons" style="left: -7px; top: -7px;">close</i>
-                                            </button>
+                                            <a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
+                                                Batal
+                                            </a>
                                         </td>
                                         @endif
                                     @else
@@ -203,9 +203,9 @@
                     item.parent('td').replaceWith(
                         '<td class="tdbg-' + response.data.month + '">' + response.data.date + 
                         '    <br>'+
-                        '    <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="' + response.data.id + '" style="width: 25px; height: 25px;">'+
-                        '        <i class="material-icons">close</i>'+
-                        '    </button>'+
+                        '<a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="'+ response.data.id +'">'+
+                        '    Batal'+
+                        '</a>'+
                         '</td>'
                     );
                 },
