@@ -280,10 +280,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::group(array('prefix' => 'jurnal-guru'), function() {
 				Route::get('/', 'Pendidikan\LaporanAkademik\JurnalGuruController@viewJurnalGuru');
 				Route::get('/{id_guru}/{id_semester}', 'Pendidikan\LaporanAkademik\JurnalGuruController@viewJurnalGuru');
-				Route::get('datatables', 'Pendidikan\LaporanAkademik\JurnalGuruController@datatablesJurnalGuru');
-				Route::get('add', 'Pendidikan\LaporanAkademik\JurnalGuruController@addJurnalGuru');
-				Route::get('edit/{id}', 'Pendidikan\LaporanAkademik\JurnalGuruController@editJurnalGuru');
-				Route::post('action/{mode}/{id}', 'PendidikanLaporanAkademik\JurnalGuruController@actionJurnalGuru');
+				Route::get('datatables/{id_guru}/{id_semester}', 'Pendidikan\LaporanAkademik\JurnalGuruController@datatablesJurnalGuru');
 			});
 
 
