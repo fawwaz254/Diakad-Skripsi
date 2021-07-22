@@ -283,6 +283,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				Route::get('datatables/{id_guru}/{id_semester}', 'Pendidikan\LaporanAkademik\JurnalGuruController@datatablesJurnalGuru');
 			});
 
+			Route::group(array('prefix' => 'jurnal-kelas'), function() {
+				Route::get('/', 'Pendidikan\LaporanAkademik\JurnalKelasController@viewJurnalKelas');
+				Route::get('/{id_kelas}/{id_semester}', 'Pendidikan\LaporanAkademik\JurnalKelasController@viewJurnalKelas');
+				Route::get('datatables/{id_kelas}/{id_semester}', 'Pendidikan\LaporanAkademik\JurnalKelasController@datatablesJurnalKelas');
+			});
 
 			Route::get('absensi-siswa', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
 

@@ -12,13 +12,13 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                                  <div class="form-group">
+                                <div class="form-group">
                                     <div class="form-line">
-                                        <label>Guru</label>
-                                        <select class="form-control show-tick" name="id_guru" required="">
-                                            @foreach($data_guru as $r)
-                                            <option value="{{$r->id_guru}}" {{!empty($selected_guru) && $selected_guru->id_guru == $r->id_guru ? 'selected' : '' }}>
-                                                {{$r->gelar_depan ? $r->gelar_depan : ''}} {{$r->nm_pengguna}} {{$r->gelar_belakang ? $r->gelar_belakang : ''}}
+                                        <label>Kelas</label>
+                                        <select class="form-control show-tick" name="id_kelas" required="">
+                                            @foreach($data_kelas as $data)
+                                            <option value="{{$data->id_kelas}}" {{ (!empty($selected_kelas) && $selected_kelas->id_kelas == $data->id_kelas) ? 'selected' : ''}}>
+                                                {{$data->nm_kelas}}
                                             </option>
                                             @endforeach
                                         </select>
@@ -55,7 +55,7 @@
     </div>
 </div>
 
-@if(!empty($selected_guru) && !empty($selected_semester))
+@if(!empty($selected_kelas) && !empty($selected_semester))
 
 <div class="container-fluid">
 <div class="card">
@@ -68,9 +68,7 @@
                     <th>Mata Pelajaran</th>
                     <th>Hari</th>
                     <th>Jam KBM</th>
-                    <th>Kelas</th>
                     <th>Ruangan</th>
-                    <th>Status PJMP</th>
                 </tr>
             </thead>
         </table>
@@ -80,10 +78,11 @@
 </div>
 
 <script type="text/javascript">
-    let id_guru = '{{ $selected_guru->id_guru }}',  id_semester = '{{ $selected_semester->id_semester }}';
+    
+    let id_kelas = '{{ $selected_kelas->id_kelas }}',  id_semester = '{{ $selected_semester->id_semester }}';
 
     var modul_url       = 'laporan-akademik';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jurnal-guru/datatables/'+id_guru+'/'+id_semester;
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jurnal-kelas/datatables/'+id_kelas+'/'+id_semester;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -98,11 +97,9 @@
         columns: [
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'mata_pelajaran', name: 'mata_pelajaran' },
-            { data: 'nm_jadwal_hari', name: 'nm_jadwal_hari' },
+            { data: 'jadwal_hari', name: 'jadwal_hari' },
             { data: 'jadwal_jam', name: 'jadwal_jam'},
-            { data: 'nm_kelas', name: 'nm_kelas'},
-            { data: 'nm_ruangan', name: 'nm_ruangan'},
-            { data: 'status_pjmp', name: 'status_pjmp'}
+            { data: 'ruangan', name: 'ruangan'},
         ]
     });
 
@@ -113,6 +110,7 @@
             primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
+
 </script>
 
 @endif
@@ -121,10 +119,10 @@
 
     $('select:not(.ms)').selectpicker();
 
-</script>      
+</script>
 
-<script>
-
+<script type="text/javascript">
+    
     let modul_url       = '{{ $auth_data->modul_url }}';
     let menu_url        = '{{ $auth_data->menu_url }}';
 
@@ -158,4 +156,4 @@
         }
     });
 
-</script>
+</script>      
