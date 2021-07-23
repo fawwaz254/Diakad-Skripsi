@@ -37,12 +37,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($data as $r)
+                                @foreach($data as $key => $r)
                                 <tr>
                                     <td style="text-align:center;">{{$loop->iteration}}</td>
                                     <td id="role{{$r['index']}}">{{$r['role']}}</td>
                                     <td style="text-align:center;"></td>
-                                    <input type="text" value="{{$r['catatan']}}" id="catatan{{$r['index']}}">
+                                    
+                                    @php
+
+                                    ${"catatan$key"} = $r['catatan'];
+
+                                    @endphp
+
                                     <td style="text-align:center;">
                                         @if($r['status'] == 'Belum Digunakan')
                                         <span class="label bg-red detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['index']}})">{{$r['status']}}</span></td>
@@ -89,6 +95,8 @@
 <script type="text/javascript">
 
     function detail_catatan(key){
+        var list_catatan = {{$catatan1}};
+        console.log(list_catatan);
         $('#modalCatatanHeader').html('Catatan Untuk Role '+$('#role'+key).html());
         $('#modalCatatanBody').html($('#catatan'+key).val());
         $('#modalCatatan').modal('show');

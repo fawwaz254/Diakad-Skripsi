@@ -36,7 +36,10 @@ class PeriodeWisuda extends Model
     protected $guarded = [];
 
 
-
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester');
+    }
 
 
 

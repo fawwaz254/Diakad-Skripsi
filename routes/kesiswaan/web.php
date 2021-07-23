@@ -349,6 +349,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::group(array('prefix' => 'laporan-wisuda'), function () {
                  Route::get('/', 'Pendidikan\Wisuda\LaporanWisudaController@viewLaporanWisuda');
+                 Route::get('print-laporan-wisuda/{id_periode}', 'Pendidikan\Wisuda\LaporanWisudaController@printLaporanWisuda');
             });
         });
         
