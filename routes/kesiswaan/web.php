@@ -346,6 +346,10 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('set-lulus/datatables/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\SetLulusController@datatablesSetLulus');
 
             Route::post('action-set-lulus/{mode}/{id}', 'Pendidikan\Wisuda\SetLulusController@actionSetLulus');
+
+            Route::group(array('prefix' => 'laporan-wisuda'), function () {
+                 Route::get('/', 'Pendidikan\Wisuda\LaporanWisudaController@viewLaporanWisuda');
+            });
         });
         
         /** ==== MODUL PENDAFTARAN ==== **/
