@@ -40,20 +40,13 @@
                                 @foreach($data as $key => $r)
                                 <tr>
                                     <td style="text-align:center;">{{$loop->iteration}}</td>
-                                    <td id="role{{$r['index']}}">{{$r['role']}}</td>
+                                    <td >{{$r['role']}}</td>
                                     <td style="text-align:center;"></td>
-                                    
-                                    @php
-
-                                    ${"catatan$key"} = $r['catatan'];
-
-                                    @endphp
-
                                     <td style="text-align:center;">
                                         @if($r['status'] == 'Belum Digunakan')
-                                        <span class="label bg-red detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['index']}})">{{$r['status']}}</span></td>
+                                        <span class="label bg-red detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
                                         @else
-                                        <span class="label bg-green detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['index']}})">{{$r['status']}}</span></td>
+                                        <span class="label bg-green detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
                                         @endif
                                 </tr>
                                 @endforeach
@@ -78,7 +71,18 @@
                 <h4 class="modal-title" id="modalCatatanHeader"></h4>
             </div>
             <div class="modal-body" id="modalCatatanBody">
-              
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Catatan</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="isi_tabel">
+                        
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
@@ -94,12 +98,42 @@
 
 <script type="text/javascript">
 
-    function detail_catatan(key){
-        var list_catatan = {{$catatan1}};
-        console.log(list_catatan);
-        $('#modalCatatanHeader').html('Catatan Untuk Role '+$('#role'+key).html());
-        $('#modalCatatanBody').html($('#catatan'+key).val());
-        $('#modalCatatan').modal('show');
+    function detail_catatan(id_role){
+
+        $.ajax({
+            url : base_url+'/reporting-dashboard/all-diakad/'+id_role,
+            type : 'get',
+            dataType : 'json',
+            success : function (response){
+                $('#modalCatatanHeader').html('Catatan Untuk Role '+response.nm_role);
+                $('#isi_tabel').empty();
+                $.each(response.catatan,function(i,value){
+                    if(value.status == 1){
+                        $('#isi_tabel').append(`
+                            <tr>
+                            <td>`+(i+1)+`</td>
+                            <td>`+value.catatan+`</td>
+                            <td><i class="material-icons" style="color:green">check</i></td>
+                            </tr>
+                        `)
+                    }
+                    else{
+                        $('#isi_tabel').append(`
+                            <tr>
+                            <td>`+(i+1)+`</td>
+                            <td>`+value.catatan+`</td>
+                            <td><i class="material-icons" style="color:red">clear</i></td>
+                            </tr>
+                        `)
+                    }
+                })
+                $('#modalCatatan').modal('show');
+            },   
+            error:function(){
+                alert('mohon maaf terjadi kesalahan, silahkan hubungi admin');
+            }
+        })
+
     }
 </script>
 
