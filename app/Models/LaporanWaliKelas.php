@@ -22,6 +22,11 @@ class LaporanWaliKelas extends Model
     
     protected $guarded = [];
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
     public function semester()
     {
         return $this->belongsTo(Semester::class, 'id_semester');
