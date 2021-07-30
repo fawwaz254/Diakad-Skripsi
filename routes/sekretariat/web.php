@@ -56,6 +56,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             
             //ajax subkategori
             Route::post('sub-kategori', 'Sekretariat\DataDokumen\InputDokumenController@ajaxGetSubkategori');
+
+            Route::group(array('prefix' => 'dokumen-dibagikan'), function() {
+                 Route::get('/', 'Sekretariat\DataDokumen\DokumenDibagikanController@viewDokumenDibagikan');
+            });
             
         });
 

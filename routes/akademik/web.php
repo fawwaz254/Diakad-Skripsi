@@ -228,5 +228,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('setting-pengampu/guru/action/{mode}', 'Akademik\KelasDaring\SettingPengampuController@actionSettingPengampu');
         });
+
+        Route::group(array('prefix' => 'laporan'), function () {
+
+            Route::group(array('prefix' => 'wali-kelas'), function () {
+                Route::get('/', 'Kesiswaan\Laporan\WaliKelasController@viewWaliKelas');
+                Route::get('datatables', 'Kesiswaan\Laporan\WaliKelasController@datatablesWaliKelas');
+                Route::get('add', 'Kesiswaan\Laporan\WaliKelasController@addWaliKelas');
+                Route::get('edit/{id}', 'Kesiswaan\Laporan\WaliKelasController@editWaliKelas');
+                Route::get('detail/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailWaliKelas');
+                Route::get('detail-ajax/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailAjaxWaliKelas');
+                Route::get('detail-datatable/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailDataTable');
+                Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
+                Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
+            });
+
+        });
     });
 });
