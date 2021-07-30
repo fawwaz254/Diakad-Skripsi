@@ -164,6 +164,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('action-batch-upload-foto', 'Pendidikan\Siswa\UpdateFotoController@actionBatchUploadFoto');
 
             //MENU UPLOAD DATA SISWA
+            Route::get('update-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@updateDataSiswa');
             Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');
             Route::get('/download-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@downloadFileExcel')->name('siswa/download-file-excel');
             Route::post('post-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@uploadFileExcel');
@@ -345,6 +346,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('set-lulus/datatables/{id_periode_wisuda}/{id_kelas}', 'Pendidikan\Wisuda\SetLulusController@datatablesSetLulus');
 
             Route::post('action-set-lulus/{mode}/{id}', 'Pendidikan\Wisuda\SetLulusController@actionSetLulus');
+
+            Route::group(array('prefix' => 'laporan-wisuda'), function () {
+                 Route::get('/', 'Pendidikan\Wisuda\LaporanWisudaController@viewLaporanWisuda');
+                 Route::get('print-laporan-wisuda/{id_periode}', 'Pendidikan\Wisuda\LaporanWisudaController@printLaporanWisuda');
+            });
         });
         
         /** ==== MODUL PENDAFTARAN ==== **/
@@ -369,5 +375,24 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::post('action-pengambilan-ijazah/{mode}/{id}', 'Kesiswaan\Ijazah\PengambilanIjazahController@actionPengambilanIjazah');
         });
+
+        /** ==== MODUL IJAZAH ==== **/
+        
+        Route::group(array('prefix' => 'laporan'), function () {
+
+            Route::group(array('prefix' => 'wali-kelas'), function () {
+                Route::get('/', 'Kesiswaan\Laporan\WaliKelasController@viewWaliKelas');
+                Route::get('datatables', 'Kesiswaan\Laporan\WaliKelasController@datatablesWaliKelas');
+                Route::get('add', 'Kesiswaan\Laporan\WaliKelasController@addWaliKelas');
+                Route::get('edit/{id}', 'Kesiswaan\Laporan\WaliKelasController@editWaliKelas');
+                Route::get('detail/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailWaliKelas');
+                Route::get('detail-ajax/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailAjaxWaliKelas');
+                Route::get('detail-datatable/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailDataTable');
+                Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
+                Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
+            });
+
+        });
+
     });
 });

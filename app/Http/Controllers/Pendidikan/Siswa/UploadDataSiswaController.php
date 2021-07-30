@@ -26,6 +26,7 @@ use App\Models\Voucher;
 use App\Models\Agama;
 use App\Models\Kota;
 use App\Models\Provinsi;
+use App\Models\PengajuanWisuda;
 use App\Models\KebutuhanKhusus;
 use App\Models\JenisTinggal;
 use App\Models\JenisTransportasi;
@@ -56,6 +57,61 @@ class UploadDataSiswaController extends BaseController
            ];
 
         return response()->download($file, 'ContohFileExcelUploadDataSiswa.xls', $headers);
+
+    }
+
+    public function updateDataSiswa(Request $request){
+
+    	$input = (object) $request->input();
+	    $auth_data = $input->auth_data;
+	    $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+	    set_time_limit(0);
+
+	    DB::beginTransaction();
+
+        try {
+
+        	$path = public_path(). "/excel-ijazah.csv";
+
+        	$csv = array();
+            $lines = file($path, FILE_IGNORE_NEW_LINES);
+
+            foreach ($lines as $key => $value){
+                
+                $csv[$key] = str_getcsv($value);
+                
+            }
+
+            foreach ($csv as $key => $value) {
+
+            	$siswa = Siswa::where('nis_siswa',$value[1])->first();
+
+            	if($siswa){
+            		$pengjuan_wisuda = PengajuanWisuda::where('id_siswa',$siswa->id_siswa)->first();
+
+            		if($pengjuan_wisuda){
+            			$pengjuan_wisuda->nomor_ijasah = $value[4];
+            			$pengjuan_wisuda->save();
+            		}
+            	} 
+
+            }
+
+            DB::commit();
+
+            return 'success';
+
+        }
+
+        catch (\Exception $e) {
+
+            DB::rollback();
+
+            return (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error';
+
+        }
+
 
     }
     

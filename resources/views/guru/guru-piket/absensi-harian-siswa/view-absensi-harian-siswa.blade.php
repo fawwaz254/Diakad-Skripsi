@@ -16,7 +16,7 @@
                                         <label>Semester</label>
                                         <select class="form-control show-tick" name="id_semester" required="">
                                             @foreach($data_semester as $data)
-                                            <option value="{{$data->id_semester}}" {{(!empty($selected_semester) && $selected_semester->id_semester == $data->id_semester)? 'selected' : ($data->is_aktif_semester == 1)? 'selected' : ''}}>
+                                            <option value="{{$data->id_semester}}" {{((!empty($selected_semester) && $selected_semester->id_semester == $data->id_semester)? 'selected' : ($data->is_aktif_semester == 1))? 'selected' : ''}}>
                                                 {{$data->tahun_ajaran}}
                                                 {{$data->nm_semester}} 
                                                 @if($data->is_aktif_semester == 1)
