@@ -46,4 +46,12 @@ class PengajuanWisuda extends Model
         return $this->belongsTo('App\Models\PeriodeWisuda', 'id_periode_wisuda');
     }
 
+    public function siswa(){
+        return $this->belongsTo(Siswa::class, 'id_siswa');
+    }
+
+    public function kelas(){
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
+
 }

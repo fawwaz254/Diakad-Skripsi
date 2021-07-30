@@ -59,5 +59,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             
         });
 
+        Route::group(array('prefix' => 'laporan'), function() {
+
+            Route::group(array('prefix' => 'wali-kelas'), function() {
+
+                Route::get('/', 'Sekretariat\Laporan\WaliKelasController@viewWaliKelas');
+                Route::get('datatables', 'Sekretariat\Laporan\WaliKelasController@datatablesWaliKelas');
+                Route::get('detail/{id}', 'Sekretariat\Laporan\WaliKelasController@detailWaliKelas');
+                Route::get('detail-datatable/{id}', 'Sekretariat\Laporan\WaliKelasController@detailDataTable');
+
+            });
+
+        });
+
     });
 });

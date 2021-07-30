@@ -194,6 +194,25 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('cetak-presensi-uas/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUASController@printCetakPresensiUAS');
         });
 
+        // MODUL MONITORING
+
+        Route::group(array('prefix' => 'guru-piket'), function () {
+            Route::get('absensi-harian-siswa', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
+            Route::get('absensi-harian-siswa/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
+            Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
+            Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
+            Route::get('absensi-harian-siswa/detail/{id_semester}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewDetailAbsensiHarianSiswa');
+            
+            Route::post('absensi-harian-siswa/datatables/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesAbsensiHarianSiswa');
+            Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesKelasAbsensiHariSiswa');
+            Route::post('absensi-harian-siswa/action/{mode}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
+            Route::post('absensi-harian-siswa/action/{mode}/{id}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
+        });
+    
+        Route::group(array('prefix' => 'monitoring'), function () {
+            Route::get('monitoring-presensi', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
+        });
+
         // MODUL KELAS DARING
         Route::group(array('prefix' => 'kelas-daring'), function () {
             // MENU Setting Toleransi Keterlambatan
