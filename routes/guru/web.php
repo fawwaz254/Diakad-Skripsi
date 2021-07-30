@@ -399,6 +399,18 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             });
         });
 
+        Route::group(['prefix' => 'laporan'], function(){
+
+            Route::group(array('prefix' => 'kerja-harian'), function () {
+                Route::get('/', 'Guru\Laporan\KerjaHarianController@viewKerjaHarian');
+                Route::get('datatables', 'Guru\Laporan\KerjaHarianController@datatablesKerjaHarian');
+                Route::get('add', 'Guru\Laporan\KerjaHarianController@addKerjaHarian');
+                Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
+                Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
+            });
+
+        });
+
         // MODUL PEMBINA EKSKUL
         Route::group(['prefix' => 'pembina-ekskul'], function(){
             // Menu Rekap Absensi Ekskul
