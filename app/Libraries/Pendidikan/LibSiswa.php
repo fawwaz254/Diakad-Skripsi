@@ -637,7 +637,7 @@ class LibSiswa
     /** ========== **/
 
     /** RIWAYAT BAYAR SISWA BY id_pengguna **/
-    public static function fetchPembayaranSiswa($auth_data, $id_pengguna)
+    public static function fetchPembayaranSiswa($auth_data, $id_pengguna, $tahun = null)
     {
         // get id_siswa
         $siswa = Siswa::where('id_pengguna', '=', $id_pengguna)->first();
@@ -661,6 +661,9 @@ class LibSiswa
                     ->leftJoin('bank_via', 'bank_via.id_bank_via', '=', 'pembayaran_biaya.id_bank_via')
                     ->where('siswa.id_siswa', '=', $id_siswa)
                     ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->when($tahun, function ($query) use ($tahun) {
+                        return $query->where('s_bayar.thn_akademik_semester', $tahun);
+                    })
                     ->orderBy('pembayaran_biaya.tgl_pembayaran', 'desc')
                     ->orderBy('s_bayar.thn_akademik_semester', 'desc')
                     ->orderBy('s_bayar.nm_semester', 'desc')
