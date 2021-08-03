@@ -7,6 +7,9 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Yajra\Datatables\Datatables;
 
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Models\Semester;
 use App\Models\WaliKelas as WaliKelas;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -161,6 +164,10 @@ class WaliKelasController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
+
+                $kelas = Kelas::find($input->id_kelas);
+                $semester = Semester::find($input->id_semester);
+                $guru = Guru::find($input->id_guru);
                 // cek apabila ada record kelas dan semester yg sama
                 $waliKelas = WaliKelas::join('semester', 'semester.id_semester', '=', 'wali_kelas.id_semester')
                                 ->where('wali_kelas.id_kelas', '=', $input->id_kelas)
@@ -175,10 +182,21 @@ class WaliKelasController extends BaseController
                                 ->first();
 
                 if ($waliKelas || $waliKelasGuru) {
-                    return [
-                        'status' => 300, // FAILED
-                        'message' => 'Failed To Save Wali Kelas!'
-                    ];
+
+                    if($waliKelas){
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki wali kelas yaitu '.$waliKelas->guru->pengguna->nm_pengguna
+                        ];
+                    }
+
+                    if($waliKelasGuru){
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Mohon maaf guru atas nama '.$guru->pengguna->nm_pengguna.' pada semester '.$semester->tahun_ajaran.' telah menjadi wali kelas di kelas '.$waliKelasGuru->kelas->nm_kelas
+                        ];
+                    }
+                
                 } else {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
