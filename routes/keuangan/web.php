@@ -141,6 +141,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-by-kelas', 'Keuangan\Utility\PembayaranByKelasController@viewPembayaranByKelas');
             Route::post('post-view-pembayaran-by-kelas', 'Keuangan\Utility\PembayaranByKelasController@actionViewPembayaranByKelas');
             Route::get('pembayaran-by-kelas/view-detail/{id_semester}/{id_kelas}', 'Keuangan\Utility\PembayaranByKelasController@viewDetailPembayaranByKelas');
+
+            Route::group(array('prefix' => 'input-tagihan-siswa'), function () {
+                 Route::get('/', 'Keuangan\Utility\InputTagihanSiswaController@viewInputTagihanSiswa');
+                 Route::get('filter-siswa/{id}', 'Keuangan\Utility\InputTagihanSiswaController@filterSiswa');
+                 Route::post('add-tagihan', 'Keuangan\Utility\InputTagihanSiswaController@addTagihan');
+            });
+
         });
 
         /** ==== MODUL RAPB ==== **/

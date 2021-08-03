@@ -98,9 +98,6 @@
                                     <button class="btn btn-success waves-effect float-right" id="pay-button" onclick="paySelected()">
                                         <i class="material-icons">point_of_sale</i><span>Bayar tagihan terpilih</span>
                                     </button>
-                                      <button class="btn btn-warning waves-effect float-right" style="float:right;" id="tambah-tagihan" onclick="tambahTagihan()">
-                                        <i class="material-icons">add</i><span>Tambah Tagihan</span>
-                                    </button>
                                 </h2>
                             </div>
                             <div class="body">
@@ -192,93 +189,6 @@
     </div>
 </div>
 <!-- END modal print -->
-
-<!-- Modal Tambah Tagihan -->
-<div class="modal fade" id="modal-tambah-tagihan" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Form Tambah Tagihan</h4>
-            </div>
-            <form id="print-unpaid" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran/'.$siswa->id_pengguna.'/'.now()->format('Y-m-d')) }}" target="_blank" method="GET">
-                <div class="modal-body">
-                    
-
-                    <div class="row clearfix">
-
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <p>Biaya Sekolah</p>
-                            <select class="form-control show-tick" name="id_biaya_sekolah">
-                                <option value="" disabled selected >-- Pilih Biaya Sekolah --</option>
-                                @foreach($data_biaya_sekolah as $data)
-                                    <option value="{{$data->id_biaya_sekolah}}">{{ ucwords($data->nm_kelompok_biaya) }} ({{$data->tahun_ajaran}} {{$data->nm_semester}})</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <p>Nama Biaya</p>
-                            <select class="form-control show-tick" name="id_biaya">
-                                <option value="" disabled selected >-- Pilih Nama Biaya --</option>
-                                @foreach($data_biaya as $data)
-                                    <option value="{{$data->id_biaya}}">{{$data->nm_biaya}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <div class="row clearfix">
-
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <p>Besar Biaya</p>
-                            <input type="number" class="form-control" name="besar_biaya" required="" aria-required="true" aria-invalid="true">
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <p>Keterangan</p>
-                            <input type="text" class="form-control" name="keterangan_biaya" required="" aria-required="true" aria-invalid="true">
-                        </div>
-
-                    </div>
-
-                    <br>
-
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <p>Jenis Biaya</p>
-                            <select class="form-control show-tick" name="id_jenis_detail_biaya" onchange="changeJenis(this)">
-                                <option value="" disabled selected >-- Pilih Jenis Biaya --</option>
-                                @foreach($data_jenis_detail_biaya as $data)
-                                    <option value="{{$data->id_jenis_detail_biaya}}">{{$data->nm_jenis_detail_biaya}} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-
-                    <br>
-
-                    <p>
-                        Bulan <small>* Khusus Jenis Biaya Pembayaran Per Bulan</small>
-                    </p>
-                    <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div id="div_bulan">
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Modal Tambah Tagihan -->
 
 <!-- START modal print UNPAID BILLS -->
 <div class="modal fade" id="modal-print-unpaid-bills" tabindex="-1" role="dialog">
@@ -707,12 +617,6 @@ function changeJenis(el){
                 $('#pay-button').removeAttr('disabled', 'disabled');
             }
         });
-    }
-
-    function tambahTagihan(){
-
-        $('#modal-tambah-tagihan').modal('show');
-
     }
 
     $(document).ready(function () {

@@ -253,7 +253,7 @@ class PembayaranSiswaController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
 
-        return view('keuangan/utility/pembayaran-siswa/view-detail-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'data_semester', 'tahun_akademik_semester'));
+        return view('keuangan/utility/pembayaran-siswa/view-detail-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'data_semester', 'tahun_akademik_semester','data_biaya_sekolah','data_biaya','data_jenis_detail_biaya','data_bulan'));
     }
 
     public function datatablesTagihanPembayaranSiswa(Request $request, $id_pengguna, $nis_nama_siswa)
