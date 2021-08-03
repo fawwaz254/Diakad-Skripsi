@@ -97,6 +97,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
 
             Route::post('action-setting-peserta-ekskul/{mode}/{id}', 'Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController@actionSettingPesertaEkskul');
+
+            Route::group(array('prefix' => 'monitoring-absensi-ekskul'), function () {
+                Route::get('/', 'Kesiswaan\Ekstrakurikuler\MonitoringAbsensiEkskulController@viewMonitoringAbsensiEkskul');
+                Route::get('detail/{id_semester}/{id_ekskul}', 'Kesiswaan\Ekstrakurikuler\MonitoringAbsensiEkskulController@viewDetailMonitoringAbsensiEkskul');
+                Route::get('print/{id_semester}/{id_ekskul}', 'Kesiswaan\Ekstrakurikuler\MonitoringAbsensiEkskulController@printMonitoringAbsensiEkskul');
+            });
+
         });
 
         /** ==== MODUL PENANGANAN SISWA ==== **/
