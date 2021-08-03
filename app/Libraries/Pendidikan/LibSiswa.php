@@ -62,7 +62,7 @@ class LibSiswa
 
     public static function fetchDataSiswaByKelompokBiaya($auth_data,$id_kelompok_biaya){
 
-        $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'calon_siswa_baru.jenis_kelamin', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
+        $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna','siswa.id_kelompok_biaya', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'calon_siswa_baru.jenis_kelamin', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.id_kelas', 'kelas.nm_kelas')
                     ->join('pengguna', function ($q) {
                         $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                             ->whereNull('pengguna.deleted_at');
@@ -86,6 +86,8 @@ class LibSiswa
                     ->orderBy('kelas.tingkat', 'asc')
                     ->orderBy('siswa.nis_siswa', 'asc')
                     ->get();
+
+        return $siswa;
 
     }
 

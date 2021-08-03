@@ -27,11 +27,11 @@ class InputTagihanSiswaController extends BaseController
 	    $input = (object) $request->input();
 	    $auth_data = $input->auth_data;
 
-      $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
-      $data_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
-      $data_jenis_detail_biaya = LibDataKeuangan::fetchDataJenisDetailBiaya($auth_data);
-      $data_kelompok_biaya = KelompokBiaya::all();
-      $data_siswa = LibSiswa::fetchDataSiswa($auth_data);
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $data_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
+        $data_jenis_detail_biaya = LibDataKeuangan::fetchDataJenisDetailBiaya($auth_data);
+        $data_kelompok_biaya = KelompokBiaya::all();
+        $data_siswa = LibSiswa::fetchDataSiswa($auth_data);
 
     	return view('keuangan/utility/input-tagihan-siswa/view-input-tagihan-siswa',compact('auth_data','data_semester','data_biaya','data_jenis_detail_biaya','data_siswa','data_kelompok_biaya'));
   	}
@@ -69,6 +69,15 @@ class InputTagihanSiswaController extends BaseController
             $siswa = Siswa::find($list_siswa[0]);
 
             $biaya_sekolah = BiayaSekolah::where(['id_semester'=>$input->semester,'id_kelompok_biaya'=>$siswa->id_kelompok_biaya])->first();
+
+            if(!$biaya_sekolah){
+
+                return [
+                    'status' => 300, // GAGAL
+                    'message' => 'Pada semester yang anda masukkan biaya sekolah tidak ditemukan'
+                ];
+
+            }
 
             $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 

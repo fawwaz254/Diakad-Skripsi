@@ -78,8 +78,7 @@
 
                     <div>
                         <label>Filter Kelompok Biaya</label>
-                        <select class="form-control" id="kelompok_biaya" name="kelompok_biaya">
-                        <option value="">Pilih Kelompok Biaya</option>
+                        <select class="form-control" id="kelompok_biaya" onchange="tampilkan_data(1)" name="kelompok_biaya">
                         @foreach($data_kelompok_biaya as $data)
                             <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} </option>
                         @endforeach
@@ -100,18 +99,7 @@
                                 </tr>
                             </thead>
                             <tbody id="isi_tabel">
-                                @foreach($data_siswa as $r)
-                                <tr>
-                                    <td>{{$loop->iteration}}</td>
-                                    <td>{{$r->nis_siswa}}</td>
-                                    <td>{{$r->nm_pengguna}}</td>
-                                    <td>{{$r->nm_kelas}}</td>
-                                    <td>
-                                      <input type="checkbox" id="basic_checkbox_{{$r->id_siswa}}" name="id_siswa[]" value="{{$r->id_siswa}}" class="filled-in" />
-                                      <label for="basic_checkbox_{{$r->id_siswa}}"></label>
-                                    </td>
-                                </tr>
-                                @endforeach
+                                
                             </tbody>
                         </table>
                     </div>
@@ -126,7 +114,8 @@
 @include('scriptjs')
 
 <script type="text/javascript">
-    $('#primary_table').DataTable();
+
+    tampilkan_data(0);
 
     $(document).on('change', '.filled-in', function() {
 
@@ -141,23 +130,20 @@
         }
     })
 
-    $('#kelompok_biaya').change(function(){
+    function tampilkan_data(mode){
 
         var id = $('#kelompok_biaya').val();
-
-        if(id==""){
-            alert('mohon isi dulu kelompok biaya');
-            return false;
-        }
+        $('#siswa_terpilih').html('0');
 
         $.ajax({
             url : base_url+'/keuangan/utility/input-tagihan-siswa/filter-siswa/'+id,
             type : 'get',
             dataType : 'json',
             success : function (response){
-                $('#isi_tabel').empty();
 
-                console.log(response);
+                if(mode == 1) $('#primary_table').DataTable().clear().destroy();
+
+                $('#isi_tabel').empty();
 
                 $.each(response,function(i,value){
                     $('#isi_tabel').append(`
@@ -173,12 +159,14 @@
                         </tr>
                     `);
                 })
+                
+                $('#primary_table').DataTable();
             },  
             error: function(){
                 alert('mohon maaf terjadi error, silahkan hubungi admin');
             }
         })
 
-    })
+    }
 
 </script>
