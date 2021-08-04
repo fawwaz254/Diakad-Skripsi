@@ -778,13 +778,19 @@ class SppController extends BaseController
 
         $tutup_buku_tahunan = TutupBukuTahunanBiaya::where('id_semester_mulai', $semester_mulai->id_semester)
                                                         ->where('id_semester_selesai', $semester_selesai->id_semester)
-                                                        ->isInputByPengguna($auth_data->pengguna->id_pengguna)->firstOrFail();
+                                                        ->isInputByPengguna($auth_data->pengguna->id_pengguna)
+                                                        ->first();
 
         $data_pembayaran_tunggakan = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
                                                         ->where('id_semester_selesai', $semester_selesai->id_semester)
                                                         ->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
-        $sisa_tunggakan = $tutup_buku_tahunan->jml_tunggakan_biaya - $data_pembayaran_tunggakan->sum('besar_pembayaran');
+        if($tutup_buku_tahunan){
+            $sisa_tunggakan = $tutup_buku_tahunan->jml_tunggakan_biaya - $data_pembayaran_tunggakan->sum('besar_pembayaran');
+        }
+        else{
+            $sisa_tunggakan = null;
+        }
 
         $data_bulan = Bulan::orderBy('id_bulan')->get();
         
