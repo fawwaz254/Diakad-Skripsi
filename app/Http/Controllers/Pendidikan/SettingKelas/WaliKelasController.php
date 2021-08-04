@@ -193,7 +193,7 @@ class WaliKelasController extends BaseController
                     if($waliKelasGuru){
                         return [
                             'status' => 300, // FAILED
-                            'message' => 'Mohon maaf guru atas nama '.$guru->pengguna->nm_pengguna.' pada semester '.$semester->tahun_ajaran.' telah menjadi wali kelas di kelas '.$waliKelasGuru->kelas->nm_kelas
+                            'message' => 'Mohon maaf guru atas nama '.$guru->pengguna->nm_pengguna.' pada semester '.$semester->tahun_ajaran.' '.$semester->nm_semester.' telah menjadi wali kelas di kelas '.$waliKelasGuru->kelas->nm_kelas
                         ];
                     }
                 
