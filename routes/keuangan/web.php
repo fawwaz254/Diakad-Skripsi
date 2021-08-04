@@ -302,6 +302,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         Route::group(array('prefix' => 'sim'), function () {
             // MENU SPP
             Route::group(array('prefix' => 'spp'), function () {
+
                 Route::get('/', 'Keuangan\SIM\SppController@viewMenuSpp');
 
                 Route::get('input', 'Keuangan\SIM\SppController@viewMenuInput');
@@ -329,6 +330,12 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('setting-non-spp', 'Keuangan\SIM\SppController@viewMenuSettingNonSpp');
                 Route::post('setting-non-spp/datatables', 'Keuangan\SIM\SppController@datatablesMenuSettingNonSpp');
+
+                Route::get('setting-saldo-kas-awal-tahun', 'Keuangan\SIM\SppController@viewMenuSettingSaldoKasAwalTahun');
+                Route::get('setting-saldo-kas-awal-tahun/datatables', 'Keuangan\SIM\SppController@datatablesMenuSettingSaldoKasAwalTahun');
+                Route::get('setting-saldo-kas-awal-tahun/add', 'Keuangan\SIM\SppController@addeMenuSettingSaldoKasAwalTahun');
+                Route::get('setting-saldo-kas-awal-tahun/edit/{id}', 'Keuangan\SIM\SppController@editMenuSettingSaldoKasAwalTahun');
+                Route::post('action-setting-saldo-kas-awal-tahun/{mode}/{id}', 'Keuangan\SIM\SppController@actionMenuSettingSaldoKasAwalTahun');
 
                 Route::get('edit-setting/{tahun_akademik_semester}/{id}', 'Keuangan\SIM\SppController@viewMenuEditSetting');
                 Route::post('setting/save', 'Keuangan\SIM\SppController@actionMenuSettingSaveSpp');

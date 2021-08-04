@@ -943,6 +943,154 @@ class SppController extends BaseController
                 ->make(true);
     }
 
+    public function viewMenuSettingSaldoKasAwalTahun(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('keuangan/sim/spp/view-menu-setting-saldo-kas-awal-tahun', compact('auth_data','semester_aktif'));
+
+    }
+
+    public function datatablesMenuSettingSaldoKasAwalTahun(Request $request){      
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = TutupBukuBulananKas::where('id_bulan',6)->get();
+
+        return Datatables::of($list_data)
+                ->addColumn('semester_mulai',function($item){
+                    return $item->semester_mulai->tahun_ajaran.' '.$item->semester_mulai->nm_semester;
+                })
+                ->addColumn('semester_selesai',function($item){
+                    return $item->semester_mulai->tahun_ajaran.' '.$item->semester_selesai->nm_semester;
+                })
+                ->addColumn('saldo',function($item){
+                    return number_format($item->kas_akhir_bulan,0,',','.');
+                })
+                ->addColumn('action', function($item){
+                    $data = array(
+                        'id' => $item->id_tutup_buku_bulanan_kas
+                    );
+                    return $data;
+                })
+                ->make(true);
+
+    }
+
+    public function addeMenuSettingSaldoKasAwalTahun(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        // get semester mulai dan selesai
+        $tahun = $semester_aktif->thn_akademik_semester - 1;
+        $kode_semester_mulai = $tahun.'1';
+        $kode_semester_selesai = $tahun.'2';
+
+        $semester_mulai = Semester::where('kode_semester',$kode_semester_mulai)->first();
+        $semester_selesai = Semester::where('kode_semester',$kode_semester_selesai)->first();
+
+        return view('keuangan/sim/spp/add-menu-setting-saldo-kas-awal-tahun', compact('auth_data','semester_mulai','semester_selesai'));
+
+    }
+
+    public function editMenuSettingSaldoKasAwalTahun($id, Request $request){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data = TutupBukuBulananKas::find($id);
+
+        return view('keuangan/sim/spp/edit-menu-setting-saldo-kas-awal-tahun', compact('auth_data','data'));
+
+    }
+
+    public function actionMenuSettingSaldoKasAwalTahun(Request $request, $mode, $id = null){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'kas_akhir_bulan' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+        else{
+
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+            // get semester mulai dan selesai
+            $tahun = $semester_aktif->thn_akademik_semester - 1;
+            $kode_semester_mulai = $tahun.'1';
+            $kode_semester_selesai = $tahun.'2';
+
+            $semester_mulai = Semester::where('kode_semester',$kode_semester_mulai)->first();
+            $semester_selesai = Semester::where('kode_semester',$kode_semester_selesai)->first();
+
+            if($mode == 'add') {
+
+                // cek apakah sudah pernah diinput
+                $cek = TutupBukuBulananKas::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester])->first();
+
+                if($cek){
+                      return [
+                        'status' => 300, // FAILED
+                        'message' => 'Data pada semester ini sudah dimasukkan'
+                    ];
+                }
+
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $data = new TutupBukuBulananKas;
+                $data->id_tutup_buku_bulanan_kas = $id;
+                $data->id_semester_mulai = $semester_mulai->id_semester;
+                $data->id_semester_selesai = $semester_selesai->id_semester;
+                $data->id_bulan = 6;
+                $data->kas_akhir_bulan = $input->kas_akhir_bulan;
+                $data->created_by = $input->auth_data->pengguna->id_pengguna;
+                $data->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
+                    'message' => 'Save Gedung successfully'
+                ];
+
+
+            }
+
+            elseif($mode == 'edit'){
+
+                $data = TutupBukuBulananKas::find($id);
+                $data->kas_akhir_bulan = $input->kas_akhir_bulan;
+                $data->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $data->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
+                    'message' => 'Save Gedung successfully'
+                ];
+
+            }
+
+        }
+
+    }
+
     public function actionMenuSettingSaveSpp(Request $request)
     {
         $input = (object) $request->input();
