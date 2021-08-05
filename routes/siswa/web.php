@@ -97,6 +97,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('beasiswa', 'Siswa\Kesiswaan\BeasiswaController@viewBeasiswa');
             Route::get('beasiswa/datatables', 'Siswa\Kesiswaan\BeasiswaController@datatablesBeasiswa');
 
+            Route::group(array('prefix' => 'absensi-ekskul'), function() {
+            	Route::get('/', 'Siswa\Kesiswaan\AbsensiEkskulController@viewAbsensiEkskul');
+            	Route::get('detail/{id_semester}/{id_ekskul}', 'Siswa\Kesiswaan\AbsensiEkskulController@viewDetailAbsensiEkskul');
+            });
+
+            Route::group(array('prefix' => 'nilai-ekskul'), function() {
+            	Route::get('/', 'Siswa\Kesiswaan\NilaiEkskulController@viewNilaiEkskul');
+            	Route::get('detail/{id_semester}/{id_ekskul}', 'Siswa\Kesiswaan\NilaiEkskulController@viewDetailNilaiEkskul');
+            });
+
+
+
 		});
 
 		/** ==== MODUL SARANA PRASARANA ==== **/
