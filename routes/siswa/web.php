@@ -59,6 +59,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('magang', 'Siswa\Akademik\MagangController@viewMagang');
 			Route::get('magang/datatables', 'Siswa\Akademik\MagangController@datatablesMagang');
 
+			Route::group(array('prefix' => 'lihat-absensi'), function() {
+				Route::get('/', 'Siswa\Akademik\LihatAbsensiController@viewLihatAbsensi');
+			});
+
+
 		});
 
 		/** ==== MODUL KEUANGAN ==== **/
