@@ -332,6 +332,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
         // MODUL KELAS DARING
         Route::group(array('prefix' => 'kelas-daring'), function () {
+            
             Route::group(array('prefix' => 'jadwal-kelas'), function () {
                 Route::get('/', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasDaring');
                 Route::get('add', 'Guru\KelasDaring\SettingKelasDaringController@viewAddKelasDaring');
