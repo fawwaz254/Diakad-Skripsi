@@ -38,6 +38,11 @@ class KelasMp extends Model
         return $this->belongsTo('App\Models\Kelas', 'id_kelas');
     }
 
+    public function kelas_mp_grup()
+    {
+        return $this->belongsTo('App\Models\KelasMpGrup', 'id_kelas_mp_grup');
+    }
+
     public function jadwal_kelas_mp()
     {
         return $this->hasMany('App\Models\JadwalKelasMp', 'id_kelas_mp');
