@@ -65,10 +65,16 @@
 							</div>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<h2 class="card-inside-title"> Tanggal Kerjasama </h2>
+							<h2 class="card-inside-title"> Tanggal Awal Kerjasama </h2>
 							<input type="date" class="form-control" name="tanggal_kerjasama" aria-required="true"
 								aria-invalid="true"
 								value="{{(!empty($kerjasama))? $kerjasama->tanggal_kerjasama : ''}}">
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title"> Tanggal Akhir Kerjasama </h2>
+							<input type="date" class="form-control" name="tanggal_akhir_kerjasama" aria-required="true"
+								aria-invalid="true"
+								value="{{(!empty($kerjasama))? $kerjasama->tanggal_akhir_kerjasama : ''}}">
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Status </h2>

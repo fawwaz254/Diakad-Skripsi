@@ -189,6 +189,7 @@
     </div>
 </div>
 <!-- END modal print -->
+
 <!-- START modal print UNPAID BILLS -->
 <div class="modal fade" id="modal-print-unpaid-bills" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -217,6 +218,37 @@
 </div>
 <!-- END modal print -->
 @include('scriptjs')
+
+<script>
+function changeJenis(el){
+    $.ajax({
+        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/bulan-byjenisbiaya')}}',
+        type: 'POST',
+        data: {
+            id_jenis_detail_biaya: $('select[name=id_jenis_detail_biaya]').val()
+        },
+        success: function(result) {
+            // $('select[name=id_bulan]').html('');
+            // var html = '<option value="">-- Pilih Bulan --</option>';
+            // $.each(result, function( key, item ) {
+            //     html += '<option value="'+item.id_bulan+'">'+item.nm_bulan+'</option>'
+            // });
+            // $('select[name=id_bulan]').html(html);
+
+            $('#div_bulan').html('');
+            var html = '';
+            $.each(result, function( key, item ) {
+                html += '<div class="row clearfix" style="margin-left:0;">'+
+                    '<input type="checkbox" id="checkbox-'+item.id_bulan+'" name="id_bulan[]" class="filled-in" value="'+item.id_bulan+'">'+
+                    '<label for="checkbox-'+item.id_bulan+'">'+item.nm_bulan+'</label>'+
+                '</div>';
+            });
+            $('#div_bulan').html(html);
+        }
+    });
+}
+</script>
+
 <script>
 
     var id_pengguna = <?= json_encode($siswa->id_pengguna) ?>;

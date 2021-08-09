@@ -30,6 +30,8 @@
             <ul class="dropdown-menu pull-left">
                 <li><a href="{{Request::segment(1)}}#sim/spp/setting" class="target-link waves-effect waves-block">Setting SPP</a></li>
                 <li><a href="{{Request::segment(1)}}#sim/spp/setting-non-spp" class="target-link waves-effect waves-block">Setting NON-SPP</a></li>
+                <li><a href="{{Request::segment(1)}}#sim/spp/setting-saldo-kas-awal-tahun" class="target-link waves-effect waves-block">Setting Saldo Kas Awal Tahun</a></li>
+                <li><a href="{{Request::segment(1)}}#sim/spp/setting-tunggakan-tahun-lalu" class="target-link waves-effect waves-block">Setting Tunggakan Tahun Lalu</a></li>
             </ul>
         </li>
         <li><a href="{{Request::segment(1)}}#sim/spp/upload-pembayaran" class="target-link">UPLOAD PEMBAYARAN</a></li>

@@ -1,3 +1,5 @@
+@if($grup_payment_channel)
+
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -92,6 +94,41 @@
         </div>
     </div>
 </div>
+
+@else
+
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                    <div class="header">
+                        <h2>TAGIHAN SISWA</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Biaya</th>
+                                        <th>-</th>
+                                        <th>Semester</th>
+                                        <th>Besar Tagihan</th>
+                                        <th>Denda Tagihan</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                     
+                    </div>
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+@endif
+
 @include('scriptjs')
 
 <script>
@@ -109,13 +146,6 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function (data, type, full, meta){
-                    return '<input id="checkbox-' + data.id + '" type="checkbox" name="id_tagihan_biaya[]" class="filled-in" value="' + data.id + '">'+
-                    '<label for="checkbox-' + data.id + '"></label>'; 
-
-                }
-            },
             { data: 'nm_biaya', name: 'nm_biaya' },
             { data: 'jenis_biaya', name: 'jenis_biaya'},
             { data: 'semester', name: 'semester', searchable: false, orderable: false },

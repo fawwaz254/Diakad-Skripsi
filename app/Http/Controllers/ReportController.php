@@ -10,6 +10,8 @@ use App\Models\Role;
 use App\Models\Gedung;
 use App\Models\Ruangan;
 use App\Models\BukuAlat;
+use App\Models\LowonganKerja;
+use App\Models\Kerjasama;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -45,6 +47,13 @@ class ReportController extends BaseController{
             }
 
             elseif($r->nm_role == 'Sarana Prasarana'){
+                $temp = $this->checkProgress($r->id_role);
+                $temp = $temp->original;
+                $data[$key]['status'] = $temp['status'];
+                $data[$key]['catatan'] = $temp['catatan'];
+            }
+
+            elseif($r->nm_role == 'Humas'){
                 $temp = $this->checkProgress($r->id_role);
                 $temp = $temp->original;
                 $data[$key]['status'] = $temp['status'];
@@ -132,6 +141,41 @@ class ReportController extends BaseController{
 
             if($bukualat){
                 $param[2]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
+
+        }
+
+        elseif($id_role == 19){ // Humas
+
+            $loker = LowonganKerja::count();
+            $kerjasama = Kerjasama::count();
+
+            $param[0]['catatan'] = 'Belum melakukuan input data pada lowongan kerja';
+            $param[0]['status'] = 0;
+
+            $param[1]['catatan'] = 'Belum melakukuan input data kerja sama';
+            $param[1]['status'] = 0;
+
+            if($loker){
+                $param[0]['status'] = 1;
+            }
+
+            if($kerjasama){
+                $param[1]['status'] = 1;
             }
 
             $jumlah_diisi = $this->count_multidimension($param);

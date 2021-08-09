@@ -35,6 +35,7 @@
                             text-align: center;
                         }
                     </style>
+                    @if($tutup_buku_tahunan)
                     <div class="table-responsive">
                         <h4>Total tunggakan tahun lalu: <b>Rp{{number_format($tutup_buku_tahunan->jml_tunggakan_biaya)}}</b></h4>
                         <h4>Sisa tunggakan tahun lalu: <b>Rp{{number_format($sisa_tunggakan)}}</b> (Otomatis akan berkurang saat ada pemasukan)</h4>
@@ -59,6 +60,9 @@
                             </tbody>
                         </table>
                     </div>
+                    @else
+                    <p>Mohon maaf data pada tahun ajaran ini tidak ditemukan</p>
+                    @endif
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/sim/spp/tunggakan/save')}}">
                         {{csrf_field()}}
                         <div class="row clearfix">

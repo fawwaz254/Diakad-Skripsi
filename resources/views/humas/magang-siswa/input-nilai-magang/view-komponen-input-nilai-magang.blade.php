@@ -5,11 +5,10 @@
     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-nilai-magang/save/'.$id_periode_magang)}}">
     {{csrf_field()}}
     <input type="hidden" name="id_periode_magang" id="id_periode_magang" value="{{$id_periode_magang}}" />
-    <div class="col-xs-12 col-sm-4 col-md-4">
+
         <div class="block-header">
             <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
         </div>
-    </div>
         <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -34,8 +33,6 @@
                                             </th>
                                         @endforeach
                                         <th>Nilai Angka</th>
-                                        <th>Nilai Huruf</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -55,15 +52,11 @@
                                         @foreach($list_data as $nilai)
                                             <td>
                                                 <input type="text" name="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" id="nilai{{$nilai->id_komponen_magang}}-{{$siswa->id_siswa}}" 
-                                                value="{{ !empty($nilai_magang_siswa) ? $nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang] : null }}" style="width: 50%">
+                                                value="{{ isset($nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang]) ? $nilai_magang_siswa[$siswa->id_pengambilan_magang.$nilai->id_komponen_magang] : '' }}" style="width: 50%">
                                             </td>
                                         @endforeach
                                         <td>
-                                            {{isset($siswa->nilai_angka) ? $siswa->nilai_angka : 0}}
-                                        </td>
-                                        <td>{{$siswa->nilai_huruf}}</td>
-                                        <td>
-                                            <button class="btn btn-info btn-circle waves-effect waves-circle waves-float"><i class="material-icons">visibility</i></button>
+                                            {{isset($siswa->nilai_angka) ? $siswa->nilai_angka : '-'}}
                                         </td>
                                     </tr>
                                     @endforeach
@@ -77,7 +70,9 @@
     </form>
 </div>
 <script type="text/javascript">
+
     $(document).ready(function() {
         var table = $('#primary_table').DataTable();
-    } );
+    });
+
 </script>

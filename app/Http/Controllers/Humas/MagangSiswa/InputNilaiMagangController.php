@@ -36,6 +36,7 @@ class InputNilaiMagangController extends BaseController
 
     	return view('humas/magang-siswa/input-nilai-magang/view-periode-magang',compact('auth_data','data_periode_magang'));
     }
+
     public function actionViewKomponenInputNilaiMagang(Request $request){
         # code...
         $input = (object) $request->input();
@@ -51,6 +52,7 @@ class InputNilaiMagangController extends BaseController
         for($i=0;$i<count($data);$i++){
             array_push($persentase, $data[$i]['persentase_komponen_magang']);
         }
+
         if($validator->fails()) {
             return [
                 'status' => 300, // FAILED
@@ -69,6 +71,7 @@ class InputNilaiMagangController extends BaseController
                     'message' => "Tidak Dapat Meng-Input Nilai. Persentase Komponen Lebih Dari 100%."
                 ];
             }else{
+
                 return [
                     'status' => 204, // SUCCESS AND LOAD CONTENT
                     'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$input->id_periode_magang
@@ -79,13 +82,24 @@ class InputNilaiMagangController extends BaseController
     }
 
     public function viewKomponenInputNilaiMagang(Request $request, $id_periode_magang){
+
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $periodeMagang = PeriodeMagang::leftJoin('semester','semester.id_semester','=','periode_magang.id_semester')->where('periode_magang.id_periode_magang','=',$id_periode_magang)->first();
+
         $list_data = KomponenMagang::where('id_periode_magang','=',$id_periode_magang)->get();
 
-        $list_siswa = LibMagangSiswa::fetchDataSiswaMagang($auth_data,$id_periode_magang);
+        $list_siswa = PengajuanSiswaMagang::join('siswa','siswa.id_siswa','=','pengambilan_magang.id_siswa')
+                        ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
+                        ->join('rekanan_magang','rekanan_magang.id_rekanan_magang','=','pengambilan_magang.id_rekanan_magang')
+                        ->join('periode_magang','periode_magang.id_periode_magang','=','pengambilan_magang.id_periode_magang')
+                        ->join('semester','semester.id_semester','=','periode_magang.id_semester')
+                        ->where('pengambilan_magang.id_periode_magang','=',$id_periode_magang)
+                        ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                        ->where('status_magang',1)
+                        ->get();
+
         $list_nilai = NilaiMagang::select('nilai_magang.id_pengambilan_magang','nilai_magang.id_komponen_magang','nilai_magang.besar_nilai_magang','komponen_magang.urutan_komponen_magang')->join('komponen_magang','nilai_magang.id_komponen_magang','=','komponen_magang.id_komponen_magang')
             ->where('komponen_magang.id_periode_magang','=',$id_periode_magang)
             ->get();
@@ -100,6 +114,7 @@ class InputNilaiMagangController extends BaseController
 
             }
         }
+
     	return view('humas/magang-siswa/input-nilai-magang/view-komponen-input-nilai-magang',compact('auth_data','id_periode_magang','periodeMagang','list_data','list_siswa','nilai_magang_siswa'));
     }
 
@@ -142,6 +157,7 @@ class InputNilaiMagangController extends BaseController
                 })
                 ->make(true);
     }
+
     public function actionInputNilaiMagang(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
@@ -214,15 +230,15 @@ class InputNilaiMagangController extends BaseController
 		                    $inputNilaiMagang->updated_by      = $input->auth_data->pengguna->id_pengguna;
 		                    $inputNilaiMagang->save();
 		                }else{
-                            return redirect()->back();
+                            return redirect('humas#magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang);
 							
 						}	
 					}else{
-                          return redirect()->back();
+                          return redirect('humas#magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang);
 						
 					}	
             	}
-                  return redirect()->back();
+                  return redirect('humas#magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang);
             }
         }
     }
