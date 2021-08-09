@@ -38,13 +38,11 @@
                         primary_table.ajax.reload(null, false);
                     }else if(response.status == 204){
                         loadURI(response.path);
-                    }
-                    else if(response.status == 205){
+                    }else if(response.status == 205){
                         $('#modalMaster').modal('hide');
                         vex.dialog.alert(response.message);
                         primary_table.ajax.reload(null, false);
-                    }
-                    else if(response.status == 300){
+                    }else if(response.status == 300){
                         vex.dialog.alert(response.message);
                     }
                 },

@@ -37,9 +37,15 @@ class PengambilanMagang extends Model
 
     protected $guarded = [];
 
+    public function periode()
+    {
+        return $this->belongsTo(PeriodeMagang::class, 'id_periode_magang');
+    }
 
-
-
+    public function rekanan()
+    {
+        return $this->belongsTo(RekananMagang::class, 'id_rekanan_magang');
+    }
 
 
 }

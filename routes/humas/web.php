@@ -97,6 +97,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::post('action-nama-magang/{mode}/{id}', 'Humas\MagangSiswa\MagangSiswaController@actionMagang');
 
+			// Menu Laporan Magang
+			Route::get('laporan-magang', 'Humas\MagangSiswa\LaporanMagangController@viewLaporanMagang');
+			Route::get('laporan-magang/datatables', 'Humas\MagangSiswa\LaporanMagangController@datatablesLaporanMagang');
+			Route::get('laporan-magang/print/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@printLaporanMagang');
+
 			//MENU Periode Magang
 			Route::get('periode-magang', 'Humas\MagangSiswa\PeriodeMagangController@viewPeriodeMagang');
 			Route::get('periode-magang/datatables', 'Humas\MagangSiswa\PeriodeMagangController@datatablesPeriodeMagang');
@@ -112,6 +117,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('rekanan-magang/edit/{id}', 'Humas\MagangSiswa\RekananMagangController@editRekananMagang');
 
 			Route::post('action-rekanan-magang/{mode}/{id}', 'Humas\MagangSiswa\RekananMagangController@actionRekananMagang');
+
+			// Menu Pengajuan Magang
+			Route::get('pengajuan-magang', 'Humas\MagangSiswa\PengajuanMagangController@viewPengajuanMagang');
+			Route::get('pengajuan-magang/datatables', 'Humas\MagangSiswa\PengajuanMagangController@datatablesPengajuanMagang');
+			Route::get('pengajuan-magang/add/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\PengajuanMagangController@addPengajuanMagang');
+			Route::get('pengajuan-magang/datatables-list-siswa/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\PengajuanMagangController@datatablesListSiswa');
+			Route::post('pengajuan-magang/action-pengajuan-magang', 'Humas\MagangSiswa\PengajuanMagangController@actionPengajuanMagang');
 
 			//MENU Pengajuan Siswa Magang
 			Route::get('pengajuan-siswa-magang', 'Humas\MagangSiswa\PengajuanSiswaMagangController@viewPengajuanSiswaMagang');
@@ -150,70 +162,70 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('action-input-nilai-magang/{mode}/{id}', 'Humas\MagangSiswa\InputNilaiMagangController@actionInputNilaiMagang');
 		});
 		
-			/** === MODUL MAGANG ALUMNI === **/
-			Route::namespace('Humas\Alumni')->prefix('alumni')->group(function() {
-				Route::get('/tracer-alumni', 'AlumniController@index');
-				Route::get('/tambah-alumni', 'AlumniController@create');
-				Route::get('/edit/{alumni}', 'AlumniController@show');
-				Route::post('/store', 'AlumniController@store');
-				Route::post('/update/{alumni}', 'AlumniController@update');
-				Route::post('/delete/{alumni}', 'AlumniController@destroy');
-				Route::post('/datatables', 'AlumniController@renderDatatables');
+		/** === MODUL MAGANG ALUMNI === **/
+		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function() {
+			Route::get('/tracer-alumni', 'AlumniController@index');
+			Route::get('/tambah-alumni', 'AlumniController@create');
+			Route::get('/edit/{alumni}', 'AlumniController@show');
+			Route::post('/store', 'AlumniController@store');
+			Route::post('/update/{alumni}', 'AlumniController@update');
+			Route::post('/delete/{alumni}', 'AlumniController@destroy');
+			Route::post('/datatables', 'AlumniController@renderDatatables');
+		});
+
+		Route::group(array('prefix' => 'laporan'), function () {
+
+			Route::group(array('prefix' => 'wali-kelas'), function () {
+				Route::get('/', 'Kesiswaan\Laporan\WaliKelasController@viewWaliKelas');
+				Route::get('datatables', 'Kesiswaan\Laporan\WaliKelasController@datatablesWaliKelas');
+				Route::get('add', 'Kesiswaan\Laporan\WaliKelasController@addWaliKelas');
+				Route::get('edit/{id}', 'Kesiswaan\Laporan\WaliKelasController@editWaliKelas');
+				Route::get('detail/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailWaliKelas');
+				Route::get('detail-ajax/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailAjaxWaliKelas');
+				Route::get('detail-datatable/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailDataTable');
+				Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
+				Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
 			});
 
-			Route::group(array('prefix' => 'laporan'), function () {
-
-	            Route::group(array('prefix' => 'wali-kelas'), function () {
-	                Route::get('/', 'Kesiswaan\Laporan\WaliKelasController@viewWaliKelas');
-	                Route::get('datatables', 'Kesiswaan\Laporan\WaliKelasController@datatablesWaliKelas');
-	                Route::get('add', 'Kesiswaan\Laporan\WaliKelasController@addWaliKelas');
-	                Route::get('edit/{id}', 'Kesiswaan\Laporan\WaliKelasController@editWaliKelas');
-	                Route::get('detail/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailWaliKelas');
-	                Route::get('detail-ajax/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailAjaxWaliKelas');
-	                Route::get('detail-datatable/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailDataTable');
-	                Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
-	                Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
-	            });
-
-	        });
+		});
 		
-			/** === MODUL MAGANG KERJASAMA === **/
-			Route::namespace('Humas\Kerjasama')->prefix('kerjasama')->group(function() {
-				Route::get('/list', 'KerjasamaController@index');
-				Route::get('/add', 'KerjasamaController@create');
-				Route::get('/edit/{kerjasama}', 'KerjasamaController@edit');
-				Route::post('/store', 'KerjasamaController@store');
-				Route::post('/update/{kerjasama}', 'KerjasamaController@update');
-				Route::post('/delete/{kerjasama}', 'KerjasamaController@destroy');
-				Route::post('/datatables', 'KerjasamaController@renderDatatables');
+		/** === MODUL MAGANG KERJASAMA === **/
+		Route::namespace('Humas\Kerjasama')->prefix('kerjasama')->group(function() {
+			Route::get('/list', 'KerjasamaController@index');
+			Route::get('/add', 'KerjasamaController@create');
+			Route::get('/edit/{kerjasama}', 'KerjasamaController@edit');
+			Route::post('/store', 'KerjasamaController@store');
+			Route::post('/update/{kerjasama}', 'KerjasamaController@update');
+			Route::post('/delete/{kerjasama}', 'KerjasamaController@destroy');
+			Route::post('/datatables', 'KerjasamaController@renderDatatables');
 
-				Route::group(array('prefix' => 'instansi'), function() {
-					Route::get('/', 'InstansiController@index');
-					Route::get('/add', 'InstansiController@create');
-					Route::get('/edit/{instansi}', 'InstansiController@edit');
-					Route::post('/store', 'InstansiController@store');
-					Route::post('/update/{instansi}', 'InstansiController@update');
-					Route::post('/delete/{instansi}', 'InstansiController@destroy');
-					Route::post('/datatables', 'InstansiController@renderDatatables');
-				});
-				
-				Route::group(array('prefix' => 'jenis'), function() {
-					Route::get('/', 'JenisKerjaSamaController@index');
-					Route::get('/add', 'JenisKerjaSamaController@create');
-					Route::get('/edit/{jenisKerjasama}', 'JenisKerjaSamaController@edit');
-					Route::post('/store', 'JenisKerjaSamaController@store');
-					Route::post('/update/{jenisKerjasama}', 'JenisKerjaSamaController@update');
-					Route::post('/delete/{jenisKerjasama}', 'JenisKerjaSamaController@destroy');
-					Route::post('/datatables', 'JenisKerjaSamaController@renderDatatables');
-				});
-		
-				Route::group(array('prefix' => 'berkas'), function() {
-					Route::get('/', 'BerkasKerjasamaController@index');
-					Route::get('/add/{kerjasama}', 'BerkasKerjasamaController@create');
-					Route::post('/store', 'BerkasKerjasamaController@store');
-					Route::post('/delete/{berkasKerjasama}', 'BerkasKerjasamaController@destroy');
-					Route::post('/datatables', 'BerkasKerjasamaController@renderDatatables');
-				});
+			Route::group(array('prefix' => 'instansi'), function() {
+				Route::get('/', 'InstansiController@index');
+				Route::get('/add', 'InstansiController@create');
+				Route::get('/edit/{instansi}', 'InstansiController@edit');
+				Route::post('/store', 'InstansiController@store');
+				Route::post('/update/{instansi}', 'InstansiController@update');
+				Route::post('/delete/{instansi}', 'InstansiController@destroy');
+				Route::post('/datatables', 'InstansiController@renderDatatables');
+			});
+			
+			Route::group(array('prefix' => 'jenis'), function() {
+				Route::get('/', 'JenisKerjaSamaController@index');
+				Route::get('/add', 'JenisKerjaSamaController@create');
+				Route::get('/edit/{jenisKerjasama}', 'JenisKerjaSamaController@edit');
+				Route::post('/store', 'JenisKerjaSamaController@store');
+				Route::post('/update/{jenisKerjasama}', 'JenisKerjaSamaController@update');
+				Route::post('/delete/{jenisKerjasama}', 'JenisKerjaSamaController@destroy');
+				Route::post('/datatables', 'JenisKerjaSamaController@renderDatatables');
+			});
+	
+			Route::group(array('prefix' => 'berkas'), function() {
+				Route::get('/', 'BerkasKerjasamaController@index');
+				Route::get('/add/{kerjasama}', 'BerkasKerjasamaController@create');
+				Route::post('/store', 'BerkasKerjasamaController@store');
+				Route::post('/delete/{berkasKerjasama}', 'BerkasKerjasamaController@destroy');
+				Route::post('/datatables', 'BerkasKerjasamaController@renderDatatables');
 			});
 		});
+	});
 });

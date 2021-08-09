@@ -14,7 +14,7 @@ class KerjasamaController extends Controller
 {
     const PATH = "kerjasama/list";
     const RESOURCE_PATH = 'humas/kerjasama/kerjasama/';
-    const FETCH_ATTRIBUTE = ['nm_kerjasama', 'id_instansi', 'id_jenis_kerjasama', 'tanggal_kerjasama', 'status'];
+    const FETCH_ATTRIBUTE = ['nm_kerjasama', 'id_instansi', 'id_jenis_kerjasama', 'tanggal_kerjasama','tanggal_akhir_kerjasama', 'status'];
 
     /**
      * Display a listing of the resource.
