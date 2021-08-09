@@ -67,12 +67,20 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('jadwal-ujian/datatables-uts', 'Siswa\Akademik\JadwalUjianController@datatablesJadwalUTS');
 			Route::get('jadwal-ujian/datatables-uas', 'Siswa\Akademik\JadwalUjianController@datatablesJadwalUAS');
 
+			Route::group(array('prefix' => 'jadwal-kelas-daring'), function() {
+				Route::get('/', 'Siswa\Akademik\JadwalKelasDaringController@viewJadwalKelasDaring');
+				Route::post('datatables', 'Siswa\Akademik\JadwalKelasDaringController@datatablesJadwalKelasDaring');
+				Route::get('{id}', 'Siswa\Akademik\JadwalKelasDaringController@viewDetailJadwalKelasDaring');
+
+			});
+
 			// MENU Magang
 			Route::get('magang', 'Siswa\Akademik\MagangController@viewMagang');
 			Route::get('magang/datatables', 'Siswa\Akademik\MagangController@datatablesMagang');
 
 			Route::group(array('prefix' => 'lihat-absensi'), function() {
 				Route::get('/', 'Siswa\Akademik\LihatAbsensiController@viewLihatAbsensi');
+				Route::get('/{id_bulan}/{tahun}', 'Siswa\Akademik\LihatAbsensiController@viewLihatAbsensi');
 			});
 
 
