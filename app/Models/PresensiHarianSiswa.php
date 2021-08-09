@@ -32,9 +32,9 @@ class PresensiHarianSiswa extends Model
 
     protected $guarded = [];
 
-
-
-
-
+    public function presensi_harian()
+    {
+        return $this->belongsTo(PresensiHarian::class, 'id_presensi_harian');
+    }
 
 }

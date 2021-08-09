@@ -80,6 +80,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::group(array('prefix' => 'lihat-absensi'), function() {
 				Route::get('/', 'Siswa\Akademik\LihatAbsensiController@viewLihatAbsensi');
+				Route::get('/{id_bulan}/{tahun}', 'Siswa\Akademik\LihatAbsensiController@viewLihatAbsensi');
 			});
 
 

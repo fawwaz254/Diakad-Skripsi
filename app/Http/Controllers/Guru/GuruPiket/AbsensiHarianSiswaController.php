@@ -265,27 +265,30 @@ class AbsensiHarianSiswaController extends BaseController
                                             $status = 'Alpa'; break;
                                     }
                                     
-                                    $token_wali_murid = $wali_murid->pengguna->api_token;
-                                    if(!empty($token_wali_murid)){
-                                        $message = 'Putra/Putri Anda hari ini berstatus '.$status;
-                                        $send_data = array(
-                                            'title' => 'Informasi',
-                                            'body' => $message,
-                                            'priority' => 'high',
-                                            'screen1' => 'MainMenu',
-                                            'screen2' => 'MainMenu'
-                                        );
+                                    if($wali_murid){
+                                        $token_wali_murid = $wali_murid->pengguna->api_token;
+                                        if(!empty($token_wali_murid)){
+                                            $message = 'Putra/Putri Anda hari ini berstatus '.$status;
+                                            $send_data = array(
+                                                'title' => 'Informasi',
+                                                'body' => $message,
+                                                'priority' => 'high',
+                                                'screen1' => 'MainMenu',
+                                                'screen2' => 'MainMenu'
+                                            );
 
-                                        $notifikasi = array(
-                                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
-                                            'id_pengguna' => $wali_murid->pengguna->id_pengguna,
-                                            'id_sekolah' => $wali_murid->pengguna->id_sekolah,
-                                            'isi_notifikasi' => $message,
-                                            'created_by' => $input->auth_data->pengguna->id_pengguna
-                                        );
-                                        
-                                        LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                                            $notifikasi = array(
+                                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                                'id_pengguna' => $wali_murid->pengguna->id_pengguna,
+                                                'id_sekolah' => $wali_murid->pengguna->id_sekolah,
+                                                'isi_notifikasi' => $message,
+                                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                            );
+                                            
+                                            LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
+                                        }   
                                     }
+
                                 }
                             }
                         }
