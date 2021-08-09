@@ -34,4 +34,14 @@ class TutupBukuTahunanBiaya extends Model
     public function scopeIsInputByPengguna($query, $id_pengguna){
         return $query->where('tutup_buku_tahunan_biaya.created_by', $id_pengguna);
     }
+
+    public function semester_mulai()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester_mulai','id_semester');
+    }
+
+    public function semester_selesai()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester_selesai','id_semester');
+    }
 }

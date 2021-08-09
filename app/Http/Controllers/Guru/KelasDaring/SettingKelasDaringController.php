@@ -14,6 +14,7 @@ use App\Models\KelasMp;
 use App\Models\KelasMpGrup;
 use App\Models\PresensiMp;
 use App\Models\PresensiMpMateri;
+use App\Models\PengampuMapel;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -170,7 +171,12 @@ class SettingKelasDaringController extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $list_data = KelasMp::with('kelas', 'mata_pelajaran', 'mata_pelajaran.jenis_mata_pelajaran')->where('id_semester', $semester_aktif->id_semester);
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $pengampu_mapel = PengampuMapel::where('id_guru',$guru->id_guru)->pluck('id_mata_pelajaran');
+
+        $list_data = KelasMp::with('kelas', 'mata_pelajaran', 'mata_pelajaran.jenis_mata_pelajaran')
+                            ->where('id_semester', $semester_aktif->id_semester)
+                            ->whereIn('id_mata_pelajaran',$pengampu_mapel);
 
         if(!empty($input->status) && $input->status == 1){
             $list_data = $list_data->where('id_kelas_mp_grup', $input->id);

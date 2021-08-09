@@ -11,6 +11,7 @@ use Yajra\Datatables\Datatables;
 use App\Libraries\LibGlobal;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\Keuangan\LibDataKeuangan;
 
 use App\Models\Siswa as Siswa;
 use App\Models\Staff as Staff;
@@ -242,13 +243,17 @@ class PembayaranSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
+        $data_biaya_sekolah = LibDataKeuangan::fetchDataBiayaSekolah($auth_data, 1);
+        $data_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
+        $data_jenis_detail_biaya = LibDataKeuangan::fetchDataJenisDetailBiaya($auth_data);
+        $data_bulan = LibDataKeuangan::fetchDataBulan($auth_data);
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
 
-        return view('keuangan/utility/pembayaran-siswa/view-detail-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'data_semester', 'tahun_akademik_semester'));
+        return view('keuangan/utility/pembayaran-siswa/view-detail-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'data_semester', 'tahun_akademik_semester','data_biaya_sekolah','data_biaya','data_jenis_detail_biaya','data_bulan'));
     }
 
     public function datatablesTagihanPembayaranSiswa(Request $request, $id_pengguna, $nis_nama_siswa)

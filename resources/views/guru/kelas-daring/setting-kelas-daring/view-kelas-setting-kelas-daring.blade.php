@@ -177,7 +177,7 @@
 
         $.ajax({
             type: "POST",
-            url: set_url,
+            url: delete_url,
             data: {
                 id_kelas_mp: item.attr('data-id'),
                 id: $('input[name=id]').val(),

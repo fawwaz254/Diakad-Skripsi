@@ -71,6 +71,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('magang', 'Siswa\Akademik\MagangController@viewMagang');
 			Route::get('magang/datatables', 'Siswa\Akademik\MagangController@datatablesMagang');
 
+			Route::group(array('prefix' => 'lihat-absensi'), function() {
+				Route::get('/', 'Siswa\Akademik\LihatAbsensiController@viewLihatAbsensi');
+			});
+
+
 		});
 
 		/** ==== MODUL KEUANGAN ==== **/
@@ -108,6 +113,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			//MENU Prestasi
             Route::get('beasiswa', 'Siswa\Kesiswaan\BeasiswaController@viewBeasiswa');
             Route::get('beasiswa/datatables', 'Siswa\Kesiswaan\BeasiswaController@datatablesBeasiswa');
+
+            Route::group(array('prefix' => 'absensi-ekskul'), function() {
+            	Route::get('/', 'Siswa\Kesiswaan\AbsensiEkskulController@viewAbsensiEkskul');
+            	Route::get('detail/{id_semester}/{id_ekskul}', 'Siswa\Kesiswaan\AbsensiEkskulController@viewDetailAbsensiEkskul');
+            });
+
+            Route::group(array('prefix' => 'nilai-ekskul'), function() {
+            	Route::get('/', 'Siswa\Kesiswaan\NilaiEkskulController@viewNilaiEkskul');
+            	Route::get('detail/{id_semester}/{id_ekskul}', 'Siswa\Kesiswaan\NilaiEkskulController@viewDetailNilaiEkskul');
+            });
+
+
 
 		});
 

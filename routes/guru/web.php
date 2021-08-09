@@ -332,6 +332,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
         // MODUL KELAS DARING
         Route::group(array('prefix' => 'kelas-daring'), function () {
+
             Route::group(array('prefix' => 'jadwal-kelas'), function () {
                 Route::get('/', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasDaring');
                 Route::get('add', 'Guru\KelasDaring\SettingKelasDaringController@viewAddKelasDaring');
@@ -360,8 +361,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 });
             });
 
+            Route::group(array('prefix' => 'mengajar-daring'), function () {
+                Route::get('/', 'Guru\KelasDaring\MengajarDaringController@viewMengajarDaring');
+                Route::post('datatables', 'Guru\KelasDaring\MengajarDaringController@datatablesMengajarDaring');
+                Route::get('{id}', 'Guru\KelasDaring\MengajarDaringController@viewDetailMengajarDaring');
+                Route::post('change-status/{id}', 'Guru\KelasDaring\MengajarDaringController@changeStatusMengajarDaring');
+            });
 
-            Route::get('mengajar-daring', 'Guru\KelasDaring\SettingKelasDaringController@viewAdd');
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {

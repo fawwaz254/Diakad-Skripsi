@@ -31,9 +31,10 @@ class PesertaEkskulSet extends Model
 
     protected $guarded = [];
 
-
-
-
+    public function ekskul()
+    {
+        return $this->belongsTo('App\Models\Ekskul', 'id_ekskul');
+    }
 
 
 }

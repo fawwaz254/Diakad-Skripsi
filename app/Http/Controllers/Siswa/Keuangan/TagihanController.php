@@ -30,8 +30,16 @@ class TagihanController extends BaseController{
 
         $siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
-        $winpay = new Winpay;
-        $grup_payment_channel = $winpay->getPaymentChannel();
+        $cek_winpay = env("WINPAY_PRIVATE_KEY1");
+
+        if($cek_winpay==""){
+            $grup_payment_channel = null;
+        }
+
+        else{
+            $winpay = new Winpay;
+            $grup_payment_channel = $winpay->getPaymentChannel();
+        }
 
         $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $siswa->id_siswa)->where('status_pembayaran', 0)->get();
 
