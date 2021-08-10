@@ -122,7 +122,7 @@ class PembayaranOnlineController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = PembayaranTrs::with('siswa', 'siswa.pengguna');
+        $list_data = PembayaranTrs::with('siswa', 'siswa.pengguna')->orderBy('created_at', 'desc');
 
         if (!empty($input->start_date) && !empty($input->end_date)) {
             $list_data = $list_data->whereBetween('created_at', [$input->start_date.' 00:00:00', $input->end_date.' 23:59:59']);
@@ -136,6 +136,11 @@ class PembayaranOnlineController extends BaseController
 
         if (!empty($input->siswa)){
             $list_data = $list_data->where('id_siswa', $input->siswa);
+        }
+
+        if (!empty($input->status)){
+            $status = ($input->status == 2)? 0 : $input->status;
+            $list_data = $list_data->where('status_pembayaran', $status);
         }
 
         return Datatables::of($list_data)
