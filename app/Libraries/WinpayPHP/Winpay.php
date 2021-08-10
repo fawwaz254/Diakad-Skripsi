@@ -167,7 +167,7 @@ class Winpay
         if(!empty($check_status['http_code']) && $check_status['http_code'] == 404){
             return self::getPaymentUrl($payment_channel, $api_id);
         }else{
-            return self::getStatusUrl($payment_channel, $api_id);
+            return $status_url;
         }
 
     }
