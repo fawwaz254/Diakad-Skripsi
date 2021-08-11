@@ -227,6 +227,36 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('setting-pengampu/guru/datatables', 'Akademik\KelasDaring\SettingPengampuController@datatablesGuruSettingPengampu');
 
             Route::post('setting-pengampu/guru/action/{mode}', 'Akademik\KelasDaring\SettingPengampuController@actionSettingPengampu');
+
+            Route::group(array('prefix' => 'jadwal-kelas'), function () {
+                Route::get('/', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasDaring');
+                Route::get('add', 'Guru\KelasDaring\SettingKelasDaringController@viewAddKelasDaring');
+                Route::get('edit/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditKelasDaring');
+
+                Route::get('materi/edit/{id_kelas_mp_grup}/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditMateriKelasDaring');
+                Route::post('materi/action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionEditMateriKelasDaring');
+                
+                Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesKelasDaring');
+                Route::post('save', 'Guru\KelasDaring\SettingKelasDaringController@actionAddKelasDaring');
+                
+                Route::group(array('prefix' => 'data-kelas'), function () {
+                    Route::get('/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasMpKelasDaring');
+
+                    Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesKelasMpKelasDaring');
+                    Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionKelasMpKelasDaring');
+                });
+                
+                Route::group(array('prefix' => 'data-jadwal'), function () {
+                    Route::get('/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewPresensiMpKelasDaring');
+                    Route::get('add/{id_kelas_mp_grup}', 'Guru\KelasDaring\SettingKelasDaringController@viewAddPresensiMpKelasDaring');
+                    Route::get('edit/{id_kelas_mp_grup}/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditPresensiMpKelasDaring');
+
+                    Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesPresensiMpKelasDaring');
+                    Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionPresensiMpKelasDaring');
+                });
+                
+            });
+
         });
 
         Route::group(array('prefix' => 'laporan'), function () {

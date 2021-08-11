@@ -49,7 +49,9 @@ class SettingKelasDaringController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-add-setting-kelas-daring', compact('auth_data'));
+        $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+
+        return view('guru/kelas-daring/setting-kelas-daring/view-add-setting-kelas-daring', compact('auth_data','data_guru'));
     }
 
     public function viewEditKelasDaring(Request $request, $id = '-')
@@ -60,7 +62,9 @@ class SettingKelasDaringController extends BaseController
 
         $item = KelasMpGrup::find($id);
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-edit-setting-kelas-daring', compact('auth_data', 'item'));
+        $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+
+        return view('guru/kelas-daring/setting-kelas-daring/view-edit-setting-kelas-daring', compact('auth_data', 'item','data_guru'));
     }
 
     public function viewAddPresensiMpKelasDaring(Request $request, $id = '-')
@@ -94,9 +98,7 @@ class SettingKelasDaringController extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
-
-        $item = KelasMpGrup::where('id_semester', $semester_aktif->id_semester)->where('id_guru', $guru->id_guru)->where('id_kelas_mp_grup', $id)->first();
+        $item = KelasMpGrup::find($id);
 
         return view('guru/kelas-daring/setting-kelas-daring/view-kelas-setting-kelas-daring', compact('auth_data', 'semester_aktif', 'item'));
     }
@@ -108,12 +110,13 @@ class SettingKelasDaringController extends BaseController
         $auth_data = $input->auth_data;
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $item = KelasMpGrup::find($id);
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        // cek apakah sudah mengisi kelas
 
-        $item = KelasMpGrup::where('id_semester', $semester_aktif->id_semester)->where('id_guru', $guru->id_guru)->where('id_kelas_mp_grup', $id)->first();
+        $cek_kelas_mp = KelasMp::where('id_kelas_mp_grup',$id)->count();
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-jadwal-setting-kelas-daring', compact('auth_data', 'semester_aktif', 'item'));
+        return view('guru/kelas-daring/setting-kelas-daring/view-jadwal-setting-kelas-daring', compact('auth_data', 'semester_aktif', 'item','cek_kelas_mp'));
     }
 
     public function datatablesKelasDaring(Request $request)
@@ -121,13 +124,19 @@ class SettingKelasDaringController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
-
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $list_data = KelasMpGrup::with('kelas_mp', 'kelas_mp.kelas', 'check_kelas_mp.presensi_mp')->where('id_semester', $semester_aktif->id_semester)->where('id_guru', $guru->id_guru);
+        $list_data = KelasMpGrup::with('kelas_mp', 'kelas_mp.kelas', 'check_kelas_mp.presensi_mp','guru.pengguna')->where('id_semester', $semester_aktif->id_semester);
+
+        if($auth_data->pengguna->status_join_table ==2){
+            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+            $list_data = $list_data->where('id_guru', $guru->id_guru);
+        }
 
         return Datatables::of($list_data)
+            ->addColumn('nm_guru',function($item){
+                return $item->guru->pengguna->nm_pengguna;
+            })
             ->addColumn('kelas', function ($item) {
                 $data_nm_kelas = array();
                 foreach($item->kelas_mp as $kelas_mp){
@@ -171,7 +180,7 @@ class SettingKelasDaringController extends BaseController
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $guru = Guru::find($input->id_guru);
         $pengampu_mapel = PengampuMapel::where('id_guru',$guru->id_guru)->pluck('id_mata_pelajaran');
 
         $list_data = KelasMp::with('kelas', 'mata_pelajaran', 'mata_pelajaran.jenis_mata_pelajaran')
@@ -232,10 +241,20 @@ class SettingKelasDaringController extends BaseController
     public function actionAddKelasDaring(Request $request) {
 
         $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-        $validator = Validator::make($request->all(), [
-            'nm_kelas_mp_grup'              => 'required',
-        ]);
+        if($auth_data->pengguna->status_join_table != 2){
+            $validator = Validator::make($request->all(), [
+                'nm_kelas_mp_grup'  => 'required',
+                'id_guru'           => 'required',
+            ]);
+        }
+
+        else{
+            $validator = Validator::make($request->all(), [
+                'nm_kelas_mp_grup'  => 'required',
+            ]);
+        }
         
         if($validator->fails()) {
             return [
@@ -247,7 +266,14 @@ class SettingKelasDaringController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $auth_data = $input->auth_data;
 
-            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+            if($auth_data->pengguna->status_join_table != 2){
+                $guru = Guru::where('id_guru', '=', $input->id_guru)->first();
+            }
+
+            else{
+                $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+            }
+
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
     
             if(empty($input->id)){
@@ -259,6 +285,7 @@ class SettingKelasDaringController extends BaseController
                 $kelas_mp_grup->created_by          = $auth_data->pengguna->id_pengguna;
             }else{
                 $kelas_mp_grup                      = KelasMpGrup::find($input->id);
+                $kelas_mp_grup->id_guru             = $guru->id_guru;
                 $kelas_mp_grup->updated_by          = $auth_data->pengguna->id_pengguna;
             }
 
@@ -445,7 +472,8 @@ class SettingKelasDaringController extends BaseController
             $auth_data = $input->auth_data;
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
-            $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+            $kelas_mp_grup2 = KelasMpGrup::find($input->id_kelas_mp_grup);
+            $guru = Guru::where('id_guru', '=', $kelas_mp_grup2->id_guru)->first();
             $presensi_mp = PresensiMp::find($input->id_presensi_mp);
 
             $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$guru->id_guru.'/materi/'.$input->id_kelas_mp_grup, request()->file, 'public');

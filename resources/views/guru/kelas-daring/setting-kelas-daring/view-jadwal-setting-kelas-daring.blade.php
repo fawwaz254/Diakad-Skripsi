@@ -1,3 +1,14 @@
+@if($cek_kelas_mp==0)
+
+<div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/jadwal-kelas')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
+    <p>Silahkan melakukan setting kelas terlebih dahulu sebelum setting jadwal</p>
+</div>
+
+@else
+
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/jadwal-kelas')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
@@ -107,3 +118,5 @@
         });
     }
 </script>
+
+@endif
