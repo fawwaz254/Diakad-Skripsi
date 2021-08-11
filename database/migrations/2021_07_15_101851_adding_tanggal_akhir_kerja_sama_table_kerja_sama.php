@@ -14,7 +14,7 @@ class AddingTanggalAkhirKerjaSamaTableKerjaSama extends Migration
     public function up()
     {
         Schema::table('kerjasama', function (Blueprint $table) {
-            $table->date('tanggal_akhir_kerjasama')->after('tanggal_kerjasama');
+            $table->date('tanggal_akhir_kerjasama')->after('tanggal_kerjasama')->nullable();
         });
     }
 
