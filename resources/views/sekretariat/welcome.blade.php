@@ -8,3 +8,5 @@
     <div class="row clearfix">
     </div>
 </div>
+
+@include('rilis-note')
