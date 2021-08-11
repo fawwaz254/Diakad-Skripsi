@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddingTanggalAkhirKerjaSamaTableKerjaSama extends Migration
+class UpdateTableKerjaSama extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddingTanggalAkhirKerjaSamaTableKerjaSama extends Migration
     public function up()
     {
         Schema::table('kerjasama', function (Blueprint $table) {
-            $table->date('tanggal_akhir_kerjasama')->after('tanggal_kerjasama')->nullable();
+            $table->date('tanggal_akhir_kerjasama')->nullable()->change();
         });
     }
 

@@ -41,3 +41,5 @@
         @endif
     </div>
 </div>
+
+@include('rilis-note')

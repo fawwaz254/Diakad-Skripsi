@@ -25,6 +25,7 @@ use Validator;
 class DataKegiatanSiswaController extends BaseController{
 
     public function viewDataKegiatanSiswa(Request $request){
+        
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
