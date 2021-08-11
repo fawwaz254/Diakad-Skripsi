@@ -41,7 +41,7 @@ class TagihanController extends BaseController{
             $grup_payment_channel = $winpay->getPaymentChannel();
         }
 
-        $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $siswa->id_siswa)->where('status_pembayaran', 0)->get();
+        $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $siswa->id_siswa)->where('status_pembayaran', 0)->orderBy('created_at', 'desc')->get();
 
     	return view('siswa/keuangan/tagihan/view-tagihan',compact('auth_data', 'grup_payment_channel', 'pembayaran_aktif'));
 

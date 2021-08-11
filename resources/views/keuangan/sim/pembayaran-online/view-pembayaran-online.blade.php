@@ -15,6 +15,24 @@
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <div class="form-line">
+                                    <labe>Tanggal Mulai</label>
+                                    <input type="text" class="datepicker form-control" name="start_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->startOfMonth()->format('Y-m-d')}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <labe>Tanggal Selesai</label>
+                                    <input type="text" class="datepicker form-control" name="end_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->endOfMonth()->format('Y-m-d')}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
                                     <labe>Kelas</label>
                                     <select class="form-control show-tick" {{(!empty($id_kelas))? 'disabled' : ''}} name="kelas" onchange="changeKelas()">
                                         <option value="">Semua Kelas</option>
@@ -25,7 +43,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <div class="form-line">
                                     <labe>Siswa</label>
@@ -35,25 +53,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <labe>Status</label>
+                                    <select class="form-control show-tick" name="status">
+                                        <option value="">Semua Status</option>
+                                        <option value="1">Sudah dibayar</option>
+                                        <option value="2">Waiting for payment</option>
+                                        <option value="10">Expired</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <labe>Tanggal Mulai</label>
-                                    <input type="text" class="datepicker form-control" name="start_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->startOfMonth()->format('Y-m-d')}}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <labe>Tanggal Selesai</label>
-                                    <input type="text" class="datepicker form-control" name="end_date" value="{{\Carbon\Carbon::today(env('APP_TIMEZONE', 'Asia/jakarta'))->endOfMonth()->format('Y-m-d')}}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
                         </div>
                     </div>
@@ -128,6 +143,7 @@
                 params.end_date = encodeURIComponent($('input[name=end_date]').val());
                 params.kelas = encodeURIComponent($('select[name=kelas]').val());
                 params.siswa = encodeURIComponent($('select[name=siswa]').val());
+                params.status = encodeURIComponent($('select[name=status]').val());
             },
         },
         columns: [

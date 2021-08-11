@@ -146,6 +146,15 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
+            @if($grup_payment_channel)
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function (data, type, full, meta){
+                    return '<input id="checkbox-' + data.id + '" type="checkbox" name="id_tagihan_biaya[]" class="filled-in" value="' + data.id + '">'+
+                    '<label for="checkbox-' + data.id + '"></label>'; 
+
+                }
+            },
+            @endif
             { data: 'nm_biaya', name: 'nm_biaya' },
             { data: 'jenis_biaya', name: 'jenis_biaya'},
             { data: 'semester', name: 'semester', searchable: false, orderable: false },
