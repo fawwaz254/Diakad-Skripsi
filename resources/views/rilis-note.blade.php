@@ -1,11 +1,24 @@
 @php
 
-$data = json_decode(file_get_contents('rilis.json'),true);
-$data = $data['rilis-terbaru'];
+$data = [];
+
+$siswa = json_decode(file_get_contents('rilis/siswa.json'),true);
+$akademik = json_decode(file_get_contents('rilis/akademik.json'),true);
+$kesiswaan = json_decode(file_get_contents('rilis/kesiswaan.json'),true);
+$pendidikan = json_decode(file_get_contents('rilis/pendidikan.json'),true);
+$guru = json_decode(file_get_contents('rilis/guru.json'),true);
+
+array_push($data,$siswa);
+array_push($data,$akademik);
+array_push($data,$kesiswaan);
+array_push($data,$pendidikan);
+array_push($data,$guru);
 
 $mine = array_filter($data, function ($var) {
     return ($var['role'] == Request::segment(1));
 });
+
+$mine = array_values($mine);
 
 @endphp
 

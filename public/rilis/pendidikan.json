@@ -1,0 +1,27 @@
+{
+  	"role"  :"pendidikan", 
+  	"update": [
+  	    {
+  	    	"tanggal-update" : "2021-08-09",
+  	    	"list-update" : [
+  	    		{
+  	    			"modul" : "Laporan Akademik",
+  	    			"list-fitur" : [
+  	    				{
+  	    					"fitur"     : "Menu Absensi Siswa",
+  	    					"deskripsi" : "Di menu ini anda dapat memonitoring absensi semua kelas"
+  	    				},
+  	    				{
+  	    					"fitur"     : "Menu Jurnal Kelas",
+  	    					"deskripsi" : "Di menu ini anda dapat memonitoring jurnal dari semua kelas"
+  	    				},
+  	    				{
+  	    					"fitur"     : "Menu Jurnal Guru",
+  	    					"deskripsi" : "Di menu ini anda dapat memonitoring jurnal dari semua guru"
+  	    				}
+  	    			]
+  	    		}
+  	    	]
+  		}
+  	]
+} 

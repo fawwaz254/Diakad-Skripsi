@@ -1,0 +1,19 @@
+{
+  	"role"  :"akademik", 
+  	"update": [
+  	    {
+  	    	"tanggal-update" : "2021-08-09",
+  	    	"list-update" : [
+  	    		{
+  	    			"modul" : "Modul Monitoring",
+  	    			"list-fitur" : [
+  	    				{
+  	    					"fitur"     : "Menu Monitoring Presensi",
+  	    					"deskripsi" : "Di menu ini anda dapat memonitoring presensi semua kelas"
+  	    				}
+  	    			]
+  	    		}
+  	    	]
+  		}
+  	]
+} 

@@ -1,0 +1,33 @@
+{
+  	"role"  :"kesiswaan", 
+  	"update": [
+  	    {
+  	    	"tanggal-update" : "2021-08-09",
+  	    	"list-update" : [
+  	    		{
+  	    			"modul" : "Modul Ekstrakurikuler",
+  	    			"list-fitur" : [
+  	    				{
+  	    					"fitur"     : "Menu Monitoring Absensi Ekskul",
+  	    					"deskripsi" : "Di menu ini anda dapat memonitoring absensi dari siswa yang mengikuti ekstrakurikuler"
+  	    				},
+  	    				{
+  	    					"fitur"     : "Menu Monitoring Nilai Ekskul",
+  	    					"deskripsi" : "Di menu ini anda dapat memonitoring nilai dari siswa yang mengikuti ekstrakurikuler"
+  	    				}
+  	    			]
+  	    		},
+  	    		{
+  	    			"modul" : "Modul Wisuda",
+  	    			"list-fitur" : [
+  	    				{
+  	    					"fitur"     : "Menu Laporan Wisuda",
+  	    					"deskripsi" : "Di menu ini anda dapat melihat laporan dari wisuda"
+  	    				}
+  	    			]
+  	    		}
+
+  	    	]
+  		}
+  	]
+} 
