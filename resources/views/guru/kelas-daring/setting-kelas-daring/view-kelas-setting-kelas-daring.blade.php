@@ -8,6 +8,7 @@
                 <div class="header">
                     <h2>SETTING MAPEL & KELAS ({{$item->nm_kelas_mp_grup}}) </h2>
                     <input name="id" value="{{$item->id_kelas_mp_grup}}" type="hidden">
+                    <input name="id_guru" value="{{$item->id_guru}}" type="hidden">
                 </div>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
@@ -83,6 +84,7 @@
             type: 'POST',
             data: function(params){
                 params.status = 1;
+                params.id_guru = $('input[name=id_guru]').val();
                 params.id = $('input[name=id]').val();
             },
         },
@@ -120,6 +122,7 @@
             type: 'POST',
             data: function(params){
                 params.status = 0;
+                params.id_guru = $('input[name=id_guru]').val();
                 params.id = $('input[name=id]').val();
             },
         },

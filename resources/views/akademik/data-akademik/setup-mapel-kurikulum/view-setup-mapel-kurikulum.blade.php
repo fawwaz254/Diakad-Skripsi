@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
             <div class="card">
                 <div class="header">
                     <h2>
@@ -42,12 +43,9 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
- @if($id_kurikulum != null)
-<!-- <div class="container-fluid"> -->
-    <div class="row-clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            @if($id_kurikulum != null)
+            <br>
             <div class="card">
                 <div class="body">
                     <div class="block-header">
@@ -68,11 +66,11 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
-<!-- </div> -->
-@endif
 </div>
+
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];

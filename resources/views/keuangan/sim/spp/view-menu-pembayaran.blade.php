@@ -173,6 +173,7 @@
                                             <a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
                                                 Batal
                                             </a>
+                                            @if($tagihan->is_request == 1)<br> <b>Online</b> @endif
                                         </td>
                                         @endif
                                     @else

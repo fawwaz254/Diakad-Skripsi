@@ -167,17 +167,18 @@
                                             @endphp
                                             <td>
                                                 @if($tagihan->is_request == 0)
-                                                <button class="btn btn-block bg-black waves-effect" onclick="takeAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp{{number_format($tagihan_bulanan)}}</button>
+                                                <button class="btn btn-block bg-black waves-effect" onclick="takeAction(this)" data-id="{{$tagihan->id_tagihan_biaya}}" data-nis="{{$tagihan->nis_siswa}}">Rp {{number_format($tagihan_bulanan)}}</button>
                                                 @else
                                                 Rp{{number_format($tagihan_bulanan)}}<br><b>Online</b>
                                                 @endif
                                             </td>
                                             @elseif($tagihan->is_tagih == 0)
-                                            <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                            <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}" style="vertical-align:middle;text-align: center;">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
                                                 <br>
                                                 <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
                                                     <i class="material-icons" style="left: -7px; top: -7px;">close</i>
                                                 </button>
+                                                @if($tagihan->is_request == 1) <b>Online</b> @endif
                                             </td>
                                             @endif
                                         @else
@@ -201,11 +202,12 @@
                                                 @endif
                                             </td>
                                             @elseif($tagihan->is_tagih == 0)
-                                            <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                            <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}" style="vertical-align:middle;text-align: center;">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
                                                 <br>
                                                 <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
                                                     <i class="material-icons" style="left: -7px; top: -7px;">close</i>
                                                 </button>
+                                                @if($tagihan->is_request == 1) <b>Online</b> @endif
                                             </td>
                                             @endif
                                         @else
@@ -246,10 +248,10 @@
                 success: function (response) {
                     vex.dialog.alert(response.message);
                     item.parent('td').replaceWith(
-                        '<td class="tdbg-' + response.data.month + '">' + response.data.date + 
+                        '<td style="vertical-align:middle;text-align: center;" class="tdbg-' + response.data.month + '">' + response.data.date + 
                         '    <br>'+
                         '    <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(this)" data-id="' + response.data.id + '" style="width: 25px; height: 25px;">'+
-                        '        <i class="material-icons">close</i>'+
+                        '        <i class="material-icons" style="left: -7px; top: -7px;">close</i>'+
                         '    </button>'+
                         '</td>'
                     );

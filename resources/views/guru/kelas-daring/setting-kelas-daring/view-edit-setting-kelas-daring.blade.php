@@ -14,6 +14,7 @@
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/jadwal-kelas/save')}}">
                         {{csrf_field()}}
                         <input name="id" value="{{$item->id_kelas_mp_grup}}" type="hidden">
+
                         <h2 class="card-inside-title">
                             Informasi Nama Kelas Daring
                         </h2>
@@ -23,6 +24,24 @@
                                 aria-invalid="true" value="{{$item->nm_kelas_mp_grup}}">
                             </div>
                         </div>
+
+                        @if($auth_data->pengguna->status_join_table != 2)
+                        <h2 class="card-inside-title">
+                            Guru
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_guru" required="">
+                                    @foreach($data_guru as $data)
+                                        <option value="{{$data->id_guru}}" {{$data->id_guru == $item->id_guru ? 'selected' : ''}}>
+                                           {{$data->gelar_depan}} {{$data->nm_pengguna}}, {{$data->gelar_belakang}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
