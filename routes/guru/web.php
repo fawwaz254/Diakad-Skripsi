@@ -11,6 +11,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('action-data-pribadi', 'Guru\Biodata\DataPribadiController@actionSaveDataPribadi');
         });
 
+        /** ==== MODUL E-Learning ==== **/
+        Route::group(array('prefix' => 'e-learning'), function () {
+
+            Route::group(array('prefix' => 'manajemen-materi-ajar'), function () {
+                Route::get('/', 'Guru\ELearning\ManajemenMateriAjarController@viewManajemenMateriAjar');
+                Route::get('datatables', 'Guru\ELearning\ManajemenMateriAjarController@datatablesManajemenMateriAjar');
+                Route::get('add', 'Guru\ELearning\ManajemenMateriAjarController@addManajemenMateriAjar');
+                Route::get('edit/{id}', 'Guru\ELearning\ManajemenMateriAjarController@EditManajemenMateriAjar');
+            });
+
+            Route::post('action-manajemen-materi-ajar/{mode}/{id}', 'Guru\ELearning\ManajemenMateriAjarController@actionManajemenMateriAjar');
+            
+        });
+
+
         /** ==== MODUL JADWAL ==== **/
         Route::group(array('prefix' => 'jadwal'), function () {
             // MENU Kalender Akademik
