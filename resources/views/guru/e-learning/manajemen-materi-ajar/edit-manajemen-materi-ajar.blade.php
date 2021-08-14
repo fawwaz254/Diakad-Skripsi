@@ -16,17 +16,44 @@
                     {{csrf_field()}}
                     <div class="row clearfix">
 
-                        <div class="col-md-6">
-                            <label>Judul Materi</label>
-                            <input type="text" class="form-control" name="judul_materi" value="{{$materi_ajar->judul_materi}}" required="" aria-required="true" aria-invalid="true">
+                        <div class="col-md-4">
+                            <label>Jurusan</label>
+                             <select class="form-control show-tick" name="id_jurusan">
+                                @foreach($list_jurusan as $r)
+                                <option value="{{$r->id_jurusan}}" {{$materi_ajar->id_jurusan == $r->id_jurusan ? 'selected' : ''}}>{{$r->nm_jurusan}}</option>
+                                @endforeach
+                            </select>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label>Tingkat</label>
+                            <select class="form-control show-tick" name="tingkat">
+                            @foreach($list_tingkat as $r)
+                                <option value="{{$r->tingkat}}" {{$materi_ajar->tingkat == $r->tingkat ? 'selected' : ''}}>{{$r->tingkat}}</option>
+                            @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
                             <label>Status</label>
                             <select class="form-control show-tick" name="status">
                                 <option value="0" {{$materi_ajar->status == 0 ? 'selected' : ''}}>Tidak Aktif</option>
                                 <option value="1" {{$materi_ajar->status == 1 ? 'selected' : ''}}>Aktif</option>
                             </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Mata Pelajaran</label>
+                            <select class="form-control show-tick" name="id_mata_pelajaran">
+                                @foreach($list_mapel as $r)
+                                <option value="{{$r->id_mata_pelajaran}}" {{$materi_ajar->id_mata_pelajaran == $r->id_mata_pelajaran ? 'selected' : ''}}>{{$r->nm_mata_pelajaran}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label>Judul Materi</label>
+                            <input type="text" class="form-control" name="judul_materi" value="{{$materi_ajar->judul_materi}}" required="" aria-required="true" aria-invalid="true">
                         </div>
 
                     </div>

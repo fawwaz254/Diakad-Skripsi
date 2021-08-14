@@ -1,7 +1,4 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#e-learning/manajemen-materi-ajar/add')}}"><i class="material-icons">add</i><span>Tambah Materi Ajar</span></a></h2>
-    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -15,9 +12,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
+                                    <th>Guru</th>
                                     <th>Judul Materi</th>
                                     <th>File Materi</th>
-                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -32,9 +29,8 @@
 <script type="text/javascript">
     
     var modul_url       = 'e-learning';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-manajemen-materi-ajar/delete';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'materi-ajar/datatables';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'materi-ajar/detail';
 
         var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -47,6 +43,7 @@
         columns: [
             { data: null, searchable: false, orderable: false , className:'align-center'  },
             { data: 'mapel', name: 'mapel',className:'align-center' },
+            { data: 'guru', name: 'guru',className:'align-center' },
             { data: 'judul_materi', name: 'judul_materi',className:'align-center' },
             { data: 'action', name: 'action',
                 render:function(data){
@@ -62,24 +59,11 @@
 
                 }
             },
-            { data: 'action', name: 'action',className:'align-center' ,
-                render:function(data){
-                    if(data.status==0){
-                        return `<span class="badge bg-red">Tidak Aktif</span>`;
-                    }
-                    else{
-                        return `<span class="badge bg-teal">Aktif</span>`;
-                    }
-                }
-            },
             { data: 'action', name: 'action', searchable: false, orderable: false,className:'align-center' ,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+                    '    <i class="material-icons">remove_red_eye</i>'+
+                    '</a> ';
                 }
             }
         ]

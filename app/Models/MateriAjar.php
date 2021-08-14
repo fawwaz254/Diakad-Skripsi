@@ -27,4 +27,14 @@ class MateriAjar extends Model
         return $this->hasMany(MateriAjarFile::class, 'id_materi_ajar','id_materi_ajar');
     }
 
+    public function mapel()
+    {
+        return $this->belongsTo(MataPelajaran::class, 'id_mata_pelajaran');
+    }
+
+    public function guru()
+    {
+        return $this->belongsTo(Guru::class, 'id_guru');
+    }
+
 }

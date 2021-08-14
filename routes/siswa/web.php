@@ -4,6 +4,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'siswa'), function() {
         Route::get('welcome', 'Siswa\WelcomeController@indexWelcome');
 
+        Route::group(array('prefix' => 'e-learning'), function() {
+
+        	Route::group(array('prefix' => 'materi-ajar'), function() {
+
+        		Route::get('/', 'Siswa\Elearning\MateriAjarController@viewMateriAjar');
+        		Route::get('datatables', 'Siswa\Elearning\MateriAjarController@datatablesMateriAjar');
+        		Route::get('detail/{id}', 'Siswa\Elearning\MateriAjarController@viewDetailMateriAjar');
+
+        	});
+
+        });
+
         Route::group(array('prefix' => 'bursa-kerja'), function() {
 
 			Route::group(array('prefix' => 'bkk'), function() {

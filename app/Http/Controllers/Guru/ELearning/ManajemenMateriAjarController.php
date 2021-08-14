@@ -50,8 +50,12 @@ class ManajemenMateriAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $data['list_mapel'] = MataPelajaran::all();
+        $data['list_jurusan'] = Jurusan::all();
+        $data['list_tingkat'] = Kelas::select('tingkat')->groupBy('tingkat')->get();
+
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
-        return view('guru/e-learning/manajemen-materi-ajar/edit-manajemen-materi-ajar',compact('auth_data','materi_ajar'));
+        return view('guru/e-learning/manajemen-materi-ajar/edit-manajemen-materi-ajar',compact('auth_data','materi_ajar'),$data);
 
     }
 
@@ -62,12 +66,15 @@ class ManajemenMateriAjarController extends BaseController
 
         if($mode=='add'){
             $validator = Validator::make($request->all(), [
-                'judul_materi'  => 'required',
-                'status'        => 'required',
-                'nm_file'       => 'required|array',
-                'nm_file.*'     => 'required',
-                'file'          => 'required|array',
-                'file.*'        => 'required|file|max:10240',
+                'judul_materi'      => 'required',
+                'id_mata_pelajaran' => 'required',
+                'id_jurusan'        => 'required',
+                'tingkat'           => 'required',
+                'status'            => 'required',
+                'nm_file'           => 'required|array',
+                'nm_file.*'         => 'required',
+                'file'              => 'required|array',
+                'file.*'            => 'required|file|max:10240',
             ]);
         }
 
@@ -75,6 +82,9 @@ class ManajemenMateriAjarController extends BaseController
             $validator = Validator::make($request->all(), [
                 'judul_materi'  => 'required',
                 'status'        => 'required',
+                'id_mata_pelajaran' => 'required',
+                'id_jurusan'        => 'required',
+                'tingkat'           => 'required',
             ]);
 
         }
@@ -106,6 +116,9 @@ class ManajemenMateriAjarController extends BaseController
                     $materi_ajar                    = new MateriAjar;
                     $materi_ajar->id_materi_ajar    = $id;
                     $materi_ajar->judul_materi      = $input->judul_materi;
+                    $materi_ajar->id_mata_pelajaran = $input->id_mata_pelajaran;
+                    $materi_ajar->id_jurusan        = $input->id_jurusan;
+                    $materi_ajar->tingkat           = $input->tingkat;
                     $materi_ajar->status            = $input->status;
                     $materi_ajar->id_guru           = $guru->id_guru;
                     $materi_ajar->created_by        = $input->auth_data->pengguna->id_pengguna;
@@ -158,6 +171,9 @@ class ManajemenMateriAjarController extends BaseController
 
                     $materi_ajar                    = MateriAjar::find($id);
                     $materi_ajar->judul_materi      = $input->judul_materi;
+                    $materi_ajar->id_mata_pelajaran = $input->id_mata_pelajaran;
+                    $materi_ajar->id_jurusan        = $input->id_jurusan;
+                    $materi_ajar->tingkat           = $input->tingkat;
                     $materi_ajar->status            = $input->status;
                     $materi_ajar->updated_by        = $input->auth_data->pengguna->id_pengguna;
                     $materi_ajar->save();
@@ -214,9 +230,12 @@ class ManajemenMateriAjarController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = MateriAjar::with('materi_ajar_file')->where('created_by',$auth_data->pengguna->id_pengguna)->get();
+        $list_data = MateriAjar::with('materi_ajar_file','mapel')->where('created_by',$auth_data->pengguna->id_pengguna)->get();
 
         return Datatables::of($list_data)
+                ->addColumn('mapel',function($item){
+                    return $item->mapel->nm_mata_pelajaran;
+                })
                 ->addColumn('action', function($item){
 
                     $file = [];
