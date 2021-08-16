@@ -224,7 +224,15 @@ class InsertUpdateSiswaController extends BaseController
 	    	}
 	    	//jika validasi benar
 	    	else{
-	    		$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->orWhere('nisn_siswa','=',$input->nisn_siswa)->first();
+
+	    		if(!empty($input->nisn_siswa)){
+	    			$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->orWhere('nisn_siswa','=',$input->nisn_siswa)->first();
+	    		}
+
+	    		else{
+	    			$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->first();
+	    		}
+	    		
 		    	$id_penerimaan 		= Penerimaan::where('jenis_penerimaan','=','2')->where('tahun_penerimaan','=',$input->thn_masuk_siswa)->first();
 
 		    	//jika tidak ada siswa 
@@ -360,6 +368,15 @@ class InsertUpdateSiswaController extends BaseController
 	                                'message'	=> 'Insert Data Siswa Gagal'
 	                            ];
 	                } 
+
+		    	}
+
+		    	else{
+
+		    		return [
+                        'status' 	=> 200, // GAGAL
+                        'message'	=> 'Mohon maaf siswa dengan NIS / NISN ini ditemukan didalam sistem'
+                    ];
 
 		    	}	
 	    	}
