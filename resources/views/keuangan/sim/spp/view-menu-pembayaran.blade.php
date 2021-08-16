@@ -169,10 +169,12 @@
                                         </td>
                                         @elseif($tagihan->is_tagih == 0)
                                         <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                            @if($tagihan->is_request==0)
                                             <br>
                                             <a style="margin-top: 2px; color: #e91e63; cursor: pointer;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
                                                 Batal
                                             </a>
+                                            @endif
                                             @if($tagihan->is_request == 1)<br> <b>Online</b> @endif
                                         </td>
                                         @endif
