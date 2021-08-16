@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="col-md-5">
-                            <label>File</label>
+                            <label>File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                             <input type="file" class="form-control" name="file[]" required="" aria-required="true" aria-invalid="true">
                         </div>
 
@@ -151,6 +151,7 @@
                 },
                 complete: function() {
                     $('input').removeAttr('readonly', 'readonly');
+                    $('button').removeAttr('disabled');
                 }
             });
         }

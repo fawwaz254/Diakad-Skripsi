@@ -74,7 +74,7 @@ class ManajemenMateriAjarController extends BaseController
                 'nm_file'           => 'required|array',
                 'nm_file.*'         => 'required',
                 'file'              => 'required|array',
-                'file.*'            => 'required|file|max:10240',
+                'file.*'            => 'required|file|mimes:pptx,docx,xlsx,pdf|max:10240',
             ]);
         }
 

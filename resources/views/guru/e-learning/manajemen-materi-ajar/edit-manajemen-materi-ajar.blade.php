@@ -67,15 +67,20 @@
                                         <th>Nama File</th>
                                         <th>Tipe File</th>
                                         <th>Dilihat</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($materi_ajar->materi_ajar_file as $r)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td><a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank">{{$r->nm_file}}<a></td>
+                                        <td>{{$r->nm_file}}</td>
                                         <td>{{$r->type_file}}</td>
                                         <td>{{$r->views}} kali</td>
+                                        <td style="text-align:center;">
+                                            <a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank"><button class="btn btn-success" type="button">Download</button></a>
+                                            <button class="btn btn-warning lihat" type="button" data-type="{{$r->type_file}}" data-link="{{Storage::disk('spaces')->url($r->link_file)}}">Lihat Disini</button>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -93,7 +98,7 @@
                         </div>
 
                         <div class="col-md-5">
-                            <label>File</label>
+                            <label>File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
                             <input type="file" class="form-control" name="file[]" aria-required="true" aria-invalid="true">
                         </div>
 
@@ -121,6 +126,17 @@
                     
                 </div>
             </div>
+
+            <br>
+
+            <div class="card" id="card-materi" style="display:none;">
+                <div class="body" id="frame">
+                  
+                </div>    
+            </div>
+
+            <br>
+
         </div>
     </div>
 </div>
@@ -128,6 +144,31 @@
 @include('scriptjs')
 
 <script type="text/javascript">
+
+    $('.lihat').click(function(){
+
+        $('#card-materi').show();
+
+        var link = $(this).data('link');
+        var type = $(this).data('type');
+
+        if(type=='pdf'){
+            $('#frame').empty();
+            $('#frame').append(`
+                <iframe src="`+link+`" style="width:100%; height:535px;" frameborder="0"></iframe>
+            `);
+        }
+
+        else{
+            $('#frame').empty();
+            $('#frame').append(`
+                  <iframe  src='https://view.officeapps.live.com/op/embed.aspx?src=`+link+`' style="width:100%;" height='535px' frameborder='0'></iframe>
+            `);
+        }
+
+        
+    })
+
       $('#form-upload').validate({
         rules: {
             'checkbox': {
@@ -176,6 +217,7 @@
                 },
                 complete: function() {
                     $('input').removeAttr('readonly', 'readonly');
+                    $('button').removeAttr('disabled');
                 }
             });
         }

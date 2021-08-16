@@ -106,19 +106,20 @@
         var link = $(this).data('link');
         var type = $(this).data('type');
 
-        if(type=='pptx'){
+        if(type=='pdf'){
+            $('#frame').empty();
+            $('#frame').append(`
+                <iframe src="`+link+`" style="width:100%; height:535px;" frameborder="0"></iframe>
+            `);
+        }
+
+        else{
             $('#frame').empty();
             $('#frame').append(`
                   <iframe  src='https://view.officeapps.live.com/op/embed.aspx?src=`+link+`' style="width:100%;" height='535px' frameborder='0'></iframe>
             `);
         }
 
-        else if(type=='pdf'){
-            $('#frame').empty();
-            $('#frame').append(`
-                <iframe src="`+link+`" style="width:100%; height:535px;" frameborder="0"></iframe>
-            `);
-        }
         
     })
 
