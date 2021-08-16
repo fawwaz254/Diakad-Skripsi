@@ -1,3 +1,5 @@
+<input type="hidden" id="nama" value="{{$auth_data->pengguna->nm_pengguna}}">
+
 @if($grup_payment_channel)
 
 <div class="container-fluid">
@@ -30,12 +32,10 @@
                                     <td>Rp{{number_format($pembayaran_trs->besar_pembayaran)}}</td>
                                     <td>{{$pembayaran_trs->payment_code}}</td>
                                     <td>
-                                        <a class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="copyToClipboard('{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}')">
-                                            <i class="material-icons">info_outline</i>
-                                        </a> 
-                                        <a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}">
-                                            <i class="material-icons">attach_money</i>
-                                        </a> 
+                                        <button class="btn btn-warning button_open_modal" data-link="{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}" data-keterangan="{{$pembayaran_trs->keterangan}}" type="button" waves-effect><i class="material-icons">share</i>
+                                        <span>Share Link Pembayaran</span></button>
+                                        <a target="_blank" href="{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}"><button class="btn btn-success waves-effect"><i class="material-icons">attach_money</i>
+                                        <span>Bayar Sekarang</span></button></a>                       
                                     </td>
                                 </tr>
                             </tbody>
@@ -129,9 +129,73 @@
 
 @endif
 
+<div class="modal fade" id="modal_share_link" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">Share Link Pembayaran</h4>
+            </div>
+            <div class="modal-body">
+
+                    
+                    <div>
+
+                    <a id="button_wa" href="#" target="_blank" ><button type="button" class="btn bg-green btn-block waves-effect">
+                        <i class="material-icons">whatsapp</i> <span>Share Lewat Whatsapp</span>
+                    </button></a>
+
+                    </div>
+
+                    <div>
+
+                    <a id="button_telegram" href="#" target="_blank" ><button type="button" style="margin-top: 10px;" class="btn bg-primary btn-block waves-effect">
+                        <i class="material-icons">telegram</i> <span>Share Lewat Telegram</span>
+                    </button></a>
+
+                    </div>
+
+                    <div id="copy"></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @include('scriptjs')
 
 <script>
+
+    $('.button_open_modal').click(function(){
+
+        var keterangan = $(this).data('keterangan');
+        var link = $(this).data('link');
+        var nama = $('#nama').val();
+        $('#modal_share_link').modal('show');   
+
+        link = `berikut ini merupakan link untuk melakukan pembayaran `+keterangan+` atas nama `+nama+` `+link+` `;
+
+        $('#copy').html(`
+            <button type="button" onclick="copyToClipboard('`+link+`')" style="margin-top: 10px;" class="btn bg-blue-grey btn-block waves-effect">
+                <i class="material-icons">content_copy</i> <span> Just Copy Link Pembayaran</span>
+            </button>
+        `);
+
+        $("#button_wa").attr("href", "https://wa.me/?text="+link);
+        $("#button_telegram").attr("href", "https://telegram.me/share/url?url="+link);
+
+    })
+
+    function copyToClipboard(link) {
+        var $input = $("<input>");
+        $input.val(link).appendTo('body').select();
+        document.execCommand('copy');
+        $input.remove();
+
+        vex.dialog.alert('Link copied!');
+    }
 
     var modul_url       = 'keuangan';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'tagihan/datatables';
