@@ -174,11 +174,13 @@
                                             </td>
                                             @elseif($tagihan->is_tagih == 0)
                                             <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}" style="vertical-align:middle;text-align: center;">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                                @if($tagihan->is_request == 0)
                                                 <br>
                                                 <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
                                                     <i class="material-icons" style="left: -7px; top: -7px;">close</i>
                                                 </button>
-                                                @if($tagihan->is_request == 1) <b>Online</b> @endif
+                                                @endif
+                                                @if($tagihan->is_request == 1) <br><b>Online</b> @endif
                                             </td>
                                             @endif
                                         @else
@@ -203,11 +205,13 @@
                                             </td>
                                             @elseif($tagihan->is_tagih == 0)
                                             <td class="tdbg-{{date_format(date_create($tagihan->tgl_pembayaran),'n')}}" style="vertical-align:middle;text-align: center;">{{date_format(date_create($tagihan->tgl_pembayaran),'d/m')}}
+                                                @if($tagihan->is_request == 0)
                                                 <br>
                                                 <button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" style="width: 25px; height: 25px;" onclick="deleteActionKhusus(this)" data-id="{{$tagihan->id_pembayaran_biaya}}">
                                                     <i class="material-icons" style="left: -7px; top: -7px;">close</i>
                                                 </button>
-                                                @if($tagihan->is_request == 1) <b>Online</b> @endif
+                                                @endif
+                                                @if($tagihan->is_request == 1) <br><b>Online</b> @endif
                                             </td>
                                             @endif
                                         @else
