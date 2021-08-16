@@ -156,10 +156,14 @@ class PembayaranOnlineController extends BaseController
                 })
                 ->addColumn('action', function ($item) {
                     if($item->status_pembayaran == 0){
-                        return url('payment/detail/'.$item->id_pembayaran_trs);
+                        $callback['status'] = true;
+                        $callback['link'] =  url('payment/detail/'.$item->id_pembayaran_trs);
+                        $callback['keterangan'] = $item->keterangan;
+                        $callback['nama'] = $item->siswa->pengguna->nm_pengguna;
                     }else{
-                        return null;
+                        $callback['status'] = false;
                     }
+                    return $callback;
                 })
                 ->make(true);
     }
