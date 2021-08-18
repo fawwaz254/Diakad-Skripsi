@@ -88,13 +88,28 @@ class KerjaHarianController extends BaseController{
 
                 if($request->hasFile('file')){ 
 
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
-                    $data->path_file = $file;
+                    $validator = Validator::make($request->all(),[
+                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+        
+                    if($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    }
 
-                    $upload = $request->file('file');
-                    $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
-                    $data->nm_file = $filename;
+                    else{
+
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
+                        $data->path_file = $file;
+
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
+
+                    }
 
                 }
 
@@ -119,13 +134,28 @@ class KerjaHarianController extends BaseController{
 
                 if($request->hasFile('file')){ 
 
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
-                    $data->path_file = $file;
+                    $validator = Validator::make($request->all(),[
+                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+        
+                    if($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    }
 
-                    $upload = $request->file('file');
-                    $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
-                    $data->nm_file = $filename;
+                    else{
+
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
+                        $data->path_file = $file;
+
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
+
+                    }
 
                 }
 
