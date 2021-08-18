@@ -52,6 +52,19 @@ class KerjaHarianController extends BaseController{
 
     }
 
+    public function previewFile($id,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = LaporanKerjaHarian::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+
+        return view('guru/laporan/kerja-harian/preview-file-kerja-harian',compact('auth_data','laporan_kerja_harian','link','ext'));
+
+    }
+
     public function actionKerjaHarian(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
