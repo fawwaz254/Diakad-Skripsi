@@ -35,7 +35,7 @@
                         </div>
 
                         <h2 class="card-inside-title">
-                            File Pendukung
+                            File Pendukung ( pdf , pptx , docx , xlsx , png , jpg , jpeg | max 5 mb )
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -132,6 +132,7 @@
                 },
                 complete: function() {
                     $('input').removeAttr('readonly', 'readonly');
+                    $('button').removeAttr('disabled');
                 }
             });
         }

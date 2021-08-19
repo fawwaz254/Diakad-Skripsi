@@ -36,11 +36,33 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-opsi" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">Opsi File</h4>
+            </div>
+            <div class="modal-body">
+
+                <center id="place">
+                    
+
+                </center>
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
-    var modul_url       = 'laporan';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'kerja-harian/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/action-kerja-harian/delete';
+    var modul_url        = 'laporan';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/datatables';
+    var edit_url         = role_url + '#' + modul_url + '/' + 'kerja-harian/edit';
+    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/action-kerja-harian/delete';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -74,11 +96,11 @@
                     }
                 }
             },
-            { data: 'action', name: 'file',className: 'has-text-centered', searchable: false, orderable: false,
+            { data: 'action', name: 'file',class: 'text-center', searchable: false, orderable: false,
                 render:function(data){
                     if(data.file){
-                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+data.file+'">'+
-                        '    <i class="material-icons">image</i>'+
+                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="'+data.file+'" onclick="open_modal(\''+data.id+'\' , this)">'+
+                        '    <i class="material-icons">insert_drive_file</i>'+
                         '</a> '                   
                     }
                     else{
@@ -107,4 +129,17 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+    function open_modal(id,element){
+
+        var item = $(element);
+        $('#place').empty();
+        $('#place').append(`
+            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
+            <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
+            <span>Download File</span></button></a>
+        `);
+        $('#modal-opsi').modal('show');
+    }
+
 </script>

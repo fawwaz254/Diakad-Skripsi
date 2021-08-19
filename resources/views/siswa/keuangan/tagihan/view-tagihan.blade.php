@@ -1,6 +1,6 @@
-<input type="hidden" id="nama" value="{{$auth_data->pengguna->nm_pengguna}}">
-
 @if($grup_payment_channel)
+
+<input type="hidden" id="nama" value="{{$auth_data->pengguna->nm_pengguna}}">
 
 <div class="container-fluid">
     <div class="row clearfix">
@@ -95,40 +95,6 @@
     </div>
 </div>
 
-@else
-
-<div class="container-fluid">
-    <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
-                    <div class="header">
-                        <h2>TAGIHAN SISWA</h2>
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Biaya</th>
-                                        <th>-</th>
-                                        <th>Semester</th>
-                                        <th>Besar Tagihan</th>
-                                        <th>Denda Tagihan</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                     
-                    </div>
-        
-            </div>
-        </div>
-    </div>
-</div>
-
-@endif
-
 <div class="modal fade" id="modal_share_link" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -163,6 +129,40 @@
         </div>
     </div>
 </div>
+
+@else
+
+<div class="container-fluid">
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                    <div class="header">
+                        <h2>TAGIHAN SISWA</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Biaya</th>
+                                        <th>-</th>
+                                        <th>Semester</th>
+                                        <th>Besar Tagihan</th>
+                                        <th>Denda Tagihan</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                     
+                    </div>
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+@endif
 
 @include('scriptjs')
 

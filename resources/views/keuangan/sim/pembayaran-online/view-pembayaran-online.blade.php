@@ -95,6 +95,42 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal_share_link" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">Share Link Pembayaran</h4>
+            </div>
+            <div class="modal-body">
+
+                    
+                    <div>
+
+                    <a id="button_wa" href="#" target="_blank" ><button type="button" class="btn bg-green btn-block waves-effect">
+                        <i class="material-icons">whatsapp</i> <span>Share Lewat Whatsapp</span>
+                    </button></a>
+
+                    </div>
+
+                    <div>
+
+                    <a id="button_telegram" href="#" target="_blank" ><button type="button" style="margin-top: 10px;" class="btn bg-primary btn-block waves-effect">
+                        <i class="material-icons">telegram</i> <span>Share Lewat Telegram</span>
+                    </button></a>
+
+                    </div>
+
+                    <div id="copy"></div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function(){    
         $('.datepicker').bootstrapMaterialDatePicker({
@@ -162,15 +198,22 @@
             { data: 'tanggal_bayar', searchable: false, orderable: false },
             { data: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    if(data == null){
+                    if(!data.status){
                         return '';
                     }else{
-                        return '<a class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="copyToClipboard(\'' +data+ '\')">'+
-                            '    <i class="material-icons">info_outline</i>'+
-                            '</a> '+
-                            '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ data + '">'+
-                            '    <i class="material-icons">attach_money</i>'+
-                            '</a> ';
+                        // return '<a class="btn btn-warning btn-circle waves-effect waves-circle waves-float" onclick="copyToClipboard(\'' +data+ '\')">'+
+                        //     '    <i class="material-icons">info_outline</i>'+
+                        //     '</a> '+
+                        //     '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ data + '">'+
+                        //     '    <i class="material-icons">attach_money</i>'+
+                        //     '</a> ';
+
+                        return ` 
+                        <button class="btn btn-warning button_open_modal" data-nama="`+data.nama+`" data-link="`+data.link+`" data-keterangan="`+data.keterangan+`" type="button" waves-effect><i class="material-icons">share</i>
+                        <span>Share Link Pembayaran</span></button>
+                        <a target="_blank" href="`+data.link+`"><button class="btn btn-success waves-effect"><i class="material-icons">attach_money</i>
+                        <span>Bayar Sekarang</span></button></a>
+                        `;
                     }
                 }
             },
@@ -190,6 +233,30 @@
     function filterAction(){
         primary_table.ajax.reload(null, false);
     }
+
+    $(document).ready(function() {
+        
+        $('#primary_table').on('click','.button_open_modal',function(){
+
+            var keterangan = $(this).data('keterangan');
+            var link = $(this).data('link');
+            var nama = $(this).data('nama');
+            $('#modal_share_link').modal('show');   
+
+            link = `berikut ini merupakan link untuk melakukan pembayaran `+keterangan+` atas nama `+nama+` `+link+` `;
+
+            $('#copy').html(`
+                <button type="button" onclick="copyToClipboard('`+link+`')" style="margin-top: 10px;" class="btn bg-blue-grey btn-block waves-effect">
+                    <i class="material-icons">content_copy</i> <span> Just Copy Link Pembayaran</span>
+                </button>
+            `);
+
+            $("#button_wa").attr("href", "https://wa.me/?text="+link);
+            $("#button_telegram").attr("href", "https://telegram.me/share/url?url="+link);
+
+        })
+
+    });
 
     function copyToClipboard(link) {
         var $input = $("<input>");

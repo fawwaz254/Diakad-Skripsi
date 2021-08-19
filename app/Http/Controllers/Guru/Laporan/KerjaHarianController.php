@@ -52,6 +52,19 @@ class KerjaHarianController extends BaseController{
 
     }
 
+    public function previewFile($id,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = LaporanKerjaHarian::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+
+        return view('guru/laporan/kerja-harian/preview-file-kerja-harian',compact('auth_data','laporan_kerja_harian','link','ext'));
+
+    }
+
     public function actionKerjaHarian(Request $request, $mode, $id = null){
 
         $input = (object) $request->input();
@@ -88,13 +101,28 @@ class KerjaHarianController extends BaseController{
 
                 if($request->hasFile('file')){ 
 
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
-                    $data->path_file = $file;
+                    $validator = Validator::make($request->all(),[
+                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+        
+                    if($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    }
 
-                    $upload = $request->file('file');
-                    $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
-                    $data->nm_file = $filename;
+                    else{
+
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
+                        $data->path_file = $file;
+
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
+
+                    }
 
                 }
 
@@ -119,13 +147,28 @@ class KerjaHarianController extends BaseController{
 
                 if($request->hasFile('file')){ 
 
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
-                    $data->path_file = $file;
+                    $validator = Validator::make($request->all(),[
+                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+        
+                    if($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    }
 
-                    $upload = $request->file('file');
-                    $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
-                    $data->nm_file = $filename;
+                    else{
+
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
+                        $data->path_file = $file;
+
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
+
+                    }
 
                 }
 
