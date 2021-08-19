@@ -208,7 +208,7 @@ class PembayaranSiswaController extends BaseController
 
         $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur', DB::raw("(SELECT SUM(besar_biaya) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_tagihan"), DB::raw("(SELECT SUM(denda_biaya) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_denda"), DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL AND pembayaran_biaya.deleted_at IS NULL) AS total_pembayaran"))
           ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-          ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+          ->leftJoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
           ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
           ->join('jalur_siswa', function ($join) {
               $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
@@ -222,6 +222,7 @@ class PembayaranSiswaController extends BaseController
           })
           ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
           ->get();
+
         return Datatables::of($siswa)
                 ->addColumn('total_tagihan', function ($item) {
                     return "Rp".number_format($item->total_tagihan + $item->total_denda - $item->total_pembayaran);
