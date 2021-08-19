@@ -123,20 +123,23 @@
                         <table class="table table-bordered table-striped table-hover dataTable" id="primary_table">
                             <thead>
                                 <tr>
-                                    <th rowspan=2>NIS</th>
-                                    <th rowspan=2>Nama</th>
-                                    <th colspan=12>SPP</th>
-                                    @foreach($data_ket_tagihan as $ket)
-                                        <th class="tdbg-0" rowspan=2>{!! $ket->title_biaya !!}</th>
-                                    @endforeach
+                                    <th rowspan="2">NIS</th>
+                                    <th rowspan="2">Nama</th>
+                                    <th class="text-center" colspan="{{count($data_bulan_tagihan)}}">SPP</th>
+                                    @if(count($data_ket_tagihan) > 0)
+                                    <th class="text-center" colspan="{{count($data_ket_tagihan)}}">{{$data_ket_tagihan[0]->nm_biaya}}</th>
+                                    @endif
                                 </tr>
                                 <tr>
                                     @foreach($data_bulan_tagihan as $bulan)
-                                        @if(!empty($bulan->id_bulan))
-                                        <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
-                                        @else
-                                        <th class="tdbg">{{$bulan->nm_biaya}}</th>
-                                        @endif
+                                    @if(!empty($bulan->id_bulan))
+                                    <th class="tdbg-{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</th>
+                                    @else
+                                    <th class="tdbg">{{$bulan->nm_biaya}}</th>
+                                    @endif
+                                    @endforeach
+                                    @foreach($data_ket_tagihan as $ket)
+                                        <td class="tdbg-0" rowspan="2">{!! $ket->title_biaya !!}</td>
                                     @endforeach
                                 </tr>
                             </thead>
