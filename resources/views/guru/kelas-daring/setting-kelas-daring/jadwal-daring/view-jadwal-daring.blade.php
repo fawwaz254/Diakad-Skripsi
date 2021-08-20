@@ -70,14 +70,9 @@
             { data: 'tgl_presensi' },
             { data: 'jenis_materi', searchable: false, orderable: false },
             { data: 'status_jadwal', searchable: false, orderable: false },
-            { data: 'action', searchable: false, orderable: false, 
+            { data: 'action', searchable: false, class:'text-center', orderable: false, 
                 render: function(data){
                     html = '';
-                  
-
-                    html += ' <a class="btn btn-success btn-circle waves-effect waves-circle waves-float target-link" href="' +edit_materi_url+ '/'+data.grup+'/'+data.id+'" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">remove_red_eye</i>'+
-                    '</a> ';
 
                     if(!data.sudah_diadakan){
                         html+= '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float target-link" href="' +edit_url+ '/'+data.grup+'/'+data.id+'" data-id="'+  data.id +'">'+
