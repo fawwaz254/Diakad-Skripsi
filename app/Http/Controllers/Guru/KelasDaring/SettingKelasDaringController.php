@@ -78,6 +78,18 @@ class SettingKelasDaringController extends BaseController
         return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-add-jadwal-daring', compact('auth_data', 'item'));
     }
 
+    public function viewEditPresensiMpKelasDaring(Request $request, $id_kelas_mp_grup = '-' , $id_presensi_mp = '-')
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $item = KelasMpGrup::find($id_kelas_mp_grup);
+        $item2 = PresensiMp::find($id_presensi_mp);
+
+        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-edit-jadwal-daring', compact('auth_data','item','item2'));
+    }
+
     public function viewEditMateriKelasDaring(Request $request, $id_kelas_mp_grup = '-', $id_presensi_mp = '-')
     {
         # code...
@@ -229,9 +241,17 @@ class SettingKelasDaringController extends BaseController
                 }
             })
             ->addColumn('action', function ($item) use ($input) {
+                
+                $sudah_diadakan = 0;
+
+                if(!empty($item->tgl_entry)){
+                    $sudah_diadakan = 1;
+                }
+
                 $data = array(
                     'grup' => $input->id,
-                    'id' => $item->id_presensi_mp
+                    'id' => $item->id_presensi_mp,
+                    'sudah_diadakan' => $sudah_diadakan
                 );
                 return $data;
             })
@@ -368,22 +388,28 @@ class SettingKelasDaringController extends BaseController
             ];
         }
         else{
+
             if($mode == 'add-jadwal'){
+
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
                 $auth_data = $input->auth_data;
         
                 $data_kelas_mp = KelasMp::where('id_kelas_mp_grup', $input->id_kelas_mp_grup)->get();
 
                 foreach($data_kelas_mp as $kelas_mp){
+
                     if($check_presensi = PresensiMp::where('tgl_presensi', $input->tgl_presensi)->where('id_kelas_mp', $kelas_mp->id_kelas_mp)->first()){
 
-                    }else{
+                    }
+
+                    else{
+
                         $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                         $presensi_mp = new PresensiMp;
                         $presensi_mp->id_presensi_mp = $id;
                         $presensi_mp->id_kelas_mp = $kelas_mp->id_kelas_mp;
                         $presensi_mp->pertemuan_ke = $input->pertemuan_ke;
-                        $presensi_mp->jenis_materi = $input->is_daring;
+                        $presensi_mp->jenis_materi = $input->jenis_materi;
                         $presensi_mp->is_daring = $input->is_daring;
                         $presensi_mp->torelansi_terlambat = $input->torelansi_terlambat;
                         $presensi_mp->waktu_mulai = $input->waktu_mulai;
@@ -391,7 +417,9 @@ class SettingKelasDaringController extends BaseController
                         $presensi_mp->tgl_presensi = $input->tgl_presensi;
                         $presensi_mp->created_by = $auth_data->pengguna->id_pengguna;
                         $presensi_mp->save();
+
                     }
+
                 }
         
                 return [
@@ -399,24 +427,76 @@ class SettingKelasDaringController extends BaseController
                     'path' => 'kelas-daring/jadwal-kelas/data-jadwal/'.$input->id_kelas_mp_grup,
                     'message' => 'Save Jadwal Kelas'
                 ];
-            }else{
+            }
+
+            elseif($mode == 'edit-jadwal'){
+
+                $auth_data = $input->auth_data;
+
+                $presensi_mp = PresensiMp::find($input->id_presensi_mp);
+                $presensi_mp->pertemuan_ke = $input->pertemuan_ke;
+                $presensi_mp->jenis_materi = $input->jenis_materi;
+                $presensi_mp->is_daring = $input->is_daring;
+                $presensi_mp->torelansi_terlambat = $input->torelansi_terlambat;
+                $presensi_mp->waktu_mulai = $input->waktu_mulai;
+                $presensi_mp->waktu_selesai = $input->waktu_selesai;
+                $presensi_mp->tgl_presensi = $input->tgl_presensi;
+                $presensi_mp->updated_by = $auth_data->pengguna->id_pengguna;
+                $presensi_mp->save();
+
+                return [
+                    'status' => 202, // SUCCESS
+                    'path' => 'kelas-daring/jadwal-kelas/data-jadwal/'.$input->id_kelas_mp_grup,
+                    'message' => 'Edit Jadwal Kelas Success'
+                ];
+
+            }
+
+            else{
+
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
                 $auth_data = $input->auth_data;
         
-                $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
-                $kelas_mp->id_kelas_mp_grup             = null;
-                $kelas_mp->updated_by                   = $auth_data->pengguna->id_pengguna;
-                $kelas_mp->save();
+                // $kelas_mp                               = KelasMp::find($input->id_kelas_mp);
+                // $kelas_mp->id_kelas_mp_grup             = null;
+                // $kelas_mp->updated_by                   = $auth_data->pengguna->id_pengguna;
+                // $kelas_mp->save();
+
+                $presensi_mp = PresensiMp::find($input->id_presensi_mp);
+                $presensi_mp->deleted_by = $auth_data->pengguna->id_pengguna;
+                $presensi_mp->save();
+
+                $presensi_mp->delete();
         
                 return [
-                    'status' => 200, // SUCCESS
-                    'message' => 'Delete Jadwal Kelas'
+                    'status' => 203, // SUCCESS
+                    'message' => 'Delete Jadwal Kelas Success'
                 ];
+
             }
         }
     }
 
+    public function actionDeletePresensiMpKelasDaring(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $presensi_mp = PresensiMp::find($id);
+        $presensi_mp->deleted_by = $auth_data->pengguna->id_pengguna;
+        $presensi_mp->save();
+
+        $presensi_mp->delete();
+
+        return [
+            'status' => 203, // SUCCESS
+            'message' => 'Delete Jadwal Kelas Success'
+        ];
+
+    }
+
     public function actionEditMateriKelasDaring(Request $request, $mode = '-') {
+
         $input = (object) $request->input();
         
         if($mode == 'add-materi'){
