@@ -75,7 +75,7 @@ class SettingKelasDaringController extends BaseController
 
         $item = KelasMpGrup::find($id);
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-add-jadwal-setting-kelas-daring', compact('auth_data', 'item'));
+        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-add-jadwal-daring', compact('auth_data', 'item'));
     }
 
     public function viewEditMateriKelasDaring(Request $request, $id_kelas_mp_grup = '-', $id_presensi_mp = '-')
@@ -87,7 +87,7 @@ class SettingKelasDaringController extends BaseController
         $item = PresensiMp::find($id_presensi_mp);
         $data_materi = PresensiMpMateri::where('id_presensi_mp', $id_presensi_mp)->get();
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-add-materi-setting-kelas-daring', compact('auth_data', 'id_kelas_mp_grup', 'item', 'data_materi'));
+        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-add-edit-materi', compact('auth_data', 'id_kelas_mp_grup', 'item', 'data_materi'));
     }
 
     public function viewKelasMpKelasDaring(Request $request, $id = '-')
@@ -100,7 +100,7 @@ class SettingKelasDaringController extends BaseController
 
         $item = KelasMpGrup::find($id);
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-kelas-setting-kelas-daring', compact('auth_data', 'semester_aktif', 'item'));
+        return view('guru/kelas-daring/setting-kelas-daring/kelas-daring/view-kelas-daring', compact('auth_data', 'semester_aktif', 'item'));
     }
 
     public function viewPresensiMpKelasDaring(Request $request, $id = '-')
@@ -116,7 +116,7 @@ class SettingKelasDaringController extends BaseController
 
         $cek_kelas_mp = KelasMp::where('id_kelas_mp_grup',$id)->count();
 
-        return view('guru/kelas-daring/setting-kelas-daring/view-jadwal-setting-kelas-daring', compact('auth_data', 'semester_aktif', 'item','cek_kelas_mp'));
+        return view('guru/kelas-daring/setting-kelas-daring/jadwal-daring/view-jadwal-daring', compact('auth_data', 'semester_aktif', 'item','cek_kelas_mp'));
     }
 
     public function datatablesKelasDaring(Request $request)
