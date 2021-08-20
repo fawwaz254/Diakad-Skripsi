@@ -96,7 +96,10 @@
                         <tr>
                             <td>{{$no++}}.</td>
                             @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
-                            <td>{{$pembayaran_siswa->nm_biaya." (".$pembayaran_siswa->nm_bulan.")"}}</td>
+                            @php
+                            $ket = $pembayaran_siswa->nm_bulan.' '.$pembayaran_siswa->thn_akademik_semester;
+                            @endphp
+                            <td>{{$pembayaran_siswa->nm_biaya." (".$ket.")"}}</td>
                             @else
                             <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                             @endif
