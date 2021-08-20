@@ -78,10 +78,10 @@
             </tr>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:small">
+        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:18px">
             <tr>
                 <th style="width: 10px;">No.</th>
-                <th>Tanggal Pembayaran</th>
+                <th>Tanggal</th>
                 <th>Keterangan</th>
                 <th>Debit</th>
                 <th>Kredit</th>
@@ -90,7 +90,7 @@
             @php
                 $date = new DateTime($value['tanggal']);
             @endphp
-            <tr>
+            <tr >
                 <td>{{ $key+1 }}</td>
                 <td>{{ indonesiaDate($value['tanggal'])  }}</td>
                 <td>
