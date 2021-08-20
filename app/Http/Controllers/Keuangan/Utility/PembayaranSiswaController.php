@@ -80,15 +80,27 @@ class PembayaranSiswaController extends BaseController
                     ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->whereDate('pembayaran_biaya.tgl_pembayaran', $tgl_pembayaran)
                     ->get();
-        
-        if($type == 'struk'){
-            if($lebar == null){
-                $lebar = 70; // in mm
+
+        if($data_pembayaran_siswa->count()>0){
+
+            if($type == 'struk'){
+                if($lebar == null){
+                    $lebar = 70; // in mm
+                }
+                return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa-struk', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa', 'lebar'));
+            } else {
+                return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));
             }
-            return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa-struk', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa', 'lebar'));
-        } else {
-            return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa'));
+
         }
+
+        else{
+
+            return response()->json('mohon maaf siswa ini tidak memiliki tagihan untuk tanggal '.$tgl_pembayaran);
+
+        }
+        
+       
     }
     
     public function printBelumTerbayarPembayaranSiswa(Request $request, $id_pengguna)
