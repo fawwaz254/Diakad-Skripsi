@@ -70,18 +70,19 @@
         </table>
         <table>
             <tr>
+
             @if($start_date != $end_date)
-                <td colspan="3"><b>TANGGAL   {{ \Carbon\Carbon::createFromFormat('Y-m-d', $start_date)->format('d M Y') }} - {{ \Carbon\Carbon::createFromFormat('Y-m-d', $end_date)->format('d M Y') }}</b></td>
+                <td colspan="3"><b>TANGGAL   {{ indonesiaDate(\Carbon\Carbon::parse($start_date)->format('Y-m-d'))  }} - {{ indonesiaDate(\Carbon\Carbon::parse($end_date)->format('Y-m-d'))  }}</b></td>
             @else
-                <td colspan="3"><b>TANGGAL   {{ \Carbon\Carbon::createFromFormat('Y-m-d', $start_date)->format('d M Y') }}</b></td>
+                <td colspan="3"><b>TANGGAL    {{ indonesiaDate(\Carbon\Carbon::parse($start_date)->format('Y-m-d'))  }}</b></td>
             @endif
             </tr>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:18px">
+        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:15px;">
             <tr>
                 <th style="width: 10px;">No.</th>
-                <th>Tanggal</th>
+                @if($start_date != $end_date)<th>Tanggal</th>@endif
                 <th>Keterangan</th>
                 <th>Debit</th>
                 <th>Kredit</th>
@@ -92,7 +93,7 @@
             @endphp
             <tr >
                 <td>{{ $key+1 }}</td>
-                <td>{{ indonesiaDate($value['tanggal'])  }}</td>
+                 @if($start_date != $end_date)<td>{{ indonesiaDate($value['tanggal'])  }}</td>@endif
                 <td>
                     {{ $value['keterangan'] }}
                     @if($value['potongan'])
@@ -110,7 +111,11 @@
             </tr>
             @endforeach
             <tr>
+                @if($start_date != $end_date)
                 <th colspan="3"></th>
+                @else
+                <th colspan="2"></th>
+                @endif
                 <th>TOTAL DEBIT: <br>{{ "Rp " . number_format($data_laporan['total_debit']) }}</th>
                 <th>TOTAL KREDIT: <br>{{ "Rp " . number_format($data_laporan['total_kredit']) }}</th>
             </tr>
