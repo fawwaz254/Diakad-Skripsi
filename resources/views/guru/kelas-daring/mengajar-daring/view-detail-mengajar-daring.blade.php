@@ -136,6 +136,63 @@
 
     </div>
 
+    <div class="row clearfix">
+        
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card is-gap">
+
+                <div class="header">
+                    <h2>ABSENSI SISWA</h2>
+                </div>
+
+                <div class="body">
+
+                    @if($data->tgl_presensi < \Carbon\Carbon::now()->format('Y-m-d') || ( $data->tgl_presensi == \Carbon\Carbon::now()->format('Y-m-d') && ($data->waktu_selesai <= Carbon\Carbon::now()->format('H:i')) ) )
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Siswa</th>
+                                    <th>Kelas</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($peserta as $r)
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td>{{$r->siswa->pengguna->nm_pengguna}}</td>
+                                        <td>{{$r->siswa->kelas->nm_kelas}}</td>
+                                        @if($r->kehadiran == 1)
+                                        <td class="is-center bg-light-green" style="text-align:center;">H</td>
+                                        @elseif($r->kehadiran == 2)
+                                        <td class="is-center bg-amber" style="text-align:center;">S</td>
+                                        @elseif($r->kehadiran == 3)
+                                        <td class="is-center bg-cyan" style="text-align:center;">I</td>
+                                        @elseif($r->kehadiran == 4)
+                                        <td class="is-center bg-red" style="text-align:center;">A</td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    @else
+
+                    <p>Hasil Absen Akan Keluar Pada Tanggal {{$data->tgl_presensi}} Jam {{$data->waktu_selesai}}</p>
+
+                    @endif
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 <!--     <div class="row clearfix">
         
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

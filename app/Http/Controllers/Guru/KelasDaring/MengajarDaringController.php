@@ -13,6 +13,7 @@ use App\Models\JadwalKelasMp;
 use App\Models\KelasMp;
 use App\Models\KelasMpGrup;
 use App\Models\PresensiMp;
+use App\Models\PresensiMpSiswa;
 use App\Models\PresensiMpMateri;
 use App\Models\PengampuMapel;
 
@@ -121,8 +122,9 @@ class MengajarDaringController extends BaseController
 
         $data = PresensiMp::with('kelas_mp.kelas_mp_grup')->find($id);
         $data_materi = PresensiMpMateri::where('id_presensi_mp',$id)->get();
+        $peserta = PresensiMpSiswa::with('siswa.pengguna','siswa.kelas')->where('id_presensi_mp',$id)->get();
 
-        return view('guru/kelas-daring/mengajar-daring/view-detail-mengajar-daring', compact('auth_data','data','data_materi'));
+        return view('guru/kelas-daring/mengajar-daring/view-detail-mengajar-daring', compact('auth_data','data','data_materi','peserta'));
 
     }
 

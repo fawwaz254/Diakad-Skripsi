@@ -36,4 +36,9 @@ class PresensiMpSiswa extends Model
     {
         return $this->belongsTo('App\Models\PresensiMp', 'id_presensi_mp');
     }
+
+    public function siswa()
+    {
+        return $this->belongsTo('App\Models\Siswa', 'id_siswa');
+    }
 }
