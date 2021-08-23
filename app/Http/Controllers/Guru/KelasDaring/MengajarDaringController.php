@@ -84,6 +84,23 @@ class MengajarDaringController extends BaseController
             ->addColumn('nama_kelas_daring',function($item){
                 return $item->kelas_mp->kelas_mp_grup->nm_kelas_mp_grup;
             })
+            ->addColumn('kelas',function($item){
+                    
+                $data = '';
+                $id_kelas_mp_grup = $item->kelas_mp->id_kelas_mp_grup;
+                $list = KelasMp::with('kelas')->where('id_kelas_mp_grup',$id_kelas_mp_grup)->get();
+                foreach($list as $key => $r){
+                    if($key != $list->count()-1){
+                         $data = $data . $r->kelas->nm_kelas . ',';
+                    }
+                    else{
+                         $data = $data . $r->kelas->nm_kelas;
+                    }
+                }
+
+                return $data;
+
+            })
             ->editColumn('tgl_presensi', function ($item) {
                 return date_format(date_create($item->tgl_presensi.' '.$item->waktu_mulai), "d M Y H:i");
             })

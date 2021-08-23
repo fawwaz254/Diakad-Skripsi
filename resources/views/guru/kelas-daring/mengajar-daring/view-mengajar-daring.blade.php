@@ -30,6 +30,7 @@
                                                 <th>No</th>
                                                 <th>Tanggal Pertemuan</th>
                                                 <th>Nama Kelas Daring</th>
+                                                <th>Kelas</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
                                                 <th>Status</th>
@@ -48,6 +49,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal Pertemuan</th>
+                                                <th>Kelas</th>
                                                 <th>Nama Kelas Daring</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
@@ -86,6 +88,7 @@
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
             { data: 'tgl_presensi' },
             { data: 'nama_kelas_daring' },
+            { data: 'kelas' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
             { data: 'status_materi' },
@@ -122,6 +125,7 @@
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
             { data: 'tgl_presensi' },
             { data: 'nama_kelas_daring' },
+            { data: 'kelas' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
             { data: 'action', searchable: false, orderable: false, 
