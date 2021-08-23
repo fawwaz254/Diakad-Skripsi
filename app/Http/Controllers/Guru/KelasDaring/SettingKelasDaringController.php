@@ -554,7 +554,11 @@ class SettingKelasDaringController extends BaseController
 
             $kelas_mp_grup2 = KelasMpGrup::find($input->id_kelas_mp_grup);
             $guru = Guru::where('id_guru', '=', $kelas_mp_grup2->id_guru)->first();
+            
             $presensi_mp = PresensiMp::find($input->id_presensi_mp);
+            $presensi_mp->tgl_entry = Carbon::now()->format('Y-m-d H:i:s');
+            $presensi_mp->updated_by = $auth_data->pengguna->id_pengguna;
+            $presensi_mp->save();
 
             $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$guru->id_guru.'/materi/'.$input->id_kelas_mp_grup, request()->file, 'public');
             
