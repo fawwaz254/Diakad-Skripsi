@@ -32,6 +32,7 @@
                                                 <th>Nama Kelas Daring</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -87,6 +88,7 @@
             { data: 'nama_kelas_daring' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
+            { data: 'status_materi' },
             { data: 'action', searchable: false, orderable: false, 
                 render: function(data){
                     return  '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

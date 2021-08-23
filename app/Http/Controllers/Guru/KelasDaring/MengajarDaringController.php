@@ -76,6 +76,14 @@ class MengajarDaringController extends BaseController
             ->editColumn('jenis_materi', function ($item) {
                 return $item->jenis_materi_to_text();
             })
+            ->addColumn('status_materi',function($item){
+                if($item->materi->count()>0){
+                    return 'Sudah Upload Materi';
+                }
+                else{
+                    return 'Belum Upload Materi';
+                }
+            })
             ->addColumn('status_jadwal', function ($item) {
                 if(!empty($item->tgl_entry)){
                     return 'Sudah diadakan';
