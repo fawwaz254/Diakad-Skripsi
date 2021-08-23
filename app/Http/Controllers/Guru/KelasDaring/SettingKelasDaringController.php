@@ -576,7 +576,7 @@ class SettingKelasDaringController extends BaseController
     
             return [
                 'status' => 204, // SUCCESS
-                'path' => 'kelas-daring/jadwal-kelas/materi/edit/'.$input->id_kelas_mp_grup.'/'.$input->id_presensi_mp,
+                'path' =>'kelas-daring/mengajar-daring/'.$input->id_presensi_mp,
                 'message' => 'Success upload File Materi'
             ];
         }

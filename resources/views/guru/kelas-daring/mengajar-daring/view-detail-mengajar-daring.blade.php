@@ -19,8 +19,8 @@
                     <form id="form-upload" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/jadwal-kelas/materi/action/add-file')}}" enctype="multipart/form-data">
 
                         {{csrf_field()}}
-                        <input type="hidden" name="id_kelas_mp_grup" value="0">
-                        <input type="hidden" name="id_presensi_mp" value="0">
+                        <input type="hidden" name="id_kelas_mp_grup" value="{{$data->kelas_mp->id_kelas_mp_grup}}">
+                        <input type="hidden" name="id_presensi_mp" value="{{$data->id_presensi_mp}}">
 
                         <div class="row clearfix">
                             <div class="col-md-6">
@@ -182,6 +182,62 @@
 </div>
 
 @include('scriptjs')
+
+<script>
+var primary_table = null;
+    $('#form-upload').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-group').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-group').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                enctype: 'multipart/form-data',
+                data: new FormData($('#form-upload')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('input').removeAttr('readonly', 'readonly');
+                }
+            });
+        }
+    });
+</script>
 <!-- CKeditor Plugin Js -->
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
 
