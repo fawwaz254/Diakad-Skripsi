@@ -23,19 +23,16 @@
                                 aria-invalid="true" value="{{$item->nm_kelas_mp_grup}}">
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
-                            Pertemuan ke
-                        </h2>
+
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label>Pertemuan Ke</label>
                                 <input type="number" class="form-control" min="1" name="pertemuan_ke" required="" aria-required="true" aria-invalid="true" value="1" >
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Jenis Pertemuan
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label>Jenis Pertemuan</label>
                                 <select class="form-control show-tick" name="jenis_materi">
                                     <option value="" disabled selected >-- Pilih jenis pertemuan --</option>
                                     <option value="1">KBM</option>
@@ -44,51 +41,42 @@
                                     <option value="4">UAS</option>
                                 </select>
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Online/Offline
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label> Online/Offline</label>
                                 <select class="form-control show-tick" name="is_daring">
                                     <option value="" disabled selected >-- Pilih online/offline --</option>
                                     <option value="1">Online</option>
                                     <option value="0">Offline</option>
                                 </select>
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Toleransi keterlambatan (Dalam menit)
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label> Toleransi Keterlambatan (Menit)</label>
                                 <input type="number" class="form-control" min="0" name="torelansi_terlambat" required="" aria-required="true" aria-invalid="true" value="0" >
                             </div>
+
                         </div>
-                        <h2 class="card-inside-title">
-                            Tanggal
-                        </h2>
+
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Tanggal</label>
                                 <input type="text" class="datepicker form-control" name="tgl_presensi" required="" aria-required="true" aria-invalid="true" value="{{\Carbon\Carbon::today()->format('Y-m-d')}}">
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Waktu Mulai
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label> Waktu Mulai</label>
                                 <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value="">
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Waktu Selesai
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Waktu Selesai</label>
                                 <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value="">
                             </div>
+
                         </div>
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
