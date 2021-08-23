@@ -5,50 +5,6 @@
     </div>
 
     <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="card is-gap">
-
-                <div class="header">
-                    <h2>
-                        UPLOAD MATERI
-                    </h2>
-                </div>
-
-                <div class="body">
-                    
-                    <form id="form-upload" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/jadwal-kelas/materi/action/add-file')}}" enctype="multipart/form-data">
-
-                        {{csrf_field()}}
-                        <input type="hidden" name="id_kelas_mp_grup" value="{{$data->kelas_mp->id_kelas_mp_grup}}">
-                        <input type="hidden" name="id_presensi_mp" value="{{$data->id_presensi_mp}}">
-
-                        <div class="row clearfix">
-                            <div class="col-md-6">
-                                 <label>Nama File</label>
-                                <input type="text" class="form-control" name="nm_materi" required="" aria-required="true" aria-invalid="true" >
-                            </div>
-                              <div class="col-md-6">
-                                <label>Upload File</label>
-                                <input type="file" class="form-control" name="file" />
-                            </div>
-                        </div>
-
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Upload</span></button>
-                            </div>
-                        </div>
-
-                    </form>   
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-    <div class="row clearfix">
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card is-gap">
@@ -119,12 +75,24 @@
 
                     <div class="row clearfix">
                         <div class="col-md-12">
-                            <label>File file materi</label>
-                            <ol>
-                                @foreach($data_materi as $materi)
-                                <li><a href="{{$materi->link_materi}}" target="_blank">{{$materi->nm_materi}}</a></li>
-                                @endforeach
-                            </ol>
+
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:10%">No</th>
+                                        <th>File Materi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($data_materi as $materi)
+                                    <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td><a href="{{$materi->link_materi}}" target="_blank">{{$materi->nm_materi}}</a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                     @endif
@@ -135,6 +103,50 @@
         </div>
 
     </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card is-gap">
+
+                <div class="header">
+                    <h2>
+                        UPLOAD MATERI
+                    </h2>
+                </div>
+
+                <div class="body">
+                    
+                    <form id="form-upload" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/jadwal-kelas/materi/action/add-file')}}" enctype="multipart/form-data">
+
+                        {{csrf_field()}}
+                        <input type="hidden" name="id_kelas_mp_grup" value="{{$data->kelas_mp->id_kelas_mp_grup}}">
+                        <input type="hidden" name="id_presensi_mp" value="{{$data->id_presensi_mp}}">
+
+                        <div class="row clearfix">
+                            <div class="col-md-6">
+                                 <label>Nama File</label>
+                                <input type="text" class="form-control" name="nm_materi" required="" aria-required="true" aria-invalid="true" >
+                            </div>
+                              <div class="col-md-6">
+                                <label>Upload File</label>
+                                <input type="file" class="form-control" name="file" />
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Upload</span></button>
+                            </div>
+                        </div>
+
+                    </form>   
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <div class="row clearfix">
         
