@@ -91,10 +91,28 @@
                             </div>
                         </div>
 
-                    </div>  
+                    </div> 
+
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/jadwal-kelas/materi/action/add-materi')}}" enctype="multipart/form-data">
+                    {{csrf_field()}} 
+
+                    <input type="hidden" name="id_kelas_mp_grup" value="{{$data->kelas_mp->id_kelas_mp_grup}}">
+                    <input type="hidden" name="id_presensi_mp" value="{{$data->id_presensi_mp}}">
 
                     <label>Isi Materi</label>
                     <textarea name="uraian_materi" id="editor1" class="editor1" rows="10" cols="80">{{$data->uraian_materi}}</textarea>
+
+                    <br>
+
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Simpan Materi</span></button>
+                        </div>
+                    </div>
+
+                    </form>
+
+                    <br>
 
                     @if($data_materi->count()>0)
                     <br>
