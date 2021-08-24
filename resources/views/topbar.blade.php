@@ -70,12 +70,21 @@
         </div>
     </div>
     <!-- #END# Search Bar -->
+    @php
+    $sekolah = \App\Models\Sekolah::orderBy('id_sekolah')->first();
+    @endphp
     <nav class="navbar">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars" style="display: none;"></a>
-                <a class="navbar-brand"><?=str_replace('-', ' ', strtoupper($theme_name))?> <?=strtoupper(auth_data()->sekolah_data->nm_sekolah)?> - {{strtoupper(env('APP_NAME', 'dsmart edu'))}} </a>
+                <a class="navbar-brand"><?=str_replace('-', ' ', strtoupper($theme_name))?> <?=strtoupper(auth_data()->sekolah_data->nm_sekolah)?> - 
+                    @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
+                    {{strtoupper(env('APP_NAME', 'dsmart edu'))}}
+                    @else
+                    DIAKAD
+                    @endif
+                 </a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
