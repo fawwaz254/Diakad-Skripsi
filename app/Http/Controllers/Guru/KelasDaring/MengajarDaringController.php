@@ -13,6 +13,7 @@ use App\Models\JadwalKelasMp;
 use App\Models\KelasMp;
 use App\Models\KelasMpGrup;
 use App\Models\PresensiMp;
+use App\Models\PresensiMpSiswa;
 use App\Models\PresensiMpMateri;
 use App\Models\PengampuMapel;
 
@@ -54,13 +55,26 @@ class MengajarDaringController extends BaseController
                             ->whereHas('kelas_mp',function($q) use ($kelas_mp){
                                 $q->whereIn('id_kelas_mp',$kelas_mp);
                             })
-                            ->whereNull('tgl_entry')
+                            ->where(function($q){
+                                $q->where('tgl_presensi','>',Carbon::now()->format('Y-m-d'));
+                                $q->orWhere(function($q2){
+                                    $q2->where('tgl_presensi',Carbon::now()->format('Y-m-d'))
+                                    ->where('waktu_selesai','>=',Carbon::now()->format('H:i'));
+                                });
+                            })
                             ->get();    
         }
         else{
              $list_data = PresensiMp::with('kelas_mp.kelas_mp_grup')
                             ->whereHas('kelas_mp',function($q) use ($kelas_mp){
                                 $q->whereIn('id_kelas_mp',$kelas_mp);
+                            })
+                            ->where(function($q){
+                                $q->where('tgl_presensi','<',Carbon::now()->format('Y-m-d'));
+                                $q->orWhere(function($q2){
+                                    $q2->where('tgl_presensi',Carbon::now()->format('Y-m-d'))
+                                    ->where('waktu_selesai','<=',Carbon::now()->format('H:i'));
+                                });
                             })
                             ->whereNotNull('tgl_entry')
                             ->get();    
@@ -70,11 +84,36 @@ class MengajarDaringController extends BaseController
             ->addColumn('nama_kelas_daring',function($item){
                 return $item->kelas_mp->kelas_mp_grup->nm_kelas_mp_grup;
             })
+            ->addColumn('kelas',function($item){
+                    
+                $data = '';
+                $id_kelas_mp_grup = $item->kelas_mp->id_kelas_mp_grup;
+                $list = KelasMp::with('kelas')->where('id_kelas_mp_grup',$id_kelas_mp_grup)->get();
+                foreach($list as $key => $r){
+                    if($key != $list->count()-1){
+                         $data = $data . $r->kelas->nm_kelas . ',';
+                    }
+                    else{
+                         $data = $data . $r->kelas->nm_kelas;
+                    }
+                }
+
+                return $data;
+
+            })
             ->editColumn('tgl_presensi', function ($item) {
                 return date_format(date_create($item->tgl_presensi.' '.$item->waktu_mulai), "d M Y H:i");
             })
             ->editColumn('jenis_materi', function ($item) {
                 return $item->jenis_materi_to_text();
+            })
+            ->addColumn('status_materi',function($item){
+                if($item->materi->count()>0){
+                    return 'Sudah Upload Materi';
+                }
+                else{
+                    return 'Belum Upload Materi';
+                }
             })
             ->addColumn('status_jadwal', function ($item) {
                 if(!empty($item->tgl_entry)){
@@ -100,8 +139,9 @@ class MengajarDaringController extends BaseController
 
         $data = PresensiMp::with('kelas_mp.kelas_mp_grup')->find($id);
         $data_materi = PresensiMpMateri::where('id_presensi_mp',$id)->get();
+        $peserta = PresensiMpSiswa::with('siswa.pengguna','siswa.kelas')->where('id_presensi_mp',$id)->get();
 
-        return view('guru/kelas-daring/mengajar-daring/view-detail-mengajar-daring', compact('auth_data','data','data_materi'));
+        return view('guru/kelas-daring/mengajar-daring/view-detail-mengajar-daring', compact('auth_data','data','data_materi','peserta'));
 
     }
 

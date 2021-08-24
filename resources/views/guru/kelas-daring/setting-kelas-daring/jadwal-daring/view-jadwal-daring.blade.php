@@ -48,7 +48,7 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url       = 'kelas-daring';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kelas/data-jadwal/datatables';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kelas/data-jadwal/action/delete';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'jadwal-kelas/data-jadwal/action-delete';
 
     var edit_url        = role_url + '#' + modul_url + '/' + 'jadwal-kelas/data-jadwal/edit';
 
@@ -70,17 +70,21 @@
             { data: 'tgl_presensi' },
             { data: 'jenis_materi', searchable: false, orderable: false },
             { data: 'status_jadwal', searchable: false, orderable: false },
-            { data: 'action', searchable: false, orderable: false, 
+            { data: 'action', searchable: false, class:'text-center', orderable: false, 
                 render: function(data){
-                    return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '+
-                    '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float target-link" href="' +edit_materi_url+ '/'+data.grup+'/'+data.id+'" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">remove_red_eye</i>'+
-                    '</a> '+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" data-id="'+  data.id +'">'+
+                    html = '';
+
+                    if(!data.sudah_diadakan){
+                        html+= '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float target-link" href="' +edit_url+ '/'+data.grup+'/'+data.id+'" data-id="'+  data.id +'">'+
+                            '    <i class="material-icons">edit</i>'+
+                            '</a> ';
+                        html += '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+                    '</button>'
+                    }
+
+                    return html; 
+                   
                 } 
             },
         ]
@@ -102,8 +106,8 @@
             type: "POST",
             url: set_url,
             data: {
-                id_kelas_mp: item.attr('data-id'),
-                id: $('input[name=id]').val(),
+                id_presensi_mp: item.attr('data-id'),
+                // id: $('input[name=id]').val(),
             },
             success: function (response) {
                 if(response.status == 200){

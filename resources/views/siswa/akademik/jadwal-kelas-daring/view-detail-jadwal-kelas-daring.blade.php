@@ -56,15 +56,27 @@
 
                     <div class="row clearfix">
                         <div class="col-md-12">
-                            <label>File file materi</label>
-                            <ol>
-                                @foreach($data_materi as $materi)
-                                <li><a href="{{$materi->link_materi}}" target="_blank">{{$materi->nm_materi}}</a></li>
-                                @endforeach
-                            </ol>
+
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:10%">No</th>
+                                        <th>File Materi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($data_materi as $materi)
+                                    <tr>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td><a href="{{$materi->link_materi}}" target="_blank">{{$materi->nm_materi}}</a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
-                    @endif   
+                    @endif
 
                 </div>
            
