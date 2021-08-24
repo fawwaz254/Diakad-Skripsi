@@ -5,19 +5,29 @@
 
 @section('content')
 <!-- <body class="login-page" style="background-color: #006302;"> -->
-<body class="login-page" style="background-image: url({{asset('media/login-bg.jpg')}}); background-repeat: no-repeat; background-size: cover; background-color: whitesmoke;">
+<body class="login-page" style="background-image: url({{asset('media/login-bg2.jpeg')}}); background-repeat: no-repeat; background-size: cover; background-color: whitesmoke;">
     <div class="login-box">
         <div class="card is-login">
             <div class="row">
                 <div class="col-md-6 hidden-sm hidden-xs">
-                    <img src="https://diakad.sgp1.cdn.digitaloceanspaces.com/x-image-resources/{{env('APP_NAME', 'diakad')}}-logo.png" alt="Logo Diakad" style="width: 100%;" />
+                    @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
+                     <img src="{{asset('logo/logo-dsm.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                    @else
+                     <img src="{{asset('logo/logo-diakad-by-dsm.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                    @endif
+                   
                 </div>
                 <div class="col-md-6">
                     <div class="body" id="khusus-login">
                         <form class="form-validation" method="POST" action="{{url('signin')}}">
                             {{csrf_field()}}
                             <div class="msg" style="font-size:1.5em;line-height:50px">
-                                <img class="hidden-md hidden-lg" src="https://diakad.sgp1.cdn.digitaloceanspaces.com/x-image-resources/{{env('APP_NAME', 'diakad')}}-logo.png" alt="Logo Diakad" style="height: 90px;" />
+                                @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
+                                <img class="hidden-md hidden-lg" src="{{asset('logo/logo-dsm.png')}}" alt="Logo Diakad" style="height: 90px;" />
+                                @else
+                                <img class="hidden-md hidden-lg" src="{{asset('logo/logo-diakad-by-dsm.png')}}" alt="Logo Diakad" style="height: 90px;" />
+                                @endif
+                                
                                 <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" />
                                 <br>
                                 {{$sekolah->nm_sekolah}}
@@ -72,7 +82,7 @@
             <div class="row" style="background-color:#f7f7f7;margin-right:0;margin-left:0;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;padding-top:25px;padding-bottom:25px ">
                     <div class="row">
                             <div class="col-xs-12 align-center">
-                                Powered By <a href="https://dsmartedu.com" target="_blank">DSM SMART EDU</a></span>
+                                Powered By <a href="https://dsmartedu.com" target="_blank">DSMART EDU</a></span>
                             </div>
                         </div>
             </div>

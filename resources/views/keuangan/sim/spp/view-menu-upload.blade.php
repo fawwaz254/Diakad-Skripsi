@@ -36,7 +36,7 @@
                             <h5>Format susunan file excel, sebagai berikut :</h5>
                             <ul>
                                 <li>
-                                    Download EXCEL dari menu SPP > EXCEL {{env('APP_NAME', 'diakad')}} Aplikasi Keuangan
+                                    Download EXCEL dari menu SPP > EXCEL {{env('APP_NAME', 'dsmart edu')}} Aplikasi Keuangan
                                 </li>
                                 <li>
                                     Upload ke menu berikut excel tersebut
