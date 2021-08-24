@@ -13,7 +13,7 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                            <table class="table table-bordered table-striped table-hover dataTable display nowrap" id="primary_table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -45,7 +45,10 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-        responsive: true,
+        // responsive: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
