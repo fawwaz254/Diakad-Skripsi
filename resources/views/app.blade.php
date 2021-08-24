@@ -13,13 +13,13 @@
         @endphp
 
         @if($theme_name != '')
-        <title><?=str_replace('-', ' ', strtoupper($theme_name))?> - Sekolah Berbasis Teknologi by DSM SMART EDU</title>
+        <title><?=str_replace('-', ' ', strtoupper($theme_name))?> - Sekolah Berbasis Teknologi by DSMART EDU</title>
         @else
-        <title>{{strtoupper(env('APP_NAME', 'diakad'))}} - Sekolah Berbasis Teknologi by DSM SMART EDU</title>
+        <title>{{strtoupper(env('APP_NAME', 'dsmart edu'))}} - Sekolah Berbasis Teknologi by DSMART EDU</title>
         @endif
 
         <!-- Favicon-->
-        <link rel="icon" href="https://dsmartedu.com/assets/img/favicon.png" type="image/x-icon">
+        <link rel="icon" href="{{asset('favicon_io/android-chrome-512x512.png')}}" type="image/x-icon">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">

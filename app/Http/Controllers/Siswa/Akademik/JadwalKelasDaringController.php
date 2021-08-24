@@ -52,13 +52,26 @@ class JadwalKelasDaringController extends BaseController{
                             ->whereHas('kelas_mp',function($q) use ($kelas_mp){
                                 $q->whereIn('id_kelas_mp',$kelas_mp);
                             })
-                            ->whereNull('tgl_entry')
+                            ->where(function($q){
+                                $q->where('tgl_presensi','>',Carbon::now()->format('Y-m-d'));
+                                $q->orWhere(function($q2){
+                                    $q2->where('tgl_presensi',Carbon::now()->format('Y-m-d'))
+                                    ->where('waktu_selesai','>=',Carbon::now()->format('H:i'));
+                                });
+                            })
                             ->get();    
         }
         else{
              $list_data = PresensiMp::with('kelas_mp.kelas_mp_grup')
                             ->whereHas('kelas_mp',function($q) use ($kelas_mp){
                                 $q->whereIn('id_kelas_mp',$kelas_mp);
+                            })
+                            ->where(function($q){
+                                $q->where('tgl_presensi','<',Carbon::now()->format('Y-m-d'));
+                                $q->orWhere(function($q2){
+                                    $q2->where('tgl_presensi',Carbon::now()->format('Y-m-d'))
+                                    ->where('waktu_selesai','<=',Carbon::now()->format('H:i'));
+                                });
                             })
                             ->whereNotNull('tgl_entry')
                             ->get();    

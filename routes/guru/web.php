@@ -358,6 +358,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                     Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesPresensiMpKelasDaring');
                     Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionPresensiMpKelasDaring');
+                   
                 });
             });
 

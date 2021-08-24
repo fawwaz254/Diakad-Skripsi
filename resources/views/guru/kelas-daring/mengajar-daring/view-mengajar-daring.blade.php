@@ -30,8 +30,10 @@
                                                 <th>No</th>
                                                 <th>Tanggal Pertemuan</th>
                                                 <th>Nama Kelas Daring</th>
+                                                <th>Kelas</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -47,6 +49,7 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal Pertemuan</th>
+                                                <th>Kelas</th>
                                                 <th>Nama Kelas Daring</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
@@ -85,8 +88,10 @@
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
             { data: 'tgl_presensi' },
             { data: 'nama_kelas_daring' },
+            { data: 'kelas' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
+            { data: 'status_materi' },
             { data: 'action', searchable: false, orderable: false, 
                 render: function(data){
                     return  '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
@@ -120,6 +125,7 @@
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
             { data: 'tgl_presensi' },
             { data: 'nama_kelas_daring' },
+            { data: 'kelas' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
             { data: 'action', searchable: false, orderable: false, 

@@ -50,6 +50,12 @@ class PresensiMp extends Model
         return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
     }
 
+    public function materi(){
+
+        return $this->hasMany('App\Models\PresensiMpMateri', 'id_presensi_mp');
+
+    }
+
     public function jenis_materi_to_text()
     {
         switch($this->jenis_materi){
