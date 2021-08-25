@@ -396,6 +396,7 @@ class SettingKelasDaringController extends BaseController
             'id_kelas_mp_grup'  => 'required',
             'pertemuan_ke'  => 'required',
             'jenis_materi'  => 'required',
+            'is_task'  => 'required',
             'is_daring'  => 'required',
             'torelansi_terlambat'  => 'required',
             'tgl_presensi'  => 'required',
@@ -437,6 +438,7 @@ class SettingKelasDaringController extends BaseController
                             $presensi_mp->pertemuan_ke = $input->pertemuan_ke;
                             $presensi_mp->jenis_materi = $input->jenis_materi;
                             $presensi_mp->is_daring = $input->is_daring;
+                            $presensi_mp->is_task = $input->is_task;
                             $presensi_mp->torelansi_terlambat = $input->torelansi_terlambat;
                             $presensi_mp->waktu_mulai = $input->waktu_mulai;
                             $presensi_mp->waktu_selesai = $input->waktu_selesai;
@@ -493,6 +495,7 @@ class SettingKelasDaringController extends BaseController
                 $presensi_mp->pertemuan_ke = $input->pertemuan_ke;
                 $presensi_mp->jenis_materi = $input->jenis_materi;
                 $presensi_mp->is_daring = $input->is_daring;
+                $presensi_mp->is_task = $input->is_task;
                 $presensi_mp->torelansi_terlambat = $input->torelansi_terlambat;
                 $presensi_mp->waktu_mulai = $input->waktu_mulai;
                 $presensi_mp->waktu_selesai = $input->waktu_selesai;
