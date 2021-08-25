@@ -14,6 +14,7 @@ use App\Models\JadwalKelasMp;
 use App\Models\KelasMp;
 use App\Models\KelasMpGrup;
 use App\Models\PresensiMp;
+use App\Models\PresensiMpSiswa;
 use App\Models\PresensiMpMateri;
 use App\Models\PengampuMapel;
 
@@ -123,10 +124,14 @@ class JadwalKelasDaringController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        $siswa = Siswa::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+
         $data = PresensiMp::with('kelas_mp.kelas_mp_grup')->find($id);
         $data_materi = PresensiMpMateri::where('id_presensi_mp',$id)->get();
 
-        return view('siswa/akademik/jadwal-kelas-daring/view-detail-jadwal-kelas-daring', compact('auth_data','data','data_materi'));
+        $presensi_mp_siswa = PresensiMpSiswa::where(['id_presensi_mp'=>$id,'id_siswa'=>$siswa->id_siswa])->first();
+
+        return view('siswa/akademik/jadwal-kelas-daring/view-detail-jadwal-kelas-daring', compact('auth_data','data','data_materi','presensi_mp_siswa'));
 
     }
 

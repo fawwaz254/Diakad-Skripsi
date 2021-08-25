@@ -78,6 +78,35 @@
                     </div>
                     @endif
 
+                     <div class="row clearfix">
+                        <div class="col-md-12">
+
+                            <p>Status Absen</p>
+
+                            <hr>
+
+                            @if($presensi_mp_siswa->kehadiran==1)
+
+                            Anda sudah melakukan absensi
+
+                            @elseif($presensi_mp_siswa->kehadiran==4 && 
+                            (
+                            (\Carbon\Carbon::now()->format('Y-m-d') == $presensi_mp_siswa->presensi_mp->tgl_presensi) && 
+                            (\Carbon\carbon::now()->format('H:i') < $presensi_mp_siswa->presensi_mp->waktu_selesai) 
+                            )
+                            )
+
+                            Anda belum melakuan absensi
+
+                            @else
+
+                            Anda tidak mengikuti kelas ini
+                           
+                            @endif 
+
+                        </div>
+                    </div>
+
                 </div>
            
             </div>
