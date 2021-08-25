@@ -124,7 +124,8 @@ class MengajarDaringController extends BaseController
             })
             ->addColumn('action', function ($item) use ($input) {
                 $data = array(
-                    'id' => $item->id_presensi_mp
+                    'id' => $item->id_presensi_mp,
+                    'is_task' => $item->is_task
                 );
                 return $data;
             })

@@ -85,7 +85,17 @@
         columns: [
             { data: 'index_table', defaultContent: '', searchable: false, orderable: false },
             { data: 'tgl_presensi' },
-            { data: 'nama_kelas_daring' },
+             { data: 'action', searchable: false, orderable: false, 
+                render: function(data){
+                    if(data.is_task==1){
+                        return data.nama_kelas_daring+`<br><span class="badge bg-teal">Ada Tugas</span>`;
+                    }
+                    else{
+                        return data.nama_kelas_daring;
+                    }
+                    
+                }
+            },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
             { data: 'action', searchable: false, orderable: false, 

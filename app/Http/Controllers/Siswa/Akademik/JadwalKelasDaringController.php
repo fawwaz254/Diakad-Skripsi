@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Siswa\Akademik;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -111,11 +112,52 @@ class JadwalKelasDaringController extends BaseController{
 
                 $data = array(
                     'id' => $item->id_presensi_mp,
-                    'open_class' => $open_class
+                    'open_class' => $open_class,
+                    'is_task' => $item->is_task,
+                    'nama_kelas_daring' => $item->kelas_mp->kelas_mp_grup->nm_kelas_mp_grup
                 );
                 return $data;
             })
             ->make(true);
+
+    }
+
+    public function uploadTugas(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'file|required|max:10240' // 10 MB
+        ]);
+
+        if($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+            $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/tugas-siswa/'.$id, request()->file, 'public');
+
+            $data = PresensiMpSiswa::find($id);
+
+            $presensi_mp = $data->id_presensi_mp;
+
+            $data->link_tugas = Storage::disk('spaces')->url($file);
+            $data->save();
+
+            return [
+                'status' => 202, // SUCCESS
+                'path' =>'akademik/jadwal-kelas-daring/'.$presensi_mp,
+                'message' => 'Success upload File Tugas'
+            ];
+
+
+        }
 
     }
 

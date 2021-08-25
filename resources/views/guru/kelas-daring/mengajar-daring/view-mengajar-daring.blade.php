@@ -33,6 +33,7 @@
                                                 <th>Kelas</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
+                                                <th>Tugas</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -53,6 +54,8 @@
                                                 <th>Nama Kelas Daring</th>
                                                 <th>Pertemuan Ke</th>
                                                 <th>Jenis Pertemuan</th>
+                                                <th>Tugas</th>
+                                                <th>Status</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -91,6 +94,17 @@
             { data: 'kelas' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
+            { data: 'action', searchable: false, orderable: false, 
+                render: function(data){
+                    if(data.is_task==1){
+                         return  `<i class="material-icons" style="color:green">done</i>`;
+                    }
+                    else{
+                         return  `<i class="material-icons" style="color:red">close</i>`;
+                    }
+                   
+                } 
+            },
             { data: 'status_materi' },
             { data: 'action', searchable: false, orderable: false, 
                 render: function(data){
@@ -128,6 +142,18 @@
             { data: 'kelas' },
             { data: 'pertemuan_ke' },
             { data: 'jenis_materi' },
+            { data: 'action', searchable: false, orderable: false, 
+                render: function(data){
+                    if(data.is_task==1){
+                         return  `<i class="material-icons" style="color:green">done</i>`;
+                    }
+                    else{
+                         return  `<i class="material-icons" style="color:red">close</i>`;
+                    }
+                   
+                } 
+            },
+            { data: 'status_materi' },
             { data: 'action', searchable: false, orderable: false, 
                 render: function(data){
                     return  '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
