@@ -95,8 +95,22 @@ class JadwalKelasDaringController extends BaseController{
                 }
             })
             ->addColumn('action', function ($item) use ($input) {
+                
+                $open_class = 0;
+
+                if(Carbon::now()->format('Y-m-d') == $item->tgl_presensi){
+
+                    $start = strtotime($item->waktu_mulai);
+                    $end = strtotime(Carbon::now()->format('H:i'));
+                    $mins = ($start - $end) / 60;
+
+                    if($mins <= 60) $open_class = 1;
+                
+                }
+
                 $data = array(
-                    'id' => $item->id_presensi_mp
+                    'id' => $item->id_presensi_mp,
+                    'open_class' => $open_class
                 );
                 return $data;
             })

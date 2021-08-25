@@ -65,6 +65,7 @@
     </div>
 </div>
 
+
 <script type="text/javascript">
     
     var modul_url       = 'akademik';
@@ -89,9 +90,17 @@
             { data: 'jenis_materi' },
             { data: 'action', searchable: false, orderable: false, 
                 render: function(data){
-                    return  '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">remove_red_eye</i>'+
-                    '</a> ';
+                    if(data.open_class==0){
+                        //  return  '<button  data-toggle="tooltip" data-placement="top" title="Kelas dapat dibuka 90 menit sebelum jadwal kelas tersebut" class="btn btn-success btn-circle waves-effect waves-circle waves-float">'+
+                        // '    <i class="material-icons">remove_red_eye</i>'+
+                        // '</button> ';
+                        return `Kelas dapat dibuka H-60 Menit`;
+                    }
+                    else{
+                        return  '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                        '    <i class="material-icons">remove_red_eye</i>'+
+                        '</a> ';
+                    }
                 } 
             },
         ]
