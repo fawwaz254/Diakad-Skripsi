@@ -119,6 +119,20 @@ class JadwalKelasDaringController extends BaseController{
 
     }
 
+    public function downloadMateri(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data = PresensiMpSiswa::find($id);
+        $data->kehadiran = 1;
+        $data->updated_by = $auth_data->pengguna->id_pengguna;
+        $data->save();
+
+        return response()->json('success');
+
+    }
+
     public function viewDetailJadwalKelasDaring(Request $request,$id){
 
         $input = (object) $request->input();

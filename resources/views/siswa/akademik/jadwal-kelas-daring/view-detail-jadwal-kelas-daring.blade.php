@@ -62,13 +62,19 @@
                                     <tr>
                                         <th style="width:10%">No</th>
                                         <th>File Materi</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($data_materi as $materi)
                                     <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td><a href="{{$materi->link_materi}}" target="_blank">{{$materi->nm_materi}}</a></td>
+                                    <td>{{$materi->nm_materi}}</td>
+                                    @if($loop->last)
+                                    <td><button class="btn btn-success download-materi" data-link="{{$materi->link_materi}}"> <i class="material-icons">file_download</i><span>Download</span></button></td>
+                                    @else>
+                                    <td><a href="{{$materi->link_materi}}" class="btn btn-success" target="_blank"><i class="material-icons">file_download</i><span>Download</span></a></td>
+                                    @endif
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -83,11 +89,15 @@
 
                             <p>Status Absen</p>
 
+                            <div class="alert alert-warning">
+                                <strong>Catatan!</strong> Anda akan dianggap melakuan absensi ketika mendownload semua file materi
+                            </div>
+
                             <hr>
 
                             @if($presensi_mp_siswa->kehadiran==1)
 
-                            Anda sudah melakukan absensi
+                            <p id="tulisan_absen">Anda sudah melakukan absensi</p>
 
                             @elseif($presensi_mp_siswa->kehadiran==4 && 
                             (
@@ -96,11 +106,11 @@
                             )
                             )
 
-                            Anda belum melakuan absensi
+                            <p id="tulisan_absen">Anda belum melakuan absensi</p>
 
                             @else
 
-                            Anda tidak mengikuti kelas ini
+                            <p id="tulisan_absen">Anda tidak mengikuti kelas ini</p>
                            
                             @endif 
 
@@ -112,11 +122,43 @@
             </div>
         </div>
 
+        <input type="hidden" id="id_presensi_mp_siswa" value="{{$presensi_mp_siswa->id_presensi_mp_siswa}}">
+
 </div>
+
+
 
 @include('scriptjs')
 <!-- CKeditor Plugin Js -->
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+
+<script type="text/javascript">
+
+
+    $('.download-materi').click(function(){
+
+        var link = $(this).data('link');
+        var id = $('#id_presensi_mp_siswa').val();  
+        var url = base_url+'/siswa/akademik/jadwal-kelas-daring/download/'+id;
+
+        $.ajax({
+            url : url,
+            type : 'get',
+            dataType :'json',
+            success : function(response){
+                vex.dialog.alert('anda berhasil melakukan absensi pada kelas ini');
+                $('#tulisan_absen').html(`Anda sudah melakukan absensi`);
+                window.open(link);
+            },
+            error:function(){
+                alert('mohon maaf terjadi kesahalahan, silahkan hubungi admin');
+            }
+        })
+
+    })
+
+
+</script>
 
 <script>
 CKEDITOR.replace( 'editor1' );
