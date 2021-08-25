@@ -236,7 +236,20 @@ class SettingKelasDaringController extends BaseController
                 return $item->jenis_materi_to_text();
             })
             ->addColumn('status_jadwal', function ($item) {
-                if(!empty($item->tgl_entry) && ($item->tgl_presensi < Carbon::now()->format('Y-m-d'))){
+                
+                $kondisi_1 = false;
+                $kondisi_2 = false;
+
+                if(!empty($item->tgl_entry) && $item->tgl_presensi < Carbon::now()->format('Y-m-d')){
+                    $kondisi_1 = true;
+                }
+
+                if( !empty($item->tgl_entry) && ( $item->tgl_presensi == Carbon::now()->format('Y-m-d') && Carbon::now()->format('H:i') >= $item->waktu_selesai) ) {
+                    $kondisi_2 = true;
+                }
+
+
+                if($kondisi_1 || $kondisi_2){
                     return 'Sudah diadakan';
                 }else{
                     return 'Belum diadakan';
