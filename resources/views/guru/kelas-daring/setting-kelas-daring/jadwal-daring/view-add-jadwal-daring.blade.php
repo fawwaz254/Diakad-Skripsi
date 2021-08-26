@@ -60,17 +60,26 @@
 
                         <div class="row clearfix">
 
-                            <div class="col-md-4">
+                             <div class="col-md-3">
+                                <label> Ada Tugas </label>
+                                <select class="form-control show-tick" name="is_task">
+                                    <option value="" disabled selected >-- Pilih ada tugas / tidak --</option>
+                                    <option value="0">Tidak Ada Tugas</option>
+                                    <option value="1">Ada tugas</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
                                 <label>Tanggal</label>
                                 <input type="text" class="datepicker form-control" name="tgl_presensi" required="" aria-required="true" aria-invalid="true" value="{{\Carbon\Carbon::today()->format('Y-m-d')}}">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label> Waktu Mulai</label>
                                 <input type="text" class="datepicker-time form-control" name="waktu_mulai" required="" aria-required="true" aria-invalid="true" value="">
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label>Waktu Selesai</label>
                                 <input type="text" class="datepicker-time form-control" name="waktu_selesai" required="" aria-required="true" aria-invalid="true" value="">
                             </div>

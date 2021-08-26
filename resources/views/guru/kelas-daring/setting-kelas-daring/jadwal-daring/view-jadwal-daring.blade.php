@@ -74,7 +74,7 @@
                 render: function(data){
                     html = '';
 
-                    if(!data.sudah_diadakan){
+                    if(data.sudah_diadakan==0){
                         html+= '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float target-link" href="' +edit_url+ '/'+data.grup+'/'+data.id+'" data-id="'+  data.id +'">'+
                             '    <i class="material-icons">edit</i>'+
                             '</a> ';
