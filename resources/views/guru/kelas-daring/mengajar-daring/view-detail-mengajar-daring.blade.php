@@ -169,6 +169,9 @@
                                     <th>Nama Siswa</th>
                                     <th>Kelas</th>
                                     <th>Keterangan</th>
+                                    @if($data->is_task==1)
+                                    <th>Tugas</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -185,6 +188,13 @@
                                         <td class="is-center bg-cyan" style="text-align:center;">I</td>
                                         @elseif($r->kehadiran == 4)
                                         <td class="is-center bg-red" style="text-align:center;">A</td>
+                                        @endif
+                                        @if($data->is_task==1)
+                                        @if($r->link_tugas)
+                                        <td style="text-align:center;"> <a href="{{Storage::disk('spaces')->url($r->link_tugas)}}" style="font-size:40px;" target="_blank"><i class="material-icons">description</i></a></td>
+                                        @else
+                                        <td></td>
+                                        @endif
                                         @endif
                                     </tr>
                                 @endforeach

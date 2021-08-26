@@ -71,6 +71,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				Route::get('/', 'Siswa\Akademik\JadwalKelasDaringController@viewJadwalKelasDaring');
 				Route::post('datatables', 'Siswa\Akademik\JadwalKelasDaringController@datatablesJadwalKelasDaring');
 				Route::get('{id}', 'Siswa\Akademik\JadwalKelasDaringController@viewDetailJadwalKelasDaring');
+				Route::get('download/{id}', 'Siswa\Akademik\JadwalKelasDaringController@downloadMateri');
+				Route::post('upload-tugas/{id}', 'Siswa\Akademik\JadwalKelasDaringController@uploadTugas');
 
 			});
 
