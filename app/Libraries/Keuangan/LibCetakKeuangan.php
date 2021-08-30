@@ -948,6 +948,7 @@ class LibCetakKeuangan{
 
             $summ = [];
             foreach($siswa->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya') as $idBiaya => $rwytBayar){
+
                 $item = $rwytBayar->first();
 
                 if($idBiaya != $item->tagihan_biaya->detail_biaya->biaya->id_biaya){
@@ -956,12 +957,19 @@ class LibCetakKeuangan{
                 $idBiaya = $item->tagihan_biaya->detail_biaya->biaya->id_biaya;
                 $ketTagihan = $ketTagihan . (empty($ketTagihan) ? '' : ', ') . $item->tagihan_biaya->keterangan;
 
+                if($item->tagihan_biaya->siswa->kelas){
+                    $nm_kelas = $item->tagihan_biaya->siswa->kelas;
+                }
+                else{
+                    $nm_kelas = '-';
+                }
+
                 $summ[] = [
                     'id_siswa' => $idSiswa,
                     'id_biaya' => $idBiaya,
                     'nis_siswa' => $item->tagihan_biaya->siswa->nis_siswa,
                     'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
-                    'kelas_siswa' => $item->tagihan_biaya->siswa->kelas->nm_kelas,
+                    'kelas_siswa' => $nm_kelas,
                     'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
                     'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
                     'frekuensi_pembayaran' => $rwytBayar->count(),
@@ -972,11 +980,18 @@ class LibCetakKeuangan{
                 ];
             }
 
+            if($tagihanBiayaSiswa->siswa->kelas){
+                $nm_kelas2 = $tagihanBiayaSiswa->siswa->kelas->nm_kelas;
+            }
+            else{
+                $nm_kelas2 = '-';
+            }
+
             $listData[] = [
                 'id_siswa' => $idSiswa,
                 'nis_siswa' => $tagihanBiayaSiswa->siswa->nis_siswa,
                 'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
-                'kelas_siswa' => $tagihanBiayaSiswa->siswa->kelas->nm_kelas,
+                'kelas_siswa' => $nm_kelas2,
                 'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan.total_potongan'),
                 'summary' => $summ
             ];
