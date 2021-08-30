@@ -3,6 +3,29 @@
 <!-- Meta -->
 @endsection
 
+<style type="text/css">
+
+
+.progress-bar-animated {
+    -webkit-animation: progress-bar-stripes 1s linear infinite;
+    animation: progress-bar-stripes 1s linear infinite;
+}
+
+.progress .progress-bar {
+    line-height: 23px;
+    background-color: #dc3545!important;
+}
+
+.progress-bar-striped {
+    background-image: linear-gradient(
+45deg
+,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+    background-size: 1rem 1rem;
+    
+}
+
+</style>
+
 @section('content')
 
 <body>
@@ -20,7 +43,7 @@
                     <div class="card">
                         <div class="header">
                             <h2>
-                               Data Penggunaan Diakad Untuk Setiap Role
+                               Data Penggunaan Diakad Untuk Setiap Role Semester {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}
                             </h2>
                         </div>
                         <div class="body">
@@ -30,10 +53,10 @@
                             id="primary_table">
                             <thead style="background: #009688 !important;color:white !important">
                                 <tr>
-                                    <th style="text-align:center;">No</th>
-                                    <th>Role</th>
-                                    <th style="text-align:center;">Pelatihan</th>
-                                    <th style="text-align:center;">Penggunaan</th>
+                                    <th style="text-align:center;width: 10%;">No</th>
+                                    <th style="width:15%;">Role</th>
+                                    <th style="text-align:center;width: 25%;">Status Penggunaan</th>
+                                    <th style="text-align:center;">Progress</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,13 +64,21 @@
                                 <tr>
                                     <td style="text-align:center;">{{$loop->iteration}}</td>
                                     <td >{{$r['role']}}</td>
-                                    <td style="text-align:center;"></td>
                                     <td style="text-align:center;">
                                         @if($r['status'] == 'Belum Digunakan')
                                         <span class="label bg-red detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
+                                        @elseif($r['status'] == 'Sudah digunakan namun belum maksimal')
+                                        <span class="label bg-orange detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
                                         @else
                                         <span class="label bg-green detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
                                         @endif
+                                    <td style="text-align:center;vertical-align: middle;">
+                                    @if($r['status'])
+                                    <div class="progress">
+                                      <div class="progress-bar progress-bar-striped bg-success progress-bar-animated " role="progressbar" aria-valuenow="{{$r['progress']}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$r['progress']}}%;vertical-align: middle;">{{round($r['progress'],0)}} %</div>
+                                    </div>
+                                    @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
