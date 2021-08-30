@@ -918,6 +918,114 @@ class LibCetakKeuangan{
 
         return $data;
     }
+
+    public static function fetchLaporanPembayaranPerSiswaOnline($auth_data, $start_date = null, $end_date = null)
+    {
+
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')->whereNotNull('nomor_transaksi');
+
+        if(!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy('tagihan_biaya.siswa.id_siswa');
+        }else{
+            $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.siswa.id_siswa');
+        }
+
+        $listData = [];
+        $ketTagihan = '';
+        $idBiaya = null;
+
+        foreach($allDataPembayaran as $idSiswa => $siswa){
+
+            $tagihanBiayaSiswa = $siswa->first()->tagihan_biaya;
+
+            $summ = [];
+
+            foreach($siswa->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya') as $idBiaya => $rwytBayar){
+
+                $item = $rwytBayar->first();
+
+                if($idBiaya != $item->tagihan_biaya->detail_biaya->biaya->id_biaya){
+                    $ketTagihan = ''; // reset
+                }
+
+                $idBiaya = $item->tagihan_biaya->detail_biaya->biaya->id_biaya;
+                $ketTagihan = $ketTagihan . (empty($ketTagihan) ? '' : ', ') . $item->tagihan_biaya->keterangan;
+
+                if($item->tagihan_biaya->siswa->kelas){
+                    $nm_kelas = $item->tagihan_biaya->siswa->kelas->nm_kelas;
+                }
+                else{
+                    $nm_kelas = '-';
+                }
+
+                $summ[] = [
+                    'id_siswa' => $idSiswa,
+                    'id_biaya' => $idBiaya,
+                    'nis_siswa' => $item->tagihan_biaya->siswa->nis_siswa,
+                    'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
+                    'kelas_siswa' => $nm_kelas,
+                    'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
+                    'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
+                    'frekuensi_pembayaran' => $rwytBayar->count(),
+                    'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                    'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
+                    'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
+                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran
+                ];
+
+            }
+
+            if($tagihanBiayaSiswa->siswa->kelas){
+                $nm_kelas2 = $tagihanBiayaSiswa->siswa->kelas->nm_kelas;
+            }
+            else{
+                $nm_kelas2 = '-';
+            }
+
+            $listData[] = [
+                'id_siswa' => $idSiswa,
+                'nis_siswa' => $tagihanBiayaSiswa->siswa->nis_siswa,
+                'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
+                'kelas_siswa' => $nm_kelas2,
+                'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan.total_potongan'),
+                'summary' => $summ
+            ];
+
+        }
+
+        $allPembayaranBiaya = $pembayaran->get()->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya');
+        $summaryData = [];
+        foreach($allPembayaranBiaya as $idBiaya => $biaya){
+            $summaryData[] = [
+                'id_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
+                'nm_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                'frekuensi' => $biaya->count(),
+                'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
+                'total_pembayaran' => $biaya->sum('besar_pembayaran'),
+                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan')
+            ];
+        }
+
+        $result = [
+            'data' => $listData,
+            'summary' => $summaryData,
+            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya')
+        ];
+
+        return $result;
+
+
+    }
     
     public static function fetchLaporanPembayaranPerSiswa($auth_data, $start_date = null, $end_date = null)
     {
@@ -958,7 +1066,7 @@ class LibCetakKeuangan{
                 $ketTagihan = $ketTagihan . (empty($ketTagihan) ? '' : ', ') . $item->tagihan_biaya->keterangan;
 
                 if($item->tagihan_biaya->siswa->kelas){
-                    $nm_kelas = $item->tagihan_biaya->siswa->kelas;
+                    $nm_kelas = $item->tagihan_biaya->siswa->kelas->nm_kelas;
                 }
                 else{
                     $nm_kelas = '-';
