@@ -97,7 +97,7 @@
                     @else
 
                     <center>
-                        <h4>Tidak ada tugas pada kelas ini :)</h4>
+                        <h5>Tidak ada tugas pada kelas ini</h5>
                     </center>
 
                     @endif
