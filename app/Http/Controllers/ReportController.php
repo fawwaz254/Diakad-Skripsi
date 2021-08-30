@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\Sekolah;
 use App\Models\PelanggaranSiswa;
 use App\Models\Role;
 use App\Models\Gedung;
@@ -28,6 +29,9 @@ use App\Models\PelatihEkskulSet;
 use App\Models\PembinaEkskulSet;
 use App\Models\PesertaEkskulSet;
 use App\Models\PresensiEkskul;
+use App\Models\ArsipDokumen;
+use App\Models\Penerimaan;
+use App\Models\CalonSiswaBaru;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -45,6 +49,7 @@ class ReportController extends BaseController{
 
         $semester_aktif = Semester::where('is_aktif_semester','=',1)->first();
         $role = Role::whereNotIn('nm_role',['Siswa','Wali Murid','Administrator','Dapodik','Alumni','Rapor & Buku Induk','Tenaga Pendidik'])->get();
+        $sekolah = Sekolah::orderBy('id_sekolah')->first();
 
         $data = array();
 
@@ -120,9 +125,25 @@ class ReportController extends BaseController{
                 $data[$key]['progress'] = $temp['progress'];
             }
 
+            elseif($r->nm_role == 'Sekretariat'){
+                $temp = $this->checkProgress($r->id_role);
+                $temp = $temp->original;
+                $data[$key]['status'] = $temp['status'];
+                $data[$key]['catatan'] = $temp['catatan'];
+                $data[$key]['progress'] = $temp['progress'];
+            }
+
+            elseif($r->nm_role == 'PPDB'){
+                $temp = $this->checkProgress($r->id_role);
+                $temp = $temp->original;
+                $data[$key]['status'] = $temp['status'];
+                $data[$key]['catatan'] = $temp['catatan'];
+                $data[$key]['progress'] = $temp['progress'];
+            }
+
         }
 
-    	return view('reporting-dashboard.all-diakad',compact('data','semester_aktif'));
+    	return view('reporting-dashboard.all-diakad',compact('data','semester_aktif','sekolah'));
 
     }
 
@@ -140,6 +161,7 @@ class ReportController extends BaseController{
     public function checkProgress($id_role){
 
         $semester_aktif = Semester::where('is_aktif_semester','=',1)->first();
+        $tahun_semester_aktif = $semester_aktif->thn_akademik_semester;
         $semester_aktif = $semester_aktif->id_semester;
 
         $role = Role::find($id_role);
@@ -379,6 +401,45 @@ class ReportController extends BaseController{
 
         }
 
+        elseif($id_role == 11){ // PPDB
+
+            $penerimaan_online = Penerimaan::where('is_pendaftaran_online',1)
+                                        ->whereHas('semester',function($q) use ($tahun_semester_aktif){
+                                            $q->where('thn_akademik_semester',$tahun_semester_aktif);
+                                        });
+
+            $calon_siswa_online = CalonSiswaBaru::whereIn('id_penerimaan',$penerimaan_online->pluck('id_penerimaan'))->count();
+
+            $param[0]['catatan'] = 'Sudah pernah melakukan penerimaan secara online';
+            $param[0]['status'] = 0;
+
+            $param[1]['catatan'] = 'Sudah ada siswa yang mendaftar pada penerimaan secara online';
+            $param[1]['status'] = 0;
+
+            if($penerimaan_online->count()){
+                $param[0]['status'] = 1;
+            }
+
+            if($calon_siswa_online){
+                $param[1]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
+
+        }
+
         elseif($id_role == 13){ // Pelatih Ekskul
 
             $presensi_ekskul = PresensiEkskul::where('id_semester',$semester_aktif)->count();
@@ -408,7 +469,28 @@ class ReportController extends BaseController{
 
         elseif($id_role == 14){ // Sekretariat
 
-            
+            $arsip_dokumen = ArsipDokumen::count();
+
+            $param[0]['catatan'] = 'Sudah melakukuan input data pada arsip dokumen';
+            $param[0]['status'] = 0;
+
+            if($arsip_dokumen){
+                $param[0]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
 
         }
 

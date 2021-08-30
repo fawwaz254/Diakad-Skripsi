@@ -66,9 +66,10 @@ Route::get('check/payment/expired', 'Keuangan\SIM\PembayaranOnlineController@act
 Route::get('/', 'SignInController@indexSignIn');
 Route::post('signin', 'SignInController@actionSignIn');
 
+Route::get('report-pimpinan', 'ReportController@viewAllDiakad');
+
 Route::group(array('prefix' => 'reporting-dashboard'), function () {
     Route::get('/', 'SignInController@indexReportingDashboard');
-    Route::get('all-diakad', 'ReportController@viewAllDiakad');
     Route::get('all-diakad/{id}', 'ReportController@checkProgress');
     Route::get('akademik', function(){
         return view('reporting-dashboard/akademik');

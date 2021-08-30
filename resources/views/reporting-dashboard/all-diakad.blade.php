@@ -3,92 +3,96 @@
 <!-- Meta -->
 @endsection
 
-<style type="text/css">
-
-
-.progress-bar-animated {
-    -webkit-animation: progress-bar-stripes 1s linear infinite;
-    animation: progress-bar-stripes 1s linear infinite;
-}
-
-.progress .progress-bar {
-    line-height: 23px;
-    background-color: #dc3545!important;
-}
-
-.progress-bar-striped {
-    background-image: linear-gradient(
-45deg
-,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
-    background-size: 1rem 1rem;
-    
-}
-
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400&display=swap" rel="stylesheet">
 
 @section('content')
 
 <body>
     <section class="section">
         <div class="container-fluid">
-            <div class="block-header">
-            </div>
-            <div class="block-header">
-                <h2><a class="btn bg-blue waves-effect" href="{{url('reporting-dashboard')}}"><i class="material-icons">arrow_back</i><span>Kembali</span></a></h2>
-            </div>
 
-            <!-- Widgets -->
-            <div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="card">
-                        <div class="header">
-                            <h2>
-                               Data Penggunaan Diakad Untuk Setiap Role Semester {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}
-                            </h2>
-                        </div>
-                        <div class="body">
-                           
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                            id="primary_table">
-                            <thead style="background: #009688 !important;color:white !important">
-                                <tr>
-                                    <th style="text-align:center;width: 10%;">No</th>
-                                    <th style="width:15%;">Role</th>
-                                    <th style="text-align:center;width: 25%;">Status Penggunaan</th>
-                                    <th style="text-align:center;">Progress</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($data as $key => $r)
-                                <tr>
-                                    <td style="text-align:center;">{{$loop->iteration}}</td>
-                                    <td >{{$r['role']}}</td>
-                                    <td style="text-align:center;">
-                                        @if($r['status'] == 'Belum Digunakan')
-                                        <span class="label bg-red detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
-                                        @elseif($r['status'] == 'Sudah digunakan namun belum maksimal')
-                                        <span class="label bg-orange detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
-                                        @else
-                                        <span class="label bg-green detail-catatan" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})">{{$r['status']}}</span></td>
+            <div class="container">
+
+                <br>
+
+                <!-- Widgets -->
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="card">
+                            <div class="body">
+                               
+                            <center>
+                            <img src="https://diakad.sgp1.digitaloceanspaces.com/{{$sekolah->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" />
+                            <br>
+                            <h3 style="font-family: 'Nunito', sans-serif;">Data Penggunaan Diakad Untuk Setiap Role Semester {{$semester_aktif->tahun_ajaran}} {{$semester_aktif->nm_semester}}</h3>  
+                            <h4 style="font-family: 'Nunito', sans-serif;">Per Tanggal : {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}</h4>  
+                            </center>
+
+                            <hr>
+                             
+                            <div class="table-responsive"> 
+                            <table
+                                class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                                id="primary_table">
+                                <thead style="background: #009688 !important;color:white !important;">
+                                    <tr>
+                                        <th style="text-align:center;width: 10%;">No</th>
+                                        <th style="width:15%;">Role</th>
+                                        <th style="text-align:center;width: 25%;">Status Penggunaan</th>
+                                        <th style="text-align:center;">Progress</th>
+                                        <th style="text-align:center;width: 15%;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($data as $key => $r)
+                                    <tr>
+                                        <td style="text-align:center;">{{$loop->iteration}}</td>
+                                        <td >{{$r['role']}}</td>
+                                        <td style="text-align:center;">
+                                            @if($r['status'] == 'Belum Digunakan')
+                                            @php $color ='danger'; @endphp
+                                            <span class="label bg-red detail-catatan">{{$r['status']}}</span></td>
+                                            @elseif($r['status'] == 'Sudah digunakan namun belum maksimal')
+                                            @php $color ='warning'; @endphp
+                                            <span class="label bg-orange detail-catatan">{{$r['status']}}</span></td>
+                                            @else
+                                            @php $color ='success'; @endphp
+                                            <span class="label bg-green detail-catatan">{{$r['status']}}</span></td>
+                                            @endif
+                                        <td style="text-align:center;vertical-align: middle;">
+                                        @if($r['status'])
+                                        <div class="progress">
+                                        <div class="progress-bar progress-bar-{{$color}} progress-bar-striped active" role="progressbar" aria-valuenow="{{$r['progress']}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$r['progress']}}%;vertical-align: middle;">{{round($r['progress'],0)}} %</div>
+                                        </div>
                                         @endif
-                                    <td style="text-align:center;vertical-align: middle;">
-                                    @if($r['status'])
-                                    <div class="progress">
-                                      <div class="progress-bar progress-bar-striped bg-success progress-bar-animated " role="progressbar" aria-valuenow="{{$r['progress']}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$r['progress']}}%;vertical-align: middle;">{{round($r['progress'],0)}} %</div>
-                                    </div>
-                                    @endif
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-          
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <button type="button" style="cursor:pointer;" onclick="detail_catatan({{$r['id_role']}})" class="btn bg-indigo waves-effect">
+                                                <i class="material-icons">remove_red_eye</i>
+                                                <span>Lihat Detail</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            </div>  
+
+                            </div>
+
+
+              
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- #END# Widgets -->
+
+                <br>
+
             </div>
-            <!-- #END# Widgets -->
 
         </div>
     </section>
