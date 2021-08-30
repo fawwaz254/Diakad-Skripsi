@@ -31,6 +31,11 @@
                             </center>
 
                             <hr>
+
+                            <a href="/report-pimpinan-print" style="cursor:pointer;margin-bottom: 5px;" target="_blank" class="btn bg-red waves-effect">
+                                <i class="material-icons">print</i>
+                                <span>Print Laporan</span>
+                            </a>
                              
                             <div class="table-responsive"> 
                             <table
