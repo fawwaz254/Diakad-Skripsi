@@ -68,6 +68,18 @@
                             </ul>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                PEMBAYARAN SISWA (ONLINE)
+                            </h2>
+                            <ul>
+                                <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('siswa-online')" >Rekap per Siswa</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

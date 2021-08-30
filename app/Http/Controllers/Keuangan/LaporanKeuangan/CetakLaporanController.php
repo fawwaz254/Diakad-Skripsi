@@ -131,7 +131,7 @@ class CetakLaporanController extends BaseController
         ], [
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
-            'jenis' => 'required|in:siswa,tanggal,bulan,tingkat,kelas'
+            'jenis' => 'required|in:siswa,siswa-online,tanggal,bulan,tingkat,kelas'
         ], [
             'end_date.after_or_equal' => 'Tanggal Akhir harus sama dengan atau lebih dari Tanggal Awal',
             'jenis.in' => 'Tidak valid'
@@ -149,7 +149,12 @@ class CetakLaporanController extends BaseController
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerSiswa($auth_data, $start_date, $end_date);
 
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-siswa', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
-        } elseif($jenis == 'kelas'){
+        } 
+        elseif($jenis == 'siswa-online'){
+            $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerSiswaOnline($auth_data, $start_date, $end_date);
+            return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-siswa-online', compact('auth_data','data_laporan','start_date', 'end_date'));
+        }
+        elseif($jenis == 'kelas'){
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerKelas($auth_data, $start_date, $end_date);
             
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-kelas', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
