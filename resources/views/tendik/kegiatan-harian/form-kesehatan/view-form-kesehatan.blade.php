@@ -7,7 +7,7 @@
                 href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}"
                 @endif
                 >
-                <i class="material-icons">note_add</i><span>Isi FORM</span></a> @if($is_disabled)<p class="font-bold col-pink">*Pengisian hanya bisa dilakukan pada jam 7 malam hingga jam 7 pagi</p>@endif</h2>
+                <i class="material-icons">note_add</i><span>Isi FORM</span></a> @if($is_disabled)<p class="font-bold col-pink">*Pengisian hanya bisa dilakukan pada jam {{$start_monkes}} hingga jam {{$end_monkes}}</p>@endif</h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
