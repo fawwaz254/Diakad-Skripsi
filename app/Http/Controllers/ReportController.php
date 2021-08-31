@@ -37,6 +37,7 @@ use App\Models\KurikulumMp;
 use App\Models\KelasMp;
 use App\Models\PresensiMp;
 use App\Models\PresensiMpSiswa;
+use App\Models\JadwalKelasMp;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -273,20 +274,29 @@ class ReportController extends BaseController{
             $kurikulum = Kurikulum::pluck('id_kurikulum');
             $kurikulum_mp = KurikulumMp::distinct('id_kurikulum')->whereIn('id_kurikulum',$kurikulum)->count('id_kurikulum');
 
-            $kelas_mp = KelasMp::where('id_semester',$semester_aktif)->count(); 
+            $kelas_mp = KelasMp::where('id_semester',$semester_aktif)->pluck('id_kelas_mp');
+
+            $jadwal_kelas_mp = JadwalKelasMp::distinct('id_kelas_mp')->whereIn('id_kelas_mp',$kelas_mp)->count('id_kelas_mp');
 
             $param[0]['catatan'] = 'Sudah mensetting kurikulum beserta mapel mapelnya';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah mensetting usulan mata ajar pada semester yang aktif';
+            $param[1]['catatan'] = 'Sudah mensetting usulan mata ajar (semester yang aktif)';
             $param[1]['status'] = 0;
+
+            $param[2]['catatan'] = 'Sudah mensetting jadwal mengajar serta ruangan pada usulan mata ajar (semester yang aktif) ';
+            $param[2]['status'] = 0;
 
             if($kurikulum_mp > 0 && $kurikulum_mp == $kurikulum->count()){
                 $param[0]['status'] = 1;
             }
 
-            if($kelas_mp){
+            if($kelas_mp->count()){
                 $param[1]['status'] = 1;
+            }
+
+            if($jadwal_kelas_mp == $kelas_mp->count()){
+                $param[2]['status'] = 1;
             }
 
             $jumlah_diisi = $this->count_multidimension($param);
