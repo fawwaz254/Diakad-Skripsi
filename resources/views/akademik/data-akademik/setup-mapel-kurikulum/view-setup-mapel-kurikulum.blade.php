@@ -20,11 +20,11 @@
                                     @foreach($kurikulum as $data)
                                         @if($data->id_kurikulum == $id_kurikulum)
                                             <option value="{{$data->id_kurikulum}}" selected>
-                                                {{ $data->tahun_kurikulum . ' - '. $data->nm_kurikulum . ' - ' . $data->nomor_sk_kurikulum }}
+                                                {{ $data->nm_kurikulum . ' - ' .  $data->jurusan->nm_jurusan }} ( {{$data->mapel_count}} mata pelajaran )
                                             </option>
                                         @else
                                             <option value="{{$data->id_kurikulum}}">
-                                                {{ $data->tahun_kurikulum . ' - '. $data->nm_kurikulum . ' - ' . $data->nomor_sk_kurikulum }}
+                                                {{ $data->nm_kurikulum . ' - ' .  $data->jurusan->nm_jurusan }} ( {{$data->mapel_count}} mata pelajaran )
                                             </option>
                                         @endif
                                     @endforeach

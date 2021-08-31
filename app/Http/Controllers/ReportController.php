@@ -484,7 +484,7 @@ class ReportController extends BaseController{
 
             $presensi_ekskul = PresensiEkskul::where('id_semester',$semester_aktif)->count();
 
-            $param[0]['catatan'] = 'Sudah melakukuan absensi ekskul';
+            $param[0]['catatan'] = 'Sudah melakukuan absensi ekskul pada semester yang aktif';
             $param[0]['status'] = 0;
 
             if($presensi_ekskul){

@@ -31,10 +31,13 @@ class SetupMapelKurikulumController extends BaseController
         $auth_data = $input->auth_data;
 
         //get kurikulum aktif di sekolah tersebut
-        $kurikulum = Kurikulum::join('jurusan','jurusan.id_jurusan','=','kurikulum.id_jurusan')
-        		->where('jurusan.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-        		->where('kurikulum.is_aktif','=',1)
-        		->get();
+        $kurikulum = Kurikulum::with('jurusan')
+                                ->withCount('mapel')
+                                ->where('is_aktif','=',1)
+                                ->whereHas('jurusan',function($q) use ($auth_data){
+                                    $q->where('id_sekolah',$auth_data->pengguna->id_sekolah);
+                                })
+                                ->get();
 
         return view('akademik/data-akademik/setup-mapel-kurikulum/view-setup-mapel-kurikulum',compact('auth_data','kurikulum', 'id_kurikulum'));
     }
