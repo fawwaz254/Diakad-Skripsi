@@ -67,7 +67,26 @@ class AdmisiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $siswa = LibSiswa::fetchAdmisiSiswa($auth_data, $nis_nama_siswa);
+        $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'jurusan.nm_jurusan', 'status_pengguna.nm_status_pengguna', 'calon_siswa_baru.asal_sekolah', 'calon_siswa_baru.alamat_jalan', 'calon_siswa_baru.alamat_dusun', 'calon_siswa_baru.alamat_kelurahan', 'calon_siswa_baru.alamat_rt', 'calon_siswa_baru.alamat_rw', 'calon_siswa_baru.alamat_kecamatan', 'calon_siswa_baru.alamat_kodepos', 'calon_siswa_baru.kode_voucher', 'jalur.nm_jalur', 'calon_siswa_baru.nomor_hp', 'calon_siswa_ortu.nomor_hp_ortu', 'provinsi.nm_provinsi', 'kota.nm_kota', 'siswa.id_siswa')
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->leftJoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->leftJoin('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
+            ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
+            ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+            ->join('jalur_siswa', function ($join) {
+                $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+            })
+            ->join('jalur', 'jalur_siswa.id_jalur', '=', 'jalur.id_jalur')
+            ->leftJoin('calon_siswa_ortu', 'calon_siswa_ortu.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+            ->leftJoin('provinsi', 'calon_siswa_baru.alamat_provinsi', '=', 'provinsi.id_provinsi')
+            ->leftJoin('kota', 'calon_siswa_baru.alamat_kota', '=', 'kota.id_kota')
+            ->where(function ($query) use ($nis_nama_siswa) {
+                $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
+                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%');
+            })
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
+
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', 1)->first();
         $admisi = Admisi::where('id_siswa', '=', $siswa->id_siswa)->where('id_semester', '=', $semester_aktif->id_semester)->first();
         $status = StatusPengguna::where('status_join_table', '=', '3')->where('kode_status_pengguna', '!=', 'LULUS')->where('kode_status_pengguna', '!=', 'CALON_LULUS')->get();
