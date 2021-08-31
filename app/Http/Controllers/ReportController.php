@@ -204,13 +204,13 @@ class ReportController extends BaseController{
 
         elseif($id_role == 5){ // Bimbingan & Konseling
 
-            $pelanggaran_siswa = PelanggaranSiswa::count();
-            $tindakan_pelanggaran = PelanggaranSiswa::where('is_sudah_tindakan', 1)->count();
+            $pelanggaran_siswa = PelanggaranSiswa::where('id_semester',$semester_aktif)->count();
+            $tindakan_pelanggaran = PelanggaranSiswa::where('is_sudah_tindakan', 1)->where('id_semester',$semester_aktif)->count();
 
-            $param[0]['catatan'] = 'Sudah ada pelanggaran yang diinputkan';
+            $param[0]['catatan'] = 'Sudah ada pelanggaran yang diinputkan pada semester yang aktif';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah melakukan tindakan peda pelanggaran';
+            $param[1]['catatan'] = 'Sudah melakukan tindakan peda pelanggaran pada semester yang aktif';
             $param[1]['status'] = 0;
 
             if($pelanggaran_siswa){
@@ -450,10 +450,10 @@ class ReportController extends BaseController{
 
             $calon_siswa_online = CalonSiswaBaru::whereIn('id_penerimaan',$penerimaan_online->pluck('id_penerimaan'))->count();
 
-            $param[0]['catatan'] = 'Sudah pernah melakukan penerimaan secara online';
+            $param[0]['catatan'] = 'Sudah pernah melakukan penerimaan secara online pada tahun '.$tahun_semester_aktif;
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah ada siswa yang mendaftar pada penerimaan secara online';
+            $param[1]['catatan'] = 'Sudah ada siswa yang mendaftar pada penerimaan secara online pada tahun '.$tahun_semester_aktif;
             $param[1]['status'] = 0;
 
             if($penerimaan_online->count()){
