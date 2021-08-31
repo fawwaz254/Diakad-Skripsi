@@ -575,11 +575,6 @@ public function deletemonitoringkesehatan(Request $request)
 
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $start_1 = Carbon::createFromTimeString('00:00');
-        $end_1 = Carbon::createFromTimeString('07:00');
-
-        $start_2 = Carbon::createFromTimeString('19:00');
-        $end_2 = Carbon::createFromTimeString('23:59');
         $syarat = [
             'id_pengisian_kegiatan_harian' => 'required',
         ];
@@ -763,12 +758,24 @@ $validator = Validator::make($request->all(), $syarat);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+        if($start_monkes = Setting::where('key_setting', 'start_monkes')->first()){
+            $start_monkes = $start_monkes->value;
+        }else{
+            $start_monkes = '19:00';
+        }
+
+        if($end_monkes = Setting::where('key_setting', 'end_monkes')->first()){
+            $end_monkes = $end_monkes->value;
+        }else{
+            $end_monkes = '07:00';
+        }
+
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $start_1 = Carbon::createFromTimeString('00:00');
-        $end_1 = Carbon::createFromTimeString('07:00');
+        $end_1 = Carbon::createFromTimeString($end_monkes);
 
-        $start_2 = Carbon::createFromTimeString('19:00');
+        $start_2 = Carbon::createFromTimeString($start_monkes);
         $end_2 = Carbon::createFromTimeString('23:59');
 
         if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)){

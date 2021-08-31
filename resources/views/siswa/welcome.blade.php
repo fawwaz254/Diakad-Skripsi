@@ -34,7 +34,7 @@
                         <h5>
                         Monitoring Kesehatan 
                         </h5>
-                        <small>Isi Form monitoring kesehatan Anda setiap hari pukul 19:00 - 07:00</small>
+                        <small>Isi Form monitoring kesehatan Anda setiap hari pukul {{$start_monkes}} - {{$end_monkes}}</small>
                     </div>
                 </div>
             </a>
