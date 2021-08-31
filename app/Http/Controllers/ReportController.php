@@ -244,9 +244,9 @@ class ReportController extends BaseController{
             $param[0]['catatan'] = 'Sudah ada melakukan input date ekskul beserta pelatih , pembina dan peserta';
             $param[0]['status'] = 0;
 
-            $pelatih_ekskul = PelatihEkskulSet::where('id_ekskul',[Ekskul::pluck('id_ekskul')])->where('is_aktif',1)->count();
-            $pembina_ekskul = PembinaEkskulSet::where('id_ekskul',[Ekskul::pluck('id_ekskul')])->where('is_aktif',1)->count();
-            $peserta_ekskul = PesertaEkskulSet::where('id_ekskul',[Ekskul::pluck('id_ekskul')])->groupBy('id_ekskul')->count();
+            $pelatih_ekskul = PelatihEkskulSet::whereIn('id_ekskul',Ekskul::pluck('id_ekskul'))->where('is_aktif',1)->count();
+            $pembina_ekskul = PembinaEkskulSet::whereIn('id_ekskul',Ekskul::pluck('id_ekskul'))->where('is_aktif',1)->count();
+            $peserta_ekskul = PesertaEkskulSet::whereIn('id_ekskul',Ekskul::pluck('id_ekskul'))->groupBy('id_ekskul')->count();
 
             if($pelatih_ekskul == $data_ekskul && $pembina_ekskul == $data_ekskul && $peserta_ekskul == $data_ekskul){
                 $param[0]['status'] = 1;
