@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\Sekolah;
 use App\Models\PelanggaranSiswa;
 use App\Models\Role;
 use App\Models\Gedung;
@@ -28,6 +29,15 @@ use App\Models\PelatihEkskulSet;
 use App\Models\PembinaEkskulSet;
 use App\Models\PesertaEkskulSet;
 use App\Models\PresensiEkskul;
+use App\Models\ArsipDokumen;
+use App\Models\Penerimaan;
+use App\Models\CalonSiswaBaru;
+use App\Models\Kurikulum;
+use App\Models\KurikulumMp;
+use App\Models\KelasMp;
+use App\Models\PresensiMp;
+use App\Models\PresensiMpSiswa;
+use App\Models\JadwalKelasMp;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -44,7 +54,8 @@ class ReportController extends BaseController{
     public function viewAllDiakad(){
 
         $semester_aktif = Semester::where('is_aktif_semester','=',1)->first();
-        $role = Role::whereNotIn('nm_role',['Siswa','Wali Murid','Administrator','Dapodik','Alumni','Rapor & Buku Induk','Tenaga Pendidik'])->get();
+        $role = Role::whereNotIn('nm_role',['Siswa','Wali Murid','Administrator','Dapodik','Alumni','Rapor & Buku Induk','Tenaga Pendidik'])->orderBy('nm_role','asc')->get();
+        $sekolah = Sekolah::orderBy('id_sekolah')->first();
 
         $data = array();
 
@@ -56,73 +67,44 @@ class ReportController extends BaseController{
             $data[$key]['status'] = '';
             $data[$key]['catatan'] = '';
 
-            if($r->nm_role == 'Bimbingan Konseling'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+            $temp = $this->checkProgress($r->id_role);
+            $temp = $temp->original;
+            $data[$key]['status'] = $temp['status'];
+            $data[$key]['catatan'] = $temp['catatan'];
+            $data[$key]['progress'] = $temp['progress'];
+            $data[$key]['rowspan'] = count($temp['catatan']);
+        }
 
-            elseif($r->nm_role == 'Sarana Prasarana'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+    	return view('reporting-dashboard.all-diakad',compact('data','semester_aktif','sekolah'));
 
-            elseif($r->nm_role == 'Humas'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+    }
 
-            elseif($r->nm_role == 'Keuangan'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+    public function printAllDiakad(){
 
-            elseif($r->nm_role == 'Sumber Daya'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+        $semester_aktif = Semester::where('is_aktif_semester','=',1)->first();
+        $role = Role::whereNotIn('nm_role',['Siswa','Wali Murid','Administrator','Dapodik','Alumni','Rapor & Buku Induk','Tenaga Pendidik'])->orderBy('nm_role','asc')->get();
+        $sekolah = Sekolah::orderBy('id_sekolah')->first();
 
-            elseif($r->nm_role == 'Pendidikan'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+        $data = array();
 
-            elseif($r->nm_role == 'Kesiswaan'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+        foreach($role as $key => $r){
 
-            elseif($r->nm_role == 'Pelatih Ekskul'){
-                $temp = $this->checkProgress($r->id_role);
-                $temp = $temp->original;
-                $data[$key]['status'] = $temp['status'];
-                $data[$key]['catatan'] = $temp['catatan'];
-                $data[$key]['progress'] = $temp['progress'];
-            }
+            $data[$key]['id_role'] = $r->id_role;
+            $data[$key]['role'] = $r->nm_role;
+
+            $data[$key]['status'] = '';
+            $data[$key]['catatan'] = '';
+
+            $temp = $this->checkProgress($r->id_role);
+            $temp = $temp->original;
+            $data[$key]['status'] = $temp['status'];
+            $data[$key]['catatan'] = $temp['catatan'];
+            $data[$key]['progress'] = $temp['progress'];
+            $data[$key]['rowspan'] = count($temp['catatan']);
 
         }
 
-    	return view('reporting-dashboard.all-diakad',compact('data','semester_aktif'));
+        return view('reporting-dashboard.print-all-diakad',compact('data','semester_aktif','sekolah'));
 
     }
 
@@ -140,6 +122,7 @@ class ReportController extends BaseController{
     public function checkProgress($id_role){
 
         $semester_aktif = Semester::where('is_aktif_semester','=',1)->first();
+        $tahun_semester_aktif = $semester_aktif->thn_akademik_semester;
         $semester_aktif = $semester_aktif->id_semester;
 
         $role = Role::find($id_role);
@@ -172,6 +155,35 @@ class ReportController extends BaseController{
 
             if($kalender){
                 $param[2]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
+
+        }
+
+        elseif($id_role == 2){ // Guru
+
+            $kelas_mp = KelasMp::where('id_semester',$semester_aktif)->pluck('id_kelas_mp'); 
+            $presensi_mp = PresensiMp::whereIn('id_kelas_mp',$kelas_mp)->pluck('id_presensi_mp');
+            $presensi_mp_siswa = PresensiMpSiswa::whereIn('id_presensi_mp',$presensi_mp)->count();
+
+            $param[0]['catatan'] = 'Sudah pernah melakukan absen pada saat kbm';
+            $param[0]['status'] = 0;
+
+            if($presensi_mp_siswa){
+                $param[0]['status'] = 1;
             }
 
             $jumlah_diisi = $this->count_multidimension($param);
@@ -257,6 +269,52 @@ class ReportController extends BaseController{
 
         }
 
+        elseif($id_role == 7){ // Akademik
+
+            $kurikulum = Kurikulum::pluck('id_kurikulum');
+            $kurikulum_mp = KurikulumMp::distinct('id_kurikulum')->whereIn('id_kurikulum',$kurikulum)->count('id_kurikulum');
+
+            $kelas_mp = KelasMp::where('id_semester',$semester_aktif)->pluck('id_kelas_mp');
+
+            $jadwal_kelas_mp = JadwalKelasMp::distinct('id_kelas_mp')->whereIn('id_kelas_mp',$kelas_mp)->count('id_kelas_mp');
+
+            $param[0]['catatan'] = 'Sudah mensetting kurikulum beserta mapel mapelnya';
+            $param[0]['status'] = 0;
+
+            $param[1]['catatan'] = 'Sudah mensetting usulan mata ajar (semester yang aktif)';
+            $param[1]['status'] = 0;
+
+            $param[2]['catatan'] = 'Sudah mensetting jadwal mengajar serta ruangan pada usulan mata ajar (semester yang aktif) ';
+            $param[2]['status'] = 0;
+
+            if($kurikulum_mp > 0 && $kurikulum_mp == $kurikulum->count()){
+                $param[0]['status'] = 1;
+            }
+
+            if($kelas_mp->count()){
+                $param[1]['status'] = 1;
+            }
+
+            if($jadwal_kelas_mp == $kelas_mp->count()){
+                $param[2]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
+
+        }
+
         elseif($id_role == 8){ // Sumber Daya
 
             $data_guru = Guru::count();
@@ -294,19 +352,23 @@ class ReportController extends BaseController{
 
         elseif($id_role == 9){ // Keuangan
 
-            $tagihan_siswa = TagihanBiaya::count();
-            $pembayaran_siswa = TagihanBiaya::where('is_tagih',0)->count();
-            $pemasukan_biaya = PemasukanBiaya::count();
-            $pengeluaran_biaya = PengeluaranBiaya::count();
+            $tagihan_siswa = TagihanBiaya::whereHas('detail_biaya.biaya_sekolah',function($q) use ($semester_aktif){
+                                            $q->where('id_semester',$semester_aktif);
+                                        })->count();
+            $pembayaran_siswa = TagihanBiaya::whereHas('detail_biaya.biaya_sekolah',function($q) use ($semester_aktif){
+                                                $q->where('id_semester',$semester_aktif);
+                                            })->where('is_tagih',0)->count();
+            $pemasukan_biaya = PemasukanBiaya::where('id_semester',$semester_aktif)->count();
+            $pengeluaran_biaya = PengeluaranBiaya::where('id_semester',$semester_aktif)->count();
             $pembayaran_online = env("WINPAY_PRIVATE_KEY1");
 
-            $param[0]['catatan'] = 'Sudah melakukan generate tagihan siswa';
+            $param[0]['catatan'] = 'Sudah melakukan generate tagihan siswa (semester yang aktif)';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah melakukan proses pembayaran siswa';
+            $param[1]['catatan'] = 'Sudah melakukan proses pembayaran siswa (semester yang aktif)';
             $param[1]['status'] = 0;
 
-            $param[2]['catatan'] = 'Sudah melakukan input pemasukan dan pengeluaran';
+            $param[2]['catatan'] = 'Sudah melakukan input pemasukan dan pengeluaran (semester yang aktif)';
             $param[2]['status'] = 0;
 
             $param[3]['catatan'] = 'Sudah menerapkan pembayaran online';
@@ -379,6 +441,45 @@ class ReportController extends BaseController{
 
         }
 
+        elseif($id_role == 11){ // PPDB
+
+            $penerimaan_online = Penerimaan::where('is_pendaftaran_online',1)
+                                        ->whereHas('semester',function($q) use ($tahun_semester_aktif){
+                                            $q->where('thn_akademik_semester',$tahun_semester_aktif);
+                                        });
+
+            $calon_siswa_online = CalonSiswaBaru::whereIn('id_penerimaan',$penerimaan_online->pluck('id_penerimaan'))->count();
+
+            $param[0]['catatan'] = 'Sudah pernah melakukan penerimaan secara online';
+            $param[0]['status'] = 0;
+
+            $param[1]['catatan'] = 'Sudah ada siswa yang mendaftar pada penerimaan secara online';
+            $param[1]['status'] = 0;
+
+            if($penerimaan_online->count()){
+                $param[0]['status'] = 1;
+            }
+
+            if($calon_siswa_online){
+                $param[1]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
+
+        }
+
         elseif($id_role == 13){ // Pelatih Ekskul
 
             $presensi_ekskul = PresensiEkskul::where('id_semester',$semester_aktif)->count();
@@ -408,7 +509,28 @@ class ReportController extends BaseController{
 
         elseif($id_role == 14){ // Sekretariat
 
-            
+            $arsip_dokumen = ArsipDokumen::count();
+
+            $param[0]['catatan'] = 'Sudah melakukuan input data pada arsip dokumen';
+            $param[0]['status'] = 0;
+
+            if($arsip_dokumen){
+                $param[0]['status'] = 1;
+            }
+
+            $jumlah_diisi = $this->count_multidimension($param);
+
+            if($jumlah_diisi == 0){
+                $status = 'Belum Digunakan';
+            }
+
+            elseif($jumlah_diisi < count($param)){
+                $status = 'Sudah digunakan namun belum maksimal';
+            }
+
+            else{
+                $status = 'Sudah digunakan dengan maksimal';
+            }
 
         }
 
