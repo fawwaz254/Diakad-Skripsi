@@ -352,19 +352,23 @@ class ReportController extends BaseController{
 
         elseif($id_role == 9){ // Keuangan
 
-            $tagihan_siswa = TagihanBiaya::count();
-            $pembayaran_siswa = TagihanBiaya::where('is_tagih',0)->count();
-            $pemasukan_biaya = PemasukanBiaya::count();
-            $pengeluaran_biaya = PengeluaranBiaya::count();
+            $tagihan_siswa = TagihanBiaya::whereHas('detail_biaya.biaya_sekolah',function($q) use ($semester_aktif){
+                                            $q->where('id_semester',$semester_aktif);
+                                        })->count();
+            $pembayaran_siswa = TagihanBiaya::whereHas('detail_biaya.biaya_sekolah',function($q) use ($semester_aktif){
+                                                $q->where('id_semester',$semester_aktif);
+                                            })->where('is_tagih',0)->count();
+            $pemasukan_biaya = PemasukanBiaya::where('id_semester',$semester_aktif)->count();
+            $pengeluaran_biaya = PengeluaranBiaya::where('id_semester',$semester_aktif)->count();
             $pembayaran_online = env("WINPAY_PRIVATE_KEY1");
 
-            $param[0]['catatan'] = 'Sudah melakukan generate tagihan siswa';
+            $param[0]['catatan'] = 'Sudah melakukan generate tagihan siswa (semester yang aktif)';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah melakukan proses pembayaran siswa';
+            $param[1]['catatan'] = 'Sudah melakukan proses pembayaran siswa (semester yang aktif)';
             $param[1]['status'] = 0;
 
-            $param[2]['catatan'] = 'Sudah melakukan input pemasukan dan pengeluaran';
+            $param[2]['catatan'] = 'Sudah melakukan input pemasukan dan pengeluaran (semester yang aktif)';
             $param[2]['status'] = 0;
 
             $param[3]['catatan'] = 'Sudah menerapkan pembayaran online';
