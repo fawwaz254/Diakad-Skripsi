@@ -37,7 +37,7 @@
                 <td colspan=6><h1 style="font-size: 14pt;" align="center">KWITANSI PEMBAYARAN<br> {{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h1></td>
             </tr>
         </table>
-        <table style="width: 100%; font-size:x-small">
+        <table style="width: 100%; font-size:12px;font-weight: 700;">
             <tr>
                 <td>Siswa</td>
                 <td style="width: 5px;">:</td>
@@ -60,7 +60,7 @@
             </tr>
         </table>
         <hr>
-        <table border="0" cellspacing="0" cellpadding="5" style="width: 100%; font-size:x-small">
+        <table border="0" cellspacing="0" cellpadding="5" style="width: 100%; font-size:12px;font-weight: 700;">
             <tr>
                 <th>Nama Biaya</th>
                 <th>Besar Pembayaran</th>
@@ -68,10 +68,8 @@
             @foreach($data_pembayaran_siswa as $pembayaran_siswa)
             <tr>
                 @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
-                    @php
-                        $ket = $pembayaran_siswa->nm_bulan.' '.$pembayaran_siswa->thn_akademik_semester;
-                    @endphp
-                    <td>{{$pembayaran_siswa->nm_biaya." (".$ket.")"}}</td>
+                    
+                    <td>{{$pembayaran_siswa->nm_biaya}} ({{$pembayaran_siswa->nm_bulan}} {{$pembayaran_siswa->thn_akademik_semester}})</td>
                 @else
                     <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                 @endif
@@ -80,13 +78,13 @@
             @endforeach
         </table>
         <hr>
-        <table style="width: 100%; font-size:x-small">
+        <table style="width: 100%; font-size:12px">
             <tr>
                 <td align="center"><b>TOTAL</b></td>
                 <td align="right"><b>{{"Rp ".number_format($data_pembayaran_siswa->sum('besar_pembayaran'))}}</b></td>
             </tr>
         </table>
-        <div class="ttd">
+        <div class="ttd" style="font-weight:700;font-size: 12px;">
             {{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }} {{date_format(date_create($tgl_pembayaran), 'd M Y')}} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>

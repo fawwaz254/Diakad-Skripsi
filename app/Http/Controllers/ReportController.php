@@ -204,13 +204,13 @@ class ReportController extends BaseController{
 
         elseif($id_role == 5){ // Bimbingan & Konseling
 
-            $pelanggaran_siswa = PelanggaranSiswa::count();
-            $tindakan_pelanggaran = PelanggaranSiswa::where('is_sudah_tindakan', 1)->count();
+            $pelanggaran_siswa = PelanggaranSiswa::where('id_semester',$semester_aktif)->count();
+            $tindakan_pelanggaran = PelanggaranSiswa::where('is_sudah_tindakan', 1)->where('id_semester',$semester_aktif)->count();
 
-            $param[0]['catatan'] = 'Sudah ada pelanggaran yang diinputkan';
+            $param[0]['catatan'] = 'Sudah ada pelanggaran yang diinputkan pada semester yang aktif';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah melakukan tindakan peda pelanggaran';
+            $param[1]['catatan'] = 'Sudah melakukan tindakan peda pelanggaran pada semester yang aktif';
             $param[1]['status'] = 0;
 
             if($pelanggaran_siswa){
@@ -278,13 +278,13 @@ class ReportController extends BaseController{
 
             $jadwal_kelas_mp = JadwalKelasMp::distinct('id_kelas_mp')->whereIn('id_kelas_mp',$kelas_mp)->count('id_kelas_mp');
 
-            $param[0]['catatan'] = 'Sudah mensetting kurikulum beserta mapel mapelnya';
+            $param[0]['catatan'] = 'Sudah memasukkan kurikulum beserta mapel mapelnya';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah mensetting usulan mata ajar (semester yang aktif)';
+            $param[1]['catatan'] = 'Sudah memasukkan usulan mata ajar pada semester yang aktif';
             $param[1]['status'] = 0;
 
-            $param[2]['catatan'] = 'Sudah mensetting jadwal mengajar serta ruangan pada usulan mata ajar (semester yang aktif) ';
+            $param[2]['catatan'] = 'Sudah memasukkan jadwal mengajar serta ruangan di usulan mata ajar pada semester yang aktif ';
             $param[2]['status'] = 0;
 
             if($kurikulum_mp > 0 && $kurikulum_mp == $kurikulum->count()){
@@ -295,7 +295,7 @@ class ReportController extends BaseController{
                 $param[1]['status'] = 1;
             }
 
-            if($jadwal_kelas_mp == $kelas_mp->count()){
+            if($jadwal_kelas_mp == $kelas_mp->count() && $kelas_mp->count() != 0){
                 $param[2]['status'] = 1;
             }
 
@@ -362,16 +362,16 @@ class ReportController extends BaseController{
             $pengeluaran_biaya = PengeluaranBiaya::where('id_semester',$semester_aktif)->count();
             $pembayaran_online = env("WINPAY_PRIVATE_KEY1");
 
-            $param[0]['catatan'] = 'Sudah melakukan generate tagihan siswa (semester yang aktif)';
+            $param[0]['catatan'] = 'Sudah melakukan generate tagihan siswa pada semester yang aktif';
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah melakukan proses pembayaran siswa (semester yang aktif)';
+            $param[1]['catatan'] = 'Sudah melakukan proses pembayaran siswa pada semester yang aktif';
             $param[1]['status'] = 0;
 
-            $param[2]['catatan'] = 'Sudah melakukan input pemasukan dan pengeluaran (semester yang aktif)';
+            $param[2]['catatan'] = 'Sudah melakukan input pemasukan dan pengeluaran pada semester yang aktif';
             $param[2]['status'] = 0;
 
-            $param[3]['catatan'] = 'Sudah menerapkan pembayaran online';
+            $param[3]['catatan'] = 'Sudah menerapkan pembayaran online (lewat alfamart, indomaret , virtual account bank)';
             $param[3]['status'] = 0;
 
             if($tagihan_siswa) $param[0]['status'] = 1;
@@ -450,10 +450,10 @@ class ReportController extends BaseController{
 
             $calon_siswa_online = CalonSiswaBaru::whereIn('id_penerimaan',$penerimaan_online->pluck('id_penerimaan'))->count();
 
-            $param[0]['catatan'] = 'Sudah pernah melakukan penerimaan secara online';
+            $param[0]['catatan'] = 'Sudah pernah melakukan penerimaan secara online pada tahun '.$tahun_semester_aktif;
             $param[0]['status'] = 0;
 
-            $param[1]['catatan'] = 'Sudah ada siswa yang mendaftar pada penerimaan secara online';
+            $param[1]['catatan'] = 'Sudah ada siswa yang mendaftar pada penerimaan secara online pada tahun '.$tahun_semester_aktif;
             $param[1]['status'] = 0;
 
             if($penerimaan_online->count()){
@@ -484,7 +484,7 @@ class ReportController extends BaseController{
 
             $presensi_ekskul = PresensiEkskul::where('id_semester',$semester_aktif)->count();
 
-            $param[0]['catatan'] = 'Sudah melakukuan absensi ekskul';
+            $param[0]['catatan'] = 'Sudah melakukuan absensi ekskul pada semester yang aktif';
             $param[0]['status'] = 0;
 
             if($presensi_ekskul){
