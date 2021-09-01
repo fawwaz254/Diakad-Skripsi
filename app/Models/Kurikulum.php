@@ -38,7 +38,15 @@ class Kurikulum extends Model
     protected $guarded = [];
 
 
+    public function jurusan()
+    {
+        return $this->belongsTo(Jurusan::class, 'id_jurusan');
+    }
 
+    public function mapel()
+    {
+        return $this->hasMany(KurikulumMp::class, 'id_kurikulum');
+    }
 
 
 

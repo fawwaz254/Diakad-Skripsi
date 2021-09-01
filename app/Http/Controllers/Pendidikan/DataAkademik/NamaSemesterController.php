@@ -56,7 +56,7 @@ class NamaSemesterController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $list_data = $semester = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->orderBy('thn_akademik_semester', 'desc')->orderBy('nm_semester', 'desc')->get();
 
         return Datatables::of($list_data)
                 ->addColumn('status_aktif', function($item){
