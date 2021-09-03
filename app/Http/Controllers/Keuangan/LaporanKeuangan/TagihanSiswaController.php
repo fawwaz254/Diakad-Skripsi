@@ -70,6 +70,8 @@ class TagihanSiswaController extends BaseController
 
         $id_semester_mulai = $semester_mulai->id_semester;
         $id_semester_selesai = $semester_selesai->id_semester;
+
+        $list_data = array();
         
         if (!empty($id_semester_mulai) && !empty($id_semester_selesai)) {
             $data_detail_biaya = DetailBiaya::with('bulan')->whereHas('biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
@@ -77,19 +79,16 @@ class TagihanSiswaController extends BaseController
             })->get();
 
             $list_data = Siswa::with(['tagihan_biaya' => function($q) use ($data_detail_biaya){
-                $q->where('is_tagih', 1)
-                    ->with('pembayaran')
-                    ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
-            }])
-            ->with('pengguna', 'kelas');
+                                    $q->where('is_tagih', 1)
+                                        ->with('pembayaran')
+                                        ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
+                                },'pengguna','kelas','tagihan_biaya.potongan']);
 
             if(!empty($kelas)){
                 $list_data = $list_data->whereHas('kelas', function($q) use ($kelas){
                     $q->where('id_kelas', $kelas);
                 });
             }
-        }else{
-            $list_data = array();
         }
 
         return Datatables::of($list_data)
