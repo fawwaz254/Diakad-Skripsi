@@ -30,6 +30,8 @@ class ForgetPasswordController extends BaseController
 
 		$input = (object) $request->input();
 
+		DB::beginTransaction();
+
         try {
 
         	$sekolah = Sekolah::orderBy('id_sekolah')->first();
@@ -52,6 +54,8 @@ class ForgetPasswordController extends BaseController
 	                $message->to($input->email)->subject('[Diakad '.$sekolah->nm_sekolah.'] Link Reset Password');
 	            });
 
+	            DB::commit();
+
 	            return [
                     'status' => 200,
                     'message' => 'Silahkan cek email anda untuk melakukan reset password'
@@ -72,7 +76,9 @@ class ForgetPasswordController extends BaseController
 
         catch (Exception $e) {
 
-        	return $e->getMessage();
+        	DB::rollback();
+
+        	return (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error';
 
         }
 
