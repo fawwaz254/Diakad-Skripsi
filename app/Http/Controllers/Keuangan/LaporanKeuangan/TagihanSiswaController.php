@@ -101,7 +101,7 @@ class TagihanSiswaController extends BaseController
                     });
                     return 'Rp'.number_format($item->tagihan_biaya->sum('besar_biaya') - $sumPembayaran - $diskonTagihan);
                 })
-                ->addColumn('tagihan_bulan', function ($item) use ($data_detail_biaya) {
+                ->addColumn('tagihan_bulan', function ($item) use ($data_detail_biaya,$tahun) {
                     $array_tagihan_bulan = array();
                     foreach($item->tagihan_biaya as $tagihan){
                         // dd($tagihan);
@@ -115,7 +115,7 @@ class TagihanSiswaController extends BaseController
                         if($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->id_jenis_detail_biaya == 4){
                             $tagihan_bulan['id_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->bulan->id_bulan;
                             $tagihan_bulan['nm_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->bulan->nm_bulan;
-                            $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'];
+                            $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'].' '.$tahun;
                         }else{
                             $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya)->keterangan_biaya;
                         }
