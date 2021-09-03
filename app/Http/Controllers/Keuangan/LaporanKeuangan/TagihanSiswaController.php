@@ -81,7 +81,7 @@ class TagihanSiswaController extends BaseController
                     ->with('pembayaran')
                     ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
             }])
-            ->with('pengguna', 'kelas','tagihan_biaya.potongan');
+            ->with('pengguna', 'kelas');
 
             if(!empty($kelas)){
                 $list_data = $list_data->whereHas('kelas', function($q) use ($kelas){
