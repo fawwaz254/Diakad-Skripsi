@@ -72,7 +72,11 @@ class PrestasiSiswaController extends BaseController
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_guru = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-        $prestasi = PrestasiSiswa::join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_prestasi_siswa', '=', $id_prestasi_siswa)->first();
+
+        $prestasi = PrestasiSiswa::join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                        ->leftjoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                        ->where('id_prestasi_siswa', '=', $id_prestasi_siswa)->first();
 
         // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
@@ -97,6 +101,7 @@ class PrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
+            'prestasi_siswa.link_sertif_prestasi_siswa',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
@@ -163,7 +168,8 @@ class PrestasiSiswaController extends BaseController
               })
                 ->addColumn('action', function ($item) {
                     $data = array(
-                        'id' => $item->id_prestasi_siswa
+                        'id' => $item->id_prestasi_siswa,
+                        'link_sertif_prestasi_siswa' => $item->link_sertif_prestasi_siswa
                     );
                     return $data;
                 })
