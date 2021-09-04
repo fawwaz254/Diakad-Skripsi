@@ -1,14 +1,18 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <button type="button" id="button2" onclick="datatable(2)" class="btn btn-default">
+                Data SKPI Semua Siswa
+            </button>
             <button type="button" id="button0" onclick="datatable(0)" class="btn btn-primary">
-                Approve / Reject
+                Siswa yang memiliki prestasi / kegiatan
             </button>
              <button type="button" id="button1" onclick="datatable(1)" class="btn btn-default">
-                Belum di approve
+                Siswa yang menunggu approval
             </button>
 
             <input type="hidden" id="param" value="0">
+            <input type="hidden" id="param_semua_siswa" value="0">
             <input type="hidden" name="role" id="role" value="{{Request::segment(1)}}">
 
             <p></p>
@@ -51,15 +55,28 @@
 
         if(id==0){
             $('#param').val(0);
-            $('#button1').removeClass('btn btn-primary').addClass('btn btn-default');
+            $('#param_semua_siswa').val(0);
             $('#button0').removeClass('btn btn-default').addClass('btn btn-primary');
+            $('#button1').removeClass('btn btn-primary').addClass('btn btn-default');
+            $('#button2').removeClass('btn btn-primary').addClass('btn btn-default');
             primary_table.draw();
         }
 
-        else{
+        else if(id==1){
             $('#param').val(1);
+            $('#param_semua_siswa').val(0);
             $('#button0').removeClass('btn btn-primary').addClass('btn btn-default');
             $('#button1').removeClass('btn btn-default').addClass('btn btn-primary');
+            $('#button2').removeClass('btn btn-primary').addClass('btn btn-default');
+            primary_table.draw();
+        }
+
+        else if(id==2){
+            $('#param').val(0);
+            $('#param_semua_siswa').val(1);
+            $('#button0').removeClass('btn btn-primary').addClass('btn btn-default');
+            $('#button1').removeClass('btn btn-primary').addClass('btn btn-default');
+            $('#button2').removeClass('btn btn-default').addClass('btn btn-primary');
             primary_table.draw();
         }
 
@@ -74,7 +91,8 @@
             type: 'GET',
             data:function(d){
                 d.param = $('#param').val(),
-                d.role = $('#role').val()
+                d.role = $('#role').val(),
+                d.param_semua_siswa = $('#param_semua_siswa').val()
             }
         },
         columns: [
