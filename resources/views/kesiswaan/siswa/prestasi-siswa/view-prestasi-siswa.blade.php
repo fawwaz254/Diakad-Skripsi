@@ -29,6 +29,7 @@
                                         <th>Kelas</th>
                                         <th>Lokasi</th>
                                         <th>Penyelenggara</th>
+                                        <th>Link Sertifikat</th>
                                         <th>Tanggal</th>
                                         <th>Ekstrakurikuler</th>
                                         <th>Guru Pendamping</th>
@@ -76,6 +77,11 @@
             { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'lokasi_prestasi_siswa', name: 'lokasi_prestasi_siswa' },
             { data: 'penyelenggara_prestasi_siswa', name: 'penyelenggara_prestasi_siswa' },
+            { data: 'action', name: 'link_sertif_prestasi_siswa', searchable: false, orderable: false,
+                render:function(data){
+                    return '<a target="_blank" href="'+ data.link_sertif_prestasi_siswa +'">'+data.link_sertif_prestasi_siswa+'</a>';
+                }
+            },
             { data: 'tgl_prestasi_siswa', name: 'tgl_prestasi_siswa' },
             { data: 'nm_ekskul', name: 'nm_ekskul' },
             { data: 'nm_guru_pendamping', name: 'nm_guru_pendamping' },

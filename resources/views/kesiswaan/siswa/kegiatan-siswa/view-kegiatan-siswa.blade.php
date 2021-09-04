@@ -62,9 +62,7 @@
             { data: 'penyelenggara_kegiatan_siswa', name: 'penyelenggara_kegiatan_siswa'},
             { data: 'action', name: 'nm_kegiatan_siswa', searchable: false, orderable: false,
                 render:function(data){
-                    return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" target="_blank" href="'+ data.link_sertifikat +'">'+
-                    '    <i class="material-icons">link</i>'+
-                    '</a>';
+                    return '<a target="_blank" href="'+ data.link_sertifikat +'">'+data.link_sertifikat+'</a>';
                 }
             },
             { data: 'action', name: 'action', searchable: false, orderable: false,
