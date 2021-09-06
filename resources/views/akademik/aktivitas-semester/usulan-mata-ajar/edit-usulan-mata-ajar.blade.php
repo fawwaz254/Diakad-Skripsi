@@ -203,11 +203,11 @@
                         <div class="demo-color-box bg-success">
                                 Informasi Penanggungjawab Mata Pelajaran 
                         </div>
-                        <h2 class="card-inside-title">
-                            Penanggungjawab Mata Ajar
-                        </h2>
+
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Penanggungjawab Mata Ajar</label>
                                 <select class="form-control show-tick select2" name="pjma" required  style="width:100%;">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
@@ -223,12 +223,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Tim PJMA 1
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Tim PJMA 1</label>
                                 <select class="form-control show-tick select2" name="pjma_tim1" style="width:100%;">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
@@ -244,13 +241,9 @@
                                      @endforeach
                                 </select>
                             </div>
-                        </div>
-    
-                        <h2 class="card-inside-title">
-                            Tim PJMA 2
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Tim PJMA 2</label>
                                 <select class="form-control show-tick select2" name="pjma_tim2" style="width:100%;">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
@@ -266,7 +259,9 @@
                                     @endforeach
                                 </select>
                             </div>
+
                         </div>
+    
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
