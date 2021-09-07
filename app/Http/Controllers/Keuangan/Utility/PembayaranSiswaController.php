@@ -685,10 +685,20 @@ class PembayaranSiswaController extends BaseController
                     'path' => 'utility/pembayaran-siswa/view-detail-siswa/'.$input->nis_siswa.'/'.$input->nis_nama_siswa_asli,
                     'message' => 'Save Pembayaran successfully'
                 ];
-            } elseif ($mode == 'lunas') {
-                $tagihanBiaya   = TagihanBiaya::find($id);
+            } 
 
-                $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya - $tagihanBiaya->potongan_biaya;
+            elseif ($mode == 'lunas') {
+
+                $tagihanBiaya   = TagihanBiaya::with('potongan')->find($id);
+
+                if($tagihanBiaya->potongan){
+                    $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya - $tagihanBiaya->potongan->total_potongan;
+                }
+
+                else{
+                    $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
+                }
+                
 
                 $besar_pembayaran_lama = PembayaranBiaya::where('id_tagihan_biaya', '=', $id)
                                             ->sum('besar_pembayaran');
@@ -787,7 +797,9 @@ class PembayaranSiswaController extends BaseController
                         'month' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'n')
                     ]
                 ];
+
             } 
+
             else if($mode == 'diskon'){
                 // dd($request->all());
                 $data = array_merge($request->all(), ['id_tagihan_biaya' => $id]);
