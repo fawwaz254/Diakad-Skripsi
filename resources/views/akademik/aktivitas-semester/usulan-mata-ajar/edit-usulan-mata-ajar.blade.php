@@ -25,45 +25,36 @@
                                 aria-invalid="true" value="{{$kelas_mp->nm_mata_pelajaran}}">
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
-                            Jenis Mapel
-                        </h2>
+                       
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label>Jenis Mapel</label>
                                 <input type="text" class="form-control" name="nm_mata_pelajaran" readonly="" aria-required="true"
                                 aria-invalid="true" value="{{$kelas_mp->nm_jenis_mata_pelajaran}}">
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Kelas
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label> Kelas</label>
                                 <input type="text" class="form-control" name="nm_kelas" readonly="" aria-required="true"
                                 aria-invalid="true" value="{{$kelas_mp->nm_kelas}}">
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Semester
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-3">
+                                <label>Semester</label>
                                 <input type="text" class="form-control" name="semester" readonly="" aria-required="true"
                                 aria-invalid="true" value="{{$kelas_mp->nm_semester}}  {{$kelas_mp->tahun_ajaran}}">
                                 <input type="hidden" name="id_semester" value="{{$kelas_mp->id_semester}}">
                                 <input type="hidden" name="id_mata_pelajaran" value="{{$kelas_mp->id_mata_pelajaran}}">
                                 <input type="hidden" name="id_kelas_mp" value="{{$kelas_mp->id_kelas_mp}}">
                             </div>
-                        </div>
-                         
-                        <h2 class="card-inside-title">
-                            Rencana Pertemuan
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                             <div class="col-md-3">
+                                <label> Rencana Pertemuan</label>
                                 <input type="text" class="form-control" name="jml_pertemuan_kelas_mp" aria-required="true"
                                 aria-invalid="true" value="{{$kelas_mp->jml_pertemuan_kelas_mp}}">
                             </div>
+
                         </div>
                        <!--  <h2 class="card-inside-title">
                             Kapasitas Kelas
@@ -103,578 +94,120 @@
                                 $j++
                             @endphp
                         @endforeach
-                        
+
+                        @for($k=1;$k<=6;$k++)
+
                         <div class="panel">
                             <div class="panel-heading demo-color-box bg-success">
                                 <div class="panel-title">
-                                    <a role="button" data-toggle="collapse" href="#panel_jadwal1">
-                                        <i class="material-icons">date_range</i> Jadwal 1
+                                    <a role="button" data-toggle="collapse" href="#panel_jadwal{{$k}}">
+                                        <i class="material-icons">date_range</i> Jadwal {{$k}}
                                     </a>
                                 </div>
                             </div>
-                            <div id="panel_jadwal1" class="panel-collapse collapse in">
+
+                            <div id="panel_jadwal{{$k}}" class="panel-collapse collapse {{$k==1 ? 'in' : ''}}">
                                 <div class="panel-body">
-                                    <h3 class="card-inside-title">
-                                        Hari
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="hari_jadwal1" required >
-                                                <option value="">-- Pilih Hari --</option>
-                                                @foreach($hari as $data)
-                                                    @if($jml_jadwal < 1)
-                                                        <option value="{{$data->id_jadwal_hari}}">
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_hari}}" @if($jadwal[0]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
+
+                                    <div class="row">
+
+                                        <div class="row clearfix">
+
+                                            <div class="col-md-6">
+                                                <label>Hari</label>
+                                                <select class="form-control show-tick" name="hari_jadwal{{$k}}" required >
+                                                    <option value="">-- Pilih Hari --</option>
+                                                    @foreach($hari as $data)
+                                                        @if($jml_jadwal < $k)
+                                                            <option value="{{$data->id_jadwal_hari}}">
+                                                                {{$data->nm_jadwal_hari}}
+                                                            </option>
+                                                        @else
+                                                            <option value="{{$data->id_jadwal_hari}}" @if($jadwal[$k-1]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
+                                                                {{$data->nm_jadwal_hari}}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label>Ruangan Kelas</label>
+                                                <select class="form-control show-tick select2" name="ruangan{{$k}}" required  style="width:100%;">
+                                                    <option value="">-- Pilih Ruangan Kelas --</option>
+                                                    @foreach($ruangan as $data)
+                                                        @if($jml_jadwal < $k)
+                                                            <option value="{{$data->id_ruangan}}">
+                                                                {{$data->nm_ruangan}} ({{$data->nm_gedung}})
+                                                            </option>
+                                                        @else
+                                                            <option value="{{$data->id_ruangan}}" @if($jadwal[$k-1]->id_ruangan == $data->id_ruangan) selected @endif>
+                                                                {{$data->nm_ruangan}} ({{$data->nm_gedung}})
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                         </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Mulai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal1" required >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 1)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[0]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
+
+                                        <div class="row clearfix">
+
+                                            <div class="col-md-6">
+                                                <label> Jam Mulai</label>
+                                                <select class="form-control show-tick" name="jam_jadwal{{$k}}" required >
+                                                    <option value="">-- Pilih Jam --</option>
+                                                    @foreach($jam as $data)
+                                                        @if($jml_jadwal < $k)
+                                                            <option value="{{$data->id_jadwal_jam}}">
+                                                                {{$data->nm_jadwal_jam}} ( {{$data->jam_mulai}} : {{$data->menit_mulai}} - {{$data->jam_selesai}}:{{$data->menit_selesai}} )
+                                                            </option>
+                                                        @else
+                                                            <option value="{{$data->id_jadwal_jam}}" @if($jadwal[$k-1]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
+                                                               {{$data->nm_jadwal_jam}} ( {{$data->jam_mulai}} : {{$data->menit_mulai}} - {{$data->jam_selesai}}:{{$data->menit_selesai}} )
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label>Jam Selesai</label>
+                                                <select class="form-control show-tick" name="jam_jadwal_selesai{{$k}}" required >
+                                                    <option value="">-- Pilih Jam --</option>
+                                                    @foreach($jam as $data)
+                                                        @if($jml_jadwal < $k)
+                                                            <option value="{{$data->id_jadwal_jam}}">
+                                                               {{$data->nm_jadwal_jam}} ( {{$data->jam_mulai}} : {{$data->menit_mulai}} - {{$data->jam_selesai}} : {{$data->menit_selesai}} )
+                                                            </option>
+                                                        @else
+                                                            <option value="{{$data->id_jadwal_jam}}" @if($jadwal[$k-1]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
+                                                                {{$data->nm_jadwal_jam}} ( {{$data->jam_mulai}} : {{$data->menit_mulai}} - {{$data->jam_selesai}} : {{$data->menit_selesai}} )
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
                                         </div>
+
                                     </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Selesai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal_selesai1" required >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 1)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[0]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Ruangan Kelas
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick select2" name="ruangan1" required  style="width:100%;">
-                                                <option value="">-- Pilih Ruangan Kelas --</option>
-                                                @foreach($ruangan as $data)
-                                                    @if($jml_jadwal < 1)
-                                                        <option value="{{$data->id_ruangan}}">
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_ruangan}}" @if($jadwal[0]->id_ruangan == $data->id_ruangan) selected @endif>
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+ 
                                 </div>
                             </div>
+
                         </div>
-                        <div class="panel">
-                            <div class="panel-heading demo-color-box bg-success">
-                                <div class="panel-title">
-                                    <a role="button" data-toggle="collapse" href="#panel_jadwal2">
-                                        <i class="material-icons">date_range</i> Jadwal 2
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="panel_jadwal2" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h3 class="card-inside-title">
-                                        Hari
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="hari_jadwal2">
-                                                <option value="">-- Pilih Hari --</option>
-                                                @foreach($hari as $data)
-                                                    @if($jml_jadwal < 2)
-                                                        <option value="{{$data->id_jadwal_hari}}">
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_hari}}" @if($jadwal[1]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Mulai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal2">
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 2)
-                                                        <option value="{{$data->id_jadwal_jam}}">{{$data->nm_jadwal_jam}}</option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[1]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Selesai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal_selesai2" >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 2)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[1]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Ruangan Kelas
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick select2" name="ruangan2" style="width:100%;">
-                                                <option value="">-- Pilih Ruangan Kelas --</option>
-                                                @foreach($ruangan as $data)
-                                                    @if($jml_jadwal < 2)
-                                                        <option value="{{$data->id_ruangan}}">{{$data->nm_ruangan}}({{$data->nm_gedung}})</option>
-                                                    @else
-                                                        <option value="{{$data->id_ruangan}}" @if($jadwal[1]->id_ruangan == $data->id_ruangan) selected @endif>
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-heading demo-color-box bg-success">
-                                <div class="panel-title">
-                                    <a role="button" data-toggle="collapse" href="#panel_jadwal3">
-                                        <i class="material-icons">date_range</i> Jadwal 3
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="panel_jadwal3" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h3 class="card-inside-title">
-                                        Hari
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="hari_jadwal3">
-                                                <option value="">-- Pilih Hari --</option>
-                                                @foreach($hari as $data)
-                                                    @if($jml_jadwal < 3)
-                                                        <option value="{{$data->id_jadwal_hari}}">
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_hari}}" @if($jadwal[2]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
-                                                            {{$data->nm_jadwal_hari}} 
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Mulai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal3">
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 3)
-                                                        <option value="{{$data->id_jadwal_jam}}">{{$data->nm_jadwal_jam}}</option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[2]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Selesai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal_selesai3" >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 3)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[2]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Ruangan Kelas
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick select2" name="ruangan3" style="width:100%;">
-                                                <option value="">-- Pilih Ruangan Kelas --</option>
-                                                @foreach($ruangan as $data)
-                                                    @if($jml_jadwal < 3)
-                                                        <option value="{{$data->id_ruangan}}">{{$data->nm_ruangan}}({{$data->nm_gedung}})</option>
-                                                    @else
-                                                        <option value="{{$data->id_ruangan}}" @if($jadwal[2]->id_ruangan == $data->id_ruangan) selected @endif>
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-heading demo-color-box bg-success">
-                                <div class="panel-title">
-                                    <a role="button" data-toggle="collapse" href="#panel_jadwal4">
-                                        <i class="material-icons">date_range</i> Jadwal 4
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="panel_jadwal4" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h3 class="card-inside-title">
-                                        Hari
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="hari_jadwal4">
-                                                <option value="">-- Pilih Hari --</option>
-                                                @foreach($hari as $data)
-                                                    @if($jml_jadwal < 4)
-                                                        <option value="{{$data->id_jadwal_hari}}">
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_hari}}" @if($jadwal[3]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
-                                                            {{$data->nm_jadwal_hari}} 
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Mulai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal4">
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 4)
-                                                        <option value="{{$data->id_jadwal_jam}}">{{$data->nm_jadwal_jam}}</option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[3]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Selesai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal_selesai4" >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 4)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[3]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Ruangan Kelas
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick select2" name="ruangan4" style="width:100%;">
-                                                <option value="">-- Pilih Ruangan Kelas --</option>
-                                                @foreach($ruangan as $data)
-                                                    @if($jml_jadwal < 4)
-                                                        <option value="{{$data->id_ruangan}}">{{$data->nm_ruangan}}({{$data->nm_gedung}})</option>
-                                                    @else
-                                                        <option value="{{$data->id_ruangan}}" @if($jadwal[3]->id_ruangan == $data->id_ruangan) selected @endif>
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-heading demo-color-box bg-success">
-                                <div class="panel-title">
-                                    <a role="button" data-toggle="collapse" href="#panel_jadwal5">
-                                        <i class="material-icons">date_range</i> Jadwal 5
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="panel_jadwal5" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h3 class="card-inside-title">
-                                        Hari
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="hari_jadwal5">
-                                                <option value="">-- Pilih Hari --</option>
-                                                @foreach($hari as $data)
-                                                    @if($jml_jadwal < 5)
-                                                        <option value="{{$data->id_jadwal_hari}}">
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_hari}}" @if($jadwal[4]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
-                                                            {{$data->nm_jadwal_hari}} 
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Mulai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal5">
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 5)
-                                                        <option value="{{$data->id_jadwal_jam}}">{{$data->nm_jadwal_jam}}</option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[4]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Selesai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal_selesai5" >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 5)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[4]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Ruangan Kelas
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick select2" name="ruangan5" style="width:100%;">
-                                                <option value="">-- Pilih Ruangan Kelas --</option>
-                                                @foreach($ruangan as $data)
-                                                    @if($jml_jadwal < 5)
-                                                        <option value="{{$data->id_ruangan}}">{{$data->nm_ruangan}}({{$data->nm_gedung}})</option>
-                                                    @else
-                                                        <option value="{{$data->id_ruangan}}" @if($jadwal[4]->id_ruangan == $data->id_ruangan) selected @endif>
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-heading demo-color-box bg-success">
-                                <div class="panel-title">
-                                    <a role="button" data-toggle="collapse" href="#panel_jadwal6">
-                                        <i class="material-icons">date_range</i> Jadwal 6
-                                    </a>
-                                </div>
-                            </div>
-                            <div id="panel_jadwal6" class="panel-collapse collapse">
-                                <div class="panel-body">
-                                    <h3 class="card-inside-title">
-                                        Hari
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="hari_jadwal6">
-                                                <option value="">-- Pilih Hari --</option>
-                                                @foreach($hari as $data)
-                                                    @if($jml_jadwal < 6)
-                                                        <option value="{{$data->id_jadwal_hari}}">
-                                                            {{$data->nm_jadwal_hari}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_hari}}" @if($jadwal[5]->id_jadwal_hari == $data->id_jadwal_hari) selected @endif>
-                                                            {{$data->nm_jadwal_hari}} 
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Mulai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal6">
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 6)
-                                                        <option value="{{$data->id_jadwal_jam}}">{{$data->nm_jadwal_jam}}</option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[5]->id_jadwal_jam == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Jam Selesai
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick" name="jam_jadwal_selesai6" >
-                                                <option value="">-- Pilih Jam --</option>
-                                                @foreach($jam as $data)
-                                                    @if($jml_jadwal < 6)
-                                                        <option value="{{$data->id_jadwal_jam}}">
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @else
-                                                        <option value="{{$data->id_jadwal_jam}}" @if($jadwal[5]->id_jadwal_jam_selesai == $data->id_jadwal_jam) selected @endif>
-                                                            {{$data->nm_jadwal_jam}}
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <h3 class="card-inside-title">
-                                        Ruangan Kelas
-                                    </h3>
-                                    <div class="row clearfix">
-                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                            <select class="form-control show-tick select2" name="ruangan6" style="width:100%;">
-                                                <option value="">-- Pilih Ruangan Kelas --</option>
-                                                @foreach($ruangan as $data)
-                                                    @if($jml_jadwal < 6)
-                                                        <option value="{{$data->id_ruangan}}">{{$data->nm_ruangan}}({{$data->nm_gedung}})</option>
-                                                    @else
-                                                        <option value="{{$data->id_ruangan}}" @if($jadwal[5]->id_ruangan == $data->id_ruangan) selected @endif>
-                                                            {{$data->nm_ruangan}}({{$data->nm_gedung}})
-                                                        </option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        @endfor
                         
                         <div class="demo-color-box bg-success">
                                 Informasi Penanggungjawab Mata Pelajaran 
                         </div>
-                        <h2 class="card-inside-title">
-                            Penanggungjawab Mata Ajar
-                        </h2>
+
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Penanggungjawab Mata Ajar</label>
                                 <select class="form-control show-tick select2" name="pjma" required  style="width:100%;">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
@@ -690,12 +223,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Tim PJMA 1
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Tim PJMA 1</label>
                                 <select class="form-control show-tick select2" name="pjma_tim1" style="width:100%;">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
@@ -711,13 +241,9 @@
                                      @endforeach
                                 </select>
                             </div>
-                        </div>
-    
-                        <h2 class="card-inside-title">
-                            Tim PJMA 2
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Tim PJMA 2</label>
                                 <select class="form-control show-tick select2" name="pjma_tim2" style="width:100%;">
                                     <option value="">-- Pilih Guru  --</option>
                                     @foreach($pjma as $data)
@@ -733,7 +259,9 @@
                                     @endforeach
                                 </select>
                             </div>
+
                         </div>
+    
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

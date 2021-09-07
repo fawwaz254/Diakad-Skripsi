@@ -152,7 +152,7 @@ class JamKBMController extends BaseController{
                 if($jadwalKelasMp = JadwalKelasMp::where('id_jadwal_jam',$id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Jam KBM'
+                        'message' => 'Gagal mengapus data jam kbm , karena sudah digunakan pada jadwal kelas'
                     ]; 
                 }
                 else {
