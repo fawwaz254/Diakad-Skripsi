@@ -83,7 +83,7 @@
                             <td class="ttd"></td>
                             <td class="ttd"></td>
                             <td class="ttd">
-                                {{ ($auth_data->sekolah_data->alamat_kecamatan !== null) ? $auth_data->sekolah_data->alamat_kecamatan . ',' : null}} {{ \Carbon\Carbon::now()->format('j M Y') }}
+                                {{ ($auth_data->sekolah_data->alamat_kecamatan !== null) ? $auth_data->sekolah_data->alamat_kecamatan . ',' : null}} {{ date_format(new DateTime($pengeluaran->tgl_realisasi), 'j M Y') }}
                             </td>
                         </tr>
                         <tr>
@@ -108,7 +108,7 @@
             </tr>
         </table>
         <div>
-            <p style="font-size: x-small;">Tanggal input: {{ date_format(new DateTime($pengeluaran->tgl_realisasi), 'j M Y') }}</p>
+            <p style="font-size: x-small;">Tanggal sekarang: {{ \Carbon\Carbon::now()->format('j M Y') }}</p>
         </div>
         <div class="clear"></div>
     </div>
