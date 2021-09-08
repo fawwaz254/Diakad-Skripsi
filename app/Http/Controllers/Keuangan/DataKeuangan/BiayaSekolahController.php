@@ -157,7 +157,7 @@ class BiayaSekolahController extends BaseController
             'id_kelompok_biaya' => 'required',
             'id_semester' => 'required',
             //'id_jalur' => 'required',
-            'besar_biaya_sekolah' => 'required',
+            // 'besar_biaya_sekolah' => 'required',
             'validasi_biaya_sekolah' => 'required',
             'keterangan_biaya_sekolah' => 'required',
         ]);
@@ -178,9 +178,9 @@ class BiayaSekolahController extends BaseController
                 $biayaSekolah->id_biaya_sekolah             = $id;
                 $biayaSekolah->id_kelompok_biaya            = $input->id_kelompok_biaya;
                 $biayaSekolah->id_semester                  = $input->id_semester;
-                if (! empty($input->id_jalur)) {
-                    $biayaSekolah->id_jalur                 = $input->id_jalur;
-                }
+                // if (! empty($input->id_jalur)) {
+                //     $biayaSekolah->id_jalur                 = $input->id_jalur;
+                // }
                 // $biayaSekolah->besar_biaya_sekolah          = $input->besar_biaya_sekolah;
                 $biayaSekolah->besar_biaya_sekolah          = 0;
                 $biayaSekolah->validasi_biaya_sekolah       = $input->validasi_biaya_sekolah;
@@ -198,9 +198,9 @@ class BiayaSekolahController extends BaseController
                 $biayaSekolah                               = BiayaSekolah::find($id);
                 $biayaSekolah->id_kelompok_biaya            = $input->id_kelompok_biaya;
                 $biayaSekolah->id_semester                  = $input->id_semester;
-                if (! empty($input->id_jalur)) {
-                    $biayaSekolah->id_jalur                 = $input->id_jalur;
-                }
+                // if (! empty($input->id_jalur)) {
+                //     $biayaSekolah->id_jalur                 = $input->id_jalur;
+                // }
                 // $biayaSekolah->besar_biaya_sekolah          = $input->besar_biaya_sekolah;
                 $biayaSekolah->besar_biaya_sekolah          = 0;
                 $biayaSekolah->validasi_biaya_sekolah       = $input->validasi_biaya_sekolah;

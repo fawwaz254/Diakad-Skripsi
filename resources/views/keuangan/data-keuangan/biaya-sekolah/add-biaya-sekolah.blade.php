@@ -39,7 +39,7 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                       <!--  <h2 class="card-inside-title">
                             Jalur
                             <small>*Opsional Khusus Jalur Tertentu</small>
                         </h2>
@@ -52,7 +52,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                       <!--   <h2 class="card-inside-title">
                             Besar Biaya
                         </h2>

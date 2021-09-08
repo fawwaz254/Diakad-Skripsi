@@ -83,8 +83,8 @@ class KelompokBiayaController extends BaseController{
 
         $validator = Validator::make($request->all(), [
             'nm_kelompok_biaya' => 'required',
-            'keterangan_kelompok_biaya' => 'required',
-            'status_kelompok_biaya' => 'required'
+            'keterangan_kelompok_biaya' => 'required'
+            // 'status_kelompok_biaya' => 'required'
         ]);
         
         if($validator->fails() && $mode != 'delete') {
