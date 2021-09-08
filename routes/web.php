@@ -57,6 +57,12 @@ Route::get('guid', function(){
     return $html;
 });
 
+Route::get('forget-password', 'ForgetPasswordController@index');
+Route::post('send-link-reset-password', 'ForgetPasswordController@sendLinkResetPassword');
+Route::get('check-link-reset-password', 'ForgetPasswordController@checkLinkResetPassword');
+Route::get('reset-password', 'ForgetPasswordController@resetPassword');
+Route::post('reset-password-action', 'ForgetPasswordController@resetPasswordAction');
+
 Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
 Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
 Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionCallback');
