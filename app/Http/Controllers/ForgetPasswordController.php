@@ -40,7 +40,7 @@ class ForgetPasswordController extends BaseController
 			if($check){
 
 				$token = base64_encode(random_bytes(32));
-				$url = "https://".$sekolah->http_host."check-link-reset-password?email=". $input->email . "&token=" .urlencode($token);
+				$url = "https://".$sekolah->http_host."/check-link-reset-password?email=". $input->email . "&token=" .urlencode($token);
 				$link_sekolah = "https://".$sekolah->http_host;
 
 				DB::table('pengguna_token')->insert([
@@ -51,7 +51,9 @@ class ForgetPasswordController extends BaseController
 		        ]);
 
 		        Mail::send('template-email.forget-password', ['nm_sekolah'=>$sekolah->nm_sekolah,'nama' => $check->nm_pengguna, 'url' => $url , 'link_sekolah'=>$link_sekolah], function ($message) use ($input,$sekolah){
-	                $message->to($input->email)->subject('[Diakad '.$sekolah->nm_sekolah.'] Link Reset Password');
+	                $message->to($input->email)
+							->from('noreply@solusimaster.co.id')
+							->subject('[Diakad '.$sekolah->nm_sekolah.'] Link Reset Password');
 	            });
 
 	            DB::commit();
