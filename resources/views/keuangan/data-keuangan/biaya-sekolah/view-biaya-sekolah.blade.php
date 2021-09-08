@@ -49,7 +49,7 @@
                                         <th>No</th>
                                         <th>Nama Kelompok Biaya</th>
                                         <th>Semester</th>
-                                        <th>Jalur</th>
+                                     <!--    <th>Jalur</th> -->
                                         <th>Besar Biaya</th>
                                         <th>Validasi</th>
                                         <th>Keterangan</th>
@@ -98,7 +98,7 @@
             { data: null, searchable: false, orderable: false },
             { data: 'nm_kelompok_biaya', name: 'kelompok_biaya.nm_kelompok_biaya' },
             { data: 'semester', name: 'semester.nm_semester' },
-            { data: 'jalur', name: 'jalur.nm_jalur' },
+            // { data: 'jalur', name: 'jalur.nm_jalur' },
             { data: 'besar_biaya_sekolah', name: 'biaya_sekolah.besar_biaya_sekolah', searchable: false, orderable: false },
             { data: 'validasi_biaya_sekolah', searchable: false, orderable: false },
             { data: 'keterangan_biaya_sekolah', name: 'biaya_sekolah.keterangan_biaya_sekolah' },
