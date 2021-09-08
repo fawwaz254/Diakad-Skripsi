@@ -181,7 +181,8 @@ class BiayaSekolahController extends BaseController
                 if (! empty($input->id_jalur)) {
                     $biayaSekolah->id_jalur                 = $input->id_jalur;
                 }
-                $biayaSekolah->besar_biaya_sekolah          = $input->besar_biaya_sekolah;
+                // $biayaSekolah->besar_biaya_sekolah          = $input->besar_biaya_sekolah;
+                $biayaSekolah->besar_biaya_sekolah          = 0;
                 $biayaSekolah->validasi_biaya_sekolah       = $input->validasi_biaya_sekolah;
                 $biayaSekolah->keterangan_biaya_sekolah     = $input->keterangan_biaya_sekolah;
                 $biayaSekolah->created_by                   = $input->auth_data->pengguna->id_pengguna;
@@ -200,7 +201,8 @@ class BiayaSekolahController extends BaseController
                 if (! empty($input->id_jalur)) {
                     $biayaSekolah->id_jalur                 = $input->id_jalur;
                 }
-                $biayaSekolah->besar_biaya_sekolah          = $input->besar_biaya_sekolah;
+                // $biayaSekolah->besar_biaya_sekolah          = $input->besar_biaya_sekolah;
+                $biayaSekolah->besar_biaya_sekolah          = 0;
                 $biayaSekolah->validasi_biaya_sekolah       = $input->validasi_biaya_sekolah;
                 $biayaSekolah->keterangan_biaya_sekolah     = $input->keterangan_biaya_sekolah;
                 $biayaSekolah->updated_by                   = $input->auth_data->pengguna->id_pengguna;
