@@ -31,14 +31,14 @@
                             Jurusan
                         </h2>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <label>{{$mapel->nm_jurusan}}</label>
+                            <label>@if($mapel->nm_jurusan) {{$mapel->nm_jurusan}} @else Semua Jurusan @endif</label>
                         </div>
-                        <h2 class="card-inside-title">
+                       <!--  <h2 class="card-inside-title">
                             Tingkat Semester
                         </h2>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <label>{{$mapel->tingkat_semester}}</label>
-                        </div>
+                        </div> -->
                         <h2 class="card-inside-title">
                             Kelas
                         </h2>

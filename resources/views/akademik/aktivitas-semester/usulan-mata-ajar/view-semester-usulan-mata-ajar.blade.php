@@ -23,7 +23,7 @@
                                         <th class="search-filter">Kode</th>
                                         <th class="search-filter">Nama Mata Ajar</th>
                                         <th class="search-filter">Jenis Mapel</th>
-                                        <th class="search-filter">Tingkat</th>
+                                        <!-- <th class="search-filter">Tingkat</th> -->
                                         <th class="search-filter">Kelas</th>
                                         <th>Jadwal Hari</th>
                                         <th>Jadwal Jam</th>
@@ -78,7 +78,7 @@
             { data: 'mata_pelajaran.kd_mata_pelajaran' },
             { data: 'mata_pelajaran.nm_mata_pelajaran' },
             { data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
-            { data: 'mata_pelajaran.tingkat_semester' },
+            // { data: 'mata_pelajaran.tingkat_semester' },
             { data: 'kelas.nm_kelas' },
             { data: 'jml_jadwal', searchable: false, orderable: false },
             { data: 'jml_jadwal_jam', searchable: false, orderable: false },
