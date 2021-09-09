@@ -20,6 +20,7 @@ use App\Models\JenisKeahlianLab as JenisKeahlianLab;
 use App\Models\JenisSumberGaji as JenisSumberGaji;
 use App\Models\JenisLembagaPengangkat as JenisLembagaPengangkat;
 use App\Models\GuruPiket as GuruPiket;
+use App\Models\StatusPengguna as StatusPengguna;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -42,7 +43,9 @@ class InputTendikController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sumber-daya/tendik/input-tendik/view-input-tendik',compact('auth_data'));
+        $status = StatusPengguna::where('status_join_table',1)->get();
+
+    	return view('sumber-daya/tendik/input-tendik/view-input-tendik',compact('auth_data','status'));
 
     }
 
@@ -113,7 +116,16 @@ class InputTendikController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = LibTendik::fetchDataAllTendik($auth_data);
+        $list_data = $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
+                    ->join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
+                    ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
+                    ->join('unit_kerja','unit_kerja.id_unit_kerja','=','staff.id_unit_kerja')
+                    ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
+                    ->orderBy('pengguna.nm_pengguna', 'asc');
+
+        if($input->id_status_pengguna){
+            $list_data = $list_data->where('pengguna.id_status_pengguna',$input->id_status_pengguna);
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('nm_pengguna', function($item){
