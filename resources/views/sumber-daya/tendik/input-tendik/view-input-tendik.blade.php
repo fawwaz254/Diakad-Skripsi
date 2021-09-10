@@ -2,6 +2,43 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#tendik/input-tendik/add')}}"><i class="material-icons">note_add</i><span>Input Tendik Baru</span></a></h2>
     </div>
+
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2>FILTER STATUS</h2>
+                </div>
+                <div class="body">
+
+                    <div class="row clearfix">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Status
+                            </h2>
+                            <select class="form-control show-tick" name="id_status_pengguna" id="id_status_pengguna">
+                                <option value="0">-- Semua --</option>
+                                @foreach($status as $r)
+                                    <option value="{{$r->id_status_pengguna}}">{{$r->nm_status_pengguna}}</option>
+                                @endforeach
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-red waves-effect" type="button" onclick="filterData()"><i class="material-icons">save</i><span>Tampilkan</span></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -19,7 +56,7 @@
                                         <th>NIP</th>
                                         <!-- <th>Jabatan</th> -->
                                         <th>Unit Kerja</th>
-                                        <th>Status Aktif</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -32,6 +69,11 @@
     </div>
 </div>
 <script>
+
+    function filterData(){
+        primary_table.draw();
+    }
+
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url       = 'tendik';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'input-tendik/datatables';
@@ -41,10 +83,13 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
-responsive: true,
+        responsive: true,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data : function(d){
+                d.id_status_pengguna = $('select[name=id_status_pengguna]').val()
+            }
         },
         columns: [
             { data: null, searchable: false, orderable: false },

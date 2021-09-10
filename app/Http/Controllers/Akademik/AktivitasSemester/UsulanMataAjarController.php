@@ -95,7 +95,7 @@ class UsulanMataAjarController extends BaseController
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
-        $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+        $mapel      = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
                             ->join('jenis_mata_pelajaran', function ($join) {
                                 $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                                      ->whereNull('jenis_mata_pelajaran.deleted_at');
@@ -116,7 +116,7 @@ class UsulanMataAjarController extends BaseController
 
         $kelas_mp   = KelasMp::with('kelas')->where('id_kelas_mp', '=', $id_kelas_mp)->first();
 
-        $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+        $mapel      = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
                             ->join('jenis_mata_pelajaran', function ($join) {
                                 $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                                     ->whereNull('jenis_mata_pelajaran.deleted_at');
@@ -194,7 +194,7 @@ class UsulanMataAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = MataPelajaran::join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
-            ->join('jurusan', 'mata_pelajaran.id_jurusan', '=', 'jurusan.id_jurusan')
+            ->leftjoin('jurusan', 'mata_pelajaran.id_jurusan', '=', 'jurusan.id_jurusan')
             ->whereNotExists(function ($query) use ($id_semester) {
                 $query->select(DB::raw(1))
                       ->from('kelas_mp')
