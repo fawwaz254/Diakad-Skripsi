@@ -17,7 +17,7 @@
                                 Identitas Pendidik dan Tenaga Pendidik
                         </div>
                         <h2 class="card-inside-title">
-                            Nama Guru
+                            Nama Guru <span style="color:red;">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -273,7 +273,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Unit Kerja
+                            Unit Kerja <span style="color:red;">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -319,7 +319,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            NIP <small><strong>Nomor Induk Pegawai</strong></small>
+                            NIP <span style="color:red;">*</span> <small><strong>Nomor Induk Pegawai</strong></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -547,7 +547,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Status Aktif
+                            Status Aktif <span style="color:red;">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
