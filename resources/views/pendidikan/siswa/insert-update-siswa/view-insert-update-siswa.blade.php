@@ -37,7 +37,7 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <input type="text" class="form-control" name="nisn_siswa" aria-required="true" aria-invalid="true">
+                                        <input type="text" class="form-control" required="" name="nisn_siswa" aria-required="true" aria-invalid="true">
                                     </div>
                                 </div>
                                 <h2 class="card-inside-title">
@@ -53,7 +53,7 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="jenis_kelamin" id="jenis_kelamin">
+                                        <select class="form-control show-tick" required="" name="jenis_kelamin" id="jenis_kelamin">
                                             <option value="1">Laki-Laki</option>
                                             <option value="2">Perempuan</option>
                                         </select>
@@ -64,8 +64,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_status_pengguna" id="status_siswa">
-                                              <option value="0">-- Pilih Status Siswa --</option>
+                                        <select class="form-control show-tick" required="" name="id_status_pengguna" id="status_siswa">
+                                              <option value="">-- Pilih Status Siswa --</option>
                                                 @foreach($status_pengguna as $status_siswa)
                                                     <option value="{{$status_siswa->id_status_pengguna}}">{{$status_siswa->nm_status_pengguna}}</option>
                                                 @endforeach
@@ -77,8 +77,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_kelas" id="id_kelas">
-                                              <option value="0">-- Pilih Kelas --</option>
+                                        <select class="form-control show-tick" required="" name="id_kelas" id="id_kelas">
+                                              <option value="">-- Pilih Kelas --</option>
                                                 @foreach($kelas as $kelas)
                                                     <option value="{{$kelas->id_kelas}}">{{$kelas->nm_kelas}}</option>
                                                 @endforeach
@@ -90,8 +90,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="thn_masuk_siswa" id="thn_masuk">
-                                              <option value="0">-- Pilih Tahun Masuk --</option>
+                                        <select class="form-control show-tick" required="" name="thn_masuk_siswa" id="thn_masuk">
+                                              <option value="">-- Pilih Tahun Masuk --</option>
                                                 @foreach($thn_masuk_siswa as $tahun)
                                                     <option value="{{$tahun->thn_masuk_siswa}}">{{$tahun->thn_masuk_siswa}}</option>
                                                 @endforeach
@@ -103,8 +103,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_semester" id="id_semester">
-                                              <option value="0">-- Pilih Semester --</option>
+                                        <select class="form-control show-tick" required="" name="id_semester" id="id_semester">
+                                              <option value="">-- Pilih Semester --</option>
                                                 @foreach($semester as $semester)
                                                     <option value="{{$semester->id_semester}}">{{$semester->nm_semester}} {{$semester->tahun_ajaran}}</option>
                                                 @endforeach
@@ -116,8 +116,8 @@
                                 </h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="id_jalur" id="jalur">
-                                            <option value="0">-- Pilih Jalur --</option>
+                                        <select class="form-control show-tick" required="" name="id_jalur" id="jalur">
+                                            <option value="">-- Pilih Jalur --</option>
                                             @foreach($jalur as $jalur)
                                                 <option value="{{$jalur->id_jalur}}">{{$jalur->nm_jalur}}</option>
                                             @endforeach

@@ -91,7 +91,7 @@ class MataPelajaranController extends BaseController{
             'kd_mata_pelajaran'     => 'required',
             'nm_mata_pelajaran'     => 'required',
             'id_jenis_mata_pelajaran'   => 'required',
-            'nm_mata_pelajaran_en'  => 'required',
+            // 'nm_mata_pelajaran_en'  => 'required',
             //'nm_mata_pelajaran_en'  => 'required',
             // 'kredit_semester'       => 'required',
             // 'kredit_tatap_muka'     => 'required',
@@ -100,7 +100,7 @@ class MataPelajaranController extends BaseController{
             // 'kredit_prak_lapangan'  => 'required',
             // 'kredit_simulasi'       => 'required',
             // 'tingkat_semester'      => 'required',
-            'nilai_kkm'             => 'required'
+            // 'nilai_kkm'             => 'required'
             // 'ada_sap'               => 'required',
             // 'ada_silabus'           => 'required',
             // 'ada_bahan_ajar'        => 'required',
@@ -128,7 +128,9 @@ class MataPelajaranController extends BaseController{
                 $mataPelajaran->kd_mata_pelajaran       = $input->kd_mata_pelajaran;
                 $mataPelajaran->id_jenis_mata_pelajaran = $input->id_jenis_mata_pelajaran;
                 $mataPelajaran->nm_mata_pelajaran       = $input->nm_mata_pelajaran;
-                $mataPelajaran->nm_mata_pelajaran_en    = $input->nm_mata_pelajaran_en;
+                if(isset($input->nm_mata_pelajaran_en)){
+                    $mataPelajaran->nm_mata_pelajaran_en    = $input->nm_mata_pelajaran_en;
+                }
                 // $mataPelajaran->kredit_semester         = $input->kredit_semester;
                 // $mataPelajaran->kredit_tatap_muka       = $input->kredit_tatap_muka;
                 // $mataPelajaran->kredit_praktikum        = $input->kredit_praktikum;
@@ -136,7 +138,7 @@ class MataPelajaranController extends BaseController{
                 // $mataPelajaran->kredit_prak_lapangan    = $input->kredit_prak_lapangan;
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
-                $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
+                // $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
@@ -158,7 +160,9 @@ class MataPelajaranController extends BaseController{
                 $mataPelajaran->kd_mata_pelajaran       = $input->kd_mata_pelajaran;
                 $mataPelajaran->id_jenis_mata_pelajaran = $input->id_jenis_mata_pelajaran;
                 $mataPelajaran->nm_mata_pelajaran       = $input->nm_mata_pelajaran;
-                $mataPelajaran->nm_mata_pelajaran_en    = $input->nm_mata_pelajaran_en;
+                if(isset($input->nm_mata_pelajaran_en)){
+                    $mataPelajaran->nm_mata_pelajaran_en    = $input->nm_mata_pelajaran_en;
+                }
                 // $mataPelajaran->kredit_semester         = $input->kredit_semester;
                 // $mataPelajaran->kredit_tatap_muka       = $input->kredit_tatap_muka;
                 // $mataPelajaran->kredit_praktikum        = $input->kredit_praktikum;
@@ -166,7 +170,7 @@ class MataPelajaranController extends BaseController{
                 // $mataPelajaran->kredit_prak_lapangan    = $input->kredit_prak_lapangan;
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
-                $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
+                // $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;

@@ -21,7 +21,7 @@
                                         <th>Nama Mapel</th>
                                         <th>Jenis Mapel</th>
                                         <th>Jurusan</th>
-                                        <th>Tingkat Semester</th>
+                                       <!--  <th>Tingkat Semester</th> -->
                                         <th>Jenis Mata Pelajaran</th>
                                         <th>Action</th>
                                     </tr>
@@ -58,7 +58,7 @@
             { data: 'nm_mata_pelajaran', name: 'mata_pelajaran.nm_mata_pelajaran' },
             { data: 'nm_jenis_mata_pelajaran', name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
             { data: 'nm_jurusan', name: 'jurusan.nm_jurusan' },
-            { data: 'tingkat_semester', name: 'mata_pelajaran.tingkat_semester' },
+            // { data: 'tingkat_semester', name: 'mata_pelajaran.tingkat_semester' },
             { data: 'nm_jenis_mata_pelajaran', name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
