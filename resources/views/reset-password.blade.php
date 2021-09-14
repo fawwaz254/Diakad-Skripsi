@@ -8,13 +8,6 @@
 <body class="login-page" style="background-image: url({{asset('media/login-bg2.jpeg')}}); background-repeat: no-repeat; background-size: cover; background-color: whitesmoke;">
     <div class="login-box">
         <div class="card is-login">
-
-          @if($message = Session::get('error'))
-          <div class="alert alert-danger alert-block">
-              <strong>{{ $message }}</strong>
-          </div>
-          @endif
-
             <div class="row">
                 <div class="col-md-6 hidden-sm hidden-xs">
                     @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
@@ -26,7 +19,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="body" id="khusus-login">
-                        <form class="form-validation" method="POST" action="{{url('signin')}}">
+                        <form id="form-validation" method="POST" action="{{url('reset-password-action')}}">
                             {{csrf_field()}}
                             <div class="msg" style="font-size:1.5em;line-height:50px">
                                 @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
@@ -39,23 +32,11 @@
                                 <br>
                                 {{$sekolah->nm_sekolah}}
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">
-                                            <i class="material-icons">person</i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            <input type="text" class="form-control" name="username" required="" aria-required="true" aria-invalid="true" value="{{old('username')}}" style="background-color: transparent;">
-                                            <label class="form-label" style="color: #555;">Username</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <center>
+                                <p>Reset Password Email {{session('reset_email')}}</p>
+                            <br>
+                            </center>
+
                             <div class="row clearfix">
                                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                                     <div class="input-group">
@@ -65,28 +46,39 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                    <div class="form-group input-group form-float">
+                                    <div class="form-group form-float">
                                         <div class="form-line">
-                                            <input type="password" class="form-control" name="password" required="" minLength="4" aria-required="true" style="background-color: transparent;">
+                                            <input type="password" class="form-control" name="password" required="" aria-required="true" aria-invalid="true"style="background-color: transparent;">
                                             <label class="form-label" style="color: #555;">Password</label>
                                         </div>
-                                        <span class="input-group-addon">
-                                            <a href="javascript:void(0)" onclick="tooglePassword(this)"><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
-                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <button class="btn btn-block waves-effect" style="background-color:#235789;color:#fff;padding:10px" type="submit">LOGIN</button>
+
+                            <div class="row clearfix">
+                                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">lock</i>
+                                        </span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                    <a href="/forget-password" target="_blank">Lupa Password ?</a>
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <input type="password" class="form-control" name="password_confirmation" required="" aria-required="true" aria-invalid="true"style="background-color: transparent;">
+                                            <label class="form-label" style="color: #555;">Konfirmasi Password</label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <button class="btn btn-block waves-effect" style="background-color:#235789;color:#fff;padding:10px" type="submit">RESET MY PASSWORD</button>
+                                </div>
+                            </div>
+                                           
                         </form>
                     </div>
                 </div>
@@ -104,16 +96,59 @@
 @endsection
 
 @section('js')
-<!-- Javascript -->
-<script>
-function tooglePassword(el) {
-    $(el).find('i').toggleClass("fa-eye fa-eye-slash");
-    var input = $('input[name=password]');
-    if (input.attr("type") == "password") {
-        input.attr("type", "text");
-    } else {
-        input.attr("type", "password");
-    }
-}
+
+<script>    
+    $('#form-validation').validate({
+        rules: {
+            'checkbox': {
+                required: true
+            },
+            'gender': {
+                required: true
+            }
+        },
+        highlight: function (input) {
+            $(input).parents('.form-group').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-group').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $(form).serialize(),
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 205){
+                        $('#modalMaster').modal('hide');
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
+    });
 </script>
 @endsection
