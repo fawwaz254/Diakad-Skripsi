@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            EDIT KURIKULUM
+                            EDIT MATA PELAJARAN
                         </h2>
                     </div>
                     <div class="body">
@@ -17,7 +17,7 @@
                             <div class="row clearfix">
 
                                 <div class="col-md-4">
-                                    <label>Jurusan</label>
+                                    <label>Jurusan <span style="color:red">*</span></label>
                                     <select class="form-control show-tick" name="id_jurusan">
                                         <option value="1" {{$data_mata_pelajaran->id_jurusan==null ? 'selected' : ''}}>Semua Jurusan</option>
                                         @foreach($data_jurusan as $data)
@@ -31,13 +31,13 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label> Kode Mapel</label>
+                                    <label>Kode Mapel <span style="color:red">*</span></label>
                                     <input type="text" class="form-control" name="kd_mata_pelajaran" required="" aria-required="true"
                                         aria-invalid="true" value="{{$data_mata_pelajaran->kd_mata_pelajaran}}">
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label>Nama Mapel</label>
+                                    <label>Nama Mapel <span style="color:red">*</span></label>
                                     <input type="text" class="form-control" name="nm_mata_pelajaran" required="" aria-required="true"
                                         aria-invalid="true" value="{{$data_mata_pelajaran->nm_mata_pelajaran}}">
                                 </div>
@@ -46,8 +46,8 @@
 
                             <div class="row clearfix">
 
-                                <div class="col-md-4">
-                                    <label>Jenis Mapel</label>
+                                <div class="col-md-6">
+                                    <label>Jenis Mapel <span style="color:red">*</span></label>
                                     <select class="form-control show-tick" name="id_jenis_mata_pelajaran">
                                         @foreach($jenis_mapel as $data)
                                             @if($data->id_jenis_mata_pelajaran == $data_mata_pelajaran->id_jenis_mata_pelajaran)
@@ -59,17 +59,17 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-4">
-                                    <label> Nama Mapel English</label>
-                                    <input type="text" class="form-control" name="nm_mata_pelajaran_en" required="" aria-required="true"
+                                <div class="col-md-6">
+                                    <label>Nama Mapel English</label>
+                                    <input type="text" class="form-control" name="nm_mata_pelajaran_en" aria-required="true"
                                         aria-invalid="true" value="{{$data_mata_pelajaran->nm_mata_pelajaran_en}}">
                                 </div>
 
-                                <div class="col-md-4">
+                               <!--  <div class="col-md-4">
                                     <label>Nilai KKM</label>
                                     <input type="number" class="form-control" name="nilai_kkm" required="" aria-required="true" aria-invalid="true"
                                         value="{{$data_mata_pelajaran->nilai_kkm}}">
-                                </div>
+                                </div> -->
 
                               <!--   <div class="col-md-4">
                                     <label>Jam KBM</label>
