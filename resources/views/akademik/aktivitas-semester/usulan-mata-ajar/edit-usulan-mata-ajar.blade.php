@@ -106,7 +106,7 @@
                                 </div>
                             </div>
 
-                            <div id="panel_jadwal{{$k}}" class="panel-collapse collapse {{$k==1 ? 'in' : ''}}">
+                            <div id="panel_jadwal{{$k}}" class="panel-collapse collapse {{$k<=$jml_jadwal ? 'in' : ''}}">
                                 <div class="panel-body">
 
                                     <div class="row">
