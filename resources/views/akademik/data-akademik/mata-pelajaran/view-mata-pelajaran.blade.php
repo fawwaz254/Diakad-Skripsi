@@ -19,7 +19,7 @@
                                         <th>Kode Mapel</th>
                                         <th>Nama Mapel</th>
                                         <th>Jenis Mapel</th>
-                                        <th>KKM</th>
+                                        <!-- <th>KKM</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -52,7 +52,7 @@
             { data: 'kd_mata_pelajaran', name: 'mata_pelajaran.kd_mata_pelajaran' },
             { data: 'nm_mata_pelajaran', name: 'mata_pelajaran.nm_mata_pelajaran' },
             { data: 'nm_jenis_mata_pelajaran', name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
-            { data: 'nilai_kkm', name: 'mata_pelajaran.nilai_kkm' },
+            // { data: 'nilai_kkm', name: 'mata_pelajaran.nilai_kkm' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
