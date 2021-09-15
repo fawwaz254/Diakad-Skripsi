@@ -410,6 +410,7 @@ class InsertUpdateSiswaController extends BaseController
 							'must_change_password' 	=> 1,
 							'status_join_table' 	=> 3,
 							'updated_at' 			=> $now,
+							'email_pengguna'		=> $input->email_pengguna,
 							'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 						]);
 
