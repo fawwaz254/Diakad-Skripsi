@@ -68,6 +68,17 @@
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
+                                    EMAIL SISWA
+                                </h2>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                <input type="email" class="form-control" name="email_pengguna" aria-required="true" aria-invalid="true" value="{{$siswa->email_pengguna}}">
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <h2 class="card-inside-title">
                                     NIK / No. KITAS <small>Nomor Induk Kependudukan yang tercantum pada kartu keluarga, kartu identitas anak, atau KTP (jika sudah memiliki) bagi WNI. Bagi WNA, diisi dengan nomor Kartu Izin Tinggal Terbatas (KITAS)</small>
                                 </h2>
                             </div>
