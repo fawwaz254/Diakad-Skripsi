@@ -375,7 +375,12 @@ class PembayaranSiswaController extends BaseController
         return Datatables::of($list_data)
                 ->editColumn('nm_biaya', function ($item) {
                     if ($item->id_jenis_detail_biaya == 4) {
-                        $ket = $item->nm_biaya.' '.$item->thn_akademik_semester;
+                        if($item->id_bulan < 7){
+                            $ket = $item->nm_bulan.' '.($item->thn_akademik_semester+1);
+                        }
+                        else{
+                            $ket = $item->nm_bulan.' '.$item->thn_akademik_semester;
+                        }
                         return $item->nm_biaya." (".$ket.")";
                     } else {
                         return $item->nm_biaya." ".$item->keterangan;
