@@ -96,7 +96,12 @@
                         <tr>
                             <td>{{$no++}}.</td>
                             @if ($data->id_jenis_detail_biaya == 4) 
-                            <td>{{$data->nm_biaya." (".$data->nm_bulan.")"}}</td>
+                            @if($data->id_bulan <7) 
+                            @php $ket = $data->nm_bulan.' '.($data->thn_akademik_semester+1); @endphp
+                            @else 
+                            @php $ket = $data->nm_bulan.' '.$data->thn_akademik_semester; @endphp
+                            @endif
+                            <td>{{$data->nm_biaya." (".$ket.")"}}</td>
                             @else
                             <td>{{$data->nm_biaya." ".$data->keterangan}}</td>
                             @endif
