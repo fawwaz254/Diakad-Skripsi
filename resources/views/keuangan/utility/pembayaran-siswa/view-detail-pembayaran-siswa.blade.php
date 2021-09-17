@@ -199,7 +199,52 @@
             </div>
             <form id="print" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-belum-terbayar/'.$siswa->id_pengguna) }}" target="_blank" method="GET">
                 <div class="modal-body">
-                    <div class="row form-group">
+
+                    <div class="row">
+                        
+                        <div class="col-md-12">
+                            <label>Tahun</label>
+                            <select class="form-control" name="tahun_tagihan">
+                            @foreach($data_semester as $semester)
+                                @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                <option value="{{$semester->thn_akademik_semester}}" selected>{{$semester->tahun_ajaran}} (Aktif)</option>
+                                @else
+                                <option value="{{$semester->thn_akademik_semester}}">{{$semester->tahun_ajaran}}</option>
+                                @endif>
+                            @endforeach
+                            </select>
+                        </div>
+
+                       <!--  <div class="col-md-4">
+                            <label>Bulan Mulai</label>
+                            <select class="form-control" name="bulan_mulai_tagihan">
+                            @foreach($data_bulan as $bulan)
+                                <option value="{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</option>
+                            @endforeach
+                            </select>
+                        </div> -->
+
+                    </div>
+
+                    <div class="row">
+
+                        <p></p>
+                        <br>
+
+                        <div class="col-md-12">
+                            <label>Bulan</label>
+                            
+                            <p></p>
+                            @foreach($nama_bulan as $key => $bulan)
+                            <input type="checkbox" name="bulan_tagihan[]" id="basic_checkbox_{{$loop->iteration}}" value="{{$index_bulan[$key]}}" class="filled-in"  />
+                            <label for="basic_checkbox_{{$loop->iteration}}" >{{$bulan}}</label>
+                            <br>
+                            @endforeach
+                        </div>
+
+                    </div>
+
+                    <!-- <div class="row form-group">
                         <div class="col">
                             <label for="catatan" class="form-control">Pilih Jenis</label>
                             <select class="form-control" name="type">
@@ -207,7 +252,9 @@
                                 <option value="2">Hanya tagihan hingga bulan ini</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
+
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="submit">Cetak Tagihan Belum Terbayar</button>

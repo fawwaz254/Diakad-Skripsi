@@ -23,6 +23,7 @@ use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
 use App\Models\PotonganBiaya;
 use App\Models\WaliMurid;
+use App\Models\Semester;
 
 use DateTime;
 use Exception;
@@ -112,16 +113,26 @@ class PembayaranSiswaController extends BaseController
         $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan'
+        $semester_mulai = Semester::where('kode_semester', $input->tahun_tagihan.'1')->first()->id_semester;
+        $semester_selesai = Semester::where('kode_semester', $input->tahun_tagihan.'2')->first()->id_semester;
+
+        $bulan_tagihan = $input->bulan_tagihan;
+
+        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan'
         , DB::raw('SUM(pembayaran_biaya.besar_pembayaran) as total_pembayaran')
         )
-            ->join('detail_biaya', function($join){
+            ->join('detail_biaya', function($join) use ($bulan_tagihan){
                 $join->on('detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya');
                 $join->whereNull('detail_biaya.deleted_at');
+                $join->where(function($q) use ($bulan_tagihan){
+                    $q->whereIn('id_bulan',$bulan_tagihan)
+                      ->orWhereNull('id_bulan');
+                });
             })
-            ->join('biaya_sekolah', function($join){
+            ->join('biaya_sekolah', function($join) use ($semester_mulai,$semester_selesai){
                 $join->on('biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah');
                 $join->whereNull('biaya_sekolah.deleted_at');
+                $join->whereIn('id_semester',[$semester_mulai,$semester_selesai]);
             })
             ->join('kelompok_biaya', function($join){
                 $join->on('kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya');
@@ -149,23 +160,23 @@ class PembayaranSiswaController extends BaseController
             })
             ->where('tagihan_biaya.is_request', '=', 0)
             ->where('tagihan_biaya.id_siswa', '=', $siswa->id_siswa)
-            ->groupBy('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan');
+            ->groupBy('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan');
             
-        if($request->type == 2){
-            $list_data->where(function($q) use ($now){
-                $q->where('detail_biaya.id_jenis_detail_biaya', '!=', 4);
-                $q->orWhere(function($w) use ($now){
-                    $w->where('detail_biaya.id_jenis_detail_biaya', 4);
-                    if($now->format('n') <= 6){
-                        $w->where('detail_biaya.id_bulan', '<=', $now->format('n'));
-                        $w->orWhere('detail_biaya.id_bulan', '>', 6);
-                    } else {
-                        $w->where('detail_biaya.id_bulan', '<=', $now->format('n'));
-                        $w->where('detail_biaya.id_bulan', '>', 6);
-                    }
-                });
-            });
-        }
+        // if($request->type == 2){
+        //     $list_data->where(function($q) use ($now){
+        //         $q->where('detail_biaya.id_jenis_detail_biaya', '!=', 4);
+        //         $q->orWhere(function($w) use ($now){
+        //             $w->where('detail_biaya.id_jenis_detail_biaya', 4);
+        //             if($now->format('n') <= 6){
+        //                 $w->where('detail_biaya.id_bulan', '<=', $now->format('n'));
+        //                 $w->orWhere('detail_biaya.id_bulan', '>', 6);
+        //             } else {
+        //                 $w->where('detail_biaya.id_bulan', '<=', $now->format('n'));
+        //                 $w->where('detail_biaya.id_bulan', '>', 6);
+        //             }
+        //         });
+        //     });
+        // }
 
         $list_data = $list_data->orderBy('bulan.id_bulan', 'asc')
             ->orderBy('detail_biaya.id_jenis_detail_biaya', 'asc')
@@ -260,13 +271,15 @@ class PembayaranSiswaController extends BaseController
         $data_biaya = LibDataKeuangan::fetchDataNamaBiaya($auth_data);
         $data_jenis_detail_biaya = LibDataKeuangan::fetchDataJenisDetailBiaya($auth_data);
         $data_bulan = LibDataKeuangan::fetchDataBulan($auth_data);
+        $nama_bulan = ['Juli','Agustus','September','Oktober','November','Desember','Januari','Febuari','Maret','April','Mei','Juni'];
+        $index_bulan = [7,8,9,10,11,12,1,2,3,4,5,6];
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
 
-        return view('keuangan/utility/pembayaran-siswa/view-detail-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'data_semester', 'tahun_akademik_semester','data_biaya_sekolah','data_biaya','data_jenis_detail_biaya','data_bulan'));
+        return view('keuangan/utility/pembayaran-siswa/view-detail-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'data_semester', 'tahun_akademik_semester','data_biaya_sekolah','data_biaya','data_jenis_detail_biaya','data_bulan','nama_bulan','index_bulan'));
     }
 
     public function datatablesTagihanPembayaranSiswa(Request $request, $id_pengguna, $nis_nama_siswa)
@@ -283,7 +296,7 @@ class PembayaranSiswaController extends BaseController
             $tahun = null;
         }
 
-        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'tagihan_biaya.id_potongan_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"), 'potongan_biaya.total_potongan')
+        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'tagihan_biaya.id_potongan_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan','bulan.id_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan', DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya WHERE pembayaran_biaya.id_tagihan_biaya = tagihan_biaya.id_tagihan_biaya AND pembayaran_biaya.deleted_at IS NULL) AS besar_pembayaran"), 'potongan_biaya.total_potongan')
                                 ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
                                 ->join('biaya_sekolah', 'biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah')
                                 ->join('kelompok_biaya', 'kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
@@ -304,7 +317,12 @@ class PembayaranSiswaController extends BaseController
         return Datatables::of($list_data)
                 ->editColumn('nm_biaya', function ($item) {
                     if ($item->id_jenis_detail_biaya == 4) {
-                        $ket = $item->nm_bulan.' '.$item->thn_akademik_semester;
+                        if($item->id_bulan <7){
+                            $ket = $item->nm_bulan.' '.($item->thn_akademik_semester+1);
+                        }
+                        else{
+                            $ket = $item->nm_bulan.' '.$item->thn_akademik_semester;
+                        }
                         return $item->nm_biaya." (".$ket.")";
                     } else {
                         return $item->nm_biaya." ".$item->keterangan;
@@ -370,7 +388,12 @@ class PembayaranSiswaController extends BaseController
         return Datatables::of($list_data)
                 ->editColumn('nm_biaya', function ($item) {
                     if ($item->id_jenis_detail_biaya == 4) {
-                        $ket = $item->nm_biaya.' '.$item->thn_akademik_semester;
+                        if($item->id_bulan < 7){
+                            $ket = $item->nm_bulan.' '.($item->thn_akademik_semester+1);
+                        }
+                        else{
+                            $ket = $item->nm_bulan.' '.$item->thn_akademik_semester;
+                        }
                         return $item->nm_biaya." (".$ket.")";
                     } else {
                         return $item->nm_biaya." ".$item->keterangan;
