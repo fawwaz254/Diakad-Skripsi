@@ -117,7 +117,12 @@ class TagihanSiswaController extends BaseController
                         if($x->id_jenis_detail_biaya == 4){
                             $tagihan_bulan['id_bulan'] = $x->bulan->id_bulan;
                             $tagihan_bulan['nm_bulan'] = $x->bulan->nm_bulan;
-                            $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'];
+                            if($x->bulan->id_bulan <7){
+                                $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'].' '.($tahun+1);
+                            }
+                            else{
+                                $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'].' '.$tahun;
+                            }
                         }else{
                             $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$x->keterangan_biaya;
                         }
@@ -134,6 +139,9 @@ class TagihanSiswaController extends BaseController
     }
 
     public function printTagihanSiswa(Request $request, $tahun, $id_kelas){
+
+        set_time_limit(0);
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -153,8 +161,7 @@ class TagihanSiswaController extends BaseController
             $q->where('is_tagih', 1)
                 ->with('pembayaran')
                 ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
-        }])
-        ->with('pengguna', 'kelas', 'tagihan_biaya.potongan');
+        },'pengguna', 'kelas', 'tagihan_biaya.potongan']);
 
         $list_data = $list_data->whereHas('kelas', function($q) use ($id_kelas){
             $q->where('id_kelas', $id_kelas);
@@ -165,22 +172,24 @@ class TagihanSiswaController extends BaseController
             $tagihan = [];
             
             foreach($data->tagihan_biaya as $tagihan_siswa){
-                $nominal = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->besar_biaya - $tagihan_siswa->pembayaran->sum('besar_pembayaran') - ($tagihan_siswa->potongan->total_potongan ?? 0);
+
+                $x = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya);
+                $nominal = $x->besar_biaya - $tagihan_siswa->pembayaran->sum('besar_pembayaran') - ($tagihan_siswa->potongan->total_potongan ?? 0);
                 
                 $tagihan_bulan['id_bulan'] = 13;
-                $tagihan_bulan['jenis_tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->biaya->nm_biaya;
+                $tagihan_bulan['jenis_tagihan'] = $x->biaya->nm_biaya;
                 $tagihan_bulan['judul'] = $tagihan_bulan['jenis_tagihan'];
                 $tagihan_bulan['belum_bayar'] = $nominal;
                 $tagihan_bulan['total_potongan'] = ($tagihan_siswa->potongan->total_potongan ?? 0);
                 $tagihan_bulan['sudah_bayar'] = $tagihan_siswa->pembayaran->sum('besar_pembayaran');
-                $tagihan_bulan['tagihan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->besar_biaya;
+                $tagihan_bulan['tagihan'] = $x->besar_biaya;
 
-                if($data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->id_jenis_detail_biaya == 4){
-                    $tagihan_bulan['id_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->bulan->id_bulan;
-                    $tagihan_bulan['nm_bulan'] = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->bulan->nm_bulan;
+                if($x->id_jenis_detail_biaya == 4){
+                    $tagihan_bulan['id_bulan'] = $x->bulan->id_bulan;
+                    $tagihan_bulan['nm_bulan'] = $x->bulan->nm_bulan;
                     $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'];
                 }else{
-                    $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)->keterangan_biaya;
+                    $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$x->keterangan_biaya;
                 }
                 $tagihan[] = $tagihan_bulan;
             }
