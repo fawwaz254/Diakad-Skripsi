@@ -166,7 +166,7 @@ class TagihanSiswaController extends BaseController
         });
 
         $all_data = $list_data->get();
-        $all_data = $all_data->map(function($data) use ($data_detail_biaya){
+        $all_data = $all_data->map(function($data) use ($data_detail_biaya,$tahun){
             $tagihan = [];
             
             foreach($data->tagihan_biaya as $tagihan_siswa){
@@ -185,7 +185,14 @@ class TagihanSiswaController extends BaseController
                 if($x->id_jenis_detail_biaya == 4){
                     $tagihan_bulan['id_bulan'] = $x->bulan->id_bulan;
                     $tagihan_bulan['nm_bulan'] = $x->bulan->nm_bulan;
-                    $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'];
+                    if($x->bulan->id_bulan <7){
+                        $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'].' '.($tahun+1);
+                    }
+                    else{
+                        $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$tagihan_bulan['nm_bulan'].' '.$tahun;
+                    }
+
+                    
                 }else{
                     $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$x->keterangan_biaya;
                 }
