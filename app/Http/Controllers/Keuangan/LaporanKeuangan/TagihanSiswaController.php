@@ -140,8 +140,6 @@ class TagihanSiswaController extends BaseController
 
     public function printTagihanSiswa(Request $request, $tahun, $id_kelas){
 
-        set_time_limit(0);
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
