@@ -282,6 +282,26 @@ class UsulanMataAjarController extends BaseController
         return view('akademik/aktivitas-semester/usulan-mata-ajar/copy-semester-usulan-mata-ajar', compact('auth_data', 'id_semester', 'semester', 'data_semester'));
     }
 
+    public function hapusJadwal(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $jadwal               = JadwalKelasMp::find($id);
+        $kelas_mp = $jadwal->id_kelas_mp;
+        $jadwal->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+        $jadwal->save();
+
+        $jadwal->delete();
+
+        return [
+            'status'  => 202, // SUCCESS AND LOAD TABLE
+            'path'    => 'aktivitas-semester/usulan-mata-ajar/edit/'.$kelas_mp,
+            'message' => 'Delete Jadwal Kelas successfully'
+        ];
+
+    }
+
     public function actionUsulanMataAjar(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
