@@ -14,6 +14,19 @@
                     <form id="form-validation" method="POST"
                         action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-setting-kelas-siswa/ganti-kelas/'.$kelas->id_kelas)}}">
                         {{csrf_field()}}
+
+                        <h2 class="card-inside-title">
+                            Apakah anda ingin mengubah semua tagihan dari kelas {{$kelas->nm_kelas}} ke kelas yang anda pilih
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="status_pindah">
+                                    <option value="0">Tidak</option>
+                                    <option value="1">Iya</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <h2 class="card-inside-title">
                             Pindah Ke Kelas :
                         </h2>
