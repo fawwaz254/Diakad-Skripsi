@@ -65,6 +65,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('usulan-mata-ajar/copy/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyUsulanMataAjar');
             Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyJadwalSemesterLain');
 
+            Route::post('usulan-mata-ajar/hapus-jadwal/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@hapusJadwal');
+
             Route::post('action-usulan-mata-ajar/{mode}/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionUsulanMataAjar');
 
             // MENU Monitoring Kelas
