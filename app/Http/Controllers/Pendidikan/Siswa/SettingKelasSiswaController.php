@@ -18,6 +18,7 @@ use App\Models\WaliMurid as WaliMurid;
 use App\Models\StatusPengguna as StatusPengguna;
 use App\Models\Pengguna as Pengguna;
 use App\Models\LogKelasSiswa as LogKelasSiswa;
+use App\Models\TagihanBiaya;
 
 use Auth;
 use DB;
@@ -183,8 +184,31 @@ class SettingKelasSiswaController extends BaseController
                 try {
                     foreach ($input->id_siswa as $id_siswa) {
                         $siswa 				= Siswa::where('id_siswa','=',$id_siswa)->first();
+
+                        $kelas_sebelumnya = $siswa->id_kelas;
+
                         $siswa->id_kelas	= $input->id_kelas;
                         $siswa->save();
+
+                        // ubah tagihan siswa juga ketika status pindah = 1
+
+                        if($input->status_pindah == 1){
+
+                            $tagihan_biaya = TagihanBiaya::where([
+                                'id_siswa' => $id_siswa,
+                                'id_kelas' => $kelas_sebelumnya
+                            ])->get();
+
+                            foreach($tagihan_biaya as $r){
+
+                                $tagihan                   = TagihanBiaya::find($r->id_tagihan_biaya);
+                                $tagihan->id_kelas         = $input->id_kelas;
+                                $tagihan->updated_by       = $input->auth_data->pengguna->id_pengguna;
+                                $tagihan->save();
+
+                            }
+
+                        }
 
                         $logKelasSiswa                          = new LogKelasSiswa;
                         $logKelasSiswa->id_log_kelas_siswa      = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();

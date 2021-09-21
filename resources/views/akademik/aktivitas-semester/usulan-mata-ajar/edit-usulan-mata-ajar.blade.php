@@ -111,6 +111,13 @@
 
                                     <div class="row">
 
+                                        @if($k<=$jml_jadwal)
+
+                                        <div class="row-clearfix">
+                                            <button class="btn btn-danger hapus-jadwal" type="button" data-id="{{$jadwal[$k-1]->id_jadwal_kelas_mp}}"  style="margin-bottom:5px;">Hapus Jadwal Ini</button>
+                                        </div>
+                                        @endif
+
                                         <div class="row clearfix">
 
                                             <div class="col-md-6">
@@ -278,6 +285,56 @@
     </div>
 </div>
 @include('scriptjs')
+
+<script type="text/javascript">
+    $('.hapus-jadwal').click(function(){
+
+        var delete_url = base_url + '/' + role_url + '/aktivitas-semester/usulan-mata-ajar/hapus-jadwal/'+ $(this).data('id');
+
+        $('button').attr('disabled', 'disabled');
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to delete this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: delete_url,
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            primary_table.ajax.reload(null, false);
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            }
+            else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+
+        });
+    });
+</script>
 
 <script>
     $('.select2').select2();
