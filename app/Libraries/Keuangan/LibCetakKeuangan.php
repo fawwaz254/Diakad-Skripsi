@@ -705,22 +705,21 @@ class LibCetakKeuangan{
                         foreach($detailBiayaInternal as $x){
                             // dd($x, $data);
                             $potongan = $data->tagihan_biaya->potongan;
-                            $sisa = $nominalPembayaran -= ($x->besar_biaya - $potongan->detail_potongan
-                                                    ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
-                                                    ->sum('potongan_biaya'));
+
+                            if(!empty($potongan)){
+                                $potongan_biaya = $potongan->detail_potongan
+                                        ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
+                                        ->sum('potongan_biaya');
+                            }else{
+                                $potongan_biaya = 0;
+                            }
+                            $sisa = $nominalPembayaran -= ($x->besar_biaya - $potongan_biaya);
                             $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
                                 'tanggal' => $date->format('Y-m-d'),
-                                'nominal' => ($sisa > ($x->besar_biaya - $potongan->detail_potongan
-                                                    ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
-                                                    ->sum('potongan_biaya'))) 
-                                                ? ($x->besar_biaya - $potongan->detail_potongan
-                                                    ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
-                                                    ->sum('potongan_biaya')) 
+                                'nominal' => ($sisa > ($x->besar_biaya - $potongan_biaya)) 
+                                                ? ($x->besar_biaya - $potongan_biaya) 
                                                 : $x->besar_biaya + $sisa,
-                                'potongan' => $potongan->detail_potongan
-                                                ->where('id_detail_biaya_internal', $x->id_detail_biaya_internal)
-                                                ->sum('potongan_biaya')
-                                                                    ,
+                                'potongan' => $potongan_biaya,
                                 'frekuensi' => $count,
                                 'tipe' => 1,
                                 'nm_tipe' => 'debit',
