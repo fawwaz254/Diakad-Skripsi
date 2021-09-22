@@ -1045,13 +1045,18 @@ class SppController extends BaseController
             $kode_semester_mulai = $tahun.'1';
             $kode_semester_selesai = $tahun.'2';
 
+            $tahun_lalu = $semester_aktif->thn_akademik_semester - 1;
+
             $semester_mulai = Semester::where('kode_semester',$kode_semester_mulai)->first();
             $semester_selesai = Semester::where('kode_semester',$kode_semester_selesai)->first();
+
+            $semester_mulai_tahun_lalu = Semester::where('kode_semester',$tahun_lalu.'1')->first();
+            $semester_selesai_tahun_lalu = Semester::where('kode_semester',$tahun_lalu.'2')->first();
 
             if($mode == 'add') {
 
                 // cek apakah sudah pernah diinput
-                $cek = TutupBukuTahunanBiaya::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester])->first();
+                $cek = TutupBukuTahunanBiaya::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
                 if($cek){
                       return [
@@ -1070,6 +1075,13 @@ class SppController extends BaseController
                 $data->created_by = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
 
+                $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai'=>$semester_mulai_tahun_lalu->id_semester,'id_semester_selesai'=>$semester_selesai_tahun_lalu->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+
+                if($cek){
+                    $cek->sisa_tunggakan_biaya = $data->jml_tunggakan_biaya;
+                    $cek->save();
+                }
+
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-tunggakan-tahun-lalu',
@@ -1079,12 +1091,18 @@ class SppController extends BaseController
 
             }
 
-            elseif($mode == 'edit'){
-
+            elseif($mode == 'edit'){                
                 $data = TutupBukuTahunanBiaya::find($id);
                 $data->jml_tunggakan_biaya = $input->jml_tunggakan_biaya;
                 $data->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
+                
+                $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai'=>$semester_mulai_tahun_lalu->id_semester,'id_semester_selesai'=>$semester_selesai_tahun_lalu->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+                
+                if($cek){
+                    $cek->sisa_tunggakan_biaya = $data->jml_tunggakan_biaya;
+                    $cek->save();
+                }
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -1115,7 +1133,7 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = TutupBukuBulananKas::where('id_bulan',6)->get();
+        $list_data = TutupBukuBulananKas::where('id_bulan',6)->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
         return Datatables::of($list_data)
                 ->addColumn('semester_mulai',function($item){
@@ -1199,7 +1217,7 @@ class SppController extends BaseController
             if($mode == 'add') {
 
                 // cek apakah sudah pernah diinput
-                $cek = TutupBukuBulananKas::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester])->first();
+                $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
                 if($cek){
                       return [
@@ -1222,7 +1240,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save successfully'
                 ];
 
 
@@ -1238,7 +1256,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save successfully'
                 ];
 
             }
