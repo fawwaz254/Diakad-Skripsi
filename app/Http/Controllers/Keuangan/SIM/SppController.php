@@ -1189,7 +1189,7 @@ class SppController extends BaseController
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
             // get semester mulai dan selesai
-            $tahun = $semester_aktif->thn_akademik_semester - 1;
+            $tahun = $semester_aktif->thn_akademik_semester;
             $kode_semester_mulai = $tahun.'1';
             $kode_semester_selesai = $tahun.'2';
 
@@ -1222,7 +1222,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save successfully'
                 ];
 
 
@@ -1238,7 +1238,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save successfully'
                 ];
 
             }
