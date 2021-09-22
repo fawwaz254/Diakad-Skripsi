@@ -1051,7 +1051,7 @@ class SppController extends BaseController
             if($mode == 'add') {
 
                 // cek apakah sudah pernah diinput
-                $cek = TutupBukuTahunanBiaya::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester])->first();
+                $cek = TutupBukuTahunanBiaya::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
                 if($cek){
                       return [
