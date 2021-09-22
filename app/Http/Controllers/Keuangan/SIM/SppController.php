@@ -965,7 +965,7 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = TutupBukuTahunanBiaya::with('semester_mulai','semester_selesai')->get();
+        $list_data = TutupBukuTahunanBiaya::with('semester_mulai','semester_selesai')->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
 
         return Datatables::of($list_data)
                 ->addColumn('semester_mulai',function($item){
