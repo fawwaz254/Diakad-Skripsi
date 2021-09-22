@@ -1045,8 +1045,13 @@ class SppController extends BaseController
             $kode_semester_mulai = $tahun.'1';
             $kode_semester_selesai = $tahun.'2';
 
+            $tahun_lalu = $semester_aktif->thn_akademik_semester - 1;
+
             $semester_mulai = Semester::where('kode_semester',$kode_semester_mulai)->first();
             $semester_selesai = Semester::where('kode_semester',$kode_semester_selesai)->first();
+
+            $semester_mulai_tahun_lalu = Semester::where('kode_semester',$tahun_lalu.'1')->first();
+            $semester_selesai_tahun_lalu = Semester::where('kode_semester',$tahun_lalu.'2')->first();
 
             if($mode == 'add') {
 
@@ -1070,6 +1075,13 @@ class SppController extends BaseController
                 $data->created_by = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
 
+                $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai'=>$semester_mulai_tahun_lalu->id_semester,'id_semester_selesai'=>$semester_selesai_tahun_lalu->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+
+                if($cek){
+                    $cek->sisa_tunggakan_biaya = $data->jml_tunggakan_biaya;
+                    $cek->save();
+                }
+
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-tunggakan-tahun-lalu',
@@ -1079,12 +1091,18 @@ class SppController extends BaseController
 
             }
 
-            elseif($mode == 'edit'){
-
+            elseif($mode == 'edit'){                
                 $data = TutupBukuTahunanBiaya::find($id);
                 $data->jml_tunggakan_biaya = $input->jml_tunggakan_biaya;
                 $data->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
+                
+                $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai'=>$semester_mulai_tahun_lalu->id_semester,'id_semester_selesai'=>$semester_selesai_tahun_lalu->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+                
+                if($cek){
+                    $cek->sisa_tunggakan_biaya = $data->jml_tunggakan_biaya;
+                    $cek->save();
+                }
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT

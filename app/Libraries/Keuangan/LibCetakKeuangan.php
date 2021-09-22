@@ -198,10 +198,10 @@ class LibCetakKeuangan{
         try {
             if($id_bulan_lalu < 7){
                 // Semester lama kurang dari bulan 7
-                $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu])->first();
+                $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
             }else{
                 // Semester ini mulai bulan 7
-                $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
+                $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
             }
 
             foreach($list_data_jml_siswa as $i => $data) {
@@ -209,15 +209,16 @@ class LibCetakKeuangan{
                     'id_semester_mulai' => $id_semester_mulai,
                     'id_semester_selesai' => $id_semester_selesai,
                     'id_bulan' => $id_bulan,
-                    'tingkat' => $data->tingkat
+                    'tingkat' => $data->tingkat,
+                    'created_by' => $auth_data->pengguna->id_pengguna
                 ])->first();
 
                 if($id_bulan_lalu < 7){
                     // Semester lama kurang dari bulan 7
-                    $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat])->first();
+                    $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }else{
                     // Semester ini mulai bulan 7
-                    $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat])->first();
+                    $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
                 
                 if($tutup_buku_bulanan_biaya) {
@@ -447,13 +448,13 @@ class LibCetakKeuangan{
         $sekolah = $auth_data->sekolah_data;
 
         // $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->firstOrFail();
-        $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->firstOrFail();
+        $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->firstOrFail();
         if($id_bulan_lalu < 7){
             // Semester lama kurang dari bulan 7
-            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu])->first();
+            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
         }else{
             // Semester ini mulai bulan 7
-            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
+            $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
         }
 
         $data = [
