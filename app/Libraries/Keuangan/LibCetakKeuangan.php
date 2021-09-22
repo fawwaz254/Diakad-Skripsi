@@ -107,14 +107,18 @@ class LibCetakKeuangan{
             $index_splice = $id_bulan + 5;
             $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
             $index_periode_bulan_ini->all();
+            $where_bayar_bulan_ini_dan_kedepannya = 'AND detail_biaya.id_bulan IN ('.$index_periode_bulan_ini->implode(',').')';
+            $where_bayar_bulan_lalu_dan_belakangnya = 'AND detail_biaya.id_bulan IN ('.$periode_bulan_sekolah->implode(',').')';
+        }else if($id_bulan == 7){
+            $where_bayar_bulan_ini_dan_kedepannya = 'AND detail_biaya.id_bulan IN (7)';
+            $where_bayar_bulan_lalu_dan_belakangnya = '';
         }else{
             $index_splice = $id_bulan - 7;
             $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
             $index_periode_bulan_ini->all();
+            $where_bayar_bulan_ini_dan_kedepannya = 'AND detail_biaya.id_bulan IN ('.$index_periode_bulan_ini->implode(',').')';
+            $where_bayar_bulan_lalu_dan_belakangnya = 'AND detail_biaya.id_bulan IN ('.$periode_bulan_sekolah->implode(',').')';
         }
-
-        $where_bayar_bulan_ini_dan_kedepannya = 'AND detail_biaya.id_bulan IN ('.$index_periode_bulan_ini->implode(',').')';
-        $where_bayar_bulan_lalu_dan_belakangnya = 'AND detail_biaya.id_bulan IN ('.$periode_bulan_sekolah->implode(',').')';
 
         $list_data_pembayaran = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya
                             FROM pembayaran_biaya

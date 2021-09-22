@@ -45,5 +45,7 @@ class TutupBukuBulananKas extends Model
         return $this->belongsTo(Semester::class, 'id_semester_selesai','id_semester');
     }
 
-
+    public function scopeIsInputByPengguna($query, $id_pengguna){
+        return $query->where('tutup_buku_bulanan_kas.created_by', $id_pengguna);
+    }
 }
