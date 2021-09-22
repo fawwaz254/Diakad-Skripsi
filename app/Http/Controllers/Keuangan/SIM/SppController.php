@@ -1189,7 +1189,7 @@ class SppController extends BaseController
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
             // get semester mulai dan selesai
-            $tahun = $semester_aktif->thn_akademik_semester;
+            $tahun = $semester_aktif->thn_akademik_semester - 1;
             $kode_semester_mulai = $tahun.'1';
             $kode_semester_selesai = $tahun.'2';
 
@@ -1199,7 +1199,7 @@ class SppController extends BaseController
             if($mode == 'add') {
 
                 // cek apakah sudah pernah diinput
-                $cek = TutupBukuBulananKas::where(['id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+                $cek = TutupBukuBulananKas::where(['id_bulan' => 6, 'id_semester_mulai'=>$semester_mulai->id_semester,'id_semester_selesai'=>$semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
                 if($cek){
                       return [
