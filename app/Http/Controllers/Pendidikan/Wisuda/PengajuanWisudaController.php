@@ -153,7 +153,8 @@ class PengajuanWisudaController extends BaseController{
         $siswa = Siswa::select('pengajuan_wisuda.id_pengajuan_wisuda','siswa.id_siswa','periode_wisuda.id_periode_wisuda','periode_wisuda.nm_periode_wisuda', 'semester.tahun_ajaran', 'semester.nm_semester', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'pengajuan_wisuda.status_wisuda')
             ->leftJoin('pengajuan_wisuda', function ($join) {
                     $join->on('pengajuan_wisuda.id_siswa','=','siswa.id_siswa')
-                            ->where('pengajuan_wisuda.status_wisuda', '<>', 3);
+                            ->where('pengajuan_wisuda.status_wisuda', '<>', 3)
+                            ->whereNull('pengajuan_wisuda.deleted_at');
                 })
             ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
             ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
