@@ -135,7 +135,11 @@
                     <td>{{ $no++ }}</td>
                     <td>{{ $nm_bayar }}</td>
                     @foreach($data_laporan['tingkat'] as $tingkat)
+                    @if(!empty($data_bayar_non_kbm[$tingkat]))
                     <td style="text-align: right;">{{ number_format($data_bayar_non_kbm[$tingkat]) }}</td>
+                    @else
+                    <td style="text-align: right;">0</td>
+                    @endif
                     @endforeach
                     <td>{{ number_format(collect($data_bayar_non_kbm)->sum()) }}</td>
                 </tr>

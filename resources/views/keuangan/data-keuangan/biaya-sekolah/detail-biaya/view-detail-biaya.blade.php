@@ -21,7 +21,7 @@
                                         <th>Nama Biaya</th>
                                         <th>Besar Biaya</th>
                                         <th>Validasi</th>
-                                        <th>Tag Internal</th>
+                                        <th>Terdiri Dari</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -55,10 +55,15 @@
             { data: 'nm_biaya', name: 'biaya.nm_biaya' },
             { data: 'besar_biaya', name: 'detail_biaya.besar_biaya' },
             { data: 'validasi_biaya', name: 'validasi_biaya', searchable: false, orderable: false },
-            { data: 'action', name: 'action',class:'text-center', searchable: false, orderable: false,
+            { data: 'detail_internal', name: 'detail_internal', searchable: false, orderable: false,
                 render: function(data){
-                    return   '<a class="target-link btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ detail_biaya_internal_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">remove_red_eye</i>'+
+                    var html = `<ol>`;
+                    $.each(JSON.parse(data.detail.replace(/&quot;/g,'"')), function( key, item ) {
+                        html += `<li>${item.nm_detail_biaya_internal} Rp${item.besar_biaya}</li>`;
+                    });
+                    html += `</ol>`;
+                    return   html + '<a class="target-link" href="'+ detail_biaya_internal_url + '/' + data.id +'">'+
+                    '    Edit'+
                     '</a> '
                 }
             },
