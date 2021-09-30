@@ -120,6 +120,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			// Menu Pengajuan Magang
 			Route::get('pengajuan-magang', 'Humas\MagangSiswa\PengajuanMagangController@viewPengajuanMagang');
+			Route::get('pengajuan-magang/import-excel', 'Humas\MagangSiswa\PengajuanMagangController@importExcel');
+			Route::post('pengajuan-magang/import-excel', 'Humas\MagangSiswa\PengajuanMagangController@importExcelAction');
 			Route::get('pengajuan-magang/datatables', 'Humas\MagangSiswa\PengajuanMagangController@datatablesPengajuanMagang');
 			Route::get('pengajuan-magang/add/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\PengajuanMagangController@addPengajuanMagang');
 			Route::get('pengajuan-magang/datatables-list-siswa/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\PengajuanMagangController@datatablesListSiswa');
