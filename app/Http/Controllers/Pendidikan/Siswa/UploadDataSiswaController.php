@@ -50,6 +50,7 @@ class UploadDataSiswaController extends BaseController
 
     	return view('pendidikan/siswa/upload-data-siswa/view-upload-data-siswa',compact('auth_data'));
   	}
+  	
   	public function downloadFileExcel(){
         $file= public_path(). "/excel/ContohFileExcelUploadDataSiswa.xls";
         $headers = [
