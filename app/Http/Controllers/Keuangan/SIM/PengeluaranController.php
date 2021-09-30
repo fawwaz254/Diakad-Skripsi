@@ -95,6 +95,7 @@ class PengeluaranController extends BaseController
                         })
                         ->where('id_semester_mulai', $semester_mulai->id_semester)
                         ->where('id_semester_selesai', $semester_selesai->id_semester)
+                        ->isInputByPengguna($input->auth_data->pengguna->id_pengguna)
                         ->get();
 
         return Datatables::of($list_data)
