@@ -18,6 +18,7 @@ use App\Libraries\Pendidikan\LibMagangSiswa;
 use App\Libraries\Pendidikan\LibSiswa;
 
 use Auth;
+use Excel;
 use DB;
 use Session;
 use Validator;
@@ -35,6 +36,137 @@ class PengajuanMagangController extends BaseController
       $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
       return view('humas/magang-siswa/pengajuan-magang/view-pengajuan-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
+  }
+
+  public function importExcel(Request $request){
+
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+
+    $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
+    $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
+
+    return view('humas/magang-siswa/pengajuan-magang/import-excel',compact('auth_data','data_periode_magang','data_rekanan_magang'));
+
+  }
+
+  public function importExcelAction(Request $request){
+
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+     $validator = Validator::make($request->all(), [
+            'id_rekanan_magang' => 'required',
+            'id_periode_magang' => 'required',
+            'file-excel' => 'required',
+    ]);
+    
+    if($validator->fails() && $mode != 'delete') {
+        return [
+            'status' => 300, // FAILED
+            'message' => $validator->errors()->first()
+        ];
+    }
+
+    else{
+
+        if($request->hasFile('file-excel')){
+
+            $path = $request->file('file-excel')->getRealPath();
+            $data = Excel::load($path)->get();
+
+            if($data->count()){
+
+                DB::beginTransaction();
+                
+                try {
+
+                    foreach ($data as $key => $value) {
+
+                        $siswa = Siswa::where('nis_siswa',$value->nis)->first();
+
+                        if($siswa){
+
+                            if($value->status == 'Waiting Approval'){
+                                $status = 0;
+                            }
+                            elseif($value->status == 'Approve'){
+                                $status = 1;
+                            } 
+                            else{
+                                 return [
+                                    'status'    => 300, // FAILED
+                                    'message'   => "Mohon maaf status yang diizinkan hanya approve dan waiting approval"
+                                ];
+                            }
+
+                            $data                        = new PengajuanSiswaMagang;
+                            $data->id_pengambilan_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->id_siswa              = $siswa->id_siswa;
+                            $data->id_kelas              = $siswa->id_kelas;
+                            $data->id_periode_magang     = $input->id_periode_magang;
+                            $data->id_rekanan_magang     = $input->id_rekanan_magang;
+                            $data->status_apv_pengambilan_magang         = $status;
+                            $data->status_magang         = 0;
+                            $data->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+                        else{
+
+                            return [
+                                'status'    => 300, // FAILED
+                                'message'   => "Mohon maaf siswa dengan nis ".$value->nis." ini tidak ditemikan"
+                            ];
+
+                        }
+
+                    }
+
+                    DB::commit();
+
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'magang-siswa/pengajuan-magang',
+                        'message' => 'Import Magang Siswa successfully'
+                    ];
+
+                }
+
+                catch (\Exception $e) {
+
+                    DB::rollback();
+            
+                    return [
+                        'status'    => 203, // GAGAL
+                        'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                    ];
+                } 
+
+            }
+
+            else{
+
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File excel anda kosong"
+                ];
+
+            }
+
+        }
+
+        else{
+            return [
+                'status'    => 300, // FAILED
+                'message'   => "File Excel tidak ditemukan"
+            ];
+        }
+
+    }
+
   }
 
   public function datatablesPengajuanMagang(Request $request){
