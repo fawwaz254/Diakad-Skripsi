@@ -40,29 +40,71 @@
                 <td colspan=6><h1 align="center">TAGIHAN PEMBAYARAN KELAS {{ $kelas_data->nm_kelas }}<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
-        @foreach($all_data as $siswa)
+
+        @foreach($all_data as $key => $siswa)
         <br><br>
         <table cellspacing="0" cellpadding="10" style="width: 100%; text-align: left;">
+            @if($key==0)
             <tr>
                 <td colspan="3"><b>TAGIHAN PER TANGGAL {{ \Carbon\Carbon::now()->format('j M Y') }}</b></td>
             </tr>
+            @endif
             <tr>
                 <th style="width: 200px;">Siswa</th>
                 <th style="width: 5px;">:</th>
-                <th>{{ $siswa->pengguna->nm_pengguna }}</th>
-            </tr>
-            <tr>
-                <th>Kelas</th>
-                <th>:</th>
-                <th>{{ $siswa->kelas->nm_kelas }}</th>
-            </tr>
-            <tr>
-                <th>Nomor Induk</th>
-                <th>:</th>
-                <th>{{ $siswa->nis_siswa }}</th>
+                <th>{{ $siswa->pengguna->nm_pengguna }} / {{ $siswa->kelas->nm_kelas }} / {{ $siswa->nis_siswa }}</th>
             </tr>
         </table>
-        <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
+
+        <!-- Tagihan SPP -->
+        <h4 style="margin-left: 5px;">Tagihan SPP</h4>
+
+        <span style="margin-left: 5px;">
+
+        @foreach($siswa->tagihan as $key => $tagihan)
+
+        @if($tagihan['id_jenis_detail_biaya'] == 4)
+
+        {{$tagihan['judul']}} ( {{number_format($tagihan['belum_bayar'],0,',','.')}} )
+
+        @if($key>0 & $key!= $loop->last) , @endif
+
+        @endif
+
+        @endforeach
+
+        </span>
+
+        <!-- Tagihan Lain - lain -->
+
+        @php
+
+        $counter = 0;
+
+        @endphp;
+
+        <span style="margin-left: 5px;">
+
+        @foreach($siswa->tagihan as $key => $tagihan)
+
+        @if($tagihan['id_jenis_detail_biaya'] != 4)
+
+        @if($counter == 0)  
+        <h4 style="margin-left: 5px;">Tagihan lain - lain</h4> 
+        @php $counter++ @endphp
+        @endif
+       
+        {{$tagihan['judul']}} ( {{number_format($tagihan['belum_bayar'],0,',','.')}} )
+
+        @if($key>0 & $key!= $loop->last) , @endif
+
+        @endif
+
+        @endforeach
+
+        </span>
+
+      <!--   <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <th style="width: 10px;">No.</th>
                 <th>Nama Biaya</th>
@@ -82,7 +124,8 @@
                 <td colspan="2" align="center"><b>TOTAL</b></td>
                 <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_biaya->sum('besar_biaya') - collect($siswa->tagihan)->sum('sudah_bayar') - collect($siswa->tagihan)->sum('total_potongan') )}}</b></td>
             </tr>
-        </table>
+        </table> -->
+        <hr>
         @endforeach
         <div class="ttd avoid-break">
             {{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }} {{ \Carbon\Carbon::now()->format('j M Y') }} <br><br><br><br> {{ $auth_data->pengguna->nm_pengguna }}
