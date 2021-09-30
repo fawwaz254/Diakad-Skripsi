@@ -201,6 +201,7 @@ class TagihanSiswaController extends BaseController
                 $tagihan_bulan['total_potongan'] = ($tagihan_siswa->potongan->total_potongan ?? 0);
                 $tagihan_bulan['sudah_bayar'] = $tagihan_siswa->pembayaran->sum('besar_pembayaran');
                 $tagihan_bulan['tagihan'] = $x->besar_biaya;
+                $tagihan_bulan['id_jenis_detail_biaya'] = $x->id_jenis_detail_biaya;
 
                 if($x->id_jenis_detail_biaya == 4){
                     $tagihan_bulan['id_bulan'] = $x->bulan->id_bulan;
