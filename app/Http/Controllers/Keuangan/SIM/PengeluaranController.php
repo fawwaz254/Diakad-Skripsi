@@ -242,6 +242,7 @@ class PengeluaranController extends BaseController
 
     public function datatablesMenuTampilkan(Request $request){
         $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
         $tahun = $input->tahun;
         $tgl_awal = $input->tgl_awal;
@@ -254,7 +255,7 @@ class PengeluaranController extends BaseController
         })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
         ->whereDate('tgl_realisasi', '>=', $tgl_awal)
         ->whereDate('tgl_realisasi', '<=', $tgl_akhir)
-        ->isInputByPengguna($input->auth_data->id_pengguna);
+        ->isInputByPengguna($auth_data->pengguna->id_pengguna);
 
         return Datatables::of($list_data)
                     ->editColumn('tgl_realisasi', function ($item) {
