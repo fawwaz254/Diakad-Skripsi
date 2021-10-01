@@ -72,10 +72,12 @@ class LibCetakKeuangan{
                             FROM siswa
                             JOIN kelas ON kelas.id_kelas = siswa.id_kelas
                                 AND kelas.deleted_at IS NULL
+                            JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
+                                AND pengguna.deleted_at IS NULL
                             -- JOIN admisi ON admisi.id_siswa = siswa.id_siswa
                             --     AND admisi.id_semester = ?
                             --     AND admisi.deleted_at IS NULL
-                            JOIN status_pengguna ON status_pengguna.id_status_pengguna = admisi.id_status_pengguna
+                            JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna
                                 AND status_pengguna.aktif_status_pengguna = 1
                                 AND status_pengguna.deleted_at IS NULL
                             WHERE siswa.deleted_at IS NULL
