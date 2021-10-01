@@ -122,7 +122,7 @@ class PengeluaranController extends BaseController
         $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
 
-        if($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first()){
+        if($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first()){
 
         }else{
             $item = null;
