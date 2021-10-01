@@ -272,7 +272,8 @@ class LibCetakKeuangan{
             $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
                 'id_semester_mulai' => $id_semester_mulai,
                 'id_semester_selesai' => $id_semester_selesai,
-                'id_bulan' => $id_bulan
+                'id_bulan' => $id_bulan,
+                'created_by' => $auth_data->pengguna->id_pengguna
             ])->get();
 
             $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
@@ -326,7 +327,7 @@ class LibCetakKeuangan{
 
             $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
 
-            if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first()){
+            if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()){
                 $tutup_buku_bulanan_kas_now->updated_by                   = $auth_data->pengguna->id_pengguna;
             }else{
                 $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
@@ -409,7 +410,7 @@ class LibCetakKeuangan{
             dd((env('APP_DEBUG', 'true') == 'true')? $e->getMessage(). '. In Line: ' . $e->getLine() : 'There is something wrong. Error Code '.$e->getLine());
         }
 
-        $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan ])->orderBy('tingkat')->get();
+        $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan , 'created_by' => $auth_data->pengguna->id_pengguna])->orderBy('tingkat')->get();
 
         $data_realisasi = Rapb::selectRaw('
                                         nm_kategori_rapb, 
