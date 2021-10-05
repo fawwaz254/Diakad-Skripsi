@@ -2,6 +2,7 @@
 // ROLE SEKRETARIAT
 Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'sekretariat'), function() {
+
         Route::get('welcome', 'Sekretariat\WelcomeController@indexWelcome');
 
          Route::group(array('prefix' => 'data-sekretariat'), function() {
@@ -61,6 +62,21 @@ Route::group(array('middleware'=> ['token_staff']), function() {
                  Route::get('/', 'Sekretariat\DataDokumen\DokumenDibagikanController@viewDokumenDibagikan');
             });
             
+        });
+
+        Route::group(array('prefix' => 'manajemen-file'), function() {
+
+            Route::group(array('prefix' => 'data-file'), function() {
+
+                Route::get('/', 'Sekretariat\ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'Sekretariat\ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'Sekretariat\ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'Sekretariat\ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'Sekretariat\ManajemenFile\DataFileController@actionDataFile');
+
+            });
+
         });
 
         Route::group(array('prefix' => 'laporan'), function() {
