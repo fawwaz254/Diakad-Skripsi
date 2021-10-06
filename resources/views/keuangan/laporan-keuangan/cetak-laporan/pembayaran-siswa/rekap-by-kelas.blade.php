@@ -81,18 +81,32 @@
             <tr>
                 <th style="width: 10px;">No.</th>
                 <th>Kelas</th>
-                <th>Frekuensi Bayar</th>
-                <th>Potongan</th>
+                @if(isset($data_laporan['jenis_bayar']))
+                @foreach($data_laporan['jenis_bayar'] as $jenis => $laporan_jenis_bayar)
+                <th>{{$jenis}}</th>
+                @endforeach
+                @endif
+                <th>Total Frekuensi</th>
+                <th>Potongan (*Apabila ada)</th>
                 <th>Jumlah Pembayaran</th>
             </tr>
-            @php 
-                $no = 1;
-            @endphp
+        @php 
+            $no = 1;
+        @endphp
         @if(isset($data_laporan['data']))
             @foreach($data_laporan['data']->groupBy('tagihan_biaya.kelas.nm_kelas') as $kelas => $laporan)
             <tr>
                 <td>{{ $no++ }}</td>
                 <td>{{ $kelas }}</td>
+                @if(isset($data_laporan['jenis_bayar']))
+                @foreach($data_laporan['jenis_bayar'] as $jenis => $laporan_jenis_bayar)
+                @if($laporan_jenis_bayar->where('tagihan_biaya.kelas.nm_kelas', $kelas)->count('id_pembayaran_siswa') > 0)
+                <td style="text-align: right;">{{ $laporan_jenis_bayar->where('tagihan_biaya.kelas.nm_kelas', $kelas)->count('id_pembayaran_siswa') }}x</td>
+                @else
+                <td style="text-align: right;">-</td>
+                @endif
+                @endforeach
+                @endif
                 <td style="text-align: right;">{{ $laporan->count('id_pembayaran_siswa') }}x</td>
                 <td style="text-align: right;">{{ 'Rp ' . number_format($laporan->sum('tagihan_biaya.potongan.total_potongan')) }}</td>
                 <td style="text-align: right;">{{ 'Rp ' . number_format($laporan->sum('besar_pembayaran')) }}</td>
@@ -100,6 +114,11 @@
             @endforeach
             <tr>
                 <th colspan="2" style="text-align: right;">TOTAL</th>
+                @if(isset($data_laporan['jenis_bayar']))
+                @foreach($data_laporan['jenis_bayar'] as $jenis => $laporan_jenis_bayar)
+                <th style="text-align: right;">{{ $laporan_jenis_bayar->count('id_pembayaran_siswa') }}x</th>
+                @endforeach
+                @endif
                 <th style="text-align: right;">{{ $data_laporan['data']->count('id_pembayaran_siswa') . ' x' }}</th>
                 <th style="text-align: right;">{{ 'Rp ' . number_format($data_laporan['data']->sum('tagihan_biaya.potongan.total_potongan')) }}</th>
                 <th style="text-align: right;">{{ 'Rp ' . number_format($data_laporan['data']->sum('besar_pembayaran')) }}</th>

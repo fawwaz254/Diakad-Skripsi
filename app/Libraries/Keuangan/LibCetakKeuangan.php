@@ -1142,7 +1142,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan');
+        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.biaya');
 
         if (!empty($start_date) && !empty($end_date)) {
             $allDataPembayaran = $allDataPembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
@@ -1155,7 +1155,14 @@ class LibCetakKeuangan{
         }
 
         $result = [
-            'data' => $allDataPembayaran
+            'data' => $allDataPembayaran,
+            'jenis_bayar' => $allDataPembayaran->sortBy('tagihan_biaya.detail_biaya.id_bulan')->values()->groupBy(function ($item, $key){
+                if(!empty($item->tagihan_biaya->detail_biaya->id_bulan)){
+                    return $item->tagihan_biaya->detail_biaya->biaya->nm_biaya.' '.$item->tagihan_biaya->detail_biaya->bulan->nm_bulan;
+                }else{
+                    return $item->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                }
+            })
         ];
         // dd($result);
         return $result;

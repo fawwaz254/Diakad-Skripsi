@@ -156,7 +156,6 @@ class CetakLaporanController extends BaseController
         }
         elseif($jenis == 'kelas'){
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerKelas($auth_data, $start_date, $end_date);
-            
             return view('keuangan/laporan-keuangan/cetak-laporan/pembayaran-siswa/rekap-by-kelas', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
         } elseif($jenis == 'tingkat'){
             $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerTingkat($auth_data, $start_date, $end_date);
