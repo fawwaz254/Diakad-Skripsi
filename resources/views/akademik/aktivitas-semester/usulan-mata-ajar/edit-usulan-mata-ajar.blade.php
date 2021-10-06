@@ -46,7 +46,7 @@
                                 aria-invalid="true" value="{{$kelas_mp->nm_semester}}  {{$kelas_mp->tahun_ajaran}}">
                                 <input type="hidden" name="id_semester" value="{{$kelas_mp->id_semester}}">
                                 <input type="hidden" name="id_mata_pelajaran" value="{{$kelas_mp->id_mata_pelajaran}}">
-                                <input type="hidden" name="id_kelas_mp" value="{{$kelas_mp->id_kelas_mp}}">
+                                <input type="hidden" id="id_kelas_mp" name="id_kelas_mp" value="{{$kelas_mp->id_kelas_mp}}">
                             </div>
 
                              <div class="col-md-3">
@@ -275,7 +275,17 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-indigo waves-effect" type="button" id="cek_validasi"><i class="material-icons">search</i><span>Cek Apakah Jadwal Bentrok</span></button>
+                            </div>
+                        </div>
+
+                        <div id="place_message_error">
+                            
+                        </div>
+
+                        <div class="row clearfix" id="lanjutkan_submit" style="display:none">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span id="text_lanjutkan_submit">Lanjtukan Submit</span></button>
                             </div>
                         </div>
                     </div>
@@ -287,6 +297,62 @@
 @include('scriptjs')
 
 <script type="text/javascript">
+
+    $('#cek_validasi').click(function(){
+        $('button').attr('disabled', 'disabled');
+        $.ajax({
+            type : "POST",
+            url  : base_url + '/' + role_url + '/aktivitas-semester/usulan-mata-ajar/cek-jadwal-crash/'+$('#id_kelas_mp').val(),
+            data : $('#form-validation').serialize(),
+            dataType : 'json',
+            success : function(response){
+                console.log(response.message);
+                $('button').removeAttr('disabled');
+
+                if(response.status==200){
+
+                    $('#place_message_error').empty();
+                    if(response.message.length == 0){
+                        $('#place_message_error').html(`
+                            <p><strong>Catatan</strong></p>
+                            <p>Selamat, Jadwal yang anda masukkan tidak ada bentrok dengan jadwal yang lain</p>
+                            <br>
+                        `)
+                        $('#text_lanjutkan_submit').html(`Lanjutkan Submit`);
+                    }
+                    else{
+                        $('#place_message_error').append(`
+                            <p><strong>Catatan</strong></p>
+                        `)
+                        $.each(response.message,function(i,value){
+                            $('#place_message_error').append(`
+                                <p>`+value+`</p>
+                            `)
+                        });
+                        $('#place_message_error').append(`
+                            <br>
+                        `);
+                        $('#text_lanjutkan_submit').html(`Tetap Lanjutkan Submit`);
+                    }
+
+                    $('#lanjutkan_submit').show();
+
+                }
+
+                else{
+
+                    vex.dialog.alert('Silahkan isi terlebih dahulu jadwal beserta PJMA nya');
+
+                }
+
+            },
+            error:function(){
+                $('button').removeAttr('disabled');
+                alert('mohon maaf terjadi kesalahan, silahkan hubungi admin');
+            } 
+        })
+    })
+
     $('.hapus-jadwal').click(function(){
 
         var delete_url = base_url + '/' + role_url + '/aktivitas-semester/usulan-mata-ajar/hapus-jadwal/'+ $(this).data('id');
