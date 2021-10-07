@@ -120,6 +120,14 @@ class CetakPresensiKBMController extends BaseController
             ->get();
 
         return Datatables::of($list_data)
+                ->addColumn('status_plotting',function($item){
+                    if($item->jml_siswa == 0){
+                        return 'Belum Dilakukan Plotting Siswa';
+                    }
+                    else{
+                        return 'Sudah Dilakukan Plotting Siswa';
+                    }
+                })
                 ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_jadwal_kelas_mp
