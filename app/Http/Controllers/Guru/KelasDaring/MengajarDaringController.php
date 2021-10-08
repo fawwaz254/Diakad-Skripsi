@@ -142,7 +142,7 @@ class MengajarDaringController extends BaseController
         $data_materi = PresensiMpMateri::where('id_presensi_mp',$id)->get();
         $peserta = PresensiMpSiswa::with('siswa.pengguna','siswa.kelas')->where('id_presensi_mp',$id)->get();
 
-        return view('guru/kelas-daring/mengajar-daring/view-detail-mengajar-daring', compact('auth_data','data','data_materi','peserta'));
+    return view('guru/kelas-daring/mengajar-daring/view-detail-mengajar-daring', compact('auth_data','data','data_materi','peserta'));
 
     }
 
