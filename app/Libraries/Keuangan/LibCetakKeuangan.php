@@ -72,10 +72,12 @@ class LibCetakKeuangan{
                             FROM siswa
                             JOIN kelas ON kelas.id_kelas = siswa.id_kelas
                                 AND kelas.deleted_at IS NULL
-                            JOIN admisi ON admisi.id_siswa = siswa.id_siswa
-                                AND admisi.id_semester = ?
-                                AND admisi.deleted_at IS NULL
-                            JOIN status_pengguna ON status_pengguna.id_status_pengguna = admisi.id_status_pengguna
+                            JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
+                                AND pengguna.deleted_at IS NULL
+                            -- JOIN admisi ON admisi.id_siswa = siswa.id_siswa
+                            --     AND admisi.id_semester = ?
+                            --     AND admisi.deleted_at IS NULL
+                            JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna
                                 AND status_pengguna.aktif_status_pengguna = 1
                                 AND status_pengguna.deleted_at IS NULL
                             WHERE siswa.deleted_at IS NULL
@@ -272,7 +274,8 @@ class LibCetakKeuangan{
             $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
                 'id_semester_mulai' => $id_semester_mulai,
                 'id_semester_selesai' => $id_semester_selesai,
-                'id_bulan' => $id_bulan
+                'id_bulan' => $id_bulan,
+                'created_by' => $auth_data->pengguna->id_pengguna
             ])->get();
 
             $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
@@ -326,7 +329,7 @@ class LibCetakKeuangan{
 
             $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
 
-            if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first()){
+            if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()){
                 $tutup_buku_bulanan_kas_now->updated_by                   = $auth_data->pengguna->id_pengguna;
             }else{
                 $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
@@ -409,7 +412,7 @@ class LibCetakKeuangan{
             dd((env('APP_DEBUG', 'true') == 'true')? $e->getMessage(). '. In Line: ' . $e->getLine() : 'There is something wrong. Error Code '.$e->getLine());
         }
 
-        $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan ])->orderBy('tingkat')->get();
+        $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan , 'created_by' => $auth_data->pengguna->id_pengguna])->orderBy('tingkat')->get();
 
         $data_realisasi = Rapb::selectRaw('
                                         nm_kategori_rapb, 

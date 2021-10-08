@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+<<<<<<< HEAD
  * Class JenisGedung
+=======
+ * Class Agama
+>>>>>>> manajemen-file
  */
 class CategoryFile extends Model
 {
@@ -16,17 +20,10 @@ class CategoryFile extends Model
 
     protected $primaryKey = 'category_file_id';
 
-	public $timestamps = true;
-
     public $incrementing = false;
     
-    protected $fillable = [
-        'category_file_name',
-        'category_file_explanation',
-        'created_by',
-        'updated_by',
-        'deleted_by'
-    ];
+	public $timestamps = true;
 
     protected $guarded = [];
+
 }

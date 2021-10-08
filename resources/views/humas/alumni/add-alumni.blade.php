@@ -26,12 +26,13 @@
 						action="{{url(Request::segment(1).'/'.Request::segment(2))}}/{{!empty($alumni)? 'update/'.$alumni->id_alumni  : 'store'}}">
 						{{csrf_field()}}
 						<input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : ''}}">
-						<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+						<div class="col-md-8">
 							<h2 class="card-inside-title"> Nama Siswa </h2>
 							<input type="text" class="form-control" name="nama_siswa" aria-required="true"
 								aria-invalid="true" value="{{(!empty($alumni))? $alumni->calon_siswa->nm_c_siswa : ''}}"
 								{{ !empty($alumni) ? 'readonly' : '' }}>
 						</div>
+						
 						<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Jurusan </h2>
 							<div class="form-group">

@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Agama
  */
-class SubCategoryFile extends Model
+class FilePengguna extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'sub_category_file';
+    protected $table = 'file_pengguna';
 
-    protected $primaryKey = 'sub_category_file_id';
+    protected $primaryKey = 'file_pengguna_id';
 
     public $incrementing = false;
-
+    
 	public $timestamps = true;
 
     protected $guarded = [];
