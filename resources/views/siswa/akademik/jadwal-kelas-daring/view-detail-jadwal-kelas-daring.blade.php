@@ -153,10 +153,17 @@
                             </div>
                         </div>
 
-                    </div>  
 
-                    <label>Isi Materi</label>
-                    <textarea name="uraian_materi" id="editor1" class="editor1" rows="10" cols="80">{{$data->uraian_materi}}</textarea>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Catatan</label>
+                                <div class="form-line">
+                                    <textarea rows="4" class="form-control no-resize" ><?php echo strip_tags($data->uraian_materi)?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>  
 
                     @if($data_materi->count()>0)
                     <br>
@@ -288,15 +295,4 @@ var primary_table = null;
             });
         }
     });
-</script>
-
-<script>
-CKEDITOR.replace( 'editor1' );
-
-// custom code to key binding ckeditor
-timer = setInterval(updateDiv,100);
-function updateDiv(){
-    var editorText = CKEDITOR.instances.editor1.getData();
-    $('#editor1').val(editorText);
-}
 </script>
