@@ -70,7 +70,7 @@
 
                     <center>
                         <p>Tugas Saya</p>
-                        <a href="{{Storage::disk('spaces')->url($presensi_mp_siswa->link_tugas)}}" style="font-size:40px;" target="_blank"><i class="material-icons">description</i></a>
+                        <a href="{{Storage::disk('spaces')->url($presensi_mp_siswa->link_tugas)}}" target="_blank"><i class="material-icons" style="font-size:40px;" >description</i></a>
                     </center>
 
                     @else
