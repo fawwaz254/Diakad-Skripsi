@@ -51,7 +51,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('input-dokumen/upload/{id}', 'Sekretariat\DataDokumen\InputDokumenController@uploadInputDokumen');
             Route::get('input-dokumen/datatables', 'Sekretariat\DataDokumen\InputDokumenController@datatablesInputDokumen');
 
-            // //action input dokumen
+            //action input dokumen
             Route::post('action-input-dokumen/{mode}/{id}', 'Sekretariat\DataDokumen\InputDokumenController@actionInputDokumen');
             
             //ajax subkategori
@@ -61,6 +61,31 @@ Route::group(array('middleware'=> ['token_staff']), function() {
                  Route::get('/', 'Sekretariat\DataDokumen\DokumenDibagikanController@viewDokumenDibagikan');
             });
             
+        });
+
+        Route::group(array('prefix' => 'manajemen-file'), function() {
+
+            Route::group(array('prefix' => 'data-kategori'), function() {
+                Route::get('/', 'Sekretariat\ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/add', 'Sekretariat\ManajemenFile\DataKategoriController@addDataKategori');
+                Route::get('/datatables', 'Sekretariat\ManajemenFile\DataKategoriController@datatablesCategoryfile'); 
+                Route::get('/edit/{id}', 'Sekretariat\ManajemenFile\DataKategoriController@editDataKategori'); 
+
+            //action input data kategori
+            Route::post('action-data-kategori/{mode}/{id}', 'Sekretariat\ManajemenFile\DataKategoriController@actionDataKategori');
+
+            });
+
+            Route::group(array('prefix' => 'data-sub-kategori'), function() {
+                Route::get('/', 'Sekretariat\ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'Sekretariat\ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'Sekretariat\ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile'); 
+                Route::get('/edit/{id}', 'Sekretariat\ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+            //action input sub data kategori
+            Route::post('action-data-sub-kategori/{mode}/{id}', 'Sekretariat\ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+
+            });
         });
 
         Route::group(array('prefix' => 'laporan'), function() {
