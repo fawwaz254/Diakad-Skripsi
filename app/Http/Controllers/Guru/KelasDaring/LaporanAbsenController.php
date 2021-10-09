@@ -12,6 +12,7 @@ use App\Models\Guru;
 use App\Models\KelasMp;
 use App\Models\KelasMpGrup;
 use App\Models\PresensiMp;
+use App\Models\Siswa;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -76,7 +77,41 @@ class LaporanAbsenController extends BaseController
 
         $data_presensi = PresensiMp::where('id_kelas_mp',$kelas_mp->id_kelas_mp)->where('is_daring',1)->get();
 
-        return view('guru/kelas-daring/laporan-absen/view-laporan-absen-detail', compact('auth_data','semester_aktif','kelas_mp_grup','id_kelas_mp_grup','data_presensi'));
+        $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
+                        ->join('pengguna', function ($join) {
+                            $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                            ->whereNull('pengguna.deleted_at');
+                        })
+                        ->join('status_pengguna', function ($join) {
+                            $join->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                            ->whereNull('status_pengguna.deleted_at');
+                        })
+                        ->join('pengambilan_mp', function ($join) {
+                            $join->on('pengambilan_mp.id_siswa', '=', 'siswa.id_siswa')
+                            ->whereNull('pengambilan_mp.deleted_at');
+                        })
+                        ->join('kelas_mp', function ($join) {
+                            $join->on('kelas_mp.id_kelas_mp', '=', 'pengambilan_mp.id_kelas_mp')
+                            ->whereNull('kelas_mp.deleted_at');
+                        })
+                        ->join('kelas', function ($join) {
+                            $join->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                            ->whereNull('kelas.deleted_at');
+                        })
+                        ->join('jadwal_kelas_mp', function ($join) {
+                            $join->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                            ->whereNull('jadwal_kelas_mp.deleted_at');
+                        })
+                        ->where('kelas_mp.id_kelas_mp', '=', $kelas_mp->id_kelas_mp);
+
+        $data_siswa = $siswa->where('pengambilan_mp.status_apv_pengambilan_mp', '=', 1)
+                        ->orderBy('siswa.nis_siswa', 'asc')
+                        ->orderBy('kelas.nm_kelas', 'asc')
+                        ->orderBy('kelas.tingkat', 'asc')
+                        ->orderBy('pengguna.nm_pengguna', 'asc')
+                        ->get();
+
+        return view('guru/kelas-daring/laporan-absen/view-laporan-absen-detail', compact('auth_data','semester_aktif','kelas_mp_grup','id_kelas_mp_grup','data_presensi','data_siswa'));
 
     }
 
