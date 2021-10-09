@@ -369,6 +369,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::post('change-status/{id}', 'Guru\KelasDaring\MengajarDaringController@changeStatusMengajarDaring');
             });
 
+            Route::group(array('prefix' => 'laporan-absen'), function () {
+
+                Route::get('/', 'Guru\KelasDaring\LaporanAbsenController@viewLaporanAbsen');
+                Route::get('view/{id}', 'Guru\KelasDaring\LaporanAbsenController@viewLaporanAbsenDetail');
+                Route::post('post-laporan-absen', 'Guru\KelasDaring\LaporanAbsenController@postLaporanAbsen');
+
+            });
+
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
