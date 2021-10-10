@@ -20,15 +20,17 @@
                         <div class="row">
                                 
                             @foreach($file as $r)
+                            @if($r->is_google_drive == 1)
+                            <a href="{{$r->link_file}}" target="_blank" style="color: inherit;text-decoration: inherit; ">
+                            @else
                             <a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank" style="color: inherit;text-decoration: inherit; ">
+                            @endif
                             <div class="col-md-3 folder">
                                 <center>
                                   @if($r->extension_file == 'pdf')
                                   <i class="material-icons" style="color:red;font-size: 45px;">picture_as_pdf</i>
-                                  @elseif($r->extension_file == 'docx')
-                                  <i class="material-icons" style="color:blue;font-size: 45px;">description</i>
                                   @else
-                                  <i class="material-icons" style="color:#DAA520;font-size: 45px;">folder</i>
+                                  <i class="material-icons" style="color:blue;font-size: 45px;">description</i>
                                   @endif                
                                 </center>
                                 <center>
