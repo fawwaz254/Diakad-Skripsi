@@ -175,12 +175,12 @@ class DetailBiayaController extends BaseController{
                         return $item->nm_biaya." ".$item->keterangan_biaya;
                     }
                 })  
-                ->addColumn('nm_biaya_internal', function($item){
-                    if($item->detail_internal->first()){
-                        return $item->nm_kelompok_biaya_internal . ' ('.number_format($item->detail_internal->sum('besar_biaya')).')';
-                    }else{
-                        return '-';
-                    }
+                ->editColumn('detail_internal', function($item){
+                    $data = array(
+                        'id' => $item->id_detail_biaya,
+                        'detail' => $item->detail_internal
+                    );
+                    return $data;
                 })
                 ->addColumn('validasi_biaya', function($item){
                     if($item->validasi_biaya == 0){
