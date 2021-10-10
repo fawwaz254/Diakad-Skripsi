@@ -271,6 +271,10 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('post-rekap-absensi-kelas', 'Guru\WaliKelas\RekapAbsensiKelasController@actionViewRekapAbsensiKelas');
             Route::get('rekap-absensi-kelas/rekap-absensi-kelas-siswa/{id_jadwal_kelas_mp}', 'Guru\WaliKelas\RekapAbsensiKelasController@viewRekapAbsensiKelasSiswa');
 
+            Route::get('rekap-absensi-kelas-daring', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@viewRekapAbsensiKelasDaring');
+            Route::post('post-rekap-absensi-kelas-daring', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@actionViewRekapAbsensiKelasDaring');
+            Route::get('rekap-absensi-kelas-daring/view/{id_kelas_mp_grup}', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@viewDetailRekapAbsensiKelasDaring');
+
             // MENU Home Visit
             Route::get('home-visit', 'Guru\WaliKelas\HomeVisitController@viewHomeVisit');
             Route::get('home-visit/datatables', 'Guru\WaliKelas\HomeVisitController@datatablesHomeVisit');
