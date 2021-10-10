@@ -35,11 +35,30 @@
                             </div>
 
                         </div>
-                       
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>Pilih Upload File Dari Mana</label>
+                                <div class="demo-radio-button">
+                                    <input name="file_from" onchange="change_file_from()" type="radio" id="radio_4" value="1" checked="" class="with-gap" />
+                                    <label for="radio_4">File Dari Komputer</label>
+                                    <input name="file_from" onchange="change_file_from()" type="radio" id="radio_5" value="2" class="with-gap" />
+                                    <label for="radio_5">File Dari Google Drive</label>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="row clearfix" id="place_file">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label>File ( pdf , pptx , docx , xlsx , png , jpg , jpeg | max 5 mb )</label>
-                                <input type="file" class="form-control" required="" name="file" />
+                                <input type="file" class="form-control" name="file" />
+                            </div>
+                        </div>
+
+                         <div class="row clearfix" style="display:none;" id="place_drive">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>Link Google Drive</label>
+                                <input type="text" class="form-control" name="link_google_drive" />
                             </div>
                         </div>
 
@@ -76,6 +95,22 @@
 @include('scriptjs')
 
 <script>    
+
+    function change_file_from(){
+
+        var x = $("input[name='file_from']:checked").val()
+        
+        if(x==1){
+            $('#place_file').show();
+            $('#place_drive').hide();
+        }
+        else{
+            $('#place_file').hide();
+            $('#place_drive').show();
+        }
+
+    }
+
     $('#form-upload').validate({
         rules: {
             'checkbox': {

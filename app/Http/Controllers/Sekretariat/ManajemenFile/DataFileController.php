@@ -78,7 +78,7 @@ class DataFileController extends BaseController
         $list_validator = [
             'judul'         => 'required',
             'keterangan'    => 'required',
-            'file'          => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+            'file_from'     => 'required'
         ];
 
         $validator = Validator::make($request->all(), $list_validator);
@@ -105,15 +105,54 @@ class DataFileController extends BaseController
                 $data->pengguna_id = $id_pengguna;
                 $data->judul = $input->judul;
                 $data->keterangan = $input->keterangan;
-                $data->is_google_drive = 0;
                 $data->sub_category_file_id = $input->sub_category_file_id;
                 $data->created_by = $id_pengguna;
 
-                $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/file-pengguna/'.$id, request()->file, 'public');
-                $data->link_file = $file;
+                if($input->file_from == 1){
 
-                $data->extension_file = $request->file('file')->extension();;
+                    $validator = Validator::make($request->all(), [
+                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+        
+                    if($validator->fails() && $mode != 'delete') {
+
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+
+                    }
+
+
+                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/file-pengguna/'.$id, request()->file, 'public');
+                    $data->link_file = $file;
+
+                    $data->extension_file = $request->file('file')->extension();
+
+                    $data->is_google_drive = 0;
+
+                }
+
+                else{
+
+                    $validator = Validator::make($request->all(), [
+                        'link_google_drive' => 'required'
+                    ]);
+        
+                    if($validator->fails() && $mode != 'delete') {
+
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+
+                    }
+                    
+                    $data->link_file = $input->link_google_drive;
+                    $data->is_google_drive = 1;
+
+                }
 
                 $data->save();
 
