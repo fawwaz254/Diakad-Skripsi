@@ -84,7 +84,8 @@ class JadwalKelasDaringController extends BaseController{
                 return $item->kelas_mp->kelas_mp_grup->nm_kelas_mp_grup;
             })
             ->editColumn('tgl_presensi', function ($item) {
-                return date_format(date_create($item->tgl_presensi.' '.$item->waktu_mulai), "d M Y H:i");
+                // return date_format(date_create($item->tgl_presensi.' '.$item->waktu_mulai), "d M Y H:i");
+                return $item->tgl_presensi.' '.$item->waktu_mulai.' - '.$item->waktu_selesai;
             })
             ->editColumn('jenis_materi', function ($item) {
                 return $item->jenis_materi_to_text();

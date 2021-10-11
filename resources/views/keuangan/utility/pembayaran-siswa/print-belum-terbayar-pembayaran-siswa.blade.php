@@ -86,7 +86,8 @@
                             <th>No.</th>
                             <th>Nama Biaya</th>
                             <th>Besar Tagihan</th>
-                            <th>Frekuensi</th>
+                            <th>Potongan Biaya</th>
+                            <!-- <th>Frekuensi</th> -->
                             <th>Subtotal</th>
                         </tr>
                         @php
@@ -105,8 +106,15 @@
                             @else
                             <td>{{$data->nm_biaya." ".$data->keterangan}}</td>
                             @endif
-                            <td>{{"Rp".number_format($data->besar_pembayaran)}}</td>
-                            <td>1x</td>
+                            <td>{{"Rp".number_format($data->besar_biaya)}}</td>
+                            <td>
+                                @if($data->total_potongan)
+                                {{"Rp".number_format($data->total_potongan)}}
+                                @else
+                                -
+                                @endif
+                            </td>
+                            <!-- <td>1x</td> -->
                             <td>{{"Rp".number_format($data->besar_pembayaran)}}</td>
                         </tr>
                         @endforeach
