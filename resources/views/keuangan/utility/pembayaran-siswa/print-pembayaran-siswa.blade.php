@@ -86,6 +86,7 @@
                             <th>No.</th>
                             <th>Nama Biaya</th>
                             <th>Besar Pembayaran</th>
+                            <th>Potongan Biaya</th>
                             <!-- <th>Frekuensi</th> -->
                             <th>Subtotal</th>
                         </tr>
@@ -103,13 +104,21 @@
                             @else
                             <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                             @endif
-                            <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+                            <td>{{"Rp".number_format($pembayaran_siswa->besar_biaya)}}</td>
+                            <td>
+                                @if($pembayaran_siswa->total_potongan)
+                                {{"Rp".number_format($pembayaran_siswa->total_potongan)}}
+                                @else
+                                -
+                                @endif
+                            </td>
+                            
                             <!-- <td>1x</td> -->
                             <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="3 align="center"><b>TOTAL</b></td>
+                            <td colspan="4 align="center"><b>TOTAL</b></td>
                             <td align="center"><b>{{"Rp".number_format($data_pembayaran_siswa->sum('besar_pembayaran'))}}</b></td>
                         </tr>
                     </table>
