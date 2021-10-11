@@ -55,7 +55,7 @@
                     <input type="hidden" name="id_kelas_mp_grup" value="{{$data->kelas_mp->id_kelas_mp_grup}}">
                     <input type="hidden" name="id_presensi_mp" value="{{$data->id_presensi_mp}}">
 
-                    <label>Isi Materi</label>
+                    <label>Catatan (bisa digunakan untuk pembagian link zoom atau catatan tugas ke murid atau keperluan lainya )</label>
                     <textarea name="uraian_materi" id="editor1" class="editor1" rows="10" cols="80">{{$data->uraian_materi}}</textarea>
 
                     <br>

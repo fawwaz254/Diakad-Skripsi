@@ -61,8 +61,9 @@ class PembayaranSiswaController extends BaseController
             $lebar = $input->lebar;
         }
 
-        $data_pembayaran_siswa = PembayaranBiaya::select('siswa.id_siswa', 'tagihan_biaya.id_tagihan_biaya', 'pembayaran_biaya.id_pembayaran_biaya', 'kelompok_biaya.nm_kelompok_biaya', 's_biaya.tahun_ajaran as tahun_ajaran_biaya', 's_biaya.nm_semester as nm_semester_biaya','s_biaya.thn_akademik_semester', 'jalur.nm_jalur', 'biaya.nm_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 's_bayar.tahun_ajaran as tahun_ajaran_bayar', 's_bayar.nm_semester as nm_semester_bayar', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembayaran_biaya.besar_pembayaran', 'pembayaran_biaya.tgl_pembayaran', 'bank.nm_bank', 'bank_via.nm_bank_via', 'pembayaran_biaya.nomor_transaksi', 'tagihan_biaya.keterangan')
+        $data_pembayaran_siswa = PembayaranBiaya::select('siswa.id_siswa', 'tagihan_biaya.id_tagihan_biaya', 'pembayaran_biaya.id_pembayaran_biaya', 'kelompok_biaya.nm_kelompok_biaya', 's_biaya.tahun_ajaran as tahun_ajaran_biaya', 's_biaya.nm_semester as nm_semester_biaya','s_biaya.thn_akademik_semester', 'jalur.nm_jalur', 'biaya.nm_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 's_bayar.tahun_ajaran as tahun_ajaran_bayar', 's_bayar.nm_semester as nm_semester_bayar', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'pembayaran_biaya.besar_pembayaran', 'pembayaran_biaya.tgl_pembayaran', 'bank.nm_bank', 'bank_via.nm_bank_via', 'pembayaran_biaya.nomor_transaksi', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan')
                     ->join('tagihan_biaya', 'tagihan_biaya.id_tagihan_biaya', '=', 'pembayaran_biaya.id_tagihan_biaya')
+                    ->leftjoin('potongan_biaya','tagihan_biaya.id_potongan_biaya','potongan_biaya.id_potongan_biaya')
                     ->join('siswa', 'siswa.id_siswa', '=', 'tagihan_biaya.id_siswa')
                     ->join('detail_biaya', 'detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya')
                     ->leftJoin('jenis_detail_biaya', 'jenis_detail_biaya.id_jenis_detail_biaya', '=', 'detail_biaya.id_jenis_detail_biaya')
@@ -118,9 +119,10 @@ class PembayaranSiswaController extends BaseController
 
         $bulan_tagihan = $input->bulan_tagihan;
 
-        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan'
+        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan'
         , DB::raw('SUM(pembayaran_biaya.besar_pembayaran) as total_pembayaran')
         )
+            ->leftJoin('potongan_biaya','tagihan_biaya.id_potongan_biaya','potongan_biaya.id_potongan_biaya')
             ->join('detail_biaya', function($join) use ($bulan_tagihan){
                 $join->on('detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya');
                 $join->whereNull('detail_biaya.deleted_at');
@@ -160,7 +162,7 @@ class PembayaranSiswaController extends BaseController
             })
             ->where('tagihan_biaya.is_request', '=', 0)
             ->where('tagihan_biaya.id_siswa', '=', $siswa->id_siswa)
-            ->groupBy('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan');
+            ->groupBy('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan');
             
         // if($request->type == 2){
         //     $list_data->where(function($q) use ($now){
