@@ -362,7 +362,10 @@ class LibSiswa
                         ->orderBy('kelas.tingkat', 'asc')
                         ->orderBy('pengguna.nm_pengguna', 'asc')
                         ->get();
-        } else {
+        } 
+
+        else {
+
             if (! empty($pertemuan_ke)) {
                 $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
                         ->join('pengguna', function ($join) {
@@ -410,7 +413,10 @@ class LibSiswa
                         ->orderBy('kelas.tingkat', 'asc')
                         ->orderBy('pengguna.nm_pengguna', 'asc')
                         ->get();
-            } else {
+            
+            } 
+
+            else {
                 $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
                         ->join('pengguna', function ($join) {
                             $join->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -452,6 +458,7 @@ class LibSiswa
                         ->orderBy('kelas.tingkat', 'asc')
                         ->orderBy('pengguna.nm_pengguna', 'asc')
                         ->get();
+            
             }
         }
 
