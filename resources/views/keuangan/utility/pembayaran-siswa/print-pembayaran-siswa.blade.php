@@ -85,7 +85,7 @@
                         <tr>
                             <th>No.</th>
                             <th>Nama Biaya</th>
-                            <th>Besar Pembayaran</th>
+                            <th>Besar Tagihan</th>
                             <th>Potongan Biaya</th>
                             <!-- <th>Frekuensi</th> -->
                             <th>Jumlah</th>
