@@ -76,7 +76,7 @@
         <table border="0" style="width: 100%;">
             <tr>
                 <td></td>
-                <td><b>PEMBAYARAN TANGGAL {{date_format(date_create($tgl_pembayaran), 'd M Y')}}</b></td>
+                <td><b>Pembayaran Tanggal {{ indonesiaDate(\Carbon\Carbon::parse($tgl_pembayaran)->format('Y-m-d')) }}</b></td>
             </tr>
             <tr>
                 <td></td>
@@ -126,7 +126,7 @@
             </tr>
         </table>
         <div class="ttd avoid-page-break">
-            {{$auth_data->sekolah_data->alamat_kecamatan}}, {{date_format(date_create($tgl_pembayaran), 'd M Y')}} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
+            {{$auth_data->sekolah_data->alamat_kecamatan}}, {{ indonesiaDate(\Carbon\Carbon::parse($tgl_pembayaran)->format('Y-m-d')) }} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>
     </div>
