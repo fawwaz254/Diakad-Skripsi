@@ -88,7 +88,7 @@
                             <th>Besar Pembayaran</th>
                             <th>Potongan Biaya</th>
                             <!-- <th>Frekuensi</th> -->
-                            <th>Subtotal</th>
+                            <th>Jumlah</th>
                         </tr>
                         @php
                             $no = 1;

@@ -76,7 +76,7 @@
         <table border="0" style="width: 100%;">
             <tr>
                 <td></td>
-                <td><b>TAGIHAN PER TANGGAL {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</b></td>
+                <td><b>Tagihan Per Tanggal {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</b></td>
             </tr>
             <tr>
                 <td></td>
