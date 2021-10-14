@@ -12,20 +12,20 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header">
-                        <h2>Video Tutorial Role {{$role_name}}</h2>
+                        <h2>Video Tutorial Modul {{$modul->nm_modul}}</h2>
                     </div>
                     <div class="body">
 
                         <div class="row">
                                 
-                            @foreach($modul as $r)
-                            <a href="{{url(Request::segment(1).'#tutorial/video/modul/'.$r->id_modul)}}" style="color: inherit;text-decoration: inherit; ">
+                            @foreach($menu as $r)
+                            <a href="{{url(Request::segment(1).'#tutorial/video/menu/'.$r->id_menu)}}" style="color: inherit;text-decoration: inherit; ">
                             <div class="col-md-3 folder">
                                 <center>
-                                   <i class="material-icons" style="color:#DAA520;font-size: 45px;">folder</i>
+                                   <i class="material-icons" style="color:red;font-size: 45px;">video_library</i>
                                 </center>
                                 <center>
-                                    <span>{{$r->nm_modul}}</span>                 
+                                    <span>{{$r->nm_menu}}</span>                 
                                 </center>
                             </div>
                             </a>
