@@ -11,6 +11,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('action-data-pribadi', 'Guru\Biodata\DataPribadiController@actionSaveDataPribadi');
         });
 
+         /** ==== MODUL TUTORIAL ==== **/
+        Route::group(array('prefix' => 'tutorial'), function () {
+            Route::group(array('prefix' => 'video'), function () {
+                Route::get('/', 'Guru\Tutorial\VideoController@viewVideo');
+            });
+        });
+
         /** ==== MODUL JADWAL ==== **/
         Route::group(array('prefix' => 'jadwal'), function () {
             // MENU Kalender Akademik
