@@ -148,6 +148,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.status',
             'prestasi_siswa.jenis_lomba_siswa',
+            'prestasi_siswa.link_sertif_prestasi_siswa',
             'p1.nm_pengguna as nm_siswa',
             'siswa.nisn_siswa',
             'siswa.nis_siswa',
@@ -233,6 +234,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                 ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_prestasi_siswa,
+                        'link_sertifikat' => $item->link_sertif_prestasi_siswa,
                         'status' => $item->status
                     );
                     return $data;
