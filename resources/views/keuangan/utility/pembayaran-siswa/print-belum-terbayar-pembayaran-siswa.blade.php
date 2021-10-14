@@ -88,7 +88,8 @@
                             <th>Besar Tagihan</th>
                             <th>Potongan Biaya</th>
                             <!-- <th>Frekuensi</th> -->
-                            <th>Jumlah</th>
+                            <th>Besar Pembayaran</th>
+                            <th>Sisa Tagihan</th>
                         </tr>
                         @php
                             $no = 1;
@@ -116,8 +117,9 @@
                                 @endif
                             </td>
                             <!-- <td>1x</td> -->
+                            <td>@if($data->total_pembayaran) {{"Rp".number_format($data->total_pembayaran)}} @else -  @endif</td>
                             @php
-                            $jumlah = $data->besar_biaya;
+                            $jumlah = $data->besar_biaya - $data->total_pembayaran;
                             if($data->total_potongan){
                                 $jumlah = $jumlah - $data->total_potongan;
                             }  
@@ -127,7 +129,7 @@
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="4" align="center"><b>TOTAL</b></td>
+                            <td colspan="5" align="center"><b>TOTAL SISA TAGIHAN</b></td>
                             <td align="center"><b>{{"Rp".number_format($total)}}</b></td>
                         </tr>
                     </table>

@@ -87,8 +87,11 @@
                             <th>Nama Biaya</th>
                             <th>Besar Tagihan</th>
                             <th>Potongan Biaya</th>
+                            <th>Tagiha Terbayar</th>
+                            <th>Sisa Tagihan</th>
                             <!-- <th>Frekuensi</th> -->
-                            <th>Jumlah</th>
+                            <th>Besar Pembayaran</th>
+                            <th>Keterangan</th>
                         </tr>
                         @php
                             $no = 1;
@@ -112,13 +115,17 @@
                                 -
                                 @endif
                             </td>
-                            
+                            @php
+                            @endphp
+                            <td></td>
+                            <td></td>
                             <!-- <td>1x</td> -->
                             <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+                            <td></td>
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="4 align="center"><b>TOTAL</b></td>
+                            <td colspan="6" style="text-align:center;"><b>TOTAL PEMBAYARAN</b></td>
                             <td align="center"><b>{{"Rp".number_format($data_pembayaran_siswa->sum('besar_pembayaran'))}}</b></td>
                         </tr>
                     </table>
