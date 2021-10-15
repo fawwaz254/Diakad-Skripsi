@@ -160,7 +160,7 @@ class PembayaranSiswaController extends BaseController
                 $join->on('bulan.id_bulan', '=', 'detail_biaya.id_bulan');
                 $join->whereNull('bulan.deleted_at');
             })
-            ->where('tagihan_biaya.is_request', '=', 0)
+            ->where('tagihan_biaya.is_tagih', '=', 1)
             ->where('tagihan_biaya.id_siswa', '=', $siswa->id_siswa)
             ->groupBy('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan');
             
@@ -834,7 +834,7 @@ class PembayaranSiswaController extends BaseController
                     'besar_potongan'        => 'required|numeric',
                     'tgl_potongan'          => 'required|date',
                     'potongan_internal'     => 'nullable',
-                    'potongan_internal.'   => 'nullable|exists:detail_biaya_internal,id_detail_biaya_internal',
+                    'potongan_internal.'    => 'nullable|exists:detail_biaya_internal,id_detail_biaya_internal',
                     'potongan_internal.*'   => 'nullable|numeric',
                 ]);
                 if ($validator->fails()) {
@@ -940,6 +940,7 @@ class PembayaranSiswaController extends BaseController
                     ];
                 }
             } 
+
             elseif ($mode == 'delete') {
                 // make object to find id
                 $pembayaranBiaya                = PembayaranBiaya::find($id);
