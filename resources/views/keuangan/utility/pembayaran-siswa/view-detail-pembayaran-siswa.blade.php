@@ -111,9 +111,9 @@
                                                 <th>No</th>
                                                 <th>Nama Biaya</th>
                                                 <th>Besar Tagihan</th>
+                                                <th>Diskon</th>
                                                 <th>Besar Pembayaran</th>
                                                 <th>Sisa Tagihan</th>
-                                                <th>Diskon</th>
                                                 <th>
                                                     <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
                                                     <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
@@ -329,9 +329,9 @@ function changeJenis(el){
             { data: null, searchable: false, orderable: false },
             { data: 'nm_biaya', name: 'nm_biaya' },
             { data: 'besar_biaya', name: 'besar_biaya'},
+            { data: 'diskon_tagihan', name: 'diskon_tagihan'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'sisa_tagihan', name: 'sisa_tagihan'},
-            { data: 'diskon_tagihan', name: 'diskon_tagihan'},
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data){
                     if(data.sisa_tagihan > 0){
@@ -346,10 +346,10 @@ function changeJenis(el){
                 render: function(data){
                     var htmlaction;
                     if(data.sisa_tagihan > 0){
-                        htmlaction = '<button class="btn btn-warning waves-effect waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
+                        htmlaction = '<button class="btn btn-warning waves-effect waves-float" style="margin-right:3px;margin-bottom:3px" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
                         '    <span>Lunas</span>'+
                         '</button>'+
-                        '<a class="target-link btn btn-info waves-effect waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
+                        '<a class="target-link btn btn-info waves-effect waves-float" style="margin-right:3px;margin-bottom:3px"  href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
                         '    <span>Cicilan</span>'+
                         '</a> '+
                         '<a class="target-link btn btn-danger waves-effect waves-float" href="'+ diskon_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+

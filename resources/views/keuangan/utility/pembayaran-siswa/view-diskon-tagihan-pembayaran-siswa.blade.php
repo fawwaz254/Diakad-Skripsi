@@ -89,7 +89,7 @@
                             </div>
                         </div>
                         @if($detail_biaya_internal->isNotEmpty())
-                        <h5>Detail Biaya Internal</h5>
+                        <h5>Potongan per Detail Biaya Internal</h5>
                         <hr>
                         @foreach($detail_biaya_internal as $x)
                         <div class="row clearfix">
