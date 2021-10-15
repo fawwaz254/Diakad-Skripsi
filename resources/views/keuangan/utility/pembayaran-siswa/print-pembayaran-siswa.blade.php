@@ -95,6 +95,7 @@
                         @foreach($data_pembayaran_siswa as $pembayaran_siswa)
                         <tr>
                             <td>{{$no++}}.</td>
+
                             @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
                             @php
                             $ket = $pembayaran_siswa->nm_bulan.' '.$pembayaran_siswa->thn_akademik_semester;
@@ -103,7 +104,9 @@
                             @else
                             <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                             @endif
+
                             <td>{{"Rp".number_format($pembayaran_siswa->besar_biaya)}}</td>
+
                             <td>
                                 @if($pembayaran_siswa->total_potongan)
                                 {{"Rp".number_format($pembayaran_siswa->total_potongan)}}
@@ -111,9 +114,9 @@
                                 -
                                 @endif
                             </td>
-                            @php
-                            @endphp
+
                             <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+                            
                         </tr>
                         @endforeach
                         <tr>
