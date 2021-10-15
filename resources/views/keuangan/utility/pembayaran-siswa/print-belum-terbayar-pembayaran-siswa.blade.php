@@ -87,8 +87,7 @@
                             <th>Nama Biaya</th>
                             <th>Besar Tagihan</th>
                             <th>Potongan Biaya</th>
-                            <!-- <th>Frekuensi</th> -->
-                            <th>Jumlah</th>
+                            <th>Sisa Tagihan</th>
                         </tr>
                         @php
                             $no = 1;
@@ -97,6 +96,7 @@
                         @foreach($list_data as $data)
                         <tr>
                             <td>{{$no++}}.</td>
+
                             @if ($data->id_jenis_detail_biaya == 4) 
                             @if($data->id_bulan <7) 
                             @php $ket = $data->nm_bulan.' '.($data->thn_akademik_semester+1); @endphp
@@ -107,7 +107,9 @@
                             @else
                             <td>{{$data->nm_biaya." ".$data->keterangan}}</td>
                             @endif
+
                             <td>{{"Rp".number_format($data->besar_biaya)}}</td>
+
                             <td>
                                 @if($data->total_potongan)
                                 {{"Rp".number_format($data->total_potongan)}}
@@ -115,19 +117,21 @@
                                 -
                                 @endif
                             </td>
-                            <!-- <td>1x</td> -->
+
                             @php
-                            $jumlah = $data->besar_biaya;
+                            $jumlah = $data->besar_biaya - $data->total_pembayaran;
                             if($data->total_potongan){
                                 $jumlah = $jumlah - $data->total_potongan;
                             }  
                             $total += $jumlah;  
                             @endphp
+
                             <td>{{"Rp".number_format($jumlah)}}</td>
+                            
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="4" align="center"><b>TOTAL</b></td>
+                            <td colspan="4" align="center"><b>TOTAL SISA TAGIHAN</b></td>
                             <td align="center"><b>{{"Rp".number_format($total)}}</b></td>
                         </tr>
                     </table>
