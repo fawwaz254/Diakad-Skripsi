@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <td style="width: 50%">Potongan Tagihan</td>
-                                <td style="width: 50%">Rp{{number_format($tagihan->potongan_biaya)}}</td>
+                                <td style="width: 50%">Rp{{number_format($tagihan->total_potongan)}}</td>
                             </tr>
                             <tr>
                                 <td style="width: 50%">Keterangan</td>

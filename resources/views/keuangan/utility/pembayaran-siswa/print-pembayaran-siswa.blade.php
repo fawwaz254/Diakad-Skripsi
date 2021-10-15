@@ -87,8 +87,7 @@
                             <th>Nama Biaya</th>
                             <th>Besar Tagihan</th>
                             <th>Potongan Biaya</th>
-                            <!-- <th>Frekuensi</th> -->
-                            <th>Jumlah</th>
+                            <th>Besar Pembayaran</th>
                         </tr>
                         @php
                             $no = 1;
@@ -96,6 +95,7 @@
                         @foreach($data_pembayaran_siswa as $pembayaran_siswa)
                         <tr>
                             <td>{{$no++}}.</td>
+
                             @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
                             @php
                             $ket = $pembayaran_siswa->nm_bulan.' '.$pembayaran_siswa->thn_akademik_semester;
@@ -104,7 +104,9 @@
                             @else
                             <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                             @endif
+
                             <td>{{"Rp".number_format($pembayaran_siswa->besar_biaya)}}</td>
+
                             <td>
                                 @if($pembayaran_siswa->total_potongan)
                                 {{"Rp".number_format($pembayaran_siswa->total_potongan)}}
@@ -112,13 +114,13 @@
                                 -
                                 @endif
                             </td>
-                            
-                            <!-- <td>1x</td> -->
+
                             <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+                            
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="4 align="center"><b>TOTAL</b></td>
+                            <td colspan="4" style="text-align:center;"><b>TOTAL PEMBAYARAN</b></td>
                             <td align="center"><b>{{"Rp".number_format($data_pembayaran_siswa->sum('besar_pembayaran'))}}</b></td>
                         </tr>
                     </table>
