@@ -602,11 +602,13 @@ class PembayaranSiswaController extends BaseController
 
                 $besar_pembayaran = $input->besar_pembayaran + $input->besar_pembayaran_lama;
 
+                $sisa_tagihan = $besar_biaya - $input->besar_pembayaran_lama;
+
                 // cek besar pembayaran yg diinput
                 if ($besar_pembayaran > $besar_biaya) {
                     return [
                         'status' => 300,
-                        'message' => 'Besar Pembayaran Lebih Besar Dari Tagihan!'
+                        'message' => 'Besar Pembayaran Lebih Besar Dari Sisa Tagihan, Sisa Tagihan adalah '.number_format($sisa_tagihan)
                     ];
                 }
 
