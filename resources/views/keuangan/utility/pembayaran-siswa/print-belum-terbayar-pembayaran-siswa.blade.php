@@ -76,7 +76,7 @@
         <table border="0" style="width: 100%;">
             <tr>
                 <td></td>
-                <td><b>TAGIHAN PER TANGGAL {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</b></td>
+                <td><b>Tagihan Per Tanggal {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</b></td>
             </tr>
             <tr>
                 <td></td>
@@ -88,10 +88,11 @@
                             <th>Besar Tagihan</th>
                             <th>Potongan Biaya</th>
                             <!-- <th>Frekuensi</th> -->
-                            <th>Subtotal</th>
+                            <th>Jumlah</th>
                         </tr>
                         @php
                             $no = 1;
+                            $total = 0;
                         @endphp
                         @foreach($list_data as $data)
                         <tr>
@@ -115,12 +116,19 @@
                                 @endif
                             </td>
                             <!-- <td>1x</td> -->
-                            <td>{{"Rp".number_format($data->besar_pembayaran)}}</td>
+                            @php
+                            $jumlah = $data->besar_biaya;
+                            if($data->total_potongan){
+                                $jumlah = $jumlah - $data->total_potongan;
+                            }  
+                            $total += $jumlah;  
+                            @endphp
+                            <td>{{"Rp".number_format($jumlah)}}</td>
                         </tr>
                         @endforeach
                         <tr>
                             <td colspan="4" align="center"><b>TOTAL</b></td>
-                            <td align="center"><b>{{"Rp".number_format($list_data->sum('besar_pembayaran'))}}</b></td>
+                            <td align="center"><b>{{"Rp".number_format($total)}}</b></td>
                         </tr>
                     </table>
                 </td>
