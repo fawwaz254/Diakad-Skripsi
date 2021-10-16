@@ -598,7 +598,11 @@ class PembayaranSiswaController extends BaseController
 
                 $tagihanBiaya       = TagihanBiaya::with('potongan')->find($input->id_tagihan_biaya);
 
-                $besar_biaya = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya - $tagihanBiaya->potongan->total_potongan;
+                $besar_biaya = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
+
+                if($tagihanBiaya->potongan){
+                    $besar_biaya = $besar_biaya - $tagihanBiaya->potongan->total_potongan;
+                }
 
                 $besar_pembayaran = $input->besar_pembayaran + $input->besar_pembayaran_lama;
 
