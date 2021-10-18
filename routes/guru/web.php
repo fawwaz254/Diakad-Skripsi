@@ -26,6 +26,15 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         });
 
 
+         /** ==== MODUL TUTORIAL ==== **/
+        Route::group(array('prefix' => 'tutorial'), function () {
+            Route::group(array('prefix' => 'video'), function () {
+                Route::get('/', 'Guru\Tutorial\VideoController@viewVideo');
+                Route::get('/modul/{id_modul}', 'Guru\Tutorial\VideoController@viewVideoModul');
+                Route::get('/menu/{id_menu}', 'Guru\Tutorial\VideoController@viewVideoMenu');
+            });
+        });
+
         /** ==== MODUL JADWAL ==== **/
         Route::group(array('prefix' => 'jadwal'), function () {
             // MENU Kalender Akademik
