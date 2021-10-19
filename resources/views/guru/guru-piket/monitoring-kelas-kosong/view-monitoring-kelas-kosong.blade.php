@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header">
-                        <h2>MONITORING KELAS KOSONG</h2>
+                        <h2>MONITORING KELAS KOSONG {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
