@@ -44,6 +44,7 @@ class AddSomeMenuModulMonitoringRoleAkademik extends Migration
                 "created_at"   => $now
             ],
         ]);
+        
     }
 
     /**
