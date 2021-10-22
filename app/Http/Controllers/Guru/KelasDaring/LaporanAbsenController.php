@@ -75,7 +75,16 @@ class LaporanAbsenController extends BaseController
 
         $kelas_mp = KelasMp::where('id_kelas_mp_grup',$kelas_mp_grup->id_kelas_mp_grup)->first();
 
-        $data_presensi = PresensiMp::where('id_kelas_mp',$kelas_mp->id_kelas_mp)->where('is_daring',1)->get();
+        $data_presensi = PresensiMp::where('id_kelas_mp',$kelas_mp->id_kelas_mp)
+                                    ->where('is_daring',1)
+                                    ->where(function($q){
+                                        $q->where('tgl_presensi','<',Carbon::now()->format('Y-m-d'));
+                                        $q->orWhere(function($q2){
+                                            $q2->where('tgl_presensi',Carbon::now()->format('Y-m-d'))
+                                            ->where('waktu_selesai','<=',Carbon::now()->format('H:i'));
+                                        });
+                                    })
+                                    ->get();
 
         $siswa = Siswa::select('siswa.id_siswa', 'siswa.id_pengguna', 'kelas_mp.id_kelas_mp', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.aktif_status_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
                         ->join('pengguna', function ($join) {
