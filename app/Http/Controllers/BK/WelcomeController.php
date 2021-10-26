@@ -12,10 +12,13 @@ use DB;
 use Session;
 
 class WelcomeController extends BaseController{
+    
     public function indexWelcome(Request $request){
+        
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('bk/welcome', compact('auth_data')); //folder akademik/nama file welcome.blade
+        return view('bk/welcome', compact('auth_data'));
+
     }
 
 }
