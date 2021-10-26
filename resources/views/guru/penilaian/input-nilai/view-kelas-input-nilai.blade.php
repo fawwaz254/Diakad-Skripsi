@@ -17,9 +17,11 @@
         <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-nilai/kbm/0')}}">
             {{csrf_field()}}
             <input type="hidden" name="id_kelas_mp" id="id_kelas_mp" value="{{$pengambilan_mp->id_kelas_mp}}" />
-            <div class="col-xs-12 col-sm-4 col-md-4">
-                <div class="block-header">
-                    <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+            <div class="row clearfix">
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class="block-header">
+                        <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                    </div>
                 </div>
             </div>
                 <div class="row clearfix">

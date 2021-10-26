@@ -169,14 +169,17 @@ class InputNilaiController extends BaseController
                     ];
                 }   
             }
+
             elseif($mode == 'kbm'){
                 DB::beginTransaction();
         
                 try {
+
                     $validator = Validator::make($request->only('id_kelas_mp'), [
                         // dari type hidden
                         'id_kelas_mp' => 'required'
                     ]);
+                    
                     if($validator->fails()){
                         return [
                             'status' => 300, // FAILED
