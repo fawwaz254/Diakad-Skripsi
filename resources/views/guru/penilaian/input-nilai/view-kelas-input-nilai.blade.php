@@ -1,3 +1,5 @@
+@if($pengambilan_mp)
+
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#'. Request::segment(2) .'/input-nilai') }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
@@ -128,3 +130,9 @@
         });
     }
 </script>
+
+@else
+
+Penilaian bisa dilakukan ketika sudah ada pertemuan / absen
+
+@endif
