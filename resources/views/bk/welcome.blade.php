@@ -5,7 +5,7 @@
     <div class="block-header">
         <h2>DASHBOARD | {{$today->format('d M Y')}}</h2>
     </div>
-<!--     <div class="row clearfix">
+    <div class="row clearfix">
 
         <div class="col-md-12">
             <div class="card">
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-    </div> -->
+    </div>
 </div>
 
 @include('rilis-note')

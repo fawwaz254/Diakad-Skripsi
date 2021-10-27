@@ -20,7 +20,7 @@
                             </li>
                             <li role="presentation">
                                 <a href="#sudah_tindakan" data-toggle="tab">
-                                    <i class="material-icons">done_all</i> SUDAH TINDAKAN
+                                    <i class="material-icons">done_all</i> SUDAH DITINDAK
                                 </a>
                             </li>
                     </ul>
@@ -34,13 +34,9 @@
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Guru Input</th>
-                                                <th>Tingkat Pelanggaran</th>
-                                                <th>Keterangan Sub-Kategori</th>
-                                                <th>Catatan Pelanggaran</th>
-                                                <th>Catatan Khusus</th>
+                                                <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Aktor Input Pelanggaran</th>
+                                                <th>Nama Guru Input</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -57,11 +53,9 @@
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Guru Input</th>
                                                 <th>Mapel</th>
-                                                <th>Catatan Pelanggaran</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Aktor Input Pelanggaran</th>
+                                                <th>Nama Guru Input</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -78,16 +72,12 @@
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Guru Input</th>
-                                                <th>Tingkat Pelanggaran</th>
-                                                <th>Keterangan Sub-Kategori</th>
-                                                <th>Catatan Pelanggaran</th>
-                                                <th>Catatan Khusus</th>
+                                                <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Aktor Input Pelanggaran</th>
                                                 <th>Nama Input Tindakan</th>
                                                 <th>Catatan Tindakan</th>
                                                 <th>Catatan Khusus</th>
+                                                <th>Nama Guru Input</th>
                                                 <th>Tanggal Tindakan</th>
                                                 <th>Aktor Input Tindakan</th>
                                                 <th>Action</th>
@@ -128,13 +118,9 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
-            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
             { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
-            { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
-            { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },
-            { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran', searchable: false, orderable: false },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url_nonkbm + '/' + data.id +'">'+
@@ -167,11 +153,9 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'nm_mapel', name: 'mata_pelajaran.nm_mata_pelajaran' },
-            { data: 'catatan_pelanggaran', name: 'presensi_mp_pelanggaran.catatan_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'presensi_mp_pelanggaran.created_at' },
-            { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran', searchable: false, orderable: false },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url_kbm + '/' + data.id +'">'+
@@ -204,16 +188,12 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', searchable: false, orderable: false },
             { data: 'nm_kelas', searchable: false, orderable: false },
-            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
-            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
             { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
-            { data: 'catatan_pelanggaran', name: 'catatan_pelanggaran', searchable: false, orderable: false },
-            { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
             { data: 'tgl_pelanggaran', name: 'tgl_pelanggaran', searchable: false, orderable: false },
-            { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran', searchable: false, orderable: false },
             { data: 'nm_input_tindakan', name: 'p_tindakan.nm_pengguna' },
             { data: 'catatan_tindakan_pelanggaran', name: 'tindakan_pelanggaran.catatan_tindakan_pelanggaran' },
             { data: 'catatan_tindakan_pelanggaran_khusus', name: 'catatan_tindakan_pelanggaran_khusus', searchable: false, orderable: false },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'tgl_tindakan_pelanggaran', name: 'tindakan_pelanggaran.tgl_tindakan_pelanggaran' },
             { data: 'aktor_input_tindakan_pelanggaran', name: 'aktor_input_tindakan_pelanggaran', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
