@@ -236,18 +236,20 @@
         swal({
             title: "Are you sure?",
             text: "For Reject this",
-            type: "warning",
+            type: "input",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
             confirmButtonText: "Yes, reject it!",
             cancelButtonText: "No, cancel!",
             closeOnConfirm: true,
-            closeOnCancel: true
+            closeOnCancel: true,
+            inputPlaceholder: "Alasan Ditolak"
         }, function (result) {
             if (result) {
                 $.ajax({
                     type: "POST",
                     url: reject_url + '/' + item.attr('data-id'),
+                    data : {keterangan:result},
                     success: function (response) {
                         if(response.status == 200){
                             vex.dialog.alert(response.message);
@@ -273,8 +275,10 @@
                         $('button').removeAttr('disabled', 'disabled');
                     }
                 });
-            } else {
+            }else{
+                alert("Alasan Ditolak Harus Diisi");
                 $('button').removeAttr('disabled', 'disabled');
+                return false
             }
         });
     }

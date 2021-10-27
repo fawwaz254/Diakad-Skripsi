@@ -24,6 +24,7 @@
                                         <th>Penyelenggara</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
+                                        <th>Keterangan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -65,11 +66,12 @@
                     '</a>';
                 }
             },
-            { data: 'keterangan', name: 'keterangan', searchable: false, orderable: false,
+            { data: 'keterangan_status', name: 'keterangan_status', searchable: false, orderable: false,
                 render:function(data){
                     return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
                 }
             },
+            { data: 'keterangan', name: 'keterangan'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     if(data.status==0){
