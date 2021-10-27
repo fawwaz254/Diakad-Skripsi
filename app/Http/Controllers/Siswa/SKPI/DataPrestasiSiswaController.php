@@ -211,6 +211,7 @@ class DataPrestasiSiswaController extends BaseController
 
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
+            'prestasi_siswa.keterangan',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
@@ -253,7 +254,7 @@ class DataPrestasiSiswaController extends BaseController
                 ->addColumn('semester', function ($item) {
                     return $item->nm_semester.' ('.$item->tahun_ajaran.')';
                 })
-                ->addColumn('keterangan', function ($item) {
+                ->addColumn('keterangan_status', function ($item) {
                             if ($item->status == 0) {
                                 $status = 'Belum Diapprove';
                                 $color = 'pink';

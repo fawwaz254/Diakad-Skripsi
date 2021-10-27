@@ -287,6 +287,7 @@ class KomponenNilaiController extends BaseController{
             }
 
             elseif($mode == 'delete') {
+
                 if($nilaiMp = NilaiMp::where('id_komponen_mp',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE

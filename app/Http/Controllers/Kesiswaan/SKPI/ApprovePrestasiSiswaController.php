@@ -294,6 +294,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 
             $prestasi = PrestasiSiswa::findOrFail($id);
             $prestasi->status = 10;
+            $prestasi->keterangan = $input->keterangan;
             $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
@@ -307,6 +308,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 
             $kegiatan = KegiatanSiswa::findOrFail($id);
             $kegiatan->status = 10;
+            $kegiatan->keterangan = $input->keterangan;
             $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 
