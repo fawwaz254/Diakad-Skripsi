@@ -24,6 +24,7 @@
                                         <th>Peringkat</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
+                                        <th>Keterangan</th>
                                         <th>Semester</th>
                                         <th>Kelas</th>
                                         <th>Lokasi</th>
@@ -72,11 +73,12 @@
                     '</a>';
                 }
             },
-            { data: 'keterangan', name: 'keterangan', searchable: false, orderable: false,
+            { data: 'keterangan_status', name: 'keterangan_status', searchable: false, orderable: false,
                 render:function(data){
                     return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
                 }
             },
+            { data: 'keterangan', name: 'keterangan' },
             { data: 'semester', name: 'semester' },
             { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'lokasi_prestasi_siswa', name: 'lokasi_prestasi_siswa' },
