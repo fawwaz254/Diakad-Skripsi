@@ -4,7 +4,7 @@
             <div class="card">
                 {{csrf_field()}}
                 <div class="header">
-                    <h2>DATA PELANGGARAN & TINDAKAN PELANGGARAN</h2>
+                    <h2>DATA PELANGGARAN SISWA</h2>
                 </div>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">

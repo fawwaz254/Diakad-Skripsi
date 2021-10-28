@@ -249,7 +249,9 @@ class LibDataPelanggaran
                 if ($is_datatable == null) {
                     $tindakanPelanggaran = $tindakanPelanggaran->get();
                 }
-            } elseif ($status == "1") {
+            } 
+
+            elseif ($status == "1") {
                 $tindakanPelanggaran = TindakanPelanggaran::select(
                     'tindakan_pelanggaran.id_tindakan_pelanggaran',
                     'pelanggaran_siswa.id_pelanggaran_siswa',
