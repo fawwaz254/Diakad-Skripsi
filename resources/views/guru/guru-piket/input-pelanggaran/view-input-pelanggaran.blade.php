@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/input-pelanggaran/add')}}"><i class="material-icons">note_add</i><span>Tambah Pelanggaran Siswa</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/input-pelanggaran/add')}}"><i class="material-icons">note_add</i><span>Tambah Pelanggaran Siswa Non KBM</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

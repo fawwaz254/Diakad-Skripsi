@@ -13,11 +13,11 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-pelanggaran/edit/'.$data_pelanggaran_siswa->id_pelanggaran_siswa)}}">
                         {{csrf_field()}}
-                        <h2 class="card-inside-title">
-                            Semester
-                        </h2>
+
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Semester</label>
                                 <select class="form-control show-tick" name="id_semester" required="">
                                   <option value="" disabled selected >-- Pilih Semester --</option>
                                     @foreach($data_semester as $data)
@@ -37,12 +37,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Kelas
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Kelas</label>
                                 <select class="form-control show-tick" name="kelas" onchange="changeKelas(this)" required="">
                                     <option value="">-- Pilih Kelas --</option>
                                     @foreach($data_kelas as $data)
@@ -54,12 +51,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Nama Siswa
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                            <div class="col-md-4">
+                                <label>Nama Siswa</label>
                                 <select class="form-control show-tick" name="id_siswa" required="">
                                     <option value="">-- Pilih Siswa --</option>
                                     @foreach($data_siswa_sekelas as $data)
@@ -71,9 +65,11 @@
                                     @endforeach
                                 </select>
                             </div>
+
                         </div>
+
                         <h2 class="card-inside-title">
-                            Sub-Kategori Pelanggaran
+                            Sub Kategori Pelanggaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -83,9 +79,9 @@
                                     <optgroup label="{{$kategori->nm_kategori_pelanggaran}}">
                                         @foreach($kategori->subkategori_pelanggaran as $data)
                                             @if($data->id_subkategori_pelanggaran == $data_pelanggaran_siswa->id_subkategori_pelanggaran)
-                                            <option value="{{$data->id_subkategori_pelanggaran}}" selected="">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
+                                            <option value="{{$data->id_subkategori_pelanggaran}}" selected="">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {!!$data->nm_subkategori_pelanggaran!!}</option>
                                             @else
-                                            <option value="{{$data->id_subkategori_pelanggaran}}">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {{$data->keterangan_subkategori_pelanggaran}}</option>
+                                            <option value="{{$data->id_subkategori_pelanggaran}}">{{$kategori->tingkat_kategori_pelanggaran}}.{{$data->tingkat_subkategori_pelanggaran}} {!!$data->nm_subkategori_pelanggaran!!}</option>
                                             @endif
                                         @endforeach
                                     </optgroup>
