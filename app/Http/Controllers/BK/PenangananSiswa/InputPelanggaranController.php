@@ -274,7 +274,7 @@ class InputPelanggaranController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'penanganan-siswa/input-pelanggaran',
+                    'path' => 'penanganan-siswa/tindakan-pelanggaran',
                     'message' => 'Save Pelanggaran Siswa successfully'
                 ];
             } elseif ($mode == 'edit') {
@@ -298,7 +298,7 @@ class InputPelanggaranController extends BaseController
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'penanganan-siswa/input-pelanggaran',
+                    'path' => 'penanganan-siswa/tindakan-pelanggaran',
                     'message' => 'Update Pelanggaran Siswa successfully'
                 ];
             } elseif ($mode == 'delete') {

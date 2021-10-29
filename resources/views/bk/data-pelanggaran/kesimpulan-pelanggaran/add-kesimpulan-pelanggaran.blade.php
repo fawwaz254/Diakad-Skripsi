@@ -37,30 +37,7 @@
                                 <input type="number" class="form-control" name="poin_atas_kesimpulan_pelanggaran" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
-                            Deskripsi 1
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="deskripsi_kesimpulan_pelanggaran_1" id="editor1" class="editor1" rows="10" cols="80"></textarea>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Deskripsi 2
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="deskripsi_kesimpulan_pelanggaran_2" id="editor2" class="editor2" rows="10" cols="80"></textarea>
-                            </div>
-                        </div>
-                        <h2 class="card-inside-title">
-                            Deskripsi 3
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <textarea name="deskripsi_kesimpulan_pelanggaran_3" id="editor3" class="editor3" rows="10" cols="80"></textarea>
-                            </div>
-                        </div>
+                        
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

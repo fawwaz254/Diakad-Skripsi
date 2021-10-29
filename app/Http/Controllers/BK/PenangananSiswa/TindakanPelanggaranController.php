@@ -111,6 +111,9 @@ class TindakanPelanggaranController extends BaseController
                 ->addColumn('nm_siswa', function ($item) {
                     return $item->nm_pengguna;
                 })
+                ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                    return strip_tags($item->nm_subkategori_pelanggaran);
+                })
                 ->addColumn('aktor_input_pelanggaran', function ($item) {
                     if ($item->aktor_input_pelanggaran == 1) {
                         return "Role BK";
@@ -175,6 +178,9 @@ class TindakanPelanggaranController extends BaseController
                 ->addColumn('nm_siswa', function ($item) {
                     return $item->nm_pengguna;
                 })
+                 ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                    return strip_tags($item->nm_subkategori_pelanggaran);
+                })
                 ->addColumn('aktor_input_pelanggaran', function ($item) {
                     return "Guru Pengampu";
                 })
@@ -219,6 +225,9 @@ class TindakanPelanggaranController extends BaseController
                     } else {
                         return "-";
                     }
+                })
+                 ->editColumn('nm_subkategori_pelanggaran', function ($item) {
+                    return strip_tags($item->nm_subkategori_pelanggaran);
                 })
                 ->addColumn('nm_kelas', function ($item) {
                     if (! empty($item->nm_kelas)) {
