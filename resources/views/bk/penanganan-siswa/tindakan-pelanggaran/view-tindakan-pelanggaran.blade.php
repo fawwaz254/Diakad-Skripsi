@@ -1,4 +1,7 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penanganan-siswa/input-pelanggaran/add')}}"><i class="material-icons">note_add</i><span>Tambah Pelanggaran Siswa</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -46,7 +49,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="belum_tindakan_kbm">
                             <div class="body">
-                                <div class="table-responsive" style="overflow-x: auto;">
+                                <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_kbm">
                                         <thead>
                                             <tr>
@@ -54,6 +57,7 @@
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
                                                 <th>Mapel</th>
+                                                <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
                                                 <th>Nama Guru Input</th>
                                                 <th>Action</th>
@@ -65,7 +69,7 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="sudah_tindakan">
                             <div class="body">
-                                <div class="table-responsive" style="overflow-x: auto;">
+                                <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
@@ -74,12 +78,13 @@
                                                 <th>Kelas</th>
                                                 <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Nama Input Tindakan</th>
-                                                <th>Catatan Tindakan</th>
-                                                <th>Catatan Khusus</th>
                                                 <th>Nama Guru Input</th>
-                                                <th>Tanggal Tindakan</th>
-                                                <th>Aktor Input Tindakan</th>
+                                                <th>Nama Input Tindakan</th>
+                                                <!-- <th>Catatan Tindakan</th>
+                                                <th>Catatan Khusus</th> -->
+                                             
+                                             <!--    <th>Tanggal Tindakan</th>
+                                                <th>Aktor Input Tindakan</th> -->
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -118,7 +123,7 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
+            { data: 'nm_subkategori_pelanggaran', name: 'nm_subkategori_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
@@ -154,6 +159,7 @@
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'nm_mapel', name: 'mata_pelajaran.nm_mata_pelajaran' },
+            { data: 'nm_subkategori_pelanggaran', name: 'nm_subkategori_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'presensi_mp_pelanggaran.created_at' },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
@@ -188,14 +194,15 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', searchable: false, orderable: false },
             { data: 'nm_kelas', searchable: false, orderable: false },
-            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
+            { data: 'nm_subkategori_pelanggaran', name: 'nm_subkategori_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'tgl_pelanggaran', searchable: false, orderable: false },
-            { data: 'nm_input_tindakan', name: 'p_tindakan.nm_pengguna' },
-            { data: 'catatan_tindakan_pelanggaran', name: 'tindakan_pelanggaran.catatan_tindakan_pelanggaran' },
-            { data: 'catatan_tindakan_pelanggaran_khusus', name: 'catatan_tindakan_pelanggaran_khusus', searchable: false, orderable: false },
             { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
-            { data: 'tgl_tindakan_pelanggaran', name: 'tindakan_pelanggaran.tgl_tindakan_pelanggaran' },
-            { data: 'aktor_input_tindakan_pelanggaran', name: 'aktor_input_tindakan_pelanggaran', searchable: false, orderable: false },
+            { data: 'nm_input_tindakan', name: 'p_tindakan.nm_pengguna' },
+            // { data: 'catatan_tindakan_pelanggaran', name: 'tindakan_pelanggaran.catatan_tindakan_pelanggaran' },
+            // { data: 'catatan_tindakan_pelanggaran_khusus', name: 'catatan_tindakan_pelanggaran_khusus', searchable: false, orderable: false },
+         
+            // { data: 'tgl_tindakan_pelanggaran', name: 'tindakan_pelanggaran.tgl_tindakan_pelanggaran' },
+            // { data: 'aktor_input_tindakan_pelanggaran', name: 'aktor_input_tindakan_pelanggaran', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
