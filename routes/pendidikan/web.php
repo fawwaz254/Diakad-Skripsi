@@ -106,6 +106,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 			Route::post('action-wali-kelas/{mode}/{id}', 'Pendidikan\SettingKelas\WaliKelasController@actionWaliKelas');
 
+			// Menu Setting BK Kelas
+			Route::get('setting-bk-kelas', 'Pendidikan\SettingKelas\BkKelasController@viewBkKelas');
+			Route::post('post-view-bk-kelas', 'Pendidikan\SettingKelas\BkKelasController@actionViewBkKelas');
+			Route::get('bk-kelas/view-kelas/{id_kelas}', 'Pendidikan\SettingKelas\BkKelasController@viewKelasBkKelas');
+			Route::get('bk-kelas/datatables/{id_kelas}', 'Pendidikan\SettingKelas\BkKelasController@datatablesBkKelas');
+			Route::get('bk-kelas/add/{id_kelas}', 'Pendidikan\SettingKelas\BkKelasController@addBkKelas');
+			Route::get('bk-kelas/edit/{id_kelas}/{id_semester}/{id}', 'Pendidikan\SettingKelas\BkKelasController@editBkKelas');
+
+			Route::post('action-bk-kelas/{mode}/{id}', 'Pendidikan\SettingKelas\BkKelasController@actionBkKelas');
+
 			// MENU Setting Sekretaris Kelas
 			Route::get('sekretaris-kelas', 'Pendidikan\SettingKelas\SekretarisKelasController@viewSekretarisKelas');
 			Route::post('post-view-sekretaris-kelas', 'Pendidikan\SettingKelas\SekretarisKelasController@actionViewSekretarisKelas');
