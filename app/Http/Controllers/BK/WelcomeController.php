@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 use Yajra\Datatables\Datatables;
+use App\Models\BkKelas;
+use App\Models\Guru;
+use App\Models\PelanggaranSiswa;
+use App\Models\Semester;
 
 use Auth;
 use DB;
@@ -17,7 +21,31 @@ class WelcomeController extends BaseController{
         
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('bk/welcome', compact('auth_data'));
+
+        $semester_aktif = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('is_aktif_semester','=','1')->first();
+
+        $bk_kelas = [];
+        $bk_kelas_nama = [];
+        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($guru){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->where('id_semester',$semester_aktif->id_semester)->pluck('id_kelas')->toArray();
+            $bk_kelas_nama = BkKelas::groupBy('nm_kelas')
+                                    ->join('kelas','kelas.id_kelas','bk_kelas.id_kelas')
+                                    ->where('id_guru',$guru->id_guru)
+                                    ->where('id_semester',$semester_aktif->id_semester)
+                                    ->pluck('nm_kelas')
+                                    ->toArray();
+        }
+
+        $pelanggaran = PelanggaranSiswa::where('id_guru_input',$guru->id_guru)->whereIn('id_kelas',$bk_kelas)->where('id_semester',$semester_aktif->id_semester)->get();
+        $pelanggaran_belum_ditindak = $pelanggaran->where('is_sudah_tindakan',0)->count();
+        $pelanggaran_sudah_ditindak = $pelanggaran->where('is_sudah_tindakan',1)->count();
+
+        $pelanggaran_orang_lain = PelanggaranSiswa::where('id_guru_input','!=',$guru->id_guru)->whereIn('id_kelas',$bk_kelas)->where('id_semester',$semester_aktif->id_semester)->get();
+        $pelanggaran_orang_lain_belum_ditindak = $pelanggaran_orang_lain->where('is_sudah_tindakan',0)->count();
+        $pelanggaran_orang_lain_sudah_ditindak = $pelanggaran_orang_lain->where('is_sudah_tindakan',1)->count();
+
+        return view('bk/welcome', compact('auth_data','pelanggaran','pelanggaran_belum_ditindak','pelanggaran_sudah_ditindak','pelanggaran_orang_lain','pelanggaran_orang_lain_belum_ditindak','pelanggaran_orang_lain_sudah_ditindak','semester_aktif','bk_kelas_nama'));
 
     }
 

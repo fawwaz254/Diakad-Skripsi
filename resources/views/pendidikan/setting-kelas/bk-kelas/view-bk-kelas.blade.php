@@ -17,7 +17,7 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_kelas">
                                     @foreach($data_kelas as $data)
-                                        <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
+                                        <option value="{{$data->id_kelas}}">{{$data->nm_kelas}} @if($data->nama_guru_bk) ({{$data->nama_guru_bk}}) @endif</option>
                                     @endforeach
                                 </select>
                             </div>

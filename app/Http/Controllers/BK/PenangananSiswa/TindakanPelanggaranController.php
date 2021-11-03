@@ -9,6 +9,7 @@ use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 use App\Models\Guru as Guru;
+use App\Models\BkKelas;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
@@ -107,7 +108,20 @@ class TindakanPelanggaranController extends BaseController
         $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1");
 
+        $bk_kelas = [];
+        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($guru){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->pluck('id_kelas')->toArray();
+        }
+
         return Datatables::of($list_data)
+                ->addColumn('cek_pj_bk',function($item) use ($bk_kelas){
+                    $hasil = false;
+                    if(in_array($item->id_kelas,$bk_kelas)){
+                        $hasil = true;
+                    }
+                    return $hasil;
+                })
                 ->addColumn('nm_siswa', function ($item) {
                     return $item->nm_pengguna;
                 })
@@ -174,7 +188,20 @@ class TindakanPelanggaranController extends BaseController
         $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1");
 
+        $bk_kelas = [];
+        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($guru){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->pluck('id_kelas')->toArray();
+        }
+
         return Datatables::of($list_data)
+                ->addColumn('cek_pj_bk',function($item) use ($bk_kelas){
+                    $hasil = false;
+                    if(in_array($item->id_kelas,$bk_kelas)){
+                        $hasil = true;
+                    }
+                    return $hasil;
+                })
                 ->addColumn('nm_siswa', function ($item) {
                     return $item->nm_pengguna;
                 })
@@ -216,7 +243,20 @@ class TindakanPelanggaranController extends BaseController
         $auth_data = $input->auth_data;
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1");
 
+        $bk_kelas = [];
+        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($guru){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->pluck('id_kelas')->toArray();
+        }
+
         return Datatables::of($list_data)
+                ->addColumn('cek_pj_bk',function($item) use ($bk_kelas){
+                    $hasil = false;
+                    if(in_array($item->id_kelas,$bk_kelas)){
+                        $hasil = true;
+                    }
+                    return $hasil;
+                })
                 ->addColumn('nm_siswa', function ($item) {
                     if (! empty($item->nm_siswa)) {
                         return $item->nm_siswa;
