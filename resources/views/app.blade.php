@@ -34,6 +34,8 @@
         <!-- Animation Css -->
         <link href="{{asset('plugins/animate-css/animate.css')}}" rel="stylesheet" />
 
+        <link href="{{asset('plugins/multi-select/css/multi-select.css')}}" rel="stylesheet">
+
         <!-- Toast -->
         <link rel="stylesheet" href="{{asset('plugins/vex-4.0.1/dist/css/vex.css')}}" >
         <link rel="stylesheet" href="{{asset('plugins/vex-4.0.1/dist/css/vex-theme-flat-attack.css')}}" >
@@ -170,6 +172,9 @@
 
     <!-- Bootstrap Material Datetime Picker Plugin Js -->
     <script src="{{asset('plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js')}}"></script>
+
+    <!-- Multi Select Plugin Js -->
+    <script src="{{asset('plugins/multi-select/js/jquery.multi-select.js')}}"></script>
 
     <!-- Custom Js -->
     <script src="{{asset('js/admin.js?v0')}}"></script>

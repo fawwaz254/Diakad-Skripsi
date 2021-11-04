@@ -80,7 +80,9 @@ class TagihanSiswaController extends BaseController
             })->get();
 
             if($jenis_tagihan){
-                $data_detail_biaya = $data_detail_biaya->where('id_detail_biaya',$jenis_tagihan);
+                if(!in_array("0",$jenis_tagihan)){
+                    $data_detail_biaya = $data_detail_biaya->whereIn('id_detail_biaya',$jenis_tagihan);
+                }
             }
 
             $list_data = Siswa::whereHas('tagihan_biaya',function($q) use ($data_detail_biaya){
