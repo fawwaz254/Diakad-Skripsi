@@ -50,10 +50,6 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-kesimpulan-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@actionKesimpulanPelanggaran');
 
-        });
-
-        /** ==== MODUL PENANGANAN SISWA ==== **/
-        Route::group(array('prefix' => 'penanganan-siswa'), function() {
             // MENU Data Jenis Tindakan
             Route::get('jenis-tindakan', 'BK\PenangananSiswa\JenisTindakanController@viewJenisTindakan');
             Route::get('jenis-tindakan/datatables', 'BK\PenangananSiswa\JenisTindakanController@datatablesJenisTindakan');
@@ -61,6 +57,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('jenis-tindakan/edit/{id}', 'BK\PenangananSiswa\JenisTindakanController@editJenisTindakan');
 
             Route::post('action-jenis-tindakan/{mode}/{id}', 'BK\PenangananSiswa\JenisTindakanController@actionJenisTindakan');
+
+        });
+
+        /** ==== MODUL PENANGANAN SISWA ==== **/
+        Route::group(array('prefix' => 'penanganan-siswa'), function() {
 
             // MENU Data Jurnal Tindakan
             Route::get('jurnal-tindakan', 'BK\PenangananSiswa\JurnalTindakanController@viewJurnalTindakan');

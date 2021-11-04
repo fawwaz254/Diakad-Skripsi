@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penanganan-siswa/jenis-tindakan/add')}}"><i class="material-icons">note_add</i><span>Tambah Jenis Tindakan</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-pelanggaran/jenis-tindakan/add')}}"><i class="material-icons">note_add</i><span>Tambah Jenis Tindakan</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -30,7 +30,7 @@
 </div>
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url       = 'penanganan-siswa';
+    var modul_url       = 'data-pelanggaran';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jenis-tindakan/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'jenis-tindakan/edit';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-jenis-tindakan/delete';

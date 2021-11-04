@@ -41,7 +41,7 @@
                             <h2 class="card-inside-title">
                                 Pilih Tagihan yang Ditampilkan
                             </h2>
-                            <select class="form-control show-tick" id="jenis_tagihan" name="jenis_tagihan">
+                            <select class="form-control show-tick" multiple="" id="jenis_tagihan" name="jenis_tagihan">
                             <option value="0">Semua Tagihan</option>
                             </select>
                         </div>
