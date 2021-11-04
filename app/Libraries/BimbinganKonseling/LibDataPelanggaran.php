@@ -183,7 +183,7 @@ class LibDataPelanggaran
 
         // get mode view
         if ($id == null) {
-            $presensiMpPelanggaran = PresensiMpPelanggaran::select('presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_siswa', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'presensi_mp_pelanggaran.catatan_pelanggaran', 'presensi_mp_pelanggaran.created_at', 'presensi_mp.pertemuan_ke', 'presensi_mp_pelanggaran.id_presensi_mp', 'kelas.nm_kelas', 'presensi_mp_pelanggaran.id_subkategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran','subkategori_pelanggaran.nm_subkategori_pelanggaran')
+            $presensiMpPelanggaran = PresensiMpPelanggaran::select('presensi_mp_pelanggaran.id_presensi_mp_pelanggaran', 'presensi_mp_pelanggaran.id_siswa', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'presensi_mp_pelanggaran.catatan_pelanggaran', 'presensi_mp_pelanggaran.created_at', 'presensi_mp.pertemuan_ke', 'presensi_mp_pelanggaran.id_presensi_mp', 'kelas.nm_kelas','kelas.id_kelas', 'presensi_mp_pelanggaran.id_subkategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran','subkategori_pelanggaran.nm_subkategori_pelanggaran')
                         ->join('siswa', 'siswa.id_siswa', '=', 'presensi_mp_pelanggaran.id_siswa')
                         ->join('kelas', 'presensi_mp_pelanggaran.id_kelas', '=', 'kelas.id_kelas')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -233,7 +233,7 @@ class LibDataPelanggaran
         if ($id == null) {
             // belum ada tindakan
             if ($status == "0") {
-                $tindakanPelanggaran = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_guru_input', 'kategori_pelanggaran.id_kategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran','subkategori_pelanggaran.nm_subkategori_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran_khusus', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas')
+                $tindakanPelanggaran = PelanggaranSiswa::select('pelanggaran_siswa.id_pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', 'pelanggaran_siswa.id_guru_input', 'kategori_pelanggaran.id_kategori_pelanggaran', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'pengguna.nm_pengguna', 'p_guru.nm_pengguna as nm_guru_input', 'p_guru.gelar_depan as gelar_depan_guru', 'p_guru.gelar_belakang as gelar_belakang_guru', 'p_staff.nm_pengguna as nm_staff_input', 'p_staff.gelar_depan as gelar_depan_staff', 'p_staff.gelar_belakang as gelar_belakang_staff', 'kategori_pelanggaran.tingkat_kategori_pelanggaran', 'subkategori_pelanggaran.tingkat_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran','subkategori_pelanggaran.nm_subkategori_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.catatan_pelanggaran_khusus', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'pelanggaran_siswa.created_by', 'kelas.nm_kelas','kelas.id_kelas')
                     ->join('siswa', 'siswa.id_siswa', '=', 'pelanggaran_siswa.id_siswa')
                     ->join('kelas', 'pelanggaran_siswa.id_kelas', '=', 'kelas.id_kelas')
                     ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -298,6 +298,7 @@ class LibDataPelanggaran
                     'p_tindakan.gelar_depan as gelar_depan_tindakan',
                     'p_tindakan.gelar_belakang as gelar_belakang_tindakan',
                     'kelas.nm_kelas',
+                    'kelas.id_kelas',
                     'kelas_presensi.nm_kelas as nm_kelas_presensi'
                 )
                     ->join('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', 'tindakan_pelanggaran.id_jenis_tindakan')
@@ -367,7 +368,8 @@ class LibDataPelanggaran
                 'tindakan_pelanggaran.tgl_tindakan_pelanggaran',
                 'tindakan_pelanggaran.aktor_input_tindakan_pelanggaran',
                 'tindakan_pelanggaran.created_by as created_by_tindakan',
-                'kelas.nm_kelas'
+                'kelas.nm_kelas',
+                'kelas.id_kelas'
             )
                     ->join('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', 'tindakan_pelanggaran.id_jenis_tindakan')
                     ->leftJoin('pelanggaran_siswa', 'pelanggaran_siswa.id_pelanggaran_siswa', '=', 'tindakan_pelanggaran.id_pelanggaran_siswa')

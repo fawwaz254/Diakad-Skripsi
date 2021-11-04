@@ -101,7 +101,7 @@ class JenisTindakanController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'penanganan-siswa/jenis-tindakan',
+                    'path' => 'data-pelanggaran/jenis-tindakan',
                     'message' => 'Save Jenis Tindakan successfully'
                 ];
             }
@@ -116,7 +116,7 @@ class JenisTindakanController extends BaseController{
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'penanganan-siswa/jenis-tindakan',
+                    'path' => 'data-pelanggaran/jenis-tindakan',
                     'message' => 'Update Jenis Tindakan successfully'
                 ];
             }
