@@ -238,9 +238,14 @@ class TagihanSiswaController extends BaseController
         $id_semester_mulai = Semester::where('kode_semester', $tahun.'1')->first()->id_semester;
         $id_semester_selesai = Semester::where('kode_semester', $tahun.'2')->first()->id_semester;
 
-        $data_detail_biaya = DetailBiaya::with('bulan','biaya')->whereHas('biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
-            $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
-        })->get();
+        $tagihan_biaya = TagihanBiaya::where('id_kelas',$id_kelas)
+                    ->whereHas('detail_biaya.biaya_sekolah',function($q) use ($id_semester_mulai, $id_semester_selesai){
+                         $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+                     })
+                    ->groupBy('id_detail_biaya')
+                    ->pluck('id_detail_biaya');
+
+        $data_detail_biaya = DetailBiaya::with('bulan','biaya')->whereIn('id_detail_biaya',$tagihan_biaya)->get();
 
         $data_detail_biaya_modified = $data_detail_biaya->map(function ($item, $key) use ($tahun) {
                 
