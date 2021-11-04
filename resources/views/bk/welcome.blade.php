@@ -40,19 +40,19 @@
                             </tr>
                             <tr>
                                 <th style="text-align: center;">Saya</th>
-                                <th style="text-align: center;">{{$pelanggaran->count()}}</th>
+                                <th style="text-align: center;">{{$pelanggaran}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_belum_ditindak}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_sudah_ditindak}}</th>
                             </tr>
                             <tr>
                                 <th style="text-align: center;">Orang Lain</th>
-                                <th style="text-align: center;">{{$pelanggaran_orang_lain->count()}}</th>
+                                <th style="text-align: center;">{{$pelanggaran_orang_lain}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_orang_lain_belum_ditindak}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_orang_lain_sudah_ditindak}}</th>
                             </tr>
                             <tr>
                                 <th style="text-align: center;" class="bg-pink">Total</th>
-                                <th style="text-align: center;">{{$pelanggaran->count() +  $pelanggaran_orang_lain->count()}}</th>
+                                <th style="text-align: center;">{{$pelanggaran +  $pelanggaran_orang_lain}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_belum_ditindak +  $pelanggaran_orang_lain_belum_ditindak}}</th>
                                 <th style="text-align: center;">{{$pelanggaran_sudah_ditindak +  $pelanggaran_orang_lain_sudah_ditindak}}</th>
                             </tr>

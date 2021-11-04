@@ -52,8 +52,6 @@ class TagihanSiswaController extends BaseController
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
-
-
         
         return view('keuangan/laporan-keuangan/tagihan-siswa/view-tagihan-siswa', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_kelas'));
 
