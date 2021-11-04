@@ -30,7 +30,7 @@
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="belum_tindakan_nonkbm">
                             <div class="body">
-                                <div class="table-responsive" style="overflow-x: auto;">
+                                <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                             <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_nonkbm">
                                         <thead>
                                             <tr>
@@ -133,7 +133,12 @@
                     '</a>';
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if(data.cek_pj_bk){
+                $(row).css('background-color', 'hsl(28, 80%, 61%)');
+            }
+        }
     });
 
     primary_table_belum_nonkbm.on( 'draw', function () {
@@ -169,7 +174,12 @@
                     '</a>';
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if(data.cek_pj_bk){
+                $(row).css('background-color', 'hsl(28, 80%, 61%)');
+            }
+        }
     });
 
     primary_table_belum_kbm.on( 'draw', function () {
@@ -213,7 +223,12 @@
                     '</button>';
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if(data.cek_pj_bk){
+                $(row).css('background-color', 'hsl(28, 80%, 61%)');
+            }
+        }
     });
 
     primary_table_sudah.on( 'draw', function () {
