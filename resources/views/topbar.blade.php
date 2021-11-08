@@ -80,7 +80,7 @@
                 <a href="javascript:void(0);" class="bars" style="display: none;"></a>
                 <a class="navbar-brand"><?=str_replace('-', ' ', strtoupper($theme_name))?> <?=strtoupper(auth_data()->sekolah_data->nm_sekolah)?> - 
                     @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
-                    {{strtoupper(env('APP_NAME', 'dsmart edu'))}}
+                    {{strtoupper(env('APP_NAME', 'EDUSCHOOL'))}}
                     @else
                     DIAKAD
                     @endif
