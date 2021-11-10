@@ -1034,6 +1034,39 @@ class LibCetakKeuangan{
 
     }
     
+    public static function fetchLaporanPembayaranPerKategori($auth_data, $start_date = null, $end_date = null)
+    {
+
+        if(empty(session('setting_print_keuangan'))){
+            $print_setting = 'all';
+        }else{
+            $print_setting = session('setting_print_keuangan');
+        }
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya');
+        if (!empty($start_date) && !empty($end_date)) {
+            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
+        }
+
+        if($print_setting == 'self'){
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya');
+        }else{
+            $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.detail_biaya.biaya.nm_biaya');
+        }
+
+        $listData = [];
+
+        foreach($allDataPembayaran as $key => $value){
+
+            $listData[$key]['nama'] = $key;
+            $listData[$key]['total'] =  $value->sum('besar_pembayaran');
+
+        }
+
+        return $listData;
+
+    }
+
     public static function fetchLaporanPembayaranPerSiswa($auth_data, $start_date = null, $end_date = null)
     {
         if(empty(session('setting_print_keuangan'))){
