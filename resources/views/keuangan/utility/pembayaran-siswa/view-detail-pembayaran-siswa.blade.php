@@ -101,9 +101,18 @@
                                 </h2>
                             </div>
                             <div class="body">
+                                
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label>Pilih Tanggal Pembayaran</label>
+                                        <input type="text" class="datepicker form-control" id="tanggal_pembayaran" value="{{\Carbon\Carbon::today()->format('Y-m-d')}}">
+                                    </div>
+                                </div>
+
                                 <div>
                                     <h4 class="">Total Tagihan terpilih: Rp <span id="show-total"></span></h4>
                                 </div>
+
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tagihan">
                                         <thead>
@@ -527,31 +536,40 @@ function changeJenis(el){
             closeOnCancel: true
         }, function (result) {
             if (result) {
-                $.ajax({
-                    type: "POST",
-                    url: lunas_url + '/' + item.attr('data-id'),
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            primary_table_tagihan.ajax.reload(null, false);
-                            primary_table_riwayat_bayar.ajax.reload(null, false);
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
+                var tanggal_pembayaran = $('#tanggal_pembayaran').val();
+                if(tanggal_pembayaran == null || tanggal_pembayaran == ""){
+                    vex.dialog.alert('Silahkan pilih tanggal pembayaran terlebih dahulu');
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+                else{
+                    $.ajax({
+                        type: "POST",
+                        url: lunas_url + '/' + item.attr('data-id'),
+                        data : {tgl_pembayaran:tanggal_pembayaran},
+                        success: function (response) {
+                            if(response.status == 200){
+                                vex.dialog.alert(response.message);
+                            }else if(response.status == 201){
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            }else if(response.status == 202){
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            }else if(response.status == 203){
+                                vex.dialog.alert(response.message);
+                                primary_table_tagihan.ajax.reload(null, false);
+                                primary_table_riwayat_bayar.ajax.reload(null, false);
+                            }else if(response.status == 300){
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            $('button').removeAttr('disabled', 'disabled');
                         }
-                    },
-                    complete: function() {
-                        $('button').removeAttr('disabled', 'disabled');
-                    }
-                });
-            } else {
+                    });
+                }
+            } 
+            else {
                 $('button').removeAttr('disabled', 'disabled');
             }
         });
@@ -634,32 +652,39 @@ function changeJenis(el){
             closeOnCancel: true
         }, function (result) {
             if (result) {
-                $.ajax({
-                    method: "POST",
-                    url: mass_payment_url,
-                    data: { data_pembayaran: valueObj},
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            primary_table_tagihan.ajax.reload(null, false);
-                            primary_table_riwayat_bayar.ajax.reload(null, false);
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
+                var tanggal_pembayaran = $('#tanggal_pembayaran').val();
+                if(tanggal_pembayaran == null || tanggal_pembayaran == ""){
+                    vex.dialog.alert('Silahkan pilih tanggal pembayaran terlebih dahulu');
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+                else{
+                    $.ajax({
+                        method: "POST",
+                        url: mass_payment_url,
+                        data: { data_pembayaran: valueObj, tgl_pembayaran:tanggal_pembayaran},
+                        success: function (response) {
+                            if(response.status == 200){
+                                vex.dialog.alert(response.message);
+                            }else if(response.status == 201){
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            }else if(response.status == 202){
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            }else if(response.status == 203){
+                                vex.dialog.alert(response.message);
+                                primary_table_tagihan.ajax.reload(null, false);
+                                primary_table_riwayat_bayar.ajax.reload(null, false);
+                            }else if(response.status == 300){
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            var sum = 0;
+                            $('#show-total').text(sum);
                         }
-                    },
-                    complete: function() {
-                        var sum = 0;
-                        $('#show-total').text(sum);
-                    }
-                });
+                    });
+                }
             } else {
                 $('#pay-button').removeAttr('disabled', 'disabled');
             }
@@ -682,5 +707,15 @@ function changeJenis(el){
         primary_table_tagihan.ajax.reload(null, false);
         primary_table_riwayat_bayar.ajax.reload(null, false);
     }
+
+    $(function(){    
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
+    });
 
 </script>
