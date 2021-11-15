@@ -199,12 +199,14 @@ class KomponenNilaiController extends BaseController{
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($pengambilan_mp = PengambilanMp::with('nilai_mp')->where('id_kelas_mp', $input->id_kelas_mp)->first()){
-                if($check_nilai_mp = $pengambilan_mp->nilai_mp->first()){
-                    return [
-                        'status' => 300, // FAILED
-                        'message' => 'Failed To Save Komponen Nilai (Nilai mata pelajaran sudah diinput)!'
-                    ];
+            if($mode != 'delete'){
+                if($pengambilan_mp = PengambilanMp::with('nilai_mp')->where('id_kelas_mp', $input->id_kelas_mp)->first()){
+                    if($check_nilai_mp = $pengambilan_mp->nilai_mp->first()){
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => 'Failed To Save Komponen Nilai (Nilai mata pelajaran sudah diinput)!'
+                        ];
+                    }
                 }
             }
 
@@ -247,6 +249,7 @@ class KomponenNilaiController extends BaseController{
                     ];
                 }
             }
+
             elseif($mode == 'edit') {
                 $komponenMp = KomponenMp::where('id_kelas_mp','=',$input->id_kelas_mp)->where('urutan_komponen_mp','=',$input->urutan_komponen_mp)->where('id_komponen_mp', '<>', $id)->first();
 
@@ -282,11 +285,13 @@ class KomponenNilaiController extends BaseController{
                     ];
                 }
             }
+
             elseif($mode == 'delete') {
+
                 if($nilaiMp = NilaiMp::where('id_komponen_mp',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Komponen Nilai'
+                        'message' => 'Failed To Delete Komponen Nilai Karena Sudah ada Nilai yang Dimasukkan'
                     ]; 
                 }
                 else {

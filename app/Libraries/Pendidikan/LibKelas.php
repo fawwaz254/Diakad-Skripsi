@@ -22,7 +22,7 @@ class LibKelas
         if ($id == null){
             $semester_aktif = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('is_aktif_semester','=',1)->first();
 
-            $kelas = Kelas::select('kelas.id_kelas', 'jurusan.nm_jurusan', 'kelas.nm_kelas', 'kelas.tingkat', 'kelas.keterangan_kelas', 'p1.nm_pengguna as nm_sekretaris', 'ruangan.nm_ruangan', 'p2.nm_pengguna as nm_wali_kelas', 'p2.gelar_depan as gelar_depan_wali_kelas', 'p2.gelar_belakang as gelar_belakang_wali_kelas', DB::raw("(SELECT COUNT(*) FROM siswa WHERE siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa"))
+            $kelas = Kelas::select('p3.nm_pengguna as nama_guru_bk','kelas.id_kelas', 'jurusan.nm_jurusan', 'kelas.nm_kelas', 'kelas.tingkat', 'kelas.keterangan_kelas', 'p1.nm_pengguna as nm_sekretaris', 'ruangan.nm_ruangan', 'p2.nm_pengguna as nm_wali_kelas', 'p2.gelar_depan as gelar_depan_wali_kelas', 'p2.gelar_belakang as gelar_belakang_wali_kelas', DB::raw("(SELECT COUNT(*) FROM siswa WHERE siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa"))
                 ->join('jurusan','jurusan.id_jurusan','=','kelas.id_jurusan')
                 ->leftJoin('ruangan_kelas', function ($join) use ($semester_aktif) {
                     $join->on('ruangan_kelas.id_kelas', '=', 'kelas.id_kelas')
@@ -42,8 +42,16 @@ class LibKelas
                          ->where('wali_kelas.is_aktif', '=', 1)
                          ->where('wali_kelas.id_semester', '=', $semester_aktif->id_semester);
                 })
+                ->leftJoin('bk_kelas', function ($join) use ($semester_aktif) {
+                    $join->on('bk_kelas.id_kelas', '=', 'kelas.id_kelas')
+                        ->whereNull('bk_kelas.deleted_at')
+                        ->where('bk_kelas.is_aktif', '=', 1)
+                        ->where('bk_kelas.id_semester', '=', $semester_aktif->id_semester);
+                })
                 ->leftJoin('guru','guru.id_guru','=','wali_kelas.id_guru')
                 ->leftJoin('pengguna as p2','p2.id_pengguna','=','guru.id_pengguna')
+                ->leftJoin('guru as guru_bk','guru_bk.id_guru','=','bk_kelas.id_guru')
+                ->leftJoin('pengguna as p3','p3.id_pengguna','=','guru_bk.id_pengguna')
                 ->where('jurusan.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                 ->orderBy('jurusan.kode_jurusan', 'asc')
                 ->orderBy('kelas.tingkat', 'asc')

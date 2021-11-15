@@ -95,6 +95,7 @@ class PengeluaranController extends BaseController
                         })
                         ->where('id_semester_mulai', $semester_mulai->id_semester)
                         ->where('id_semester_selesai', $semester_selesai->id_semester)
+                        ->isInputByPengguna($input->auth_data->pengguna->id_pengguna)
                         ->get();
 
         return Datatables::of($list_data)
@@ -121,7 +122,7 @@ class PengeluaranController extends BaseController
         $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
 
-        if($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first()){
+        if($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first()){
 
         }else{
             $item = null;
@@ -159,7 +160,7 @@ class PengeluaranController extends BaseController
                 if(!empty($input->id)){
                     $rapb = Rapb::find($id);
                 }else{
-                    $rapb = Rapb::where(['id_subkategori_rapb' => $input->subkategori, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first();
+                    $rapb = Rapb::where(['id_subkategori_rapb' => $input->subkategori, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
 
                 if($rapb){
@@ -241,6 +242,7 @@ class PengeluaranController extends BaseController
 
     public function datatablesMenuTampilkan(Request $request){
         $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
         $tahun = $input->tahun;
         $tgl_awal = $input->tgl_awal;
@@ -252,7 +254,8 @@ class PengeluaranController extends BaseController
             $q->where('tipe_kategori_rapb', 2);
         })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
         ->whereDate('tgl_realisasi', '>=', $tgl_awal)
-        ->whereDate('tgl_realisasi', '<=', $tgl_akhir);
+        ->whereDate('tgl_realisasi', '<=', $tgl_akhir)
+        ->isInputByPengguna($auth_data->pengguna->id_pengguna);
 
         return Datatables::of($list_data)
                     ->editColumn('tgl_realisasi', function ($item) {
@@ -294,7 +297,7 @@ class PengeluaranController extends BaseController
             $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
             $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
 
-            $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester ])->first();
+            $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester , 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
             if($rapb){
 

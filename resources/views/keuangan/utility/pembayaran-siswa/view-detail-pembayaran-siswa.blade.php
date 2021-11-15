@@ -101,9 +101,18 @@
                                 </h2>
                             </div>
                             <div class="body">
+                                
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label>Pilih Tanggal Pembayaran</label>
+                                        <input type="text" class="datepicker form-control" id="tanggal_pembayaran" value="{{\Carbon\Carbon::today()->format('Y-m-d')}}">
+                                    </div>
+                                </div>
+
                                 <div>
                                     <h4 class="">Total Tagihan terpilih: Rp <span id="show-total"></span></h4>
                                 </div>
+
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tagihan">
                                         <thead>
@@ -111,9 +120,9 @@
                                                 <th>No</th>
                                                 <th>Nama Biaya</th>
                                                 <th>Besar Tagihan</th>
+                                                <th>Diskon</th>
                                                 <th>Besar Pembayaran</th>
                                                 <th>Sisa Tagihan</th>
-                                                <th>Diskon</th>
                                                 <th>
                                                     <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
                                                     <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
@@ -199,7 +208,52 @@
             </div>
             <form id="print" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-belum-terbayar/'.$siswa->id_pengguna) }}" target="_blank" method="GET">
                 <div class="modal-body">
-                    <div class="row form-group">
+
+                    <div class="row">
+                        
+                        <div class="col-md-12">
+                            <label>Tahun</label>
+                            <select class="form-control" name="tahun_tagihan">
+                            @foreach($data_semester as $semester)
+                                @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                <option value="{{$semester->thn_akademik_semester}}" selected>{{$semester->tahun_ajaran}} (Aktif)</option>
+                                @else
+                                <option value="{{$semester->thn_akademik_semester}}">{{$semester->tahun_ajaran}}</option>
+                                @endif>
+                            @endforeach
+                            </select>
+                        </div>
+
+                       <!--  <div class="col-md-4">
+                            <label>Bulan Mulai</label>
+                            <select class="form-control" name="bulan_mulai_tagihan">
+                            @foreach($data_bulan as $bulan)
+                                <option value="{{$bulan->id_bulan}}">{{$bulan->nm_bulan}}</option>
+                            @endforeach
+                            </select>
+                        </div> -->
+
+                    </div>
+
+                    <div class="row">
+
+                        <p></p>
+                        <br>
+
+                        <div class="col-md-12">
+                            <label>Bulan</label>
+                            
+                            <p></p>
+                            @foreach($nama_bulan as $key => $bulan)
+                            <input type="checkbox" name="bulan_tagihan[]" id="basic_checkbox_{{$loop->iteration}}" value="{{$index_bulan[$key]}}" class="filled-in"  />
+                            <label for="basic_checkbox_{{$loop->iteration}}" >{{$bulan}}</label>
+                            <br>
+                            @endforeach
+                        </div>
+
+                    </div>
+
+                    <!-- <div class="row form-group">
                         <div class="col">
                             <label for="catatan" class="form-control">Pilih Jenis</label>
                             <select class="form-control" name="type">
@@ -207,7 +261,9 @@
                                 <option value="2">Hanya tagihan hingga bulan ini</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
+
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" type="submit">Cetak Tagihan Belum Terbayar</button>
@@ -282,9 +338,9 @@ function changeJenis(el){
             { data: null, searchable: false, orderable: false },
             { data: 'nm_biaya', name: 'nm_biaya' },
             { data: 'besar_biaya', name: 'besar_biaya'},
+            { data: 'diskon_tagihan', name: 'diskon_tagihan'},
             { data: 'besar_pembayaran', name: 'besar_pembayaran'},
             { data: 'sisa_tagihan', name: 'sisa_tagihan'},
-            { data: 'diskon_tagihan', name: 'diskon_tagihan'},
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data){
                     if(data.sisa_tagihan > 0){
@@ -299,10 +355,10 @@ function changeJenis(el){
                 render: function(data){
                     var htmlaction;
                     if(data.sisa_tagihan > 0){
-                        htmlaction = '<button class="btn btn-warning waves-effect waves-float" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
+                        htmlaction = '<button class="btn btn-warning waves-effect waves-float" style="margin-right:3px;margin-bottom:3px" onclick="lunasAction(\''+ lunas_url +'\', this)" data-id="'+  data.id +'">'+
                         '    <span>Lunas</span>'+
                         '</button>'+
-                        '<a class="target-link btn btn-info waves-effect waves-float" href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
+                        '<a class="target-link btn btn-info waves-effect waves-float" style="margin-right:3px;margin-bottom:3px"  href="'+ detail_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
                         '    <span>Cicilan</span>'+
                         '</a> '+
                         '<a class="target-link btn btn-danger waves-effect waves-float" href="'+ diskon_tagihan_siswa_url + '/' + data.id +'/' + data.id_asli + '">'+
@@ -480,31 +536,40 @@ function changeJenis(el){
             closeOnCancel: true
         }, function (result) {
             if (result) {
-                $.ajax({
-                    type: "POST",
-                    url: lunas_url + '/' + item.attr('data-id'),
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            primary_table_tagihan.ajax.reload(null, false);
-                            primary_table_riwayat_bayar.ajax.reload(null, false);
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
+                var tanggal_pembayaran = $('#tanggal_pembayaran').val();
+                if(tanggal_pembayaran == null || tanggal_pembayaran == ""){
+                    vex.dialog.alert('Silahkan pilih tanggal pembayaran terlebih dahulu');
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+                else{
+                    $.ajax({
+                        type: "POST",
+                        url: lunas_url + '/' + item.attr('data-id'),
+                        data : {tgl_pembayaran:tanggal_pembayaran},
+                        success: function (response) {
+                            if(response.status == 200){
+                                vex.dialog.alert(response.message);
+                            }else if(response.status == 201){
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            }else if(response.status == 202){
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            }else if(response.status == 203){
+                                vex.dialog.alert(response.message);
+                                primary_table_tagihan.ajax.reload(null, false);
+                                primary_table_riwayat_bayar.ajax.reload(null, false);
+                            }else if(response.status == 300){
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            $('button').removeAttr('disabled', 'disabled');
                         }
-                    },
-                    complete: function() {
-                        $('button').removeAttr('disabled', 'disabled');
-                    }
-                });
-            } else {
+                    });
+                }
+            } 
+            else {
                 $('button').removeAttr('disabled', 'disabled');
             }
         });
@@ -587,32 +652,39 @@ function changeJenis(el){
             closeOnCancel: true
         }, function (result) {
             if (result) {
-                $.ajax({
-                    method: "POST",
-                    url: mass_payment_url,
-                    data: { data_pembayaran: valueObj},
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            primary_table_tagihan.ajax.reload(null, false);
-                            primary_table_riwayat_bayar.ajax.reload(null, false);
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
+                var tanggal_pembayaran = $('#tanggal_pembayaran').val();
+                if(tanggal_pembayaran == null || tanggal_pembayaran == ""){
+                    vex.dialog.alert('Silahkan pilih tanggal pembayaran terlebih dahulu');
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+                else{
+                    $.ajax({
+                        method: "POST",
+                        url: mass_payment_url,
+                        data: { data_pembayaran: valueObj, tgl_pembayaran:tanggal_pembayaran},
+                        success: function (response) {
+                            if(response.status == 200){
+                                vex.dialog.alert(response.message);
+                            }else if(response.status == 201){
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            }else if(response.status == 202){
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            }else if(response.status == 203){
+                                vex.dialog.alert(response.message);
+                                primary_table_tagihan.ajax.reload(null, false);
+                                primary_table_riwayat_bayar.ajax.reload(null, false);
+                            }else if(response.status == 300){
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            var sum = 0;
+                            $('#show-total').text(sum);
                         }
-                    },
-                    complete: function() {
-                        var sum = 0;
-                        $('#show-total').text(sum);
-                    }
-                });
+                    });
+                }
             } else {
                 $('#pay-button').removeAttr('disabled', 'disabled');
             }
@@ -635,5 +707,15 @@ function changeJenis(el){
         primary_table_tagihan.ajax.reload(null, false);
         primary_table_riwayat_bayar.ajax.reload(null, false);
     }
+
+    $(function(){    
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'YYYY-MM-DD',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
+    });
 
 </script>

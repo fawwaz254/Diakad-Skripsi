@@ -40,29 +40,15 @@
                 <td colspan=6><h1 align="center">TAGIHAN PEMBAYARAN KELAS {{ $kelas_data->nm_kelas }}<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
-        @foreach($all_data as $siswa)
+        @foreach($all_data as $key => $siswa)
         <br><br>
-        <table cellspacing="0" cellpadding="10" style="width: 100%; text-align: left;">
+        @if($key==0)
+        <h4>Tagihan Per Tanggal {{ \Carbon\Carbon::now()->format('j M Y') }}</h4>
+        @endif
+        <table border="1" cellspacing="0" cellpadding="2" style="width: 100%;font-size: 14px;">
             <tr>
-                <td colspan="3"><b>TAGIHAN PER TANGGAL {{ \Carbon\Carbon::now()->format('j M Y') }}</b></td>
+                <th colspan="3"> {{ $siswa->pengguna->nm_pengguna }} / {{ $siswa->kelas->nm_kelas }} / {{ $siswa->nis_siswa }}</th>
             </tr>
-            <tr>
-                <th style="width: 200px;">Siswa</th>
-                <th style="width: 5px;">:</th>
-                <th>{{ $siswa->pengguna->nm_pengguna }}</th>
-            </tr>
-            <tr>
-                <th>Kelas</th>
-                <th>:</th>
-                <th>{{ $siswa->kelas->nm_kelas }}</th>
-            </tr>
-            <tr>
-                <th>Nomor Induk</th>
-                <th>:</th>
-                <th>{{ $siswa->nis_siswa }}</th>
-            </tr>
-        </table>
-        <table border="1" cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <th style="width: 10px;">No.</th>
                 <th>Nama Biaya</th>

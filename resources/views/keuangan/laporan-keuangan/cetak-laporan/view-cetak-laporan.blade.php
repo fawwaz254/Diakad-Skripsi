@@ -46,6 +46,7 @@
                                 <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('tingkat')" >Rekap per Tingkat</a></li>
                                 <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('tanggal')">Rekap per Tanggal</a></li>
                                 <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('bulan')">Rekap per Bulan (Laporan Tahunan)</a></li>
+                                <li><a style="cursor: pointer;" onclick="printPembayaranSiswa('kategori')">Rekap per Kategori</a>
                             </ul>
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">

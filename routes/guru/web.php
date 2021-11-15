@@ -11,6 +11,30 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('action-data-pribadi', 'Guru\Biodata\DataPribadiController@actionSaveDataPribadi');
         });
 
+        /** ==== MODUL E-Learning ==== **/
+        Route::group(array('prefix' => 'e-learning'), function () {
+
+            Route::group(array('prefix' => 'manajemen-materi-ajar'), function () {
+                Route::get('/', 'Guru\ELearning\ManajemenMateriAjarController@viewManajemenMateriAjar');
+                Route::get('datatables', 'Guru\ELearning\ManajemenMateriAjarController@datatablesManajemenMateriAjar');
+                Route::get('add', 'Guru\ELearning\ManajemenMateriAjarController@addManajemenMateriAjar');
+                Route::get('edit/{id}', 'Guru\ELearning\ManajemenMateriAjarController@EditManajemenMateriAjar');
+            });
+
+            Route::post('action-manajemen-materi-ajar/{mode}/{id}', 'Guru\ELearning\ManajemenMateriAjarController@actionManajemenMateriAjar');
+            
+        });
+
+
+         /** ==== MODUL TUTORIAL ==== **/
+        Route::group(array('prefix' => 'tutorial'), function () {
+            Route::group(array('prefix' => 'video'), function () {
+                Route::get('/', 'Guru\Tutorial\VideoController@viewVideo');
+                Route::get('/modul/{id_modul}', 'Guru\Tutorial\VideoController@viewVideoModul');
+                Route::get('/menu/{id_menu}', 'Guru\Tutorial\VideoController@viewVideoMenu');
+            });
+        });
+
         /** ==== MODUL JADWAL ==== **/
         Route::group(array('prefix' => 'jadwal'), function () {
             // MENU Kalender Akademik
@@ -271,6 +295,10 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('post-rekap-absensi-kelas', 'Guru\WaliKelas\RekapAbsensiKelasController@actionViewRekapAbsensiKelas');
             Route::get('rekap-absensi-kelas/rekap-absensi-kelas-siswa/{id_jadwal_kelas_mp}', 'Guru\WaliKelas\RekapAbsensiKelasController@viewRekapAbsensiKelasSiswa');
 
+            Route::get('rekap-absensi-kelas-daring', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@viewRekapAbsensiKelasDaring');
+            Route::post('post-rekap-absensi-kelas-daring', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@actionViewRekapAbsensiKelasDaring');
+            Route::get('rekap-absensi-kelas-daring/view/{id_kelas_mp_grup}', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@viewDetailRekapAbsensiKelasDaring');
+
             // MENU Home Visit
             Route::get('home-visit', 'Guru\WaliKelas\HomeVisitController@viewHomeVisit');
             Route::get('home-visit/datatables', 'Guru\WaliKelas\HomeVisitController@datatablesHomeVisit');
@@ -367,6 +395,14 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::post('datatables', 'Guru\KelasDaring\MengajarDaringController@datatablesMengajarDaring');
                 Route::get('{id}', 'Guru\KelasDaring\MengajarDaringController@viewDetailMengajarDaring');
                 Route::post('change-status/{id}', 'Guru\KelasDaring\MengajarDaringController@changeStatusMengajarDaring');
+            });
+
+            Route::group(array('prefix' => 'laporan-absen'), function () {
+
+                Route::get('/', 'Guru\KelasDaring\LaporanAbsenController@viewLaporanAbsen');
+                Route::get('view/{id}', 'Guru\KelasDaring\LaporanAbsenController@viewLaporanAbsenDetail');
+                Route::post('post-laporan-absen', 'Guru\KelasDaring\LaporanAbsenController@postLaporanAbsen');
+
             });
 
         });

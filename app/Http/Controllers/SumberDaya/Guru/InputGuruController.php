@@ -20,6 +20,7 @@ use App\Models\JenisPtk as JenisPtk;
 use App\Models\JenisKeahlianLab as JenisKeahlianLab;
 use App\Models\JenisSumberGaji as JenisSumberGaji;
 use App\Models\JenisLembagaPengangkat as JenisLembagaPengangkat;
+use App\Models\StatusPengguna as StatusPengguna;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -42,7 +43,9 @@ class InputGuruController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('sumber-daya/guru/input-guru/view-input-guru',compact('auth_data'));
+        $status = StatusPengguna::where('status_join_table',2)->get();
+
+        return view('sumber-daya/guru/input-guru/view-input-guru',compact('auth_data','status'));
 
     }
 
@@ -122,7 +125,34 @@ class InputGuruController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = LibGuru::fetchDataAllGuru($auth_data,null,"1");
+        $list_data = Guru::select(
+                'guru.id_guru',
+                'guru.id_pengguna',
+                'pengguna.id_status_pengguna',
+                'guru.jenis_jabatan',
+                'pengguna.nm_pengguna',
+                'pengguna.gelar_depan',
+                'pengguna.gelar_belakang',
+                'guru.nip_guru',
+                'unit_kerja.nm_unit_kerja',
+                'status_pengguna.nm_status_pengguna',
+                    DB::raw("(SELECT COUNT(*) FROM pengampu_mp 
+                                JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengampu_mp.id_kelas_mp 
+                                JOIN semester ON semester.id_semester = kelas_mp.id_semester 
+                                WHERE pengampu_mp.id_guru = guru.id_guru 
+                                AND semester.is_aktif_semester = 1 AND pengampu_mp.deleted_at IS NULL) 
+                                AS jml_mengajar_semester_aktif")
+                )
+                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                    ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                    ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')
+                    ->with('pengguna')
+                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->orderBy('pengguna.nm_pengguna', 'asc');
+
+        if($input->id_status_pengguna){
+            $list_data = $list_data->where('pengguna.id_status_pengguna',$input->id_status_pengguna);
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('nm_pengguna', function($item){

@@ -18,9 +18,6 @@
                                         <th>Nama Kesimpulan</th>
                                         <th>Poin Bawah</th>
                                         <th>Poin Atas</th>
-                                        <th>Deskripsi 1</th>
-                                        <th>Deskripsi 2</th>
-                                        <th>Deskripsi 3</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -52,9 +49,6 @@ responsive: true,
             { data: 'nm_kesimpulan_pelanggaran', name: 'nm_kesimpulan_pelanggaran' },
             { data: 'poin_bawah_kesimpulan_pelanggaran', name: 'poin_bawah_kesimpulan_pelanggaran' },
             { data: 'poin_atas_kesimpulan_pelanggaran', name: 'poin_atas_kesimpulan_pelanggaran' },
-            { data: 'deskripsi_kesimpulan_pelanggaran_1', name: 'deskripsi_kesimpulan_pelanggaran_1' },
-            { data: 'deskripsi_kesimpulan_pelanggaran_2', name: 'deskripsi_kesimpulan_pelanggaran_2' },
-            { data: 'deskripsi_kesimpulan_pelanggaran_3', name: 'deskripsi_kesimpulan_pelanggaran_3' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

@@ -42,6 +42,7 @@ Route::post('upload', function (Request $request) {
     return redirect()->back();
 });*/
 // END CONTOH UPLOAD DO
+
 Route::get('guid', function(){
     $now = Carbon::now(env('APP_TIMEZONE', ''));
     $prefix = Sekolah::first()->prefix;
@@ -56,6 +57,12 @@ Route::get('guid', function(){
     }
     return $html;
 });
+
+Route::get('forget-password', 'ForgetPasswordController@index');
+Route::post('send-link-reset-password', 'ForgetPasswordController@sendLinkResetPassword');
+Route::get('check-link-reset-password', 'ForgetPasswordController@checkLinkResetPassword');
+Route::get('reset-password', 'ForgetPasswordController@resetPassword');
+Route::post('reset-password-action', 'ForgetPasswordController@resetPasswordAction');
 
 Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
 Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');

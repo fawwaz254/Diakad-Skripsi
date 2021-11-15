@@ -1,10 +1,13 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#pelanggaran-siswa/input-pelanggaran-mp')}}"><i class="material-icons">note_add</i><span>Tambah Pelanggaran Siswa KBM</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>DATA PELANGGARAN SISWA MP</h2>
+                        <h2>DATA PELANGGARAN SISWA KBM</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">

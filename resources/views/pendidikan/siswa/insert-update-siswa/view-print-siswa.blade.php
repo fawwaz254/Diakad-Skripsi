@@ -136,7 +136,7 @@
 		<tr>
 			<td>17.</td>
 			<td>Email Pribadi</td>
-			<td>: {{$siswa->email_ortu}}</td>
+			<td>: {{$siswa->email_pengguna}}</td>
 		</tr>
 		<tr>
 			<td>18.</td>

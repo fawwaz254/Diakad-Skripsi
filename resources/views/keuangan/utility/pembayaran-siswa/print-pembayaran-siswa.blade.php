@@ -76,7 +76,7 @@
         <table border="0" style="width: 100%;">
             <tr>
                 <td></td>
-                <td><b>PEMBAYARAN TANGGAL {{date_format(date_create($tgl_pembayaran), 'd M Y')}}</b></td>
+                <td><b>Pembayaran Tanggal {{ indonesiaDate(\Carbon\Carbon::parse($tgl_pembayaran)->format('Y-m-d')) }}</b></td>
             </tr>
             <tr>
                 <td></td>
@@ -85,9 +85,9 @@
                         <tr>
                             <th>No.</th>
                             <th>Nama Biaya</th>
+                            <th>Besar Tagihan</th>
+                            <th>Potongan Biaya</th>
                             <th>Besar Pembayaran</th>
-                            <th>Frekuensi</th>
-                            <th>Subtotal</th>
                         </tr>
                         @php
                             $no = 1;
@@ -95,6 +95,7 @@
                         @foreach($data_pembayaran_siswa as $pembayaran_siswa)
                         <tr>
                             <td>{{$no++}}.</td>
+
                             @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
                             @php
                             $ket = $pembayaran_siswa->nm_bulan.' '.$pembayaran_siswa->thn_akademik_semester;
@@ -103,21 +104,37 @@
                             @else
                             <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                             @endif
-                            <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
-                            <td>1x</td>
-                            <td>{{"Rp".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+
+                            <td>{{"Rp ".number_format($pembayaran_siswa->besar_biaya)}}</td>
+
+                            <td>
+                                @if($pembayaran_siswa->total_potongan)
+                                {{"Rp ".number_format($pembayaran_siswa->total_potongan)}}
+                                @else
+                                -
+                                @endif
+                            </td>
+
+                            <td>{{"Rp ".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+                            
                         </tr>
                         @endforeach
                         <tr>
-                            <td colspan="4" align="center"><b>TOTAL</b></td>
-                            <td align="center"><b>{{"Rp".number_format($data_pembayaran_siswa->sum('besar_pembayaran'))}}</b></td>
+                            <td colspan="4" style="text-align:center;"><b>TOTAL PEMBAYARAN</b></td>
+                            <td align="center"><b>{{"Rp ".number_format($data_pembayaran_siswa->sum('besar_pembayaran'))}}</b></td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
+
+        @if($nama_sekolah == 'SMP Muhammadiyah 6 Krian')
+        <p>Total Tagihan SPP yang Belum Terbayar : {{"Rp ".number_format($tagihan_belum_terbayar_spp)}}<br>
+        Total Tagihan Lain - lain yang Belum Terbayar :  {{"Rp ".number_format($tagihan_belum_terbayar_non_spp)}}</p>
+        @endif
+        
         <div class="ttd avoid-page-break">
-            {{$auth_data->sekolah_data->alamat_kecamatan}}, {{date_format(date_create($tgl_pembayaran), 'd M Y')}} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
+            {{$auth_data->sekolah_data->alamat_kecamatan}}, {{ indonesiaDate(\Carbon\Carbon::parse($tgl_pembayaran)->format('Y-m-d')) }} <br><br><br><br> {{$auth_data->pengguna->nm_pengguna}}
         </div>
         <div class="clear"></div>
     </div>

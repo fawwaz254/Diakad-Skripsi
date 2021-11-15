@@ -76,7 +76,7 @@ class KesimpulanPelanggaranController extends BaseController{
             'nm_kesimpulan_pelanggaran' => 'required',
             'poin_bawah_kesimpulan_pelanggaran' => 'required',
             'poin_atas_kesimpulan_pelanggaran' => 'required',
-            'deskripsi_kesimpulan_pelanggaran_1' => 'required'
+            // 'deskripsi_kesimpulan_pelanggaran_1' => 'required'
             /*'deskripsi_kesimpulan_pelanggaran_2' => 'required',
             'deskripsi_kesimpulan_pelanggaran_3' => 'required'*/
         ]);
@@ -99,9 +99,9 @@ class KesimpulanPelanggaranController extends BaseController{
                 $kesimpulanPelanggaran->nm_kesimpulan_pelanggaran           = $input->nm_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_bawah_kesimpulan_pelanggaran   = $input->poin_bawah_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_atas_kesimpulan_pelanggaran    = $input->poin_atas_kesimpulan_pelanggaran;
-                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
-                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
-                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
+                // $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
+                // $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
+                // $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
                 $kesimpulanPelanggaran->id_sekolah                          = $input->auth_data->pengguna->id_sekolah;
                 $kesimpulanPelanggaran->created_by                          = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->save();
@@ -118,9 +118,9 @@ class KesimpulanPelanggaranController extends BaseController{
                 $kesimpulanPelanggaran->nm_kesimpulan_pelanggaran           = $input->nm_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_bawah_kesimpulan_pelanggaran   = $input->poin_bawah_kesimpulan_pelanggaran;
                 $kesimpulanPelanggaran->poin_atas_kesimpulan_pelanggaran    = $input->poin_atas_kesimpulan_pelanggaran;
-                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
-                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
-                $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
+                // $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_1  = $input->deskripsi_kesimpulan_pelanggaran_1;
+                // $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_2  = $input->deskripsi_kesimpulan_pelanggaran_2;
+                // $kesimpulanPelanggaran->deskripsi_kesimpulan_pelanggaran_3  = $input->deskripsi_kesimpulan_pelanggaran_3;
                 $kesimpulanPelanggaran->updated_by                          = $input->auth_data->pengguna->id_pengguna;
                 $kesimpulanPelanggaran->updated_at                          = $now;
                 $kesimpulanPelanggaran->save();

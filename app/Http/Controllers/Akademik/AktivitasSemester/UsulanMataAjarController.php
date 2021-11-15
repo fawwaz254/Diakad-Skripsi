@@ -95,7 +95,7 @@ class UsulanMataAjarController extends BaseController
         $input      = (object) $request->input();
         $auth_data  = $input->auth_data;
 
-        $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+        $mapel      = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
                             ->join('jenis_mata_pelajaran', function ($join) {
                                 $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                                      ->whereNull('jenis_mata_pelajaran.deleted_at');
@@ -116,7 +116,7 @@ class UsulanMataAjarController extends BaseController
 
         $kelas_mp   = KelasMp::with('kelas')->where('id_kelas_mp', '=', $id_kelas_mp)->first();
 
-        $mapel      = MataPelajaran::join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+        $mapel      = MataPelajaran::leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
                             ->join('jenis_mata_pelajaran', function ($join) {
                                 $join->on('jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
                                     ->whereNull('jenis_mata_pelajaran.deleted_at');
@@ -194,7 +194,7 @@ class UsulanMataAjarController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = MataPelajaran::join('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
-            ->join('jurusan', 'mata_pelajaran.id_jurusan', '=', 'jurusan.id_jurusan')
+            ->leftjoin('jurusan', 'mata_pelajaran.id_jurusan', '=', 'jurusan.id_jurusan')
             ->whereNotExists(function ($query) use ($id_semester) {
                 $query->select(DB::raw(1))
                       ->from('kelas_mp')
@@ -282,6 +282,183 @@ class UsulanMataAjarController extends BaseController
         return view('akademik/aktivitas-semester/usulan-mata-ajar/copy-semester-usulan-mata-ajar', compact('auth_data', 'id_semester', 'semester', 'data_semester'));
     }
 
+    public function hapusJadwal(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $jadwal               = JadwalKelasMp::find($id);
+        $kelas_mp = $jadwal->id_kelas_mp;
+        $jadwal->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+        $jadwal->save();
+
+        $jadwal->delete();
+
+        return [
+            'status'  => 202, // SUCCESS AND LOAD TABLE
+            'path'    => 'aktivitas-semester/usulan-mata-ajar/edit/'.$kelas_mp,
+            'message' => 'Delete Jadwal Kelas successfully'
+        ];
+
+    }
+
+    public function cekJadwalCrash(Request $request,$id){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'pjma' => 'required',
+            'hari_jadwal1' => 'required',
+            'ruangan1' => 'required',
+            'jam_jadwal1' => 'required',
+            'jam_jadwal_selesai1' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            $message_error = [];
+
+            if(LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1)) {
+
+                $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1);
+                
+                if ($cek_jadwal['guru'] == 0) {
+                    array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 1');
+                    // return [
+                    //     'status' => 300, // FAILED
+                    //     'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 1'
+                    // ];
+                } 
+
+                elseif ($cek_jadwal['ruangan'] == 0) {
+                    array_push($message_error,'Ruangan Pada Jadwal 1 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama');
+                    // return [
+                    //     'status' => 300, // FAILED
+                    //     'message' => 'Ruangan Pada Jadwal 1 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                    // ];
+                }
+
+            }
+
+            if($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
+                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2)) {
+                    $cek_jadwal2 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2);
+
+                    if ($cek_jadwal2['guru'] == 0) {
+                        array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 2');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 2'
+                        // ];
+                    } elseif ($cek_jadwal2['ruangan'] == 0) {
+                        array_push($message_error,'Ruangan Pada Jadwal 2 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Ruangan Pada Jadwal 2 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                        // ];
+                    }
+                }
+            }
+
+            if($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
+                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3)) {
+                    $cek_jadwal3 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3);
+
+                    if ($cek_jadwal3['guru'] == 0) {
+                         array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 3');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 3'
+                        // ];
+                    } elseif ($cek_jadwal3['ruangan'] == 0) {
+                        array_push($message_error,'Ruangan Pada Jadwal 3 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Ruangan Pada Jadwal 3 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                        // ];
+                    }
+                }
+            }
+
+            if($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
+                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4)) {
+                    $cek_jadwal4 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4);
+
+                    if ($cek_jadwal4['guru'] == 0) {
+                        array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 4');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 4'
+                        // ];
+                    } 
+
+                    elseif ($cek_jadwal4['ruangan'] == 0) {
+                        array_push($message_error,'Ruangan Pada Jadwal 4 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Ruangan Pada Jadwal 4 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                        // ];
+                    }
+                }
+            }
+
+            if($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
+                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5)) {
+                    $cek_jadwal5 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5);
+
+                    if ($cek_jadwal5['guru'] == 0) {
+                        array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 5');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Ruangan Pada Jadwal 5 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                        // ];
+                    } elseif ($cek_jadwal5['ruangan'] == 0) {
+                        array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 5');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Ruangan Pada Jadwal 5 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                        // ];
+                    }
+                }
+            }
+
+            if($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
+                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6)) {
+                    $cek_jadwal6 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6);
+
+                    if ($cek_jadwal6['guru'] == 0) {
+                        array_push($message_error,'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 6');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 6'
+                        // ];
+                    } elseif ($cek_jadwal6['ruangan'] == 0) {
+                        array_push($message_error,'Ruangan Pada Jadwal 6 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama');
+                        // return [
+                        //     'status' => 300, // FAILED
+                        //     'message' => 'Ruangan Pada Jadwal 6 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
+                        // ];
+                    }
+                }
+            }
+
+            return [
+                'status' => 200, // FAILED
+                'message' => $message_error
+            ];
+
+        }
+
+    }
+
     public function actionUsulanMataAjar(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
@@ -323,7 +500,9 @@ class UsulanMataAjarController extends BaseController
                     'message'   =>  'Save Usulan Mata Ajar successfully',
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
-            } elseif ($mode == 'copy') {
+            } 
+
+            elseif ($mode == 'copy') {
                 $batch_insert_kelas_mp = [];
                 foreach ($input->id_kelas as $id_kelas) {
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -353,7 +532,9 @@ class UsulanMataAjarController extends BaseController
                     'message'   =>  'Save Usulan Mata Ajar successfully',
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
-            } elseif ($mode == 'copy-jadwal-semester') {
+            } 
+
+            elseif ($mode == 'copy-jadwal-semester') {
                 // semester paste
                 $id_semester = $id;
                 
@@ -473,112 +654,9 @@ class UsulanMataAjarController extends BaseController
                                 'message' => 'Edit Usulan Mata Ajar Gagal! '
                             ];
                 }
-            } elseif ($mode == 'edit') {
-                if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1)) {
-                    $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan1, $input->hari_jadwal1, $input->jam_jadwal1, $input->jam_jadwal_selesai1);
-                    
-                    if ($cek_jadwal['guru'] == 0) {
-                        return [
-                            'status' => 300, // FAILED
-                            'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 1'
-                        ];
-                    } elseif ($cek_jadwal['ruangan'] == 0) {
-                        return [
-                            'status' => 300, // FAILED
-                            'message' => 'Ruangan Pada Jadwal 1 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
-                        ];
-                    }
-                }
+            } 
 
-                if ($input->jam_jadwal2 != null && $input->jam_jadwal_selesai2 != null && $input->hari_jadwal2 != null && $input->ruangan2 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2)) {
-                        $cek_jadwal2 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan2, $input->hari_jadwal2, $input->jam_jadwal2, $input->jam_jadwal_selesai2);
-
-                        if ($cek_jadwal2['guru'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 2'
-                        ];
-                        } elseif ($cek_jadwal2['ruangan'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Ruangan Pada Jadwal 2 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
-                        ];
-                        }
-                    }
-                }
-
-                if ($input->jam_jadwal3 != null && $input->jam_jadwal_selesai3 != null && $input->hari_jadwal3 != null && $input->ruangan3 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3)) {
-                        $cek_jadwal3 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan3, $input->hari_jadwal3, $input->jam_jadwal3, $input->jam_jadwal_selesai3);
-
-                        if ($cek_jadwal3['guru'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 3'
-                        ];
-                        } elseif ($cek_jadwal3['ruangan'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Ruangan Pada Jadwal 3 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
-                        ];
-                        }
-                    }
-                }
-
-                if ($input->jam_jadwal4 != null && $input->jam_jadwal_selesai4 != null && $input->hari_jadwal4 != null && $input->ruangan4 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4)) {
-                        $cek_jadwal4 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan4, $input->hari_jadwal4, $input->jam_jadwal4, $input->jam_jadwal_selesai4);
-
-                        if ($cek_jadwal4['guru'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 4'
-                        ];
-                        } elseif ($cek_jadwal4['ruangan'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Ruangan Pada Jadwal 4 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
-                        ];
-                        }
-                    }
-                }
-
-                if ($input->jam_jadwal5 != null && $input->jam_jadwal_selesai5 != null && $input->hari_jadwal5 != null && $input->ruangan5 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5)) {
-                        $cek_jadwal5 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan5, $input->hari_jadwal5, $input->jam_jadwal5, $input->jam_jadwal_selesai5);
-
-                        if ($cek_jadwal5['guru'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 5'
-                        ];
-                        } elseif ($cek_jadwal5['ruangan'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Ruangan Pada Jadwal 5 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
-                        ];
-                        }
-                    }
-                }
-
-                if ($input->jam_jadwal6 != null && $input->jam_jadwal_selesai6 != null && $input->hari_jadwal6 != null && $input->ruangan6 != null) {
-                    if (LibAkademik::cekJadwalKelasMpBerubah($auth_data, $id, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6)) {
-                        $cek_jadwal6 = LibAkademik::cekJadwalKelas($auth_data, $input->pjma, $input->ruangan6, $input->hari_jadwal6, $input->jam_jadwal6, $input->jam_jadwal_selesai6);
-
-                        if ($cek_jadwal6['guru'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Guru PJMA Sudah Mempunyai Jadwal di Hari dan Jam yang Sama Pada Jadwal 6'
-                        ];
-                        } elseif ($cek_jadwal6['ruangan'] == 0) {
-                            return [
-                            'status' => 300, // FAILED
-                            'message' => 'Ruangan Pada Jadwal 6 Sudah Mempunyai Jadwal di Hari dan Jam yang Sama'
-                        ];
-                        }
-                    }
-                }
+            elseif ($mode == 'edit') {
 
                 DB::beginTransaction();
 
@@ -891,7 +969,9 @@ class UsulanMataAjarController extends BaseController
                         'message' => 'Update Usulan Mata Ajar successfully',
                         'path'      =>  'aktivitas-semester/usulan-mata-ajar/edit/'.$id
                     ];
-                } catch (\Exception $e) {
+                } 
+
+                catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
 
@@ -900,7 +980,9 @@ class UsulanMataAjarController extends BaseController
                                 'message' => 'Edit Usulan Mata Ajar Gagal!'
                             ];
                 }
-            } elseif ($mode == 'delete') {
+            } 
+
+            elseif ($mode == 'delete') {
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE

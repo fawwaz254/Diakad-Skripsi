@@ -65,6 +65,9 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('usulan-mata-ajar/copy/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyUsulanMataAjar');
             Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyJadwalSemesterLain');
 
+            Route::post('usulan-mata-ajar/hapus-jadwal/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@hapusJadwal');
+
+            Route::post('usulan-mata-ajar/cek-jadwal-crash/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@cekJadwalCrash');
             Route::post('action-usulan-mata-ajar/{mode}/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionUsulanMataAjar');
 
             // MENU Monitoring Kelas
@@ -207,10 +210,18 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesKelasAbsensiHariSiswa');
             Route::post('absensi-harian-siswa/action/{mode}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
             Route::post('absensi-harian-siswa/action/{mode}/{id}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
+
+            Route::get('monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesMonitoringKelasKosong');
+             Route::get('rekap-monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesRekapMonitoringKelasKosong');
         });
     
         Route::group(array('prefix' => 'monitoring'), function () {
+
             Route::get('monitoring-presensi', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
+
+            Route::get('monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewMonitoringKelasKosong');
+            Route::get('rekap-monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewRekapMonitoringKelasKosong');
+
         });
 
         // MODUL KELAS DARING

@@ -29,7 +29,7 @@
 
                             <div class="col-md-3">
                                 <label>Pertemuan ke</label>
-                                <input type="number" class="form-control" min="1" name="pertemuan_ke" required="" aria-required="true" aria-invalid="true" value="1" >
+                                <input type="number" class="form-control" min="1" name="pertemuan_ke" required="" aria-required="true" aria-invalid="true" value="{{$item2->pertemuan_ke}}" >
                             </div>
 
                             <div class="col-md-3">

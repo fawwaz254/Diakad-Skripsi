@@ -59,6 +59,15 @@
                                 <input type="text" class="datepicker form-control" name="tgl_kegiatan_siswa" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
+
+                        <div class="alert alert-warning">
+                            <strong>Catatan !</strong> Untuk link sertifikat pastikan anda mengupload di google drive dengan settingan publik, untuk tutorial menguplod dengan settingan publik bisa dilihat <span style="text-decoration:underline;cursor:pointer" id="disini">disini</span>.
+                        </div>
+
+                        <div id="video" style="display:none;">
+                        <iframe width="870" height="393" src="https://www.youtube.com/embed/ccXgIuT0Hjc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+
                          <h2 class="card-inside-title">
                             Link Sertifikat
                         </h2>
@@ -80,6 +89,12 @@
 </div>
 
 @include('scriptjs')
+
+<script type="text/javascript">
+    $('#disini').click(function(){
+        $('#video').show();
+    })
+</script>
 
 <script type="text/javascript">
     $(function(){

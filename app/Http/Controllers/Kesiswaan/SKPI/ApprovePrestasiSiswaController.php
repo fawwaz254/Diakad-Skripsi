@@ -148,6 +148,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.status',
             'prestasi_siswa.jenis_lomba_siswa',
+            'prestasi_siswa.link_sertif_prestasi_siswa',
             'p1.nm_pengguna as nm_siswa',
             'siswa.nisn_siswa',
             'siswa.nis_siswa',
@@ -233,6 +234,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                 ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_prestasi_siswa,
+                        'link_sertifikat' => $item->link_sertif_prestasi_siswa,
                         'status' => $item->status
                     );
                     return $data;
@@ -292,6 +294,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 
             $prestasi = PrestasiSiswa::findOrFail($id);
             $prestasi->status = 10;
+            $prestasi->keterangan = $input->keterangan;
             $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 
@@ -305,6 +308,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 
             $kegiatan = KegiatanSiswa::findOrFail($id);
             $kegiatan->status = 10;
+            $kegiatan->keterangan = $input->keterangan;
             $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
             $kegiatan->approved_at = $now;
 

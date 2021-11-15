@@ -72,9 +72,9 @@ class LibAkademik
         // get mode view
         if ($id == null) {
             $mataPelajaran = MataPelajaran::select('mata_pelajaran.id_mata_pelajaran', 'jurusan.nm_jurusan', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.kredit_tatap_muka', 'mata_pelajaran.kredit_praktikum', 'mata_pelajaran.kredit_tutor', 'mata_pelajaran.kredit_prak_lapangan', 'mata_pelajaran.kredit_simulasi', 'mata_pelajaran.tingkat_semester', 'mata_pelajaran.nilai_kkm', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran')
-                            ->join('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
-                            ->leftJoin('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran')
-                            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+                            ->leftjoin('jurusan', 'jurusan.id_jurusan', '=', 'mata_pelajaran.id_jurusan')
+                            ->leftJoin('jenis_mata_pelajaran', 'jenis_mata_pelajaran.id_jenis_mata_pelajaran', '=', 'mata_pelajaran.id_jenis_mata_pelajaran');
+                            // ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
             if ($is_datatable == null) {
                 $mataPelajaran = $mataPelajaran->get();
@@ -142,11 +142,12 @@ class LibAkademik
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
 
         // cek by guru
+        // cek apakah guru ini memiliki kelas lain di jadwal yang sama
         $cekGuru = KelasMp::join('pengampu_mp', function ($join) {
-            $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                                                        ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
-                                                        ->whereNull('pengampu_mp.deleted_at');
-        })
+                                $join->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                                ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
+                                ->whereNull('pengampu_mp.deleted_at');
+                            })
                             ->join('jadwal_kelas_mp', function ($q) {
                                 $q->on('jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
                                     ->whereNull('jadwal_kelas_mp.deleted_at');
@@ -170,9 +171,9 @@ class LibAkademik
 
         // cek by ruangan
         $cekRuangan = JadwalKelasMp::join('jadwal_jam AS jj', function ($q) {
-            $q->on('jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
-                                            ->whereNull('jj.deleted_at');
-        })
+                                        $q->on('jj.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
+                                          ->whereNull('jj.deleted_at');
+                                    })
                                     ->join('jadwal_jam AS jjs', function ($q) {
                                         $q->on('jjs.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam_selesai')
                                             ->whereNull('jjs.deleted_at');
@@ -207,9 +208,9 @@ class LibAkademik
         $semester_aktif = Semester::where(['id_sekolah' => $auth_data->pengguna->id_sekolah, 'is_aktif_semester' => 1])->first();
 
         $cek_jadwal_kelas_mp = JadwalKelasMp::join('kelas_mp', function ($q) {
-            $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
-                                                                        ->whereNull('kelas_mp.deleted_at');
-        })
+                                        $q->on('kelas_mp.id_kelas_mp', '=', 'jadwal_kelas_mp.id_kelas_mp')
+                                            ->whereNull('kelas_mp.deleted_at');
+                                    })
                                     ->where('jadwal_kelas_mp.id_kelas_mp', $id_kelas_mp)
                                     ->where('jadwal_kelas_mp.id_ruangan', '=', $id_ruangan)
                                     ->where('jadwal_kelas_mp.id_jadwal_hari', '=', $id_jadwal_hari)

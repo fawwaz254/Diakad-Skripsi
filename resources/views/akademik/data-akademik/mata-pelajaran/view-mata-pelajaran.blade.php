@@ -19,14 +19,7 @@
                                         <th>Kode Mapel</th>
                                         <th>Nama Mapel</th>
                                         <th>Jenis Mapel</th>
-                                        <th>Jam KBM</th>
-                                        <th>Jam TM</th>
-                                        <th>Jam Prak.</th>
-                                        <th>Jam Tutor</th>
-                                        <th>Jam Prak.Lap.</th>
-                                        <th>Jam Simulasi</th>
-                                        <th>Tingkat Semester</th>
-                                        <th>KKM</th>
+                                        <!-- <th>KKM</th> -->
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -59,14 +52,7 @@
             { data: 'kd_mata_pelajaran', name: 'mata_pelajaran.kd_mata_pelajaran' },
             { data: 'nm_mata_pelajaran', name: 'mata_pelajaran.nm_mata_pelajaran' },
             { data: 'nm_jenis_mata_pelajaran', name: 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran' },
-            { data: 'kredit_semester', name: 'mata_pelajaran.kredit_semester' },
-            { data: 'kredit_tatap_muka', name: 'mata_pelajaran.kredit_tatap_muka' },
-            { data: 'kredit_praktikum', name: 'mata_pelajaran.kredit_praktikum' },
-            { data: 'kredit_tutor', name: 'mata_pelajaran.kredit_tutor' },
-            { data: 'kredit_prak_lapangan', name: 'mata_pelajaran.kredit_prak_lapangan' },
-            { data: 'kredit_simulasi', name: 'mata_pelajaran.kredit_simulasi' },
-            { data: 'tingkat_semester', name: 'mata_pelajaran.tingkat_semester' },
-            { data: 'nilai_kkm', name: 'mata_pelajaran.nilai_kkm' },
+            // { data: 'nilai_kkm', name: 'mata_pelajaran.nilai_kkm' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

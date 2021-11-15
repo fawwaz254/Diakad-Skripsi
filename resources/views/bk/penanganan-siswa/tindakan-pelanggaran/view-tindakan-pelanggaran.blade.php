@@ -1,10 +1,13 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#penanganan-siswa/input-pelanggaran/add')}}"><i class="material-icons">note_add</i><span>Tambah Pelanggaran Siswa</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 {{csrf_field()}}
                 <div class="header">
-                    <h2>DATA PELANGGARAN & TINDAKAN PELANGGARAN</h2>
+                    <h2>DATA PELANGGARAN SISWA</h2>
                 </div>
                 <div class="body">
                     <ul class="nav nav-tabs" role="tablist">
@@ -20,27 +23,23 @@
                             </li>
                             <li role="presentation">
                                 <a href="#sudah_tindakan" data-toggle="tab">
-                                    <i class="material-icons">done_all</i> SUDAH TINDAKAN
+                                    <i class="material-icons">done_all</i> SUDAH DITINDAK
                                 </a>
                             </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade active in" id="belum_tindakan_nonkbm">
                             <div class="body">
-                                <div class="table-responsive" style="overflow-x: auto;">
+                                <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                             <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_nonkbm">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Guru Input</th>
-                                                <th>Tingkat Pelanggaran</th>
-                                                <th>Keterangan Sub-Kategori</th>
-                                                <th>Catatan Pelanggaran</th>
-                                                <th>Catatan Khusus</th>
+                                                <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Aktor Input Pelanggaran</th>
+                                                <th>Nama Guru Input</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -50,18 +49,17 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="belum_tindakan_kbm">
                             <div class="body">
-                                <div class="table-responsive" style="overflow-x: auto;">
+                                <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_kbm">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Guru Input</th>
                                                 <th>Mapel</th>
-                                                <th>Catatan Pelanggaran</th>
+                                                <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Aktor Input Pelanggaran</th>
+                                                <th>Nama Guru Input</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -71,25 +69,22 @@
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="sudah_tindakan">
                             <div class="body">
-                                <div class="table-responsive" style="overflow-x: auto;">
+                                <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                                     <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Siswa</th>
                                                 <th>Kelas</th>
-                                                <th>Nama Guru Input</th>
-                                                <th>Tingkat Pelanggaran</th>
-                                                <th>Keterangan Sub-Kategori</th>
-                                                <th>Catatan Pelanggaran</th>
-                                                <th>Catatan Khusus</th>
+                                                <th>Sub Kategori</th>
                                                 <th>Tanggal Pelanggaran</th>
-                                                <th>Aktor Input Pelanggaran</th>
+                                                <th>Nama Guru Input</th>
                                                 <th>Nama Input Tindakan</th>
-                                                <th>Catatan Tindakan</th>
-                                                <th>Catatan Khusus</th>
-                                                <th>Tanggal Tindakan</th>
-                                                <th>Aktor Input Tindakan</th>
+                                                <!-- <th>Catatan Tindakan</th>
+                                                <th>Catatan Khusus</th> -->
+                                             
+                                             <!--    <th>Tanggal Tindakan</th>
+                                                <th>Aktor Input Tindakan</th> -->
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -128,13 +123,9 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
-            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
-            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
-            { data: 'catatan_pelanggaran', name: 'pelanggaran_siswa.catatan_pelanggaran' },
-            { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
+            { data: 'nm_subkategori_pelanggaran', name: 'nm_subkategori_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'pelanggaran_siswa.tgl_pelanggaran' },
-            { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran', searchable: false, orderable: false },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url_nonkbm + '/' + data.id +'">'+
@@ -142,7 +133,12 @@
                     '</a>';
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if(data.cek_pj_bk){
+                $(row).css('background-color', 'hsl(28, 80%, 61%)');
+            }
+        }
     });
 
     primary_table_belum_nonkbm.on( 'draw', function () {
@@ -167,11 +163,10 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', name: 'pengguna.nm_pengguna' },
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
-            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'nm_mapel', name: 'mata_pelajaran.nm_mata_pelajaran' },
-            { data: 'catatan_pelanggaran', name: 'presensi_mp_pelanggaran.catatan_pelanggaran' },
+            { data: 'nm_subkategori_pelanggaran', name: 'nm_subkategori_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'presensi_mp_pelanggaran.created_at' },
-            { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran', searchable: false, orderable: false },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url_kbm + '/' + data.id +'">'+
@@ -179,7 +174,12 @@
                     '</a>';
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if(data.cek_pj_bk){
+                $(row).css('background-color', 'hsl(28, 80%, 61%)');
+            }
+        }
     });
 
     primary_table_belum_kbm.on( 'draw', function () {
@@ -204,18 +204,15 @@
             { data: 'index_table', defaultContent:'', searchable: false, orderable: false },
             { data: 'nm_siswa', searchable: false, orderable: false },
             { data: 'nm_kelas', searchable: false, orderable: false },
-            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
-            { data: 'tingkat_pelanggaran', name: 'tingkat_pelanggaran', searchable: false, orderable: false },
-            { data: 'keterangan_subkategori_pelanggaran', name: 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran' },
-            { data: 'catatan_pelanggaran', name: 'catatan_pelanggaran', searchable: false, orderable: false },
-            { data: 'catatan_pelanggaran_khusus', name: 'catatan_pelanggaran_khusus', searchable: false, orderable: false },
+            { data: 'nm_subkategori_pelanggaran', name: 'nm_subkategori_pelanggaran' },
             { data: 'tgl_pelanggaran', name: 'tgl_pelanggaran', searchable: false, orderable: false },
-            { data: 'aktor_input_pelanggaran', name: 'aktor_input_pelanggaran', searchable: false, orderable: false },
+            { data: 'nm_input', name: 'nm_input', searchable: false, orderable: false },
             { data: 'nm_input_tindakan', name: 'p_tindakan.nm_pengguna' },
-            { data: 'catatan_tindakan_pelanggaran', name: 'tindakan_pelanggaran.catatan_tindakan_pelanggaran' },
-            { data: 'catatan_tindakan_pelanggaran_khusus', name: 'catatan_tindakan_pelanggaran_khusus', searchable: false, orderable: false },
-            { data: 'tgl_tindakan_pelanggaran', name: 'tindakan_pelanggaran.tgl_tindakan_pelanggaran' },
-            { data: 'aktor_input_tindakan_pelanggaran', name: 'aktor_input_tindakan_pelanggaran', searchable: false, orderable: false },
+            // { data: 'catatan_tindakan_pelanggaran', name: 'tindakan_pelanggaran.catatan_tindakan_pelanggaran' },
+            // { data: 'catatan_tindakan_pelanggaran_khusus', name: 'catatan_tindakan_pelanggaran_khusus', searchable: false, orderable: false },
+         
+            // { data: 'tgl_tindakan_pelanggaran', name: 'tindakan_pelanggaran.tgl_tindakan_pelanggaran' },
+            // { data: 'aktor_input_tindakan_pelanggaran', name: 'aktor_input_tindakan_pelanggaran', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
@@ -226,7 +223,12 @@
                     '</button>';
                 }
             }
-        ]
+        ],
+        createdRow: function( row, data, dataIndex){
+            if(data.cek_pj_bk){
+                $(row).css('background-color', 'hsl(28, 80%, 61%)');
+            }
+        }
     });
 
     primary_table_sudah.on( 'draw', function () {

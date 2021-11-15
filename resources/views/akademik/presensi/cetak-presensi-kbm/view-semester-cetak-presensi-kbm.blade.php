@@ -18,6 +18,7 @@
                                     <th>Kelas</th>
                                     <th>Nama Mata Ajar</th>
                                     <th>Jam</th>
+                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -51,6 +52,7 @@
             { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'nm_mata_pelajaran', name: 'nm_mata_pelajaran' },
             { data: 'nm_jadwal_jam', name: 'nm_jadwal_jam' },
+            { data: 'status_plotting', name: 'status_plotting' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ print_url + '/' + data.id +'">'+

@@ -73,7 +73,12 @@
                 @else
                     <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                 @endif
-                <td style="text-align: right;">{{"Rp ".number_format($pembayaran_siswa->besar_pembayaran)}}</td>
+                <td style="text-align: right;">{{"Rp ".number_format($pembayaran_siswa->besar_pembayaran)}} <br>
+                    @if($pembayaran_siswa->total_potongan)
+                    <br>
+                    <span style="color:red">- {{"Rp ".number_format($pembayaran_siswa->total_potongan)}}</span>
+                    @endif
+                </td>
             </tr>
             @endforeach
         </table>
