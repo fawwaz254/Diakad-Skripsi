@@ -35,7 +35,7 @@
                                     </div>
                                 </div>
                                 <label>Kategori</label>
-                                <select class="form-control show-tick" name="id_subkategori_rapb">
+                                <select class="form-control show-tick" data-live-search="true" name="id_subkategori_rapb">
                                     @foreach($data_subkategori as $subkategori)
                                     <option value="{{$subkategori->id_subkategori_rapb}}"
                                         @if(isset($rapb) && $subkategori->id_subkategori_rapb == $rapb->id_subkategori_rapb)
@@ -45,6 +45,7 @@
                                     @endforeach
                                 </select>
                                 <br>
+                                <p></p>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Uraian</label>
@@ -69,14 +70,19 @@
     </div>
 </div>
 @include('scriptjs')
-    <script>
-    $(function(){    
-        $('.datepicker').bootstrapMaterialDatePicker({
-            format: 'YYYY-MM-DD',
-            //lang : 'id',
-            clearButton: true,
-            weekStart: 1,
-            time: false
-        });
-    });
-    </script>
+<script>
+$(function(){    
+$('.datepicker').bootstrapMaterialDatePicker({
+    format: 'YYYY-MM-DD',
+    //lang : 'id',
+    clearButton: true,
+    weekStart: 1,
+    time: false
+});
+
+$('select:not(.ms)').selectpicker();
+
+});
+
+</script>
+
