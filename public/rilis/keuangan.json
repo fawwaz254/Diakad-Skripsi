@@ -1,0 +1,28 @@
+{
+  	"role"  :"keuangan", 
+  	"update": [
+  	    {
+  	    	"tanggal-update" : "2021-11-15",
+  	    	"list-update" : [
+  	    		{
+  	    			"modul" : "Modul Data Keuangan",
+  	    			"list-fitur" : [
+  	    				{
+  	    					"fitur"     : "Menu Kelompok Biaya",
+  	    					"deskripsi" : "Menghapus input status saat menambah kelompok biaya"
+  	    				}
+  	    				,{
+  	    					"fitur"     : "Menu Data Biaya Sekolah",
+  	    					"deskripsi" : "Menghapus input besar biaya dan jalur saat menambah biaya sekolah"
+  	    				}
+  	    				,{
+  	    					"fitur"     : "Menu Data Biaya Sekolah",
+  	    					"deskripsi" : "Mengubah pilihan jenis biaya menjadi 2 (pembayaran per bulan dan pembayaran sekali (opsional)) saja serta menghapus nama biaya internal saat menambahkan detail biaya pada biaya sekolah"
+  	    				}
+  	    			]
+  	    			
+  	    		}
+  	    	]
+  		}
+  	]
+} 
