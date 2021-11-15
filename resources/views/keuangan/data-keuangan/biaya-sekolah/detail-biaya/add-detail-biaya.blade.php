@@ -39,7 +39,7 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                       <!--  <h2 class="card-inside-title">
                             Nama Biaya Internal
                         </h2>
                         <div class="row clearfix">
@@ -51,7 +51,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <h2 class="card-inside-title">
                             Validasi
                         </h2>

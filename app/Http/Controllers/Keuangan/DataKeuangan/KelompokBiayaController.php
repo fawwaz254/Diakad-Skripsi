@@ -83,8 +83,8 @@ class KelompokBiayaController extends BaseController{
 
         $validator = Validator::make($request->all(), [
             'nm_kelompok_biaya' => 'required',
-            'keterangan_kelompok_biaya' => 'required',
-            'status_kelompok_biaya' => 'required'
+            'keterangan_kelompok_biaya' => 'required'
+            // 'status_kelompok_biaya' => 'required'
         ]);
         
         if($validator->fails() && $mode != 'delete') {
@@ -104,7 +104,8 @@ class KelompokBiayaController extends BaseController{
                 $kelompokBiaya->id_kelompok_biaya           = $id;
                 $kelompokBiaya->nm_kelompok_biaya           = $input->nm_kelompok_biaya;
                 $kelompokBiaya->keterangan_kelompok_biaya   = $input->keterangan_kelompok_biaya;
-                $kelompokBiaya->status_kelompok_biaya       = $input->status_kelompok_biaya;
+                // $kelompokBiaya->status_kelompok_biaya       = $input->status_kelompok_biaya;
+                $kelompokBiaya->status_kelompok_biaya       = 1;
                 $kelompokBiaya->id_sekolah                  = $input->auth_data->pengguna->id_sekolah;
                 $kelompokBiaya->created_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kelompokBiaya->save();
@@ -120,7 +121,8 @@ class KelompokBiayaController extends BaseController{
                 $kelompokBiaya                              = KelompokBiaya::find($id);
                 $kelompokBiaya->nm_kelompok_biaya           = $input->nm_kelompok_biaya;
                 $kelompokBiaya->keterangan_kelompok_biaya   = $input->keterangan_kelompok_biaya;
-                $kelompokBiaya->status_kelompok_biaya       = $input->status_kelompok_biaya;
+                // $kelompokBiaya->status_kelompok_biaya       = $input->status_kelompok_biaya;
+                $kelompokBiaya->status_kelompok_biaya       = 1;
                 $kelompokBiaya->updated_by                  = $input->auth_data->pengguna->id_pengguna;
                 $kelompokBiaya->updated_at                  = $now;
                 $kelompokBiaya->save();

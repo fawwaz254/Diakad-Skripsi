@@ -17,7 +17,6 @@
                                         <th>No</th>
                                         <th>Nama Kelompok Biaya</th>
                                         <th>Keterangan</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -48,7 +47,6 @@ responsive: true,
             { data: null, searchable: false, orderable: false },
             { data: 'nm_kelompok_biaya', name: 'nm_kelompok_biaya' },
             { data: 'keterangan_kelompok_biaya', name: 'keterangan_kelompok_biaya' },
-            { data: 'status_kelompok_biaya', name: 'status_kelompok_biaya' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
