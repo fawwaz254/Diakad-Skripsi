@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#biodata/data-prestasi/add')}}"><i class="material-icons">note_add</i><span>Tambah Prestasi</span></a>
+            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/data-prestasi/add')}}"><i class="material-icons">note_add</i><span>Tambah Prestasi</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -17,6 +17,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Nama</th>
                                         <th>Nama Prestasi</th>
                                         <th>Tingkat Prestasi</th>
                                         <th>Jenis Prestasi</th>
@@ -42,6 +43,7 @@
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
+    var role_url        = '{{Request::segment(1)}}';
     var modul_url       = '{{Request::segment(2)}}';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-prestasi/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'data-prestasi/edit';
@@ -57,10 +59,11 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_prestasi', name: 'nm_prestasi_siswa' },
+            { data: 'nm_pengguna', name: 'nm_pengguna' },
+            { data: 'nm_prestasi', name: 'nm_prestasi' },
             { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'jenis_prestasi', name: 'jenis_prestasi' },
-            { data: 'jenis_lomba', name: 'jenis_lomba_' },
+            { data: 'jenis_lomba', name: 'jenis_lomba' },
             { data: 'peringkat', name: 'peringkat' },
             { data: 'action', name: 'link_sertifikat', searchable: false, orderable: false,
                 render:function(data){
@@ -80,16 +83,26 @@
             { data: 'tanggal', name: 'tanggal' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    if(data.status==0){
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ edit_url + '/' + data.id +'">'+
-                        '    <i class="material-icons">edit</i>'+
-                        '</a> '+
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                        '    <i class="material-icons">delete_forever</i>'+
-                        '</button> ';
+                    if(role_url=='humas'){
+                         return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ edit_url + '/' + data.id +'">'+
+                            '    <i class="material-icons">edit</i>'+
+                            '</a> '+
+                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                            '    <i class="material-icons">delete_forever</i>'+
+                            '</button> ';
                     }
                     else{
-                        return '-';
+                        if(data.status==0){
+                            return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ edit_url + '/' + data.id +'">'+
+                            '    <i class="material-icons">edit</i>'+
+                            '</a> '+
+                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                            '    <i class="material-icons">delete_forever</i>'+
+                            '</button> ';
+                        }
+                        else{
+                            return '-';
+                        }
                     }
                     
                 }

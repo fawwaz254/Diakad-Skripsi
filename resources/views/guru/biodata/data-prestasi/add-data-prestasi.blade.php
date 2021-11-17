@@ -1,6 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#biodata/data-prestasi')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#'.Request::segment(2).'/data-prestasi')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -109,6 +109,21 @@
                                 <input type="text" class="form-control" name="link_sertifikat" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
+
+                        @if(Request::segment(1)=='humas')
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">   
+                            <h2 class="card-inside-title">
+                                Pilih Guru
+                            </h2>
+                            <select class="form-control show-tick" name="id_pengguna" required="">
+                                @foreach($guru as $r)
+                                    <option value="{{$r->id_pengguna}}">{{$r->nm_pengguna}}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
+                        @endif
 
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

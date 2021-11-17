@@ -14,8 +14,7 @@ use App\Models\TingkatPrestasiSiswa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
-use App\Libraries\Pendidikan\LibDataAkademik;
-
+use App\Libraries\SumberDaya\LibGuru;
 
 use Auth;
 use DB;
@@ -40,8 +39,9 @@ class DataKegiatanController extends BaseController{
         $auth_data = $input->auth_data;
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+        $guru = LibGuru::fetchDataAllGuru($auth_data);
         
-    	return view('guru/biodata/data-kegiatan/add-data-kegiatan',compact('auth_data','tingkat'));
+    	return view('guru/biodata/data-kegiatan/add-data-kegiatan',compact('auth_data','tingkat','guru'));
 
     }
 
@@ -52,8 +52,9 @@ class DataKegiatanController extends BaseController{
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $kegiatan = KegiatanGuru::find($id);
+        $guru = LibGuru::fetchDataAllGuru($auth_data);
         
-    	return view('guru/biodata/data-kegiatan/edit-data-kegiatan',compact('auth_data','tingkat','kegiatan'));
+    	return view('guru/biodata/data-kegiatan/edit-data-kegiatan',compact('auth_data','tingkat','kegiatan','guru'));
 
     }
 
@@ -62,6 +63,7 @@ class DataKegiatanController extends BaseController{
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $role = $auth_data->role_aktif->nm_role;
 
         $validator = Validator::make($request->all(), [
             'nm_kegiatan' => 'required',
@@ -85,7 +87,18 @@ class DataKegiatanController extends BaseController{
         		$id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         		$kegiatan = new KegiatanGuru;
-                $kegiatan->id_pengguna = $auth_data->pengguna->id_pengguna;
+
+                if($role=='Humas'){
+                    $kegiatan->id_pengguna = $input->id_pengguna;
+                    $kegiatan->status = 1;
+                    $path = 'data-guru/data-kegiatan';
+                }
+                else{
+                    $kegiatan->id_pengguna = $auth_data->pengguna->id_pengguna;
+                    $kegiatan->status = 0;
+                    $path = 'biodata/data-kegiatan';
+                }
+
         		$kegiatan->id_kegiatan_guru = $id;
         		$kegiatan->nm_kegiatan = $input->nm_kegiatan;
                 $kegiatan->lokasi = $input->lokasi;
@@ -93,13 +106,12 @@ class DataKegiatanController extends BaseController{
         		$kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
         		$kegiatan->tgl_kegiatan = date("Y-m-d", strtotime($input->tgl_kegiatan));
         		$kegiatan->link_kegiatan = $input->link_kegiatan;
-                $kegiatan->status = 0;
         		$kegiatan->created_by = $input->auth_data->pengguna->id_pengguna;
         		$kegiatan->save();
 
         		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'biodata/data-kegiatan',
+                    'path' => $path,
                     'message' => 'Save Kegiatan successfully'
                 ];
 
@@ -108,6 +120,16 @@ class DataKegiatanController extends BaseController{
         	elseif ($mode == 'edit') {
         		
         		$kegiatan = KegiatanGuru::find($id);
+
+                if($role=='Humas'){
+                    $kegiatan->id_pengguna = $input->id_pengguna;
+                    $path = 'data-guru/data-kegiatan/edit/'.$id;
+                }
+
+                else{
+                    $path = 'biodata/data-kegiatan/edit/'.$id;
+                }
+
                 $kegiatan->nm_kegiatan = $input->nm_kegiatan;
                 $kegiatan->lokasi = $input->lokasi;
                 $kegiatan->penyelenggara = $input->penyelenggara;
@@ -120,7 +142,7 @@ class DataKegiatanController extends BaseController{
 
 	    		return [
 	                    'status' => 202, // SUCCESS AND LOAD CONTENT
-	                    'path' => 'biodata/data-kegiatan/edit/'.$id,
+	                    'path' => $path,
 	                    'message' => 'Edit Kegiatan successfully'
 	                ];
 
@@ -150,6 +172,7 @@ class DataKegiatanController extends BaseController{
 
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $role = $auth_data->role_aktif->nm_role;
 
         $list_data = KegiatanGuru::Select(
         			'kegiatan_guru.id_kegiatan_guru',
@@ -160,12 +183,16 @@ class DataKegiatanController extends BaseController{
                     'kegiatan_guru.penyelenggara',
         			'kegiatan_guru.link_kegiatan',
         			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
-                    'kegiatan_guru.keterangan'
+                    'kegiatan_guru.keterangan',
+                    'pengguna.nm_pengguna'
         			)
+        ->join('pengguna','kegiatan_guru.id_pengguna','pengguna.id_pengguna')
         ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_guru.id_tingkat_prestasi_siswa')
-        ->where('kegiatan_guru.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->get();
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+
+        if($role!='Humas'){
+            $list_data = $list_data->where('kegiatan_guru.id_pengguna', '=', $auth_data->pengguna->id_pengguna);
+        }
 
         return Datatables::of($list_data)
                         ->addColumn('keterangan_status', function ($item) {

@@ -19,8 +19,6 @@ use App\Models\Ekskul as Ekskul;
 use App\Models\PrestasiGuru as PrestasiGuru;
 use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 
-use App\Libraries\Pendidikan\LibDataAkademik;
-
 use Auth;
 use DB;
 use Session;
@@ -44,8 +42,10 @@ class DataPrestasiController extends BaseController
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
+
+        $guru = LibGuru::fetchDataAllGuru($auth_data);
         
-        return view('guru/biodata/data-prestasi/add-data-prestasi',compact('auth_data','tingkat','jenis_prestasi'));
+        return view('guru/biodata/data-prestasi/add-data-prestasi',compact('auth_data','tingkat','jenis_prestasi','guru'));
 
     }
 
@@ -58,7 +58,9 @@ class DataPrestasiController extends BaseController
         $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
         $prestasi = PrestasiGuru::findOrFail($id);
         
-        return view('guru/biodata/data-prestasi/edit-data-prestasi',compact('auth_data','tingkat','jenis_prestasi','prestasi'));
+        $guru = LibGuru::fetchDataAllGuru($auth_data);
+
+        return view('guru/biodata/data-prestasi/edit-data-prestasi',compact('auth_data','tingkat','jenis_prestasi','prestasi','guru'));
 
     }
 
@@ -67,9 +69,9 @@ class DataPrestasiController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $siswa = Siswa::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        $role = $auth_data->role_aktif->nm_role;
 
-         $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'nm_prestasi' => 'required',
             'peringkat' => 'required',
             'lokasi' => 'required',
@@ -96,7 +98,18 @@ class DataPrestasiController extends BaseController
 
                 $prestasi = new PrestasiGuru;
                 $prestasi->id_prestasi_guru = $id;
-                $prestasi->id_pengguna = $auth_data->pengguna->id_pengguna;
+
+                if($role=='Humas'){
+                    $prestasi->id_pengguna = $input->id_pengguna;
+                    $prestasi->status = 1;
+                    $path = 'data-guru/data-prestasi';
+                }
+                else{
+                    $prestasi->id_pengguna = $auth_data->pengguna->id_pengguna;
+                    $prestasi->status = 0;
+                    $path = 'biodata/data-prestasi';
+                }
+                
                 $prestasi->id_tingkat_prestasi = $input->id_tingkat_prestasi;
                 $prestasi->jenis_prestasi = $input->jenis_prestasi;
                 $prestasi->jenis_lomba = $input->jenis_lomba;
@@ -107,13 +120,12 @@ class DataPrestasiController extends BaseController
                 $prestasi->tanggal =date("Y-m-d", strtotime($input->tanggal));
                 $prestasi->created_by = $input->auth_data->pengguna->id_pengguna;
                 $prestasi->link_sertifikat = $input->link_sertifikat;
-                $prestasi->status = 0;
 
                 $prestasi->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'biodata/data-prestasi',
+                    'path' => $path,
                     'message' => 'Save Prestasi successfully'
                 ];
 
@@ -122,6 +134,15 @@ class DataPrestasiController extends BaseController
             elseif ($mode == 'edit') {
                
                 $prestasi = PrestasiGuru::findOrFail($id);
+
+                if($role=='Humas'){
+                    $prestasi->id_pengguna = $input->id_pengguna;
+                    $path = 'data-guru/data-prestasi/edit/'.$id;
+                }
+
+                else{
+                    $path = 'biodata/data-prestasi/edit/'.$id;
+                }
 
                 $prestasi->id_tingkat_prestasi = $input->id_tingkat_prestasi;
                 $prestasi->jenis_prestasi = $input->jenis_prestasi;
@@ -139,7 +160,7 @@ class DataPrestasiController extends BaseController
 
                    return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'path' => 'biodata/data-prestasi/edit/'.$id,
+                            'path' => $path,
                             'message' => 'Edit Prestasi successfully'
                 ];
 
@@ -169,6 +190,7 @@ class DataPrestasiController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $role = $auth_data->role_aktif->nm_role;
 
         $list_data = PrestasiGuru::select(
             'prestasi_guru.nm_prestasi',
@@ -189,10 +211,12 @@ class DataPrestasiController extends BaseController
         ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_guru.id_tingkat_prestasi')
         ->join('pengguna', 'pengguna.id_pengguna', '=', 'prestasi_guru.id_pengguna')
         ->orderBy('prestasi_guru.created_at', 'desc')
-        ->where('pengguna.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
         ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->get();
+        ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+
+        if($role!='Humas'){
+            $list_data = $list_data->where('pengguna.id_pengguna', '=', $auth_data->pengguna->id_pengguna);
+        }
 
         return Datatables::of($list_data)
                 ->addColumn('keterangan_status', function ($item) {
