@@ -9,6 +9,29 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             // MENU Data Pribadi
             Route::get('data-pribadi', 'Guru\Biodata\DataPribadiController@viewDataPribadi');
             Route::post('action-data-pribadi', 'Guru\Biodata\DataPribadiController@actionSaveDataPribadi');
+
+            Route::group(array('prefix' => 'data-kegiatan'), function() {
+
+                Route::get('/', 'Guru\Biodata\DataKegiatanController@viewDataKegiatan');
+                Route::get('add', 'Guru\Biodata\DataKegiatanController@viewAddDataKegiatan');
+                Route::get('edit/{id}', 'Guru\Biodata\DataKegiatanController@viewEditDataKegiatan');
+                Route::post('action/{mode}/{id}', 'Guru\Biodata\DataKegiatanController@actionDataKegiatan');
+
+                Route::get('datatables', 'Guru\Biodata\DataKegiatanController@datatablesDataKegiatan');
+
+            });
+
+            Route::group(array('prefix' => 'data-prestasi'), function() {
+
+                Route::get('/', 'Guru\Biodata\DataPrestasiController@viewDataPrestasi');
+                Route::get('add', 'Guru\Biodata\DataPrestasiController@viewAddDataPrestasi');
+                Route::get('edit/{id}', 'Guru\Biodata\DataPrestasiController@viewEditDataPrestasi');
+                Route::post('action/{mode}/{id}', 'Guru\Biodata\DataPrestasiController@actionDataPrestasi');
+
+                Route::get('datatables', 'Guru\Biodata\DataPrestasiController@datatablesDataPrestasi');
+
+            });
+
         });
 
         /** ==== MODUL E-Learning ==== **/

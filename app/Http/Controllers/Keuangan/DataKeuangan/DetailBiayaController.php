@@ -341,6 +341,7 @@ class DetailBiayaController extends BaseController{
                     'message' => 'Save Detail Biaya successfully'
                 ];
             }
+
             elseif($mode == 'edit'){
 
                 // make object to find id
@@ -365,6 +366,7 @@ class DetailBiayaController extends BaseController{
                     'message' => 'Update Detail Biaya successfully'
                 ];
             }
+
             elseif($mode == 'delete'){
                 if($tagihanBiaya = TagihanBiaya::where('id_detail_biaya',$id)->first()){
                     return [
@@ -386,6 +388,7 @@ class DetailBiayaController extends BaseController{
                     ];
                 }
             }
+            
         }
 
     }
