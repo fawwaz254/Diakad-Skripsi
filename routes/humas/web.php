@@ -4,6 +4,32 @@ Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'humas'), function() {
 			Route::get('welcome', 'Humas\WelcomeController@indexWelcome');
 
+		Route::group(array('prefix' => 'data-guru'), function() {
+
+			Route::group(array('prefix' => 'data-kegiatan'), function() {
+
+                Route::get('/', 'Guru\Biodata\DataKegiatanController@viewDataKegiatan');
+                Route::get('add', 'Guru\Biodata\DataKegiatanController@viewAddDataKegiatan');
+                Route::get('edit/{id}', 'Guru\Biodata\DataKegiatanController@viewEditDataKegiatan');
+                Route::post('action/{mode}/{id}', 'Guru\Biodata\DataKegiatanController@actionDataKegiatan');
+
+                Route::get('datatables', 'Guru\Biodata\DataKegiatanController@datatablesDataKegiatan');
+
+            });
+
+            Route::group(array('prefix' => 'data-prestasi'), function() {
+
+                Route::get('/', 'Guru\Biodata\DataPrestasiController@viewDataPrestasi');
+                Route::get('add', 'Guru\Biodata\DataPrestasiController@viewAddDataPrestasi');
+                Route::get('edit/{id}', 'Guru\Biodata\DataPrestasiController@viewEditDataPrestasi');
+                Route::post('action/{mode}/{id}', 'Guru\Biodata\DataPrestasiController@actionDataPrestasi');
+
+                Route::get('datatables', 'Guru\Biodata\DataPrestasiController@datatablesDataPrestasi');
+
+            });
+
+		});
+
 		/** ==== MODUL BURSA KERJA ==== **/
 		Route::group(array('prefix' => 'bursa-kerja'), function() {
 
