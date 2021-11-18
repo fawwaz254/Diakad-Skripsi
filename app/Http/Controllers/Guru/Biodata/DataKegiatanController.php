@@ -124,6 +124,7 @@ class DataKegiatanController extends BaseController{
                 if($role=='Humas'){
                     $kegiatan->id_pengguna = $input->id_pengguna;
                     $path = 'data-guru/data-kegiatan/edit/'.$id;
+                    $kegiatan->status = $input->status;
                 }
 
                 else{

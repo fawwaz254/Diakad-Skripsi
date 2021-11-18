@@ -111,6 +111,7 @@
                         </div>
 
                         @if(Request::segment(1)=='humas')
+                        
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">   
                             <h2 class="card-inside-title">
@@ -123,6 +124,20 @@
                             </select>
                             </div>
                         </div>
+
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">   
+                                <h2 class="card-inside-title">
+                                    Pilih Status
+                                </h2>
+                                <select class="form-control show-tick" name="status" required="">
+                                    <option value="1" {{$prestasi->status == 1 ? 'selected' : ''}}>Sudah Diapprove</option>
+                                    <option value="0" {{$prestasi->status == 0 ? 'selected' : ''}}>Belum Diapprove</option>
+                                    <option value="10" {{$prestasi->status == 10 ? 'selected' : ''}}>Ditolak</option>
+                                </select>
+                            </div>
+                        </div>
+
                         @endif
 
                         <div class="row clearfix">

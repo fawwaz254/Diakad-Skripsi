@@ -19,6 +19,8 @@ use App\Models\Ekskul as Ekskul;
 use App\Models\PrestasiGuru as PrestasiGuru;
 use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 
+use App\Libraries\SumberDaya\LibGuru;
+
 use Auth;
 use DB;
 use Session;
@@ -138,6 +140,7 @@ class DataPrestasiController extends BaseController
                 if($role=='Humas'){
                     $prestasi->id_pengguna = $input->id_pengguna;
                     $path = 'data-guru/data-prestasi/edit/'.$id;
+                    $prestasi->status = $input->status;
                 }
 
                 else{
