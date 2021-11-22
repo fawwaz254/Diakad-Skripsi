@@ -62,7 +62,7 @@
             { data: 'tgl_kegiatan', name: 'tgl_kegiatan'},
             { data: 'lokasi', name: 'lokasi'},
             { data: 'penyelenggara', name: 'penyelenggara'},
-            { data: 'action', name: 'nm_kegiatan_siswa', searchable: false, orderable: false,
+            { data: 'action', name: 'action', searchable: false, orderable: false,
                 render:function(data){
                     if(data.link_kegiatan){
                         return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float text-center" target="_blank" href="'+ data.link_kegiatan +'">'+

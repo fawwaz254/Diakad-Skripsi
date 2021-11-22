@@ -208,7 +208,7 @@ class DataPrestasiController extends BaseController
             'prestasi_guru.id_prestasi_guru',
             'prestasi_guru.tanggal',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
-            'pengguna.nm_pengguna',
+            'pengguna.nm_pengguna'
            
         )
         ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_guru.id_tingkat_prestasi')
