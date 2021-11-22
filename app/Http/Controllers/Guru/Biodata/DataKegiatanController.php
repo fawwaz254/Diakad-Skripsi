@@ -217,7 +217,7 @@ class DataKegiatanController extends BaseController{
         				->addColumn('action', function($item){
 		                    $data = array(
 		                        'id' => $item->id_kegiatan_guru,
-		                        'link_sertifikat'=>$item->link_kegiatan,
+		                        'link_kegiatan'=>$item->link_kegiatan,
                                 'status'=>$item->status
 		                    );
 		                    return $data;
