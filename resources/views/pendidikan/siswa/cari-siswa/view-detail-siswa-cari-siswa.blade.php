@@ -161,15 +161,11 @@
                             <tr>
                                 <th>Semester</th>
                                 <th>Status Siswa</th>
-                                <th>IPS</th>
-                                <th>IPK</th>
                             </tr>
                             @foreach($aktivitas as $aktivitas)
                             <tr>
                                 <td>{{$aktivitas->nm_semester}} {{$aktivitas->tahun_ajaran}}</td>
                                 <td>{{$aktivitas->nm_status_pengguna}}</td>
-                                <td>{{$aktivitas->ips}}</td>
-                                <td>{{$aktivitas->ipk}}</td>
                             </tr>
                             @endforeach
                         </table>
