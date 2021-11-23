@@ -22,20 +22,17 @@
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
             <div class="card is-gap">
                 <div class="body">
+                    <center>
+                        <h4>Biodata Siswa</h4>
+                        @if(!empty($siswa->path_foto_pengguna))
+                        <img src="{{Storage::disk('spaces')->url($siswa->path_foto_pengguna)}}" style="height: 270px; width: 180px">
+                        @else
+                        <img src="{{asset('media/blank-user.png')}}" style="height: 270px; width: 180px">
+                        @endif
+                    </center>
+                    <br>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
-                            <tr>
-                                <th colspan="2" style="text-align: center;">BIODATA SISWA</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2" style="text-align: center;">
-                                    @if(!empty($siswa->path_foto_pengguna))
-                                    <img src="{{Storage::disk('spaces')->url($siswa->path_foto_pengguna)}}" style="height: 270px; width: 180px">
-                                    @else
-                                    <img src="{{asset('media/blank-user.png')}}" style="height: 270px; width: 180px">
-                                    @endif
-                                </th>
-                            </tr>
                             <tr>
                                 <td style="width: 50%">Nama Lengkap</td>
                                 <td style="width: 50%">{{$siswa->nm_pengguna}}</td>
