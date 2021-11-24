@@ -21,6 +21,18 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
         });
 
+        Route::group(array('prefix' => 'laporan'), function () {
+
+            Route::group(array('prefix' => 'tagihan-siswa'), function () {
+                Route::get('/', 'Keuangan\LaporanKeuangan\TagihanSiswaController@viewTagihanSiswa');
+            });
+
+        });
+
+        Route::post('laporan-keuangan/tagihan-siswa/datatables', 'Keuangan\LaporanKeuangan\TagihanSiswaController@datatablesTagihanSiswa');
+        Route::get('laporan-keuangan/tagihan-siswa/print/{tahun}/{id_kelas}/{jenis_tagihan}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@printTagihanSiswa');
+        Route::get('laporan-keuangan/tagihan-siswa/show-list-tagihan/{tahun}/{id_kelas}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@showListTagihan');
+
         /** ==== MODUL DATA PELANGGARAN ==== **/
         Route::group(array('prefix' => 'data-pelanggaran'), function() {
             // MENU Kategori Pelanggaran
