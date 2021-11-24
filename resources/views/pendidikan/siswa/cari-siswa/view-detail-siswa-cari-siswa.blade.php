@@ -22,20 +22,17 @@
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
             <div class="card is-gap">
                 <div class="body">
+                    <center>
+                        <h4>Biodata Siswa</h4>
+                        @if(!empty($siswa->path_foto_pengguna))
+                        <img src="{{Storage::disk('spaces')->url($siswa->path_foto_pengguna)}}" style="height: 270px; width: 180px">
+                        @else
+                        <img src="{{asset('media/blank-user.png')}}" style="height: 270px; width: 180px">
+                        @endif
+                    </center>
+                    <br>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
-                            <tr>
-                                <th colspan="2" style="text-align: center;">BIODATA SISWA</th>
-                            </tr>
-                            <tr>
-                                <th colspan="2" style="text-align: center;">
-                                    @if(!empty($siswa->path_foto_pengguna))
-                                    <img src="{{Storage::disk('spaces')->url($siswa->path_foto_pengguna)}}" style="height: 270px; width: 180px">
-                                    @else
-                                    <img src="{{asset('media/blank-user.png')}}" style="height: 270px; width: 180px">
-                                    @endif
-                                </th>
-                            </tr>
                             <tr>
                                 <td style="width: 50%">Nama Lengkap</td>
                                 <td style="width: 50%">{{$siswa->nm_pengguna}}</td>
@@ -118,12 +115,13 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+
             <div class="card">
                 <div class="body">
                     <div class="table-responsive">
                         @foreach($grup_semester_kelas as $tahun_ajaran => $grup_kelas)
                             @foreach($grup_kelas as $nm_semester => $datapergrup)
-                            <h2 class="card-inside-title">{{$nm_semester}} ({{$tahun_ajaran}})</h2>
+                            <h2 class="card-inside-title">Mapel yang Diambil Semester {{$nm_semester}} ({{$tahun_ajaran}})</h2>
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
                                 <tr>
                                     <th>No.</th>
@@ -151,8 +149,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+
+            <br>
+
             <div class="card">
                 <div class="body">
                     <div class="table-responsive">
@@ -161,22 +160,94 @@
                             <tr>
                                 <th>Semester</th>
                                 <th>Status Siswa</th>
-                                <th>IPS</th>
-                                <th>IPK</th>
                             </tr>
                             @foreach($aktivitas as $aktivitas)
                             <tr>
                                 <td>{{$aktivitas->nm_semester}} {{$aktivitas->tahun_ajaran}}</td>
                                 <td>{{$aktivitas->nm_status_pengguna}}</td>
-                                <td>{{$aktivitas->ips}}</td>
-                                <td>{{$aktivitas->ipk}}</td>
                             </tr>
                             @endforeach
                         </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                    {{csrf_field()}}
+                    <div class="header">
+                        <h2>Data Prestasi Siswa</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Prestasi</th>
+                                        <th>Tingkat Prestasi</th>
+                                        <th>Jenis Prestasi</th>
+                                        <th>Jenis Lomba</th>
+                                        <th>Peringkat</th>
+                                        <th>Link Sertifikat</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                        <th>Semester</th>
+                                        <th>Kelas</th>
+                                        <th>Lokasi</th>
+                                        <th>Penyelenggara</th>
+                                        <th>Tanggal</th>
+                                        <th>Ekstrakurikuler</th>
+                                        <th>Guru Pendamping</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <br>
+
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                    {{csrf_field()}}
+                    <div class="header">
+                        <h2>Data Kegiatan Siswa</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Kegiatan</th>
+                                        <th>Tingkat Kegiatan</th>
+                                        <th>Tanggal</th>
+                                        <th>Lokasi</th>
+                                        <th>Penyelenggara</th>
+                                        <th>Link Sertifikat</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
 </div>
 @include('scriptjs')

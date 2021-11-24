@@ -16,6 +16,7 @@ use App\Models\Provinsi as Provinsi;
 use App\Models\PengambilanMp as PengambilanMp;
 use App\Models\Admisi as Admisi;
 use App\Models\Siswa as Siswa;
+use App\Models\Semester as Semester;
 
 
 use Auth;
@@ -25,7 +26,8 @@ use Validator;
 
 class CariSiswaController extends BaseController
 {
-     public function viewCariSiswa(Request $request, $nis_nama_siswa = null){
+  
+    public function viewCariSiswa(Request $request, $nis_nama_siswa = null){
 	    # code..
 	    $input = (object) $request->input();
 	    $auth_data = $input->auth_data;
@@ -96,12 +98,14 @@ class CariSiswaController extends BaseController
                 })
                 ->make(true);
     }
+
     public function viewDetailSiswaCariSiswa(Request $request, $nis_siswa, $nis_nama_siswa_asli){
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
+        $semester_aktif = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('is_aktif_semester','=','1')->first();
         
         if($siswa->jenis_kelamin == "1"){
           $jenis_kelamin = "Laki-Laki";
@@ -223,6 +227,7 @@ class CariSiswaController extends BaseController
             ->join('semester','semester.id_semester','=','pengambilan_mp.id_semester')
             ->where('siswa.nis_siswa','=',$nis_siswa)
             ->where('pengambilan_mp.status_apv_pengambilan_mp','=','1')
+            ->where('pengambilan_mp.id_semester',$semester_aktif->id_semester)
             ->get();
 
           $grup_semester_kelas = $pengambilan->groupBy('tahun_ajaran')->transform(function($item, $k) {
@@ -234,4 +239,6 @@ class CariSiswaController extends BaseController
 
         return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa',compact('auth_data','nis_siswa','nis_nama_siswa_asli','siswa','jenis_kelamin','kota_lahir','alamat_jalan_siswa','alamat_dusun_siswa','alamat_kelurahan_siswa','alamat_rt_siswa','alamat_rw_siswa','alamat_kecamatan_siswa','alamat_kodepos_siswa','alamat_jalan_ortu','alamat_dusun_ortu','alamat_kelurahan_ortu','alamat_rt_ortu','alamat_rw_ortu','alamat_kecamatan_ortu','alamat_kodepos_ortu','alamat_kota_ortu','alamat_provinsi_ortu','aktivitas','grup_semester_kelas'));
     }
+
+    
 }

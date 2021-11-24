@@ -14,6 +14,24 @@
   	    			]
   	    		}
   	    	]
+  		},
+  		{
+  			"tanggal-update" : "2021-11-23",
+  	    	"list-update" : [
+  	    		{
+  	    			"modul" : "Modul Biodata",
+  	    			"list-fitur" : [
+  	    				{
+  	    					"fitur"     : "Menu Data Prestasi",
+  	    					"deskripsi" : "Di menu ini anda mengisi dari prestasi yang telah anda capai"
+  	    				},
+  	    				{
+  	    					"fitur"     : "Menu Data Kegiatan",
+  	    					"deskripsi" : "Di menu ini anda mengisi dari kegiatan yang telah anda lakukan"
+  	    				}
+  	    			]
+  	    		}
+  	    	]
   		}
   	]
 } 
