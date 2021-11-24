@@ -1,4 +1,10 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2>
+            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#siswa/insert-update-siswa')}}"><i class="material-icons">note_add</i><span>Insert / Update Siswa</span></a>
+            <a class="btn bg-green waves-effect target-link" href="{{url(Request::segment(1).'#siswa/upload-data-siswa')}}"><i class="material-icons">attach_file</i><span>Upload Data Siswa Dengan Excel</span></a>
+        </h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
