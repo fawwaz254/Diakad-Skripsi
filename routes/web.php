@@ -58,6 +58,8 @@ Route::get('guid', function(){
     return $html;
 });
 
+Route::view('success-page', 'form-pengisian-alumni.success-page');
+Route::view('error-page', 'form-pengisian-alumni.error-page');
 Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
 Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
 

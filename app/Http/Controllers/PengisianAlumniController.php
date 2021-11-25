@@ -150,7 +150,7 @@ class PengisianAlumniController extends BaseController{
 
             DB::commit();
 
-            return 'selamat anda sukses berhasil mengisi data anda';
+            return redirect('success-page');
 
         }
 
@@ -158,7 +158,7 @@ class PengisianAlumniController extends BaseController{
 
            DB::rollback();
 
-           return $e->getMessage();
+           return redirect('error-page');
 
         }
 
