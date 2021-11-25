@@ -58,6 +58,9 @@ Route::get('guid', function(){
     return $html;
 });
 
+Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
+Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
+
 Route::get('forget-password', 'ForgetPasswordController@index');
 Route::post('send-link-reset-password', 'ForgetPasswordController@sendLinkResetPassword');
 Route::get('check-link-reset-password', 'ForgetPasswordController@checkLinkResetPassword');
