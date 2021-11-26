@@ -192,13 +192,25 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		
 		/** === MODUL MAGANG ALUMNI === **/
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function() {
-			Route::get('/tracer-alumni', 'AlumniController@index');
-			Route::get('/tambah-alumni', 'AlumniController@create');
-			Route::get('/edit/{alumni}', 'AlumniController@show');
-			Route::post('/store', 'AlumniController@store');
-			Route::post('/update/{alumni}', 'AlumniController@update');
-			Route::post('/delete/{alumni}', 'AlumniController@destroy');
-			Route::post('/datatables', 'AlumniController@renderDatatables');
+
+			// Route::get('/tracer-alumni', 'AlumniController@index');
+			// Route::get('/tambah-alumni', 'AlumniController@create');
+			// Route::get('/edit/{alumni}', 'AlumniController@show');
+			// Route::post('/store', 'AlumniController@store');
+			// Route::post('/update/{alumni}', 'AlumniController@update');
+			// Route::post('/delete/{alumni}', 'AlumniController@destroy');
+			// Route::post('/datatables', 'AlumniController@renderDatatables');
+
+			Route::group(array('prefix' => 'tracer-alumni'), function () {
+
+				Route::get('/', 'TracerAlumniController@viewTracerAlumni');
+				Route::get('datatables', 'TracerAlumniController@datatablesTracerAlumni');
+				Route::get('add', 'TracerAlumniController@addTracerAlumni');
+				Route::get('edit/{id}', 'TracerAlumniController@editTracerAlumni');
+				Route::post('action/{mode}/{id}', 'TracerAlumniController@actionTracerAlumni');
+
+			});
+
 		});
 
 		Route::group(array('prefix' => 'laporan'), function () {
