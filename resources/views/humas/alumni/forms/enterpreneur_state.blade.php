@@ -21,7 +21,7 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<h2 class="card-inside-title"> Jumlah Karyawan </h2>
-	<input type="text" class="form-control" name="jumlah_karyawan" required="" aria-required="true" aria-invalid="true"
+	<input type="number" class="form-control" name="jumlah_karyawan" required="" aria-required="true" aria-invalid="true"
 		value="{{(!empty($alumni->usaha))? $alumni->usaha->jumlah_karyawan : ''}}">
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
