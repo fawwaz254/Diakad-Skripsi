@@ -38,6 +38,6 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 	<h2 class="card-inside-title"> Tahun Masuk </h2>
-	<input type="text" class="form-control" name="tahun_masuk_perguruan" required="" aria-required="true"
+	<input type="number" class="form-control" name="tahun_masuk_perguruan" required="" aria-required="true"
 		aria-invalid="true" value="{{(!empty($alumni->kuliah))? $alumni->kuliah->tahun_masuk_perguruan : ''}}">
 </div>

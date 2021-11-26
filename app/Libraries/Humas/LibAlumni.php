@@ -42,7 +42,8 @@ class LibAlumni {
     return DB::table('alumni')
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
       ->join('jurusan', 'siswa.id_jurusan', '=', 'jurusan.id_jurusan')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status')
+      ->join('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->get();
   }
