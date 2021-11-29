@@ -10,6 +10,7 @@ use App\Models\BkKelas;
 use App\Models\Guru;
 use App\Models\PelanggaranSiswa;
 use App\Models\Semester;
+use App\Models\Setting;
 
 use Auth;
 use DB;
@@ -59,7 +60,19 @@ class WelcomeController extends BaseController{
 
         }
 
-        return view('bk/welcome', compact('auth_data','pelanggaran','pelanggaran_belum_ditindak','pelanggaran_sudah_ditindak','pelanggaran_orang_lain','pelanggaran_orang_lain_belum_ditindak','pelanggaran_orang_lain_sudah_ditindak','semester_aktif','bk_kelas_nama'));
+        if($start_monkes = Setting::where('key_setting', 'start_monkes')->first()){
+            $start_monkes = $start_monkes->value;
+        }else{
+            $start_monkes = '19:00';
+        }
+
+        if($end_monkes = Setting::where('key_setting', 'end_monkes')->first()){
+            $end_monkes = $end_monkes->value;
+        }else{
+            $end_monkes = '07:00';
+        }
+
+        return view('bk/welcome', compact('auth_data','pelanggaran','pelanggaran_belum_ditindak','pelanggaran_sudah_ditindak','pelanggaran_orang_lain','pelanggaran_orang_lain_belum_ditindak','pelanggaran_orang_lain_sudah_ditindak','semester_aktif','bk_kelas_nama','start_monkes','end_monkes'));
 
     }
 
