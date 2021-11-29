@@ -179,6 +179,7 @@ class FormKesehatanController extends BaseController{
     }
     public function actionFormKesehatan(Request $request, $mode){
         $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
         switch($mode){
             case 'add':
@@ -209,7 +210,7 @@ class FormKesehatanController extends BaseController{
             if($end_monkes = Setting::where('key_setting', 'end_monkes')->first()){
                 $end_monkes = $end_monkes->value;
             }else{
-                $end_monkes = '07:00';
+                $end_monkes = '11:00';
             }
 
             // mengambil waktu sekarang
@@ -231,16 +232,20 @@ class FormKesehatanController extends BaseController{
 
             if($mode == 'add') {
                 $pengisian_kegiatan_harian_id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                switch($request->segment(1)){
-                    case 'tendik':
-                        $status_join = 1; break;
-                    case 'guru':
-                        $status_join = 2; break;
-                    case 'siswa':
-                        $status_join = 3; break;
-                    default:
-                        $status_join = 0; break;
-                }
+                
+                // switch($request->segment(1)){
+                //     case 'tendik':
+                //         $status_join = 1; break;
+                //     case 'guru':
+                //         $status_join = 2; break;
+                //     case 'siswa':
+                //         $status_join = 3; break;
+                //     default:
+                //         $status_join = 0; break;
+                // }
+
+                $status_join = $auth_data->pengguna->status_join_table;
+                if(!$status_join) $status_join = 0;
                 
                 // DB::beginTransaction();
                 
