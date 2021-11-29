@@ -13,9 +13,12 @@ use App\Models\Siswa;
 use Auth;
 use DB;
 use Session;
+use App\Models\Setting;
 
 class WelcomeController extends BaseController{
+
     public function indexWelcome(Request $request){
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -37,7 +40,19 @@ class WelcomeController extends BaseController{
                                 ->groupBy('jenis_kelamin')
                                 ->get();
 
-        return view('kesiswaan/welcome', compact('auth_data', 'data_tingkat', 'count_siswa', 'last_siswa', 'jenis_kelamin'));
+        if($start_monkes = Setting::where('key_setting', 'start_monkes')->first()){
+            $start_monkes = $start_monkes->value;
+        }else{
+            $start_monkes = '19:00';
+        }
+
+        if($end_monkes = Setting::where('key_setting', 'end_monkes')->first()){
+            $end_monkes = $end_monkes->value;
+        }else{
+            $end_monkes = '07:00';
+        }
+
+        return view('kesiswaan/welcome', compact('auth_data', 'data_tingkat', 'count_siswa', 'last_siswa', 'jenis_kelamin','start_monkes','end_monkes'));
     }
 
 }

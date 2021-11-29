@@ -210,7 +210,7 @@ class FormKesehatanController extends BaseController{
             if($end_monkes = Setting::where('key_setting', 'end_monkes')->first()){
                 $end_monkes = $end_monkes->value;
             }else{
-                $end_monkes = '11:00';
+                $end_monkes = '07:00';
             }
 
             // mengambil waktu sekarang
