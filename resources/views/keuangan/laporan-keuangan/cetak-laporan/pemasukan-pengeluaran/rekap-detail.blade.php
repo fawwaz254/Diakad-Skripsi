@@ -4,63 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Cetak Laporan Keuangan</title>
 
-    <style>
-        .page {
-            width: 900px;
-        }
-        
-        .ttd {
-            margin-top: 30px;
-            text-align: right;
-        }
-        
-        .clear {
-            clear: both;
-        }
-
-        .avoid-break {
-            page-break-inside: avoid;
-        }
-
-        .mb-0 {
-            margin-bottom: 0px;
-        }
-        
-        .mb-05 {
-            margin-bottom: 5px;
-        }
-        
-        .mb-1 {
-            margin-bottom: 10px;
-        }
-
-        .mb-2 {
-            margin-bottom: 20px;
-        }
-
-        .mt-2 {
-            margin-top: 20px;
-        }
-        
-        .mt-4 {
-            margin-top: 40px;
-        }
-
-        .mb-4 {
-            margin-bottom: 40px;
-        }
-    </style>
-    <style type="text/css" media="print">
-        @page {
-            size: A4;
-        }
-    </style>
-</head>
+ </head>
 
 <body>
-    <div class="page">
+
+    <div class="container">
         
         <table cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
@@ -68,6 +19,7 @@
                 <td colspan=6><h1 align="center">{{$judul}}<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
+
         <table>
             <tr>
 
@@ -120,31 +72,60 @@
                 <th>TOTAL KREDIT: <br>{{ "Rp " . number_format($data_laporan['total_kredit']) }}</th>
             </tr>
         </table>
-        <div class="avoid-break mt-4 mb-4">
-            <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
-                <tr>
-                    <td style="width: 50%;">Mengetahui</td>
-                    <td>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
-                        {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
-                    </td>
-                </tr>
-                <tr></tr>
-                <tr style="vertical-align: top;">
-                    <td>
-                        Kepala Sekolah
-                        <br><br><br><br>
-                        <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
-                    </td>
-                    <td>
-                        Keuangan
-                        <br><br><br><br> 
-                        <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
-                    </td>
-                </tr>
-            </table>
+
+        @if($sekolah == 'SMK PEMUDA KRIAN')
+        <div style="margin-top:40px;">
+           <table style="width:100%">
+               <tr>
+                <td style="width:30%"></td>
+                <td style="width:20%">Saldo Bulan Lalu</td>
+                <td>{{ "Rp " . number_format($saldo_before->kas_akhir_bulan) }}</td>
+               </tr>
+               <tr>
+                <td style="width:30%"></td>
+                <td style="width:20%">Penerimaan Bulan Ini</td>
+                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_debit']) }}</td>
+               </tr>
+               <tr>
+                <td style="width:30%"></td>
+                <td style="width:20%"></td>
+                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit']) }}</td>
+               </tr>
+               <tr>
+                <td style="width:30%"></td>
+                <td style="width:20%">Pengeluaran Bulan Ini</td>
+                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_kredit']) }}</td>
+               </tr>
+               <tr>
+                <td style="width:30%"></td>
+                <td style="width:20%">Saldo Akhir Bulan</td>
+                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'] - $data_laporan['total_kredit']) }}</td>
+               </tr>
+           </table>
         </div>
+        @endif
+
+        <div class="row" style="margin-top:40px;">
+            <div class="col-md-4">
+                <p>Mengetahui<br>Kepala Sekolah<br><br><br><br>
+                <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b></p>
+            </div>
+            @if($sekolah == 'SMK PEMUDA KRIAN')
+            <div class="col-md-4">
+                <p>Bendahara PCM<br><br><br><br>
+                <b><u>Drs.ec.H.Nanang Abdul Hakim,SE</u></b></p>
+            </div>
+            @endif
+            <div class="col-md-4 {{$sekolah == 'SMK PEMUDA KRIAN' ? '' : 'offset-md-4'}}">
+                <p>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
+                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }} <br>Keuangan<br><br><br><br> 
+                <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b></p>
+            </div>
+        </div>
+
         <div class="clear"></div>
     </div>
+
 </body>
 <script>
     window.print();
