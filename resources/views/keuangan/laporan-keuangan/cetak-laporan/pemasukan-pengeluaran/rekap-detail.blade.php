@@ -113,7 +113,7 @@
             @if($sekolah == 'SMK PEMUDA KRIAN')
             <div class="col-md-4">
                 <p>Bendahara PCM<br><br><br><br>
-                <b><u>Drs.ec.H.Nanang Abdul Hakim,S.Si.</u></b></p>
+                <b><u>Drs.ec.H.Nanang Abdul Hakim,SE</u></b></p>
             </div>
             @endif
             <div class="col-md-4 {{$sekolah == 'SMK PEMUDA KRIAN' ? '' : 'offset-md-4'}}">
