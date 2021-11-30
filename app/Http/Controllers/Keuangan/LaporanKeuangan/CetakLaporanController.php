@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 use App\Libraries\Keuangan\LibCetakKeuangan;
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Bulan;
+use App\Models\TutupBukuBulananKas;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -84,6 +86,11 @@ class CetakLaporanController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $sekolah = $auth_data->sekolah_data->nm_sekolah;
+
+        $month_before = Carbon::parse($start_date)->subMonth()->format('m');
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $saldo_before = TutupBukuBulananKas::where('id_semester_mulai',$semester_aktif->id_semester)->where('id_bulan',$month_before)->first();
 
         $validator = Validator::make([
             'start_date' => $start_date,
@@ -115,7 +122,7 @@ class CetakLaporanController extends BaseController
             $data_laporan = LibCetakKeuangan::fetchLaporanKasReguler($auth_data, $start_date, $end_date);
         }
 
-        return view('keuangan/laporan-keuangan/cetak-laporan/pemasukan-pengeluaran/rekap-detail', compact('auth_data', 'judul', 'data_laporan', 'start_date', 'end_date'));
+        return view('keuangan/laporan-keuangan/cetak-laporan/pemasukan-pengeluaran/rekap-detail', compact('auth_data', 'judul', 'data_laporan', 'start_date', 'end_date','sekolah','saldo_before'));
     }
     
     public function printCetakLaporanPembayaranSiswa(Request $request, $jenis, $start_date, $end_date)
