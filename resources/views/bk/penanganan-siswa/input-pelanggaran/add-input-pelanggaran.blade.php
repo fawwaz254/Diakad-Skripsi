@@ -82,14 +82,16 @@
                                 <textarea name="catatan_pelanggaran_khusus" id="editor1" class="editor1" rows="10" cols="80"></textarea>
                             </div>
                         </div>
+
                         <h2 class="card-inside-title">
                             Tanggal Pelanggaran
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_pelanggaran" required="" aria-required="true" aria-invalid="true">
+                                <input type="datetime-local" class="form-control" name="tgl_pelanggaran" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
