@@ -97,7 +97,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_pelanggaran" required="" aria-required="true" aria-invalid="true">
+                                <input type="datetime-local" class="form-control" name="tgl_pelanggaran" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -175,7 +175,7 @@ function changeKategori(el){
             $('select[name=id_subkategori_pelanggaran]').html('');
             var html = '<option value="">-- Pilih Sub-Kategori --</option>';
             $.each(result, function( key, item ) {
-                html += '<option value="'+item.id_subkategori_pelanggaran+'">'+item.tingkat_kategori_pelanggaran+'.'+item.tingkat_subkategori_pelanggaran+' '+item.keterangan_subkategori_pelanggaran+'</option>'
+                html += '<option value="'+item.id_subkategori_pelanggaran+'">'+item.tingkat_kategori_pelanggaran+'.'+item.tingkat_subkategori_pelanggaran+' '+item.nm_subkategori_pelanggaran+'</option>'
             });
             $('select[name=id_subkategori_pelanggaran]').html(html);
         }
