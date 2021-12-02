@@ -97,7 +97,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_tindakan_pelanggaran" required="" aria-required="true" aria-invalid="true" value="{{$tgl_tindakan_pelanggaran}}">
+                                <input type="datetime-local" class="form-control" name="tgl_tindakan_pelanggaran" required="" aria-required="true" aria-invalid="true" value="{{\Carbon\carbon::parse($tgl_tindakan_pelanggaran)->format('Y-m-d\TH:i')}}">
                             </div>
                         </div>
                         <div class="row clearfix">
