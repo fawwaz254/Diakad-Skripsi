@@ -160,6 +160,47 @@
     </div>
 </div>
 
+<!-- Modal Print Riwayat Pembayaran -->
+
+<div class="modal fade" id="modal_print_riwayat_pembayaran" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">CETAK PEMBAYARAN</h4>
+            </div>
+            <form id="form_print_riwayat_pembayaran" action="{{ url(Request::segment(1).'/utility/pembayaran-siswa/print-pembayaran') }}" target="_blank" method="GET">
+                <div class="modal-body">
+                    <div class="row form-group">
+                        <div class="col">
+                            <label for="catatan" class="form-control">Pilih Jenis</label>
+                            <select class="form-control" name="type" id="jenis">
+                                <option value="default">Default</option>
+                                <option value="struk">Struk/Printer Thermal</option>
+                            </select>
+                        </div>
+                        <div class="col" id="ukuran-struk" style="display: none">
+                            <label for="" class="form-control">Pilih Ukuran Kertas</label>
+                            <select class="form-control" name="lebar" id="lebar">
+                                <option value="" selected disabled>-- Pilih ukuran --</option>
+                                <option value="57">57 mm</option>
+                                <option value="58">58 mm</option>
+                                <option value="60">60 mm</option>
+                                <option value="70">70 mm</option>
+                                <option value="75">75 mm</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Cetak Pembayaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Print Riwayat Pembayaran -->
+
 <!-- START modal print -->
 <div class="modal fade" id="modal-print" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -409,11 +450,10 @@ function changeJenis(el){
             { data: 'semester_bayar', name: 'semester_bayar'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" id="delete-khusus-button" onclick="deleteActionKhusus(\''+ delete_pembayaran_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">close</i>'+
+                    return '<button class="btn btn-danger waves-effect" id="delete-khusus-button" onclick="deleteActionKhusus(\''+ delete_pembayaran_url +'\', this)" data-id="'+  data.id +'">'+
+                    'Hapus'+
                     '</button>' +
-                    '<a class="btn btn-info waves-effect" target="_blank" href="' + print_riwayat_pembayaran_url + '/' + data.id_pengguna + '/' + data.tgl_pembayaran 
-                    + '"><i class="material-icons">print</i></a>';
+                    '<button class="btn btn-info waves-effect" type="button" onclick="print_pembayaran_riwayat_siswa(\''+data.id_pengguna+ '\',this)" data-tgl-pembayaran = "'+data.tgl_pembayaran+'">Print</button>';
                 }
             }
         ]
@@ -428,6 +468,20 @@ function changeJenis(el){
 </script>
 
 <script>
+
+    function print_pembayaran_riwayat_siswa(id_pengguna,element){
+        
+        var item = $(element);
+        var tgl_pembayaran = item.attr('data-tgl-pembayaran');
+
+        var url = '/keuangan/utility/pembayaran-siswa/print-pembayaran';
+        url = url + '/' + id_pengguna + '/' + tgl_pembayaran;
+
+        $('#form_print_riwayat_pembayaran').attr('action', url);
+        $('#modal_print_riwayat_pembayaran').modal('show');
+
+    }
+
     function deleteActionKhusus(delete_url, element){
         var item = $(element);
         $('button').attr('disabled', 'disabled');
