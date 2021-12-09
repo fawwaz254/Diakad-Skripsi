@@ -262,6 +262,14 @@ class PembayaranOnlineController extends BaseController
             $pembayaran_trs->keterangan = $trs_keterangan;
             $pembayaran_trs->save();
 
+            if(empty($wali_murid_phone)){
+                $wali_murid_phone = '085155226781';
+            }
+
+            if(!empty($wali_murid_email)){
+                $wali_murid_email = 'tech@solusimaster.co.id';
+            }
+
             $params = array(
                 'callback' => url('payment/callback/'.$pembayaran_trs->id_pembayaran_trs),
                 'listener' => url('payment/notification/'.$pembayaran_trs->id_pembayaran_trs),
