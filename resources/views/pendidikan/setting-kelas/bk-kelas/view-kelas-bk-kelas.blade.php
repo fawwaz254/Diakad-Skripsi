@@ -13,7 +13,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>DATA GURU BK KELAS {{$data_kelas->nm_kelas}}</h2>
+                        <h2>DATA PENANGGUNG JAWAB BK KELAS {{$data_kelas->nm_kelas}}</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -23,7 +23,7 @@
                                         <th>No</th>
                                         <th>Nama Kelas</th>
                                         <th>Semester</th>
-                                        <th>Nama Guru BK</th>
+                                        <th>Nama Penanggung Jawab BK</th>
                                         <th>Status Aktif</th>
                                         <th>Action</th>
                                     </tr>

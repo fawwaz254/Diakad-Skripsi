@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use Yajra\Datatables\Datatables;
 
+use App\Models\Pengguna;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Semester;
@@ -83,14 +84,14 @@ class BkKelasController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
         // ambil data guru melalui role sumber daya
-        $data_guru = LibGuru::fetchDataAllGuru($auth_data);
+        $data_guru_tendik = Pengguna::whereIn('status_join_table',[1,2])->where('username','!=','admin')->get();
 
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $id_bk_kelas = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('pendidikan/setting-kelas/bk-kelas/add-bk-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru', 'id_bk_kelas'));
+        return view('pendidikan/setting-kelas/bk-kelas/add-bk-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru_tendik', 'id_bk_kelas'));
     }
 
     public function editBkKelas(Request $request, $id_kelas, $id_semester, $id)
@@ -103,12 +104,11 @@ class BkKelasController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
-        // ambil data guru melalui role sumber daya
-        $data_guru = LibGuru::fetchDataAllGuru($auth_data);
+        $data_guru_tendik = Pengguna::whereIn('status_join_table',[1,2])->where('username','!=','admin')->get();
 
         $data_bk_kelas = LibGuru::fetchDataBkKelas($auth_data, $id_kelas, $id);
 
-        return view('pendidikan/setting-kelas/bk-kelas/edit-bk-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru', 'data_bk_kelas'));
+        return view('pendidikan/setting-kelas/bk-kelas/edit-bk-kelas', compact('auth_data', 'data_kelas', 'data_semester', 'data_guru_tendik', 'data_bk_kelas'));
     }
 
     public function datatablesBkKelas(Request $request, $id_kelas)
@@ -151,7 +151,7 @@ class BkKelasController extends BaseController
         $validator = Validator::make($request->all(), [
             'id_kelas' => 'required',
             'id_semester' => 'required',
-            'id_guru' => 'required',
+            'id_pengguna' => 'required',
             'is_aktif' => 'required'
         ]);
 
@@ -169,7 +169,8 @@ class BkKelasController extends BaseController
 
                 $kelas = Kelas::find($input->id_kelas);
                 $semester = Semester::find($input->id_semester);
-                $guru = Guru::find($input->id_guru);
+                $pengguna = Pengguna::find($input->id_pengguna);
+
                 // cek apabila ada record kelas dan semester yg sama
                 $bkKelas = BkKelas::join('semester', 'semester.id_semester', '=', 'bk_kelas.id_semester')
                                 ->where('bk_kelas.id_kelas', '=', $input->id_kelas)
@@ -181,7 +182,7 @@ class BkKelasController extends BaseController
  
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$bkKelas->guru->pengguna->nm_pengguna
+                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$bkKelas->pengguna->nm_pengguna
                     ];
                  
                 
@@ -195,7 +196,7 @@ class BkKelasController extends BaseController
                     $bkKelas->id_bk_kelas          = $id;
                     $bkKelas->id_kelas             = $input->id_kelas;
                     $bkKelas->id_semester          = $input->id_semester;
-                    $bkKelas->id_guru              = $input->id_guru;
+                    $bkKelas->id_pengguna          = $input->id_pengguna;
                     $bkKelas->is_aktif             = $input->is_aktif;
                     $bkKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
                     $bkKelas->save();
@@ -226,7 +227,7 @@ class BkKelasController extends BaseController
                 $bkKelas                   = BkKelas::find($id);
                 $bkKelas->id_kelas         = $input->id_kelas;
                 $bkKelas->id_semester      = $input->id_semester;
-                $bkKelas->id_guru          = $input->id_guru;
+                $bkKelas->id_pengguna      = $input->id_pengguna;
                 $bkKelas->is_aktif         = $input->is_aktif;
                 $bkKelas->updated_by       = $input->auth_data->pengguna->id_pengguna;
                 $bkKelas->updated_at       = $now;

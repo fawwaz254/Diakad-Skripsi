@@ -9,6 +9,7 @@ use App\Models\PelanggaranSiswa as PelanggaranSiswa;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\TindakanPelanggaran as TindakanPelanggaran;
 use App\Models\Guru as Guru;
+use App\Models\Pengguna;
 use App\Models\BkKelas;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -109,9 +110,9 @@ class TindakanPelanggaranController extends BaseController
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 0, null, "1");
 
         $bk_kelas = [];
-        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-        if($guru){
-            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->pluck('id_kelas')->toArray();
+        $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($pengguna){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna',$pengguna->id_pengguna)->pluck('id_kelas')->toArray();
         }
 
         return Datatables::of($list_data)
@@ -189,9 +190,9 @@ class TindakanPelanggaranController extends BaseController
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, "1");
 
         $bk_kelas = [];
-        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-        if($guru){
-            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->pluck('id_kelas')->toArray();
+        $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($pengguna){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna',$pengguna->id_pengguna)->pluck('id_kelas')->toArray();
         }
 
         return Datatables::of($list_data)
@@ -244,9 +245,9 @@ class TindakanPelanggaranController extends BaseController
         $list_data = LibDataPelanggaran::fetchDataTindakanPelanggaran($auth_data, 1, null, "1");
 
         $bk_kelas = [];
-        $guru = Guru::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-        if($guru){
-            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_guru',$guru->id_guru)->pluck('id_kelas')->toArray();
+        $pengguna = Pengguna::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+        if($pengguna){
+            $bk_kelas = BkKelas::groupBy('id_kelas')->where('id_pengguna',$auth_data->pengguna->id_pengguna)->pluck('id_kelas')->toArray();
         }
 
         return Datatables::of($list_data)
