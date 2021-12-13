@@ -17,6 +17,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Excel;
 
 class MagangSiswaController extends BaseController
 {

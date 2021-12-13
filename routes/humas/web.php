@@ -154,6 +154,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('rekanan-magang/datatables', 'Humas\MagangSiswa\RekananMagangController@datatablesRekananMagang');
 			Route::get('rekanan-magang/add', 'Humas\MagangSiswa\RekananMagangController@addRekananMagang');
 			Route::get('rekanan-magang/edit/{id}', 'Humas\MagangSiswa\RekananMagangController@editRekananMagang');
+			Route::get('rekanan-magang/import-excel', 'Humas\MagangSiswa\RekananMagangController@importExcel');
+			Route::post('rekanan-magang/import-excel', 'Humas\MagangSiswa\RekananMagangController@importExcelAction');
 
 			Route::post('action-rekanan-magang/{mode}/{id}', 'Humas\MagangSiswa\RekananMagangController@actionRekananMagang');
 

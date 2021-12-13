@@ -39,12 +39,12 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_guru">
-                                    @foreach($data_guru as $data)
-                                    @if($data->id_guru == $data_bk_kelas->id_guru)
-                                    <option value="{{$data->id_guru}}" selected>{{$data->pengguna->fullname()}}</option>
+                                <select class="form-control show-tick" name="id_pengguna">
+                                    @foreach($data_guru_tendik as $data)
+                                    @if($data->id_pengguna == $data_bk_kelas->id_pengguna)
+                                    <option value="{{$data->id_pengguna}}" selected>{{$data->fullname()}}</option>
                                     @else
-                                    <option value="{{$data->id_guru}}">{{$data->pengguna->fullname()}}</option>
+                                    <option value="{{$data->id_pengguna}}">{{$data->fullname()}}</option>
                                     @endif
                                     @endforeach
                                 </select>

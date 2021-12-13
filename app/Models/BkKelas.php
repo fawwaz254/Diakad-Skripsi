@@ -32,8 +32,8 @@ class BkKelas extends Model
 
     protected $guarded = [];
 
-    public function guru(){
-        return $this->belongsTo(Guru::class, 'id_guru');
+    public function pengguna(){
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
     public function kelas(){
