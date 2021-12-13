@@ -114,11 +114,11 @@ class RekananMagangController extends BaseController
 
                             $data                                = new RekananMagang;
                             $data->id_rekanan_magang             = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            $data->nm_rekanan_magang             = $value->nm_rekanan_magang;
-                            if(empty($value->no_telepon)){
+                            $data->nm_rekanan_magang             = $value->nama_rekanan_magang;
+                            if(!empty($value->no_telepon)){
                                 $data->nomor_telp_rekanan_magang     = $value->no_telepon;
                             }
-                            if(empty($value->no_hp)){
+                            if(!empty($value->no_hp)){
                                 $data->nomor_hp_rekanan_magang       = $value->no_hp;
                             }
                             $data->alamat_rekanan_magang         = $value->alamat;
