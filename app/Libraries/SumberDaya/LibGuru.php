@@ -473,15 +473,14 @@ class LibGuru
 
         // get mode view
         if ($id == null) {
-            $bkKelas = BkKelas::select('bk_kelas.id_bk_kelas', 'bk_kelas.id_guru', 'bk_kelas.id_kelas', 'bk_kelas.id_semester', 'kelas.nm_kelas', 'pengguna.nm_pengguna as nm_bk_kelas', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'semester.tahun_ajaran', 'semester.nm_semester', 'bk_kelas.is_aktif')
+            $bkKelas = BkKelas::select('bk_kelas.id_bk_kelas', 'bk_kelas.id_pengguna', 'bk_kelas.id_kelas', 'bk_kelas.id_semester', 'kelas.nm_kelas', 'pengguna.nm_pengguna as nm_bk_kelas', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'semester.tahun_ajaran', 'semester.nm_semester', 'bk_kelas.is_aktif')
                 ->join('kelas', 'kelas.id_kelas', '=', 'bk_kelas.id_kelas')
-                ->join('guru', 'guru.id_guru', '=', 'bk_kelas.id_guru')
-                ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                ->join('pengguna', 'pengguna.id_pengguna', '=', 'bk_kelas.id_pengguna')
                 ->join('semester', 'semester.id_semester', '=', 'bk_kelas.id_semester')
                 ->where('bk_kelas.id_kelas', '=', $id_kelas)
                 ->orderBy('semester.thn_akademik_semester', 'asc')
                 ->orderBy('semester.nm_semester', 'asc')
-                ->with('guru', 'guru.pengguna')
+                ->with('pengguna')
                 ->get();
         }
         // get mode edit
@@ -489,7 +488,7 @@ class LibGuru
             $bkKelas = BkKelas::where('bk_kelas.id_bk_kelas', '=', $id)->first();
         }
 
-        return$bkKelas;
+        return $bkKelas;
     }
 
     /** JADWAL KBM GURU with HARI BY id_pengguna **/
