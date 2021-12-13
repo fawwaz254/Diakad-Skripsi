@@ -48,6 +48,16 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             
         });
 
+        /** ==== MODUL Absensi ==== **/
+        Route::group(array('prefix' => 'absensi'), function () {
+
+            Route::group(array('prefix' => 'histori-absensi'), function () {
+                Route::get('/', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+                Route::get('/{start_date}/{end_date}', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+            });
+
+        });
+
 
          /** ==== MODUL TUTORIAL ==== **/
         Route::group(array('prefix' => 'tutorial'), function () {
