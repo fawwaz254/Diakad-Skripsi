@@ -36,13 +36,13 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Nama Wali Kelas
+                            Nama Penanggung Jawab BK
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_guru">
-                                    @foreach($data_guru as $data)
-                                    <option value="{{$data->id_guru}}">{{$data->pengguna->fullname()}}</option>
+                                <select class="form-control show-tick" name="id_pengguna">
+                                    @foreach($data_guru_tendik as $data)
+                                    <option value="{{$data->id_pengguna}}">{{$data->fullname()}}</option>
                                     @endforeach
                                 </select>
                             </div>

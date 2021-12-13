@@ -1049,9 +1049,9 @@ class LibCetakKeuangan{
         }
 
         if($print_setting == 'self'){
-            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya');
+            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy('tagihan_biaya.detail_biaya.keterangan_biaya','tagihan_biaya.detail_biaya.id_biaya');
         }else{
-            $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.detail_biaya.biaya.nm_biaya');
+            $allDataPembayaran = $pembayaran->get()->groupBy('tagihan_biaya.detail_biaya.keterangan_biaya','tagihan_biaya.detail_biaya.id_biaya');
         }
 
         $listData = [];
