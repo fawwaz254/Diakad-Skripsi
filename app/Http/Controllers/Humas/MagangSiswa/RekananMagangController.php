@@ -122,8 +122,8 @@ class RekananMagangController extends BaseController
                                 $data->nomor_hp_rekanan_magang       = $value->no_hp;
                             }
                             $data->alamat_rekanan_magang         = $value->alamat;
-                            $data->tgl_awal_kerja_sama       = date_format(date_create($value->tanggal_awal_kerja_sama),"Y-m-d");
-                            $data->tgl_akhir_kerja_sama      = date_format(date_create($value->tanggal_akhir_kerja_sama),"Y-m-d");
+                            $data->tgl_awal_kerjasama       = date_format(date_create($value->tanggal_awal_kerja_sama),"Y-m-d");
+                            $data->tgl_akhir_kerjasama      = date_format(date_create($value->tanggal_akhir_kerja_sama),"Y-m-d");
                             $data->kuota_rekanan_magang          = $value->kuota_magang;
                             $data->contact_person_rekanan_magang = $value->contact_person_magang;
                             $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
