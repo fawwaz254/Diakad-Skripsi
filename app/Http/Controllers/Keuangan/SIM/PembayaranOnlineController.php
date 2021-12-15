@@ -266,7 +266,7 @@ class PembayaranOnlineController extends BaseController
                 $wali_murid_phone = '085155226781';
             }
 
-            if(!empty($wali_murid_email)){
+            if(empty($wali_murid_email)){
                 $wali_murid_email = 'tech@solusimaster.co.id';
             }
 
