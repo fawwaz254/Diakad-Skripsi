@@ -753,7 +753,7 @@ class SppController extends BaseController
 
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        $data_realisasi = Realisasi::select('*')->addSelect(DB::raw('MONTH(realisasi.created_at) month'))
+        $data_realisasi = Realisasi::select('*')->addSelect(DB::raw('MONTH(realisasi.tgl_realisasi) month'))
                             ->with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function($q){
                                 $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
                             })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])->get();
