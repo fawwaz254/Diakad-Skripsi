@@ -93,6 +93,10 @@ $jumlah += $data->poin_subkategori_pelanggaran * $data->frekuensi;
 <td colspan="5" align="center"><b>TOTAL</b></td>
 <td align="center"><b>{{$jumlah}}</b></td>
 </tr>
+<tr>
+<td colspan="5" align="center"><b>KATEGORI PELANGGARAN</b></td>
+<td align="center"><b>TIDAK ADA</b></td>
+</tr>
 </table>
 </div>
 
@@ -110,9 +114,19 @@ $jumlah += $data->poin_subkategori_pelanggaran * $data->frekuensi;
 </fieldset>
 </div>
 
-<div class="col-md-3 offset-md-9" style="margin-top:45px;">
+<div class="col-md-4" style="margin-top:45px;">
+    Mengetahui <br> Kepala Sekolah,
+    <div style="margin-top:40px;">{{$sekolah_data->nm_kepala_sekolah}}</div> 
+</div>
+
+<div class="col-md-4" style="margin-top:65px;">
+    Orang Tua / Wali Peserta Dididk
+    <div style="margin-top:40px;">...........</div>
+</div>
+
+<div class="col-md-4" style="margin-top:65px;">
   Sidoarjo, {{now('Asia/Jakarta')->format('d M Y')}}  <br> Wali Kelas 
-  <div style="margin-top:30px;">.....</div>
+  <div style="margin-top:40px;">...........</div>
 </div>
    
 </div>
