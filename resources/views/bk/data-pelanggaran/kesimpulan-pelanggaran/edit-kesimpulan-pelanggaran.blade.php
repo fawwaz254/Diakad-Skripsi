@@ -37,6 +37,33 @@
                                 <input type="number" class="form-control" name="poin_atas_kesimpulan_pelanggaran" required="" aria-required="true" aria-invalid="true" value="{{$data_kesimpulan_pelanggaran->poin_atas_kesimpulan_pelanggaran}}">
                             </div>
                         </div>
+
+                        @if($setting_bk==1)
+                        <h2 class="card-inside-title">
+                            Deskripsi 1
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea name="deskripsi_kesimpulan_pelanggaran_1" id="editor1" class="editor1" rows="10" cols="80">{{ $data_kesimpulan_pelanggaran->deskripsi_kesimpulan_pelanggaran_1 }}</textarea>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Deskripsi 2
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea name="deskripsi_kesimpulan_pelanggaran_2" id="editor2" class="editor2" rows="10" cols="80">{{ $data_kesimpulan_pelanggaran->deskripsi_kesimpulan_pelanggaran_2 }}</textarea>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Deskripsi 3
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea name="deskripsi_kesimpulan_pelanggaran_3" id="editor3" class="editor3" rows="10" cols="80">{{ $data_kesimpulan_pelanggaran->deskripsi_kesimpulan_pelanggaran_3 }}</textarea>
+                            </div>
+                        </div>
+                        @endif
                         
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
