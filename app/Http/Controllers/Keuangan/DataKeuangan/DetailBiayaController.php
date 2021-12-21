@@ -309,7 +309,7 @@ class DetailBiayaController extends BaseController{
                         $detailBiaya->id_detail_biaya               = $id;
                         $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
                         $detailBiaya->id_biaya                      = $input->id_biaya;
-                        $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
+                        // $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
                         $detailBiaya->validasi_biaya                = $input->validasi_biaya;
                         $detailBiaya->besar_biaya                   = $input->besar_biaya;
                         $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
@@ -326,7 +326,7 @@ class DetailBiayaController extends BaseController{
                     $detailBiaya->id_detail_biaya               = $id;
                     $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
                     $detailBiaya->id_biaya                      = $input->id_biaya;
-                    $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
+                    // $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
                     $detailBiaya->validasi_biaya                = $input->validasi_biaya;
                     $detailBiaya->besar_biaya                   = $input->besar_biaya;
                     $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;
@@ -348,7 +348,7 @@ class DetailBiayaController extends BaseController{
                 $detailBiaya                                = DetailBiaya::find($id);
                 $detailBiaya->id_biaya_sekolah              = $input->id_biaya_sekolah;
                 $detailBiaya->id_biaya                      = $input->id_biaya;
-                $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
+                // $detailBiaya->id_kelompok_biaya_internal    = $input->id_kelompok_biaya_internal;
                 $detailBiaya->validasi_biaya                = $input->validasi_biaya;
                 $detailBiaya->besar_biaya                   = $input->besar_biaya;
                 $detailBiaya->keterangan_biaya              = $input->keterangan_biaya;

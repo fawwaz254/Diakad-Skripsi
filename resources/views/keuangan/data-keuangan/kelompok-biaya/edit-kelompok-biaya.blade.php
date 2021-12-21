@@ -31,7 +31,7 @@
                                     aria-invalid="true" value="{{$data_kelompok_biaya->keterangan_kelompok_biaya}}">
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                      <!--   <h2 class="card-inside-title">
                             Status
                         </h2>
                         <div class="row clearfix">
@@ -46,7 +46,7 @@
                                     @endif
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>

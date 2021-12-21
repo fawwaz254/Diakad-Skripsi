@@ -41,7 +41,7 @@ class LibDataKeuangan
     /** DATA MASTER **/
     public static function fetchDataJenisDetailBiaya($auth_data)
     {
-        $jenisDetailBiaya = JenisDetailBiaya::orderBy('id_jenis_detail_biaya', 'asc')->get();
+        $jenisDetailBiaya = JenisDetailBiaya::orderBy('id_jenis_detail_biaya', 'asc')->whereIn('id_jenis_detail_biaya',[3,4])->get();
 
         return $jenisDetailBiaya;
     }
