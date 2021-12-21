@@ -719,7 +719,7 @@ class LibSiswa
         $siswa = Siswa::where('id_pengguna', '=', $id_pengguna)->first();
         $id_siswa = $siswa->id_siswa;
 
-        $pelanggaranNonKBM = Siswa::select('siswa.id_siswa', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'jenis_tindakan.nm_jenis_tindakan', 'tindakan_pelanggaran.catatan_tindakan_pelanggaran', 'tindakan_pelanggaran.tgl_tindakan_pelanggaran', 'tindakan_pelanggaran.aktor_input_tindakan_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran')
+        $pelanggaranNonKBM = Siswa::select('siswa.id_siswa', 'pelanggaran_siswa.catatan_pelanggaran', 'pelanggaran_siswa.tgl_pelanggaran', 'pelanggaran_siswa.aktor_input_pelanggaran', 'pelanggaran_siswa.is_sudah_tindakan', 'jenis_tindakan.nm_jenis_tindakan', 'tindakan_pelanggaran.catatan_tindakan_pelanggaran', 'tindakan_pelanggaran.tgl_tindakan_pelanggaran', 'tindakan_pelanggaran.aktor_input_tindakan_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran','subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran')
                     ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
                     ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
                     ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')

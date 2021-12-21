@@ -12,9 +12,27 @@
 </head>
 <body>
 
-<div class="container text-center" style="margin-top:60px;">
+<div class="container text-center" style="margin-top:20px;">
+<div class="row">
+    <div class="col-md-2">
+        <img src="{{asset('logo/logo-yayasan.png')}}" width="120">
+    </div>
+    <div class="col-md-8">
+        <h2>YAYASAN PENDIDIKAN DAN SOSIAL MA'ARIF <br> TAMAN – SEPANJANG – SIDOARJO</h2>
+        <p>Akte Notaris Goesti Djohan Nomor 91 Tanggal 17 September 1965</p>    
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-md-12">
+    <p>Jl.Raya Ngelom 86 Telp. (031) 7874045 Fax. (031) 7884364 Sepanjang 61257 website http.//www.ypm.ac.id- e-mail:ypm.ac.id.yayasan@ypm.ac.id</p>
+    </div>
+</div>
+</div>
+
+<div class="container text-center" style="margin-top:20px;">
     
-<h1>LAPORAN PRIBADI SISWA <br> {{strtoupper($sekolah_data->nm_sekolah)}}</h1>
+<h2>LAPORAN PRIBADI SISWA <br> {{strtoupper($sekolah_data->nm_sekolah)}}</h2>
 <hr>
 <div class="row" style="margin-top: 15px;">
 <table class="table table-borderless" style="text-align:left">
@@ -50,45 +68,88 @@
 <th>No.</th>
 <th>Jenis Pelanggaran</th>
 <th>Pelanggaran Tingkat</th>
-<th>Catatan Pelanggaran</th>
 <th>Poin</th>
+<th>Frekuensi</th>
+<th>Jumlah</th>
 </tr>
 @php
 $no = 1;
+$jumlah = 0;
 @endphp
 @foreach($list_data as $data)
 <tr>
 <td>{{$no++}}.</td>
-<td>{{$data->keterangan_subkategori_pelanggaran}}</td>
+<td>{!!$data->nm_subkategori_pelanggaran!!}</td>
 <td>{{$data->nm_kategori_pelanggaran}}</td>
-<td>{{$data->catatan_pelanggaran}}</td>
 <td>{{$data->poin_subkategori_pelanggaran}}</td>
+<td>{{$data->frekuensi}} x</td>
+<td>{{$data->jumlah_poin}}</td>
+@php
+$jumlah += $data->jumlah_poin;
+@endphp
 </tr>
 @endforeach
 <tr>
-<td colspan="4" align="center"><b>TOTAL</b></td>
-<td align="center"><b>{{$list_data->sum('poin_subkategori_pelanggaran')}}</b></td>
+<td colspan="5" align="center"><b>TOTAL</b></td>
+<td align="center"><b>{{$jumlah}}</b></td>
 </tr>
+@if($setting_bk)
+<tr>
+<td colspan="5" align="center"><b>KATEGORI PELANGGARAN</b></td>
+<td align="center"><b>{{$kategori_pelanggaran}}</b></td>
+</tr>
+@endif
 </table>
 </div>
 
+<!-- Deskripsi Perilaku Siswa -->
+
 <div class="col-md-12">
 <h6 style="margin-top:15px;text-align: left;">B. Deskripsi Perilaku Siswa</h6> 
+@if($setting_bk)
+<table border="1" style="width:100%" cellspacing="0" cellpadding="10">
+<tr>
+<th style="width:10%">No.</th>
+<th>Deskripsi</th>
+</tr>
+<tr>
+<td style="width:10%">1</td>
+<td>{{$deskripsi_perilaku_1}}</td>
+</tr>
+<tr>
+<td style="width:10%">2</td>
+<td>{{$deskripsi_perilaku_2}}</td>
+</tr>
+</table>
+@else
 <fieldset style="height: 100px;border:2px solid black">
     <p></p>
 </fieldset>
+@endif
 </div>
+
+<!-- Deskripsi Perilaku Siswa -->
 
 <div class="col-md-12">
 <h6 style="margin-top:15px;text-align: left;">C. Catatan Sekolah</h6> 
 <fieldset style="height: 100px;border:2px solid black">
-    <p></p>
+    <p>{{$catatan_sekolah}}</p>
 </fieldset>
 </div>
 
-<div class="col-md-3 offset-md-9" style="margin-top:45px;">
+<div class="col-md-4" style="margin-top:45px;">
+    Mengetahui <br> Kepala Sekolah,
+    <div style="margin-top:40px;">{{$sekolah_data->nm_kepala_sekolah}}</div> 
+</div>
+
+<div class="col-md-4" style="margin-top:65px;">
+    Orang Tua / Wali Peserta Dididk
+    <div style="margin-top:40px;">...........</div>
+</div>
+
+<div class="col-md-4" style="margin-top:65px;">
   Sidoarjo, {{now('Asia/Jakarta')->format('d M Y')}}  <br> Wali Kelas 
-  <div style="margin-top:30px;">.....</div>
+  <div style="margin-top:40px;">...........</div>
 </div>
    
 </div>
