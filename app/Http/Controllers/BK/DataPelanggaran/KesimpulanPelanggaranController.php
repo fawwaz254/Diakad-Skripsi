@@ -65,6 +65,16 @@ class KesimpulanPelanggaranController extends BaseController{
     	$list_data = LibDataPelanggaran::fetchDataKesimpulanPelanggaran($auth_data);
 
         return Datatables::of($list_data)
+                ->editColumn('deskripsi_kesimpulan_pelanggaran_1',function($item){
+                    return strip_tags($item->deskripsi_kesimpulan_pelanggaran_1);
+                })
+                ->editColumn('deskripsi_kesimpulan_pelanggaran_2',function($item){
+                    return strip_tags($item->deskripsi_kesimpulan_pelanggaran_2);
+                })
+                ->editColumn('deskripsi_kesimpulan_pelanggaran_3',function($item){
+                    return strip_tags($item->deskripsi_kesimpulan_pelanggaran_3);
+                })
+
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_kesimpulan_pelanggaran
@@ -87,9 +97,7 @@ class KesimpulanPelanggaranController extends BaseController{
                 'nm_kesimpulan_pelanggaran' => 'required',
                 'poin_bawah_kesimpulan_pelanggaran' => 'required',
                 'poin_atas_kesimpulan_pelanggaran' => 'required',
-                'deskripsi_kesimpulan_pelanggaran_1' => 'required',
-                'deskripsi_kesimpulan_pelanggaran_2' => 'required',
-                'deskripsi_kesimpulan_pelanggaran_3' => 'required'
+                'deskripsi_kesimpulan_pelanggaran_1' => 'required'
             ]);
 
         }   

@@ -83,9 +83,9 @@ $jumlah = 0;
 <td>{{$data->nm_kategori_pelanggaran}}</td>
 <td>{{$data->poin_subkategori_pelanggaran}}</td>
 <td>{{$data->frekuensi}} x</td>
-<td>{{$data->poin_subkategori_pelanggaran * $data->frekuensi}}</td>
+<td>{{$data->jumlah_poin}}</td>
 @php
-$jumlah += $data->poin_subkategori_pelanggaran * $data->frekuensi;
+$jumlah += $data->jumlah_poin;
 @endphp
 </tr>
 @endforeach
@@ -93,24 +93,47 @@ $jumlah += $data->poin_subkategori_pelanggaran * $data->frekuensi;
 <td colspan="5" align="center"><b>TOTAL</b></td>
 <td align="center"><b>{{$jumlah}}</b></td>
 </tr>
+@if($setting_bk)
 <tr>
 <td colspan="5" align="center"><b>KATEGORI PELANGGARAN</b></td>
-<td align="center"><b>TIDAK ADA</b></td>
+<td align="center"><b>{{$kategori_pelanggaran}}</b></td>
 </tr>
+@endif
 </table>
 </div>
 
+<!-- Deskripsi Perilaku Siswa -->
+
 <div class="col-md-12">
 <h6 style="margin-top:15px;text-align: left;">B. Deskripsi Perilaku Siswa</h6> 
+@if($setting_bk)
+<table border="1" style="width:100%" cellspacing="0" cellpadding="10">
+<tr>
+<th style="width:10%">No.</th>
+<th>Deskripsi</th>
+</tr>
+<tr>
+<td style="width:10%">1</td>
+<td>{{$deskripsi_perilaku_1}}</td>
+</tr>
+<tr>
+<td style="width:10%">2</td>
+<td>{{$deskripsi_perilaku_2}}</td>
+</tr>
+</table>
+@else
 <fieldset style="height: 100px;border:2px solid black">
     <p></p>
 </fieldset>
+@endif
 </div>
+
+<!-- Deskripsi Perilaku Siswa -->
 
 <div class="col-md-12">
 <h6 style="margin-top:15px;text-align: left;">C. Catatan Sekolah</h6> 
 <fieldset style="height: 100px;border:2px solid black">
-    <p></p>
+    <p>{{$catatan_sekolah}}</p>
 </fieldset>
 </div>
 
