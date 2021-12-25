@@ -16,6 +16,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Excel;
 
 class JenisRuanganController extends BaseController{
 
@@ -152,5 +153,129 @@ class JenisRuanganController extends BaseController{
         }
     }
 
+    public function importExcel(Request $request){
+      # code...
+      $input = (object) $request->input();
+      $auth_data = $input->auth_data;
+
+      return view('sarana-prasarana/data-sarpras-ruangan/jenis-ruangan/import-excel',compact('auth_data'));
+
+    }
+
+    public function importExcelAction(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+                'file-excel' => 'required',
+        ]);
+        
+        if($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            if($request->hasFile('file-excel')){
+
+                $path = $request->file('file-excel')->getRealPath();
+                $data = Excel::load($path)->get();
+
+                if($data->count()){
+
+                    DB::beginTransaction();
+                    
+                    try {
+
+                        foreach ($data as $key => $value) {
+
+                            if(empty($value->nama_jenis_ruangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data jenis ruangan gagal, ada nama jenis ruangan yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->tipe_ruangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data jenis ruangan gagal, ada tipe ruangan yang kosong'
+                                ];
+                            }
+
+                            if(ucwords($value->tipe_ruangan) != 'Kelas' || ucwords($value->tipe_ruangan) != 'Non-Kelas'){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data jenis ruangan gagal, tipe ruangan yang ada hanya Kelas  / Non-Kelas'
+                                ];
+                            }
+
+                            $tipe_ruangan = ucwords($value->tipe_ruangan);
+
+                            if($tipe_ruangan=='Kelas'){
+                                $tipe_ruangan = 1;
+                            }
+                            else{
+                                $tipe_ruangan = 2;
+                            }
+
+                            $data                                = new JenisRuangan;
+                            $data->id_jenis_ruangan              = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->nm_jenis_ruangan              = $value->nama_jenis_ruangan;
+                            $data->tipe_ruangan                  = $tipe_ruangan;
+                            $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
+                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+                        DB::commit();
+
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'data-sarpras-ruangan/jenis-ruangan',
+                            'message' => 'Import Jenis Ruangan Successfully'
+                        ];
+
+                    }
+
+                    catch (\Exception $e) {
+
+                        DB::rollback();
+                
+                        return [
+                            'status'    => 203, // GAGAL
+                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                        ];
+                    } 
+
+                }
+
+                else{
+
+                    return [
+                        'status'    => 300, // FAILED
+                        'message'   => "File excel anda kosong"
+                    ];
+
+                }
+
+            }
+
+            else{
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File Excel tidak ditemukan"
+                ];
+            }
+
+        }
+
+    }
 
 }

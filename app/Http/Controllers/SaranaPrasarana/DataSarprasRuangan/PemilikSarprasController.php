@@ -16,6 +16,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Excel;
 
 class PemilikSarprasController extends BaseController{
 
@@ -142,6 +143,115 @@ class PemilikSarprasController extends BaseController{
                 }
             }
         }
+    }
+
+    public function importExcel(Request $request){
+      # code...
+      $input = (object) $request->input();
+      $auth_data = $input->auth_data;
+
+      return view('sarana-prasarana/data-sarpras-ruangan/pemilik-sarpras/import-excel',compact('auth_data'));
+
+    }
+
+    public function importExcelAction(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+                'file-excel' => 'required',
+        ]);
+        
+        if($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            if($request->hasFile('file-excel')){
+
+                $path = $request->file('file-excel')->getRealPath();
+                $data = Excel::load($path)->get();
+
+                if($data->count()){
+
+                    DB::beginTransaction();
+                    
+                    try {
+
+                        foreach ($data as $key => $value) {
+
+                            if(empty($value->kode_pemilik_sarpras)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data pemilik sarpras gagal, ada kode pemilik sarpras yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->nama_pemilik_sarpras)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data pemilik sarpras gagal, ada nama pemilik sarpras yang kosong'
+                                ];
+                            }
+
+                            $data                                = new PemilikSarpras;
+                            $data->id_pemilik_sarpras            = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->kode_pemilik_sarpras          = $value->kode_pemilik_sarpras;
+                            $data->nm_pemilik_sarpras            = $value->nama_pemilik_sarpras;
+                            $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
+                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+                        DB::commit();
+
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'data-sarpras-ruangan/pemilik-sarpras',
+                            'message' => 'Import Pemilik Sarpras Successfully'
+                        ];
+
+                    }
+
+                    catch (\Exception $e) {
+
+                        DB::rollback();
+                
+                        return [
+                            'status'    => 203, // GAGAL
+                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                        ];
+                    } 
+
+                }
+
+                else{
+
+                    return [
+                        'status'    => 300, // FAILED
+                        'message'   => "File excel anda kosong"
+                    ];
+
+                }
+
+            }
+
+            else{
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File Excel tidak ditemukan"
+                ];
+            }
+
+        }
+
     }
 
 

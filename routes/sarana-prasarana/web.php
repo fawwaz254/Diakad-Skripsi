@@ -31,7 +31,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('pemilik-sarpras/datatables', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@datatablesPemilikSarpras');
             Route::get('pemilik-sarpras/add', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@addPemilikSarpras');
             Route::get('pemilik-sarpras/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@editPemilikSarpras');
-
+            Route::get('pemilik-sarpras/import-excel', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@importExcel');
+            Route::post('pemilik-sarpras/import-excel', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@importExcelAction');
+            
             Route::post('action-pemilik-sarpras/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@actionPemilikSarpras');
 
             // MENU Data Jenis Ruangan
@@ -39,6 +41,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('jenis-ruangan/datatables', 'SaranaPrasarana\DataSarprasRuangan\JenisRuanganController@datatablesJenisRuangan');
             Route::get('jenis-ruangan/add', 'SaranaPrasarana\DataSarprasRuangan\JenisRuanganController@addJenisRuangan');
             Route::get('jenis-ruangan/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\JenisRuanganController@editJenisRuangan');
+            Route::get('jenis-ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\JenisRuanganController@importExcel');
+            Route::post('jenis-ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\JenisRuanganController@importExcelAction');
 
             Route::post('action-jenis-ruangan/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\JenisRuanganController@actionJenisRuangan');
 
@@ -47,6 +51,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('ruangan/datatables', 'SaranaPrasarana\DataSarprasRuangan\RuanganController@datatablesRuangan');
             Route::get('ruangan/add', 'SaranaPrasarana\DataSarprasRuangan\RuanganController@addRuangan');
             Route::get('ruangan/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\RuanganController@editRuangan');
+            Route::get('ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\RuanganController@importExcel');
+            Route::post('ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\RuanganController@importExcelAction');
 
             Route::post('action-ruangan/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\RuanganController@actionRuangan');
 
@@ -55,7 +61,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('kondisi-ruangan/datatables', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@datatablesKondisiRuangan');
             Route::get('kondisi-ruangan/add', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@addKondisiRuangan');
             Route::get('kondisi-ruangan/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@editKondisiRuangan');
-
+            Route::get('kondisi-ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@importExcel');
+            Route::post('kondisi-ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@importExcelAction');
+            
             Route::post('action-kondisi-ruangan/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@actionKondisiRuangan');
 
             // MENU Data Inventaris
@@ -63,6 +71,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('inventaris/datatables', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@datatablesInventaris');
             Route::get('inventaris/add', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@addInventaris');
             Route::get('inventaris/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@editInventaris');
+            Route::get('inventaris/import-excel', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@importExcel');
+            Route::post('inventaris/import-excel', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@importExcelAction');
 
             Route::post('action-inventaris/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@actionInventaris');
         });
@@ -88,6 +98,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('jenis-buku-alat/datatables', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@datatablesJenisBukuAlat');
             Route::get('jenis-buku-alat/add', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@addJenisBukuAlat');
             Route::get('jenis-buku-alat/edit/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@editJenisBukuAlat');
+            Route::get('jenis-buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@importExcel');
+            Route::post('jenis-buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@importExcelAction');
 
             Route::post('action-jenis-buku-alat/{mode}/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@actionJenisBukuAlat');
 
@@ -96,6 +108,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('buku-alat/datatables', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@datatablesBukuAlat');
             Route::get('buku-alat/add', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@addBukuAlat');
             Route::get('buku-alat/edit/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@editBukuAlat');
+            Route::get('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@importExcel');
+            Route::post('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@importExcelAction');
 
             Route::post('action-buku-alat/{mode}/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@actionBukuAlat');
 

@@ -16,6 +16,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Excel;
 
 class JenisBukuAlatController extends BaseController{
 
@@ -144,5 +145,113 @@ class JenisBukuAlatController extends BaseController{
         }
     }
 
+    public function importExcel(Request $request){
+      # code...
+      $input = (object) $request->input();
+      $auth_data = $input->auth_data;
+
+      return view('sarana-prasarana/data-sarpras-buku-alat/jenis-buku-alat/import-excel',compact('auth_data'));
+
+    }
+
+    public function importExcelAction(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+                'file-excel' => 'required',
+        ]);
+        
+        if($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            if($request->hasFile('file-excel')){
+
+                $path = $request->file('file-excel')->getRealPath();
+                $data = Excel::load($path)->get();
+
+                if($data->count()){
+
+                    DB::beginTransaction();
+                    
+                    try {
+
+                        foreach ($data as $key => $value) {
+
+                            if(empty($value->kode_jenis_buku_atau_alat)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data jenis buku/alat gagal, ada kode jenis buku / alat yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->jenis_buku_atau_alat)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data jenis buku/alat gagal, ada nama jenis buku / alat yang kosong'
+                                ];
+                            }
+
+                            $data                                 = new JenisBukuAlat;
+                            $data->id_jenis_buku_alat             = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->kode_jenis_buku_alat           = $value->kode_jenis_buku_atau_alat;
+                            $data->nm_jenis_buku_alat             = $value->jenis_buku_atau_alat;
+                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+                        DB::commit();
+
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'data-sarpras-buku-alat/jenis-buku-alat',
+                            'message' => 'Import Pemilik Sarpras Successfully'
+                        ];
+
+                    }
+
+                    catch (\Exception $e) {
+
+                        DB::rollback();
+                
+                        return [
+                            'status'    => 203, // GAGAL
+                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                        ];
+                    } 
+
+                }
+
+                else{
+
+                    return [
+                        'status'    => 300, // FAILED
+                        'message'   => "File excel anda kosong"
+                    ];
+
+                }
+
+            }
+
+            else{
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File Excel tidak ditemukan"
+                ];
+            }
+
+        }
+
+    }
 
 }
