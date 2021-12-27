@@ -299,7 +299,7 @@ class InventarisController extends BaseController{
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->spesifikasi_inventaris_ruangan = $value->spesifikasi;
                             $data->keterangan_inventaris_ruangan  = $value->keterangan;
-                            //$data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 
