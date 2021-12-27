@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SaranaPrasarana\DataSarprasRuangan;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\Ruangan;
 use App\Models\InventarisRuangan as InventarisRuangan;
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -16,6 +17,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Excel;
 
 class InventarisController extends BaseController{
 
@@ -173,5 +175,178 @@ class InventarisController extends BaseController{
         }
     }
 
+    public function importExcel(Request $request){
+      # code...
+      $input = (object) $request->input();
+      $auth_data = $input->auth_data;
+
+      return view('sarana-prasarana/data-sarpras-ruangan/inventaris/import-excel',compact('auth_data'));
+
+    }
+
+    public function importExcelAction(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+                'file-excel' => 'required',
+        ]);
+        
+        if($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            if($request->hasFile('file-excel')){
+
+                $path = $request->file('file-excel')->getRealPath();
+                $data = Excel::load($path)->get();
+
+                if($data->count()){
+
+                    DB::beginTransaction();
+                    
+                    try {
+
+                        foreach ($data as $key => $value) {
+
+                            if(empty($value->nama_ruangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada nama ruangan yang kosong'
+                                ];
+                            }
+
+                            $check_ruangan = Ruangan::where('nm_ruangan', $value->nama_ruangan)->first();
+                            
+                            if(!$check_ruangan){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada nama ruangan yang tidak ditemukan dalam data master ruangan'
+                                ];
+                            }
+
+                            if(empty($value->nama_inventaris)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada nama inventaris yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kode_inventaris)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada kode inventaris yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->tanggal_pembelian)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada tanggal pembelian yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->jumlah_inventaris) && ($value->kondisi_baik!= 0)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada jumlah inventaris yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kondisi_baik) && ($value->kondisi_baik!= 0)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada kondisi_baik yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kondisi_rusak) && ($value->kondisi_rusak!= 0)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada kondisi rusak yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->spesifikasi)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada spesifikasi yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->keterangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada keterangan yang kosong'
+                                ];
+                            }
+
+                            $data                                 = new InventarisRuangan;
+                            $data->id_inventaris_ruangan          = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->id_ruangan                     = $check_ruangan->id_ruangan;
+                            $data->nm_inventaris_ruangan          = $value->nama_inventaris;
+                            $data->kode_inventaris_ruangan        = $value->kode_inventaris;
+                            $data->tgl_pembelian                  = date('Y-m-d',strtotime($value->tanggal_pembelian));
+                            $data->jumlah_inventaris_ruangan      = $value->jumlah_inventaris;
+                            $data->jumlah_kondisi_baik            = $value->kondisi_baik;
+                            $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
+                            $data->spesifikasi_inventaris_ruangan = $value->spesifikasi;
+                            $data->keterangan_inventaris_ruangan  = $value->keterangan;
+                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+                        DB::commit();
+
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'data-sarpras-ruangan/inventaris',
+                            'message' => 'Import Pemilik Sarpras Successfully'
+                        ];
+
+                    }
+
+                    catch (\Exception $e) {
+
+                        DB::rollback();
+                
+                        return [
+                            'status'    => 203, // GAGAL
+                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                        ];
+                    } 
+
+                }
+
+                else{
+
+                    return [
+                        'status'    => 300, // FAILED
+                        'message'   => "File excel anda kosong"
+                    ];
+
+                }
+
+            }
+
+            else{
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File Excel tidak ditemukan"
+                ];
+            }
+
+        }
+
+    }
 
 }

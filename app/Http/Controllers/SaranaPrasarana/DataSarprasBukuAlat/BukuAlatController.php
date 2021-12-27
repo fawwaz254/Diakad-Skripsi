@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SaranaPrasarana\DataSarprasBukuAlat;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
+use App\Models\JenisBukuAlat;
 use App\Models\BukuAlat as BukuAlat;
 use App\Models\Kelas as Kelas;
 use Carbon\Carbon;
@@ -18,6 +19,7 @@ use Auth;
 use DB;
 use Session;
 use Validator;
+use Excel;
 
 class BukuAlatController extends BaseController{
 
@@ -192,5 +194,184 @@ class BukuAlatController extends BaseController{
         }
     }
 
+    public function importExcel(Request $request){
+      # code...
+      $input = (object) $request->input();
+      $auth_data = $input->auth_data;
+
+      return view('sarana-prasarana/data-sarpras-buku-alat/buku-alat/import-excel',compact('auth_data'));
+
+    }
+
+    public function importExcelAction(Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+                'file-excel' => 'required',
+        ]);
+        
+        if($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
+        else{
+
+            if($request->hasFile('file-excel')){
+
+                $path = $request->file('file-excel')->getRealPath();
+                $data = Excel::load($path)->get();
+
+                if($data->count()){
+
+                    DB::beginTransaction();
+                    
+                    try {
+
+                        foreach ($data as $key => $value) {
+
+                            if(empty($value->jenis_buku_atau_alat)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data jenis buku/alat gagal, ada nama jenis buku / alat yang kosong'
+                                ];
+                            }
+
+                            $check_jenis_buku_alat = JenisBukuAlat::where('nm_jenis_buku_alat',$value->jenis_buku_atau_alat)->first();
+
+                            if(!$check_jenis_buku_alat){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data buku/alat gagal, ada jenis buku / alat yang anda masukkan tidak ada di dalam master jenis buku/alat'
+                                ];
+                            }
+
+                            if(empty($value->nama_buku_atau_alat)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data buku/alat gagal, ada nama buku / alat yang kosong'
+                                ];
+                            }
+
+                            //  if(empty($value->jenis) && ($value->jenis== 0)){
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data buku/alat gagal, ada jenis yang kosong'
+                            //     ];
+                            // }
+
+                            // if(ucwords($value->jenis)!='Alat' || ucwords($value->jenis)!='Buku'){
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data buku/alat gagal, pilihat jenis hanyalah Alat / Buku'
+                            //     ];
+                            // }
+
+                            if(empty($value->kode_buku_atau_alat)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data buku/alat gagal, ada kode buku / alat yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->tanggal_pembelian)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data buku/alat gagal, ada tanggal pembelian yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->jumlah_buku_atau_alat)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data buku/alat gagal, ada jumlah buku / alat yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kondisi_baik)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada kondisi_baik yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kondisi_rusak) && ($value->kondisi_rusak== 0)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada kondisi rusak yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->keterangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data inventaris gagal, ada keterangan yang kosong'
+                                ];
+                            }
+
+                            $data                                 = new BukuAlat;
+                            $data->id_buku_alat                   = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->id_jenis_buku_alat             = $check_jenis_buku_alat->id_jenis_buku_alat;
+                            $data->nm_buku_alat                   = $value->nama_buku_atau_alat;
+                            $data->kode_buku_alat                 = $value->kode_buku_atau_alat;
+                            $data->tgl_pembelian                  = date('Y-m-d',strtotime($value->tanggal_pembelian));
+                            $data->jumlah_buku_alat               = $value->jumlah_buku_atau_alat;
+                            $data->jumlah_kondisi_baik            = $value->kondisi_baik;
+                            $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
+                            $data->keterangan_buku_alat           = $value->keterangan;
+                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                            $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+                        DB::commit();
+
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'data-sarpras-buku-alat/buku-alat',
+                            'message' => 'Import Pemilik Sarpras Successfully'
+                        ];
+
+                    }
+
+                    catch (\Exception $e) {
+
+                        DB::rollback();
+                
+                        return [
+                            'status'    => 203, // GAGAL
+                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                        ];
+                    } 
+
+                }
+
+                else{
+
+                    return [
+                        'status'    => 300, // FAILED
+                        'message'   => "File excel anda kosong"
+                    ];
+
+                }
+
+            }
+
+            else{
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File Excel tidak ditemukan"
+                ];
+            }
+
+        }
+
+    }
 
 }
