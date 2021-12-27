@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH JENIS GEDUNG
+                        TAMBAH JENIS BUKU / ALAT
                     </h2>
                 </div>
                 <div class="body">
