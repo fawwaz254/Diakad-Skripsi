@@ -485,6 +485,7 @@ class DetailBiayaController extends BaseController{
                 ];
             }
             elseif($mode == 'delete'){
+                
                 if($tagihanBiaya = TagihanBiaya::where('id_detail_biaya',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
