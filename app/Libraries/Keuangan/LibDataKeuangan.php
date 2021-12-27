@@ -160,6 +160,7 @@ class LibDataKeuangan
         // get mode view
         if ($id == null) {
             $biayaSekolah = BiayaSekolah::select('biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'biaya_sekolah.id_jalur', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester', 'jalur.nm_jalur', 'biaya_sekolah.besar_biaya_sekolah', 'biaya_sekolah.validasi_biaya_sekolah', 'biaya_sekolah.keterangan_biaya_sekolah')
+                                ->with('detail_biaya')
                                 ->join('kelompok_biaya', function ($q) {
                                     $q->on('kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya')
                                         ->whereNull('kelompok_biaya.deleted_at');
@@ -238,7 +239,7 @@ class LibDataKeuangan
                                         ->whereNull('b_internal.deleted_at');
                                 })
                                 ->with('detail_internal')
-                                ->where('biaya_sekolah.validasi_biaya_sekolah', '=', 1)
+                                // ->where('biaya_sekolah.validasi_biaya_sekolah', '=', 1)
                                 ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                                 ->orderBy('semester.thn_akademik_semester', 'desc')
                                 ->orderBy('semester.nm_semester', 'desc')

@@ -13,23 +13,7 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/biaya-sekolah/detail-biaya/action-detail-biaya/edit/'.$data_detail_biaya->id_detail_biaya)}}">
                         {{csrf_field()}}
-                        <h2 class="card-inside-title">
-                            Biaya Sekolah
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_biaya_sekolah">
-                                    <option value="" disabled selected >-- Pilih Biaya Sekolah --</option>
-                                    @foreach($data_biaya_sekolah as $data)
-                                        @if($data->id_biaya_sekolah == $data_detail_biaya->id_biaya_sekolah)
-                                            <option value="{{$data->id_biaya_sekolah}}" selected >{{ ucwords($data->nm_kelompok_biaya) }} ({{$data->tahun_ajaran}} {{$data->nm_semester}})</option>
-                                        @else
-                                            <option value="{{$data->id_biaya_sekolah}}">{{ ucwords($data->nm_kelompok_biaya) }} ({{$data->tahun_ajaran}} {{$data->nm_semester}})</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                       
                         <h2 class="card-inside-title">
                             Nama Biaya
                         </h2>
