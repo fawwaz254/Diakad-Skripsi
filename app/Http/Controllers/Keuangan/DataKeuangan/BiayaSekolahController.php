@@ -130,7 +130,7 @@ class BiayaSekolahController extends BaseController
                     }
                 })
                 ->addColumn('besar_biaya_sekolah', function ($item) {
-                    return "Rp".number_format($item->besar_biaya_sekolah);
+                    return "Rp".number_format($item->detail_biaya->sum('besar_biaya'));
                 })
                 ->addColumn('validasi_biaya_sekolah', function ($item) {
                     if ($item->validasi_biaya_sekolah == 0) {
