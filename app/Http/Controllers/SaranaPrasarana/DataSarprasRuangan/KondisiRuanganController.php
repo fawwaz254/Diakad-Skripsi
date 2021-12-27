@@ -242,8 +242,8 @@ class KondisiRuanganController extends BaseController{
                                 ];
                             }
 
-                            $check_kerusakan = KerusakanRuangan::where('nm_kerusakan_ruangan',ucwords($value->nama_kerusakan))->first();
-
+                            $check_kerusakan = KerusakanRuangan::where('nm_kerusakan_ruangan',($value->nama_kerusakan))->first();
+                            
                             if(!$check_kerusakan){
                                 return [
                                     'status'    => 203, // GAGAL
@@ -251,14 +251,14 @@ class KondisiRuanganController extends BaseController{
                                 ];
                             }
 
-                            if(empty($value->persentase_kerusakan)){
+                            if(empty($value->presentase_kerusakan) && ($value->presentase_kerusakan== 0)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada presentase kerusakan yang kosong'
                                 ];
                             }
 
-                            if(empty($value->keterangan)){
+                            if(empty($value->keterangan) && ($value->presentase_kerusakan== 0)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada keterangan yang kosong'
@@ -269,9 +269,9 @@ class KondisiRuanganController extends BaseController{
                             $data->id_kondisi_ruangan             = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                             $data->id_ruangan                     = $check_ruangan->id_ruangan;
                             $data->id_kerusakan_ruangan           = $check_kerusakan->id_kerusakan_ruangan;
-                            $data->persentase_kerusakan_ruangan   = $value->persentase_kerusakan;
+                            $data->persentase_kerusakan_ruangan   = $value->presentase_kerusakan;
                             $data->keterangan_kerusakan_ruangan   = $value->keterangan;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                            //$data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 

@@ -309,14 +309,23 @@ class RuanganController extends BaseController
                                 ];
                             }
 
-                            if(ucwords($value->status_aktif)!='Aktif' || ucwords($value->status_aktif)!='Non Aktif'){
+                            if(!(ucwords($value->status_aktif)=='Aktif' || ucwords($value->status_aktif)=='Non-Aktif')){
                                  return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data ruangan gagal, status aktif yang diizinkan hanya Aktif dan Non-Aktif'
                                 ];
                             }
 
-                            if(ucwords($value->status_aktif)!='Aktif') $is_aktif = 1;
+                            // $ruangan = ucwords($value->status_aktif);
+
+                            // if($ruangan!='Aktif'){
+                            //     $is_aktif = 1;
+                            // }
+                            // else{
+                            //     $is_aktif = 0;
+                            // }
+
+                            if(ucwords($value->status_aktif)=='Aktif') $is_aktif = 1;
                             else $is_aktif = 0;
 
                             $data                                = new Ruangan;
@@ -324,12 +333,11 @@ class RuanganController extends BaseController
                             $data->id_jenis_ruangan              = $check_jenis_ruangan->id_jenis_ruangan;
                             $data->id_pemilik_sarpras            = $check_nama_pemilik_sarpras->id_pemilik_sarpras;
                             $data->id_gedung                     = $check_nama_gedung->id_gedung;
-                            $data->nm_ruangan                    = $value->nm_ruangan;
+                            $data->nm_ruangan                    = $value->nama_ruangan;
                             $data->kapasitas_ruangan             = $value->kapasitas_ruangan;
                             $data->kapasitas_ujian               = $value->kapasitas_ujian;
                             $data->deskripsi_ruangan             = $value->deskripsi_ruangan;
                             $data->is_aktif                      = $is_aktif;
-                            $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 

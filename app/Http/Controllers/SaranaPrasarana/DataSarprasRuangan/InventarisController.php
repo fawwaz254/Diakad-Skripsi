@@ -223,12 +223,12 @@ class InventarisController extends BaseController{
                                 ];
                             }
 
-                            $check_ruangan = Ruangan::where('nm_ruangan',ucwords($value->nama_ruangan))->first();
-
+                            $check_ruangan = Ruangan::where('nm_ruangan', $value->nama_ruangan)->first();
+                            
                             if(!$check_ruangan){
                                 return [
                                     'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data inventaris gagal, ada namaruangan yang tidak ditemukan dalam data master ruangan'
+                                    'message'   => 'Upload data inventaris gagal, ada nama ruangan yang tidak ditemukan dalam data master ruangan'
                                 ];
                             }
 
@@ -253,21 +253,21 @@ class InventarisController extends BaseController{
                                 ];
                             }
 
-                            if(empty($value->jumlah_inventaris)){
+                            if(empty($value->jumlah_inventaris) && ($value->kondisi_baik!= 0)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada jumlah inventaris yang kosong'
                                 ];
                             }
 
-                            if(empty($value->kondisi_baik)){
+                            if(empty($value->kondisi_baik) && ($value->kondisi_baik!= 0)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada kondisi_baik yang kosong'
                                 ];
                             }
 
-                            if(empty($value->kondisi_rusak)){
+                            if(empty($value->kondisi_rusak) && ($value->kondisi_rusak!= 0)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada kondisi rusak yang kosong'
@@ -299,7 +299,7 @@ class InventarisController extends BaseController{
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->spesifikasi_inventaris_ruangan = $value->spesifikasi;
                             $data->keterangan_inventaris_ruangan  = $value->keterangan;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                            //$data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 

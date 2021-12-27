@@ -193,7 +193,7 @@ class JenisBukuAlatController extends BaseController{
                                 ];
                             }
 
-                            if(empty($value->jenis_buku_atau_alat)){
+                            if(empty($value->nama_jenis_buku_atau_alat)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data jenis buku/alat gagal, ada nama jenis buku / alat yang kosong'
@@ -203,7 +203,7 @@ class JenisBukuAlatController extends BaseController{
                             $data                                 = new JenisBukuAlat;
                             $data->id_jenis_buku_alat             = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                             $data->kode_jenis_buku_alat           = $value->kode_jenis_buku_atau_alat;
-                            $data->nm_jenis_buku_alat             = $value->jenis_buku_atau_alat;
+                            $data->nm_jenis_buku_alat             = $value->nama_jenis_buku_atau_alat;
                             $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();

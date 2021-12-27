@@ -207,8 +207,8 @@ class JenisRuanganController extends BaseController{
                                     'message'   => 'Upload data jenis ruangan gagal, ada tipe ruangan yang kosong'
                                 ];
                             }
-
-                            if(ucwords($value->tipe_ruangan) != 'Kelas' || ucwords($value->tipe_ruangan) != 'Non-Kelas'){
+                
+                            if(!(ucwords($value->tipe_ruangan) == 'Kelas' || ucwords($value->tipe_ruangan) == 'Non-Kelas')){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data jenis ruangan gagal, tipe ruangan yang ada hanya Kelas  / Non-Kelas'

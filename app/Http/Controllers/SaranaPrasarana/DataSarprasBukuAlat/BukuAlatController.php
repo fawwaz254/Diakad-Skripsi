@@ -258,12 +258,12 @@ class BukuAlatController extends BaseController{
                                 ];
                             }
 
-                             if(empty($value->jenis)){
-                                return [
-                                    'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data buku/alat gagal, ada jenis yang kosong'
-                                ];
-                            }
+                            //  if(empty($value->jenis) && ($value->jenis== 0)){
+                            //     return [
+                            //         'status'    => 203, // GAGAL
+                            //         'message'   => 'Upload data buku/alat gagal, ada jenis yang kosong'
+                            //     ];
+                            // }
 
                             // if(ucwords($value->jenis)!='Alat' || ucwords($value->jenis)!='Buku'){
                             //     return [
@@ -300,7 +300,7 @@ class BukuAlatController extends BaseController{
                                 ];
                             }
 
-                            if(empty($value->kondisi_rusak)){
+                            if(empty($value->kondisi_rusak) && ($value->kondisi_rusak== 0)){
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada kondisi rusak yang kosong'
@@ -324,7 +324,7 @@ class BukuAlatController extends BaseController{
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->keterangan_buku_alat           = $value->keterangan;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
+                           // $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 

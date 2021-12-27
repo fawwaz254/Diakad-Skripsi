@@ -108,8 +108,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('buku-alat/datatables', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@datatablesBukuAlat');
             Route::get('buku-alat/add', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@addBukuAlat');
             Route::get('buku-alat/edit/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@editBukuAlat');
-            Route::get('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@importExcel');
-            Route::post('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@importExcelAction');
+            Route::get('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@importExcel');
+            Route::post('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@importExcelAction');
 
             Route::post('action-buku-alat/{mode}/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@actionBukuAlat');
 
