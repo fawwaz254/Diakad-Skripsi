@@ -13,19 +13,9 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/biaya-sekolah/detail-biaya/action-detail-biaya/add/'.$id_detail_biaya)}}">
                         {{csrf_field()}}
-                        <h2 class="card-inside-title">
-                            Biaya Sekolah
-                        </h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_biaya_sekolah">
-                                    <option value="" disabled selected >-- Pilih Biaya Sekolah --</option>
-                                    @foreach($data_biaya_sekolah as $data)
-                                        <option value="{{$data->id_biaya_sekolah}}"  {{$data->id_biaya_sekolah == Request::segment(6) ? 'selected' : ''}}>{{ ucwords($data->nm_kelompok_biaya) }} ({{$data->tahun_ajaran}} {{$data->nm_semester}})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                            
+                        <input type="hidden" name="id_biaya_sekolah" value="{{Request::segment(6)}}">
+
                         <h2 class="card-inside-title">
                             Nama Biaya
                         </h2>

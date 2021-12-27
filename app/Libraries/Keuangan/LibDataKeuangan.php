@@ -238,7 +238,7 @@ class LibDataKeuangan
                                         ->whereNull('b_internal.deleted_at');
                                 })
                                 ->with('detail_internal')
-                                ->where('biaya_sekolah.validasi_biaya_sekolah', '=', 1)
+                                // ->where('biaya_sekolah.validasi_biaya_sekolah', '=', 1)
                                 ->where('biaya.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                                 ->orderBy('semester.thn_akademik_semester', 'desc')
                                 ->orderBy('semester.nm_semester', 'desc')

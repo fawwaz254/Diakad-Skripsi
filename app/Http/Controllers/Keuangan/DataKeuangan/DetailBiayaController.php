@@ -279,7 +279,7 @@ class DetailBiayaController extends BaseController{
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_biaya_sekolah' => 'required',
+            // 'id_biaya_sekolah' => 'required',
             'id_biaya' => 'required',
             /*'id_kelompok_biaya_internal' => 'required',*/
             'validasi_biaya' => 'required',
