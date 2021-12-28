@@ -324,7 +324,6 @@ class BukuAlatController extends BaseController{
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
                             $data->keterangan_buku_alat           = $value->keterangan;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 
