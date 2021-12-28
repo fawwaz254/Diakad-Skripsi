@@ -338,7 +338,6 @@ class RuanganController extends BaseController
                             $data->kapasitas_ujian               = $value->kapasitas_ujian;
                             $data->deskripsi_ruangan             = $value->deskripsi_ruangan;
                             $data->is_aktif                      = $is_aktif;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 
