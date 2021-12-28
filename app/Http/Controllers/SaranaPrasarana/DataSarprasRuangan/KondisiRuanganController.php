@@ -271,7 +271,6 @@ class KondisiRuanganController extends BaseController{
                             $data->id_kerusakan_ruangan           = $check_kerusakan->id_kerusakan_ruangan;
                             $data->persentase_kerusakan_ruangan   = $value->presentase_kerusakan;
                             $data->keterangan_kerusakan_ruangan   = $value->keterangan;
-                            $data->id_sekolah                     = $input->auth_data->pengguna->id_sekolah;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
 
