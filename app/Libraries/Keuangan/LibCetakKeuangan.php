@@ -792,7 +792,7 @@ class LibCetakKeuangan{
         }
         
         // reordering by date descending
-        foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
+        foreach(collect($tempDataLaporan)->sortBy('tanggal') as $data){
             $dataLaporan[] = $data;
         }
 
@@ -910,7 +910,7 @@ class LibCetakKeuangan{
         }
         
         // reordering by date descending
-        foreach(collect($tempDataLaporan)->sortByDesc('tanggal') as $data){
+        foreach(collect($tempDataLaporan)->sortBy('tanggal') as $data){
             $dataLaporan[] = $data;
         }
 
