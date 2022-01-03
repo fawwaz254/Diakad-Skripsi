@@ -68,8 +68,12 @@
             @foreach($data_pembayaran_siswa as $pembayaran_siswa)
             <tr>
                 @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
-                    
-                    <td>{{$pembayaran_siswa->nm_biaya}} ({{$pembayaran_siswa->nm_bulan}} {{$pembayaran_siswa->thn_akademik_semester}})</td>
+                    @if($pembayaran_siswa->id_bulan<=6)
+                    @php $tahun = $pembayaran_siswa->thn_akademik_semester + 1; @endphp
+                    @else
+                    @php $tahun = $pembayaran_siswa->thn_akademik_semester; @endphp
+                    @endif
+                    <td>{{$pembayaran_siswa->nm_biaya}} ({{$pembayaran_siswa->nm_bulan}} {{$tahun}})</td>
                 @else
                     <td>{{$pembayaran_siswa->nm_biaya." ".$pembayaran_siswa->keterangan}}</td>
                 @endif
