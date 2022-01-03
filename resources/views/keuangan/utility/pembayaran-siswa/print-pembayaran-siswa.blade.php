@@ -97,8 +97,13 @@
                             <td>{{$no++}}.</td>
 
                             @if ($pembayaran_siswa->id_jenis_detail_biaya == 4) 
+                            @if($pembayaran_siswa->id_bulan<=6)
+                            @php $tahun = $pembayaran_siswa->thn_akademik_semester + 1; @endphp
+                            @else
+                            @php $tahun = $pembayaran_siswa->thn_akademik_semester; @endphp
+                            @endif
                             @php
-                            $ket = $pembayaran_siswa->nm_bulan.' '.$pembayaran_siswa->thn_akademik_semester;
+                            $ket = $pembayaran_siswa->nm_bulan.' '.$tahun;
                             @endphp
                             <td>{{$pembayaran_siswa->nm_biaya." (".$ket.")"}}</td>
                             @else
