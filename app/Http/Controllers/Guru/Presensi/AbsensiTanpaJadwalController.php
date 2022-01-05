@@ -69,7 +69,7 @@ class AbsensiTanpaJadwalController extends BaseController
         if($input->opsi == !null) {
             $opsi = $input->opsi;
         } else {
-            $opsi = null;
+            $opsi = 0;
         }
 
         if ($validator->fails()) {
@@ -104,7 +104,10 @@ class AbsensiTanpaJadwalController extends BaseController
                 $max_pertemuan = 1;
             }
             
-        } else {
+        } 
+
+        else {
+
             DB::beginTransaction();
 
             try {
@@ -225,7 +228,9 @@ class AbsensiTanpaJadwalController extends BaseController
                                             ->where('status_entry', '=', 2)
                                             ->first()) {
                         // skip
-                    } else {
+                    } 
+
+                    else {
 
                         // insert kelas_mp
                         $kelas_mp                       = new KelasMp;
