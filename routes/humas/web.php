@@ -43,6 +43,19 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             });
         });
 
+        // Modul Absensi
+
+        Route::group(array('prefix' => 'absensi'), function() {
+
+			Route::group(array('prefix' => 'histori-absensi'), function() {
+
+				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{id_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+
+			});
+
+		});
+
 		/** ==== MODUL BURSA KERJA ==== **/
 		Route::group(array('prefix' => 'bursa-kerja'), function() {
 
