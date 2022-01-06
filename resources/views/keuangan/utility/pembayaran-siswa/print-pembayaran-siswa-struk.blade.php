@@ -56,7 +56,7 @@
             <tr>
                 <td>Waktu Pembayaran</td>
                 <td>:</td>
-                <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data_pembayaran_siswa->first()->tgl_pembayaran)->format('H:i - d M Y')}}</td>
+                <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $data_pembayaran_siswa->first()->tgl_pembayaran)->format('d M Y')}} - {{\Carbon\carbon::parse($data_pembayaran_siswa->first()->created_at)->format('H:i')}}</td>
             </tr>
         </table>
         <hr>
