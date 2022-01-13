@@ -91,9 +91,12 @@
                                             <i class="material-icons">edit</i>
                                         </a>
                                     </button>
-                                    <button type="button" class="btn bg-red waves-effect">
-                                    <i class="material-icons">delete</i>
-                                    </button>
+                                    <form id="form-validation" action="/humas/absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/delete" method="post">
+                                        {{csrf_field()}}
+                                        <button type="submit" class="btn bg-red waves-effect">
+                                        <i class="material-icons">delete</i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

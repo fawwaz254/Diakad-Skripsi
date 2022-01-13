@@ -76,34 +76,25 @@ class HistoriAbsensiController extends BaseController
 
         return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'id_pengguna', 'start_date', 'end_date', 'dates', 'guru', 'hasil'));
     }
+
     public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $start_date = null, $end_date = null)
     {
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
-        // $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
         return view('humas/absensi/histori-absensi/edit-histori-absensi', compact('presences', 'start_date', 'end_date'));
-        // echo  $id_pengguna;
-        // echo "";
-        // echo $start_date;
-        // echo "";
-        // echo $end_date;
-    }
-    public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
-    {
-
-        return [
-            'status' => 200, // SUCCESS AND LOAD CONTENT
-            'message' => 'Update Gedung successfully'
-        ];
-
-        // $input = (object) $request->input();
-        // echo $input;
     }
 
-    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
+    public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $start_date = null, $end_date = null)
     {
-        echo $id_presensi_pengguna;
+        $input = $request->input();
+        $presences = PresensiPengguna::find($id_presensi_pengguna)->first();
+        $presences->update(['status' => $input['status'], 'notes' => $input['notes']]);
+        return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
+    }
 
-        // $input = (object) $request->input();
-        // echo $input;
+    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $start_date = null, $end_date = null)
+    {
+        $presences = PresensiPengguna::find($id_presensi_pengguna);
+        $presences->delete();
+        return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
     }
 }
