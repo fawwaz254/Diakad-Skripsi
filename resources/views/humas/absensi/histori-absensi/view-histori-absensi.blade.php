@@ -87,7 +87,12 @@
                                 <td>{{$r['notes']}}</td>
                                 <td style="text-align: center;">
                                     <button type="button" class="btn bg-teal waves-effect">
-                                    <i class="material-icons">edit</i>
+                                        <a href="/humas#absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/edit">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </button>
+                                    <button type="button" class="btn bg-red waves-effect">
+                                    <i class="material-icons">delete</i>
                                     </button>
                                 </td>
                             </tr>
@@ -99,7 +104,6 @@
             </div>
         </div>
     </div>
-
 
 </div>
 
