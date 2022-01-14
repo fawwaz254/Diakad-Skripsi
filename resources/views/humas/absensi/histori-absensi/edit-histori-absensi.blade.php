@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
   <div class="block-header">
       <h2><a class="btn bg-blue waves-effect target-link " href="/humas#absensi/histori-absensi/{{  $presences->id_pengguna }}/{{ $start_date }}/{{ $end_date }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
@@ -7,6 +6,7 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
               <div class="header">
+
         <div class="header">
           <h2>
               EDIT 
@@ -51,11 +51,32 @@
             Status :
         </h4>
         <select class="form-control show-tick" name="status">
+@switch($presences->status)
+  @case('masuk')
+  <option value="masuk">Masuk</option>
+  <option value="izin">Izin</option>
+  <option value="sakit">Sakit</option>
+    @break
 
-          <option value="Masuk">Masuk</option>
-          <option value="Izin">Izin</option>
-          <option value="Tidak Masuk">Tidak Masuk</option>
-        </select>
+    @case('izin')
+    <option value="izin">Izin</option>
+    <option value="sakit">Sakit</option>
+    <option value="masuk">Masuk</option>
+    @break
+
+    @case('sakit')
+    <option value="sakit">Sakit</option>
+    <option value="izin">Izin</option>
+    <option value="masuk">Masuk</option>
+    @break
+
+  @default
+  <option value="masuk">masuk</option>
+@endswitch
+    
+
+
+         
       
         </div>
       </div>
@@ -80,7 +101,10 @@
 </form>
 
 
+
 </div>
 </div>
     </div>
 </div>
+
+

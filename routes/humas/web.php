@@ -1,4 +1,5 @@
 <?php
+
 // ROLE ALUMNI
 Route::group(array('middleware'=> ['token_staff']), function() {
     Route::group(array('prefix' => 'humas'), function() {
@@ -55,6 +56,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 				Route::post('delete/{id_presensi_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@deleteHistoriAbsensi');	
 				// Route::get('delete/{id_presensi_pengguna}', 'Humas\Absensi\HistoriAbsensiController@deleteHistoriAbsensi');	
 				Route::post('update/{id_presensi_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
+			//untuk izin
+				Route::get('izin/{id_pengguna}/{date}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@izinHistoriAbsensi');
+			
+				Route::post('tambah/{id_pengguna}/{date}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@tambahHistoriAbsensi');
 			});
 
 		});
