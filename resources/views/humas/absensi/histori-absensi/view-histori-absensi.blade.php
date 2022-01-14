@@ -85,18 +85,21 @@
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
                                 <td>{{$r['notes']}}</td>
-                                <td style="text-align: center;">
+                                <td style="text-align: center;display:flex;justify-content:center">
                                     <button type="button" class="btn bg-teal waves-effect">
                                         <a href="/humas#absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/edit">
                                             <i class="material-icons">edit</i>
                                         </a>
                                     </button>
-                                    <form id="form-validation" action="/humas/absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/delete" method="post">
+                                    @if ($r['id_presensi_pengguna'] !=='')
+                                    <form id="form-validation" action="{{url()->current()}}/delete" method="post">
                                         {{csrf_field()}}
                                         <button type="submit" class="btn bg-red waves-effect">
                                         <i class="material-icons">delete</i>
                                         </button>
+                                        <input type="hidden" name="id_presensi_pengguna" value="{{$r['id_presensi_pengguna']}}">
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

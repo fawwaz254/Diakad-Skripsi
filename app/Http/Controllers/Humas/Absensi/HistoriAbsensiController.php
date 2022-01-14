@@ -87,14 +87,14 @@ class HistoriAbsensiController extends BaseController
     {
         $input = $request->input();
         $presences = PresensiPengguna::find($id_presensi_pengguna)->first();
-        $presences->update(['status' => $input['status'], 'notes' => $input['notes']]);
+        $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
         return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
     }
 
-    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $start_date = null, $end_date = null)
+    public function destroyHistoriAbsensi(Request $request, $id_pengguna = null, $start_date = null, $end_date = null)
     {
-        $presences = PresensiPengguna::find($id_presensi_pengguna);
-        $presences->delete();
-        return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
+        $id_presensi_pengguna = $request->input()['id_presensi_pengguna'];
+        PresensiPengguna::find($id_presensi_pengguna)->delete();
+        return redirect("/humas#absensi/histori-absensi" . "/" . $id_pengguna . "/" . $start_date . "/" . $end_date);
     }
 }
