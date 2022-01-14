@@ -69,7 +69,9 @@
                                 <th>Check Out</th>
                                 <th>Status</th>
                                 <th>Notes</th>
+                        
                                 <th style="text-align: center;">Action</th>
+                              
                             </tr>
                         </thead>
                         <tbody>
@@ -85,10 +87,22 @@
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
                                 <td>{{$r['notes']}}</td>
-                                <td style="text-align: center;">
-                                    <button type="button" class="btn bg-teal waves-effect">
-                                    <i class="material-icons">edit</i>
-                                    </button>
+                              
+                                
+                             
+                                <td style="text-align: center ; display: flex; justify-content: space-around;">
+                                     
+                                    <a href="/humas#absensi/histori-absensi/edit/{{ $r['id_presensi_pengguna'] }}/{{ $start_date }}/{{ $end_date }}" class="btn btn-info">
+                                        <i class="material-icons ">edit</i>
+                                    </a>
+                                  
+                                    @if($r['id_presensi_pengguna']  == '-')
+                                    @else
+                                    <form action="/humas/absensi/histori-absensi/delete/{{ $r['id_presensi_pengguna'] }}/{{ $start_date }}/{{ $end_date }}" method="POST" class="d-inline">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('are you yakin mau menghapus data')"><i class="material-icons">delete</i></button>
+                                    </form>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -107,6 +121,108 @@
     
     function filterAction(){
         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
-    }
+    };
+
+
+
+//     // var modul_url = location.hash.replace('#','').split('/')[0];
+//     var modul_url       = 'data-sarpras-gedung';
+//     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'gedung/datatables';
+//     var edit_url        = role_url + '#' + modul_url + '/' + 'gedung/edit';
+//     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-gedung/delete';
+
+//     var primary_table = $('#primary_table').DataTable({
+//         processing: true,
+//         serverSide: true,
+// responsive: true,
+//         ajax: {
+//             url: datatable_url,
+//             type: 'GET'
+//         },
+//         columns: [
+//             { data: null, searchable: false, orderable: false },
+//             { data: 'nm_jenis_gedung', name: 'nm_jenis_gedung' },
+//             { data: 'kode_gedung', name: 'kode_gedung' },
+//             { data: 'nm_gedung', name: 'nm_gedung' },
+//             { data: 'lokasi_gedung', name: 'lokasi_gedung' },
+//             { data: 'deskripsi_gedung', name: 'deskripsi_gedung' },
+//             { data: 'action', name: 'action', searchable: false, orderable: false,
+//                 render: function(data){
+//                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+//                     '    <i class="material-icons">edit</i>'+
+//                     '</a> '+
+//                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+//                     '    <i class="material-icons">delete_forever</i>'+
+//                     '</button>';
+//                 }
+//             }
+//         ]
+//     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function deleteAction(){
+
+// }
+
+
+
+//  $(".deleteRecord").click(function(){
+
+// var id = $(this).data("id_presensi_pengguna");
+
+// var token = $("meta[name='csrf-token']").attr("content");
+
+
+
+// $.ajax(
+
+// {
+
+//     url: "delete/"+id,
+
+//     type: 'DELETE',
+
+//     data: {
+
+//         "id": id,
+
+//         // "_token": token,
+
+//     },
+
+//     success: function (){
+
+//         console.log("it Works");
+
+//     }
+
+// });
+
+
+
+// });
+
 
 </script>

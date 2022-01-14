@@ -46,6 +46,8 @@ class HistoriAbsensiController extends BaseController{
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '-';
             $hasil[$key]['notes'] = '-';
+            $hasil[$key]['id_presensi_pengguna'] = '-';
+
 
             $attendance = $presences->where('date',$value->format('Y-m-d'))->first();
 
@@ -67,11 +69,85 @@ class HistoriAbsensiController extends BaseController{
                     $hasil[$key]['notes'] = $attendance->notes;
                 }
 
+                if($attendance->id_presensi_pengguna){
+                    $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
+                }
+
             }
 
         }
 
     	return view('humas/absensi/histori-absensi/view-histori-absensi',compact('auth_data','id_pengguna','start_date','end_date','dates','guru','hasil'));
     }
+
+    public function editHistoriAbsensi($id_presensi_pengguna, $start_date, $end_date)
+{
+  
+
+    $presences = PresensiPengguna::where('id_presensi_pengguna',$id_presensi_pengguna)->first();
+
+
+
+
+   return view('humas/absensi/histori-absensi/edit-histori-absensi', compact('presences','start_date','end_date'));
+}
+
+
+public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna, $start_date, $end_date){
+    
+
+    $rules = [
+
+        'check_out' => 'required',
+        'check_in' => 'required',
+        'status' => 'required',
+        'notes' => 'required'
+
+    ];
+
+  
+
+    $validatedData = $request->validate($rules);
+
+
+    PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)
+      ->update($validatedData);
+
+      $ad =  PresensiPengguna::where('id_presensi_pengguna', $request->id_presensi_pengguna)->first();
+    //   $ad->id_pengguna;
+     
+
+
+      return redirect('/humas#absensi/histori-absensi/'. $ad->id_pengguna .'/'. $start_date  .'/'. $end_date);
+
+
+
+//     $validatedData = $request->validate([
+
+//         'title' => 'required',
+    
+
+
+//     ]);
+
+
+    
+//     PresensiPengguna::find($id_presensi_pengguna)
+
+
+
+// return redirect('/humas#absensi/histori-absensi/D4Ka215877868755ea3b47b31d90/2022-01-01/2022-01-31');
+
+}
+
+
+
+public function deleteHistoriAbsensi($id_presensi_pengguna, $start_date, $end_date){
+    $ad =  PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+    PresensiPengguna::find($id_presensi_pengguna)->delete();
+
+    return redirect('/humas#absensi/histori-absensi/'. $ad->id_pengguna .'/'.$start_date .'/'. $end_date );
+
+}
 
 }

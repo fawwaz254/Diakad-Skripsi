@@ -51,7 +51,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
 				Route::get('/{id_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-
+				Route::get('edit/{id_presensi_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
+				Route::post('delete/{id_presensi_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@deleteHistoriAbsensi');	
+				// Route::get('delete/{id_presensi_pengguna}', 'Humas\Absensi\HistoriAbsensiController@deleteHistoriAbsensi');	
+				Route::post('update/{id_presensi_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
 			});
 
 		});
