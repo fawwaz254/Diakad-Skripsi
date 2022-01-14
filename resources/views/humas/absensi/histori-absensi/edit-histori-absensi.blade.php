@@ -9,27 +9,27 @@
                     <h2>EDIT HISTORI ABSENSI</h2>
                 </div>
                 <div class="body">
-                    <form method="POST" action="{{url()->current()}}">
+                <form method="POST" action="{{url()->current()}}">
                     {{csrf_field()}}
-                <h2 class="card-inside-title">Status </h2>
+                    <h2 class="card-inside-title">Status </h2>
                     <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="status">
                                     @switch($presences['status'])
                                         @case('masuk')
                                     <option value="{{$presences['status']}}">{{$presences['status']}}</option>
-                                    <option value="tidak masuk">tidak masuk</option>
-                                    <option value="ijin">ijin</option>
+                                    <option value="sakit">sakit</option>
+                                    <option value="izin">izin</option>
                                             @break
-                                        @case('tidak masuk')
+                                        @case('sakit')
                                     <option value="{{$presences['status']}}">{{$presences['status']}}</option>
                                     <option value="masuk">masuk</option>
-                                    <option value="ijin">ijin</option>
+                                    <option value="izin">izin</option>
                                             @break
-                                        @case('ijin')
+                                        @case('izin')
                                     <option value="{{$presences['status']}}">{{$presences['status']}}</option>
                                     <option value="masuk">masuk</option>
-                                    <option value="tidak masuk">tidak masuk</option>
+                                    <option value="sakit">sakit</option>
                                             @break
                                         @default
                                         <h1>error</h1>
@@ -54,7 +54,8 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <input type="time" name="check_out" class="form-control" value="{{$presences['check_out']}}" >
                         </div>
-                    </div>
+                    </div> 
+
                     <button class="btn btn-block bg-red waves-effect" type="submit">
                         <i class="material-icons">save</i>
                         <span>Save</span>

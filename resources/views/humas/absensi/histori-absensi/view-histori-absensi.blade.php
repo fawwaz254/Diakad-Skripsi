@@ -49,7 +49,6 @@
     </div>
 
     <br>
-
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -86,12 +85,18 @@
                                 <td>{{$r['status']}}</td>
                                 <td>{{$r['notes']}}</td>
                                 <td style="text-align: center;display:flex;justify-content:center">
+                                    @if ($r['id_presensi_pengguna'] =='')
+                                    <button type="button" class="btn bg-teal waves-effect">
+                                        <a href="/humas#absensi/histori-absensi/{{$id_pengguna}}/{{$r['date']}}/{{$start_date}}/{{$end_date}}/add">
+                                            <i class="material-icons">edit</i>
+                                        </a>
+                                    </button>
+                                    @else
                                     <button type="button" class="btn bg-teal waves-effect">
                                         <a href="/humas#absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/edit">
                                             <i class="material-icons">edit</i>
                                         </a>
                                     </button>
-                                    @if ($r['id_presensi_pengguna'] !=='')
                                     <form id="form-validation" action="{{url()->current()}}/delete" method="post">
                                         {{csrf_field()}}
                                         <button type="submit" class="btn bg-red waves-effect">
@@ -99,6 +104,7 @@
                                         </button>
                                         <input type="hidden" name="id_presensi_pengguna" value="{{$r['id_presensi_pengguna']}}">
                                     </form>
+                                        
                                     @endif
                                 </td>
                             </tr>
