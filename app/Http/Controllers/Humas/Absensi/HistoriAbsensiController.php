@@ -110,10 +110,10 @@ class HistoriAbsensiController extends BaseController
         return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
     }
 
-    public function destroyHistoriAbsensi(Request $request, $id_pengguna = null, $start_date = null, $end_date = null)
-    {
-        $id_presensi_pengguna = $request->input()['id_presensi_pengguna'];
-        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
-        return redirect("/humas#absensi/histori-absensi" . "/" . $id_pengguna . "/" . $start_date . "/" . $end_date);
-    }
+    // public function destroyHistoriAbsensi(Request $request, $id_pengguna = null, $start_date = null, $end_date = null)
+    // {
+    //     $id_presensi_pengguna = $request->input()['id_presensi_pengguna'];
+    //     PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
+    //     return redirect("/humas#absensi/histori-absensi" . "/" . $id_pengguna . "/" . $start_date . "/" . $end_date);
+    // }
 }

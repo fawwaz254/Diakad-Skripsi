@@ -11,16 +11,17 @@
                 <div class="body">
 
                     <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">   
-                        <h2 class="card-inside-title">
-                            Pilih Guru
-                        </h2>
-                        <select class="form-control show-tick" id="id_pengguna" name="id_pengguna" required="">
-                            <option value="0">Pilih Guru</option>
-                            @foreach($guru as $r)
-                                <option value="{{$r->id_pengguna}}" {{$r->id_pengguna == $id_pengguna ? 'selected' : ''}}>{{$r->nm_pengguna}}</option>
-                            @endforeach
-                        </select>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Pilih Guru
+                            </h2>
+                            <select class="form-control show-tick" id="id_pengguna" name="id_pengguna" required="">
+                                <option value="0">Pilih Guru</option>
+                                @foreach($guru as $r)
+                                <option value="{{$r->id_pengguna}}" {{$r->id_pengguna == $id_pengguna ? 'selected' :
+                                    ''}}>{{$r->nm_pengguna}}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -28,19 +29,22 @@
 
                         <div class="col-md-5">
                             <label>Start Date</label>
-                            <input type="date" class="form-control" value="{{$start_date}}" name="start_date" aria-required="true" aria-invalid="true">
+                            <input type="date" class="form-control" value="{{$start_date}}" name="start_date"
+                                aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-md-5">
                             <label>End Date</label>
-                            <input type="date" class="form-control" value="{{$end_date}}" name="end_date" aria-required="true" aria-invalid="true">
+                            <input type="date" class="form-control" value="{{$end_date}}" name="end_date"
+                                aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-md-2">
-                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;" onclick="filterAction()">Change Date</button>  
+                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
+                                onclick="filterAction()">Change Date</button>
                         </div>
 
-                    </div>         
+                    </div>
 
                 </div>
 
@@ -58,8 +62,8 @@
                 </div>
 
                 <div class="body">
-                    
-                     <table class="table table-bordered">
+
+                    <table class="table table-bordered">
                         <thead style="background:#9C27B0;color:white">
                             <tr>
                                 <th style="text-align: center;">Tanggal</th>
@@ -75,9 +79,9 @@
                             @foreach($hasil as $key => $r)
                             @if($key%2==1)
                             <tr style="background: #DDA0DD">
-                            @else
+                                @else
                             <tr>
-                            @endif
+                                @endif
                                 <td style="text-align: center;">{{$r['tanggal']}}</td>
                                 <td>{{$r['hari']}}</td>
                                 <td>{{$r['check_in']}}</td>
@@ -87,24 +91,23 @@
                                 <td style="text-align: center;display:flex;justify-content:center">
                                     @if ($r['id_presensi_pengguna'] =='')
                                     <button type="button" class="btn bg-teal waves-effect">
-                                        <a href="/humas#absensi/histori-absensi/{{$id_pengguna}}/{{$r['date']}}/{{$start_date}}/{{$end_date}}/add">
+                                        <a
+                                            href="/humas#absensi/histori-absensi/{{$id_pengguna}}/{{$r['date']}}/{{$start_date}}/{{$end_date}}/add">
                                             <i class="material-icons">edit</i>
                                         </a>
                                     </button>
                                     @else
                                     <button type="button" class="btn bg-teal waves-effect">
-                                        <a href="/humas#absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/edit">
+                                        <a
+                                            href="/humas#absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/edit">
                                             <i class="material-icons">edit</i>
                                         </a>
                                     </button>
-                                    <form id="form-validation" action="{{url()->current()}}/delete" method="post">
-                                        {{csrf_field()}}
                                         <button type="submit" class="btn bg-red waves-effect">
-                                        <i class="material-icons">delete</i>
+                                            <i class="material-icons">delete</i>
                                         </button>
-                                        <input type="hidden" name="id_presensi_pengguna" value="{{$r['id_presensi_pengguna']}}">
-                                    </form>
-                                        
+                                        <input type="hidden" name="id_presensi_pengguna"
+                                            value="{{$r['id_presensi_pengguna']}}">
                                     @endif
                                 </td>
                             </tr>
@@ -120,7 +123,6 @@
 </div>
 
 <script type="text/javascript">
-    
     function filterAction(){
         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
     }

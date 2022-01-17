@@ -52,7 +52,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::post('/{id_pengguna}/{date}/{start_date}/{end_date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
 				Route::get('/{id_presensi_pengguna}/{start_date}/{end_date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
 				Route::post('/{id_presensi_pengguna}/{start_date}/{end_date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
-				Route::post('/{id_pengguna}/{start_date}/{end_date}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
+				// Route::post('/{id_pengguna}/{start_date}/{end_date}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
 			});
 		});
 
