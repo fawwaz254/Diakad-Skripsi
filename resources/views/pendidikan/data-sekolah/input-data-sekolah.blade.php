@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        Input Data Sekolah
+                        Input Data Sekolah 
                     </h2>
                 </div>
                 <div class="body">
