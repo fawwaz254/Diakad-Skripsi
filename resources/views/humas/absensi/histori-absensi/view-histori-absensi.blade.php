@@ -159,7 +159,6 @@
 
 
 
-
     $(".deleteRecord").click(function(){
 
 var id = $(this).data("id");
@@ -297,6 +296,7 @@ $.ajax(
 // // //                 }
 // // //             })
 // // //         }
+
 
 
 </script>

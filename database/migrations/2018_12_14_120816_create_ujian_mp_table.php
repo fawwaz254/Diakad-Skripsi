@@ -23,6 +23,7 @@ class CreateUjianMpTable extends Migration {
 			$table->string('jam_mulai', 5)->nullable();
 			$table->string('jam_selesai', 5)->nullable();
 			$table->string('keterangan', 128)->nullable();
+			$table->string('link_gdrive', 128)->nullable();
 			$table->boolean('is_online')->nullable()->comment('0 = offline; 1 = online;');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();

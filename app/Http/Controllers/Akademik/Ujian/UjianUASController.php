@@ -48,7 +48,7 @@ class UjianUASController extends BaseController{
     }
 
     public function addDataUjianUas(Request $request, $online, $id){
-            # code..
+            # code..salah
       $input = (object) $request->input();
       $auth_data = $input->auth_data;   
       $kegiatan     = Kegiatan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('kode_kegiatan','=','UAS')->first();
