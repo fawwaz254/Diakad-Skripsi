@@ -6,19 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 use App\Models\PresensiPengguna;
-
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Sekolah;
 
 use App\Libraries\SumberDaya\LibGuru;
-
-use Auth;
-use DB;
-use Session;
-use Validator;
 
 class HistoriAbsensiController extends BaseController
 {
@@ -110,10 +102,9 @@ class HistoriAbsensiController extends BaseController
         return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
     }
 
-    // public function destroyHistoriAbsensi(Request $request, $id_pengguna = null, $start_date = null, $end_date = null)
-    // {
-    //     $id_presensi_pengguna = $request->input()['id_presensi_pengguna'];
-    //     PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
-    //     return redirect("/humas#absensi/histori-absensi" . "/" . $id_pengguna . "/" . $start_date . "/" . $end_date);
-    // }
+    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
+    {
+        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
+        return $id_presensi_pengguna;
+    }
 }

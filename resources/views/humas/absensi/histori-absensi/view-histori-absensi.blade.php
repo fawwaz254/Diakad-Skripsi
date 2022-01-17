@@ -1,3 +1,4 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
 
     <div class="row clearfix">
@@ -72,7 +73,9 @@
                                 <th>Check Out</th>
                                 <th>Status</th>
                                 <th>Notes</th>
+                        
                                 <th style="text-align: center;">Action</th>
+                              
                             </tr>
                         </thead>
                         <tbody>
@@ -103,11 +106,10 @@
                                             <i class="material-icons">edit</i>
                                         </a>
                                     </button>
-                                        <button type="submit" class="btn bg-red waves-effect">
+                                        <button data-id="{{  $r['id_presensi_pengguna'] }}" class="btn bg-red waves-effect delete-record">
                                             <i class="material-icons">delete</i>
                                         </button>
-                                        <input type="hidden" name="id_presensi_pengguna"
-                                            value="{{$r['id_presensi_pengguna']}}">
+
                                     @endif
                                 </td>
                             </tr>
@@ -125,6 +127,37 @@
 <script type="text/javascript">
     function filterAction(){
         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
-    }
+    };
+
+    $(".delete-record").click(function () {
+        var token = $("meta[name='csrf-token']").attr("content");
+        var id = $(this).data("id");
+        swal(
+        { title: "Are you sure?", showCancelButton: true},
+        function (isConfirm) {
+            if (isConfirm) {
+                //swall
+                $.ajax({
+                    url: ` /humas/absensi/histori-absensi/${id}/delete`,
+                    type: "post",
+
+                    data: {
+                        _token: token,
+                    },
+
+                    success: function () {
+                        swal({
+                            title: "Delete Succes",
+                            text: "data berhasil dihapus",
+                            icon: "success",
+                        });
+                        location.reload();
+                    },
+                });
+            }
+            return;
+        }
+    );
+});
 
 </script>
