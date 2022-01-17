@@ -43,27 +43,36 @@ class PembayaranSiswaController extends BaseController
 
     public function getTagihanBelumTerbayar($auth_data,$id_siswa,$mode){
 
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $semester_other = Semester::where('thn_akademik_semester',$semester_aktif->thn_akademik_semester)->where('is_aktif_semester',0)->first()->id_semester;
+
+        $list_semester = [$semester_aktif->id_semester,$semester_other];
 
         $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan'
         , DB::raw('SUM(pembayaran_biaya.besar_pembayaran) as total_pembayaran')
         )
             ->leftJoin('potongan_biaya','tagihan_biaya.id_potongan_biaya','potongan_biaya.id_potongan_biaya')
-            ->join('detail_biaya', function($join) use ($mode){
+            ->join('detail_biaya', function($join) use ($mode,$semester_aktif){
                 $join->on('detail_biaya.id_detail_biaya', '=', 'tagihan_biaya.id_detail_biaya');
                 $join->whereNull('detail_biaya.deleted_at');
                 if($mode=='spp'){
-                    $join->where('id_bulan','<=',Carbon::now()->format('m'));
+                    if($semester_aktif->nm_semester=='Ganjil'){
+                        $join->where('id_bulan','<=',Carbon::now()->format('m'));
+                    }
+                    else{
+                        $join->where('id_bulan','<=',Carbon::now()->format('m'))
+                             ->OrWhereIn('id_bulan',[7,8,9,10,11,12]);
+                    }
                 }
                 elseif($mode=='non-spp'){
                     $join->whereNull('id_bulan');
                 }
                
             })
-            ->join('biaya_sekolah', function($join) use ($semester_aktif){
+            ->join('biaya_sekolah', function($join) use ($list_semester){
                 $join->on('biaya_sekolah.id_biaya_sekolah', '=', 'detail_biaya.id_biaya_sekolah');
                 $join->whereNull('biaya_sekolah.deleted_at');
-                $join->whereIn('id_semester',[$semester_aktif]);
+                $join->whereIn('id_semester',$list_semester);
             })
             ->join('kelompok_biaya', function($join){
                 $join->on('kelompok_biaya.id_kelompok_biaya', '=', 'biaya_sekolah.id_kelompok_biaya');
