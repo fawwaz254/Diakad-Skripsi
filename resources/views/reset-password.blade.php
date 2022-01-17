@@ -11,9 +11,9 @@
             <div class="row">
                 <div class="col-md-6 hidden-sm hidden-xs">
                     @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
-                     <img src="{{asset('logo/logo-dsm.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                     <img src="{{asset('logo/diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
                     @else
-                     <img src="{{asset('logo/logo-diakad-by-dsm.png')}}" alt="Logo Diakad" style="width: 100%;" />
+                     <img src="{{asset('logo/diakad.png')}}" alt="Logo Diakad" style="width: 100%;" />
                     @endif
                    
                 </div>
