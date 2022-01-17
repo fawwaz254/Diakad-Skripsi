@@ -134,11 +134,37 @@ public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna, $s
 
 }
 
-public function deleteHistoriAbsensi($id_presensi_pengguna, $start_date, $end_date){
+public function deleteHistoriAbsensi($id_presensi_pengguna){
     $ad =  PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
     PresensiPengguna::find($id_presensi_pengguna)->delete();
 
-    return redirect('/humas#absensi/histori-absensi/'. $ad->id_pengguna .'/'.$start_date .'/'. $end_date );
+
+    //  return redirect('/humas#absensi/histori-absensi/'. $ad->id_pengguna  );
+    // return response()->json([
+
+    //     'success' => 'Record deleted successfully!'
+
+    // ]);
+
+
+
+    // return redirect('/humas#absensi/histori-absensi/'. $ad->id_pengguna  );
+    // return response()->json([
+
+    //     'success' => 'Record deleted successfully!'
+
+    // ]);
+
+    // if($hapus){
+    //     return response()->json([
+    //         'status' => 'success'
+    //     ]);
+    // }else{
+    //     return response()->json([
+    //         'status' => 'error'
+    //     ]);
+    // }
+
 
 }
 

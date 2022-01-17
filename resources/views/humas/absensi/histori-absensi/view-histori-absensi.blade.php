@@ -1,3 +1,6 @@
+
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
 
     <div class="row clearfix">
@@ -108,10 +111,27 @@
 
                                     @if($r['id_presensi_pengguna']  == '-')
                                     @else
-                                    <form action="/humas/absensi/histori-absensi/delete/{{ $r['id_presensi_pengguna'] }}/{{ $start_date }}/{{ $end_date }}" method="POST" class="d-inline">
+                                    {{-- <button onClick="Delete(this.id)" class="btn btn-sm btn-danger" id="{{ $r['id_presensi_pengguna'] }}">
+                                        <i class="material-icons">delete</i>
+                                    </button> --}}
+
+                                    <button class="deleteRecord" data-id="{{  $r['id_presensi_pengguna'] }}" >Delete Record</button>
+
+                                    {{-- <button onclick="deleteAction(/humas/absensi/histori-absensi/delete/{{ $r['id_presensi_pengguna'] }})">
+                                        {{ csrf_field() }}
+                                        <i class="material-icons">delete</i>
+                                    </button>
+
+
+                                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                                        '    <i class="material-icons">delete_forever</i>'+
+                                        '</button>'; --}}
+
+
+                                    {{-- <form action="/humas/absensi/histori-absensi/delete/{{ $r['id_presensi_pengguna'] }}/{{ $start_date }}/{{ $end_date }}" method="POST" class="d-inline">
                                         {{ csrf_field() }}
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('are you yakin mau menghapus data')"><i class="material-icons">delete</i></button>
-                                    </form>
+                                    </form> --}}
                                     @endif
                                 </td>
                             </tr>
@@ -132,6 +152,151 @@
     function filterAction(){
         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
     };
+
+
+
+
+
+
+
+
+    $(".deleteRecord").click(function(){
+
+var id = $(this).data("id");
+
+var token = $("meta[name='csrf-token']").attr("content");
+
+
+//swall
+
+
+
+
+
+
+
+
+$.ajax(
+
+{
+    
+   
+    url: " /humas/absensi/histori-absensi/delete/"+id,
+
+    type: 'DELETE',
+
+    data: {
+
+        "id": id,
+
+        "_token": token,
+
+    },
+
+    success: function (){
+
+
+
+
+ swal({
+  title: "Delete Succest",
+  text: "data berhasil dihapus",
+  icon: "warning",});
+
+        location.reload(); 
+        // window.location.assign("/humas#absensi/histori-absensi/D4Ka215877868755ea3b47b31d90/2022-01-01/2022-01-31")
+
+
+
+    }
+
+});
+
+
+
+});
+
+
+
+//     function Delete(id)
+//         {
+//             var id = id;
+//             var token = $("meta[name='csrf-token']").attr("content");
+
+
+//             swal({
+//   title: "Are you sure?",
+//   text: "Once deleted, you will not be able to recover this imaginary file!",
+//   icon: "warning",
+//   buttons: true,
+// })
+// .then((willDelete) => {
+//   if (willDelete) {
+//     swal("Poof! Your imaginary file has been deleted!", {
+//       icon: "success",
+//     });
+//   } else {
+//     swal("Your imaginary file is safe!");
+//   }
+// });
+
+// //             swal({
+// //                 title: "APAKAH KAMU YAKIN ?",
+// //                 text: "INGIN MENGHAPUS DATA INI!",
+// //                 icon: "warning",
+// // //                 buttons: [
+// // //                     'TIDAK',
+// // //                     'YA'
+// // //                 ],
+// // //                 dangerMode: true,
+// // //             }).then(function(isConfirm) {
+// // //                 if (isConfirm) {
+// // //                     alert('You clicked the button!')
+
+// // // //                     // //ajax delete
+// // // //                     // jQuery.ajax({
+                       
+// // // //                     //     url: "/humas/absensi/histori-absensi/delete/"+id,
+                     
+// // // //                     //     data:     {
+// // // //                     //         "id": id,
+// // // //                     //         "_token": token
+// // // //                     //     },
+// // // //                     //     type: 'DELETE',
+// // // //                     //     success: function (response) {
+// // // //                     //         if (response.status == "success") {
+// // // //                     //             swal({
+// // // //                     //                 title: 'BERHASIL!',
+// // // //                     //                 text: 'DATA BERHASIL DIHAPUS!',
+// // // //                     //                 icon: 'success',
+// // // //                     //                 timer: 1000,
+// // // //                     //                 showConfirmButton: false,
+// // // //                     //                 showCancelButton: false,
+// // // //                     //                 buttons: false,
+// // // //                     //             }).then(function() {
+// // // //                     //                 location.reload();
+// // // //                     //             });
+// // // //                     //         }else{
+// // // //                     //             swal({
+// // // //                     //                 title: 'GAGAL!',
+// // // //                     //                 text: 'DATA GAGAL DIHAPUS!',
+// // // //                     //                 icon: 'error',
+// // // //                     //                 timer: 1000,
+// // // //                     //                 showConfirmButton: false,
+// // // //                     //                 showCancelButton: false,
+// // // //                     //                 buttons: false,
+// // // //                     //             }).then(function() {
+// // // //                     //                 location.reload();
+// // // //                     //             });
+// // // //                     //         }
+// // // //                     //     }
+// // // //                     // });
+
+// // //                 } else {
+// // //                     return true;
+// // //                 }
+// // //             })
+// // //         }
 
 
 </script>
