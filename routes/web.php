@@ -44,6 +44,7 @@ Route::post('upload', function (Request $request) {
 // END CONTOH UPLOAD DO
 
 Route::get('guid', function(){
+    echo env('APP_TIMEZONE');
     $now = Carbon::now(env('APP_TIMEZONE', ''));
     $prefix = Sekolah::first()->prefix;
 

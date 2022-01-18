@@ -64,6 +64,8 @@
                                 <input type="text" class="form-control" name="nomor_sk_pendirian_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_sk_pendirian_sekolah}}">
                             </div>
                         </div>
+
+
                         <h2 class="card-inside-title">
                             Tanggal SK Pendirian Sekolah
                         </h2>
@@ -112,6 +114,8 @@
                                 <input type="text" class="form-control" name="nomor_sk_izin_operasional" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_sk_izin_operasional}}">
                             </div>
                         </div>
+
+
                         <h2 class="card-inside-title">
                             Tanggal SK Izin Operasional
                         </h2>
@@ -169,6 +173,10 @@
                                 <input type="text" class="form-control" name="npwp_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->npwp_sekolah}}">
                             </div>
                         </div>
+
+
+
+                        
                         <div class="demo-color-box bg-success">
                                 ALAMAT SEKOLAH
                         </div>
@@ -331,11 +339,42 @@
                                 <input type="text" class="form-control" name="website_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->website_sekolah}}">
                             </div>
                         </div>
+
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="demo-color-box bg-success">
+                                FILE SEKOLAH
+                        </div>
+
+
+                        <table class="table table-bordered" id="dynamicAddRemove">  
+                            <tr>
+                            <th>Nama File</th>
+                            <th>Link Google Drive</th>
+                            <th>Aksi</th>
+                            </tr>
+                            <tr>  
+                            <td><input type="text" name="fileSekolah[0][nama_file]" placeholder="Nama File" class="form-control" /></td>  
+                            <td><input type="text" name="fileSekolah[0][link_gdrive]" placeholder="Link Google Drive" class="form-control" /></td> 
+                            <input type="hidden" name="fileSekolah[0][id_sekolah]" value="{{ $sekolah->id_sekolah }}" />
+                            {{-- <input type="hidden" name="fileSekolah[0][id_file_sekolah]" value="{{ rand(10, 999) }}" /> --}}
+                            <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
+                            </tr>  
+                            </table> 
+                  
+
+
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
+
+                     
+
                     </form>
                 </div>
             </div>
@@ -344,6 +383,20 @@
 </div>
 @include('scriptjs')
 <script>
+
+
+var i = 0;
+
+$("#add-btn").click(function(){
+++i;
+
+$("#dynamicAddRemove").append('<tr><td><input type="text" name="fileSekolah['+i+'][namaFile]" placeholder="Nama File" class="form-control" /></td><td><input type="text" name="fileSekolah['+i+'][linkFile]" placeholder="Link File" class="form-control" /> </td>  <input type="hidden" name="fileSekolah['+i+'][id_sekolah]" value="{{ $sekolah->id_sekolah }}" /><td> <button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>');
+});
+$(document).on('click', '.remove-tr', function(){  
+$(this).parents('tr').remove();
+});  
+
+
     $(function(){
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY',

@@ -13,6 +13,7 @@ use App\Models\Sekolah as Sekolah;
 use App\Models\BentukPendidikan as BentukPendidikan;
 use App\Models\Provinsi as Provinsi;
 use App\Models\Kota as Kota;
+use App\Models\FileSekolah as FileSekolah;
 
 use App\Libraries\Pendidikan\LibSiswa;
 
@@ -25,6 +26,8 @@ class InputDataSekolahController extends BaseController
 {
     public function viewInputDataSekolah(Request $request){
 	    # code..
+	
+
 	    $input = (object) $request->input();
 	    $auth_data = $input->auth_data;
 	    $sekolah = Sekolah::join('bentuk_pendidikan','sekolah.id_bentuk_pendidikan','=','bentuk_pendidikan.id_bentuk_pendidikan')
@@ -44,6 +47,11 @@ class InputDataSekolahController extends BaseController
     }
 
     public function actionInputDataSekolah(Request $request, $mode, $id = null){
+	
+		foreach ($request->fileSekolah as $key => $value) {
+	
+            FileSekolah::create($value);
+        }
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));

@@ -69,4 +69,10 @@ class Sekolah extends Model
     public function kota(){
         return $this->belongsTo(Kota::class, 'alamat_kota', 'id_kota');
     }
+
+    public function fileSekolah(){
+        return $this->hasmany(FileSekolah::class, 'id_sekolah');
+    }
+
+
 }

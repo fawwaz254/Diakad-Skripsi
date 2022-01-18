@@ -29,6 +29,7 @@ class UjianMp extends Model
         'jam_selesai',
         'keterangan',
         'is_online',
+        'link_gdrive',
         'created_by',
         'updated_by',
         'deleted_by'
