@@ -350,15 +350,12 @@
                                 <th>Link Gdrive</th>
                                 <th>Action</th>
                             </tr>
-                            @foreach ($file_sekolah as $key =>$file)
+                            @foreach ($file_sekolah as $file)
                                 <tr>  
-                                    {{-- <td>{{ $key + 1 }}</td> --}}
-                                    {{-- <td><input type="text" class="form-control" value="{{$file->nama_file}}" /></td>   --}}
-                                    {{-- <td><input type="text" class="form-control" value="{{$file->nama_file}}" /></td>   --}}
                                     <td>{{$file->nama_file}}</td>
                                     <td><a href="{{$file->link_gdrive}}">Link Gdrive</a></td>
                                     <input type="hidden" class="delete-id" value="{{$file->id_file_sekolah}}" >
-                                    <td><button type="button" class="btn btn-danger delete-file">Remove</button></td>
+                                    <td><button type="button" class="btn btn-danger delete-file" onclick="destroyFileSekolah('{{$file->id_file_sekolah}}')">Remove</button></td>
                                 </tr>  
                             @endforeach
                     <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
@@ -415,20 +412,15 @@ $(document).on("click", ".remove-tr", function () {
             document.getElementById("nm_yayasan_sekolah").style.display = "none";
         }
     }
-
-$(document).ready(function () {
-    $("select").select();
-    let i = 0;
-    $(".delete-file").click(function () {
-        const delete_id = $(".delete-id").val();
+    function destroyFileSekolah(id) {
         swal(
             { title: "Are you sure?", showCancelButton: true },
             function (isConfirm) {
                 if (isConfirm) {
-                    var token = $("meta[name='csrf-token']").attr("content");
+                    const token = $("meta[name='csrf-token']").attr("content");
                     //swall
                     $.ajax({
-                        url: `pendidikan/data-sekolah/action-input-file-sekolah/delete/${delete_id}`,
+                        url: `pendidikan/data-sekolah/action-input-file-sekolah/delete/${id}`,
                         type: "post",
 
                         data: {
@@ -448,7 +440,9 @@ $(document).ready(function () {
                 return;
             }
         );
-    });
+    }
+$(document).ready(function () {
+    $("select").select();
 });
 
     var modul_url       = 'data-sekolah';
@@ -474,61 +468,5 @@ $(document).ready(function () {
             $('select').select();
         });
     });
-
-
-
-
-
-
-//     $(".deleteRecord").click(function(){
-
-// var id = $(this).data("id");
-
-// var token = $("meta[name='csrf-token']").attr("content");
-
-
-// //swall
-
-
-
-// $.ajax(
-
-// {
-    
-   
-//     url: " /pendidikan/data-sekolah/input-data-sekolah/delete/"+id,
-
-//     type: 'post',
-
-//     data: {
-
-//         "id": id,
-
-//         "_token": token,
-
-//     },
-
-//     success: function (){
-
-
-
-
-//  swal({
-//   title: "Delete Succest",
-//   text: "data berhasil dihapus",
-//   icon: "warning",});
-
-//         location.reload(); 
-//         // window.location.assign("/humas#absensi/histori-absensi/D4Ka215877868755ea3b47b31d90/2022-01-01/2022-01-31")
-
-
-
-//     }
-
-// });
-
-
-
-// });
 
 </script>
