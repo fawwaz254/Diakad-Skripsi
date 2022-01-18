@@ -33,7 +33,6 @@ class InputDataSekolahController extends BaseController
 		$provinsi = Provinsi::where('is_aktif', '=', '1')->orderBy('nm_provinsi', 'asc')->get();
 		$kota = Kota::where('id_provinsi', '=', $sekolah->alamat_provinsi)->where('is_aktif', '=', '1')->orderBy('nm_kota', 'asc')->get();
 		$file_sekolah = FileSekolah::all();
-		echo $file_sekolah;
 		return view('pendidikan/data-sekolah/input-data-sekolah', compact('auth_data', 'file_sekolah', 'sekolah', 'bentuk_pendidikan', 'provinsi', 'kota'));
 	}
 
@@ -43,11 +42,14 @@ class InputDataSekolahController extends BaseController
 		return response()->json($kota);
 	}
 
+
 	public function actionInputDataSekolah(Request $request, $mode, $id = null)
 	{
+
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$prefix = Sekolah::first()->prefix;
 
 		if ($mode == "edit") {
 			$validator = Validator::make($request->all(), [
@@ -103,6 +105,14 @@ class InputDataSekolahController extends BaseController
 				$sekolah->updated_at					= $now;
 				$sekolah->save();
 
+				if ($input->fileSekolah ?? false) {
+					foreach ($input->fileSekolah as $file_sekolah) {
+						$uuid = $prefix . strtotime($now) . uniqid();
+						$file_sekolah['id_file_sekolah'] = $uuid;
+						FileSekolah::create($file_sekolah);
+					}
+				}
+
 				return [
 					'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
 					'path' => 'data-sekolah/input-data-sekolah/',
@@ -111,6 +121,7 @@ class InputDataSekolahController extends BaseController
 			}
 		}
 	}
+
 	public function actionInputFileSekolah(Request $request, $mode, $id = null)
 	{
 		if ($mode == "delete") {

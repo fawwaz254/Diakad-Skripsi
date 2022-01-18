@@ -49,7 +49,6 @@ class UjianUASController extends BaseController
 
     return view('akademik/ujian/ujian-uas-reguler-online/view-add-ujian-uas-reguler-online', compact('auth_data', 'kegiatan', 'id'));
   }
-
   public function addDataUjianUas(Request $request, $online, $id)
   {
     # code..

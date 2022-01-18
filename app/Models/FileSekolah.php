@@ -23,6 +23,7 @@ class FileSekolah extends Model
         'id_sekolah',
         'created_by',
         'updated_by',
-        'deleted_by',
+        'deleted_by'
+
     ];
 }

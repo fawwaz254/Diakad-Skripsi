@@ -65,6 +65,8 @@
                                 <input type="text" class="form-control" name="nomor_sk_pendirian_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_sk_pendirian_sekolah}}">
                             </div>
                         </div>
+
+
                         <h2 class="card-inside-title">
                             Tanggal SK Pendirian Sekolah
                         </h2>
@@ -113,6 +115,8 @@
                                 <input type="text" class="form-control" name="nomor_sk_izin_operasional" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_sk_izin_operasional}}">
                             </div>
                         </div>
+
+
                         <h2 class="card-inside-title">
                             Tanggal SK Izin Operasional
                         </h2>
@@ -170,6 +174,10 @@
                                 <input type="text" class="form-control" name="npwp_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->npwp_sekolah}}">
                             </div>
                         </div>
+
+
+
+                        
                         <div class="demo-color-box bg-success">
                                 ALAMAT SEKOLAH
                         </div>
@@ -342,10 +350,13 @@
                                 <th>Link Gdrive</th>
                                 <th>Action</th>
                             </tr>
-                            @foreach ($file_sekolah as $file)
+                            @foreach ($file_sekolah as $key =>$file)
                                 <tr>  
-                                    <td><input type="text" class="form-control" value="{{$file->nama_file}}" /></td>  
-                                    <td><a href="{{$file->link}}">Link Gdrive</a></td>
+                                    {{-- <td>{{ $key + 1 }}</td> --}}
+                                    {{-- <td><input type="text" class="form-control" value="{{$file->nama_file}}" /></td>   --}}
+                                    {{-- <td><input type="text" class="form-control" value="{{$file->nama_file}}" /></td>   --}}
+                                    <td>{{$file->nama_file}}</td>
+                                    <td><a href="{{$file->link_gdrive}}">Link Gdrive</a></td>
                                     <input type="hidden" class="delete-id" value="{{$file->id_file_sekolah}}" >
                                     <td><button type="button" class="btn btn-danger delete-file">Remove</button></td>
                                 </tr>  
@@ -357,6 +368,8 @@
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
+
+
                     </form>
                 </div>
             </div>
@@ -365,6 +378,25 @@
 </div>
 @include('scriptjs')
 <script>
+let i = 0;
+ 
+$("#add-btn").click(function () {
+    ++i;
+
+    $("#dynamicAddRemove").append(
+        '<tr><td><input type="text" name="fileSekolah[' +
+            i +
+            '][nama_file]" placeholder="Nama File" class="form-control" /></td><td><input type="text" name="fileSekolah[' +
+            i +
+            '][link_gdrive]" placeholder="Link File" class="form-control" /> </td>  <input type="hidden" name="fileSekolah[' +
+            i +
+            '][id_sekolah]" value="{{ $sekolah->id_sekolah }}" /><td> <button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
+    );
+});
+$(document).on("click", ".remove-tr", function () {
+    $(this).parents("tr").remove();
+});
+
     $(function(){
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY',
@@ -384,19 +416,9 @@
         }
     }
 
-    $(document).ready(function() {
-        $('select').select();
-        var i = 0;
-        $("#add-btn").click(function () {
-            ++i;
-            $("#dynamicAddRemove").append(
-                '<tr><td><input type="text" name="moreFields[' +
-                    i +
-                    '][nama_file]" placeholder="Enter title" class="form-control" /></td><td><input type="text" name="moreFields[' +
-                    i +
-                    '][link_gdrive]" placeholder="Enter description" class="form-control" /></td><td><button type="button" class="btn btn-danger delete-file">Remove</button></td></tr>'
-            );
-        });
+$(document).ready(function () {
+    $("select").select();
+    let i = 0;
     $(".delete-file").click(function () {
         const delete_id = $(".delete-id").val();
         swal(
@@ -413,25 +435,21 @@
                             _token: token,
                         },
 
-                        success: function (data) {
+                        success: function () {
+                            location.reload();
                             swal({
                                 title: "Delete Succes",
                                 text: "data berhasil dihapus",
                                 icon: "success",
                             });
-                            location.reload();
                         },
                     });
                 }
                 return;
             }
         );
-});
-
-
-
-       
     });
+});
 
     var modul_url       = 'data-sekolah';
     $('#alamat_provinsi').on('change', function(e){
@@ -456,5 +474,61 @@
             $('select').select();
         });
     });
+
+
+
+
+
+
+//     $(".deleteRecord").click(function(){
+
+// var id = $(this).data("id");
+
+// var token = $("meta[name='csrf-token']").attr("content");
+
+
+// //swall
+
+
+
+// $.ajax(
+
+// {
+    
+   
+//     url: " /pendidikan/data-sekolah/input-data-sekolah/delete/"+id,
+
+//     type: 'post',
+
+//     data: {
+
+//         "id": id,
+
+//         "_token": token,
+
+//     },
+
+//     success: function (){
+
+
+
+
+//  swal({
+//   title: "Delete Succest",
+//   text: "data berhasil dihapus",
+//   icon: "warning",});
+
+//         location.reload(); 
+//         // window.location.assign("/humas#absensi/histori-absensi/D4Ka215877868755ea3b47b31d90/2022-01-01/2022-01-31")
+
+
+
+//     }
+
+// });
+
+
+
+// });
 
 </script>
