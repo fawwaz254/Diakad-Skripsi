@@ -28,6 +28,7 @@ class InputDataSekolahController extends BaseController
 	    # code..
 	
 
+
 	    $input = (object) $request->input();
 	    $auth_data = $input->auth_data;
 	    $sekolah = Sekolah::join('bentuk_pendidikan','sekolah.id_bentuk_pendidikan','=','bentuk_pendidikan.id_bentuk_pendidikan')
@@ -36,8 +37,8 @@ class InputDataSekolahController extends BaseController
 	    $bentuk_pendidikan = BentukPendidikan::orderBy('kode_bentuk_pendidikan','asc')->get();
 	    $provinsi = Provinsi::where('is_aktif','=','1')->orderBy('nm_provinsi','asc')->get();
 	    $kota = Kota::where('id_provinsi','=',$sekolah->alamat_provinsi)->where('is_aktif','=','1')->orderBy('nm_kota','asc')->get();
-
-    	return view('pendidikan/data-sekolah/input-data-sekolah',compact('auth_data','sekolah','bentuk_pendidikan','provinsi','kota'));
+		$fileSekolah = FileSekolah::where('id_sekolah','=',$sekolah->id_sekolah)->get();
+    	return view('pendidikan/data-sekolah/input-data-sekolah',compact('auth_data','sekolah','bentuk_pendidikan','provinsi','kota','fileSekolah'));
   	}
 
   	public function getKota($id_provinsi)
@@ -45,6 +46,17 @@ class InputDataSekolahController extends BaseController
         $kota = Kota::where('id_provinsi','=',$id_provinsi)->where('is_aktif','=','1')->orderBy('nm_kota','asc')->get();
         return response()->json($kota);
     }
+
+
+public function hapusfile(Request $request, $id)
+{
+
+	
+	// // FileSekolah::where('id_file_sekolah','=',$id)->remove();
+	// FileSekolah::find($id)->delete();
+	FileSekolah::where('id_file_sekolah',$id)->delete();
+}
+
 
     public function actionInputDataSekolah(Request $request, $mode, $id = null){
 	

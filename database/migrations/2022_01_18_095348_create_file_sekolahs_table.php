@@ -17,8 +17,8 @@ class CreateFileSekolahsTable extends Migration
             $table->engine = 'InnoDB';
 			$table->increments('id_file_sekolah');
 			$table->string('nama_file', 32)->nullable();
-            $table->string('link_gdrive', 32)->nullable();
-			$table->string('id_sekolah', 40)->comment('FK: sekolah.id_sekolah');
+            $table->string('link_gdrive', 128)->nullable();
+			$table->string('id_sekolah', 128)->comment('FK: sekolah.id_sekolah');
 			$table->timestamps();
 			$table->string('created_by', 40)->nullable();
 			$table->string('updated_by', 40)->nullable();

@@ -1,3 +1,5 @@
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -349,6 +351,33 @@
                         </div>
 
 
+                        <table class="table table-bordered" id="showdynamicAddRemove">  
+                            <tr>
+                                <th>No</th>
+                            <th>Nama File</th>
+                            <th>Link Google Drive</th>
+                            <th>Aksi</th>
+                            </tr>
+              
+                                @foreach ($fileSekolah as $key => $file )
+                                <tr>  
+                                    <td>{{ $key + 1 }}</td>
+                                <td><input type="test" name="fileSekolah1[{{ $key }}][nama_file]" placeholder="Nama File" class="form-control" value="{{ $file->nama_file }}" disabled /></td>  
+                                <td>
+                                    <a href="{{ $file->link_gdrive }}">Link Google Drive</a>
+                                </td>
+                                <td>
+                                    <button class="deleteRecord btn btn-danger remove-tr" data-id="{{  $file->id_file_sekolah }}" >Delete Record</button>
+                                  
+                                </td>
+                            </tr> 
+                                @endforeach
+
+                           
+                            </table> 
+
+
+
                         <table class="table table-bordered" id="dynamicAddRemove">  
                             <tr>
                             <th>Nama File</th>
@@ -390,7 +419,7 @@ var i = 0;
 $("#add-btn").click(function(){
 ++i;
 
-$("#dynamicAddRemove").append('<tr><td><input type="text" name="fileSekolah['+i+'][namaFile]" placeholder="Nama File" class="form-control" /></td><td><input type="text" name="fileSekolah['+i+'][linkFile]" placeholder="Link File" class="form-control" /> </td>  <input type="hidden" name="fileSekolah['+i+'][id_sekolah]" value="{{ $sekolah->id_sekolah }}" /><td> <button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>');
+$("#dynamicAddRemove").append('<tr><td><input type="text" name="fileSekolah['+i+'][nama_file]" placeholder="Nama File" class="form-control" /></td><td><input type="text" name="fileSekolah['+i+'][link_gdrive]" placeholder="Link File" class="form-control" /> </td>  <input type="hidden" name="fileSekolah['+i+'][id_sekolah]" value="{{ $sekolah->id_sekolah }}" /><td> <button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>');
 });
 $(document).on('click', '.remove-tr', function(){  
 $(this).parents('tr').remove();
@@ -444,5 +473,61 @@ $(this).parents('tr').remove();
             $('select').select();
         });
     });
+
+
+
+
+
+
+    $(".deleteRecord").click(function(){
+
+var id = $(this).data("id");
+
+var token = $("meta[name='csrf-token']").attr("content");
+
+
+//swall
+
+
+
+$.ajax(
+
+{
+    
+   
+    url: " /pendidikan/data-sekolah/input-data-sekolah/delete/"+id,
+
+    type: 'post',
+
+    data: {
+
+        "id": id,
+
+        "_token": token,
+
+    },
+
+    success: function (){
+
+
+
+
+ swal({
+  title: "Delete Succest",
+  text: "data berhasil dihapus",
+  icon: "warning",});
+
+        location.reload(); 
+        // window.location.assign("/humas#absensi/histori-absensi/D4Ka215877868755ea3b47b31d90/2022-01-01/2022-01-31")
+
+
+
+    }
+
+});
+
+
+
+});
 
 </script>

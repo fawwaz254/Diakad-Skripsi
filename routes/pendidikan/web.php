@@ -81,7 +81,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('data-sekolah/get-kota/{alamat_provinsi}', 'Pendidikan\DataSekolah\InputDataSekolahController@getKota');
 			
 			Route::post('action-input-data-sekolah/{mode}/{id}', 'Pendidikan\DataSekolah\InputDataSekolahController@actionInputDataSekolah');
-
+//hapus data
+// Route::get('input-data-sekolah/delete/{id}', function($id){
+// 	return $id;
+// });
+Route::post('input-data-sekolah/delete/{id}', 'Pendidikan\DataSekolah\InputDataSekolahController@hapusfile');
 
 		});
 
