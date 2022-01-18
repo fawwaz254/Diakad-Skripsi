@@ -1,3 +1,4 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -331,6 +332,26 @@
                                 <input type="text" class="form-control" name="website_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->website_sekolah}}">
                             </div>
                         </div>
+                        <div class="demo-color-box bg-success">
+                               FILE SEKOLAH
+                        </div>
+                        
+                        <table class="table table-bordered" id="dynamicAddRemove">  
+                            <tr>
+                                <th>Nama File</th>
+                                <th>Link Gdrive</th>
+                                <th>Action</th>
+                            </tr>
+                            @foreach ($file_sekolah as $file)
+                                <tr>  
+                                    <td><input type="text" class="form-control" value="{{$file->nama_file}}" /></td>  
+                                    <td><a href="{{$file->link}}">Link Gdrive</a></td>
+                                    <input type="hidden" class="delete-id" value="{{$file->id_file_sekolah}}" >
+                                    <td><button type="button" class="btn btn-danger delete-file">Remove</button></td>
+                                </tr>  
+                            @endforeach
+                    <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
+                        </table> 
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
@@ -365,10 +386,54 @@
 
     $(document).ready(function() {
         $('select').select();
+        var i = 0;
+        $("#add-btn").click(function () {
+            ++i;
+            $("#dynamicAddRemove").append(
+                '<tr><td><input type="text" name="moreFields[' +
+                    i +
+                    '][nama_file]" placeholder="Enter title" class="form-control" /></td><td><input type="text" name="moreFields[' +
+                    i +
+                    '][link_gdrive]" placeholder="Enter description" class="form-control" /></td><td><button type="button" class="btn btn-danger delete-file">Remove</button></td></tr>'
+            );
+        });
+    $(".delete-file").click(function () {
+        const delete_id = $(".delete-id").val();
+        swal(
+            { title: "Are you sure?", showCancelButton: true },
+            function (isConfirm) {
+                if (isConfirm) {
+                    var token = $("meta[name='csrf-token']").attr("content");
+                    //swall
+                    $.ajax({
+                        url: `pendidikan/data-sekolah/action-input-file-sekolah/delete/${delete_id}`,
+                        type: "post",
+
+                        data: {
+                            _token: token,
+                        },
+
+                        success: function (data) {
+                            swal({
+                                title: "Delete Succes",
+                                text: "data berhasil dihapus",
+                                icon: "success",
+                            });
+                            location.reload();
+                        },
+                    });
+                }
+                return;
+            }
+        );
+});
+
+
+
+       
     });
 
     var modul_url       = 'data-sekolah';
-
     $('#alamat_provinsi').on('change', function(e){
     console.log(e);
     var alamat_provinsi = e.target.value;

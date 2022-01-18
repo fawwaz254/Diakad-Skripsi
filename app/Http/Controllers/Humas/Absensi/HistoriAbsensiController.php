@@ -99,6 +99,11 @@ class HistoriAbsensiController extends BaseController
         $input = $request->input();
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
         $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
+        // return [
+        //     'status' => 201, // SUCCESS AND REDIRECT
+        //     'link' => url("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date),
+        //     'message' => 'Update Absensi successfully'
+        // ];
         return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
     }
 
