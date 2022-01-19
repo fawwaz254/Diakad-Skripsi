@@ -354,19 +354,16 @@
                                 <tr>  
                                     <td>{{$file->nama_file}}</td>
                                     <td><a href="{{$file->link_gdrive}}">Link Gdrive</a></td>
-                                    <input type="hidden" class="delete-id" value="{{$file->id_file_sekolah}}" >
                                     <td><button type="button" class="btn btn-danger delete-file" onclick="destroyFileSekolah('{{$file->id_file_sekolah}}')">Remove</button></td>
                                 </tr>  
-                            @endforeach
-                    <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
+                                @endforeach
+                                <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
                         </table> 
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
-
-
                     </form>
                 </div>
             </div>
@@ -383,9 +380,9 @@ $("#add-btn").click(function () {
     $("#dynamicAddRemove").append(
         '<tr><td><input type="text" name="fileSekolah[' +
             i +
-            '][nama_file]" placeholder="Nama File" class="form-control" /></td><td><input type="text" name="fileSekolah[' +
+            '][nama_file]" placeholder="Nama File" class="form-control" required /></td><td><input type="text" name="fileSekolah[' +
             i +
-            '][link_gdrive]" placeholder="Link File" class="form-control" /> </td>  <input type="hidden" name="fileSekolah[' +
+            '][link_gdrive]" placeholder="Link File" class="form-control" required /> </td>  <input type="hidden" name="fileSekolah[' +
             i +
             '][id_sekolah]" value="{{ $sekolah->id_sekolah }}" /><td> <button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
     );
@@ -430,7 +427,7 @@ $(document).on("click", ".remove-tr", function () {
                         success: function () {
                             location.reload();
                             swal({
-                                title: "Delete Succes",
+                                title: "Delete Success",
                                 text: "data berhasil dihapus",
                                 icon: "success",
                             });
