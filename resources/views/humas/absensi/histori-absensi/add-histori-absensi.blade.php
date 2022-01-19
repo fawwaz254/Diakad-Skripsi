@@ -11,7 +11,7 @@
                     <h2>ADD HISTORI ABSENSI</h2>
                 </div>
                 <div class="body">
-                    <form method="POST" action="{{url()->current()}}">
+                    <form method="POST" id="add-form" action="{{url()->current()}}">
                         {{csrf_field()}}
 
                         <h2 class="card-inside-title">Status</h2>
@@ -31,7 +31,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-block bg-red waves-effect" type="submit">
+                        <button id="btn-submit" class="btn btn-block bg-red waves-effect">
                             <i class="material-icons">save</i>
                             <span>Save</span>
                         </button>
@@ -41,3 +41,10 @@
         </div>
     </div>
 </div>
+<script>
+$( "#add-form" ).submit(function() {
+    $('#btn-submit').attr("disabled", true);
+    $('#btn-submit i').text('autorenew')
+    $('#btn-submit span').text('Loading')
+});
+</script>

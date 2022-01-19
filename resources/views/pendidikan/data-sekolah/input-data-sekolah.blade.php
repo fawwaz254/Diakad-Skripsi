@@ -353,12 +353,18 @@
                             @foreach ($file_sekolah as $file)
                                 <tr>  
                                     <td>{{$file->nama_file}}</td>
-                                    <td><a href="{{$file->link_gdrive}}">Link Gdrive</a></td>
+                                    <td><a href="{{$file->link_gdrive}}" target="_blank">Link Gdrive</a></td>
                                     <td><button type="button" class="btn btn-danger delete-file" onclick="destroyFileSekolah('{{$file->id_file_sekolah}}')">Remove</button></td>
-                                </tr>  
-                                @endforeach
-                                <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
+                                </tr>
+                            @endforeach
+                            <tr>
+                            <td><input type="text" name="fileSekolah[0][nama_file]" placeholder="Nama File" class="form-control" required /></td>  
+                            <td><input type="text" name="fileSekolah[0][link_gdrive]" placeholder="Link Google Drive" class="form-control" required /></td> 
+                            <input type="hidden" name="fileSekolah[0][id_sekolah]" value="{{ $sekolah->id_sekolah }}" />
+                            <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
+                            </tr> 
                         </table> 
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>

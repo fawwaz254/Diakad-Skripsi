@@ -11,6 +11,7 @@ use Carbon\CarbonPeriod;
 use App\Models\Sekolah;
 
 use App\Libraries\SumberDaya\LibGuru;
+use App\Libraries\SumberDaya\LibTendik;
 
 class HistoriAbsensiController extends BaseController
 {
@@ -28,7 +29,7 @@ class HistoriAbsensiController extends BaseController
 
         $dates = CarbonPeriod::create($start_date, $end_date);
         $guru = LibGuru::fetchDataAllGuru($auth_data);
-
+        $tendik = LibTendik::fetchDataAllTendik($auth_data);
         $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->whereBetween('date', [$start_date, $end_date])->get();
         $hasil = [];
 
@@ -67,7 +68,7 @@ class HistoriAbsensiController extends BaseController
             }
         }
 
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'id_pengguna', 'start_date', 'end_date', 'dates', 'guru', 'hasil'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'id_pengguna', 'start_date', 'end_date', 'dates', 'guru', 'tendik', 'hasil'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null, $start_date = null, $end_date = null)
@@ -100,9 +101,9 @@ class HistoriAbsensiController extends BaseController
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
         $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
         // return [
-        //     'status' => 201, // SUCCESS AND REDIRECT
-        //     'link' => url("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date),
-        //     'message' => 'Update Absensi successfully'
+        //     'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
+        //     'path' => 'absensi/histori-absensi/',
+        //     'message' => 'Data Absensi Berhasil Di Update'
         // ];
         return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date);
     }

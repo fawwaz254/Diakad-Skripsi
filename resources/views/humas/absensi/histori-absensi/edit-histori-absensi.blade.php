@@ -12,7 +12,7 @@
                     <h2>EDIT HISTORI ABSENSI</h2>
                 </div>
                 <div class="body">
-                    <form method="POST" action="{{url()->current()}}">
+                    <form method="POST" id="edit-form" action="{{url()->current()}}">
                         {{csrf_field()}}
                         <div>
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -59,9 +59,7 @@
                             <textarea name="notes" class="form-control" cols="30"
                                 rows="10">{{$presences['notes']}}</textarea>
                         </div>
-
-
-                        <button class="btn btn-block bg-red waves-effect" type="submit">
+                        <button id="btn-submit" class="btn btn-block bg-red waves-effect">
                             <i class="material-icons">save</i>
                             <span>Save</span>
                         </button>
@@ -72,3 +70,10 @@
     </div>
 </div>
 @include('scriptjs')
+<script>
+$( "#edit-form" ).submit(function() {
+    $('#btn-submit').attr("disabled", true);
+    $('#btn-submit i').text('autorenew')
+    $('#btn-submit span').text('Loading')
+});
+</script>
