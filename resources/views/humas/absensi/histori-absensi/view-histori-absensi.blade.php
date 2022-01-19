@@ -205,6 +205,7 @@
         { title: "Are you sure?", showCancelButton: true},
         function (isConfirm) {
             if (isConfirm) {
+                $('.delete-record').attr("disabled", true);
                 //swall
                 $.ajax({
                     url: ` /humas/absensi/histori-absensi/${id}/delete`,
@@ -216,11 +217,11 @@
 
                     success: function () {
                         swal({
-                            title: "Delete Succes",
+                            title: "Delete Success",
                             text: "data berhasil dihapus",
                             icon: "success",
                         });
-                        location.reload();
+                        loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val()+'/'+$('#guru-or-tendik').val());
                     },
                 });
             }
