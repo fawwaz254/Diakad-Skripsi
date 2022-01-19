@@ -421,6 +421,7 @@ $(document).on("click", ".remove-tr", function () {
             function (isConfirm) {
                 if (isConfirm) {
                     const token = $("meta[name='csrf-token']").attr("content");
+                    $('.delete-file').attr("disabled", true);
                     //swall
                     $.ajax({
                         url: `pendidikan/data-sekolah/action-input-file-sekolah/delete/${id}`,
@@ -431,12 +432,12 @@ $(document).on("click", ".remove-tr", function () {
                         },
 
                         success: function () {
-                            location.reload();
                             swal({
                                 title: "Delete Success",
                                 text: "data berhasil dihapus",
                                 icon: "success",
                             });
+                            loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/');
                         },
                     });
                 }
