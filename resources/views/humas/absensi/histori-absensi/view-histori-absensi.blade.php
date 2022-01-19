@@ -4,7 +4,6 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-
                 <div class="header">
                     <h2>Filter Data</h2>
                 </div>
@@ -14,9 +13,22 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Pilih Guru atau Tenaga Pendidik </h2>
                             <select class="form-control show-tick" id="guru-or-tendik" required="">
+                                @switch($role)
+                                    @case("guru")
+                                <option value="0">Pilih</option>
+                                <option selected value="guru">Guru</option>
+                                <option value="tendik">Tenaga Pendidik</option>
+                                        @break
+                                    @case("tendik")
+                                <option value="0">Pilih</option>
+                                <option value="guru">Guru</option>
+                                <option selected value="tendik">Tenaga Pendidik</option>
+                                        @break
+                                    @default
                                 <option selected value="0">Pilih</option>
                                 <option value="guru">Guru</option>
                                 <option value="tendik">Tenaga Pendidik</option>
+                                @endswitch
                             </select>
                         </div>
                     </div>
@@ -116,18 +128,12 @@
                                 <td>{{$r['notes']}}</td>
                                 <td style="text-align: center;display:flex;justify-content:center">
                                     @if ($r['id_presensi_pengguna'] =='')
-                                    <button type="button" class="btn bg-teal waves-effect">
-                                        <a
-                                            href="/humas#absensi/histori-absensi/{{$id_pengguna}}/{{$r['date']}}/{{$start_date}}/{{$end_date}}/add">
-                                            <i class="material-icons">edit</i>
-                                        </a>
+                                    <button type="button" class="btn bg-teal waves-effect" onclick="addAbsensi('{{$r['date']}}')">
+                                        <i class="material-icons">edit</i>
                                     </button>
                                     @else
-                                    <button type="button" class="btn bg-teal waves-effect">
-                                        <a
-                                            href="/humas#absensi/histori-absensi/{{$r['id_presensi_pengguna']}}/{{$start_date}}/{{$end_date}}/edit">
-                                            <i class="material-icons">edit</i>
-                                        </a>
+                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$r['id_presensi_pengguna']}}')">
+                                        <i class="material-icons">edit</i>
                                     </button>
                                         <button data-id="{{  $r['id_presensi_pengguna'] }}" class="btn bg-red waves-effect delete-record">
                                             <i class="material-icons">delete</i>
@@ -150,10 +156,26 @@
 <script type="text/javascript">
     $('#id_pengguna').val($('#id_guru').val())
     function filterAction(){
-        loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
+        loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('#id_pengguna').val()  + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val()+'/'+$('#guru-or-tendik').val());
     };
-    document.getElementById("tendik-container").style.display = "none";
-    document.getElementById("guru-container").style.display = "none";
+    function addAbsensi(currDate){
+        window.location='/humas#absensi/histori-absensi/' + $('#id_pengguna').val() + '/' +currDate + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val()+'/'+$('#guru-or-tendik').val()+'/add'
+    };
+    function editAbsensi(currUser){
+        window.location='/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=start_date]').val() + '/' + $('input[name=end_date]').val()+'/'+$('#guru-or-tendik').val()+'/edit'
+    };
+    if (!$('#guru-or-tendik').val()=="0") {
+        document.getElementById("tendik-container").style.display = "none";
+        document.getElementById("guru-container").style.display = "none";
+    }
+    if ($('#guru-or-tendik').val()=="guru") {
+        document.getElementById("tendik-container").style.display = "none";
+        document.getElementById("guru-container").style.display = "block";
+    }
+    if ($('#guru-or-tendik').val()=="tendik") {
+        document.getElementById("guru-container").style.display = "none";
+        document.getElementById("tendik-container").style.display = "block";
+    }
     $('#guru-or-tendik').change(function () {
         if ($(this).val()=="0") {
             document.getElementById("tendik-container").style.display = "none";

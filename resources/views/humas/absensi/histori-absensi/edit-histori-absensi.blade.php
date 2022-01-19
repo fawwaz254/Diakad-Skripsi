@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect target-link" href="/humas#absensi/histori-absensi/{{$presences["id_pengguna"]}}/{{$start_date}}/{{$end_date}}">
+            <a class="btn bg-blue waves-effect target-link" href="/humas#absensi/histori-absensi/{{$presences["id_pengguna"]}}/{{$start_date}}/{{$end_date}}/{{$role}}">
                 <i class="material-icons">backspace</i><span>Kembali</span></a>
         </h2>
     </div>
