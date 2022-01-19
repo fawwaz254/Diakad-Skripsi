@@ -15,7 +15,7 @@ class CreateFileSekolahsTable extends Migration
     {
         Schema::create('file_sekolahs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-			$table->increments('id_file_sekolah');
+			$table->string('id_file_sekolah',128)->primary();
 			$table->string('nama_file', 32)->nullable();
             $table->string('link_gdrive', 128)->nullable();
 			$table->string('id_sekolah', 128)->comment('FK: sekolah.id_sekolah');

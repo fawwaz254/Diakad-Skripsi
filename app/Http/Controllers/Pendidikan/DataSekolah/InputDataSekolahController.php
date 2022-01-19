@@ -59,11 +59,17 @@ public function hapusfile(Request $request, $id)
 
 
     public function actionInputDataSekolah(Request $request, $mode, $id = null){
+		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		$prefix = Sekolah::first()->prefix;
+	
 	
 		foreach ($request->fileSekolah as $key => $value) {
-	
+			$html = $prefix.strtotime($now).uniqid();
+			$value['id_file_sekolah']= $html;
+		
             FileSekolah::create($value);
         }
+
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));
