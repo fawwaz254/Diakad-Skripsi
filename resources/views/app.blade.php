@@ -19,7 +19,7 @@
         @endif
 
         <!-- Favicon-->
-        <link rel="icon" href="{{asset('favicon_io/android-chrome-512x512.png')}}" type="image/x-icon">
+        <link rel="icon" href="{{asset('favicon_io/favicon-circle.png')}}" type="image/x-icon">
 
         <!-- Google Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
