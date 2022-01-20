@@ -92,6 +92,21 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
         });
 
+//penambahan absensi
+Route::group(['prefix' => 'absensi'], function(){
+
+    Route::group(array('prefix' => 'histori-absensi'), function () {
+        
+        Route::get('/', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+        Route::get('/{start_date}/{end_date}', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+     
+
+    });
+
+});
+
+
+
         Route::group(array('prefix' => 'kesekretariatan'), function () {
 
             Route::group(array('prefix' => 'upload-dokumen'), function () {

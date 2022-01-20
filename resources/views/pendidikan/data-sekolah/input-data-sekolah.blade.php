@@ -1,3 +1,4 @@
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -64,6 +65,8 @@
                                 <input type="text" class="form-control" name="nomor_sk_pendirian_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_sk_pendirian_sekolah}}">
                             </div>
                         </div>
+
+
                         <h2 class="card-inside-title">
                             Tanggal SK Pendirian Sekolah
                         </h2>
@@ -112,6 +115,8 @@
                                 <input type="text" class="form-control" name="nomor_sk_izin_operasional" aria-required="true" aria-invalid="true" value="{{$sekolah->nomor_sk_izin_operasional}}">
                             </div>
                         </div>
+
+
                         <h2 class="card-inside-title">
                             Tanggal SK Izin Operasional
                         </h2>
@@ -169,6 +174,10 @@
                                 <input type="text" class="form-control" name="npwp_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->npwp_sekolah}}">
                             </div>
                         </div>
+
+
+
+                        
                         <div class="demo-color-box bg-success">
                                 ALAMAT SEKOLAH
                         </div>
@@ -331,6 +340,31 @@
                                 <input type="text" class="form-control" name="website_sekolah" aria-required="true" aria-invalid="true" value="{{$sekolah->website_sekolah}}">
                             </div>
                         </div>
+                        <div class="demo-color-box bg-success">
+                               FILE SEKOLAH
+                        </div>
+                        
+                        <table class="table table-bordered" id="dynamicAddRemove">  
+                            <tr>
+                                <th>Nama File</th>
+                                <th>Link Gdrive</th>
+                                <th>Action</th>
+                            </tr>
+                            @foreach ($file_sekolah as $file)
+                                <tr>  
+                                    <td>{{$file->nama_file}}</td>
+                                    <td><a href="{{$file->link_gdrive}}" target="_blank">Link Gdrive</a></td>
+                                    <td><button type="button" class="btn btn-danger delete-file" onclick="destroyFileSekolah('{{$file->id_file_sekolah}}')">Remove</button></td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                            <td><input type="text" name="fileSekolah[0][nama_file]" placeholder="Nama File" class="form-control" required /></td>  
+                            <td><input type="text" name="fileSekolah[0][link_gdrive]" placeholder="Link Google Drive" class="form-control" required /></td> 
+                            <input type="hidden" name="fileSekolah[0][id_sekolah]" value="{{ $sekolah->id_sekolah }}" />
+                            <td><button type="button" name="add" id="add-btn" class="btn btn-success">Add More</button></td>  
+                            </tr> 
+                        </table> 
+
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
@@ -344,6 +378,25 @@
 </div>
 @include('scriptjs')
 <script>
+let i = 0;
+ 
+$("#add-btn").click(function () {
+    ++i;
+
+    $("#dynamicAddRemove").append(
+        '<tr><td><input type="text" name="fileSekolah[' +
+            i +
+            '][nama_file]" placeholder="Nama File" class="form-control" required /></td><td><input type="text" name="fileSekolah[' +
+            i +
+            '][link_gdrive]" placeholder="Link File" class="form-control" required /> </td>  <input type="hidden" name="fileSekolah[' +
+            i +
+            '][id_sekolah]" value="{{ $sekolah->id_sekolah }}" /><td> <button type="button" class="btn btn-danger remove-tr">Remove</button></td></tr>'
+    );
+});
+$(document).on("click", ".remove-tr", function () {
+    $(this).parents("tr").remove();
+});
+
     $(function(){
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY',
@@ -362,13 +415,41 @@
             document.getElementById("nm_yayasan_sekolah").style.display = "none";
         }
     }
+    function destroyFileSekolah(id) {
+        swal(
+            { title: "Are you sure?", showCancelButton: true },
+            function (isConfirm) {
+                if (isConfirm) {
+                    const token = $("meta[name='csrf-token']").attr("content");
+                    $('.delete-file').attr("disabled", true);
+                    //swall
+                    $.ajax({
+                        url: `pendidikan/data-sekolah/action-input-file-sekolah/delete/${id}`,
+                        type: "post",
 
-    $(document).ready(function() {
-        $('select').select();
-    });
+                        data: {
+                            _token: token,
+                        },
+
+                        success: function () {
+                            swal({
+                                title: "Delete Success",
+                                text: "data berhasil dihapus",
+                                icon: "success",
+                            });
+                            loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/');
+                        },
+                    });
+                }
+                return;
+            }
+        );
+    }
+$(document).ready(function () {
+    $("select").select();
+});
 
     var modul_url       = 'data-sekolah';
-
     $('#alamat_provinsi').on('change', function(e){
     console.log(e);
     var alamat_provinsi = e.target.value;

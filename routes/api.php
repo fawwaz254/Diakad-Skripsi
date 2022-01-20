@@ -51,14 +51,13 @@ use App\Models\Sekolah;
 //         sleep(1);
 //     }
 // });
-
 Route::post('v1/signin', 'Apiv1Controller@actionSignIn');
 
-Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v2'), function () {
+Route::group(array('middleware' => ['auth.mobile'], 'prefix' => 'v2'), function () {
     Route::post('get-tagihan/by', 'Api\v2\KeuanganController@getTagihanBy');
 });
 
-Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function () {
+Route::group(array('middleware' => ['auth.mobile'], 'prefix' => 'v1'), function () {
     Route::group(array('prefix' => 'token'), function () {
         Route::post('save', 'Apiv1Controller@actionSaveToken');
     });
@@ -80,7 +79,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
 
         Route::post('kelas-uts/get', 'Apiv1Controller@actionGetKelasUTS');
         Route::post('kelas-uas/get', 'Apiv1Controller@actionGetKelasUAS');
-        
+
         Route::group(array('prefix' => 'presensi-kbm'), function () {
             Route::post('get', 'Apiv1Controller@actionGetPresensiKBM');
             Route::post('submit', 'Apiv1Controller@actionAbsensiKBMSiswa');
@@ -95,7 +94,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('get', 'Apiv1Controller@actionGetPresensiUjian');
             Route::post('submit', 'Apiv1Controller@actionAbsensiUjianSiswa');
         });
-        
+
         Route::post('semester/get', 'Apiv1Controller@actionGetSemester');
         Route::post('jadwal/get', 'Apiv1Controller@actionGetJadwal');
 
@@ -106,7 +105,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
         Route::group(array('prefix' => 'komplain-sarpras'), function () {
             Route::post('ruangan/detail', 'Apiv1Controller@actionGetKomplainRuangan');
             Route::post('buku-alat/detail', 'Apiv1Controller@actionGetKomplainBukuAlat');
-            
+
             Route::post('{mode}/submit', 'Apiv1Controller@actionKomplainSarpras');
         });
 
@@ -130,7 +129,6 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
             Route::post('view/{id}', 'Apiv1Controller@viewDetailFormKesehatan');
             Route::post('view-siswa/{id}', 'Apiv1Controller@viewDetailRekapKesehatan');
             Route::post('kelas-all/get', 'Apiv1Controller@actionGetKelasAll');
-
         });
 
         Route::group(array('prefix' => 'monitoring-kelas-kosong'), function () {
@@ -148,11 +146,11 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
         Route::group(array('prefix' => 'absensi-harian'), function () {
             Route::post('kelas/get', 'Apiv1Controller@actionGetAbsensiHarianKelas');
             Route::post('siswa/get', 'Apiv1Controller@actionGetAbsensiHarianSiswa');
-            
+
             Route::post('{mode}/submit', 'Apiv1Controller@actionGetAbsensiHarianSave');
         });
     });
-    
+
     Route::group(array('prefix' => 'tendik'), function () {
         Route::group(array('prefix' => 'data-pribadi'), function () {
             Route::post('get', 'Apiv1Controller@geteditprofile');
@@ -184,7 +182,7 @@ Route::group(array('middleware'=> ['auth.mobile'], 'prefix' => 'v1'), function (
         Route::group(array('prefix' => 'absensi-harian'), function () {
             Route::post('kelas/get', 'Apiv1Controller@actionGetAbsensiHarianKelas');
             Route::post('siswa/get', 'Apiv1Controller@actionGetAbsensiHarianSiswa');
-            
+
             Route::post('{mode}/submit', 'Apiv1Controller@actionGetAbsensiHarianSave');
         });
     });

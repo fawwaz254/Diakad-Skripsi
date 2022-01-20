@@ -166,6 +166,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('ujian-uas-reguler-online/datatablesMapel/{online}', 'Akademik\Ujian\UjianUASController@datatablesDaftarMataPelajaran');
             Route::get('ujian-uas-reguler-online/datatablesSiswa/{id}', 'Akademik\Ujian\UjianUASController@datatablesDaftarSiswa');
             Route::get('ujian-uas-reguler-online/add/{id}', 'Akademik\Ujian\UjianUASController@addUjianUas');
+            // ini yg salah
             Route::get('ujian-uas-reguler-online/addUjian/{online}/{id_kelas_mp}', 'Akademik\Ujian\UjianUASController@addDataUjianUas');
             Route::get('ujian-uas-reguler-online/edit/{id_ujian_mp}', 'Akademik\Ujian\UjianUASController@editDataUjianUas');
             Route::get('ujian-uas-reguler-online/assign/{id}', 'Akademik\Ujian\UjianUASController@assignUjianUas');

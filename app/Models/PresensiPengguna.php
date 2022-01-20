@@ -22,4 +22,9 @@ class PresensiPengguna extends Model
 
     protected $guarded = [];
 
+
+
+
+
+
 }
