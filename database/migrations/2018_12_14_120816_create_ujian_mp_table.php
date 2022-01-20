@@ -3,7 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateUjianMpTable extends Migration {
+class CreateUjianMpTable extends Migration
+{
 
 	/**
 	 * Run the migrations.
@@ -12,8 +13,7 @@ class CreateUjianMpTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('ujian_mp', function(Blueprint $table)
-		{
+		Schema::create('ujian_mp', function (Blueprint $table) {
 			$table->engine = 'InnoDB';
 			$table->string('id_ujian_mp', 40)->primary();
 			$table->string('id_kegiatan', 40)->comment('FK: kegiatan.id_kegiatan');
@@ -42,5 +42,4 @@ class CreateUjianMpTable extends Migration {
 	{
 		Schema::drop('ujian_mp');
 	}
-
 }

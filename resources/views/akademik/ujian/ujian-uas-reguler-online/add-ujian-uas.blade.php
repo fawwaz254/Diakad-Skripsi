@@ -19,7 +19,7 @@
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <input type="text" class="form-control" name="nm_kegiatan" required=""  readonly aria-required="true"
-                                        aria-invalid="true" value="{{$kegiatan->nm_kegiatan}}">
+                                    aria-invalid="true" value="{{$kegiatan->nm_kegiatan}}">
                                     <input type="hidden" class="form-control" name="id_kegiatan" required=""  readonly aria-required="true" aria-invalid="true" value="{{$kegiatan->id_kegiatan}}">
                                     <input type="hidden" class="form-control" name="is_online" required=""  readonly aria-required="true" aria-invalid="true" value="{{$online}}">
                                 </div>
