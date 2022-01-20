@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\FileSekolah;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -16,10 +17,10 @@ class Sekolah extends Model
 
     protected $primaryKey = 'id_sekolah';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'nm_sekolah',
         'prefix',
@@ -66,7 +67,13 @@ class Sekolah extends Model
 
     protected $guarded = [];
 
-    public function kota(){
+    public function kota()
+    {
         return $this->belongsTo(Kota::class, 'alamat_kota', 'id_kota');
+    }
+
+    public function fileSekolah()
+    {
+        return $this->hasMany(FileSekolah::class, 'id_sekolah');
     }
 }

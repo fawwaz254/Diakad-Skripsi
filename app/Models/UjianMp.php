@@ -16,10 +16,10 @@ class UjianMp extends Model
 
     protected $primaryKey = 'id_ujian_mp';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_kegiatan',
         'id_kelas_mp',
@@ -40,8 +40,4 @@ class UjianMp extends Model
     {
         return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
     }
-
-
-
-
 }
