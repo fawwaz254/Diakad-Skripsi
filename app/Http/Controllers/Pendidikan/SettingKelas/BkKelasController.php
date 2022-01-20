@@ -166,23 +166,32 @@ class BkKelasController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add') {
+               
+                
 
                 $kelas = Kelas::find($input->id_kelas);
                 $semester = Semester::find($input->id_semester);
                 $pengguna = Pengguna::find($input->id_pengguna);
 
-                // cek apabila ada record kelas dan semester yg sama
+              //  cek apabila ada record kelas dan semester yg sama
                 $bkKelas = BkKelas::join('semester', 'semester.id_semester', '=', 'bk_kelas.id_semester')
+                               
                                 ->where('bk_kelas.id_kelas', '=', $input->id_kelas)
                                 ->where('bk_kelas.id_semester', '=', $input->id_semester)
                                 ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                                 ->first();
+                $BkKelas = BkKelas::where('id_pengguna', '=', $input->id_pengguna)->first();
+                // $BkKelasSemester = BkKelas::find($input->id_semester);
+                // $BBKkelas = BKkelas::find($input->id_kelas);
 
-                if ($bkKelas) {
- 
+                if ($bkKelas && $BkKelas ) {
+                    // $data_guru = BkKelas::where('id_pengguna', '=', $input->id_pengguna)->first();
+                
+
+
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$bkKelas->pengguna->nm_pengguna
+                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$pengguna->nm_pengguna
                     ];
                  
                 
@@ -192,10 +201,11 @@ class BkKelasController extends BaseController
 
                     $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                    $bkKelas                       = new BkKelas;
+                    $bkKelas                       = new BkKelas();
                     $bkKelas->id_bk_kelas          = $id;
                     $bkKelas->id_kelas             = $input->id_kelas;
                     $bkKelas->id_semester          = $input->id_semester;
+                    
                     $bkKelas->id_pengguna          = $input->id_pengguna;
                     $bkKelas->is_aktif             = $input->is_aktif;
                     $bkKelas->created_by           = $input->auth_data->pengguna->id_pengguna;
