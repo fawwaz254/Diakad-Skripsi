@@ -180,18 +180,16 @@ class BkKelasController extends BaseController
                                 ->where('bk_kelas.id_semester', '=', $input->id_semester)
                                 ->where('semester.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                                 ->first();
-                $BkKelas = BkKelas::where('id_pengguna', '=', $input->id_pengguna)->first();
-                // $BkKelasSemester = BkKelas::find($input->id_semester);
-                // $BBKkelas = BKkelas::find($input->id_kelas);
+           
 
-                if ($bkKelas && $BkKelas ) {
-                    // $data_guru = BkKelas::where('id_pengguna', '=', $input->id_pengguna)->first();
+                if ($bkKelas) {
+                 
                 
 
 
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$pengguna->nm_pengguna
+                        'message' => 'Mohon maaf kelas '.$kelas->nm_kelas.' pada semester '.$semester->tahun_ajaran.' sudah memiliki bk kelas yaitu '.$bkKelas->pengguna->nm_pengguna
                     ];
                  
                 

@@ -146,17 +146,17 @@ class KelasController extends BaseController
                 })
                 //bk
                 ->addColumn('bk_kelas', function ($item) {
-                    if (empty($item->bk_kelas)) {
-                        $data = array(
-                            'bk_kelas' => 'ujicoba'
-                        );
+                    if (empty($item->nama_guru_bk)) {
                         // $data = array(
-                        //     'bk_kelas' => 0,
-                        //     'id' => $item->id_kelas
+                        //     'bk_kelas' => 'ujicoba'
                         // );
+                        $data = array(
+                            'bk_kelas' => 0,
+                            'id' => $item->id_kelas
+                        );
                     } else {
                         $data = array(
-                            'bk_kelas' => $item->bk_kelas
+                            'bk_kelas' => $item->nama_guru_bk
                         );
                     }
                       
