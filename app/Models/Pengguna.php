@@ -103,6 +103,11 @@ class Pengguna extends Authenticatable
         return $this->hasMany(PengisianKegiatanHarian::class, 'id_pengguna');
     }
 
+
+
+
+
+
     public function status_join_to_text()
     {
         switch ($this->status_join_table) {

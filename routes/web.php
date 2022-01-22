@@ -43,17 +43,17 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
-Route::get('guid', function(){
+Route::get('guid', function () {
     $now = Carbon::now(env('APP_TIMEZONE', ''));
     $prefix = Sekolah::first()->prefix;
 
-    if(!empty($_GET['c'])){
+    if (!empty($_GET['c'])) {
         $html = '';
-        for($i=0; $i<$_GET['c']; $i++){
-            $html .= $prefix.strtotime($now).uniqid().'<br>';
+        for ($i = 0; $i < $_GET['c']; $i++) {
+            $html .= $prefix . strtotime($now) . uniqid() . '<br>';
         }
-    }else{
-        $html = $prefix.strtotime($now).uniqid();
+    } else {
+        $html = $prefix . strtotime($now) . uniqid();
     }
     return $html;
 });
@@ -84,32 +84,32 @@ Route::get('report-pimpinan-print', 'ReportController@printAllDiakad');
 Route::group(array('prefix' => 'reporting-dashboard'), function () {
     Route::get('/', 'SignInController@indexReportingDashboard');
     Route::get('all-diakad/{id}', 'ReportController@checkProgress');
-    Route::get('akademik', function(){
+    Route::get('akademik', function () {
         return view('reporting-dashboard/akademik');
     });
-    Route::get('bk-kesiswaan', function(){
+    Route::get('bk-kesiswaan', function () {
         return view('reporting-dashboard/bk-kesiswaan');
     });
 
-    Route::get('keuangan', function(){
+    Route::get('keuangan', function () {
         return view('reporting-dashboard/keuangan');
     });
 
-    Route::get('sarpras', function(){
+    Route::get('sarpras', function () {
         return view('reporting-dashboard/sarpras');
     });
 
-    Route::get('sekretariat', function(){
+    Route::get('sekretariat', function () {
         return view('reporting-dashboard/sekretariat');
     });
 
-    Route::get('sumber-daya', function(){
+    Route::get('sumber-daya', function () {
         return view('reporting-dashboard/sumber-daya');
     });
 });
 
 
-Route::group(array('middleware'=> ['token_staff']), function () {
+Route::group(array('middleware' => ['token_staff']), function () {
     //
     Route::group(array('prefix' => '{global}'), function () {
         Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
