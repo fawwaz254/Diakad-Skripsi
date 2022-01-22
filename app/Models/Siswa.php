@@ -59,6 +59,11 @@ class Siswa extends Model
         return $this->hasMany(TagihanBiaya::class, 'id_siswa');
     }
 
+    public function tagihan_tertagih()
+    {
+        return $this->hasMany(TagihanBiaya::class, 'id_siswa')->where('is_tagih',1);
+    }
+
     public function wali_murid()
     {
         return $this->belongsTo(WaliMurid::class, 'id_wali_murid');
