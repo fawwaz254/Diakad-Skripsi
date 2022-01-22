@@ -29,13 +29,14 @@
                                 Kelas
                             </h2>
                             <select class="form-control show-tick" onchange="change_jenis_tagihan()" id="kelas" name="kelas">
-                            <option value="">Semua kelas</option>
+                            <option value="">Pilih kelas</option>
                             @foreach($data_kelas as $data)
                             <option value="{{$data->id_kelas}}">
                                 {{$data->nm_kelas}}
                             </option>
                             @endforeach
                             </select>
+                            <small style="color: red;">Wajib pilih kelas Terlebih Dahulu</small>
                         </div>
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">

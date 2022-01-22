@@ -74,31 +74,28 @@ class TagihanSiswaController extends BaseController
 
         $list_data = array();
         
-        if (!empty($id_semester_mulai) && !empty($id_semester_selesai)) {
-            $data_detail_biaya = DetailBiaya::with('bulan')->whereHas('biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
-                $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
-            })->get();
+        if (!empty($kelas) && !empty($id_semester_mulai) && !empty($id_semester_selesai)) {
+            $data_id_biaya_sekolah = BiayaSekolah::select('id_biaya_sekolah')->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai])->get()->pluck('id_biaya_sekolah');
 
-            if($jenis_tagihan){
-                if(!in_array("0",$jenis_tagihan)){
-                    $data_detail_biaya = $data_detail_biaya->whereIn('id_detail_biaya',$jenis_tagihan);
-                }
-            }
+            // $data_detail_biaya = DetailBiaya::with('bulan')->whereHas('biaya_sekolah', function($q) use ($id_semester_mulai, $id_semester_selesai){
+            //     $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
+            // })->get();
 
-            $list_data = Siswa::whereHas('tagihan_biaya',function($q) use ($data_detail_biaya){
-                    $q->where('is_tagih',1)
-                      ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
-            }) 
-                                ->with(['tagihan_biaya' => function($q) use ($data_detail_biaya){
-                                    $q->where('is_tagih', 1)
-                                        ->with('pembayaran')
-                                        ->whereIn('id_detail_biaya', $data_detail_biaya->pluck('id_detail_biaya'));
+            $list_data = Siswa::with(['tagihan_tertagih' => function($q) use ($data_id_biaya_sekolah, $jenis_tagihan){
+                                    $q->with('pembayaran')
+                                        ->whereHas('detail_biaya', function($query) use ($data_id_biaya_sekolah, $jenis_tagihan){
+                                            $query->whereIn('id_biaya_sekolah', $data_id_biaya_sekolah);
+
+                                            if($jenis_tagihan){
+                                                if(!in_array("0",$jenis_tagihan)){
+                                                    $query->whereIn('id_detail_biaya',$jenis_tagihan);
+                                                }
+                                            }
+                                        });
                                 },'pengguna','kelas','tagihan_biaya.potongan']);
 
             if(!empty($kelas)){
-                $list_data = $list_data->whereHas('kelas', function($q) use ($kelas){
-                    $q->where('id_kelas', $kelas);
-                });
+                $list_data = $list_data->where('id_kelas', $kelas);
             }
         }
 
@@ -112,11 +109,12 @@ class TagihanSiswaController extends BaseController
                     });
                     return 'Rp'.number_format($item->tagihan_biaya->sum('besar_biaya') - $sumPembayaran - $diskonTagihan);
                 })
-                ->addColumn('tagihan_bulan', function ($item) use ($data_detail_biaya,$tahun) {
+                ->addColumn('tagihan_bulan', function ($item) use ($tahun) {
                     $array_tagihan_bulan = array();
                     foreach($item->tagihan_biaya as $tagihan){
                             
-                        $x =   $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya);
+                        // $x =   $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya);
+                        $x =   $tagihan->detail_biaya;
 
                         $nominal = $x->besar_biaya - $tagihan->pembayaran->sum('besar_pembayaran') - ($tagihan->potongan->total_potongan ?? 0);
 
@@ -166,7 +164,8 @@ class TagihanSiswaController extends BaseController
             $q->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai]);
         })->get();
 
-        if($jenis_tagihan){
+
+        if($jenis_tagihan != '0' && $jenis_tagihan != 'null'){
             $data_detail_biaya = $data_detail_biaya->where('id_detail_biaya',$jenis_tagihan);
         }
 
@@ -186,6 +185,7 @@ class TagihanSiswaController extends BaseController
         });
 
         $all_data = $list_data->get();
+
         $all_data = $all_data->map(function($data) use ($data_detail_biaya,$tahun){
             $tagihan = [];
             
