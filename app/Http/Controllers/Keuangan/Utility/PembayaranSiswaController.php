@@ -48,7 +48,7 @@ class PembayaranSiswaController extends BaseController
 
         $list_semester = [$semester_aktif->id_semester,$semester_other];
 
-        $list_data = TagihanBiaya::select('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan'
+        $list_data = TagihanBiaya::select('biaya.nm_biaya','tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan'
         , DB::raw('SUM(pembayaran_biaya.besar_pembayaran) as total_pembayaran')
         )
             ->leftJoin('potongan_biaya','tagihan_biaya.id_potongan_biaya','potongan_biaya.id_potongan_biaya')
@@ -107,13 +107,36 @@ class PembayaranSiswaController extends BaseController
             ->groupBy('tagihan_biaya.id_tagihan_biaya', 'detail_biaya.id_detail_biaya', 'biaya_sekolah.id_biaya_sekolah', 'biaya_sekolah.id_kelompok_biaya', 'biaya_sekolah.id_semester', 'kelompok_biaya.nm_kelompok_biaya', 'semester.tahun_ajaran', 'semester.nm_semester','semester.thn_akademik_semester', 'biaya.nm_biaya', 'detail_biaya.validasi_biaya', 'detail_biaya.id_jenis_detail_biaya', 'jenis_detail_biaya.nm_jenis_detail_biaya', 'detail_biaya.id_bulan', 'bulan.kode_bulan', 'bulan.nm_bulan', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.keterangan','potongan_biaya.total_potongan')
             ->get();
 
-            $list_data = $list_data
-            ->map(function($item){
-                $item->total_tagihan = $item->besar_biaya - ($item->total_pembayaran ?? 0) - ($item->total_potongan ?? 0);
-                return $item->total_tagihan;
-            });
+            $total_tagihan = 0;
+            $list_tagihan_spp = [];
+            $list_tagihan_non_spp = [];
 
-            return $list_data->sum();
+            foreach($list_data as $item){
+
+                if($mode == 'spp'){
+                    if($item->id_bulan<=6){
+                        $tahun = $item->thn_akademik_semester+1;
+                    }
+                    else{
+                        $tahun = $item->thn_akademik_semester;
+                    }
+                    $list_tagihan_spp[] = $item->nm_biaya.' ('.$item->nm_bulan.' '.$tahun.')';          
+                }
+
+                elseif($mode == 'non-spp'){
+                    $list_tagihan_non_spp[] = $item->nm_biaya.' '.$item->keterangan;
+                }
+
+                $total = $item->besar_biaya - ($item->total_pembayaran ?? 0) - ($item->total_potongan ?? 0);
+                $total_tagihan += $total;
+
+            } 
+
+            $callback['total_tagihan'] = $total_tagihan;
+            $callback['list_tagihan_spp'] = $list_tagihan_spp;
+            $callback['list_tagihan_non_spp'] = $list_tagihan_non_spp;
+
+            return $callback;
 
     }
 
@@ -165,10 +188,17 @@ class PembayaranSiswaController extends BaseController
 
             $tagihan_belum_terbayar_spp = null;
             $tagihan_belum_terbayar_non_spp = null;
+            $list_tagihan_spp = null;
+            $list_tagihan_non_spp = null;
 
             if($nama_sekolah == 'SMP Muhammadiyah 6 Krian'){
                 $tagihan_belum_terbayar_spp = $this->getTagihanBelumTerbayar($auth_data,$siswa->id_siswa,'spp');
                 $tagihan_belum_terbayar_non_spp = $this->getTagihanBelumTerbayar($auth_data,$siswa->id_siswa,'non-spp');
+                $list_tagihan_spp = $tagihan_belum_terbayar_spp['list_tagihan_spp'];
+                $list_tagihan_non_spp = $tagihan_belum_terbayar_non_spp['list_tagihan_non_spp'];
+                $tagihan_belum_terbayar_spp = $tagihan_belum_terbayar_spp['total_tagihan'];
+                $tagihan_belum_terbayar_non_spp = $tagihan_belum_terbayar_non_spp['total_tagihan'];
+
             }
 
             if($type == 'struk'){
@@ -182,7 +212,7 @@ class PembayaranSiswaController extends BaseController
 
             else {
 
-                return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa','tagihan_belum_terbayar_spp','tagihan_belum_terbayar_non_spp','nama_sekolah'));
+                return view('keuangan/utility/pembayaran-siswa/print-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'tgl_pembayaran', 'data_pembayaran_siswa','tagihan_belum_terbayar_spp','tagihan_belum_terbayar_non_spp','nama_sekolah','list_tagihan_spp','list_tagihan_non_spp'));
 
             }
 
