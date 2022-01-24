@@ -60,10 +60,14 @@ class PembayaranSiswaController extends BaseController
                         $join->where('id_bulan','<=',Carbon::now()->format('m'));
                     }
                     else{
-                        $join->where('id_bulan','<=',Carbon::now()->format('m'))
-                             ->OrWhereIn('id_bulan',[7,8,9,10,11,12]);
+                        $join->where(function($q){
+                            $q->where('id_bulan','<=',Carbon::now()->format('m'))
+                              ->OrWhereIn('id_bulan',[7,8,9,10,11,12]);
+                        });
                     }
+
                 }
+        
                 elseif($mode=='non-spp'){
                     $join->whereNull('id_bulan');
                 }
