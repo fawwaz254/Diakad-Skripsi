@@ -1,12 +1,12 @@
 <?php
 // ROLE ALUMNI
-Route::group(array('middleware'=> ['token_staff']), function() {
-    Route::group(array('prefix' => 'administrator'), function() {
-        Route::get('welcome', 'Administrator\WelcomeController@indexWelcome');
+Route::group(array('middleware' => ['token_staff']), function () {
+	Route::group(array('prefix' => 'administrator'), function () {
+		Route::get('welcome', 'Administrator\WelcomeController@indexWelcome');
 
-        /** ==== MODUL PENGELOLAAN AKUN ==== **/
+		/** ==== MODUL PENGELOLAAN AKUN ==== **/
 		// url: /administrator/pengelolaan-akun
-		Route::group(array('prefix' => 'pengelolaan-akun'), function() {
+		Route::group(array('prefix' => 'pengelolaan-akun'), function () {
 
 			// MENU Pencarian
 			// url: /administrator/pengelolaan-akun/pencarian
@@ -21,7 +21,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('action-pencarian/{mode}/{id}', 'Administrator\PengelolaanAkun\PencarianController@actionPencarian');
 
 			Route::post('reset-some-password', 'Administrator\PengelolaanAkun\PencarianController@resetPasswordCollection');
-			
+
 			// MENU Tenaga Pendidik
 			// url: /administrator/pengelolaan-akun/tendik
 			Route::get('tendik', 'Administrator\PengelolaanAkun\TendikController@viewTendik');
@@ -42,23 +42,49 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('post-view-siswa', 'Administrator\PengelolaanAkun\SiswaController@actionViewSiswa');
 			Route::get('siswa/view-detail/{id_kelas}', 'Administrator\PengelolaanAkun\SiswaController@viewDetailSiswa');
 			Route::get('siswa/datatables/{id_kelas}', 'Administrator\PengelolaanAkun\SiswaController@datatablesSiswa');
-
-
 		});
-
 
 		/** ==== MODUL MANAJEMEN MENU ==== **/
 		// url: /administrator/manajemen-menu
-		Route::group(array('prefix' => 'manajemen-menu'), function() {
+		Route::group(array('prefix' => 'manajemen-menu'), function () {
 			// MENU Setting Dashboard
 			// url: /administrator/manajemen-menu/setting-dashboard
 			Route::get('setting-dashboard', 'Administrator\ManajemenMenu\SettingDashboardController@viewSettingDashboard');
-			Route::post('post-view-setting-dashboard', 'Administrator\ManajemenMenu\SettingDashboardController@actionViewSettingDashboard');	
+			Route::post('post-view-setting-dashboard', 'Administrator\ManajemenMenu\SettingDashboardController@actionViewSettingDashboard');
 			Route::get('setting-dashboard/view-detail/{id_role}', 'Administrator\ManajemenMenu\SettingDashboardController@viewDetailSettingDashboard');
 			Route::post('setting-dashboard', 'Administrator\ManajemenMenu\SettingDashboardController@actionSettingDashboard');
-
 		});
 
 
-    });
+		/** ==== MODUL MANAJEMEN FILE ==== **/
+		// url: /administrator/manajemen-file
+		Route::group(array('prefix' => 'manajemen-file'), function () {
+			// MENU Setting Dashboard
+			// url: /administrator/manajemen-menu/setting-dashboard
+			Route::group(array('prefix' => 'data-kategori'), function () {
+				Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+				Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+			});
+
+			Route::group(array('prefix' => 'data-sub-kategori'), function () {
+				Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+				Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+				Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+				Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+				//action input sub data kategori
+				Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+			});
+
+			Route::group(array('prefix' => 'data-file'), function () {
+
+				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+				Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+				Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+			});
+		});
+	});
 });

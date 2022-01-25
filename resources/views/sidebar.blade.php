@@ -4,11 +4,19 @@
     $route_menu = Request::segment(3);
 
     $path = Request::fullUrl();
+    $role_pengguna=auth_data()->pengguna->role_pengguna;
+    $curr_id_role=[];
+    foreach ($role_pengguna as $key =>$value) {
+        $curr_id_role[$key]['id_role']=$role_pengguna[$key]['id_role'];
+    }
+    $category_file_role=category_file_role($curr_id_role);
+    var_dump($curr_id_role);
 @endphp
 
 <section>
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
+        {{count($category_file_role) ? "shared" : "not shared"}}
         <!-- User Info -->
         <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{auth_data()->sekolah_data->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
@@ -47,6 +55,30 @@
                         <span>Home</span>
                     </a>
                 </li>
+                    @if (count($category_file_role))
+                        <li id="modul-item-manajemen-file" class="modul-item" >
+                            <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                                <span>Manajemen File</span>
+                            </a>
+                            <ul class="ml-menu">
+                                <li class="menu-item" id="menu-item-data-kategori">
+                                    <a href="{{url(Request::segment(1).'#manajemen-file/data-kategori')}}" class="target-link waves-effect waves-block">
+                                       Data Kategori 
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="menu-item-data-sub-kategori">
+                                    <a href="{{url(Request::segment(1).'#manajemen-file/data-sub-kategori')}}" class="target-link waves-effect waves-block">
+                                    Data Sub Kategori 
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="menu-item-data-sub-kategori">
+                                    <a href="{{url(Request::segment(1).'#manajemen-file/data-file')}}" class="target-link waves-effect waves-block">
+                                        Data File
+                                    </a> 
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
                 @foreach(get_moduls() as $modul)
                 <li id="modul-item-{{$modul->route}}" class="modul-item">
                     @if(!empty($modul->page))
