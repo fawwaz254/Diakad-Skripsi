@@ -43,14 +43,10 @@ class SubDataKategoriController extends BaseController
     {
         #code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data->pengguna->role_pengguna;
-        $curr_id_role = [];
-        foreach ($auth_data as $key => $value) {
-            $curr_id_role[$key]['id_role'] = $auth_data[$key]['id_role'];
-        }
-        $category_file = categoryfilerole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
-            ->wherein('category_file_role.id_role', $curr_id_role)
-            ->select('category_file.*')->distinct()->get();
+        $auth_data = $input->auth_data->role_aktif->id_role;
+        $category_file = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
+            ->where('category_file_role.id_role', $auth_data)
+            ->select('category_file.*')->get();
 
         return view('manajemen-file/data-sub-kategori/add-data-sub-kategori', compact('auth_data', 'category_file'));
     }
@@ -60,16 +56,11 @@ class SubDataKategoriController extends BaseController
     {
         # code...
         $input = (object) $request->input();
+        $auth_data = $input->auth_data->role_aktif->id_role;
         $sub_data_kategori = SubCategoryFile::find($id);
-        $auth_data = $input->auth_data->pengguna->role_pengguna;
-        $curr_id_role = [];
-        foreach ($auth_data as $key => $value) {
-            $curr_id_role[$key]['id_role'] = $auth_data[$key]['id_role'];
-        }
         $data_kategori = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
-            ->whereIn('category_file_role.id_role', $curr_id_role)
-            ->select('category_file.*')->distinct()->get();
-
+            ->where('category_file_role.id_role', $auth_data)
+            ->select('category_file.*')->get();
         return view('manajemen-file/data-sub-kategori/edit-data-sub-kategori', compact('auth_data', 'data_kategori', 'sub_data_kategori'));
     }
 

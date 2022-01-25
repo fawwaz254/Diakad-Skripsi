@@ -21,14 +21,10 @@ class DataFileController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data->pengguna->role_pengguna;
-        $curr_id_role = [];
-        foreach ($auth_data as $key => $value) {
-            $curr_id_role[$key]['id_role'] = $auth_data[$key]['id_role'];
-        }
+        $auth_data = $input->auth_data->role_aktif->id_role;
         $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
-            ->whereIn('category_file_role.id_role', $curr_id_role)
-            ->select('category_file.*')->distinct()->get();
+            ->where('category_file_role.id_role', $auth_data)
+            ->select('category_file.*')->get();
         return view('manajemen-file/data-file/view-data-file', compact('auth_data', 'category'));
     }
 
@@ -60,14 +56,10 @@ class DataFileController extends BaseController
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data->pengguna->role_pengguna;
-        $curr_id_role = [];
-        foreach ($auth_data as $key => $value) {
-            $curr_id_role[$key]['id_role'] = $auth_data[$key]['id_role'];
-        }
+        $auth_data = $input->auth_data->role_aktif->id_role;
         $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
-            ->whereIn('category_file_role.id_role', $curr_id_role)
-            ->select('category_file.*')->distinct()->get();
+            ->where('category_file_role.id_role', $auth_data)
+            ->select('category_file.*')->get();
         $sub_category = SubCategoryFile::all();
 
         return view('manajemen-file/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));

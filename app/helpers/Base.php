@@ -44,12 +44,12 @@ if (!function_exists('get_moduls')) {
 
 if (!function_exists('category_file_role')) {
     /**
-     * get category file based on id role 
+     * get category file based on active id role 
      * @return array
      */
     function category_file_role($id_role)
     {
-        return CategoryFileRole::whereIn('id_role', $id_role)->get();
+        return CategoryFileRole::where('id_role', $id_role)->get();
     }
 }
 

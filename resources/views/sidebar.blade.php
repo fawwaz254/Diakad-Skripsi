@@ -4,13 +4,8 @@
     $route_menu = Request::segment(3);
 
     $path = Request::fullUrl();
-    $role_pengguna=auth_data()->pengguna->role_pengguna;
-    $curr_id_role=[];
-    foreach ($role_pengguna as $key =>$value) {
-        $curr_id_role[$key]['id_role']=$role_pengguna[$key]['id_role'];
-    }
-    $category_file_role=category_file_role($curr_id_role);
-    var_dump($curr_id_role);
+    $role_aktif=auth_data()->role_aktif->id_role;
+    $category_file_role=category_file_role($role_aktif);
 @endphp
 
 <section>
@@ -55,7 +50,7 @@
                         <span>Home</span>
                     </a>
                 </li>
-                    @if (count($category_file_role))
+                    @if (count($category_file_role) && $role_aktif !== 14)
                         <li id="modul-item-manajemen-file" class="modul-item" >
                             <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                                 <span>Manajemen File</span>
