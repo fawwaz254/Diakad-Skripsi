@@ -134,8 +134,22 @@
         </table>
 
         @if($nama_sekolah == 'SMP Muhammadiyah 6 Krian')
-        <p>Total Tagihan SPP yang Belum Terbayar : {{"Rp ".number_format($tagihan_belum_terbayar_spp)}}<br>
-        Total Tagihan Lain - lain yang Belum Terbayar :  {{"Rp ".number_format($tagihan_belum_terbayar_non_spp)}}</p>
+        <p>Total Tagihan SPP yang Belum Terbayar Periode {{$semester_aktif->tahun_ajaran}} : {{"Rp ".number_format($tagihan_belum_terbayar_spp)}}</p>
+        @if(count($list_tagihan_spp)>0)
+        <ul>
+        @foreach($list_tagihan_spp as $r)
+        <li>{{$r}}</li>
+        @endforeach
+        </ul>
+        @endif
+        <p>Total Tagihan Lain - lain yang Belum Terbayar Periode {{$semester_aktif->tahun_ajaran}} :  {{"Rp ".number_format($tagihan_belum_terbayar_non_spp)}}</p>
+        @if(count($list_tagihan_non_spp)>0)
+        <ul>
+        @foreach($list_tagihan_non_spp as $r)
+        <li>{{$r}}</li>
+        @endforeach
+        </ul>
+        @endif
         @endif
         
         <div class="ttd avoid-page-break">
