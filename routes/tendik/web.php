@@ -1,13 +1,45 @@
 <?php
 // ROLE TENAGA PENDIDIK
-Route::group(array('middleware'=> ['token_staff']), function () {
+Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'tendik'), function () {
         Route::get('welcome', 'Tendik\WelcomeController@indexWelcome');
+
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /tendik/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
 
         /** ==== MODUL BIODATA ==== **/
         Route::group(array('prefix' => 'biodata'), function () {
             Route::get('data-pribadi', 'Tendik\Biodata\DataPribadiController@viewDataPribadi');
-             Route::post('action-input-tendik/{mode}/{id}', 'Tendik\Biodata\DataPribadiController@actionInputTendik');
+            Route::post('action-input-tendik/{mode}/{id}', 'Tendik\Biodata\DataPribadiController@actionInputTendik');
         });
 
 
@@ -27,7 +59,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
             Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
             Route::get('absensi-harian-siswa/detail/{id_semester}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewDetailAbsensiHarianSiswa');
-            
+
             Route::post('absensi-harian-siswa/datatables/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesAbsensiHarianSiswa');
             Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesKelasAbsensiHariSiswa');
             Route::post('absensi-harian-siswa/action/{mode}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
@@ -48,12 +80,12 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
             Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-            
+
             Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
-            
-                
+
+
             Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
 
@@ -68,19 +100,19 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
-        
+
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
                 Route::get('detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-                
+
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
         });
 
-        Route::group(['prefix' => 'laporan'], function(){
+        Route::group(['prefix' => 'laporan'], function () {
 
             Route::group(array('prefix' => 'kerja-harian'), function () {
                 Route::get('/', 'Guru\Laporan\KerjaHarianController@viewKerjaHarian');
@@ -89,21 +121,17 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
             });
-
         });
 
-//penambahan absensi
-Route::group(['prefix' => 'absensi'], function(){
+        //penambahan absensi
+        Route::group(['prefix' => 'absensi'], function () {
 
-    Route::group(array('prefix' => 'histori-absensi'), function () {
-        
-        Route::get('/', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-        Route::get('/{start_date}/{end_date}', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-     
+            Route::group(array('prefix' => 'histori-absensi'), function () {
 
-    });
-
-});
+                Route::get('/', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+                Route::get('/{start_date}/{end_date}', 'Guru\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+            });
+        });
 
 
 
@@ -120,10 +148,10 @@ Route::group(['prefix' => 'absensi'], function(){
 
             // ajax sub kategori
             Route::post('sub-kategori', 'Guru\Kesekretariatan\DokumenController@ajaxGetSubkategori');
-        
+
             Route::group(array('prefix' => 'dokumen'), function () {
                 Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
-                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');              
+                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
                 Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
             });
         });

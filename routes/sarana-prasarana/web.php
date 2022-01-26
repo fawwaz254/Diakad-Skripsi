@@ -1,11 +1,43 @@
 <?php
 // ROLE SARANA PRASARANA
-Route::group(array('middleware'=> ['token_staff']), function() {
-    Route::group(array('prefix' => 'sarana-prasarana'), function() {
+Route::group(array('middleware' => ['token_staff']), function () {
+    Route::group(array('prefix' => 'sarana-prasarana'), function () {
         Route::get('welcome', 'SaranaPrasarana\WelcomeController@indexWelcome');
 
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /sarana-prasana/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
+
         /** ==== MODUL DATA SARPRAS GEDUNG ==== **/
-        Route::group(array('prefix' => 'data-sarpras-gedung'), function() {
+        Route::group(array('prefix' => 'data-sarpras-gedung'), function () {
             // MENU Data Jenis Gedung
             Route::get('jenis-gedung', 'SaranaPrasarana\DataSarprasGedung\JenisGedungController@viewJenisGedung');
             Route::get('jenis-gedung/datatables', 'SaranaPrasarana\DataSarprasGedung\JenisGedungController@datatablesJenisGedung');
@@ -13,7 +45,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('jenis-gedung/edit/{id}', 'SaranaPrasarana\DataSarprasGedung\JenisGedungController@editJenisGedung');
 
             Route::post('action-jenis-gedung/{mode}/{id}', 'SaranaPrasarana\DataSarprasGedung\JenisGedungController@actionJenisGedung');
-            
+
             // MENU Data Gedung
             Route::get('gedung', 'SaranaPrasarana\DataSarprasGedung\GedungController@viewGedung');
             Route::get('gedung/datatables', 'SaranaPrasarana\DataSarprasGedung\GedungController@datatablesGedung');
@@ -22,9 +54,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-gedung/{mode}/{id}', 'SaranaPrasarana\DataSarprasGedung\GedungController@actionGedung');
         });
-        
+
         /** ==== MODUL DATA SARPRAS RUANGAN ==== **/
-        Route::group(array('prefix' => 'data-sarpras-ruangan'), function() {
+        Route::group(array('prefix' => 'data-sarpras-ruangan'), function () {
 
             // MENU Data Pemilik Sarpras
             Route::get('pemilik-sarpras', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@viewPemilikSarpras');
@@ -33,7 +65,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('pemilik-sarpras/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@editPemilikSarpras');
             Route::get('pemilik-sarpras/import-excel', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@importExcel');
             Route::post('pemilik-sarpras/import-excel', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@importExcelAction');
-            
+
             Route::post('action-pemilik-sarpras/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\PemilikSarprasController@actionPemilikSarpras');
 
             // MENU Data Jenis Ruangan
@@ -63,7 +95,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('kondisi-ruangan/edit/{id}', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@editKondisiRuangan');
             Route::get('kondisi-ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@importExcel');
             Route::post('kondisi-ruangan/import-excel', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@importExcelAction');
-            
+
             Route::post('action-kondisi-ruangan/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\KondisiRuanganController@actionKondisiRuangan');
 
             // MENU Data Inventaris
@@ -78,13 +110,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
-        
+
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
                 Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-                
+
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
@@ -92,7 +124,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
         /** ==== MODUL DATA SARPRAS BUKU ALAT ==== **/
-        Route::group(array('prefix' => 'data-sarpras-buku-alat'), function() {
+        Route::group(array('prefix' => 'data-sarpras-buku-alat'), function () {
             // MENU Data Jenis Buku/Alat
             Route::get('jenis-buku-alat', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@viewJenisBukuAlat');
             Route::get('jenis-buku-alat/datatables', 'SaranaPrasarana\DataSarprasBukuAlat\JenisBukuAlatController@datatablesJenisBukuAlat');
@@ -112,11 +144,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::post('buku-alat/import-excel', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@importExcelAction');
 
             Route::post('action-buku-alat/{mode}/{id}', 'SaranaPrasarana\DataSarprasBukuAlat\BukuAlatController@actionBukuAlat');
-
         });
 
         /** ==== MODUL DATA SARPRAS BUKU ALAT ==== **/
-        Route::group(array('prefix' => 'komplain-sarpras'), function() {
+        Route::group(array('prefix' => 'komplain-sarpras'), function () {
 
             // MENU Tanggapi Komplain
             // url: /sarana-prasarana/komplain-sarpras/tanggapi-komplain
@@ -126,11 +157,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('tanggapi-komplain/edit/{id}', 'SaranaPrasarana\KomplainSarpras\TanggapiKomplainController@editTanggapiKomplain');
 
             Route::post('action-tanggapi-komplain/{mode}/{id}', 'SaranaPrasarana\KomplainSarpras\TanggapiKomplainController@actionTanggapiKomplain');
-
-        });   
+        });
 
         /** ==== MODUL PERAWATAN SARPRAS ==== **/
-        Route::group(array('prefix' => 'perawatan-sarpras'), function() {  
+        Route::group(array('prefix' => 'perawatan-sarpras'), function () {
             // MENU Input Perawatan Rutin
             // url: /sarana-prasarana/perawatan-sarpras/input-perawatan-rutin
             Route::get('input-perawatan-rutin', 'SaranaPrasarana\PerawatanSarpras\InputPerawatanRutinController@viewInputPerawatanRutin');
@@ -162,8 +192,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
             Route::post('action-apv-pengadaan/{mode}/{id}/{id_unit_kerja}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@actionApvPengadaan');
             Route::post('action-pengadaan-sarpras/{mode}/{id}', 'SaranaPrasarana\PerawatanSarpras\PengadaanSarprasController@actionPengadaanSarpras');
-
-        }); 
+        });
 
         Route::group(array('prefix' => 'laporan'), function () {
 
@@ -178,8 +207,6 @@ Route::group(array('middleware'=> ['token_staff']), function() {
                 Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
                 Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
             });
-
         });
-
     });
 });

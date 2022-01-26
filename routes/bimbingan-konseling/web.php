@@ -1,22 +1,54 @@
 <?php
 // ROLE BIMBINGAN KONSELING
-Route::group(array('middleware'=> ['token_staff']), function() {
-    Route::group(array('prefix' => 'bimbingan-konseling'), function() {
+Route::group(array('middleware' => ['token_staff']), function () {
+    Route::group(array('prefix' => 'bimbingan-konseling'), function () {
         Route::get('welcome', 'BK\WelcomeController@indexWelcome');
 
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /bimbingan-konseling/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
+
         /** ==== MODUL MONITORING KESEHATAN ==== **/
-        Route::group(array('prefix' => 'monitoring-kesehatan'), function() {
+        Route::group(array('prefix' => 'monitoring-kesehatan'), function () {
 
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
             Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
             Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-            
+
             Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
-            
-                
+
+
             Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
         });
@@ -26,17 +58,16 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::group(array('prefix' => 'tagihan-siswa'), function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\TagihanSiswaController@viewTagihanSiswa');
             });
-
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
-        
+
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
                 Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-                
+
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
@@ -47,7 +78,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
         Route::get('laporan-keuangan/tagihan-siswa/show-list-tagihan/{tahun}/{id_kelas}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@showListTagihan');
 
         /** ==== MODUL DATA PELANGGARAN ==== **/
-        Route::group(array('prefix' => 'data-pelanggaran'), function() {
+        Route::group(array('prefix' => 'data-pelanggaran'), function () {
             // MENU Kategori Pelanggaran
             // url: /bimbingan-konseling/data-pelanggaran/kategori-pelanggaran
             Route::get('kategori-pelanggaran', 'BK\DataPelanggaran\KategoriPelanggaranController@viewKategoriPelanggaran');
@@ -82,11 +113,10 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('jenis-tindakan/edit/{id}', 'BK\PenangananSiswa\JenisTindakanController@editJenisTindakan');
 
             Route::post('action-jenis-tindakan/{mode}/{id}', 'BK\PenangananSiswa\JenisTindakanController@actionJenisTindakan');
-
         });
 
         /** ==== MODUL PENANGANAN SISWA ==== **/
-        Route::group(array('prefix' => 'penanganan-siswa'), function() {
+        Route::group(array('prefix' => 'penanganan-siswa'), function () {
 
             // MENU Data Jurnal Tindakan
             Route::get('jurnal-tindakan', 'BK\PenangananSiswa\JurnalTindakanController@viewJurnalTindakan');
@@ -110,14 +140,12 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('tindakan-pelanggaran/edit/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@editTindakanPelanggaran');
 
             Route::post('action-tindakan-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@actionTindakanPelanggaran');
-            
+
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
-            
         });
-
     });
 });

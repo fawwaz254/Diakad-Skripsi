@@ -1,11 +1,43 @@
 <?php
 // ROLE SUMBER DAYA
-Route::group(array('middleware'=> ['token_staff']), function() {
-    Route::group(array('prefix' => 'sumber-daya'), function() {
+Route::group(array('middleware' => ['token_staff']), function () {
+    Route::group(array('prefix' => 'sumber-daya'), function () {
         Route::get('welcome', 'SumberDaya\WelcomeController@indexWelcome');
 
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /sumber-daya/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
+
         /** ==== MODUL DATA SUMBER DAYA ==== **/
-        Route::group(array('prefix' => 'data-sumber-daya'), function() {
+        Route::group(array('prefix' => 'data-sumber-daya'), function () {
             // MENU Data Unit Kerja
             Route::get('unit-kerja', 'SumberDaya\DataSumberDaya\UnitKerjaController@viewUnitKerja');
             Route::get('unit-kerja/datatables', 'SumberDaya\DataSumberDaya\UnitKerjaController@datatablesUnitKerja');
@@ -41,13 +73,13 @@ Route::group(array('middleware'=> ['token_staff']), function() {
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
-        
+
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
                 Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-                
+
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
@@ -55,7 +87,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 
 
         /** ==== MODUL DATA GURU ==== **/
-        Route::group(array('prefix' => 'guru'), function() {
+        Route::group(array('prefix' => 'guru'), function () {
             // MENU Input Guru Baru
             Route::get('input-guru', 'SumberDaya\Guru\InputGuruController@viewInputGuru');
             Route::get('input-guru/datatables', 'SumberDaya\Guru\InputGuruController@datatablesInputGuru');
@@ -83,7 +115,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
         });
 
         /** ==== MODUL DATA TENAGA PENDIDIK ==== **/
-        Route::group(array('prefix' => 'tendik'), function() {
+        Route::group(array('prefix' => 'tendik'), function () {
             // MENU Input Tendik Baru
             Route::get('input-tendik', 'SumberDaya\Tendik\InputTendikController@viewInputTendik');
             Route::get('input-tendik/datatables', 'SumberDaya\Tendik\InputTendikController@datatablesInputTendik');
