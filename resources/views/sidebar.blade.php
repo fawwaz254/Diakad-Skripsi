@@ -11,7 +11,6 @@
 <section>
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
-        {{count($category_file_role) ? "shared" : "not shared"}}
         <!-- User Info -->
         <div class="user-info" style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{auth_data()->sekolah_data->nm_singkat_sekolah}}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">

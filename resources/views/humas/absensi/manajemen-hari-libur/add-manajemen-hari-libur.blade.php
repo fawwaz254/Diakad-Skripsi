@@ -22,7 +22,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Explanation</h2>
                             <textarea name="explanation" class="form-control" cols="30"
-                                rows="10"></textarea>
+                                rows="10" required></textarea>
                         </div>
                         <button id="btn-submit" class="btn btn-block bg-red waves-effect">
                             <i class="material-icons">save</i>
