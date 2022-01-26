@@ -87,6 +87,17 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::post('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
 				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
 			});
+
+			Route::group(array('prefix' => 'manajemen-hari-libur'), function () {
+
+				Route::get('/', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@viewManajemenHariLibur');
+				Route::get('/{date}', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@showManajemenHariLibur');
+				Route::get('/{date}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@editManajemenHariLibur');
+				Route::post('/{date}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@updateManajemenHariLibur');
+				Route::get('/{date}/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
+				Route::post('/{date}/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
+				Route::post('/{date}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
+			});
 		});
 
 		/** ==== MODUL BURSA KERJA ==== **/

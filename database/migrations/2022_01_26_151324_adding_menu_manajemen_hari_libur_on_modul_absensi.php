@@ -7,7 +7,7 @@ use Illuminate\Database\Migrations\Migration;
 use App\Models\Menu;
 use App\Models\Modul;
 
-class AddingMenuRekapAbsenTanpaJadwalOnModulGuruPiket extends Migration
+class AddingMenuManajemenHariLiburOnModulAbsensi extends Migration
 {
     /**
      * Run the migrations.
@@ -16,13 +16,13 @@ class AddingMenuRekapAbsenTanpaJadwalOnModulGuruPiket extends Migration
      */
     public function up()
     {
-        $modul = Modul::where('nm_modul', 'Guru Piket')->first();
+        $modul = Modul::where('nm_modul', 'Absensi')->where('id_role', '19')->first();
 
         $menu = new Menu;
         $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Rekap Absen Tanpa Jadwal';
-        $menu->page = 'rekap-absen-tanpa-jadwal';
-        $menu->urutan = 6;
+        $menu->nm_menu = 'Manajemen Hari Libur';
+        $menu->page = 'manajemen-hari-libur';
+        $menu->urutan = 2;
         $menu->akses = 1;
         $menu->save();
     }
