@@ -9,6 +9,7 @@ use App\Models\PresensiPengguna;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Sekolah;
+use App\Models\Pengguna;
 
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\SumberDaya\LibTendik;
@@ -16,32 +17,28 @@ use App\Libraries\SumberDaya\LibTendik;
 class HistoriAbsensiController extends BaseController
 {
 
-    public function viewHistoriAbsensi(Request $request, $id_pengguna = null, $start_date = null, $end_date = null, $role = null)
+    public function viewHistoriAbsensi(Request $request, $date = null)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        if (empty($start_date) || empty($end_date)) {
-            $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
-            $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
+        if (empty($date)) {
+            $date = Carbon::now()->format('Y-m-d');
         }
 
-        $dates = CarbonPeriod::create($start_date, $end_date);
-        $guru = LibGuru::fetchDataAllGuru($auth_data);
-        $tendik = LibTendik::fetchDataAllTendik($auth_data);
-        $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->whereBetween('date', [$start_date, $end_date])->get();
+        $pengguna = Pengguna::whereIn('status_join_table',[1,2])->where('username','!=','admin')->orderBy('status_join_table','desc')->get();
         $hasil = [];
 
-        foreach ($dates as $key => $value) {
-            $hasil[$key]['date'] = $value->format('Y-m-d');
-            $hasil[$key]['tanggal'] = $value->format('d');
-            $hasil[$key]['hari'] = $value->format('l');
+        foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
+            $hasil[$key]['id_pengguna'] = $value->id_pengguna;
+            $hasil[$key]['status_join_table'] = $value->status_join_table;
+            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '-';
             $hasil[$key]['notes'] = '-';
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
+            $attendance = PresensiPengguna::where('id_pengguna',$value->id_pengguna)->where('date', $date)->first();
 
             if ($attendance) {
 
@@ -67,15 +64,15 @@ class HistoriAbsensiController extends BaseController
             }
         }
 
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'id_pengguna', 'start_date', 'end_date', 'dates', 'guru', 'tendik', 'hasil', 'role'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data','date','hasil'));
     }
 
-    public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null, $start_date = null, $end_date = null, $role = null)
+    public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)
     {
-        return view('humas/absensi/histori-absensi/add-histori-absensi', compact('id_pengguna', 'start_date', 'end_date', 'role'));
+        return view('humas/absensi/histori-absensi/add-histori-absensi', compact('id_pengguna', 'date'));
     }
 
-    public function storeHistoriAbsensi(Request $request, $id_pengguna = null, $date = null, $start_date = null, $end_date = null, $role = null)
+    public function storeHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)
     {
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $prefix = Sekolah::first()->prefix;
@@ -84,16 +81,16 @@ class HistoriAbsensiController extends BaseController
         $status = $input['status'];
         $notes = $input['notes'];
         PresensiPengguna::create(['id_presensi_pengguna' => $uuid, 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
-        return redirect("/humas#absensi/histori-absensi" . "/" . $id_pengguna . "/" . $start_date . "/" . $end_date . "/" . $role);
+        return redirect("/humas#absensi/histori-absensi/".$date);
     }
 
-    public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $start_date = null, $end_date = null, $role = null)
+    public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $date = null)
     {
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
-        return view('humas/absensi/histori-absensi/edit-histori-absensi', compact('presences', 'start_date', 'end_date', 'role'));
+        return view('humas/absensi/histori-absensi/edit-histori-absensi', compact('presences', 'date'));
     }
 
-    public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $start_date = null, $end_date = null, $role = null)
+    public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $date = null)
     {
         $input = $request->input();
         $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
@@ -103,7 +100,7 @@ class HistoriAbsensiController extends BaseController
         //     'path' => 'absensi/histori-absensi/',
         //     'message' => 'Data Absensi Berhasil Di Update'
         // ];
-        return redirect("/humas#absensi/histori-absensi" . "/" . $presences['id_pengguna'] . "/" . $start_date . "/" . $end_date . "/" . $role);
+        return redirect("/humas#absensi/histori-absensi/" . $date);
     }
 
     public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)

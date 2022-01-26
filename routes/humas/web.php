@@ -80,11 +80,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::group(array('prefix' => 'histori-absensi'), function () {
 
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-				Route::get('/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-				Route::get('/{id_pengguna}/{date}/{start_date}/{end_date}/{role}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
-				Route::post('/{id_pengguna}/{date}/{start_date}/{end_date}/{role}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
-				Route::get('/{id_presensi_pengguna}/{start_date}/{end_date}/{role}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
-				Route::post('/{id_presensi_pengguna}/{start_date}/{end_date}/{role}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
+				Route::get('/{date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
+				Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
+				Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
 				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
 			});
 		});
