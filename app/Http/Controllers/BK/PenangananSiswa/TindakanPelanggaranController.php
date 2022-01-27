@@ -238,6 +238,19 @@ class TindakanPelanggaranController extends BaseController
                 ->make(true);
     }
 
+    //hapus
+
+    public function deleteDatatablesBelumTindakanNonKBM($id,Request $request){
+        $pelanggaranSiswa = PelanggaranSiswa::where('id_pelanggaran_siswa', '=', $id);
+$pelanggaranSiswa->delete();
+
+return [
+    'status' => 203, // SUCCESS AND LOAD TABLE
+    'message' => 'Delete Tindakan Pelanggaran Siswa successfully'
+];
+
+    }
+
     public function datatablesSudahTindakan(Request $request)
     {
         $input = (object) $request->input();

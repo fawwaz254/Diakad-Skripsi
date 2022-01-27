@@ -110,7 +110,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('tindakan-pelanggaran/edit/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@editTindakanPelanggaran');
 
             Route::post('action-tindakan-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@actionTindakanPelanggaran');
-            
+            Route::post('action-tindakan-pelanggaran-nonkbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@deleteDatatablesBelumTindakanNonKBM');
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
 

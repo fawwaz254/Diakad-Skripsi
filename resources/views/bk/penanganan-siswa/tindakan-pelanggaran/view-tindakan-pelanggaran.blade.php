@@ -108,6 +108,7 @@
     var add_url_kbm                 = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/add-kbm';
     var edit_url                    = role_url + '#' + modul_url + '/' + 'tindakan-pelanggaran/edit';
     var delete_url                  = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tindakan-pelanggaran/delete';
+    var delete_nonkbm_url           = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-tindakan-pelanggaran-nonkbm';
 
     var primary_table_belum_nonkbm = $('#primary_table_belum_nonkbm').DataTable({
         processing: true,
@@ -130,7 +131,11 @@
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url_nonkbm + '/' + data.id +'">'+
                     '    <i class="material-icons">done_all</i>'+
-                    '</a>';
+                    '</a>'
+                    +
+                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTindakan(\''+ delete_nonkbm_url +'\', this)" data-id="'+  data.id +'">'+
+                    '    <i class="material-icons">delete_forever</i>'+
+                    '</button>';
                 }
             }
         ],
@@ -171,7 +176,12 @@
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ add_url_kbm + '/' + data.id +'">'+
                     '    <i class="material-icons">done_all</i>'+
-                    '</a>';
+                    '</a>'
+                    
+                    
+                    
+                    
+                    ;
                 }
             }
         ],
