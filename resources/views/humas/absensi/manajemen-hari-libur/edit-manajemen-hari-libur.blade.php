@@ -10,6 +10,9 @@
                 <div class="header">
                     <h2>EDIT MANAJEMEN HARI LIBUR</h2>
                 </div>
+@if (session()->has('message'))
+  {{session('message')}}
+@endif
                 <div class="body">
                     <form method="POST" id="edit-form" action="{{url()->current()}}">
                         {{csrf_field()}}
@@ -17,6 +20,7 @@
                             <h2 class="card-inside-title">Date</h2>
                             <input type="date" value="{{$holiday['date']}}" name="date" class="form-control" required>
                         </div>
+                        <input type="hidden" value="{{$holiday['manajemen_hari_libur_id']}}" name="id" class="form-control">
                         <input type="hidden" value="{{$holiday['extra_money']}}" name="extraMoney" class="form-control">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Explanation</h2>

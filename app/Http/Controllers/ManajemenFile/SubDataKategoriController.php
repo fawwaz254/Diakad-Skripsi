@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Models\SubCategoryFile;
 use App\Models\CategoryFileRole;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Yajra\Datatables\Datatables;
 
 use Validator;
@@ -25,10 +26,14 @@ class SubDataKategoriController extends BaseController
     public function datatablesSubCategoryfile(Request $request)
     {
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-        $list_data = SubCategoryFile::join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
+        $auth_data = $input->auth_data->role_aktif->id_role;
+        // $list_data = SubCategoryFile::join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
+        //     ->select('category_file.category_file_name as category_file', 'sub_category_file.*');
+        $list_data = DB::table('sub_category_file')
+            ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
+            ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
+            ->where('category_file_role.id_role', '=', $auth_data)
             ->select('category_file.category_file_name as category_file', 'sub_category_file.*');
-
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
