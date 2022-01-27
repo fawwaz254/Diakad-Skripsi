@@ -59,11 +59,7 @@ class DataKategoriController extends BaseController
         $auth_data = $input->auth_data;
         $data_kategori = CategoryFile::find($id);
         $role = Role::all();
-        $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_id)->get();
-        foreach ($allowed_role as $allowed_r) {
-            echo $allowed_r->id_role;
-        }
-
+        $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_id)->pluck('id_role');
         return view('sekretariat/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'role', 'allowed_role'));
     }
 
@@ -119,6 +115,18 @@ class DataKategoriController extends BaseController
                 $datakategori->updated_at                   = $now;
                 $datakategori->save();
 
+                foreach ($input->allowed_role as $key => $value) {
+                    $datakategori_role = CategoryFileRole::where('category_file_id', $id)->where('id_role', $input->allowed_role[$key])->first();
+                    if (!$datakategori_role) {
+                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $datakategori_role = new CategoryFileRole;
+                        $datakategori_role->category_file_role_id = $uuid;
+                        $datakategori_role->id_role = $input->allowed_role[$key];
+                        $datakategori_role->category_file_id = $id;
+                        $datakategori_role->save();
+                    }
+                }
+
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'manajemen-file/data-kategori',
@@ -138,13 +146,7 @@ class DataKategoriController extends BaseController
 
                     $datakategori->delete();
 
-                    $datakategori_role = CategoryFileRole::where('category_file_id', $id)->get();
-                    foreach ($datakategori_role as $datakategori_r) {
-                        $datakategori_role = CategoryFileRole::where('category_file_id', $datakategori_r->category_file_id)->first();
-                        if ($datakategori_role) {
-                            $datakategori_role->delete();
-                        }
-                    }
+                    $datakategori_role = CategoryFileRole::where('category_file_id', $id)->delete();
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Data Kategori succesfully'

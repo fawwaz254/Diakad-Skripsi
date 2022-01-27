@@ -35,30 +35,23 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
                         </div>
+
                             <h2 class="card-inside-title">
                                 Role yang diizinkan mengakses: 
                             </h2>
+
                             @foreach($role as $r)
-                            @foreach ($allowed_role as $allowed_r)
-                            @if ($r->id_role ==$allowed_r->id_role )
-                            <p>{{$r->nm_role}}</p>
-                            @endif
-                            @endforeach
-                            @endforeach
-                            {{-- @foreach ($allowed_role as $allowed_r)
-                            {{$allowed_r->id_role}}
-                            @endforeach
-                            @foreach($role as $r)
-                            @foreach ($allowed_role as $allowed_r)
-                            @if ($r->id_role ==$allowed_r->id_role )
                             <div class="form-check">
-                                <input class="form-check-input" name="is_allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} 
-                                id="role-checkbox[{{$r->id_role}}]" {{$r->id_role ==$allowed_r->id_role ? "checked" : ""}}>
+                                @if (in_array($r->id_role,$allowed_role->toArray()))
+                                <input class="form-check-input" name="allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} 
+                                id="role-checkbox[{{$r->id_role}}]" checked>
+                                @else
+                                <input class="form-check-input" name="allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} 
+                                id="role-checkbox[{{$r->id_role}}]">
+                                @endif
                                 <label class="form-check-label" for="role-checkbox[{{$r->id_role}}]">{{$r->nm_role}}</label>
                             </div>
-                            @endif
                             @endforeach
-                            @endforeach --}}
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
