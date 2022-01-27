@@ -1,21 +1,54 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 
 // ROLE KEUANGAN
-Route::group(array('middleware'=> ['token_staff']), function () {
+Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'keuangan'), function () {
         Route::get('welcome', 'Keuangan\WelcomeController@indexWelcome');
         // Test Push
 
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /keuangan/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
+
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
-    
+
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
                 Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-                
+
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
@@ -64,32 +97,29 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             Route::group(array('prefix' => 'biaya-sekolah'), function () {
 
-                  Route::get('', 'Keuangan\DataKeuangan\BiayaSekolahController@viewBiayaSekolah');
-                  Route::get('datatables', 'Keuangan\DataKeuangan\BiayaSekolahController@datatablesBiayaSekolah');
-                  Route::get('add', 'Keuangan\DataKeuangan\BiayaSekolahController@addBiayaSekolah');
-                  Route::get('edit/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@editBiayaSekolah');
-                  Route::get('copy', 'Keuangan\DataKeuangan\BiayaSekolahController@copyBiayaSekolah');
+                Route::get('', 'Keuangan\DataKeuangan\BiayaSekolahController@viewBiayaSekolah');
+                Route::get('datatables', 'Keuangan\DataKeuangan\BiayaSekolahController@datatablesBiayaSekolah');
+                Route::get('add', 'Keuangan\DataKeuangan\BiayaSekolahController@addBiayaSekolah');
+                Route::get('edit/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@editBiayaSekolah');
+                Route::get('copy', 'Keuangan\DataKeuangan\BiayaSekolahController@copyBiayaSekolah');
 
-                  Route::group(array('prefix' => 'detail-biaya'), function () {
+                Route::group(array('prefix' => 'detail-biaya'), function () {
 
-                        Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaController@viewDetailBiaya2');
-                        Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@datatablesDetailBiaya2');
-                        Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@addDetailBiaya2');
-                        Route::get('edit/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@editDetailBiaya2');
-                        Route::post('action-detail-biaya/{mode}/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@actionDetailBiaya2');
+                    Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaController@viewDetailBiaya2');
+                    Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@datatablesDetailBiaya2');
+                    Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@addDetailBiaya2');
+                    Route::get('edit/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@editDetailBiaya2');
+                    Route::post('action-detail-biaya/{mode}/{id}', 'Keuangan\DataKeuangan\DetailBiayaController@actionDetailBiaya2');
 
-                        Route::group(array('prefix' => 'detail-biaya-internal'), function () {
+                    Route::group(array('prefix' => 'detail-biaya-internal'), function () {
 
-                              Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@viewDetailBiayaInternal2');
-                              Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@datatablesDetailBiayaInternal2');
-                              Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@addDetailBiayaInternal2');
-                              Route::get('edit/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@editDetailBiayaInternal2');
-                              Route::post('action-detail-biaya-internal/{id_detail_biaya}/{mode}/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@actionDetailBiayaInternal2');
-
-                        });
-
-                  });
-
+                        Route::get('{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@viewDetailBiayaInternal2');
+                        Route::post('datatables/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@datatablesDetailBiayaInternal2');
+                        Route::get('add/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@addDetailBiayaInternal2');
+                        Route::get('edit/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@editDetailBiayaInternal2');
+                        Route::post('action-detail-biaya-internal/{id_detail_biaya}/{mode}/{id}', 'Keuangan\DataKeuangan\DetailBiayaInternalController@actionDetailBiayaInternal2');
+                    });
+                });
             });
 
             Route::post('action-biaya-sekolah/{mode}/{id}', 'Keuangan\DataKeuangan\BiayaSekolahController@actionBiayaSekolah');
@@ -155,14 +185,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('pembayaran-by-kelas', 'Keuangan\Utility\PembayaranByKelasController@viewPembayaranByKelas');
             Route::post('post-view-pembayaran-by-kelas', 'Keuangan\Utility\PembayaranByKelasController@actionViewPembayaranByKelas');
             Route::get('pembayaran-by-kelas/view-detail/{id_semester}/{id_kelas}', 'Keuangan\Utility\PembayaranByKelasController@viewDetailPembayaranByKelas');
-             Route::get('pembayaran-by-kelas/print/{id_semester}/{id_kelas}', 'Keuangan\Utility\PembayaranByKelasController@printPembayaranByKelas');
+            Route::get('pembayaran-by-kelas/print/{id_semester}/{id_kelas}', 'Keuangan\Utility\PembayaranByKelasController@printPembayaranByKelas');
 
             Route::group(array('prefix' => 'input-tagihan-siswa'), function () {
-                 Route::get('/', 'Keuangan\Utility\InputTagihanSiswaController@viewInputTagihanSiswa');
-                 Route::get('filter-siswa/{id}', 'Keuangan\Utility\InputTagihanSiswaController@filterSiswa');
-                 Route::post('add-tagihan', 'Keuangan\Utility\InputTagihanSiswaController@addTagihan');
+                Route::get('/', 'Keuangan\Utility\InputTagihanSiswaController@viewInputTagihanSiswa');
+                Route::get('filter-siswa/{id}', 'Keuangan\Utility\InputTagihanSiswaController@filterSiswa');
+                Route::post('add-tagihan', 'Keuangan\Utility\InputTagihanSiswaController@addTagihan');
             });
-
         });
 
         /** ==== MODUL RAPB ==== **/
@@ -248,7 +277,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
             // belum
             /*Route::get('realisasi-rapb/edit/{semester_mulai}/{semester_selesai}/{id_rapb}/{id}', 'Keuangan\Rapb\RealisasiRapbController@editRealisasi');*/
-
         });
 
         /** ==== MODUL PEMASUKAN SEKOLAH ==== **/
@@ -271,7 +299,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('subkategori-pemasukan/edit/{id}', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@editSubkategoriPemasukan');
 
             Route::post('action-subkategori-pemasukan/{mode}/{id}', 'Keuangan\PemasukanSekolah\SubkategoriPemasukanController@actionSubkategoriPemasukan');
-                    
+
             // MENU Input Pemasukan
             // url: /keuangan/pemasukan-sekolah/input-pemasukan
             Route::get('input-pemasukan', 'Keuangan\PemasukanSekolah\InputPemasukanController@viewInputPemasukan');
@@ -331,7 +359,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('pemasukan', 'Keuangan\SIM\SppController@viewMenuPemasukan');
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}', 'Keuangan\SIM\SppController@viewMenuPemasukan');
-                
+
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/report', 'Keuangan\SIM\SppController@indexDownloadLapBulanan');
                 Route::get('pemasukan/{tahun_akademik_semester}/{id_bulan}/refresh', 'Keuangan\SIM\SppController@actionRefreshLapBulanan');
 
@@ -408,7 +436,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         // url: /keuangan/laporan-keuangan
         Route::group(array('prefix' => 'laporan-keuangan'), function () {
             // MENU Cetak Laporan
-            Route::group(['prefix' => 'cetak-laporan'], function(){
+            Route::group(['prefix' => 'cetak-laporan'], function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\CetakLaporanController@viewCetakLaporan');
                 Route::get('print-pengeluaran/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanPengeluaran');
                 Route::get('print-arus-kas/{jenis}/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\CetakLaporanController@printCetakLaporanKas');
@@ -423,25 +451,24 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::get('datatables', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@datatablesPembayaranSiswa');
                 Route::get('print-simple/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@printSimplePembayaranSiswa');
                 Route::get('print-detail/{start_date}/{end_date}', 'Keuangan\LaporanKeuangan\PembayaranSiswaController@printDetailPembayaranSiswa');
-                
+
                 Route::group(array('prefix' => 'bulanan'), function () {
-                      Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@viewPembayaranSiswaBulanan');
-                      Route::get('/dataPembayaranSiswaBulanan', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@dataPembayaranSiswaBulanan');
+                    Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@viewPembayaranSiswaBulanan');
+                    Route::get('/dataPembayaranSiswaBulanan', 'Keuangan\LaporanKeuangan\PembayaranSiswaBulananController@dataPembayaranSiswaBulanan');
                 });
-                
+
                 Route::group(array('prefix' => 'tahunan'), function () {
                     Route::get('/', 'Keuangan\LaporanKeuangan\PembayaranSiswaTahunanController@viewPembayaranSiswaTahunan');
                     Route::get('data/{year}', 'Keuangan\LaporanKeuangan\PembayaranSiswaTahunanController@dataPembayaranSiswaTahunan');
                 });
             });
-            
+
             Route::group(array('prefix' => 'tagihan-siswa'), function () {
                 Route::get('/', 'Keuangan\LaporanKeuangan\TagihanSiswaController@viewTagihanSiswa');
                 Route::post('datatables', 'Keuangan\LaporanKeuangan\TagihanSiswaController@datatablesTagihanSiswa');
                 Route::get('print/{tahun}/{id_kelas}/{jenis_tagihan}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@printTagihanSiswa');
                 Route::get('show-list-tagihan/{tahun}/{id_kelas}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@showListTagihan');
             });
-
         });
     });
 });

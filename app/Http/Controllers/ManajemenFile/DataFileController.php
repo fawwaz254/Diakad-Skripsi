@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Sekretariat\ManajemenFile;
+namespace App\Http\Controllers\ManajemenFile;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
 
 use App\Models\SubCategoryFile;
 use App\Models\CategoryFile;
-use App\Models\SubategoryFile;
+use App\Models\CategoryFileRole;
 use App\Models\FilePengguna;
-use Auth;
-use DB;
-use Session;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 class DataFileController extends BaseController
@@ -26,10 +22,11 @@ class DataFileController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        $category = CategoryFile::all();
-        return view('sekretariat/manajemen-file/data-file/view-data-file', compact('auth_data', 'category'));
+        $auth_data = $input->auth_data->role_aktif->id_role;
+        $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
+            ->where('category_file_role.id_role', $auth_data)
+            ->select('category_file.*')->get();
+        return view('manajemen-file/data-file/view-data-file', compact('auth_data', 'category'));
     }
 
     public function viewDataFileCategory(Request $request, $id)
@@ -40,7 +37,7 @@ class DataFileController extends BaseController
         $auth_data = $input->auth_data;
         $category = CategoryFile::find($id);
         $sub_category = SubCategoryFile::where('category_file_id', $id)->get();
-        return view('sekretariat/manajemen-file/data-file/view-data-file-category', compact('auth_data', 'sub_category', 'category'));
+        return view('manajemen-file/data-file/view-data-file-category', compact('auth_data', 'sub_category', 'category'));
     }
 
     public function viewDataFileSubCategory(Request $request, $id)
@@ -53,19 +50,23 @@ class DataFileController extends BaseController
         $sub_category = SubCategoryFile::find($id);
         $file = FilePengguna::where('sub_category_file_id', $id)->get();
 
-        return view('sekretariat/manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
+        return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
     }
 
     public function addDataFile(Request $request)
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+        $auth_data = $input->auth_data->role_aktif->id_role;
+        $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
+            ->where('category_file_role.id_role', $auth_data)
+            ->select('category_file.*')->get();
+        $sub_category = DB::table('sub_category_file')
+            ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
+            ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
+            ->where('category_file_role.id_role', '=', $auth_data)->get();
 
-        $category = CategoryFile::all();
-        $sub_category = SubCategoryFile::all();
-
-        return view('sekretariat/manajemen-file/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
+        return view('manajemen-file/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
     }
 
     public function actionDataFile(Request $request, $mode, $id = null)
