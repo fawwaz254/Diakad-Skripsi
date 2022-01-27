@@ -32,6 +32,52 @@
     </div>
 
     <br>
+
+    <div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="body bg-teal">
+                <div class="font-bold m-b--35">SUMMARY</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="dashboard-stat-list">
+                            <li>
+                                Hadir
+                                <span class="pull-right"><b>{{$jumlah_hadir}}</b></span>
+                            </li>
+                            <li>
+                                Hadir Terlambat
+                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                            </li>
+                            <li>
+                                Hadir Pulang Lebih Awal
+                               <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="dashboard-stat-list">
+                            <li>
+                                Sakit
+                                <span class="pull-right"><b>{{$jumlah_izin}}</b></span>
+                            </li>
+                            <li>
+                                Izin
+                                <span class="pull-right"><b>{{$jumlah_sakit}}</b></span>
+                            </li>
+                            <li>
+                                Alpha
+                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <br>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -45,13 +91,13 @@
                     <table class="table table-bordered">
                         <thead style="background:#9C27B0;color:white">
                             <tr>
+                                <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">Nama</th>
                                 <th>Role</th>
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Status</th>
                                 <th>Notes</th>
-                        
                                 <th style="text-align: center;">Action</th>
                               
                             </tr>
@@ -63,6 +109,7 @@
                                 @else
                             <tr>
                                 @endif
+                                <td style="text-align: center;">{{$loop->iteration}}</td>
                                 <td style="text-align: center;">{{$r['nm_pengguna']}}</td>
                                 <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
                                 <td>{{$r['check_in']}}</td>

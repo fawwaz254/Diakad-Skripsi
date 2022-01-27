@@ -40,6 +40,10 @@ class HistoriAbsensiController extends BaseController{
 
         $hasil = [];
 
+        $jumlah_hadir = 0;
+        $jumlah_izin = 0;
+        $jumlah_sakit = 0;
+
         foreach($dates as $key => $value){
 
             $hasil[$key]['tanggal'] = $value->format('d');
@@ -55,6 +59,7 @@ class HistoriAbsensiController extends BaseController{
 
                 if($attendance->check_in){
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $jumlah_hadir++;
                 }
 
                 if($attendance->check_out){
@@ -63,17 +68,23 @@ class HistoriAbsensiController extends BaseController{
 
                 if($attendance->status){
                     $hasil[$key]['status'] = $attendance->status;
+                    if($attendance->status=='izin'){
+                        $jumlah_izin++;
+                    }
                 }
 
                 if($attendance->notes){
                     $hasil[$key]['notes'] = $attendance->notes;
+                    if($attendance->status=='sakit'){
+                        $jumlah_sakit++;
+                    }
                 }
 
             }
 
         }
 
-    	return view('guru/absensi/histori-absensi/view-histori-absensi',compact('auth_data','presences','start_date','end_date','dates','hasil'));
+    	return view('guru/absensi/histori-absensi/view-histori-absensi',compact('auth_data','presences','start_date','end_date','dates','hasil','jumlah_hadir','jumlah_izin','jumlah_sakit'));
 
     }
 
