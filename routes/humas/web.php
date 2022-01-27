@@ -91,11 +91,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::group(array('prefix' => 'manajemen-hari-libur'), function () {
 
 				Route::get('/', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@viewManajemenHariLibur');
-				Route::get('/{date}', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@showManajemenHariLibur');
 				Route::get('/{date}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@editManajemenHariLibur');
 				Route::post('/{date}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@updateManajemenHariLibur');
-				Route::get('/{date}/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
-				Route::post('/{date}/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
+				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
+				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
 				Route::post('/{date}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
 			});
 		});

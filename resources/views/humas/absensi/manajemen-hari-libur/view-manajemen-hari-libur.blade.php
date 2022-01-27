@@ -4,43 +4,17 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                <div class="header">
-                    <h2>Filter Data</h2>
-                </div>
-
-                <div class="body">
-
-                    <div class="row clearfix">
-
-                        <div class="col-md-5">
-                            <label>Date</label>
-                            <input type="date" class="form-control" name="date"
-                                aria-required="true" aria-invalid="true">
-                        </div>
-
-                        <div class="col-md-2">
-                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
-                                onclick="filterAction()">Change Date</button>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <br>
-    <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
 
                 <div class="header">
                     <h2>Manajemen Hari Libur</h2>
                 </div>
 
                 <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                <button class="btn btn-block bg-red waves-effect" onclick=addAbsensi()><i class="material-icons">add</i><span>Add Holiday</span></button>
+                            </div>
+                        </div>
                     <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead style="background:#9C27B0;color:white">
@@ -50,36 +24,28 @@
                                 <th>Month</th>
                                 <th>Date</th>
                                 <th>Explanation</th>
-                                <th>Extra Money</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($date as $key => $d)
+                            @foreach($holidays as $key => $holiday)
                             @if($key%2==1)
                             <tr style="background: #DDA0DD">
                                 @else
                             <tr>
                                 @endif
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{$d['year']}}</td>
-                                <td>{{$d['month']}}</td>
-                                <td>{{$d['date']}}</td>
-                                <td>{{$d['explanation']}}</td>
-                                <td>{{$d['extra_money']}}</td>
+                                <td>{{$holiday['year']}}</td>
+                                <td>{{$holiday['month']}}</td>
+                                <td>{{$holiday['date']}}</td>
+                                <td>{{$holiday['explanation']}}</td>
                                 <td style="text-align: center;display:flex;justify-content:center">
-                                    @if (!$d['manajemen_hari_libur_id'])
-                                    <button type="button" class="btn bg-teal waves-effect" onclick="addAbsensi('{{$d['date_value']}}')">
+                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$holiday['date']}}')">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                    @else
-                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$d['date_value']}}')">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                    <button data-date={{$d['date_value']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
+                                    <button data-date={{$holiday['date']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
                                         <i class="material-icons">delete</i>
                                     </button>
-                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -99,8 +65,8 @@
         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('input[name=date]').val());
     }
 
-    function addAbsensi(date){
-        window.location='/humas#absensi/manajemen-hari-libur/' + date + '/add'
+    function addAbsensi(){
+        window.location='/humas#absensi/manajemen-hari-libur/add'
     }
 
     function editAbsensi(date){

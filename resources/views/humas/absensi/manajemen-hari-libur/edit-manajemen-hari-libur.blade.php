@@ -13,12 +13,11 @@
                 <div class="body">
                     <form method="POST" id="edit-form" action="{{url()->current()}}">
                         {{csrf_field()}}
-                        <div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                <h2 class="card-inside-title">Extra Money</h2>
-                                <input type="number" value="{{$holiday['extra_money']}}" name="extraMoney" class="form-control">
-                            </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Date</h2>
+                            <input type="date" value="{{$holiday['date']}}" name="date" class="form-control" required>
                         </div>
+                        <input type="hidden" value="{{$holiday['extra_money']}}" name="extraMoney" class="form-control">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Explanation</h2>
                             <textarea name="explanation" class="form-control" cols="30"
