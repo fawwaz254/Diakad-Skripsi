@@ -16,7 +16,7 @@
                             </div>
                         </div>
                     <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered" id="primary-table">
                         <thead style="background:#9C27B0;color:white">
                             <tr>
                                 <th>No</th>
@@ -40,10 +40,10 @@
                                 <td>{{$holiday['date']}}</td>
                                 <td>{{$holiday['explanation']}}</td>
                                 <td style="text-align: center;display:flex;justify-content:center">
-                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$holiday['date']}}')">
+                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$holiday['date_value']}}')">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                    <button data-date={{$holiday['date']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
+                                    <button data-date={{$holiday['date_value']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
                                         <i class="material-icons">delete</i>
                                     </button>
                                 </td>
@@ -60,7 +60,9 @@
 
 </div>
 <script type="text/javascript">
-
+$(document).ready(function () {
+    $('#primary-table').DataTable();
+})
     function filterAction(){
         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('input[name=date]').val());
     }

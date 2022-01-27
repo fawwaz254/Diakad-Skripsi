@@ -9,6 +9,9 @@
             <div class="card">
                 <div class="header">
                     <h2>ADD MANAJEMEN HARI LIBUR</h2>
+@if (session()->has('message'))
+  {{session('message')}}
+@endif
                 </div>
                 <div class="body">
                     <form method="POST" id="add-form" action="{{url()->current()}}">

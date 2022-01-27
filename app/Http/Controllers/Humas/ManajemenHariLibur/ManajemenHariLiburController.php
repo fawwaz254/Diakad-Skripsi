@@ -16,14 +16,13 @@ class ManajemenHariLiburController extends BaseController
     {
         # code...
         $input = (object) $request->input();
-        // $holidays = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
         $holidays = [];
         $dates = ManajemenHariLibur::all();
         foreach ($dates as $key => $date) {
             $holidays[$key]['year'] = Carbon::parse($date->date)->format('Y');
             $holidays[$key]['month'] = Carbon::parse($date->date)->format('M');
-            $holidays[$key]['holidays'] = Carbon::parse($date->date)->format('d');
-            $holidays[$key]['date'] = $date->date;
+            $holidays[$key]['date'] = Carbon::parse($date->date)->format('d');
+            $holidays[$key]['date_value'] = $date->date;
             $holidays[$key]['explanation'] = $date->explanation;
             $holidays[$key]['extra_money'] = $date->extra_money;
         }
@@ -44,6 +43,10 @@ class ManajemenHariLiburController extends BaseController
         $prefix = Sekolah::first()->prefix;
         $uuid = $prefix . strtotime($now) . uniqid();
         $holiday = [];
+        $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->first();
+        if ($is_holiday_exist) {
+            return redirect("/humas#absensi/manajemen-hari-libur/add")->with('message', 'Tanggal ini sudah diisi');
+        }
         $holiday['manajemen_hari_libur_id'] = $uuid;
         $holiday['date'] = $input->date;
         $holiday['explanation'] = $input->explanation;
@@ -63,6 +66,12 @@ class ManajemenHariLiburController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)
+            ->where('manajemen_hari_libur_id', '<>', $input->id)
+            ->first();
+        if ($is_holiday_exist) {
+            return redirect("/humas#absensi/manajemen-hari-libur/" . $date . "/edit")->with('message', 'Tanggal ini sudah diisi');
+        }
         $is_holiday = ManajemenHariLibur::where('date', $date)->first();
         $holiday = [];
         $holiday['date'] = $input->date;

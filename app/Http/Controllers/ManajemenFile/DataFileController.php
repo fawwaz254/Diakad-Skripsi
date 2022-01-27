@@ -12,6 +12,7 @@ use App\Models\SubCategoryFile;
 use App\Models\CategoryFile;
 use App\Models\CategoryFileRole;
 use App\Models\FilePengguna;
+use Illuminate\Support\Facades\DB;
 use Validator;
 
 class DataFileController extends BaseController
@@ -60,7 +61,10 @@ class DataFileController extends BaseController
         $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
             ->where('category_file_role.id_role', $auth_data)
             ->select('category_file.*')->get();
-        $sub_category = SubCategoryFile::all();
+        $sub_category = DB::table('sub_category_file')
+            ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
+            ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
+            ->where('category_file_role.id_role', '=', $auth_data)->get();
 
         return view('manajemen-file/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
     }
