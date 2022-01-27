@@ -37,7 +37,7 @@
     <br>
 
     <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="body bg-teal">
                 <div class="font-bold m-b--35">SUMMARY</div>
@@ -110,8 +110,8 @@
                         </thead>
                         <tbody>
                             @foreach($hasil as $key => $r)
-                            @if($key%2==1)
-                            <tr style="background: #DDA0DD">
+                            @if($r['libur']!="-")
+                            <tr style="background: #FFCCF2">
                             @else
                             <tr>
                             @endif
@@ -120,7 +120,11 @@
                                 <td>{{$r['check_in']}}</td>
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
+                                @if($r['libur']!="-")
+                                <td>{{$r['libur']}}</td>
+                                @else
                                 <td>{{$r['notes']}}</td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

@@ -10,6 +10,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\Siswa as Siswa;
 use App\Models\PresensiPengguna;
+use App\Models\ManajemenHariLibur;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\App;
@@ -52,6 +53,13 @@ class HistoriAbsensiController extends BaseController{
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '-';
             $hasil[$key]['notes'] = '-';
+            $hasil[$key]['libur'] = "-";
+
+            $cek_libur = ManajemenHariLibur::where('date',$value->format('Y-m-d'))->first();
+            if($cek_libur){
+                 $hasil[$key]['libur'] = $cek_libur->explanation;
+            }
+
 
             $attendance = $presences->where('date',$value->format('Y-m-d'))->first();
 

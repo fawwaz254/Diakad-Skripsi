@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Sekolah;
 use App\Models\Pengguna;
+use App\Models\ManajemenHariLibur;
 
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\SumberDaya\LibTendik;
@@ -32,6 +33,8 @@ class HistoriAbsensiController extends BaseController
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;
         $jumlah_izin = 0;
+
+        $cek_libur = ManajemenHariLibur::where('date',$date)->first();
 
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
@@ -75,7 +78,7 @@ class HistoriAbsensiController extends BaseController
             }
         }
 
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data','date','hasil','jumlah_hadir','jumlah_izin','jumlah_sakit'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data','date','hasil','jumlah_hadir','jumlah_izin','jumlah_sakit','cek_libur'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)

@@ -3,6 +3,13 @@
 
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            @if($cek_libur)
+            <div class="alert alert-danger">
+                <strong>Tanggal {{$date}} merupakan hari libur yaitu {{$cek_libur->explanation}}
+            </div>
+            @endif
+
             <div class="card">
                 <div class="header">
                     <h2>Filter Data</h2>
@@ -34,7 +41,7 @@
     <br>
 
     <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card">
             <div class="body bg-teal">
                 <div class="font-bold m-b--35">SUMMARY</div>
