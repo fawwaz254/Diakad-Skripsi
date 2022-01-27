@@ -40,10 +40,10 @@
                                 <td>{{$holiday['date']}}</td>
                                 <td>{{$holiday['explanation']}}</td>
                                 <td style="text-align: center;display:flex;justify-content:center">
-                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$holiday['date_value']}}')">
+                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$holiday['id']}}')">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                    <button data-date={{$holiday['date_value']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
+                                    <button data-id={{$holiday['id']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
                                         <i class="material-icons">delete</i>
                                     </button>
                                 </td>
@@ -63,22 +63,19 @@
 $(document).ready(function () {
     $('#primary-table').DataTable();
 })
-    function filterAction(){
-        loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('input[name=date]').val());
-    }
 
     function addAbsensi(){
         window.location='/humas#absensi/manajemen-hari-libur/add'
     }
 
-    function editAbsensi(date){
-        window.location='/humas#absensi/manajemen-hari-libur/' + date + '/edit'
+    function editAbsensi(id){
+        window.location='/humas#absensi/manajemen-hari-libur/' + id + '/edit'
     }
 
   
     $(".delete-record").click(function () {
         const token = $("meta[name='csrf-token']").attr("content");
-        const date= $(this).data("date");
+        const id= $(this).data("id");
         swal(
         { title: "Are you sure?", showCancelButton: true},
         function (isConfirm) {
@@ -86,7 +83,7 @@ $(document).ready(function () {
                 $('.delete-record').attr("disabled", true);
                 //swall
                 $.ajax({
-                    url: ` /humas/absensi/manajemen-hari-libur/${date}/delete`,
+                    url: ` /humas/absensi/manajemen-hari-libur/${id}/delete`,
                     type: "post",
 
                     data: {
