@@ -1,8 +1,40 @@
 <?php
 // ROLE ORANG TUA
-Route::group(array('middleware'=> ['token_staff']), function () {
+Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'wali-murid'), function () {
         Route::get('welcome', 'WaliMurid\WelcomeController@indexWelcome');
+
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /wali-murid/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
 
         /** ==== MODUL AKADEMIK ==== **/
         Route::group(array('prefix' => 'akademik'), function () {
@@ -27,18 +59,18 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
         /** ==== MODUL KEUANGAN ==== **/
         Route::group(array('prefix' => 'keuangan'), function () {
-            
+
             // MENU Tagihan
             Route::get('tagihan', 'WaliMurid\Keuangan\TagihanController@viewTagihan');
             Route::get('tagihan/datatables', 'WaliMurid\Keuangan\TagihanController@datatablesTagihan');
 
             Route::post('tagihan/generate', 'WaliMurid\Keuangan\TagihanController@actionGenerate');
-            
+
             // MENU Riwayat Bayar
             Route::get('riwayat-bayar', 'WaliMurid\Keuangan\RiwayatBayarController@viewRiwayatBayar');
             Route::get('riwayat-bayar/datatables', 'WaliMurid\Keuangan\RiwayatBayarController@datatablesRiwayatBayar');
         });
-        
+
         /** ==== MODUL KESISWAAN ==== **/
         Route::group(array('prefix' => 'kesiswaan'), function () {
             //MENU Prestasi
@@ -60,11 +92,11 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         });
 
         Route::group(array('prefix' => 'kesekretariatan'), function () {
-        
+
             Route::group(array('prefix' => 'dokumen'), function () {
                 Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
                 Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
-                
+
                 Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
             });
         });

@@ -8,21 +8,53 @@
 |
 */
 
-Route::group(array('middleware'=> ['token_staff']), function() {
+Route::group(array('middleware' => ['token_staff']), function () {
 
-  Route::group(array('prefix' => 'ppdb'), function() {
+	Route::group(array('prefix' => 'ppdb'), function () {
 		Route::get('welcome', 'PPDB\WelcomeController@indexWelcome');
-		
+
+		/** ==== MODUL MANAJEMEN FILE ==== **/
+		// url: /ppdb/manajemen-file
+		Route::group(array('prefix' => 'manajemen-file'), function () {
+			// MENU Data Kategori
+			Route::group(array('prefix' => 'data-kategori'), function () {
+				Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+				Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+			});
+
+			// MENU Data Sub Kategori 
+			Route::group(array('prefix' => 'data-sub-kategori'), function () {
+				Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+				Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+				Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+				Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+				//action input sub data kategori
+				Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+			});
+
+			// MENU Data File 
+			Route::group(array('prefix' => 'data-file'), function () {
+
+				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+				Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+				Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+			});
+		});
+
 		/** ==== MODUL PENDAFTARAN ==== **/
-		Route::group(array('prefix' => 'pendaftaran'), function() {
-			
+		Route::group(array('prefix' => 'pendaftaran'), function () {
+
 			// MENU Data Penerimaan
 			Route::get('penerimaan', 'PPDB\Pendaftaran\PenerimaanController@viewPenerimaan');
 			Route::get('penerimaan/datatables', 'PPDB\Pendaftaran\PenerimaanController@datatablesPenerimaan');
 			Route::get('penerimaan/add', 'PPDB\Pendaftaran\PenerimaanController@addPenerimaan');
 			Route::get('penerimaan/edit/{id}', 'PPDB\Pendaftaran\PenerimaanController@editPenerimaan');
 			Route::post('action-penerimaan/{mode}/{id}', 'PPDB\Pendaftaran\PenerimaanController@actionPenerimaan');
-			
+
 			// MENU Data Penawaran Jurusan			
 			Route::get('penawaran-jurusan', 'PPDB\Pendaftaran\PenawaranJurusanController@viewPenawaranJurusan');
 			Route::post('penawaran-jurusan/post-view-penawaran-jurusan', 'PPDB\Pendaftaran\PenawaranJurusanController@actionViewPenawaranJurusan');
@@ -66,12 +98,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			// MENU data informasi
 			Route::get('data-informasi', 'PPDB\Pendaftaran\DataInformasiController@dataInformasi');
 			Route::post('data-informasi', 'PPDB\Pendaftaran\DataInformasiController@actionPostDataInformasi');
-
 		});
 
 		/** ==== MODUL PESERTA ==== **/
-		Route::group(array('prefix' => 'peserta'), function() {
-			
+		Route::group(array('prefix' => 'peserta'), function () {
+
 			// MENU Pembayaran Formulir
 			Route::get('pembayaran-formulir', 'PPDB\Peserta\PembayaranFormulirController@viewPembayaranFormulir');
 			Route::post('pembayaran-formulir', 'PPDB\Peserta\PembayaranFormulirController@findVoucher');
@@ -91,13 +122,11 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::post('pindah-penerimaan', 'PPDB\Peserta\PindahPenerimaanController@findVoucher');
 			Route::get('pindah-penerimaan/{id_voucher}', 'PPDB\Peserta\PindahPenerimaanController@showVoucher');
 			Route::post('pindah-penerimaan/{id_voucher}/pindah', 'PPDB\Peserta\PindahPenerimaanController@actionPindahVoucher');
-
-
 		});
 
 		/** ==== MODUL REPORT ==== **/
-		Route::group(array('prefix' => 'report'), function() {
-			
+		Route::group(array('prefix' => 'report'), function () {
+
 			// MENU Report pendaftaran
 			Route::get('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@viewReportPendaftaran');
 			Route::get('report-pendaftaran/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesReportPendaftaran');
@@ -109,8 +138,8 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 		});
 
 		/** ==== MODUL PENETAPAN ==== **/
-		Route::group(array('prefix' => 'penetapan'), function() {
-			
+		Route::group(array('prefix' => 'penetapan'), function () {
+
 			// MENU penetapan
 			Route::get('data-penetapan', 'PPDB\Penetapan\PenetapanController@viewPenetapan');
 			Route::get('data-penetapan/datatables', 'PPDB\Penetapan\PenetapanController@datatablesPenetapan');
@@ -122,16 +151,15 @@ Route::group(array('middleware'=> ['token_staff']), function() {
 			Route::get('data-penetapan/add-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@addPenetapanPenerimaan');
 			Route::get('data-penetapan/edit-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapanPenerimaan');
 			Route::post('action-penetapan-penerimaan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapanPenerimaan');
-			
+
 			// MENU PERSIDANGAN
 			Route::get('persidangan', 'PPDB\Penetapan\PersidanganController@viewPersidangan');
 			Route::post('persidangan/post-view-persidangan', 'PPDB\Penetapan\PersidanganController@actionViewPersidangan');
-			Route::get('persidangan/tahun/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan2');	
+			Route::get('persidangan/tahun/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan2');
 			Route::get('persidangan/datatables/{tahun}', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
 			Route::get('persidangan/edit/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan');
 			Route::get('persidangan/view-persidangan-gelombang/{id}', 'PPDB\Penetapan\PersidanganController@viewPersidanganGelombang');
 			Route::get('persidangan/datatablesviewgelombang/{id}', 'PPDB\Penetapan\PersidanganController@datatablesPersidanganViewGelombang');
-		});		
+		});
 	});
-  
 });

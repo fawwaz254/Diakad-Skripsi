@@ -1,8 +1,40 @@
 <?php
 // ROLE AKADEMIK
-Route::group(array('middleware'=> ['token_staff']), function () {
+Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'akademik'), function () {
         Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
+
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /akademik/manajemen-file
+        Route::group(array('prefix' => 'manajemen-file'), function () {
+            // MENU Data Kategori
+            Route::group(array('prefix' => 'data-kategori'), function () {
+                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
+                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+            });
+
+            // MENU Data Sub Kategori 
+            Route::group(array('prefix' => 'data-sub-kategori'), function () {
+                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+            });
+
+            // MENU Data File 
+            Route::group(array('prefix' => 'data-file'), function () {
+
+                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+            });
+        });
 
         /** ==== MODUL DATA AKADEMIK ==== **/
         Route::group(array('prefix' => 'data-akademik'), function () {
@@ -51,13 +83,13 @@ Route::group(array('middleware'=> ['token_staff']), function () {
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
-        
+
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
                 // MENU Mengisi form kesehatan
                 Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
                 Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
                 Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-                
+
                 Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
                 Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
             });
@@ -146,7 +178,7 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::post('action-komponen-nilai/{mode}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@actionKomponenNilai');
             Route::post('action-subkomponen-nilai/{mode}/{id?}', 'Akademik\AktivitasSemester\InputNilaiController@actionSubKomponenNilai');
         });
-        
+
         Route::group(array('prefix' => 'ujian'), function () {
             //UTS
             Route::get('ujian-uts-reguler-online', 'Akademik\Ujian\UjianUTSController@viewUjianUts');
@@ -218,23 +250,22 @@ Route::group(array('middleware'=> ['token_staff']), function () {
             Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
             Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
             Route::get('absensi-harian-siswa/detail/{id_semester}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewDetailAbsensiHarianSiswa');
-            
+
             Route::post('absensi-harian-siswa/datatables/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesAbsensiHarianSiswa');
             Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesKelasAbsensiHariSiswa');
             Route::post('absensi-harian-siswa/action/{mode}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
             Route::post('absensi-harian-siswa/action/{mode}/{id}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
 
             Route::get('monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesMonitoringKelasKosong');
-             Route::get('rekap-monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesRekapMonitoringKelasKosong');
+            Route::get('rekap-monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesRekapMonitoringKelasKosong');
         });
-    
+
         Route::group(array('prefix' => 'monitoring'), function () {
 
             Route::get('monitoring-presensi', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
 
             Route::get('monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewMonitoringKelasKosong');
             Route::get('rekap-monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewRekapMonitoringKelasKosong');
-
         });
 
         // MODUL KELAS DARING
@@ -259,17 +290,17 @@ Route::group(array('middleware'=> ['token_staff']), function () {
 
                 Route::get('materi/edit/{id_kelas_mp_grup}/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditMateriKelasDaring');
                 Route::post('materi/action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionEditMateriKelasDaring');
-                
+
                 Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesKelasDaring');
                 Route::post('save', 'Guru\KelasDaring\SettingKelasDaringController@actionAddKelasDaring');
-                
+
                 Route::group(array('prefix' => 'data-kelas'), function () {
                     Route::get('/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasMpKelasDaring');
 
                     Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesKelasMpKelasDaring');
                     Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionKelasMpKelasDaring');
                 });
-                
+
                 Route::group(array('prefix' => 'data-jadwal'), function () {
                     Route::get('/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewPresensiMpKelasDaring');
                     Route::get('add/{id_kelas_mp_grup}', 'Guru\KelasDaring\SettingKelasDaringController@viewAddPresensiMpKelasDaring');
@@ -279,11 +310,8 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                     Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionPresensiMpKelasDaring');
 
                     Route::post('action-delete/{id}', 'Guru\KelasDaring\SettingKelasDaringController@actionDeletePresensiMpKelasDaring');
-
                 });
-                
             });
-
         });
 
         Route::group(array('prefix' => 'laporan'), function () {
@@ -299,7 +327,6 @@ Route::group(array('middleware'=> ['token_staff']), function () {
                 Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
                 Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
             });
-
         });
     });
 });

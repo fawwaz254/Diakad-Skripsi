@@ -5,14 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class JenisGedung
- */
-class CategoryFile extends Model
+class CategoryFileRole extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'category_file';
+    protected $table = 'category_file_role';
 
     protected $primaryKey = 'category_file_id';
 
