@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CategoryFileRole;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +39,17 @@ if (!function_exists('get_moduls')) {
     function get_moduls()
     {
         return auth_data()->moduls;
+    }
+}
+
+if (!function_exists('category_file_role')) {
+    /**
+     * get category file based on active id role 
+     * @return array
+     */
+    function category_file_role($id_role)
+    {
+        return CategoryFileRole::where('id_role', $id_role)->get();
     }
 }
 
@@ -126,7 +138,7 @@ if (!function_exists('indonesiaDate')) {
      */
     function indonesiaDate($date)
     {
-        if(!empty($date)){
+        if (!empty($date)) {
             $months = [
                 1 => 'Januari',
                 'Februari',
@@ -141,24 +153,28 @@ if (!function_exists('indonesiaDate')) {
                 'November',
                 'Desember'
             ];
-    
+
             $split = explode('-', $date);
             return $split[2] . ' ' . $months[(int)$split[1]] . ' ' . $split[0];
-        }else{
+        } else {
             return '';
         }
     }
 }
 
 if (!function_exists('api_response')) {
-    function api_response($statusCode, $message = null, $payloads = null, $headers = []){
-        return response()->json([
-                'status_code' 	=> $statusCode,
-                'status_text' 	=> 'Success',
-                'message' 	=> $message,
+    function api_response($statusCode, $message = null, $payloads = null, $headers = [])
+    {
+        return response()->json(
+            [
+                'status_code'     => $statusCode,
+                'status_text'     => 'Success',
+                'message'     => $message,
                 'data' => $payloads
-            ], 
-            200, $headers, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT
+            ],
+            200,
+            $headers,
+            JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
         );
     }
 }

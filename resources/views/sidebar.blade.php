@@ -4,6 +4,8 @@
     $route_menu = Request::segment(3);
 
     $path = Request::fullUrl();
+    $role_aktif=auth_data()->role_aktif->id_role;
+    $category_file_role=category_file_role($role_aktif);
 @endphp
 
 <section>
@@ -47,6 +49,30 @@
                         <span>Home</span>
                     </a>
                 </li>
+                    @if (count($category_file_role) && $role_aktif !== 14)
+                        <li id="modul-item-manajemen-file" class="modul-item" >
+                            <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                                <span>Manajemen File</span>
+                            </a>
+                            <ul class="ml-menu">
+                                <li class="menu-item" id="menu-item-data-kategori">
+                                    <a href="{{url(Request::segment(1).'#manajemen-file/data-kategori')}}" class="target-link waves-effect waves-block">
+                                       Data Kategori 
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="menu-item-data-sub-kategori">
+                                    <a href="{{url(Request::segment(1).'#manajemen-file/data-sub-kategori')}}" class="target-link waves-effect waves-block">
+                                    Data Sub Kategori 
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="menu-item-data-sub-kategori">
+                                    <a href="{{url(Request::segment(1).'#manajemen-file/data-file')}}" class="target-link waves-effect waves-block">
+                                        Data File
+                                    </a> 
+                                </li>
+                            </ul>
+                        </li>
+                    @endif
                 @foreach(get_moduls() as $modul)
                 <li id="modul-item-{{$modul->route}}" class="modul-item">
                     @if(!empty($modul->page))

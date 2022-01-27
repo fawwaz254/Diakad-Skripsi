@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Sekolah;
 use App\Models\Pengguna;
+use App\Models\ManajemenHariLibur;
 
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\SumberDaya\LibTendik;
@@ -28,6 +29,12 @@ class HistoriAbsensiController extends BaseController
 
         $pengguna = Pengguna::whereIn('status_join_table',[1,2])->where('username','!=','admin')->orderBy('status_join_table','desc')->get();
         $hasil = [];
+
+        $jumlah_hadir = 0;
+        $jumlah_sakit = 0;
+        $jumlah_izin = 0;
+
+        $cek_libur = ManajemenHariLibur::where('date',$date)->first();
 
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
@@ -48,6 +55,7 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $jumlah_hadir++;
                 }
 
                 if ($attendance->check_out) {
@@ -56,6 +64,12 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->status) {
                     $hasil[$key]['status'] = $attendance->status;
+                    if($attendance->status == 'sakit'){
+                        $jumlah_sakit++;
+                    }
+                    elseif($attendance->status=='izin'){
+                        $jumlah_izin++;
+                    }
                 }
 
                 if ($attendance->notes) {
@@ -64,7 +78,7 @@ class HistoriAbsensiController extends BaseController
             }
         }
 
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data','date','hasil'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data','date','hasil','jumlah_hadir','jumlah_izin','jumlah_sakit','cek_libur'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)
