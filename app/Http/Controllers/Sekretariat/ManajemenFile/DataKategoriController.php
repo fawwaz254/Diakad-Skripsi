@@ -32,7 +32,7 @@ class DataKategoriController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $role = Role::all();
+        $role = Role::where('id_role', '<>', '14')->get();
         return view('sekretariat/manajemen-file/data-kategori/add-data-kategori', compact('auth_data', 'role'));
     }
 
@@ -58,7 +58,7 @@ class DataKategoriController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_kategori = CategoryFile::find($id);
-        $role = Role::all();
+        $role = Role::where('id_role', '<>', '14')->get();
         $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_id)->pluck('id_role');
         return view('sekretariat/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'role', 'allowed_role'));
     }
@@ -85,39 +85,48 @@ class DataKategoriController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $datakategori                               = new CategoryFile;
-                $datakategori->category_file_id             = $id;
-                $datakategori->category_file_name           = $input->category_file_name;
-                $datakategori->category_file_explanation    = $input->category_file_explanation;
-                $datakategori->created_by                   = $input->auth_data->pengguna->id_pengguna;
-                $datakategori->save();
+                if ($input->allowed_role ?? false) {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $datakategori                               = new CategoryFile;
+                    $datakategori->category_file_id             = $id;
+                    $datakategori->category_file_name           = $input->category_file_name;
+                    $datakategori->category_file_explanation    = $input->category_file_explanation;
+                    $datakategori->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $datakategori->save();
 
-                foreach ($input->is_allowed_role as $key => $value) {
-                    $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $datakategori_role = new CategoryFileRole;
-                    $datakategori_role->category_file_role_id = $uuid;
-                    $datakategori_role->id_role = $input->is_allowed_role[$key];
-                    $datakategori_role->category_file_id = $datakategori->category_file_id;
-                    $datakategori_role->save();
+                    foreach ($input->allowed_role as $key => $value) {
+                        $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $datakategori_role = new CategoryFileRole;
+                        $datakategori_role->category_file_role_id = $uuid;
+                        $datakategori_role->id_role = $input->allowed_role[$key];
+                        $datakategori_role->category_file_id = $datakategori->category_file_id;
+                        $datakategori_role->save();
+                    }
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'manajemen-file/data-kategori',
+                        'message' => 'Save Data Kategori Succesfully'
+                    ];
+                } else {
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Failed to Create Data Kategori'
+                    ];
                 }
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'manajemen-file/data-kategori',
-                    'message' => 'Save Data Kategori Succesfully'
-                ];
             } elseif ($mode == 'edit') {
-                // make object to find id
-                $datakategori                               = CategoryFile::find($id);
-                $datakategori->category_file_name           = $input->category_file_name;
-                $datakategori->category_file_explanation    = $input->category_file_explanation;
-                $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
-                $datakategori->updated_at                   = $now;
-                $datakategori->save();
+                if ($input->allowed_role ?? false) {
+                    // make object to find id
+                    $datakategori                               = CategoryFile::find($id);
+                    $datakategori->category_file_name           = $input->category_file_name;
+                    $datakategori->category_file_explanation    = $input->category_file_explanation;
+                    $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $datakategori->updated_at                   = $now;
+                    $datakategori->save();
 
-                foreach ($input->allowed_role as $key => $value) {
-                    $datakategori_role = CategoryFileRole::where('category_file_id', $id)->where('id_role', $input->allowed_role[$key])->first();
-                    if (!$datakategori_role) {
+                    // replace category file role
+                    CategoryFileRole::where('category_file_id', $id)->delete();
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    foreach ($input->allowed_role as $key => $value) {
                         $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $datakategori_role = new CategoryFileRole;
                         $datakategori_role->category_file_role_id = $uuid;
@@ -125,13 +134,18 @@ class DataKategoriController extends BaseController
                         $datakategori_role->category_file_id = $id;
                         $datakategori_role->save();
                     }
-                }
 
-                return [
-                    'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'manajemen-file/data-kategori',
-                    'message' => 'Update Data Kategori Succesfully'
-                ];
+                    return [
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'path' => 'manajemen-file/data-kategori',
+                        'message' => 'Update Data Kategori Succesfully'
+                    ];
+                } else {
+                    return [
+                        'status' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Failed to Edit Data Kategori'
+                    ];
+                }
             } elseif ($mode == 'delete') {
                 if (!CategoryFile::where('category_file_id', $id)->first()) {
                     return [

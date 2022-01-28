@@ -33,6 +33,7 @@ class SubDataKategoriController extends BaseController
             ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
             ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
             ->where('category_file_role.id_role', '=', $auth_data)
+            ->where('sub_category_file.deleted_at', '=', null)
             ->select('category_file.category_file_name as category_file', 'sub_category_file.*');
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
@@ -72,7 +73,6 @@ class SubDataKategoriController extends BaseController
     //action POST
     public function actionSubDataKategori(Request $request, $mode, $id = null)
     {
-
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [

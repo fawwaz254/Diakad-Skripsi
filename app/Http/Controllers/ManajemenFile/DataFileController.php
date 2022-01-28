@@ -64,7 +64,8 @@ class DataFileController extends BaseController
         $sub_category = DB::table('sub_category_file')
             ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
             ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
-            ->where('category_file_role.id_role', '=', $auth_data)->get();
+            ->where('category_file_role.id_role', '=', $auth_data)
+            ->where('sub_category_file.deleted_at', '=', null)->get();
 
         return view('manajemen-file/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
     }
