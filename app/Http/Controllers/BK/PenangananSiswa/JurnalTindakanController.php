@@ -69,6 +69,7 @@ class JurnalTindakanController extends BaseController
         }
     }
 
+  
     public function printJurnalTindakan(Request $request, $id_semester, $id_kelas, $id_siswa) {
 
         # code...

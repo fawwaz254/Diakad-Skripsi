@@ -18,7 +18,7 @@
 
                             <div class="col-md-4">
                                 <label>Semester</label>
-                                <select class="form-control show-tick" name="id_semester" required="">
+                                <select class="form-control show-tick" name="id_semester"required="" >
                                   <option value="" disabled selected >-- Pilih Semester --</option>
                                     @foreach($data_semester as $data)
                                         @if($data->is_aktif_semester == 1)
@@ -42,12 +42,32 @@
 
                             <div class="col-md-4">
                                 <label>Nama Siswa</label>
-                                <select class="form-control show-tick" name="id_siswa" required="">
+                                <select class="form-control show-tick" name="id_siswa" required="" onchange="changeName(this)">
                                     <option value="">-- Pilih Siswa --</option>
                                 </select>
                             </div>
 
                         </div>
+                      
+
+                        <div class="row clearfix">
+                        <div class="col-md-4">
+                            <label>Riwayat pelanggaran Siswa</label>
+                        <br>
+                            {{-- <a href="" id="print">PRint</a> --}}
+                           
+                            <a href="" id="print" ></a>
+                     
+                            
+                            {{-- <select class="form-control show-tick" name="print" required="" onchange="changeName(this)">
+                                {{-- <option value="">-- Pilih Siswa --</option> --}}
+                            {{-- </select> --}} 
+                        </div>
+                        </div>
+
+                        {{-- <a href="" name="print">Print</a> --}}
+
+
 
                         <h2 class="card-inside-title">
                             Sub Kategori Pelanggaran
@@ -111,6 +131,19 @@
 <!-- CKeditor Plugin Js -->
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
 
+
+
+
+<script>
+
+
+var name = this.id_siswa;
+var kelas = this.kelas;
+var semester = this.id_semester
+
+</script>
+
+
 <script>
 CKEDITOR.replace( 'editor1' );
 
@@ -134,6 +167,7 @@ $(function(){
 
 });
 
+
 function changeKelas(el){
     $.ajax({
         url: '{{url(Request::segment(1).'/'.Request::segment(2).'/siswa-bykelas')}}',
@@ -145,12 +179,73 @@ function changeKelas(el){
             $('select[name=id_siswa]').html('');
             var html = '<option value="">-- Pilih Siswa --</option>';
             $.each(result, function( key, item ) {
-                html += '<option value="'+item.id_siswa+'">'+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
+                html += '<option value="'+item.id_kelas+'/'+''+item.id_siswa+'">  '+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
             });
             $('select[name=id_siswa]').html(html);
         }
     });
 }
+
+
+
+
+function changeName(el){
+    
+    var nilai = $(el).val() ;
+    $('#print').html('@foreach($data_semester as $data)'+
+    '@if($data->is_aktif_semester == 1)'+
+    '<a href="bimbingan-konseling/penanganan-siswa/jurnal-tindakan/print/{{$data->id_semester}}/'+nilai+'" id="print" target="_blank">Link</a>'+
+    '@endif'+
+    '@endforeach');
+    
+  
+   
+
+}
+//     $.ajax({
+//         url: '{{url(Request::segment(1).'/'.Request::segment(2).'/siswa-bySiswa')}}',
+//         type: 'POST',
+//         data: {
+//             siswa: $('select[name=id_siswa]').val()
+//         },
+       
+//         success: function(result) {
+//             $('select[name=print]').html('');
+//                      var html = 'List pelanggaran';
+//             $.each(result, function( key, item ) {
+//             html +=     '<a href='item.catatan_pelanggaran'>'+item.catatan_pelanggaran+'</a>'
+//                             // html += '<option value="'+item.id_siswa+'">'+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
+//             });
+//     //         $('select[name=print]').html(html);
+        
+           
+//         }
+//     });
+
+// function semester(el){
+//     var semester = $(el).val() ;
+//     $("#print").html("id siswa"+semester );
+// }
+
+
+
+
+
+    // $.ajax({
+    //     url: '{{url(Request::segment(1).'/'.Request::segment(2).'/siswa-bySiswa')}}',
+    //     type: 'POST',
+    //     data: {
+    //         siswa: $('select[name=siswa]').val()
+    //     },
+    //     success: function(result) {
+    //         // $('select[name=print]').html('');
+    //         $("#print").html("hasilnya adalah"+siswa)
+
+    //     }
+    // });
+//}
+
+
 </script>
 <script>
     $('.select2').select2();

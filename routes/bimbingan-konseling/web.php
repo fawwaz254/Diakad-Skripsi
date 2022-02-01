@@ -98,6 +98,9 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::get('input-pelanggaran/add', 'BK\PenangananSiswa\InputPelanggaranController@addInputPelanggaran');
             Route::get('input-pelanggaran/edit/{id}', 'BK\PenangananSiswa\InputPelanggaranController@editInputPelanggaran');
 
+      
+
+
             Route::post('action-input-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\InputPelanggaranController@actionInputPelanggaran');
 
             // MENU Tindakan Pelanggaran
@@ -113,6 +116,7 @@ Route::group(array('middleware'=> ['token_staff']), function() {
             Route::post('action-tindakan-pelanggaran-nonkbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@deleteDatatablesBelumTindakanNonKBM');
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
+        
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
