@@ -50,15 +50,15 @@
                     {{ $value['keterangan'] }}
                     @if($value['potongan'])
                     <br>
-                    <small>Potongan : Rp {{ number_format($value['potongan']) }}</small>
+                    <small>Potongan : Rp {{ number_format($value['potongan'],2) }}</small>
                     @endif
                 </td>
                 @if($value['tipe'] == 1)
-                    <td style="text-align: right;">Rp {{ number_format($value['nominal']) }}</td>
+                    <td style="text-align: right;">Rp {{ number_format($value['nominal'],2) }}</td>
                     <td></td>
                 @else
                     <td></td>
-                    <td style="text-align: right;">Rp {{ number_format($value['nominal']) }}</td>
+                    <td style="text-align: right;">Rp {{ number_format($value['nominal'],2) }}</td>
                 @endif
             </tr>
             @endforeach
@@ -68,8 +68,8 @@
                 @else
                 <th colspan="2"></th>
                 @endif
-                <th>TOTAL DEBIT: <br>{{ "Rp " . number_format($data_laporan['total_debit']) }}</th>
-                <th>TOTAL KREDIT: <br>{{ "Rp " . number_format($data_laporan['total_kredit']) }}</th>
+                <th>TOTAL DEBIT: <br>{{ "Rp " . number_format($data_laporan['total_debit'],2) }}</th>
+                <th>TOTAL KREDIT: <br>{{ "Rp " . number_format($data_laporan['total_kredit'],2) }}</th>
             </tr>
         </table>
 
@@ -84,22 +84,22 @@
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Penerimaan Bulan Ini</td>
-                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_debit']) }}</td>
+                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_debit'],2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%"></td>
-                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit']) }}</td>
+                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'],2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Pengeluaran Bulan Ini</td>
-                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_kredit']) }}</td>
+                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_kredit'],2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Saldo Akhir Bulan</td>
-                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'] - $data_laporan['total_kredit']) }}</td>
+                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'] - $data_laporan['total_kredit'],2) }}</td>
                </tr>
            </table>
         </div>
