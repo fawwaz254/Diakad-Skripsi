@@ -24,6 +24,8 @@ class DataKategoriController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        // $list_data = CategoryFile::with('category_file_role.nama_role')->get();
+        // dd($list_data);
         return view('sekretariat/manajemen-file/data-kategori/view-data-kategori', compact('auth_data'));
     }
 
@@ -40,13 +42,21 @@ class DataKategoriController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = CategoryFile::all();
-
+        $list_data = CategoryFile::with('category_file_role.nama_role')->get();
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->category_file_id
                 );
+                return $data;
+            })
+            ->addColumn('role', function ($item) {
+                $data = [];
+                if ($item->category_file_role ?? false) {
+                    foreach ($item->category_file_role as $key => $value) {
+                        $data[$key]['role'] = $item->category_file_role[$key]->nama_role->nm_role;
+                    }
+                }
                 return $data;
             })
             ->make(true);
@@ -72,7 +82,6 @@ class DataKategoriController extends BaseController
         $validator = Validator::make($request->all(), [
             'category_file_name' => 'required',
             'category_file_explanation' => 'required',
-            // 'is_allowed_role' => 'required'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
