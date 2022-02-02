@@ -79,7 +79,7 @@
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Saldo Bulan Lalu</td>
-                <td>{{ "Rp " . number_format($saldo_before->kas_akhir_bulan) }}</td>
+                <td>{{ "Rp " . number_format($saldo_before->kas_akhir_bulan,2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
