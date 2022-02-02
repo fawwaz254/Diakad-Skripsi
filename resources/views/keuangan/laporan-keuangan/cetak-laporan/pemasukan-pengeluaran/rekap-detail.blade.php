@@ -74,7 +74,7 @@
         </table>
 
         @if($sekolah == 'SMK PEMUDA KRIAN')
-        <div style="margin-top:40px;">
+        <div style="margin-top:270px;">
            <table style="width:100%">
                <tr>
                 <td style="width:30%"></td>
@@ -118,7 +118,12 @@
             @endif
             <div class="col-md-4 {{$sekolah == 'SMK PEMUDA KRIAN' ? '' : 'offset-md-4'}}">
                 <p>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
-                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }} <br>Keuangan<br><br><br><br> 
+                @if($sekolah == 'SMK PEMUDA KRIAN')
+                31 Januari 2022
+                @else
+                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
+                @endif
+               <br>Keuangan<br><br><br><br> 
                 <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b></p>
             </div>
         </div>
