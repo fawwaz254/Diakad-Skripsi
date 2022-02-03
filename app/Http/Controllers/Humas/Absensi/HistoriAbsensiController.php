@@ -27,8 +27,9 @@ class HistoriAbsensiController extends BaseController
 
         // $start = Carbon::parse($start_date, $timezone);
         // $end = Carbon::parse($end_date, $timezone);
+                $end_date = Carbon::parse($date, 'Asia/Kolkata')->endOfMonth()->format('Y-m-d');
         // $time = Carbon::now($timezone);
-$end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
+// $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
 $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->whereBetween('date', [$date, $end_date])->get();
         $dates = CarbonPeriod::create($date, $end_date);
         foreach ($dates as $key => $value) {
