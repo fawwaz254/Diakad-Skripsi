@@ -95,6 +95,8 @@
 
                 <div class="header">
                     <h2>Histori Absensi</h2>
+                    <br>
+                    <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-left:3px"> Print Hari ini </a>
                 </div>
 
                 <div class="body">
