@@ -2,6 +2,9 @@
 
 // ROLE ALUMNI
 Route::group(array('middleware' => ['token_staff']), function () {
+
+
+
 	Route::group(array('prefix' => 'humas'), function () {
 		Route::get('welcome', 'Humas\WelcomeController@indexWelcome');
 
@@ -46,7 +49,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
 		Route::group(array('prefix' => 'absensi'), function () {
 
 			Route::group(array('prefix' => 'histori-absensi'), function () {
-
+//add
+Route::get('export-laravel/{id_pengguna}/{start_date}/{end_date}','Humas\Absensi\HistoriAbsensiController@export_excel');
+// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
 				Route::get('/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
 				Route::get('/{id_pengguna}/{date}/{start_date}/{end_date}/{role}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
