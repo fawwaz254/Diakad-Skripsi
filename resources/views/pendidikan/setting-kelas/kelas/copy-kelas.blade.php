@@ -59,10 +59,16 @@
                                 <label for="checkbox-ruangan">Ruangan Kelas</label> <br>
                                 <input type="checkbox" id="checkbox-is-aktif-ruangan" name="is_aktif_ruangan" class="filled-in" value="22">
                                 <label for="checkbox-is-aktif-ruangan">Data Aktif (Default Aktif Untuk Data Baru)</label> <br> <br> <br>
+
                                 <input type="checkbox" id="checkbox-wali-kelas" name="wali_kelas" class="filled-in" value="3">
                                 <label for="checkbox-wali-kelas">Wali Kelas</label> <br>
                                 <input type="checkbox" id="checkbox-is-aktif-wali-kelas" name="is_aktif_wali_kelas" class="filled-in" value="33">
-                                <label for="checkbox-is-aktif-wali-kelas">Data Aktif (Default Aktif Untuk Data Baru)</label>
+                                <label for="checkbox-is-aktif-wali-kelas">Data Aktif (Default Aktif Untuk Data Baru)</label> <br> <br> <br>
+                                {{-- //penambahan copy guru bk --}}
+                                <input type="checkbox" id="checkbox-guru-bk" name="guru_bk" class="filled-in" value="4">
+                                <label for="checkbox-guru-bk">Guru BK</label> <br>
+                                <input type="checkbox" id="checkbox-is-aktif-guru-bk" name="is_aktif_guru_bk" class="filled-in" value="44">
+                                <label for="checkbox-is-aktif-guru-bk">Data Aktif (Default Aktif Untuk Data Baru)</label>
                             </div>
                         </div>
                         <div class="row clearfix">
