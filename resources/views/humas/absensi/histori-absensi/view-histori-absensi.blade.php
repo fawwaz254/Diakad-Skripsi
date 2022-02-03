@@ -29,7 +29,7 @@
                             <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
                                 onclick="filterAction()">Change Date</button>
 
-                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $id_pengguna }}/{{ $start_date }}/{{ $end_date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-top:10px">Export ke Excell</a>
+                                
                                                       </div>
 
                      
@@ -141,6 +141,7 @@
                                         </button>
 
                                     @endif
+                                    <a href="humas/absensi/histori-absensi/export-laravel/{{ $r['id_pengguna'] }}/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-left:3px"> <i class="material-icons">print</i></a>
                                 </td>
                             </tr>
                             @endforeach

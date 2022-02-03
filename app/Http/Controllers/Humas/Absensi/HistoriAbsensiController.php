@@ -16,20 +16,21 @@ use Maatwebsite\Excel\Facades\Excel;
 class HistoriAbsensiController extends BaseController
 {
 
-    public function export_excel(Request $request, $id_pengguna = null, $start_date = null, $end_date = null)
+    public function export_excel(Request $request, $id_pengguna = null, $date = null)
     {
-        if (empty($start_date) || empty($end_date)) {
-            $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
-            $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
-        }
-        $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->whereBetween('date', [$start_date, $end_date])->get();
+        // if (empty($start_date) || empty($end_date)) {
+        //     $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
+        //     $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
+        // }
+       
         // $timezone = 'Asia/Kolkata';
 
         // $start = Carbon::parse($start_date, $timezone);
         // $end = Carbon::parse($end_date, $timezone);
         // $time = Carbon::now($timezone);
-
-        $dates = CarbonPeriod::create($start_date, $end_date);
+$end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
+$presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->whereBetween('date', [$date, $end_date])->get();
+        $dates = CarbonPeriod::create($date, $end_date);
         foreach ($dates as $key => $value) {
             $HistoriAbsensi[$key]['date'] = $value->format('Y-m-d');
             $HistoriAbsensi[$key]['tanggal'] = $value->format('d');
