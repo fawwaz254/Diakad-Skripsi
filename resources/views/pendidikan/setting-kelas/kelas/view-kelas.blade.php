@@ -16,12 +16,13 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Jurusan</th>
-                                        <th>Nama Kelas</th>
+                                        <th>Kelas</th>
                                         <th>Tingkat</th>
                                         <th>Keterangan</th>
-                                        <th>Nama Sekretaris</th>
+                                        <th>Sekretaris</th>
                                         <th>Ruangan</th>
-                                        <th>Nama Wali Kelas</th>
+                                        <th>Wali Kelas</th>
+                                        <th>BK</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -52,6 +53,7 @@
     var sekretaris_url = role_url + '#' + modul_url + '/' + 'sekretaris-kelas/view-kelas';
     var ruangan_url = role_url + '#' + modul_url + '/' + 'ruangan-kelas/view-kelas';
     var wali_kelas_url = role_url + '#' + modul_url + '/' + 'wali-kelas/view-kelas';
+    var bk_kelas_url = role_url + '#' + modul_url + '/' + 'bk-kelas/add';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -100,6 +102,19 @@ responsive: true,
                     }
                     else{
                         return data.nm_wali_kelas;
+                    };
+                } 
+            },
+            //penambahan fitur bk
+            { data: 'bk_kelas', name: 'bk_kelas',
+                render: function(data){
+                    if(data.bk_kelas == 0){
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ bk_kelas_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">playlist_add</i>'+
+                    '</a>';
+                    }
+                    else{
+                        return data.bk_kelas;
                     };
                 } 
             },
