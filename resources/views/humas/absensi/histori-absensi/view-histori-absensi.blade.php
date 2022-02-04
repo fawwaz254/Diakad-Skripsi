@@ -25,14 +25,20 @@
                                 aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display: flex;" >
+                            <div>
                             <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
                                 onclick="filterAction()">Change Date</button>
+                            </div>
+                            <div style="margin-left:10px; ">
+                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style=" margin-top:27px; height:30px;"> <i class="material-icons">print</i> </a>
+                            </div>
+                            </div>
 
-                                
-                                                      </div>
-
-                     
+                        
+                                                   
+                            
+                              
 
                     </div>
 
@@ -93,10 +99,13 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
 
-                <div class="header">
-                    <h2>Histori Absensi</h2>
-                    <br>
-                    <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-left:3px"> Print Hari ini </a>
+              
+
+                <div class="header" >
+                    <h2>Histori Absensi   </h2>
+                    
+                   
+                   
                 </div>
 
                 <div class="body">
@@ -143,7 +152,7 @@
                                         </button>
 
                                     @endif
-                                    <a href="humas/absensi/histori-absensi/export-laravel/{{ $r['id_pengguna'] }}/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-left:3px"> <i class="material-icons">print</i></a>
+
                                 </td>
                             </tr>
                             @endforeach
