@@ -31,7 +31,8 @@
                                 onclick="filterAction()">Change Date</button>
                             </div>
                             <div style="margin-left:10px; ">
-                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style=" margin-top:27px; height:30px;"> <i class="material-icons">print</i> </a>
+                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style=" margin-top:27px; height:30px; ">
+                                     <i class="material-icons" style="font-size: 17px;">print</i> </a>
                             </div>
                             </div>
 
