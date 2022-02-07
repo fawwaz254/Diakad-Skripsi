@@ -29,7 +29,7 @@
                             <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
                                 onclick="filterAction()">Change Date</button>
 
-                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $id_pengguna }}/{{ $start_date }}/{{ $end_date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-top:10px">Export ke Excell</a>
+                                {{-- <a href="humas/absensi/histori-absensi/export-laravel/{{ $id_pengguna }}/{{ $start_date }}/{{ $end_date }}" target="_blank" class="btn bg-purple waves-effect" style="margin-top:10px">Export ke Excell</a> --}}
                                                       </div>
 
                      
