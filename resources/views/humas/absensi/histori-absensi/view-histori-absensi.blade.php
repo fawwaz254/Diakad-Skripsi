@@ -25,10 +25,21 @@
                                 aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display: flex;" >
+                            <div>
                             <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
                                 onclick="filterAction()">Change Date</button>
-                        </div>
+                            </div>
+                            <div style="margin-left:10px; ">
+                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style=" margin-top:27px; height:30px; ">
+                                     <i class="material-icons" style="font-size: 17px;">print</i> </a>
+                            </div>
+                            </div>
+
+                        
+                                                   
+                            
+                              
 
                     </div>
 
@@ -89,8 +100,13 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
 
-                <div class="header">
-                    <h2>Histori Absensi</h2>
+              
+
+                <div class="header" >
+                    <h2>Histori Absensi   </h2>
+                    
+                   
+                   
                 </div>
 
                 <div class="body">
@@ -137,6 +153,7 @@
                                         </button>
 
                                     @endif
+
                                 </td>
                             </tr>
                             @endforeach
