@@ -6,15 +6,15 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
+        "barryvdh/laravel-dompdf": "^0.8.3",
         "fideloper/proxy": "~3.3",
         "jrm2k6/cloudder": "^0.6.0",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "maatwebsite/excel": "~2.1.0",
+        "maatwebsite/excel": "3.*",
         "predis/predis": "^1.1",
-        "yajra/laravel-datatables-oracle": "^8.3",
-        "barryvdh/laravel-dompdf": "^0.8.3"
+        "yajra/laravel-datatables-oracle": "^8.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

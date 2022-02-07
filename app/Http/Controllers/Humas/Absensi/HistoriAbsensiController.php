@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Humas\Absensi;
 
-use App\Exports\HistoriAbsensi;
+
+use App\Exports\HistoriAbsensiDay;
 use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
 use App\Models\PresensiPengguna;
@@ -16,60 +17,47 @@ use Maatwebsite\Excel\Facades\Excel;
 class HistoriAbsensiController extends BaseController
 {
 
-    public function export_excel(Request $request, $id_pengguna = null, $start_date = null, $end_date = null)
-    {
-        if (empty($start_date) || empty($end_date)) {
-            $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
-            $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
-        }
-        $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->whereBetween('date', [$start_date, $end_date])->get();
-        // $timezone = 'Asia/Kolkata';
 
-        // $start = Carbon::parse($start_date, $timezone);
-        // $end = Carbon::parse($end_date, $timezone);
-        // $time = Carbon::now($timezone);
+    public function export_excel_day(Request $request, $date = null){
+        $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
 
-        $dates = CarbonPeriod::create($start_date, $end_date);
-        foreach ($dates as $key => $value) {
-            $HistoriAbsensi[$key]['date'] = $value->format('Y-m-d');
-            $HistoriAbsensi[$key]['tanggal'] = $value->format('d');
-            $HistoriAbsensi[$key]['hari'] = $value->format('l');
-            $HistoriAbsensi[$key]['check_in'] = '-';
-            $HistoriAbsensi[$key]['check_out'] = '-';
-            $HistoriAbsensi[$key]['status'] = '-';
-            $HistoriAbsensi[$key]['notes'] = '-';
 
-            $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
+        foreach ($pengguna as $key => $value) {
+            $hasil[$key]['check_in'] = '-';
+            $hasil[$key]['date'] = $date;
+            $hasil[$key]['id_pengguna'] = $value->id_pengguna;
+            $hasil[$key]['status_join_table'] = $value->status_join_table;
+            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['check_out'] = '-';
+            $hasil[$key]['status'] = '-';
+            $hasil[$key]['notes'] = '-';
+            $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
 
             if ($attendance) {
-
-                if ($attendance->id_presensi_pengguna) {
-                    $HistoriAbsensi[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
-                }
-
                 if ($attendance->check_in) {
-                    $HistoriAbsensi[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['check_in'] = $attendance->check_in;
+        
                 }
 
                 if ($attendance->check_out) {
-                    $HistoriAbsensi[$key]['check_out'] = $attendance->check_out;
+                    $hasil[$key]['check_out'] = $attendance->check_out;
                 }
 
                 if ($attendance->status) {
-                    $HistoriAbsensi[$key]['status'] = $attendance->status;
+                    $hasil[$key]['status'] = $attendance->status;
+               
                 }
 
                 if ($attendance->notes) {
-                    $HistoriAbsensi[$key]['notes'] = $attendance->notes;
+                    $hasil[$key]['notes'] = $attendance->notes;
                 }
             }
         }
-
-        $products = $HistoriAbsensi;
-        return Excel::download(new HistoriAbsensi($products), 'download.xlsx');
-        // return view('humas/absensi/histori-absensi/export-excel', compact('auth_data', 'id_pengguna', 'start_date', 'end_date', 'dates', 'guru', 'tendik', 'hasil', 'role'));
+        $products = $hasil;
+        return Excel::download(new HistoriAbsensiDay($products), 'download_harian.xlsx');
 
     }
+
 
     public function viewHistoriAbsensi(Request $request, $date = null)
     {
