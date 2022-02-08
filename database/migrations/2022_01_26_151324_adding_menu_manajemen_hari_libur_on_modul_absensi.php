@@ -22,7 +22,7 @@ class AddingMenuManajemenHariLiburOnModulAbsensi extends Migration
         $menu->id_modul = $modul->id_modul;
         $menu->nm_menu = 'Manajemen Hari Libur';
         $menu->page = 'manajemen-hari-libur';
-        $menu->urutan = 2;
+        $menu->urutan = 3;
         $menu->akses = 1;
         $menu->save();
     }
