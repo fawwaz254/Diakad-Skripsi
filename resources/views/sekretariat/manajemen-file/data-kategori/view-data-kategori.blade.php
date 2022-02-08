@@ -18,6 +18,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Kategori File</th>
+                                        <th>Role Yang diizinkan mengakses</th>
                                         <th>Keterangan Kategori File</th>
                                         <th>Action</th>
                                     </tr>
@@ -49,6 +50,13 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'category_file_name', name: 'category_file_name' },
+            { data: 'role', name: 'role',render:function(data){
+                var role_text='';
+                data.forEach((d,i)=> {
+                    role_text+=`<li>${d.role}</li>`  
+                });
+                return `<ul>${role_text}</ul>`
+            }},
             { data: 'category_file_explanation', name: 'category_file_explanation' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
