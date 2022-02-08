@@ -8,7 +8,7 @@
 </style>
 
 <div class="container-fluid">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -36,8 +36,13 @@
                                 <center>
                                     <span>{{$r->judul}}</span>
                                 </center>
-                            </div>
                             </a>
+                            <center style="margin-top:10px;">
+                                <a onclick="deleteFile('{{$r->file_pengguna_id}}')">
+                                    <i style="color:red;" class="material-icons">cancel</i>
+                                </a>
+                            </center>
+                            </div>
                             @endforeach
 
                         </div>
@@ -48,3 +53,33 @@
         </div>
     </div>
 </div>
+<script>
+    function deleteFile(id) {
+        var token = $("meta[name='csrf-token']").attr("content");
+        swal(
+        { title: "Are you sure?", showCancelButton: true},
+        function (isConfirm) {
+            if (isConfirm) {
+                $.ajax({
+                    url: `{{Request::segment(1)}}/{{Request::segment(2)}}/{{Request::segment(3)}}/action-data-file/delete/${id}`,
+                    type: "post",
+
+                    data: {
+                        _token: token,
+                    },
+
+                    success: function () {
+                        swal({
+                            title: "Delete Success",
+                            text: "Data berhasil dihapus",
+                            icon: "success",
+                        });
+                        loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/{{Request::segment(4)}}/{{Request::segment(5)}}');
+                    },
+                });
+            }
+            return;
+        }
+    );
+}
+</script>

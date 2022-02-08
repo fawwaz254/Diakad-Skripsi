@@ -49,7 +49,6 @@ class DataFileController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         $sub_category = SubCategoryFile::find($id);
         $file = FilePengguna::where('sub_category_file_id', $id)->get();
 
@@ -73,7 +72,10 @@ class DataFileController extends BaseController
 
         $input = (object) $request->input();
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
-
+        if ($mode == 'delete') {
+            FilePengguna::destroy($id);
+            return;
+        }
         $list_validator = [
             'judul'         => 'required',
             'keterangan'    => 'required',

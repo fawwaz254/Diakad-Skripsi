@@ -75,7 +75,10 @@ class DataFileController extends BaseController
 
         $input = (object) $request->input();
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
-
+        if ($mode == 'delete') {
+            FilePengguna::destroy($id);
+            return;
+        }
         $list_validator = [
             'judul'         => 'required',
             'keterangan'    => 'required',
