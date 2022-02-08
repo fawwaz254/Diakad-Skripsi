@@ -18,4 +18,9 @@ class CategoryFileRole extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+
+    public function nama_role()
+    {
+        return $this->belongsTo(Role::class, 'id_role', 'id_role');
+    }
 }

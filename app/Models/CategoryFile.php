@@ -21,4 +21,9 @@ class CategoryFile extends Model
     public $timestamps = true;
 
     protected $guarded = [];
+
+    public function category_file_role()
+    {
+        return $this->hasMany(CategoryFileRole::class, 'category_file_id', 'category_file_id');
+    }
 }

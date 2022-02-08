@@ -44,7 +44,7 @@
                             </h2>
                             @foreach($role as $r)
                             <div class="form-check">
-                                <input class="form-check-input" name="is_allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} id="role-checkbox[{{$r->id_role}}]">
+                                <input class="form-check-input" name="allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} id="role-checkbox[{{$r->id_role}}]">
                                 <label class="form-check-label" for="role-checkbox[{{$r->id_role}}]">{{$r->nm_role}}</label>
                             </div>
                             @endforeach

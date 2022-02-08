@@ -38,7 +38,7 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-sub-kategori/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'data-sub-kategori/edit';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-sub-kategori/action-data-sub-kategori/delete';
-
+    console.log(delete_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
