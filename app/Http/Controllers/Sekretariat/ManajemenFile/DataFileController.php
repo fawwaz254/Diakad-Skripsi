@@ -73,6 +73,10 @@ class DataFileController extends BaseController
         $input = (object) $request->input();
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
         if ($mode == 'delete') {
+            $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
+            if (!$is_google_drive) {
+                Storage::disk('spaces')->delete($input->link_file);
+            }
             FilePengguna::destroy($id);
             return;
         }
