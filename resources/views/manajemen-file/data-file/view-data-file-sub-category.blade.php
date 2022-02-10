@@ -23,9 +23,12 @@
                     </div>
                     <div class="body">
 
+                        @foreach ($file as $f)
+                        @if (!$f->file_pengguna->isEmpty())
+                        <h2>{{$f->nm_pengguna}}</h2> 
+                        @endif
                         <div class="row">
-                                
-                            @foreach($file as $r)
+                            @foreach($f->file_pengguna as $r)
                             @if($r->is_google_drive == 1)
                             <a href="{{$r->link_file}}" target="_blank" style="color: inherit;text-decoration: inherit; ">
                             @else
@@ -57,7 +60,7 @@
                             @endforeach
 
                         </div>
-
+                        @endforeach
                     </div>
                 </div>
             </div>

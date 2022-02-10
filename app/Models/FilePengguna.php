@@ -17,9 +17,13 @@ class FilePengguna extends Model
     protected $primaryKey = 'file_pengguna_id';
 
     public $incrementing = false;
-    
-	public $timestamps = true;
+
+    public $timestamps = true;
 
     protected $guarded = [];
 
+    public function pengguna()
+    {
+        return $this->belongsTo('App\Models\Pengguna', 'pengguna_id');
+    }
 }
