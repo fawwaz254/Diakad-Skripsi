@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Yajra\Datatables\Datatables;
 
 use App\Models\Kelas as Kelas;
+use App\Models\BkKelas;
 use App\Models\Siswa as Siswa;
 use App\Models\Semester as Semester;
 use App\Models\SekretarisKelas as SekretarisKelas;
@@ -143,6 +144,27 @@ class KelasController extends BaseController
                     }
                     return $data;
                 })
+                //bk
+                ->addColumn('bk_kelas', function ($item) {
+                    if (empty($item->nama_guru_bk)) {
+                        // $data = array(
+                        //     'bk_kelas' => 'ujicoba'
+                        // );
+                        $data = array(
+                            'bk_kelas' => 0,
+                            'id' => $item->id_kelas
+                        );
+                    } else {
+                        $data = array(
+                            'bk_kelas' => $item->nama_guru_bk
+                        );
+                    }
+                      
+                        
+                    
+                    return $data;
+                })
+
                 ->addColumn('action', function ($item) {
                     $data = array(
                         'id' => $item->id_kelas

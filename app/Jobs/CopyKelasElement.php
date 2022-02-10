@@ -11,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\RuanganKelas;
 use App\Models\SekretarisKelas;
 use App\Models\WaliKelas;
+use App\Models\BkKelas;
 
 class CopyKelasElement implements ShouldQueue
 {
@@ -199,5 +200,62 @@ class CopyKelasElement implements ShouldQueue
                 }
             }
         }
+        //guru bk
+
+        if (! empty($this->input->guru_bk) && $this->input->guru_bk == 4) {
+            // proses tabel wali_kelas
+            $guru_bk_set = BkKelas::where('id_semester', '=', $this->input->id_semester_copy)->get();
+
+            foreach ($guru_bk_set->chunk(25) as $guru_bk_chunk) {
+                foreach ($guru_bk_chunk as $guru_bk) {
+                    $id_bk_kelas          = $this->input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $id_kelas               = $guru_bk->id_kelas;
+                    $id_pengguna             = $guru_bk->id_pengguna;
+                    $id_semester            = $this->input->id_semester_paste;
+
+                    if (! empty($this->input->is_aktif_guru_bk) && $this->input->is_aktif_guru_bk == 44) {
+                        $is_aktif   = 1;
+
+                        // proses update is_aktif menjadi 0 All Record
+                        if ($guru_bk                 = BkKelas::join('semester', 'semester.id_semester', '=', 'bk_kelas.id_semester')
+                                                    ->where('bk_kelas.id_kelas', '=', $id_kelas)
+                                                    ->where('bk_kelas.is_aktif', '=', 1)
+                                                    ->first()) {
+                            $guru_bk->is_aktif       = 1;
+                            $guru_bk->updated_by     = $this->input->auth_data->pengguna->id_pengguna;
+                            $guru_bk->updated_at     = $now;
+                            $guru_bk->save();
+                        }
+
+                        BkKelas::insert(array(
+                            'id_bk_kelas'                 => $id_bk_kelas,
+                            'id_kelas'                  => $id_kelas,
+                            'id_pengguna'               => $id_pengguna,
+                            'id_semester'               => $id_semester,
+                            'is_aktif'                  => $is_aktif,
+                            'created_by'                => $this->input->auth_data->pengguna->id_pengguna,
+                            'created_at'                => $now,
+                            'updated_by'                => $this->input->auth_data->pengguna->id_pengguna,
+                            'updated_at'                => $now
+                        ));
+                    } else {
+                        $is_aktif = 0;
+
+                        WaliKelas::insert(array(
+                            'id_bk_kelas'          => $id_bk_kelas,
+                            'id_kelas'               => $id_kelas,
+                            'id_guru'                => $id_guru,
+                            'id_semester'            => $id_semester,
+                            'is_aktif'               => $is_aktif,
+                            'created_by'             => $this->input->auth_data->pengguna->id_pengguna,
+                            'created_at'             => $now,
+                            'updated_by'             => $this->input->auth_data->pengguna->id_pengguna,
+                            'updated_at'             => $now
+                        ));
+                    }
+                }
+            }
+        }
+
     }
 }

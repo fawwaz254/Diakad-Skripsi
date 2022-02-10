@@ -101,8 +101,24 @@ class InputPelanggaranController extends BaseController
         // ambil data all siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $input->kelas);
 
+
         return $data_siswa;
     }
+
+
+    // public function ajaxGetSiswaByName(Request $request){
+    //     $input = (object) $request->input();
+    //     $auth_data = $input->auth_data;
+
+    //     // ambil data all siswa
+    //     $data_siswa = PelanggaranSiswa::where('id_siswa',$input->siswa)->get();
+
+    //     return $data_siswa;
+    // } 
+    
+
+
+
 
     public function ajaxGetSubkategoriByKategori(Request $request)
     {
@@ -228,11 +244,18 @@ class InputPelanggaranController extends BaseController
 
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-                $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
+                $idSiswa = $input->id_siswa;
+                $PecahStr = explode("/", $idSiswa);
+                 
+        
+             
+
+
+                $siswa = Siswa::where('id_siswa', '=', $PecahStr[1])->first();
 
                 $pelanggaranSiswa                               = new PelanggaranSiswa;
                 $pelanggaranSiswa->id_pelanggaran_siswa         = $id;
-                $pelanggaranSiswa->id_siswa                     = $input->id_siswa;
+                $pelanggaranSiswa->id_siswa                     = $PecahStr[1];
                 $pelanggaranSiswa->id_kelas                     = $siswa->id_kelas;
                 $pelanggaranSiswa->id_guru_input                = $id_guru_input;
                 $pelanggaranSiswa->id_semester                  = $input->id_semester;

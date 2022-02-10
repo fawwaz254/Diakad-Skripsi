@@ -50,15 +50,15 @@
                     {{ $value['keterangan'] }}
                     @if($value['potongan'])
                     <br>
-                    <small>Potongan : Rp {{ number_format($value['potongan']) }}</small>
+                    <small>Potongan : Rp {{ number_format($value['potongan'],2) }}</small>
                     @endif
                 </td>
                 @if($value['tipe'] == 1)
-                    <td style="text-align: right;">Rp {{ number_format($value['nominal']) }}</td>
+                    <td style="text-align: right;">Rp {{ number_format($value['nominal'],2) }}</td>
                     <td></td>
                 @else
                     <td></td>
-                    <td style="text-align: right;">Rp {{ number_format($value['nominal']) }}</td>
+                    <td style="text-align: right;">Rp {{ number_format($value['nominal'],2) }}</td>
                 @endif
             </tr>
             @endforeach
@@ -68,38 +68,38 @@
                 @else
                 <th colspan="2"></th>
                 @endif
-                <th>TOTAL DEBIT: <br>{{ "Rp " . number_format($data_laporan['total_debit']) }}</th>
-                <th>TOTAL KREDIT: <br>{{ "Rp " . number_format($data_laporan['total_kredit']) }}</th>
+                <th>TOTAL DEBIT: <br>{{ "Rp " . number_format($data_laporan['total_debit'],2) }}</th>
+                <th>TOTAL KREDIT: <br>{{ "Rp " . number_format($data_laporan['total_kredit'],2) }}</th>
             </tr>
         </table>
 
         @if($sekolah == 'SMK PEMUDA KRIAN')
-        <div style="margin-top:40px;">
+        <div style="margin-top:270px;">
            <table style="width:100%">
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Saldo Bulan Lalu</td>
-                <td>{{ "Rp " . number_format($saldo_before->kas_akhir_bulan) }}</td>
+                <td>{{ "Rp " . number_format($saldo_before->kas_akhir_bulan,2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Penerimaan Bulan Ini</td>
-                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_debit']) }}</td>
+                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_debit'],2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%"></td>
-                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit']) }}</td>
+                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'],2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Pengeluaran Bulan Ini</td>
-                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_kredit']) }}</td>
+                <td style="text-decoration:underline;">{{ "Rp " . number_format($data_laporan['total_kredit'],2) }}</td>
                </tr>
                <tr>
                 <td style="width:30%"></td>
                 <td style="width:20%">Saldo Akhir Bulan</td>
-                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'] - $data_laporan['total_kredit']) }}</td>
+                <td style="font-weight: 700;">{{ "Rp " . number_format($saldo_before->kas_akhir_bulan + $data_laporan['total_debit'] - $data_laporan['total_kredit'],2) }}</td>
                </tr>
            </table>
         </div>
@@ -118,7 +118,12 @@
             @endif
             <div class="col-md-4 {{$sekolah == 'SMK PEMUDA KRIAN' ? '' : 'offset-md-4'}}">
                 <p>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
-                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }} <br>Keuangan<br><br><br><br> 
+                @if($sekolah == 'SMK PEMUDA KRIAN')
+                31 Januari 2022
+                @else
+                {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
+                @endif
+               <br>Keuangan<br><br><br><br> 
                 <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b></p>
             </div>
         </div>

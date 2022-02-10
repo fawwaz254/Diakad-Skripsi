@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Session;
 
 class ManajemenHariLiburController extends BaseController
 {
@@ -19,6 +20,7 @@ class ManajemenHariLiburController extends BaseController
         $holidays = [];
         $dates = ManajemenHariLibur::all();
         foreach ($dates as $key => $date) {
+            $holidays[$key]['id'] = $date->manajemen_hari_libur_id;
             $holidays[$key]['year'] = Carbon::parse($date->date)->format('Y');
             $holidays[$key]['month'] = Carbon::parse($date->date)->format('M');
             $holidays[$key]['date'] = Carbon::parse($date->date)->format('d');
@@ -45,48 +47,44 @@ class ManajemenHariLiburController extends BaseController
         $holiday = [];
         $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->first();
         if ($is_holiday_exist) {
-            return redirect("/humas#absensi/manajemen-hari-libur/add")->with('message', 'Tanggal ini sudah diisi');
+            return redirect("/humas#absensi/manajemen-hari-libur/add");
         }
         $holiday['manajemen_hari_libur_id'] = $uuid;
         $holiday['date'] = $input->date;
         $holiday['explanation'] = $input->explanation;
-        $holiday['extra_money'] = $input->extraMoney;
         $holiday['created_by'] = $auth_data->pengguna->id_pengguna;
         ManajemenHariLibur::create($holiday);
         return redirect("/humas#absensi/manajemen-hari-libur");
     }
 
-    public function editManajemenHariLibur(Request $request, $date = null)
+    public function editManajemenHariLibur(Request $request, $id)
     {
-        $holiday = ManajemenHariLibur::where('date', $date)->first();
+        $holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id)->first();
         return view('humas/absensi/manajemen-hari-libur/edit-manajemen-hari-libur', compact('holiday'));
     }
 
-    public function updateManajemenHariLibur(Request $request, $date = null)
+    public function updateManajemenHariLibur(Request $request, $id)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)
-            ->where('manajemen_hari_libur_id', '<>', $input->id)
-            ->first();
+        $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->where('manajemen_hari_libur_id','!=',$id)->first();
         if ($is_holiday_exist) {
-            return redirect("/humas#absensi/manajemen-hari-libur/" . $date . "/edit")->with('message', 'Tanggal ini sudah diisi');
+            return redirect("/humas#absensi/manajemen-hari-libur/" . $id . "/edit");
         }
-        $is_holiday = ManajemenHariLibur::where('date', $date)->first();
+        $is_holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id)->first();
         $holiday = [];
         $holiday['date'] = $input->date;
         $holiday['explanation'] = $input->explanation;
-        $holiday['extra_money'] = $input->extraMoney;
         $holiday['updated_by'] = $auth_data->pengguna->id_pengguna;
         $is_holiday->update($holiday);
         return redirect("/humas#absensi/manajemen-hari-libur");
     }
 
-    public function destroyManajemenHariLibur(Request $request, $date = null)
+    public function destroyManajemenHariLibur(Request $request, $id)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $is_holiday = ManajemenHariLibur::where('date', $date);
+        $is_holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id);
         $is_holiday->update(['deleted_by' => $auth_data->pengguna->id_pengguna]);
         $is_holiday->delete();
     }
