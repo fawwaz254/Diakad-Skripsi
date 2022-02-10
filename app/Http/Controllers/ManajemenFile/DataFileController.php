@@ -12,6 +12,7 @@ use App\Models\SubCategoryFile;
 use App\Models\CategoryFile;
 use App\Models\CategoryFileRole;
 use App\Models\FilePengguna;
+use App\Models\Pengguna;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -48,8 +49,10 @@ class DataFileController extends BaseController
         $auth_data = $input->auth_data;
 
         $sub_category = SubCategoryFile::find($id);
-        $file = FilePengguna::where('sub_category_file_id', $id)->get();
-
+        $file = Pengguna::Has('file_pengguna')
+            ->with(["file_pengguna" => function ($q) use ($id) {
+                return $q->where('sub_category_file_id', $id);
+            }])->get();
         return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
     }
 
