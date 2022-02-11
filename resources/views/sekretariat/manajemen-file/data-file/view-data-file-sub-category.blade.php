@@ -24,7 +24,8 @@
                     <div class="body">
                         @foreach ($file as $f)
                         @if (!$f->file_pengguna->isEmpty())
-                        <h2>{{$f->nm_pengguna}}</h2> 
+                        <p>{{$f->nm_pengguna}}</p>
+                        <hr> 
                         @endif
                         <div class="row">
                             @foreach($f->file_pengguna as $r)
