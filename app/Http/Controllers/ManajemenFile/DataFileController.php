@@ -12,6 +12,7 @@ use App\Models\SubCategoryFile;
 use App\Models\CategoryFile;
 use App\Models\CategoryFileRole;
 use App\Models\FilePengguna;
+use App\Models\Pengguna;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -48,8 +49,10 @@ class DataFileController extends BaseController
         $auth_data = $input->auth_data;
 
         $sub_category = SubCategoryFile::find($id);
-        $file = FilePengguna::where('sub_category_file_id', $id)->get();
-
+        $file = Pengguna::Has('file_pengguna')
+            ->with(["file_pengguna" => function ($q) use ($id) {
+                return $q->where('sub_category_file_id', $id);
+            }])->get();
         return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
     }
 
@@ -75,7 +78,14 @@ class DataFileController extends BaseController
 
         $input = (object) $request->input();
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
-
+        if ($mode == 'delete') {
+            $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
+            if (!$is_google_drive) {
+                Storage::disk('spaces')->delete($input->link_file);
+            }
+            FilePengguna::destroy($id);
+            return;
+        }
         $list_validator = [
             'judul'         => 'required',
             'keterangan'    => 'required',

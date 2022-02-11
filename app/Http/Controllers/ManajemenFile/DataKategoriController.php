@@ -14,7 +14,7 @@ class DataKategoriController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('manajemen-file/data-kategori/view-data-kategori', compact('auth-data'));
+        return view('manajemen-file/data-kategori/view-data-kategori', compact('auth_data'));
     }
 
     public function datatablesCategoryfile(Request $request)
