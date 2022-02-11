@@ -26,7 +26,7 @@ class Pengguna extends Authenticatable
     public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_pengguna',
         'id_status_pengguna',
@@ -47,39 +47,41 @@ class Pengguna extends Authenticatable
 
     protected $guarded = [];
 
-    public function getIsPegawaiAttribute(){
+    public function getIsPegawaiAttribute()
+    {
         return $this->status_join_table === self::PEGAWAI;
     }
 
-    public function getIsGuruAttribute(){
+    public function getIsGuruAttribute()
+    {
         return $this->status_join_table === self::GURU;
     }
 
-    public function getIsSiswaAttribute(){
+    public function getIsSiswaAttribute()
+    {
         return $this->status_join_table === self::SISWA;
     }
 
-    public function getIsWaliMuridAttribute(){
+    public function getIsWaliMuridAttribute()
+    {
         return $this->status_join_table === self::WALI_MURID;
     }
 
-    public function getIsPembinaEkskulAttribute(){
+    public function getIsPembinaEkskulAttribute()
+    {
         return $this->status_join_table === self::PELATIH_EKSKUL;
     }
 
     public function fullname()
     {
-        if( ! empty($this->gelar_depan) && ! empty($this->gelar_belakang)) {
-            return $this->gelar_depan." ".$this->nm_pengguna.", ".$this->gelar_belakang;
-        }
-        elseif( ! empty($this->gelar_depan)) {
-            return $this->gelar_depan." ".$this->nm_pengguna;   
-        }
-        elseif( ! empty($this->gelar_belakang)) {
-            return $this->nm_pengguna.", ".$this->gelar_belakang;   
-        }
-        else {
-            return $this->nm_pengguna; 
+        if (!empty($this->gelar_depan) && !empty($this->gelar_belakang)) {
+            return $this->gelar_depan . " " . $this->nm_pengguna . ", " . $this->gelar_belakang;
+        } elseif (!empty($this->gelar_depan)) {
+            return $this->gelar_depan . " " . $this->nm_pengguna;
+        } elseif (!empty($this->gelar_belakang)) {
+            return $this->nm_pengguna . ", " . $this->gelar_belakang;
+        } else {
+            return $this->nm_pengguna;
         }
     }
 
@@ -103,7 +105,10 @@ class Pengguna extends Authenticatable
         return $this->hasMany(PengisianKegiatanHarian::class, 'id_pengguna');
     }
 
-
+    public function file_pengguna()
+    {
+        return $this->hasMany(FilePengguna::class, 'pengguna_id', 'id_pengguna');
+    }
 
 
 
