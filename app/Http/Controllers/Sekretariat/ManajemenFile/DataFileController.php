@@ -58,6 +58,13 @@ class DataFileController extends BaseController
         return view('sekretariat/manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
     }
 
+    public function dropdownCategory(Request $request)
+    {
+        $input = (object) $request->input();
+        $sub_category = SubCategoryFile::where('category_file_id', $input->category_file_id)->get();
+        return $sub_category;
+    }
+
     public function addDataFile(Request $request)
     {
 

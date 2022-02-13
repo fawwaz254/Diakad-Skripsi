@@ -56,6 +56,13 @@ class DataFileController extends BaseController
         return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
     }
 
+    public function dropdownCategory(Request $request)
+    {
+        $input = (object) $request->input();
+        $sub_category = SubCategoryFile::where('category_file_id', $input->category_file_id)->get();
+        return $sub_category;
+    }
+
     public function addDataFile(Request $request)
     {
 
@@ -78,14 +85,6 @@ class DataFileController extends BaseController
 
         $input = (object) $request->input();
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
-        if ($mode == 'delete') {
-            $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
-            if (!$is_google_drive) {
-                Storage::disk('spaces')->delete($input->link_file);
-            }
-            FilePengguna::destroy($id);
-            return;
-        }
         $list_validator = [
             'judul'         => 'required',
             'keterangan'    => 'required',

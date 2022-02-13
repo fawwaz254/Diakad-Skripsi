@@ -18,20 +18,16 @@
 
                             <div class="col-md-6">
                                 <label>Category File</label>
-                                <select class="form-control show-tick" name="category">                            
+                                <select class="form-control show-tick" name="category" id="category">                            
                                     @foreach($category as $r)
                                     <option value="{{$r->category_file_id}}">{{$r->category_file_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="sub_category">
                                 <label>Sub Category File</label>
-                                <select class="form-control show-tick" name="sub_category_file_id" required="">             
-                                    @foreach($sub_category as $r)
-                                    <option value="{{$r->sub_category_file_id}}">{{$r->sub_category_file_name}}</option>
-                                    @endforeach
-                                </select>
+                                <select class="form-control show-tick" name="sub_category_file_id" required=""></select>
                             </div>
 
                         </div>
@@ -110,6 +106,43 @@
         }
 
     }
+
+    $(document).ready(function () {
+        var x = $('#category').val();
+        $.ajax({
+            url: "{{(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/dropdown-category')}}",
+            data: {
+                category_file_id: x,
+            },
+            dataType: 'JSON',
+            complete: function (data) {
+                var html;
+                data.responseJSON.forEach(d => {
+                    html += `<option value="${d.sub_category_file_id}">${d.sub_category_file_name}</option>`;
+                });
+                $('#sub_category select').html(html);
+            },
+        });
+    });
+
+    $('#category').change(function () {
+        var x = $(this).val();
+        $.ajax({
+            url: "{{(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/dropdown-category')}}",
+            data: {
+                category_file_id: x,
+            },
+            dataType: 'JSON',
+            complete: function (data) {
+                var html;
+                data.responseJSON.forEach(d => {
+                    html += `<option value="${d.sub_category_file_id}">${d.sub_category_file_name}</option>`;
+                });
+                $('#sub_category select').empty()
+                $('#sub_category select').html(html);
+            },
+        });
+    });
 
     $('#form-upload').validate({
         rules: {

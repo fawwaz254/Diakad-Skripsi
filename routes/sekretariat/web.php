@@ -105,6 +105,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('add', 'Sekretariat\ManajemenFile\DataFileController@addDataFile');
                 Route::get('category/{category_file_id}', 'Sekretariat\ManajemenFile\DataFileController@viewDataFileCategory');
                 Route::get('sub-category/{sub_category_file_id}', 'Sekretariat\ManajemenFile\DataFileController@viewDataFileSubCategory');
+                Route::get('dropdown-category', 'Sekretariat\ManajemenFile\DataFileController@dropdownCategory');
                 Route::post('action-data-file/{mode}/{id}', 'Sekretariat\ManajemenFile\DataFileController@actionDataFile');
             });
         });
