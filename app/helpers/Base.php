@@ -5,6 +5,17 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
+
+function minimalisTime($time){
+    $currentTime = strtotime($time);
+    return date('H:i',round($currentTime / (15 * 60)) * (15 * 60));
+
+}
+
+
+
+
+
 if (!function_exists('auth_data')) {
     /**
      * get auth data from session
