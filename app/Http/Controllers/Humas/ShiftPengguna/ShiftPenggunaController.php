@@ -24,6 +24,7 @@ class ShiftPenggunaController extends Controller
 
     public function storeShiftPengguna(Request $request)
     {
+        dd($request->input());
         var_dump($request);
         return view('humas/absensi/shift-pengguna/view-shift-pengguna');
     }

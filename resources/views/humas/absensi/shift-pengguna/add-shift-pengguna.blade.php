@@ -16,7 +16,8 @@
 
        
          
-         
+            <form method="POST" id="add-form" action="/humas/absensi/shift_pengguna/add">
+                {{csrf_field()}}
 
          
                 <div class="header">
@@ -43,7 +44,7 @@
                                 
                                 <td style="text-align: center;">{{ $key+1 }}</td>
                                 <td>{{$pengguna['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
-                                <td><input type="checkbox" name="{{$pengguna['id_pengguna']}}" id="{{$pengguna['id_pengguna']}}"> <label for="{{$pengguna['id_pengguna']}}">{{$pengguna['nm_pengguna']}} </label></td>
+                                <td><input type="checkbox" name="pengguna[{{$pengguna['id_pengguna']}}]" id="{{$pengguna['id_pengguna']}}"> <label for="{{$pengguna['id_pengguna']}}">{{$pengguna['nm_pengguna']}} </label></td>
 
 
                                 </tr>
@@ -55,8 +56,7 @@
               
 
                                         </div>
-                                        <form method="POST" id="add-form" action="/humas/absensi/shift_pengguna/add">
-                                            {{csrf_field()}}
+                                      
                                         <div class="col-sm-4">
 
                                     <h4>Pilih Bulan :</h4>
@@ -177,6 +177,19 @@
                                     </select>
                                     </td>
                                     </tr>
+
+                                    <tr hidden>
+                                        <td>
+                                        <label for="minggu" hidden>Minggu</label></td><td>
+                                            <select name="minggu"  class="form-control form-control-lg">
+                                                <option value="0" selected>Libur</option>
+                                                                                       </select>
+                                        </td>
+                                        </tr>
+    
+
+
+
                                     </table>
 
                                     <button class="btn btn-block bg-green waves-effect" id="btn-submit"><i class="material-icons">save</i><span>Save</span></button>
