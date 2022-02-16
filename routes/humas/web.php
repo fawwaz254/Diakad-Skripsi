@@ -84,8 +84,14 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 			Route::group(array('prefix' => 'shift_pengguna'), function () {
 				Route::get('/', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
-				Route::get('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');	
-				Route::post('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftPengguna');				
+				Route::get('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
+				Route::get('/add/{eror}', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
+				Route::post('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftPengguna');
+				Route::get('/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
+				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
+				Route::post('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@updateShiftAbsensi');
+				Route::get('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftMaster');
+				Route::post('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftMaster');
 			});
 
 
@@ -93,8 +99,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 
 			Route::group(array('prefix' => 'histori-absensi'), function () {
-				
-				Route::get('export-laravel/{date}','Humas\Absensi\HistoriAbsensiController@export_excel_day');
+
+				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
 				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
 				Route::get('/{date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
