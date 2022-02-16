@@ -16,6 +16,9 @@ use App\Models\Sekolah;
 
 class ShiftPenggunaController extends Controller
 {
+
+
+
     public function viewShiftPengguna(Request $request, $date = null)
     {
 
@@ -54,13 +57,13 @@ class ShiftPenggunaController extends Controller
         return view('humas/absensi/shift-pengguna/view-shift-pengguna', compact('date', 'hasil'));
     }
 
-    public function addShiftPengguna(Request $request, $eror = "")
+    public function addShiftPengguna(Request $request)
     {
 
         $shifts = ShiftMaster::all();
         $penggunas = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
-        $pesan = $eror;
-        return view('humas/absensi/shift-pengguna/add-shift-pengguna', compact('shifts', 'penggunas', 'pesan'));
+
+        return view('humas/absensi/shift-pengguna/add-shift-pengguna', compact('shifts', 'penggunas'));
     }
 
 
@@ -77,11 +80,16 @@ class ShiftPenggunaController extends Controller
         if ($v->fails()) {
             // return redirect()->back()->withErrors($v->errors());
 
+            return [
+                'status' => 300, // fail
 
+                'message' => 'Harus pilih minmal 1 user'
+
+            ];
 
             // $eror = ('Harus dicentang 1');
-            $pesan = "Harus dicentang salah satu";
-            return redirect("/humas#absensi/shift_pengguna/add/" . $pesan);
+            // $pesan = "Harus dicentang salah satu";
+            // return redirect("/humas#absensi/shift_pengguna/add/" . $pesan);
         }
 
         $input = (object) $request->input();
@@ -103,8 +111,12 @@ class ShiftPenggunaController extends Controller
         $prefix = Sekolah::first()->prefix;
 
         if ($startDate > $endDate) {
-            $pesan = "Bulan awal tidak boleh lebih besar";
-            return redirect("/humas#absensi/shift_pengguna/add/" . $pesan);
+            return [
+                'status' => 300, // fail
+
+                'message' => 'Bulan awal harus lebih kecil dari bulan akhir'
+
+            ];
         }
 
 
@@ -159,13 +171,14 @@ class ShiftPenggunaController extends Controller
 
 
         // var_dump($request);
-        // return [
-        //     'status' => 202, // SUCCESS AND LOAD CONTENT
-        //     'path' => 'absensi/shift_pengguna',
-        //     'message' => 'Tambah data berhasil successfully'
-        // ];
+        return [
+            'status' => 201, // SUCCESS AND LOAD CONTENT
+            'link' => '/humas#absensi/shift_pengguna',
+            'message' => 'Tambah data Shift berhasil '
 
-        return redirect("/humas#absensi/shift_pengguna");
+        ];
+
+        // return redirect("/humas#absensi/shift_pengguna");
     }
 
     public function editShiftAbsensi(Request $request, $id_shift_pengguna = null, $date = null)

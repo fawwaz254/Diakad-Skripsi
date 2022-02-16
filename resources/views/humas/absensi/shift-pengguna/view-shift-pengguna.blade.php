@@ -56,7 +56,7 @@
             <button class="btn btn-block bg-red waves-effect" onclick=addAbsensi()><i class="material-icons">add</i><span>Add Shift Pengguna</span></button>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <button class="btn btn-block bg-red waves-effect" onclick=addAbsensi()><i class="material-icons">add</i><span>Add Shift</span></button>
+            <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i class="material-icons">settings</i><span>Management Shift</span></button>
         </div>
     </div>
     <br>
@@ -137,7 +137,7 @@
     </div>
 
 </div>
-
+@include('scriptjs')
 <script>
 
 
@@ -148,6 +148,9 @@ function filterAction(){
         window.location='/humas#absensi/shift_pengguna/' + currUser + '/' + $('input[name=date]').val()+'/edit'
     }
 
+    function managementShift(){
+        window.location='/humas#absensi/shift_pengguna/managementShift'
+    }
 
     function addAbsensi(){
         window.location='/humas#absensi/shift_pengguna/add'

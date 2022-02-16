@@ -83,15 +83,23 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 
 			Route::group(array('prefix' => 'shift_pengguna'), function () {
+
+
+
+
+				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
+				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');
+				Route::post('/managementShift/{id}/delete', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@destroyShiftMaster');
+
 				Route::get('/', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
 				Route::get('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
-				Route::get('/add/{eror}', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
+
 				Route::post('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftPengguna');
 				Route::get('/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
 				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
 				Route::post('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@updateShiftAbsensi');
-				Route::get('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftMaster');
-				Route::post('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftMaster');
+				// Route::get('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@addShiftMaster');
+
 			});
 
 

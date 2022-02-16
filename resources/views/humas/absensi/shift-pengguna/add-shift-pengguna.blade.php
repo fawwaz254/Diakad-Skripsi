@@ -16,7 +16,7 @@
 
           
          
-            <form method="POST" id="add-form" action="/humas/absensi/shift_pengguna/add">
+            <form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/add">
                 {{csrf_field()}}
 
          
@@ -34,13 +34,7 @@
                       
                             <table class="table table-bordered" >
 
-                                @if($pesan == "")
-
-                                @else
-                                <div class="alert alert-danger">
-                                    <strong>{{ $pesan }}</strong>
-                                </div>
-                              @endif
+                                
                                
                                 <tr>
                                     <h4>Pilih Pengguna :</h4>
