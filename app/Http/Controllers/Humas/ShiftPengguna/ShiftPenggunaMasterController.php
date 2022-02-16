@@ -5,37 +5,45 @@ namespace App\Http\Controllers\Humas\ShiftPengguna;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ShiftMaster;
-
+use Carbon\Carbon;
+use App\Models\Sekolah;
 
 class ShiftPenggunaMasterController extends Controller
 {
-    // public function addShiftMaster()
-    // {
-    //     return view('humas/absensi/shift-pengguna/add-shift-master');
-    // }
 
     public function storeShiftMaster(Request $request)
     {
 
 
+
         $input = (object) $request->input();
+        $validasiNama = ShiftMaster::where('code', $input->name)->first();
+        if ($validasiNama) {
+            return [
+                'status' => 300, // SUCCESS AND LOAD CONTENT
 
-        $list_data['id_shift_master'] = $input->name;
-        $list_data['type'] = $input->name;
-        $list_data['code'] =  $input->name;
-        $list_data['start_time'] = $input->check_in;
-        $list_data['end_time'] = $input->check_out;
+                'message' => 'Nama tidak boleh sama'
+            ];
+        } else {
 
-        ShiftMaster::create($list_data);
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $prefix = Sekolah::first()->prefix;
+            $html = $prefix . strtotime($now) . uniqid();
 
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'absensi/shift_pengguna/managementShift',
-            'message' => 'Save Shift successfully'
-        ];
+            $list_data['id_shift_master'] = $html;
+            $list_data['type'] = $input->name;
+            $list_data['code'] =  $input->name;
+            $list_data['start_time'] = $input->check_in;
+            $list_data['end_time'] = $input->check_out;
 
+            ShiftMaster::create($list_data);
 
-        // return redirect("/humas#absensi/shift_pengguna/managementShift");
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'absensi/shift_pengguna/managementShift',
+                'message' => 'Save Shift successfully'
+            ];
+        }
     }
 
     public function destroyShiftMaster(Request $request, $id)

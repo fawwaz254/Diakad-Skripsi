@@ -83,7 +83,7 @@ class ShiftPenggunaController extends Controller
             return [
                 'status' => 300, // fail
 
-                'message' => 'Harus pilih minmal 1 user'
+                'message' => 'Harus pilih minimal 1 user'
 
             ];
 

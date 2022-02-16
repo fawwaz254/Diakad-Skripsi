@@ -138,7 +138,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                    <label for="dayName[Wednesday]">Rebu</label></td><td>
+                                    <label for="dayName[Wednesday]">Rabu</label></td><td>
                                         <select name="dayName[Wednesday]"  class="form-control form-control-lg">
                                             <option value="" selected>Libur</option>
                                             @foreach($shifts as $shift)

@@ -1,47 +1,23 @@
 <div class="container-fluid">
-
-
-
-
-    
-
-  
-
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-       
-         
-         
-
             <div class="card">
                 <div class="header">
                     <h2>Filter Data</h2>
                 </div>
-
                 <div class="body">
-
                     <div class="row clearfix">
-
                         <div class="col-md-5">
                             <label>Date</label>
                             <input type="date" class="form-control" value="{{$date}}" name="date"
                                 aria-required="true" aria-invalid="true">
                         </div>
-
                         <div class="col-md-2" style="display: flex;" >
                             <div>
                             <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
                                 onclick="filterAction()">Change Date</button>
+                            </div>    
                             </div>
-                            
-                            </div>
-
-                        
-                                                   
-                            
-                              
-
                     </div>
 
                 </div>
@@ -63,14 +39,9 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-
-              
-
                 <div class="header" >
                     <h2>Shift Pengguna   </h2>
-                    
-                    
-                   
+ 
                 </div>
 
                 <div class="body">
@@ -81,15 +52,10 @@
                                 <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">Nama</th>
                                 <th style="text-align: center;">Role</th>
-                     
-                              
-                              
                                 <th style="text-align: center;">Shift</th>
                                 <th style="text-align: center;">Time</th>
                                 <th style="text-align: center;">Action</th>
-                               
-                          
-                              
+    
                             </tr>
                         </thead>
                         <tbody>
@@ -114,13 +80,9 @@
                                     <button type="button" class="btn bg-teal  waves-effect" onclick="editAbsensi('{{$r['id_shift_pengguna']}}')">
                                         <i class="material-icons">edit</i>
                                     </button>
-                                   
-                                   
-
+             
                                     @endif
-
-                                
-                                    
+         
                                     
                                     {{-- {{  $r['id_shift_pengguna']  }}</td> --}}
                              
