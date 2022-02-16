@@ -69,7 +69,7 @@
                                 <td style="text-align: center;">{{ $key+1 }}</td>
                                 <td >{{$r['nm_pengguna']}}</td>
                                 <td style="text-align: center;">{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
-                                <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
+                                <td style="text-align: center;">{{ $r['code'] }}</td>
                                 <td style="text-align: center;">{{ $r['time'] }}</td>
                                     
                                     <td style="text-align: center;display:flex;justify-content:center">
