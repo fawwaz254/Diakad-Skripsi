@@ -20,7 +20,8 @@
                                     <select name="shift"  class="form-control form-control-lg">
                                         <option value="" selected>Libur</option>
                                         @foreach($shifts as $shift)
-                                        <option value="{{ $shift['code'] }}" >({{ minimalisTime($shift['start_time']) }} - {{ minimalisTime($shift['end_time']) }}) - {{ $shift['code'] }}</option>
+                                        <option value="{{ $shift['code'] }}" {{$shift_pengguna->id_shift_master == $shift['code'] ? 'selected' : ''}}>({{ minimalisTime($shift['start_time']) }} - {{ minimalisTime($shift['end_time']) }}) - {{ $shift['code'] }}
+                                        </option>
                                     
                                             @endforeach
                                 </select>

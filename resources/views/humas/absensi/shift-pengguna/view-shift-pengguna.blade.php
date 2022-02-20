@@ -32,7 +32,7 @@
             <button class="btn btn-block bg-red waves-effect" onclick=addAbsensi()><i class="material-icons">add</i><span>Add Shift Pengguna</span></button>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
-            <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i class="material-icons">settings</i><span>Management Shift</span></button>
+            <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i class="material-icons">settings</i><span>Data Master Shift</span></button>
         </div>
     </div>
     <br>
@@ -69,7 +69,9 @@
                                 <td style="text-align: center;">{{ $key+1 }}</td>
                                 <td >{{$r['nm_pengguna']}}</td>
                                 <td style="text-align: center;">{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
-                                <td style="text-align: center;">{{ $r['code'] }}</td>
+                                <td style="text-align: center;">
+                                    {{$r['id_shift_master']}}
+                                </td>
                                 <td style="text-align: center;">{{ $r['time'] }}</td>
                                     
                                     <td style="text-align: center;display:flex;justify-content:center">

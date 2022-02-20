@@ -1,14 +1,12 @@
 <div class="container-fluid">
 
-
-
-
     <div class="row clearfix">
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <button class="btn btn-block bg-red waves-effect" onclick=back()><i class="material-icons">arrow_back</i><span>Kembali</span></button>
         </div>
     </div>
 
+    <p></p>
     
     <div class="card">
     <div class="row clearfix">

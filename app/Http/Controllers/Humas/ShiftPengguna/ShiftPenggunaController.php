@@ -26,9 +26,6 @@ class ShiftPenggunaController extends Controller
             $date = Carbon::now()->format('Y-m-d');
         }
 
-
-
-
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -185,7 +182,8 @@ class ShiftPenggunaController extends Controller
     {
 
         $shifts = ShiftMaster::all();
-        return view('humas/absensi/shift-pengguna/edit-shift-pengguna', compact('id_shift_pengguna', 'date', 'shifts'));
+        $shift_pengguna = ShiftPengguna::find($id_shift_pengguna);
+        return view('humas/absensi/shift-pengguna/edit-shift-pengguna', compact('id_shift_pengguna', 'date', 'shifts','shift_pengguna'));
     }
 
     public function updateShiftAbsensi(Request $request, $id_shift_pengguna = null, $date = null)
