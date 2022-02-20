@@ -194,7 +194,7 @@ function changeName(el){
     var nilai = $(el).val() ;
     $('#print').html('@foreach($data_semester as $data)'+
     '@if($data->is_aktif_semester == 1)'+
-    '<a href="bimbingan-konseling/penanganan-siswa/jurnal-tindakan/print/{{$data->id_semester}}/'+nilai+'" id="print" target="_blank">Link</a>'+
+    '<a href="bimbingan-konseling/penanganan-siswa/jurnal-tindakan/print/{{$data->id_semester}}/'+nilai+'" id="print" target="_blank">Histori Pelanggaran</a>'+
     '@endif'+
     '@endforeach');
     
