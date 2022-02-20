@@ -110,8 +110,9 @@
                 </div>
 
                 <div class="body">
-                    <div class="table-responsive">
-                    <table class="table table-bordered">
+                 
+                    <div class="table-responsive ">
+                    <table class="table table-bordered" width="600px">
                         <thead style="background:#9C27B0;color:white">
                             <tr>
                                 <th style="text-align: center;">#</th>
@@ -159,6 +160,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                   
                 </div>
                 </div>
 
