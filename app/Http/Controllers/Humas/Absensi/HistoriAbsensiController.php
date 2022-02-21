@@ -24,49 +24,89 @@ class HistoriAbsensiController extends BaseController
     {
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
 
+        if (empty($date)) {
+            $date = Carbon::now()->format('Y-m-d');
+        }
 
+        $cek_libur = ManajemenHariLibur::where('date', $date)->first();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
-            $hasil[$key]['date'] = $date;
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '-';
             $hasil[$key]['notes'] = '-';
+            $hasil[$key]['id_presensi_pengguna'] = "";
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
             if ($attendance) {
+
+                if ($attendance->id_presensi_pengguna) {
+                    $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
+                }
+
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
                 }
 
-                if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
-                }
-
-                if ($attendance->status) {
-                    $hasil[$key]['status'] = $attendance->status;
-                }
-
-                if ($attendance->notes) {
-                    $hasil[$key]['notes'] = $attendance->notes;
-                }
                 if ($attendance->check_in > $shiftMaster['start_time']) {
+
                     $hasil[$key]['notes'] = "Telat";
                 }
 
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+
                     $hasil[$key]['notes'] = "Pulang lebih awal";
                 }
 
                 if ($attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                     $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
                 }
+                if ($attendance->check_out) {
+                    $hasil[$key]['check_out'] = $attendance->check_out;
+                }
+                if ($attendance->status) {
+                    $hasil[$key]['status'] = $attendance->status;
+                    if ($attendance->status == 'sakit') {
+                    } elseif ($attendance->status == 'izin') {
+                    }
+                }
+                if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                    $hasil[$key]['notes'] = 'Tidak Checkout';
+                }
+
+
+                if ($attendance->notes) {
+                    $hasil[$key]['notes'] = $attendance->notes;
+                }
+            } else {
+
+                if ($shiftMaster) {
+
+                    if ($date < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Alpha';
+                    } else if ($date == Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Belum Absent';
+                    } else {
+                        $hasil[$key]['status'] = '-';
+                    }
+
+                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                    }
+                }
             }
+            if ($cek_libur) {
+                $hasil[$key]['status'] = 'Libur';
+                $hasil[$key]['notes'] = $cek_libur->explanation;
+            }
+            $hasil[$key]['date'] = $date;
         }
+
+
+
         $products = $hasil;
         return Excel::download(new HistoriAbsensiDay($products), 'download_harian.xlsx');
     }
