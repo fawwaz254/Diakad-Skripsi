@@ -87,7 +87,7 @@ class RekapKesehatanController extends BaseController{
 
         $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
 
-        return Excel::download(new RekapKesehatanGuruTendik($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian), 'Download Data Rekap Kesehatan Guru & Tendik Bulan '. $bulan->nm_bulan.'.xlsx');
+        return Excel::download(new RekapKesehatanGuruTendik($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian, $tahun), 'Download Data Rekap Kesehatan Guru & Tendik Bulan '. $bulan->nm_bulan.' '.$tahun.'.xlsx');
     }
 
 }
