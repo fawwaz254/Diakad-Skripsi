@@ -234,6 +234,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('cari-siswa/datatables/{nis_nama_siswa}', 'Pendidikan\Siswa\CariSiswaController@datatablesCariSiswa');
             Route::get('cari-siswa/view-detail-siswa/{nis_siswa}/{nis_nama_siswa_asli}', 'Pendidikan\Siswa\CariSiswaController@viewDetailSiswaCariSiswa');
 
+            Route::post('reset-password', 'Pendidikan\Siswa\CariSiswaController@resetPasswordSiswa');
+
             // MENU Evaluasi Siswa
             Route::get('evaluasi-siswa', 'Kesiswaan\Siswa\EvaluasiSiswaController@viewEvaluasiSiswa');
             Route::post('post-view-evaluasi-siswa', 'Kesiswaan\Siswa\EvaluasiSiswaController@actionViewEvaluasiSiswa');
