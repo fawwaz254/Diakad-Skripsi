@@ -65,27 +65,27 @@
                             </li>
                             <li>
                                 Hadir Terlambat
-                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_telat}}</b></span>
                             </li>
                             <li>
                                 Hadir Pulang Lebih Awal
-                               <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_pulangcepat}}</b></span>
                             </li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <ul class="dashboard-stat-list">
                             <li>
-                                Sakit
+                                Izin
                                 <span class="pull-right"><b>{{$jumlah_izin}}</b></span>
                             </li>
                             <li>
-                                Izin
+                                Sakit
                                 <span class="pull-right"><b>{{$jumlah_sakit}}</b></span>
                             </li>
                             <li>
                                 Alpha
-                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_alpha}}</b></span>
                             </li>
                         </ul>
                     </div>
