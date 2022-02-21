@@ -72,7 +72,7 @@ class TracerAlumniController extends Controller
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat',9)->get();
+        $data_kelas = Kelas::where('tingkat',3)->get();
         $alumni = null;
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni',compact('auth_data','data_jurusan','alumni','data_kelas'));
