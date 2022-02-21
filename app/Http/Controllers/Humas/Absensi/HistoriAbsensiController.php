@@ -35,6 +35,8 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['status'] = '-';
             $hasil[$key]['notes'] = '-';
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
             if ($attendance) {
                 if ($attendance->check_in) {
@@ -51,6 +53,17 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->notes) {
                     $hasil[$key]['notes'] = $attendance->notes;
+                }
+                if ($attendance->check_in > $shiftMaster['start_time']) {
+                    $hasil[$key]['notes'] = "Telat";
+                }
+
+                if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                    $hasil[$key]['notes'] = "Pulang lebih awal";
+                }
+
+                if ($attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                    $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
                 }
             }
         }
@@ -77,6 +90,7 @@ class HistoriAbsensiController extends BaseController
         $jumlah_telat = 0;
         $jumlah_pulangcepat = 0;
         $jumlah_alpha = 0;
+        $tidak_checkout = 0;
 
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
 
@@ -101,7 +115,6 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
-                    // if($attandance->check_in > )
                     $jumlah_hadir++;
                 }
 
@@ -118,17 +131,9 @@ class HistoriAbsensiController extends BaseController
                 if ($attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                     $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
                 }
-
                 if ($attendance->check_out) {
                     $hasil[$key]['check_out'] = $attendance->check_out;
-                } else {
-                    if ($date < Carbon::now()->format('Y-m-d')) {
-                        $hasil[$key]['status'] = 'Alpha';
-                        $hasil[$key]['notes'] = 'Tidak Checkout';
-                        $jumlah_alpha++;
-                    }
                 }
-
                 if ($attendance->status) {
                     $hasil[$key]['status'] = $attendance->status;
                     if ($attendance->status == 'sakit') {
@@ -137,30 +142,40 @@ class HistoriAbsensiController extends BaseController
                         $jumlah_izin++;
                     }
                 }
-
+                if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                    $hasil[$key]['notes'] = 'Tidak Checkout';
+                    $tidak_checkout++;
+                }
 
 
                 if ($attendance->notes) {
                     $hasil[$key]['notes'] = $attendance->notes;
                 }
             } else {
-                if ($shiftPengguna) {
+
+                if ($shiftMaster) {
+
                     if ($date < Carbon::now()->format('Y-m-d')) {
                         $hasil[$key]['status'] = 'Alpha';
                         $jumlah_alpha++;
                     } else if ($date == Carbon::now()->format('Y-m-d')) {
                         $hasil[$key]['status'] = 'Belum Absent';
-                    } else if ($cek_libur) {
-                        $hasil[$key]['status'] = 'Libur';
-                        $hasil[$key]['notes'] = $cek_libur->explanation;
                     } else {
                         $hasil[$key]['status'] = '-';
                     }
+
+                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                        $jumlah_alpha--;
+                    }
                 }
+            }
+            if ($cek_libur) {
+                $hasil[$key]['status'] = 'Libur';
+                $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
 
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'date', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'cek_libur'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'date', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)

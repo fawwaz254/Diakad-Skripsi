@@ -71,6 +71,10 @@
                                 Hadir Pulang Lebih Awal
                                 <span class="pull-right"><b>{{$jumlah_pulangcepat}}</b></span>
                             </li>
+                            <li>
+                                Tidak Checkout
+                                <span class="pull-right"><b>{{$tidak_checkout}}</b></span>
+                            </li>
                         </ul>
                     </div>
                     <div class="col-md-6">
