@@ -44,6 +44,14 @@
  
                 </div>
 
+
+
+
+          
+           
+
+                  
+
                 <div class="body">
                     <div class="table-responsive">
                     <table class="table table-bordered">
@@ -58,39 +66,57 @@
     
                             </tr>
                         </thead>
+
+                     
+                        @foreach($hasil as $key => $r)
+
+
+
+                        @if($key%2==1)
+                        <tr style="background: #DDA0DD">
+                            @else
+                        <tr>
+                            @endif
+        
+        
+
+
                         <tbody>
-                            @foreach($hasil as $key => $r)
-                            @if($key%2==1)
-                            <tr style="background: #DDA0DD">
+                           
+
+                    
+                                 <td style="text-align: center;">{{ $key+1 }}</td>
+                            <td >{{$r['nm_pengguna']}}</td>
+                            <td style="text-align: center;">{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+                            <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
+                            <td style="text-align: center;">{{ $r['time'] }}</td>
+                                
+                                <td style="text-align: center;display:flex;justify-content:center">
+                                @if ($r['id_shift_master'] =='-')
+                                -
                                 @else
-                            <tr>
-                                @endif
-                          
-                                <td style="text-align: center;">{{ $key+1 }}</td>
-                                <td >{{$r['nm_pengguna']}}</td>
-                                <td style="text-align: center;">{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
-                                <td style="text-align: center;">
-                                    {{$r['id_shift_master']}}
-                                </td>
-                                <td style="text-align: center;">{{ $r['time'] }}</td>
-                                    
-                                    <td style="text-align: center;display:flex;justify-content:center">
-                                    @if ($r['id_shift_master'] =='-')
-                                    -
-                                    @else
-                                  
-                                    <button type="button" class="btn bg-teal  waves-effect" onclick="editAbsensi('{{$r['id_shift_pengguna']}}')">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-             
-                                    @endif
+                              
+                                <button type="button" class="btn bg-teal  waves-effect" onclick="editAbsensi('{{$r[id_shift_pengguna]}}')">
+                                    <i class="material-icons">edit</i>
+                                </button>
          
+                                @endif
+                  
+                        
+
                                     
-                                    {{-- {{  $r['id_shift_pengguna']  }}</td> --}}
+                             
                              
                                
                             </tr>
+                         
                             @endforeach
+            
+
+              
+                
+             
+                
                         </tbody>
                     </table>
                 </div>
