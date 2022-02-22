@@ -79,8 +79,8 @@ class DataFileController extends BaseController
 
     public function actionDataFile(Request $request, $mode, $id = null)
     {
-
         $input = (object) $request->input();
+
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
         if ($mode == 'delete') {
             $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
@@ -88,10 +88,12 @@ class DataFileController extends BaseController
                 Storage::disk('spaces')->delete($input->link_file);
             }
             FilePengguna::destroy($id);
-            return;
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'message' => 'Delete File successfully'
+            ];
         }
         $list_validator = [
-            'judul'         => 'required',
             'keterangan'    => 'required',
             'file_from'     => 'required'
         ];
@@ -106,24 +108,12 @@ class DataFileController extends BaseController
             ];
         } else {
 
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-
             if ($mode == 'add') {
-
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                $data = new FilePengguna;
-                $data->file_pengguna_id = $id;
-                $data->pengguna_id = $id_pengguna;
-                $data->judul = $input->judul;
-                $data->keterangan = $input->keterangan;
-                $data->sub_category_file_id = $input->sub_category_file_id;
-                $data->created_by = $id_pengguna;
 
                 if ($input->file_from == 1) {
 
                     $validator = Validator::make($request->all(), [
-                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                        'file.*' => 'mimes:pptx,docx,xlsx,xlsm,jpeg,jpg,png,pdf|required|max:10000'
                     ]);
 
                     if ($validator->fails() && $mode != 'delete') {
@@ -134,17 +124,35 @@ class DataFileController extends BaseController
                         ];
                     }
 
+                    $files = $request->file('file');
 
-                    $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, request()->file, 'public');
-                    $data->link_file = $file;
+                    if (count($files) > 3) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => "Max 3 File"
+                        ];
+                    }
 
-                    $data->extension_file = $request->file('file')->extension();
-
-                    $data->is_google_drive = 0;
+                    foreach ($files as $file) {
+                        $now = Carbon::now(env('APP_TIMEZONE', ''));
+                        $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                        $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $data = new FilePengguna;
+                        $data->file_pengguna_id = $id;
+                        $data->pengguna_id = $id_pengguna;
+                        $data->judul = $filename;
+                        $data->keterangan = $input->keterangan;
+                        $data->sub_category_file_id = $input->sub_category_file_id;
+                        $data->created_by = $id_pengguna;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
+                        $data->link_file = $file;
+                        $data->extension_file = $file->extension();
+                        $data->is_google_drive = 0;
+                    }
                 } else {
-
                     $validator = Validator::make($request->all(), [
+                        'judul' => 'required',
                         'link_google_drive' => 'required'
                     ]);
 
@@ -155,6 +163,16 @@ class DataFileController extends BaseController
                             'message' => $validator->errors()->first()
                         ];
                     }
+
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $data = new FilePengguna;
+                    $data->file_pengguna_id = $id;
+                    $data->pengguna_id = $id_pengguna;
+                    $data->judul = $input->judul;
+                    $data->keterangan = $input->keterangan;
+                    $data->sub_category_file_id = $input->sub_category_file_id;
+                    $data->created_by = $id_pengguna;
 
                     $data->link_file = $input->link_google_drive;
                     $data->is_google_drive = 1;
