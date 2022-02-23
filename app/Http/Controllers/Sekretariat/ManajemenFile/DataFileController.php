@@ -137,6 +137,7 @@ class DataFileController extends BaseController
                         $now = Carbon::now(env('APP_TIMEZONE', ''));
                         $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                         $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                         $data = new FilePengguna;
                         $data->file_pengguna_id = $id;
                         $data->pengguna_id = $id_pengguna;
@@ -145,10 +146,11 @@ class DataFileController extends BaseController
                         $data->sub_category_file_id = $input->sub_category_file_id;
                         $data->created_by = $id_pengguna;
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
-                        $data->link_file = $file;
+                        $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
+                        $data->link_file = $uploaded_file;
                         $data->extension_file = $file->extension();
                         $data->is_google_drive = 0;
+                        $data->save();
                     }
                 } else {
                     $validator = Validator::make($request->all(), [
@@ -176,9 +178,9 @@ class DataFileController extends BaseController
 
                     $data->link_file = $input->link_google_drive;
                     $data->is_google_drive = 1;
+                    $data->save();
                 }
 
-                $data->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
