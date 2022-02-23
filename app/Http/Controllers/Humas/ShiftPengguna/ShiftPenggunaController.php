@@ -17,17 +17,12 @@ use App\Models\Sekolah;
 class ShiftPenggunaController extends Controller
 {
 
-
-
     public function viewShiftPengguna(Request $request, $date = null)
     {
 
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
-
-
-
 
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
         foreach ($pengguna as $key => $value) {
@@ -63,7 +58,11 @@ class ShiftPenggunaController extends Controller
         $shifts = ShiftMaster::all();
         $penggunas = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
 
-        return view('humas/absensi/shift-pengguna/add-shift-pengguna', compact('shifts', 'penggunas'));
+        // foreach($penggunas as $pengguna){}
+        $date =  Carbon::now()->format('Y-m-d');
+
+        $shiftsPengguna = ShiftPengguna::where('date', $date)->get();
+        return view('humas/absensi/shift-pengguna/add-shift-pengguna', compact('shifts', 'penggunas', 'shiftsPengguna'));
     }
 
 

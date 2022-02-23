@@ -25,21 +25,21 @@
                                 aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-md-2" style="display: flex;" >
+                        <div class="col-md-2" style="display: flex; margin-top:27px;" >
                             <div>
-                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
+                            <button type="button" class="btn bg-purple waves-effect" 
                                 onclick="filterAction()">Change Date</button>
                             </div>
                             <div style="margin-left:10px; ">
-                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style=" margin-top:27px; height:30px; ">
-                                     <i class="material-icons" style="font-size: 17px;">print</i> </a>
+                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" >
+                                    <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+                            </div>
+                            <div style="margin-left:10px; ">
+                                <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" >
+                                    <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
                             </div>
                             </div>
 
-                        
-                                                   
-                            
-                              
 
                     </div>
 
