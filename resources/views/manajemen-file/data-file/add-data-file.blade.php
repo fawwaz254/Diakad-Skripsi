@@ -46,8 +46,8 @@
                        
                         <div class="row clearfix" id="place_file">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label>File ( pdf , pptx , docx , xlsx , png , jpg , jpeg | max 5 mb )</label>
-                                <input type="file" class="form-control" name="file" />
+                                <label>File ( pdf , pptx , docx , xlsx , xlsm , png , jpg , jpeg | Max 3 File | max 10 mb )</label>
+                                <input type="file" class="form-control" id="file" accept=".pdf, .pptx, .docx, .xlsx, .xlsm, .png, .jpg, .jpeg" name="file[]" multiple/>
                             </div>
                         </div>
 
@@ -58,7 +58,7 @@
                             </div>
                         </div>
 
-                        <div class="row clearfix">
+                        <div class="row clearfix" style="display: none" id="judul">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label>Judul</label>
                                 <input type="text" class="form-control" name="judul" required="" aria-required="true" aria-invalid="true">
@@ -99,10 +99,13 @@
         if(x==1){
             $('#place_file').show();
             $('#place_drive').hide();
+            $('#judul').hide();
+            $('#form-upload')[0].reset();
         }
         else{
             $('#place_file').hide();
             $('#place_drive').show();
+            $('#judul').show();
         }
 
     }
