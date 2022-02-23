@@ -35,15 +35,15 @@
                             <a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank" style="color: inherit;text-decoration: inherit; ">
                             @endif
                                 <div class="col-md-3 folder">
-                                    <div style="text-align: center">
+                                    <div style="text-align: center;">
                                         @if($r->extension_file == 'pdf')
-                                        <i class="material-icons" style="color:red;font-size: 45px;">picture_as_pdf</i>
+                                        <i class="material-icons" style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
                                         @elseif($r->extension_file == 'png' || $r->extension_file == 'jpg' || $r->extension_file == 'jpeg')
-                                        <i class="material-icons" style="color:blue;font-size: 45px">collections_icon</i>
+                                        <i class="material-icons" style="color:blue;font-size: 45px;width:45px">collections_icon</i>
                                         @elseif($r->extension_file == 'pptx' || $r->extension_file == 'docx' || $r->extension_file == 'xlsx')
-                                        <i class="material-icons" style="color:blue;font-size: 45px;">description</i>
+                                        <i class="material-icons" style="color:blue;font-size: 45px;width:45px">description</i>
                                         @else
-                                        <i class="material-icons" style="color:green;font-size: 45px;">add_to_drive</i>
+                                        <i class="material-icons" style="color:green;font-size: 45px;width:45px">add_to_drive</i>
                                         @endif                
                                     </div>
 
