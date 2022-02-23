@@ -18,20 +18,16 @@
 
                             <div class="col-md-6">
                                 <label>Category File</label>
-                                <select class="form-control show-tick" name="category">                            
+                                <select class="form-control show-tick" name="category" id="category">                            
                                     @foreach($category as $r)
                                     <option value="{{$r->category_file_id}}">{{$r->category_file_name}}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="sub_category">
                                 <label>Sub Category File</label>
-                                <select class="form-control show-tick" name="sub_category_file_id" required="">             
-                                    @foreach($sub_category as $r)
-                                    <option value="{{$r->sub_category_file_id}}">{{$r->sub_category_file_name}}</option>
-                                    @endforeach
-                                </select>
+                                <select class="form-control show-tick" name="sub_category_file_id" required=""></select>
                             </div>
 
                         </div>
@@ -47,13 +43,13 @@
                                 </div>
                             </div>
                         </div>
-                       
-                        <div class="row clearfix" id="place_file">
+                        
+                         <div class="row clearfix" id="place_file">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label>File ( pdf , pptx , docx , xlsx , png , jpg , jpeg | max 5 mb )</label>
-                                <input type="file" class="form-control" name="file" />
+                                <label>File ( pdf , pptx , docx , xlsx , xlsm , png , jpg , jpeg | Max 3 File | max 10 mb )</label>
+                                <input type="file" class="form-control" id="file" accept=".pdf, .pptx, .docx, .xlsx, .xlsm, .png, .jpg, .jpeg" name="file[]" multiple/>
                             </div>
-                        </div>
+                        </div> 
 
                          <div class="row clearfix" style="display:none;" id="place_drive">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -62,7 +58,7 @@
                             </div>
                         </div>
 
-                        <div class="row clearfix">
+                        <div class="row clearfix" style="display: none" id="judul">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <label>Judul</label>
                                 <input type="text" class="form-control" name="judul" required="" aria-required="true" aria-invalid="true">
@@ -103,14 +99,53 @@
         if(x==1){
             $('#place_file').show();
             $('#place_drive').hide();
+            $('#judul').hide();
+            $('#form-upload')[0].reset();
         }
         else{
             $('#place_file').hide();
             $('#place_drive').show();
+            $('#judul').show();
         }
 
     }
 
+    $(document).ready(function () {
+        var x = $('#category').val();
+        $.ajax({
+            url: "{{(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/dropdown-category')}}",
+            data: {
+                category_file_id: x,
+            },
+            dataType: 'JSON',
+            complete: function (data) {
+                var html;
+                data.responseJSON.forEach(d => {
+                    html += `<option value="${d.sub_category_file_id}">${d.sub_category_file_name}</option>`;
+                });
+                $('#sub_category select').html(html);
+            },
+        });
+    });
+
+    $('#category').change(function () {
+        var x = $(this).val();
+        $.ajax({
+            url: "{{(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/dropdown-category')}}",
+            data: {
+                category_file_id: x,
+            },
+            dataType: 'JSON',
+            complete: function (data) {
+                var html;
+                data.responseJSON.forEach(d => {
+                    html += `<option value="${d.sub_category_file_id}">${d.sub_category_file_name}</option>`;
+                });
+                $('#sub_category select').empty()
+                $('#sub_category select').html(html);
+            },
+        });
+    });
     $('#form-upload').validate({
         rules: {
             'checkbox': {
@@ -157,7 +192,7 @@
                         vex.dialog.alert(response.message);
                     }
                 },
-                complete: function() {
+                complete: function(response) {
                     $('input').removeAttr('readonly', 'readonly');
                     $('button').removeAttr('disabled');
                 }

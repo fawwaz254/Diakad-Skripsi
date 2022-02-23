@@ -11,7 +11,6 @@
 </style>
 
 <div class="container-fluid">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#manajemen-file/data-file/add')}}"><i class="material-icons">note_add</i><span>Tambah File</span></a></h2>
     </div>
@@ -35,7 +34,7 @@
                             <a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank" style="color: inherit;text-decoration: inherit; ">
                             @endif
                             <div class="col-md-3 folder">
-                                <center>
+                                <div style="text-align: center">
                                     @if($r->extension_file == 'pdf')
                                     <i class="material-icons" style="color:red;font-size: 45px;">picture_as_pdf</i>
                                     @elseif($r->extension_file == 'png' || $r->extension_file == 'jpg' || $r->extension_file == 'jpeg')
@@ -45,17 +44,17 @@
                                     @else
                                     <i class="material-icons" style="color:green;font-size: 45px;">add_to_drive</i>
                                     @endif                
-                                </center>
+                                </div>
 
-                                <center>
+                                <div style="text-align: center">
                                     <span>{{$r->judul}}</span>
-                                </center>
+                                </div>
                             </a>
-                            <center style="margin-top:10px;">
+                            <div style="text-align: center;margin-top: 10px;">
                                 <a onclick="deleteFile('{{$r->file_pengguna_id}}','{{$r->link_file}}')">
                                     <i style="color:red;" class="material-icons">cancel</i>
                                 </a>
-                            </center>
+                            </div>
                             </div>
                             @endforeach
 
@@ -68,9 +67,9 @@
         </div>
     </div>
 </div>
+
 <script>
     function deleteFile(id,linkFile) {
-        var token = $("meta[name='csrf-token']").attr("content");
         swal(
         { title: "Are you sure?", showCancelButton: true},
         function (isConfirm) {
@@ -78,18 +77,15 @@
                 $.ajax({
                     url: `{{Request::segment(1)}}/{{Request::segment(2)}}/{{Request::segment(3)}}/action-data-file/delete/${id}`,
                     type: "post",
-
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
+                    },
                     data: {
-                        _token: token,
                         link_file:linkFile
                     },
 
-                    success: function () {
-                        swal({
-                            title: "Delete Success",
-                            text: "Data berhasil dihapus",
-                            icon: "success",
-                        });
+                    success: function (response) {
+                        vex.dialog.alert(response.message);
                         loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/{{Request::segment(4)}}/{{Request::segment(5)}}');
                     },
                 });

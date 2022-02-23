@@ -27,14 +27,12 @@ class SubDataKategoriController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data->role_aktif->id_role;
-        // $list_data = SubCategoryFile::join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
-        //     ->select('category_file.category_file_name as category_file', 'sub_category_file.*');
         $list_data = DB::table('sub_category_file')
             ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
             ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
             ->where('category_file_role.id_role', '=', $auth_data)
             ->where('sub_category_file.deleted_at', '=', null)
-            ->select('category_file.category_file_name as category_file', 'sub_category_file.*');
+            ->select('category_file.category_file_name as category_file', 'sub_category_file.*')->distinct();
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
