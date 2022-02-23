@@ -126,10 +126,10 @@ class DataFileController extends BaseController
 
                     $files = $request->file('file');
 
-                    if (count($files) > 3) {
+                    if (count($files) > 50) {
                         return [
                             'status' => 300, // FAILED
-                            'message' => "Max 3 File"
+                            'message' => "Max 50 File"
                         ];
                     }
 
