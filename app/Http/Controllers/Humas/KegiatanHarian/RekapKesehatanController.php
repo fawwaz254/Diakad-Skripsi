@@ -18,9 +18,11 @@ use Yajra\Datatables\Datatables;
 
 use Auth;
 use DB;
-use Excel;
 use Session;
 use Validator;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RekapKesehatanGuruTendik;
 
 class RekapKesehatanController extends BaseController
 {
@@ -86,11 +88,6 @@ class RekapKesehatanController extends BaseController
         $data_pengguna = Pengguna::whereIn('status_join_table', [1, 2])->orderBy('nm_pengguna')->get();
 
         $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
-
-        return Excel::create('Download Data Rekap Kesehatan Guru & Tendik Bulan ' . $bulan->nm_bulan, function ($excel) use ($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian) {
-            $excel->sheet('New sheet', function ($sheet) use ($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian) {
-                $sheet->loadView('humas/kegiatan-harian/rekap-kesehatan/download-rekap-kesehatan-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun'));
-            });
-        })->download('xls');
+        return Excel::download(new RekapKesehatanGuruTendik($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian, $tahun), 'Download Data Rekap Kesehatan Guru & Tendik Bulan ' . $bulan->nm_bulan . ' ' . $tahun . '.xlsx');
     }
 }

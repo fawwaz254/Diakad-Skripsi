@@ -27,10 +27,12 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\LibGlobal;
 
 use Auth;
-use Excel;
 use DB;
 use Session;
 use Validator;
+
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RekapKesehatanSiswa;
 
 class RekapKesehatanController extends BaseController
 {
@@ -104,10 +106,6 @@ class RekapKesehatanController extends BaseController
 
         $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_siswa->pluck('id_pengguna'))->get();
 
-        return Excel::create('Download Data Rekap Kesehatan Kelas '.$data_kelas->nm_kelas.' Bulan '. $bulan->nm_bulan, function ($excel) use ($auth_data, $dates, $data_bulan, $bulan, $data_kelas, $data_siswa, $data_pengisian) {
-            $excel->sheet('New sheet', function ($sheet) use ($auth_data, $dates, $data_bulan, $bulan, $data_kelas, $data_siswa, $data_pengisian) {
-                $sheet->loadView('guru/guru-piket/rekap-kesehatan/download-rekap-kesehatan-siswa', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_kelas', 'data_siswa', 'data_pengisian'));
-            });
-        })->download('xls');
+        return Excel::download(new RekapKesehatanSiswa($auth_data, $dates, $data_bulan, $bulan, $data_kelas, $data_siswa, $data_pengisian), 'Download Data Rekap Kesehatan Kelas '.$data_kelas->nm_kelas.' Bulan '. $bulan->nm_bulan.'.xlsx');
     }
 }
