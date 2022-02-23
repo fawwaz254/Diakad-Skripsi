@@ -14,34 +14,23 @@
                 <div class="body">
                     <form method="POST" id="edit-form" action="{{url()->current()}}">
                         {{csrf_field()}}
-                      
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <label for="shift">Taggal {{ $date }}</label></td><td>
                                     <select name="shift"  class="form-control form-control-lg">
                                         <option value="" selected>Libur</option>
                                         @foreach($shifts as $shift)
-                                        <option value="{{ $shift['code'] }}" {{$shift_pengguna->id_shift_master == $shift['code'] ? 'selected' : ''}}>({{ minimalisTime($shift['start_time']) }} - {{ minimalisTime($shift['end_time']) }}) - {{ $shift['code'] }}
-                                        </option>
-                                    
-                                            @endforeach
+                                        <option value="{{ $shift['code'] }}" {{$shift_pengguna->id_shift_master == $shift['code'] ? 'selected' : ''}}>({{ minimalisTime($shift['start_time']) }} - {{ minimalisTime($shift['end_time']) }}) - {{ $shift['code'] }}</option>
+                                        @endforeach
                                 </select>
-
-
-                                
-                               
                             </div>
                             <button id="btn-submit" class="btn btn-block bg-red waves-effect">
                                 <i class="material-icons">save</i>
                                 <span>Save</span>
                             </button>
-                       
-                   
                         
-                         
                     </form>
-                       </div>
-                        </div>
-                       
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
