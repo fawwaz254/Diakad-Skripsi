@@ -46,7 +46,7 @@
                         
                          <div class="row clearfix" id="place_file">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label>File ( pdf , pptx , docx , xlsx , xlsm , png , jpg , jpeg | Max 3 File | max 10 mb )</label>
+                                <label>File ( pdf , pptx , docx , xlsx , xlsm , png , jpg , jpeg | Max 50 File | max 10 mb )</label>
                                 <input type="file" class="form-control" id="file" accept=".pdf, .pptx, .docx, .xlsx, .xlsm, .png, .jpg, .jpeg" name="file[]" multiple/>
                             </div>
                         </div> 

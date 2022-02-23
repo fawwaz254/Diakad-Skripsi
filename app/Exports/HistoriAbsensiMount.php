@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 
 use Maatwebsite\Excel\Concerns\FromView;
 
-class HistoriAbsensiDay implements FromView
+class HistoriAbsensiMount implements FromView
 {
     /**
      * @return \Illuminate\Support\Collection
