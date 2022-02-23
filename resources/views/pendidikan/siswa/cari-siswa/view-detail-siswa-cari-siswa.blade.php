@@ -172,6 +172,12 @@
                 </div>
             </div>
 
+            <div class="row clearfix" style="margin-top:20px">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <button class="btn btn-block bg-blue waves-effect" id="btn-reset-password" onclick="resetPasswordSiswa('{{$siswa->id_pengguna}}')"><i class="material-icons">update</i><span>Reset Password Siswa</span></button>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -251,3 +257,45 @@
 
 </div>
 @include('scriptjs')
+<script>
+    function resetPasswordSiswa(id) {
+        swal(
+            { title: 'Are you sure?', showCancelButton: true },
+            function (isConfirm) {
+                if (isConfirm) {
+                    $('#btn-reset-password').attr("disabled", true);
+                    $.ajax({
+                        url:
+                            base_url + '/{{Request::segment(1)}}/{{Request::segment(2)}}/reset-password',
+                        type: 'POST',
+                        data: {
+                            id_pengguna: id,
+                        },
+                        success: function (response) {
+                            if (response.status_code == 200) {
+                                vex.dialog.alert(response.message);
+                            } else if (response.status_code == 201) {
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            } else if (response.status_code == 202) {
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            } else if (response.status_code == 203) {
+                                vex.dialog.alert(response.message);
+                                primary_table.ajax.reload(null, false);
+                            } else if (response.status_code == 204) {
+                                loadURI(response.path);
+                            } else if (response.status_code == 300) {
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function () {
+                            $('#btn-reset-password').removeAttr('disabled', 'disabled');
+                        },
+                    });
+                }
+                return;
+            }
+        );
+    }
+</script>
