@@ -43,7 +43,7 @@
                                 <td>name</td>
                                 @if($shiftsPengguna)
                                 <td>shift hari ini</td>
-                                @else
+                             
                          
                                 @endif
                              
@@ -64,7 +64,6 @@
                            
                                 @if ($shift['id_pengguna'] == $pengguna['id_pengguna'] )
                                 <td>{{ $shift['id_shift_master'] }}</td>
-                                        @else
                                         
                                 @endif
                                
