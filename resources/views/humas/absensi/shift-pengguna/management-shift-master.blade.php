@@ -11,8 +11,6 @@
         </div>
     </div>
 
-    <p></p>
-
     
     <div class="card">
     <div class="row clearfix">
@@ -29,7 +27,7 @@
 
                 <div class="body">
 
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                       
 
 <h4>Tambah Shift Baru</h4>
