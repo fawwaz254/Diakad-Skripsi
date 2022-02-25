@@ -44,7 +44,7 @@ class ShiftPenggunaController extends Controller
                     $hasil[$key]['id_shift_master'] = "-";
                 }
                 if ($attendance->id_shift_pengguna) {
-                    $hasil[$key]['id_shift_pengguna'] = $attendance->id_shift_pengguna;
+                    $hasil[$key]['id_shift_pengguna'] = $attendance['id_shift_pengguna'];
                 }
             }
         }
@@ -185,7 +185,7 @@ class ShiftPenggunaController extends Controller
 
         $shifts = ShiftMaster::all();
         $shift_pengguna = ShiftPengguna::find($id_shift_pengguna);
-        return view('humas/absensi/shift-pengguna/edit-shift-pengguna', compact('id_shift_pengguna', 'date', 'shifts','shift_pengguna'));
+        return view('humas/absensi/shift-pengguna/edit-shift-pengguna', compact('id_shift_pengguna', 'date', 'shifts', 'shift_pengguna'));
     }
 
     public function updateShiftAbsensi(Request $request, $id_shift_pengguna = null, $date = null)

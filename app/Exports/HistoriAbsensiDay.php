@@ -20,7 +20,7 @@ class HistoriAbsensiDay implements FromView
     public function view(): View
     {
 
-        return view('HistoriAbsensiMount', [
+        return view('HistoriAbsensiDay', [
             'products' => $this->products
         ]);
     }
