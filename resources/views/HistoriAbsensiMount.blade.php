@@ -29,7 +29,7 @@
         @foreach($produk as $r)
 
         <tr>
-      
+           
             <td style="text-align: center;">{{$loop->iteration}}</td>
             <td>{{$r['nm_pengguna']}}</td>
             <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
