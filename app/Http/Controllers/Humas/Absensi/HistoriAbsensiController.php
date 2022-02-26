@@ -40,60 +40,25 @@ class HistoriAbsensiController extends BaseController
 
         $dates = CarbonPeriod::create($start_date, $end_date);
 
+        foreach ($pengguna as $key1 => $value) {
+            $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
+            $hasil[$key1]['status_join_table'] = $value->status_join_table;
+            $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
 
-        foreach ($dates as $key1 => $date) {
-
+        foreach ($dates as $key2 => $date) {
             $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-            foreach ($pengguna as $key2 => $value) {
-                $hasil[$key1][$key2]['check_in'] = '-';
-                $hasil[$key1][$key2]['id_pengguna'] = $value->id_pengguna;
-                $hasil[$key1][$key2]['status_join_table'] = $value->status_join_table;
-                $hasil[$key1][$key2]['nm_pengguna'] = $value->nm_pengguna;
-                $hasil[$key1][$key2]['check_out'] = '-';
-                $hasil[$key1][$key2]['status'] = '-';
-                $hasil[$key1][$key2]['notes'] = '-';
-                $hasil[$key1][$key2]['id_presensi_pengguna'] = "";
+                
+            $hasil[$key1][$key2]['status'] = '-';
                 $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
                 $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
                 $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
                 if ($attendance) {
 
-                    if ($attendance->id_presensi_pengguna) {
-                        $hasil[$key1][$key2]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
-                    }
-
-                    if ($attendance->check_in) {
-                        $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
-                    }
-
-                    if ($attendance->check_in > $shiftMaster['start_time']) {
-
-                        $hasil[$key1][$key2]['notes'] = "Telat";
-                    }
-
-                    if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
-
-                        $hasil[$key1][$key2]['notes'] = "Pulang lebih awal";
-                    }
-
-                    if ($attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                        $hasil[$key1][$key2]['notes'] = "Telat dan Pulang lebih awal";
-                    }
-                    if ($attendance->check_out) {
-                        $hasil[$key1][$key2]['check_out'] = $attendance->check_out;
-                    }
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                     }
-                    if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                        $hasil[$key1][$key2]['notes'] = 'Tidak Checkout';
-                    }
-
-
-                    if ($attendance->notes) {
-                        $hasil[$key1][$key2]['notes'] = $attendance->notes;
-                    }
+                
                 } else {
 
                     if ($shiftMaster) {
@@ -106,13 +71,10 @@ class HistoriAbsensiController extends BaseController
                             $hasil[$key1][$key2]['status'] = '-';
                         }
 
-                        if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
-                        }
                     }
                 }
                 if ($cek_libur) {
                     $hasil[$key1][$key2]['status'] = 'Libur';
-                    $hasil[$key1][$key2]['notes'] = $cek_libur->explanation;
                 }
                 $hasil[$key1][$key2]['date'] = $date;
             }
@@ -194,8 +156,7 @@ class HistoriAbsensiController extends BaseController
                         $hasil[$key]['status'] = '-';
                     }
 
-                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
-                    }
+                   
                 }
             }
             if ($cek_libur) {

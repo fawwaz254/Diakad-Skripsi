@@ -17,36 +17,39 @@
     <td></td>
     <td></td>
     <td></td>
-  
-        
-  
 
 </tr> --}}
 
     </thead>
     <tbody>
         @foreach ( $products as  $produk )
-        @foreach($produk as $r)
+        @for ($i=0; $i>2; i++)
+        
+        {{-- @foreach($produk[1] as $r) --}}
 
         <tr>
-           
             <td style="text-align: center;">{{$loop->iteration}}</td>
-            <td>{{$r['nm_pengguna']}}</td>
-            <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+            <td>{{$produk['nm_pengguna']}}</td>
+            <td>{{$produk['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
             {{-- <td>{{$r['check_in']}}</td>
             <td>{{$r['check_out']}}</td> --}}
-            @if($r['status'] == "sakit" || $r['status'] == "izin" )
-            <td style="background-color: #fffc5e">{{$r['status']}}</td>
-            @elseif($r['status'] == "Alpha")
-            <td style="background-color: #ff5e79">{{$r['status']}}</td>
-            @elseif($r['status'] == "masuk")
-            <td style="background-color: #6cff5e">{{$r['status']}}</td>
+            @foreach ( $produk as $p)
+                
+        
+            @if($p['status'] == "sakit" || $produk[0]['status'] == "izin" )
+            <td style="background-color: #fffc5e">{{$p['status']}}</td>
+            @elseif($p['status'] == "Alpha")
+            <td style="background-color: #ff5e79">{{$p['status']}}</td>
+            @elseif($p['status'] == "masuk")
+            <td style="background-color: #6cff5e">{{$p['status']}}</td>
             @else
-            <td>{{$r['status']}}</td>
+            <td>{{$p['status']}}</td>
             @endif
+            @endforeach
             {{-- <td>{{$r['notes']}}</td> --}}
                     </tr>
-        @endforeach
+        {{-- @endforeach --}}
+@endfor
         @endforeach
     </tbody>
 </table>
