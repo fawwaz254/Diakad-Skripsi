@@ -2,9 +2,9 @@
     <thead >
 
 <tr>
-<th></th>
-<th></th>
-<th></th>
+<th>-</th>
+<th>-</th>
+<th>-</th>
 <th>Tanggal</th>
 </tr>
 
