@@ -22,6 +22,7 @@ class HistoriAbsensiController extends BaseController
 
     public function export_excel_mount(Request $request, $date = null)
     {
+        set_time_limit(1800);
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
 
         // if (empty($date) || empty($end_date)) {
@@ -45,12 +46,12 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
 
-        foreach ($dates as $key2 => $date) {
-            $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-                
-            $hasil[$key1][$key2]['status'] = '-';
-                $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-                $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            foreach ($dates as $key2 => $date) {
+                $cek_libur = ManajemenHariLibur::where('date', $date->format('Y-m-d'))->first();
+
+                $hasil[$key1][$key2]['status'] = '-';
+                $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
                 $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
                 if ($attendance) {
@@ -58,30 +59,27 @@ class HistoriAbsensiController extends BaseController
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                     }
-                
                 } else {
 
                     if ($shiftMaster) {
 
-                        if ($date < Carbon::now()->format('Y-m-d')) {
+                        if ($date->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
                             $hasil[$key1][$key2]['status'] = 'Alpha';
-                        } else if ($date == Carbon::now()->format('Y-m-d')) {
-                            $hasil[$key1][$key2]['status'] = 'Belum Absent';
                         } else {
                             $hasil[$key1][$key2]['status'] = '-';
                         }
-
                     }
                 }
                 if ($cek_libur) {
                     $hasil[$key1][$key2]['status'] = 'Libur';
                 }
-                $hasil[$key1][$key2]['date'] = $date;
+                $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
             }
         }
 
         // dd($hasil);
         $products = $hasil;
+        // dd($products);
         return Excel::download(new HistoriAbsensiMount($products), 'download_bulanan.xlsx');
     }
 
@@ -155,8 +153,6 @@ class HistoriAbsensiController extends BaseController
                     } else {
                         $hasil[$key]['status'] = '-';
                     }
-
-                   
                 }
             }
             if ($cek_libur) {
