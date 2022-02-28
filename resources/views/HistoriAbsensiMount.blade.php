@@ -1,52 +1,69 @@
 <table class="table table-bordered">
     <thead >
 
-    <tr>
+<tr>
+<th>-</th>
+<th>-</th>
+<th>-</th>
+<th>Tanggal</th>
+</tr>
 
 
 
 
         <tr>
-            <th style="text-align: center; background-color: #d8d8d8">No</th>
-            <th style="background-color: #d8d8d8">Nama</th>
-            <th style="background-color: #d8d8d8">Role</th>
-            <th style="background-color: #d8d8d8">Tanggal</th>
+            <td style="text-align: center; background-color: #d8d8d8">No</td>
+            <td style="background-color: #d8d8d8">Nama</td>
+            <td style="background-color: #d8d8d8">Role</td>
+        
+            @for ($i = 0; $i < $total = count($products[0]) - 3 ; $i++)
+                    
+            <td>{{$products[0][$i]['date']}}</td>
+            @endfor
+         
+
         </tr>
         
 {{-- <tr>
     <td></td>
     <td></td>
     <td></td>
-  
-        
-  
 
 </tr> --}}
 
     </thead>
     <tbody>
         @foreach ( $products as  $produk )
-        @foreach($produk as $r)
-
+       
+        
+        {{-- @foreach($produk[1] as $r) --}}
+       
         <tr>
-           
             <td style="text-align: center;">{{$loop->iteration}}</td>
-            <td>{{$r['nm_pengguna']}}</td>
-            <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+            <td>{{$produk['nm_pengguna']}}</td>
+            <td>{{$produk['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
             {{-- <td>{{$r['check_in']}}</td>
             <td>{{$r['check_out']}}</td> --}}
-            @if($r['status'] == "sakit" || $r['status'] == "izin" )
-            <td style="background-color: #fffc5e">{{$r['status']}}</td>
-            @elseif($r['status'] == "Alpha")
-            <td style="background-color: #ff5e79">{{$r['status']}}</td>
-            @elseif($r['status'] == "masuk")
-            <td style="background-color: #6cff5e">{{$r['status']}}</td>
-            @else
-            <td>{{$r['status']}}</td>
-            @endif
+            
+                @for ($i = 0; $i < $total = count($produk) - 3 ; $i++)
+                    
+                @if($produk[$i]['status'] == "sakit" || $produk[$i]['status'] == "izin" )
+                <td style="background-color: #fffc5e">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "Alpha")
+                <td style="background-color: #ff5e79">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "masuk")
+                <td style="background-color: #6cff5e">{{$produk[$i]['status']}}</td>
+                @else
+                <td>{{$produk[$i]['status']}}</td>
+                @endif
+                @endfor
+        
+        
+          
             {{-- <td>{{$r['notes']}}</td> --}}
                     </tr>
-        @endforeach
+       
+
         @endforeach
     </tbody>
 </table>
