@@ -214,11 +214,11 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['check_in'] = $attendance->check_in;
                     $jumlah_hadir++;
                 }
-
-                if ($attendance->check_in > $shiftMaster['start_time']) {
+                if (!$shiftMaster['start_time'] == null) {
                     $jumlah_telat++;
                     $hasil[$key]['notes'] = "Telat";
                 }
+
 
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
                     $jumlah_pulangcepat++;
