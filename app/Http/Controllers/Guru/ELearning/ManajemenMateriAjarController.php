@@ -149,7 +149,7 @@ class ManajemenMateriAjarController extends BaseController
 
                     foreach ($nm_file as $key => $value) {
 
-                        $file = Storage::disk('local')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', $files[$key], 'public');
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', $files[$key], 'public');
 
                         $materi_ajar_file                        = new MateriAjarFile;
                         $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
