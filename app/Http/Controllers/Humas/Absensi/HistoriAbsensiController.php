@@ -115,7 +115,7 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['check_in'] = $attendance->check_in;
                 }
 
-                if ($attendance->check_in > $shiftMaster['start_time']) {
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
                     $hasil[$key]['notes'] = "Telat";
                 }
@@ -125,7 +125,7 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['notes'] = "Pulang lebih awal";
                 }
 
-                if ($attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                     $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
                 }
                 if ($attendance->check_out) {
@@ -214,10 +214,14 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['check_in'] = $attendance->check_in;
                     $jumlah_hadir++;
                 }
-                if (!$shiftMaster['start_time'] == null) {
+
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                     $jumlah_telat++;
                     $hasil[$key]['notes'] = "Telat";
                 }
+
+
+
 
 
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
@@ -225,7 +229,7 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['notes'] = "Pulang lebih awal";
                 }
 
-                if ($attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                     $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
                 }
                 if ($attendance->check_out) {
