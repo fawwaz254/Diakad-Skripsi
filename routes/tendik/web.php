@@ -120,6 +120,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('datatables', 'Guru\Laporan\KerjaHarianController@datatablesKerjaHarian');
                 Route::get('add', 'Guru\Laporan\KerjaHarianController@addKerjaHarian');
                 Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
+                Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
+                Route::get('print-kerja-harian/{start_date}/{end_date}', 'Guru\Laporan\KerjaHarianController@printKerjaHarian');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
             });
         });
