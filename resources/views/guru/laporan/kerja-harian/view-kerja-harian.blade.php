@@ -2,6 +2,7 @@
     <div class="block-header">
         <h2>
             <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan/kerja-harian/add')}}"><i class="material-icons">add</i><span>Tambah Laporan Kerja Harian</span></a>
+            <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
         </h2>
     </div>
     <div class="row clearfix">
@@ -57,7 +58,62 @@
     </div>
 </div>
 
+<div class="modal" id="modal_print" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Print Laporan Kerja Harian</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+                
+            <div class="row">
+
+                <div class="col-md-6">
+                    <label>
+                        Tanggal Awal
+                    </label>
+                    <input type="date" class="datepicker form-control" id="start_date" name="start_date" required="" aria-required="true" aria-invalid="true">
+                </div>
+
+                <div class="col-md-6">
+                    <label>
+                        Tanggal Akhir
+                    </label>
+                    <input type="date" class="datepicker form-control" id="end_date" name="end_date" required="" aria-required="true" aria-invalid="true">
+                </div>
+
+            </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="print_laporan" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
+        
+    $('#print').click(function(){
+        $('#modal_print').modal('show');
+    });
+
+    $('#print_laporan').click(function(){
+        var start_date = $('#start_date').val();
+        var end_date = $('#end_date').val();
+
+        if(!start_date || !end_date){
+            alert('Mohon diisi start date dan end date terlebih dahulu');
+            return;
+        }
+
+        window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
+    })
+
     var modul_url        = 'laporan';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/datatables';
     var edit_url         = role_url + '#' + modul_url + '/' + 'kerja-harian/edit';

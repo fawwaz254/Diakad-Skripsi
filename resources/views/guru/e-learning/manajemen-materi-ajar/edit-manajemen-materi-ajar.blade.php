@@ -99,7 +99,7 @@
 
                         <div class="col-md-5">
                             <label>File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
-                            <input type="file" class="form-control" name="file[]" aria-required="true" aria-invalid="true">
+                            <input type="file" class="form-control" name="file[]" aria-required="true" aria-invalid="true" accept=".pdf,.doc,.docx,.ppt,.xlsx">
                         </div>
 
                         <div class="col-md-2" style="margin-top: 23px;">
