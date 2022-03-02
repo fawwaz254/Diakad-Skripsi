@@ -31,7 +31,7 @@ class HistoriAbsensiController extends BaseController
         // }
 
         $year = Carbon::parse($date)->format('Y');
-        $mount = Carbon::parse($date)->format('m');
+        $mount = Carbon::parse($date)->format('M');
 
 
         $start_date = new Carbon('first day of' . $mount . $year);
