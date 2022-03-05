@@ -92,13 +92,13 @@ class DataFileController extends BaseController
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
 
         if ($mode == 'delete-many') {
-            dd($input);
-            foreach ($input->id_file as $key => $id_file) {
-                $is_google_drive = filter_var($input->link_file[$key], FILTER_VALIDATE_URL);
+            foreach ($input->id_file as $id_file) {
+                $file = FilePengguna::where('file_pengguna_id', $id_file)->first();
+                $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);
                 if (!$is_google_drive) {
-                    Storage::disk('local')->delete($input->link_file[$key]);
+                    Storage::disk('spaces')->delete($file->link_file);
                 }
-                FilePengguna::destroy($id_file);
+                $file->delete();
             }
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
@@ -108,11 +108,12 @@ class DataFileController extends BaseController
         }
 
         if ($mode == 'delete') {
-            $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
+            $file = FilePengguna::where('file_pengguna_id', $input->id_file)->first();
+            $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);
             if (!$is_google_drive) {
-                Storage::disk('local')->delete($input->link_file);
+                Storage::disk('spaces')->delete($file->link_file);
             }
-            FilePengguna::destroy($id);
+            $file->delete();
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
@@ -171,7 +172,7 @@ class DataFileController extends BaseController
                         $data->sub_category_file_id = $input->sub_category_file_id;
                         $data->created_by = $id_pengguna;
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                        $uploaded_file = Storage::disk('local')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
+                        $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                         $data->link_file = $uploaded_file;
                         $data->extension_file = $file->extension();
                         $data->is_google_drive = 0;

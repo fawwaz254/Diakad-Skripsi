@@ -1,10 +1,10 @@
 @php
-    $total_file = 0;
+$total_file = 0;
 @endphp
 <style type="text/css">
-/*     .folder:hover {
+    .folder:hover {
         transform: scale(1.2);
-    } */
+    }
 
     .folder {
         cursor: pointer;
@@ -13,6 +13,7 @@
     i.folder.material-icons {
         width: 45px;
     }
+
 </style>
 <div class="container-fluid">
     <div class="block-header">
@@ -20,7 +21,7 @@
             <div class="col-lg-1 col-md-6 col-sm-12 col-xs-12" id="add-file">
                 <h2>
                     <a class="btn bg-blue waves-effect target-link"
-                        href="{{url(Request::segment(1).'#manajemen-file/data-file/add')}}"><i
+                        href="{{ url(Request::segment(1) . '#manajemen-file/data-file/add') }}"><i
                             class="material-icons">note_add</i>
                         <span>Tambah File</span>
                     </a>
@@ -41,82 +42,81 @@
             </div>
         </div>
     </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Data File Sub Kategori {{$sub_category->sub_category_file_name}}</h2>
+                    <h2>Data File Sub Kategori {{ $sub_category->sub_category_file_name }}</h2>
                 </div>
                 <div class="body">
                     <form
-                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/data-file/action-data-file/delete-many/0')}}"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/action-data-file/delete-many/0') }}"
                         id="form-validation" method="POST">
                         @foreach ($files as $file)
-                        <p>{{$file->nm_pengguna}}</p>
-                        <hr>
-                        <div class="row">
-                            @foreach($file->file_pengguna as $r)
-                            @if($r->is_google_drive == 1)
-                            <a href="{{$r->link_file}}" target="_blank"
-                                style="color: inherit;text-decoration: inherit; ">
-                                @else
-                                <a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank"
-                                    style="color: inherit;text-decoration: inherit; ">
+                            <p>{{ $file->nm_pengguna }}</p>
+                            <hr>
+                            <div class="row">
+                                @foreach ($file->file_pengguna as $r)
+                                    @if ($r->is_google_drive == 1)
+                                        <a href="{{ $r->link_file }}" target="_blank"
+                                            style="color: inherit;text-decoration: inherit; ">
+                                        @else
+                                            <a href="{{ Storage::disk('spaces')->url($r->link_file) }}"
+                                                target="_blank" style="color: inherit;text-decoration: inherit; ">
                                     @endif
                                     @php
-                                    $total_file++
+                                        $total_file++;
                                     @endphp
                                     <div class="col-md-3 folder">
                                         <div style="text-align: center;">
-                                            @if($r->extension_file == 'pdf')
-                                            <i class="material-icons"
-                                                style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
-                                            @elseif($r->extension_file == 'png' || $r->extension_file == 'jpg' ||
-                                            $r->extension_file == 'jpeg')
-                                            <i class="material-icons"
-                                                style="color:blue;font-size: 45px;width:45px">collections_icon</i>
-                                            @elseif($r->extension_file == 'pptx' || $r->extension_file == 'docx' ||
-                                            $r->extension_file == 'xlsx')
-                                            <i class="material-icons"
-                                                style="color:blue;font-size: 45px;width:45px">description</i>
+                                            @if ($r->extension_file == 'pdf')
+                                                <i class="material-icons"
+                                                    style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
+                                            @elseif($r->extension_file == 'png' || $r->extension_file == 'jpg' || $r->extension_file == 'jpeg')
+                                                <i class="material-icons"
+                                                    style="color:blue;font-size: 45px;width:45px">collections_icon</i>
+                                            @elseif($r->extension_file == 'pptx' || $r->extension_file == 'docx' || $r->extension_file == 'xlsx')
+                                                <i class="material-icons"
+                                                    style="color:blue;font-size: 45px;width:45px">description</i>
                                             @else
-                                            <i class="material-icons"
-                                                style="color:green;font-size: 45px;width:45px">add_to_drive</i>
+                                                <i class="material-icons"
+                                                    style="color:green;font-size: 45px;width:45px">add_to_drive</i>
                                             @endif
                                         </div>
 
                                         <div style="text-align: center">
-                                            {{-- <span>{{$r->judul}}</span> --}}
-                                            <span>{{$r->file_pengguna_id}}</span>
-                                            <span>{{$r->link_file}}</span>
+                                            <span>{{ $r->judul }}</span>
                                         </div>
-                                </a>
-                            </a>
-                            <div class="form-check delete-many"
-                                style="text-align: center;margin-top: 10px; display: none">
-                                <input type="checkbox" class="form-check-input" value="{{$r->file_pengguna_id}}"
-                                    name="id_file[]" id="id_file[{{$r->file_pengguna_id}}]">
-                                <label class="form-check-label" for="id_file[{{$r->file_pengguna_id}}]"></label>
-                                <input type="hidden" name="link_file[]" value="{{$r->link_file}}">
+                                        </a>
+                                        <div class="form-check delete-many"
+                                            style="text-align: center;margin-top: 10px; display: none">
+                                            <input type="checkbox" class="form-check-input"
+                                                value="{{ $r->file_pengguna_id }}" name="id_file[]"
+                                                id="id_file[{{ $r->file_pengguna_id }}]">
+                                            <label class="form-check-label"
+                                                for="id_file[{{ $r->file_pengguna_id }}]"></label>
+                                            <input type="hidden" name="sub_category_file_id"
+                                                value="{{ $sub_category->sub_category_file_id }}">
+                                        </div>
+                                        <div style="text-align: center;margin-top: 10px;" class="delete-one">
+                                            <a
+                                                onclick="deleteFile('{{ $r->file_pengguna_id }}','{{ $sub_category->sub_category_file_id }}')">
+                                                <i style="color:red;" class="material-icons">cancel</i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                            <input type="hidden" name="sub_category_file_id"
-                                value="{{$sub_category->sub_category_file_id}}">
-                            <div style="text-align: center;margin-top: 10px;" class="delete-one">
-                                <a
-                                    onclick="deleteFile('{{$r->file_pengguna_id}}','{{$r->link_file}}','{{$sub_category->sub_category_file_id}}')">
-                                    <i style="color:red;" class="material-icons">cancel</i>
-                                </a>
-                            </div>
-                        </div>
                         @endforeach
                     </form>
-                    @endforeach
+                    <p>TOTAL FILE : <b>{{ $total_file }}</b></p>
                 </div>
-                <p>TOTAL FILE : <b>{{$total_file}}</b></p>
             </div>
         </div>
     </div>
 </div>
+
 @include('scriptjs')
 <script>
     function toggleDelete() {
@@ -146,16 +146,16 @@
                 required: true
             },
         },
-        highlight: function (input) {
+        highlight: function(input) {
             $(input).parents('.form-group').addClass('error');
         },
-        unhighlight: function (input) {
+        unhighlight: function(input) {
             $(input).parents('.form-group').removeClass('error');
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             $(element).parents('.form-group').append(error);
         },
-        submitHandler: function (form) {
+        submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
             $.ajax({
                 url: form.action,
@@ -165,7 +165,7 @@
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function (response) {
+                success: function(response) {
                     if (response.status == 200) {
                         vex.dialog.alert(response.message);
                     } else if (response.status == 201) {
@@ -183,7 +183,7 @@
                         vex.dialog.alert(response.message);
                     }
                 },
-                complete: function (response) {
+                complete: function(response) {
                     $('input').removeAttr('readonly', 'readonly');
                     $('button').removeAttr('disabled');
                 }
@@ -191,25 +191,25 @@
         }
     });
 
-    function deleteFile(id, linkFile, sub_category_file_id) {
+    function deleteFile(id, sub_category_file_id) {
         swal({
                 title: "Are you sure?",
                 showCancelButton: true
             },
-            function (isConfirm) {
+            function(isConfirm) {
                 if (isConfirm) {
                     $.ajax({
-                        url: `{{Request::segment(1)}}/{{Request::segment(2)}}/{{Request::segment(3)}}/action-data-file/delete/${id}`,
+                        url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/action-data-file/delete/0`,
                         type: "post",
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
                         },
                         data: {
-                            link_file: linkFile,
-                            sub_category_file_id: sub_category_file_id
+                            id_file: id,
+                            sub_category_file_id: sub_category_file_id,
                         },
 
-                        success: function (response) {
+                        success: function(response) {
                             if (response.status == 200) {
                                 vex.dialog.alert(response.message);
                             } else if (response.status == 201) {
