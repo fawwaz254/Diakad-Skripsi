@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 
 use Maatwebsite\Excel\Concerns\FromView;
 
-class HistoriAbsensiDay implements FromView
+class HistoriAbsensiMount implements FromView
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -20,7 +20,7 @@ class HistoriAbsensiDay implements FromView
     public function view(): View
     {
 
-        return view('HistoriAbsensiDay', [
+        return view('HistoriAbsensiMount', [
             'products' => $this->products
         ]);
     }

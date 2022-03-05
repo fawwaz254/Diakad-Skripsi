@@ -1,12 +1,14 @@
 <div class="container-fluid">
 
+
+
+
     <div class="row clearfix">
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <button class="btn btn-block bg-red waves-effect" onclick=back()><i class="material-icons">arrow_back</i><span>Kembali</span></button>
         </div>
     </div>
 
-    <p></p>
     
     <div class="card">
     <div class="row clearfix">
@@ -41,18 +43,41 @@
                                 <td style="text-align: center;">No</td>
                                 <td>Role</td>
                                 <td>name</td>
+                                @if($shiftsPengguna)
+                                <td>shift hari ini</td>
+                             
+                         
+                                @endif
+                             
 
                                 </tr>
-
-                                @foreach($penggunas as $key => $pengguna)
                                 <tr>
-                                
+                                @foreach($penggunas as $key => $pengguna)
+                             
                                 <td style="text-align: center;">{{ $key+1 }}</td>
                                 <td>{{$pengguna['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
                                 <td><input type="checkbox" name="pengguna[{{$pengguna['nm_pengguna']}}]" value="{{$pengguna['id_pengguna']}}" id="{{$pengguna['id_pengguna']}}" > <label for="{{$pengguna['id_pengguna']}}">{{$pengguna['nm_pengguna']}} </label></td>
+   
 
+                             
+                                    @foreach ($shiftsPengguna as $shift)
+   
+                                
+                           
+                                @if ($shift['id_pengguna'] == $pengguna['id_pengguna'] )
+                                <td>{{ $shift['id_shift_master'] }}</td>
+                                        
+                                @endif
+                               
+
+                                @endforeach
+                           
+                                
+
+                                
 
                                 </tr>
+                              
                                 @endforeach
 
 

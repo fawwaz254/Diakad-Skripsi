@@ -199,6 +199,20 @@ class KerjaHarianController extends BaseController{
         }
     }
 
+    public function printKerjaHarian($start_date,$end_date,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data['laporan'] = LaporanKerjaHarian::where('created_by',$auth_data->pengguna->id_pengguna)
+                                    ->whereBetween('tanggal', [$start_date, $end_date])
+                                    ->orderBy('tanggal','asc')->get();
+
+
+        return view('guru/laporan/kerja-harian/print-kerja-harian',$data);
+
+    }
+
     public function datatablesKerjaHarian(Request $request){
 
         $input = (object) $request->input();

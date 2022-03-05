@@ -25,21 +25,21 @@
                                 aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-md-2" style="display: flex;" >
+                        <div class="col-md-2" style="display: flex; margin-top:27px;" >
                             <div>
-                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
+                            <button type="button" class="btn bg-purple waves-effect" 
                                 onclick="filterAction()">Change Date</button>
                             </div>
                             <div style="margin-left:10px; ">
-                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" style=" margin-top:27px; height:30px; ">
-                                     <i class="material-icons" style="font-size: 17px;">print</i> </a>
+                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" >
+                                    <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+                            </div>
+                            <div style="margin-left:10px; ">
+                                <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}" target="_blank" class="btn bg-purple waves-effect" >
+                                    <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
                             </div>
                             </div>
 
-                        
-                                                   
-                            
-                              
 
                     </div>
 
@@ -65,27 +65,31 @@
                             </li>
                             <li>
                                 Hadir Terlambat
-                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_telat}}</b></span>
                             </li>
                             <li>
                                 Hadir Pulang Lebih Awal
-                               <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_pulangcepat}}</b></span>
+                            </li>
+                            <li>
+                                Tidak Checkout
+                                <span class="pull-right"><b>{{$tidak_checkout}}</b></span>
                             </li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <ul class="dashboard-stat-list">
                             <li>
-                                Sakit
+                                Izin
                                 <span class="pull-right"><b>{{$jumlah_izin}}</b></span>
                             </li>
                             <li>
-                                Izin
+                                Sakit
                                 <span class="pull-right"><b>{{$jumlah_sakit}}</b></span>
                             </li>
                             <li>
                                 Alpha
-                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_alpha}}</b></span>
                             </li>
                         </ul>
                     </div>

@@ -34,7 +34,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
 				Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
 				Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-				Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
 				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
 				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
@@ -85,6 +84,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 			Route::group(array('prefix' => 'shift_pengguna'), function () {
 
+
+
+
 				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
 				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');
 				Route::post('/managementShift/{id}/delete', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@destroyShiftMaster');
@@ -100,25 +102,32 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 			});
 
-			Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
-			// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
-			Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-			Route::get('/{date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-			Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
-			Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
-			Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
-			Route::post('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
-			Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
-		});
 
-		Route::group(array('prefix' => 'manajemen-hari-libur'), function () {
 
-			Route::get('/', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@viewManajemenHariLibur');
-			Route::get('/{id}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@editManajemenHariLibur');
-			Route::post('/{id}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@updateManajemenHariLibur');
-			Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
-			Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
-			Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
+
+
+			Route::group(array('prefix' => 'histori-absensi'), function () {
+				Route::get('export-laravel-mount/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
+				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
+				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
+				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
+				Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
+				Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
+			});
+
+			Route::group(array('prefix' => 'manajemen-hari-libur'), function () {
+
+				Route::get('/', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@viewManajemenHariLibur');
+				Route::get('/{id}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@editManajemenHariLibur');
+				Route::post('/{id}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@updateManajemenHariLibur');
+				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
+				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
+				Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
+			});
 		});
 
 		/** ==== MODUL BURSA KERJA ==== **/
