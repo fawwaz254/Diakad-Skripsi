@@ -92,6 +92,16 @@ class DataFileController extends BaseController
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
 
         if ($mode == 'delete-many') {
+            $validator = Validator::make($request->all(), [
+                'id_file' => 'required',
+                'sub_category_file_id' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => $validator->errors()->first()
+                ];
+            }
             foreach ($input->id_file as $id_file) {
                 $file = FilePengguna::where('file_pengguna_id', $id_file)->first();
                 $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);

@@ -2,15 +2,15 @@
 $total_file = 0;
 @endphp
 <style type="text/css">
-    .folder:hover {
+    .file:hover {
         transform: scale(1.2);
     }
 
-    .folder {
+    .file {
         cursor: pointer;
     }
 
-    i.folder.material-icons {
+    i.file.material-icons {
         width: 45px;
     }
 
@@ -32,39 +32,34 @@ $total_file = 0;
                     @foreach ($files as $file)
                         <p>{{ $file->nm_pengguna }}</p>
                         <hr>
-                        @php
-                            $total_file++;
-                        @endphp
                         <div class="row">
                             @foreach ($file->file_pengguna as $f)
-                                @if ($f->is_google_drive == 1)
-                                    <a href="{{ $f->link_file }}" target="_blank"
-                                        style="color: inherit;text-decoration: inherit; ">
-                                    @else
-                                        <a href="{{ Storage::disk('spaces')->url($f->link_file) }}" target="_blank"
-                                            style="color: inherit;text-decoration: inherit; ">
-                                @endif
-                                <div class="col-md-3 folder">
-                                    <div style="text-align: center;">
-                                        @if ($f->extension_file == 'pdf')
-                                            <i class="material-icons"
-                                                style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
-                                        @elseif($f->extension_file == 'png' || $f->extension_file == 'jpg' || $f->extension_file == 'jpeg')
-                                            <i class="material-icons"
-                                                style="color:blue;font-size: 45px;width:45px">collections_icon</i>
-                                        @elseif($f->extension_file == 'pptx' || $f->extension_file == 'docx' || $f->extension_file == 'xlsx')
-                                            <i class="material-icons"
-                                                style="color:blue;font-size: 45px;width:45px">description</i>
-                                        @else
-                                            <i class="material-icons"
-                                                style="color:green;font-size: 45px;width:45px">add_to_drive</i>
-                                        @endif
-                                    </div>
+                                <a href="{{ $f->is_google_drive == 1 ? $f->link_file : Storage::disk('spaces')->url($f->link_file) }}"
+                                    target="_blank" style="color: inherit;text-decoration: inherit; ">
+                                    @php
+                                        $total_file++;
+                                    @endphp
+                                    <div class="col-md-3 file">
+                                        <div style="text-align: center;">
+                                            @if ($f->extension_file == 'pdf')
+                                                <i class="material-icons"
+                                                    style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
+                                            @elseif($f->extension_file == 'png' || $f->extension_file == 'jpg' || $f->extension_file == 'jpeg')
+                                                <i class="material-icons"
+                                                    style="color:blue;font-size: 45px;width:45px">collections_icon</i>
+                                            @elseif($f->extension_file == 'pptx' || $f->extension_file == 'docx' || $f->extension_file == 'xlsx')
+                                                <i class="material-icons"
+                                                    style="color:blue;font-size: 45px;width:45px">description</i>
+                                            @else
+                                                <i class="material-icons"
+                                                    style="color:green;font-size: 45px;width:45px">add_to_drive</i>
+                                            @endif
+                                        </div>
 
-                                    <div style="text-align: center">
-                                        <span>{{ $f->judul }}</span>
+                                        <div style="text-align: center">
+                                            <span>{{ $f->judul }}</span>
+                                        </div>
                                     </div>
-                                </div>
                                 </a>
                             @endforeach
                         </div>
