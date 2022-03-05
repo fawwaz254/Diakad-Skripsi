@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 
-function minimalisTime($time){
+function minimalisTime($time)
+{
     $currentTime = strtotime($time);
-    return date('H:i',round($currentTime / (15 * 60)) * (15 * 60));
-
+    return date('H:i', round($currentTime / (15 * 60)) * (15 * 60));
 }
 
 
@@ -55,7 +55,7 @@ if (!function_exists('get_moduls')) {
 
 if (!function_exists('category_file_role')) {
     /**
-     * get category file based on active id role 
+     * get shared file based on active id role 
      * @return array
      */
     function category_file_role($id_role)
@@ -166,7 +166,7 @@ if (!function_exists('indonesiaDate')) {
             ];
 
             $split = explode('-', $date);
-            return $split[2] . ' ' . $months[(int)$split[1]] . ' ' . $split[0];
+            return $split[2] . ' ' . $months[(int) $split[1]] . ' ' . $split[0];
         } else {
             return '';
         }
