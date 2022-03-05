@@ -49,11 +49,18 @@ class DataFileController extends BaseController
         $auth_data = $input->auth_data;
 
         $sub_category = SubCategoryFile::find($id);
-        $file = Pengguna::Has('file_pengguna')
+        $data_file = Pengguna::Has('file_pengguna')
             ->with(["file_pengguna" => function ($q) use ($id) {
                 return $q->where('sub_category_file_id', $id);
             }])->get();
-        return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
+
+        $files = collect([]);
+        foreach ($data_file as $file) {
+            if ($file->file_pengguna->isNotEmpty()) {
+                $files->push($file);
+            }
+        }
+        return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'files'));
     }
 
     public function dropdownCategory(Request $request)
@@ -139,7 +146,7 @@ class DataFileController extends BaseController
                         $data->sub_category_file_id = $input->sub_category_file_id;
                         $data->created_by = $id_pengguna;
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                        $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
+                        $uploaded_file = Storage::disk('local')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                         $data->link_file = $uploaded_file;
                         $data->extension_file = $file->extension();
                         $data->is_google_drive = 0;

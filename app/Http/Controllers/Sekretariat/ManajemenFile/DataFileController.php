@@ -51,11 +51,18 @@ class DataFileController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $sub_category = SubCategoryFile::find($id);
-        $file = Pengguna::Has('file_pengguna')
+        $data_file = Pengguna::Has('file_pengguna')
             ->with(["file_pengguna" => function ($q) use ($id) {
                 return $q->where('sub_category_file_id', $id);
             }])->get();
-        return view('sekretariat/manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
+
+        $files = collect([]);
+        foreach ($data_file as $file) {
+            if ($file->file_pengguna->isNotEmpty()) {
+                $files->push($file);
+            }
+        }
+        return view('sekretariat/manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'files'));
     }
 
     public function dropdownCategory(Request $request)
@@ -81,15 +88,34 @@ class DataFileController extends BaseController
     {
         $input = (object) $request->input();
 
+        $files = $request->file('file');
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
+
+        if ($mode == 'delete-many') {
+            dd($input);
+            foreach ($input->id_file as $key => $id_file) {
+                $is_google_drive = filter_var($input->link_file[$key], FILTER_VALIDATE_URL);
+                if (!$is_google_drive) {
+                    Storage::disk('local')->delete($input->link_file[$key]);
+                }
+                FilePengguna::destroy($id_file);
+            }
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
+                'message' => 'Delete File successfully'
+            ];
+        }
+
         if ($mode == 'delete') {
             $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
             if (!$is_google_drive) {
-                Storage::disk('spaces')->delete($input->link_file);
+                Storage::disk('local')->delete($input->link_file);
             }
             FilePengguna::destroy($id);
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
                 'message' => 'Delete File successfully'
             ];
         }
@@ -125,7 +151,6 @@ class DataFileController extends BaseController
                     }
 
                     $files = $request->file('file');
-
                     if (count($files) > 50) {
                         return [
                             'status' => 300, // FAILED
@@ -146,7 +171,7 @@ class DataFileController extends BaseController
                         $data->sub_category_file_id = $input->sub_category_file_id;
                         $data->created_by = $id_pengguna;
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                        $uploaded_file = Storage::disk('spaces')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
+                        $uploaded_file = Storage::disk('local')->putFile($singkat_sekolah . '/file-pengguna/' . $id, $file, 'public');
                         $data->link_file = $uploaded_file;
                         $data->extension_file = $file->extension();
                         $data->is_google_drive = 0;
