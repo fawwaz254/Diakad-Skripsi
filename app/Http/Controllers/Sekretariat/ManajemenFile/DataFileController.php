@@ -51,11 +51,18 @@ class DataFileController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $sub_category = SubCategoryFile::find($id);
-        $file = Pengguna::Has('file_pengguna')
+        $data_file = Pengguna::Has('file_pengguna')
             ->with(["file_pengguna" => function ($q) use ($id) {
                 return $q->where('sub_category_file_id', $id);
             }])->get();
-        return view('sekretariat/manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
+
+        $files = collect([]);
+        foreach ($data_file as $file) {
+            if ($file->file_pengguna->isNotEmpty()) {
+                $files->push($file);
+            }
+        }
+        return view('sekretariat/manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'files'));
     }
 
     public function dropdownCategory(Request $request)
@@ -81,15 +88,45 @@ class DataFileController extends BaseController
     {
         $input = (object) $request->input();
 
+        $files = $request->file('file');
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
-        if ($mode == 'delete') {
-            $is_google_drive = filter_var($input->link_file, FILTER_VALIDATE_URL);
-            if (!$is_google_drive) {
-                Storage::disk('spaces')->delete($input->link_file);
+
+        if ($mode == 'delete-many') {
+            $validator = Validator::make($request->all(), [
+                'id_file' => 'required',
+                'sub_category_file_id' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => $validator->errors()->first()
+                ];
             }
-            FilePengguna::destroy($id);
+            foreach ($input->id_file as $id_file) {
+                $file = FilePengguna::where('file_pengguna_id', $id_file)->first();
+                $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);
+                if (!$is_google_drive) {
+                    Storage::disk('spaces')->delete($file->link_file);
+                }
+                $file->delete();
+            }
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
+                'message' => 'Delete File successfully'
+            ];
+        }
+
+        if ($mode == 'delete') {
+            $file = FilePengguna::where('file_pengguna_id', $input->id_file)->first();
+            $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);
+            if (!$is_google_drive) {
+                Storage::disk('spaces')->delete($file->link_file);
+            }
+            $file->delete();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
                 'message' => 'Delete File successfully'
             ];
         }
@@ -125,7 +162,6 @@ class DataFileController extends BaseController
                     }
 
                     $files = $request->file('file');
-
                     if (count($files) > 50) {
                         return [
                             'status' => 300, // FAILED
