@@ -232,6 +232,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('action-batch-upload-foto', 'Pendidikan\Siswa\UpdateFotoController@actionBatchUploadFoto');
 
             //MENU UPLOAD DATA SISWA
+            Route::post('post-file-excel-email', 'Pendidikan\Siswa\UploadDataSiswaController@uploadEmailExcel');
             Route::get('update-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@updateDataSiswa');
             Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');
             Route::get('/download-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@downloadFileExcel')->name('siswa/download-file-excel');

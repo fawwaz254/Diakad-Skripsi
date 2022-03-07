@@ -49,11 +49,18 @@ class DataFileController extends BaseController
         $auth_data = $input->auth_data;
 
         $sub_category = SubCategoryFile::find($id);
-        $file = Pengguna::Has('file_pengguna')
+        $data_file = Pengguna::Has('file_pengguna')
             ->with(["file_pengguna" => function ($q) use ($id) {
                 return $q->where('sub_category_file_id', $id);
             }])->get();
-        return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'file'));
+
+        $files = collect([]);
+        foreach ($data_file as $file) {
+            if ($file->file_pengguna->isNotEmpty()) {
+                $files->push($file);
+            }
+        }
+        return view('manajemen-file/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'files'));
     }
 
     public function dropdownCategory(Request $request)

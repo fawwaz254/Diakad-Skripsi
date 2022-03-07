@@ -7,8 +7,6 @@ use App\Models\Sekolah;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
-use Session;
 
 class ManajemenHariLiburController extends BaseController
 {
@@ -41,20 +39,26 @@ class ManajemenHariLiburController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $prefix = Sekolah::first()->prefix;
-        $uuid = $prefix . strtotime($now) . uniqid();
-        $holiday = [];
         $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->first();
         if ($is_holiday_exist) {
-            return redirect("/humas#absensi/manajemen-hari-libur/add");
+            return [
+                'status' => 200, // SUCCESS AND LOAD CONTENT
+                'message' => 'Hari Libur sudah ada'
+            ];
         }
-        $holiday['manajemen_hari_libur_id'] = $uuid;
-        $holiday['date'] = $input->date;
-        $holiday['explanation'] = $input->explanation;
-        $holiday['created_by'] = $auth_data->pengguna->id_pengguna;
-        ManajemenHariLibur::create($holiday);
-        return redirect("/humas#absensi/manajemen-hari-libur");
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $prefix = Sekolah::first()->prefix;
+        $holiday = new ManajemenHariLibur;
+        $holiday->manajemen_hari_libur_id = $prefix . strtotime($now) . uniqid();
+        $holiday->date = $input->date;
+        $holiday->explanation = $input->explanation;
+        $holiday->created_by = $auth_data->pengguna->id_pengguna;
+        $holiday->save();
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'absensi/manajemen-hari-libur',
+            'message' => 'Add Hari Libur successfully'
+        ];
     }
 
     public function editManajemenHariLibur(Request $request, $id)
@@ -67,25 +71,36 @@ class ManajemenHariLiburController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->where('manajemen_hari_libur_id','!=',$id)->first();
+        $is_holiday_exist = ManajemenHariLibur::where('date', $input->date)->where('manajemen_hari_libur_id', '!=', $id)->first();
         if ($is_holiday_exist) {
-            return redirect("/humas#absensi/manajemen-hari-libur/" . $id . "/edit");
+            return [
+                'status' => 200, // SUCCESS AND LOAD CONTENT
+                'message' => 'Hari Libur sudah ada'
+            ];
         }
         $is_holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id)->first();
-        $holiday = [];
-        $holiday['date'] = $input->date;
-        $holiday['explanation'] = $input->explanation;
-        $holiday['updated_by'] = $auth_data->pengguna->id_pengguna;
-        $is_holiday->update($holiday);
-        return redirect("/humas#absensi/manajemen-hari-libur");
+        $is_holiday->date = $input->date;
+        $is_holiday->explanation = $input->explanation;
+        $is_holiday->updated_by = $auth_data->pengguna->id_pengguna;
+        $is_holiday->save();
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'absensi/manajemen-hari-libur',
+            'message' => 'Add Hari Libur successfully'
+        ];
     }
 
     public function destroyManajemenHariLibur(Request $request, $id)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $is_holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id);
-        $is_holiday->update(['deleted_by' => $auth_data->pengguna->id_pengguna]);
-        $is_holiday->delete();
+        $holiday = ManajemenHariLibur::where('manajemen_hari_libur_id', $id)->first();
+        $holiday->deleted_by = $auth_data->pengguna->id_pengguna;
+        $holiday->delete();
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'absensi/manajemen-hari-libur',
+            'message' => 'Delete Hari Libur successfully'
+        ];
     }
 }
