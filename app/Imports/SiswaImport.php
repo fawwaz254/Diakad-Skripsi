@@ -26,7 +26,7 @@ class SiswaImport implements ToCollection, WithHeadingRow
             // $pengguna = Pengguna::where('id_pengguna', $siswa->id_pengguna)->first();
             // dd($pengguna);
             Pengguna::where('id_pengguna', $siswa->id_pengguna)->update([
-                'email_afiliasi' => $row['email'],
+                'email_pengguna' => $row['email'],
             ]);
         }
     }
