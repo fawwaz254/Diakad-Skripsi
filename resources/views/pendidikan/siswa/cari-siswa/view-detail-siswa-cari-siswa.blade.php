@@ -46,6 +46,10 @@
                                 <td style="width: 50%">{{$siswa->nis_siswa}}</td>
                             </tr>
                             <tr>
+                                <td style="width: 50%">Email</td>
+                                <td style="width: 50%">{{$email_pengguna}}</td>
+                            </tr>
+                            <tr>
                                 <td style="width: 50%">NISN</td>
                                 <td style="width: 50%">{{$siswa->nisn_siswa}}</td>
                             </tr>
