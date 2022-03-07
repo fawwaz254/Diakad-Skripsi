@@ -109,9 +109,17 @@ class CariSiswaController extends BaseController
     # code...
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
-
+    $siswa1 = Siswa::where('nis_siswa', $nis_siswa)->first();
+    $emailSiswa = Pengguna::where('id_pengguna', $siswa1->id_pengguna)->first();
     $siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_siswa);
     $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
+
+    if ($emailSiswa->email_pengguna == null) {
+      $email_pengguna = " ";
+    } else {
+
+      $email_pengguna = $emailSiswa->email_pengguna;
+    }
 
     if ($siswa->jenis_kelamin == "1") {
       $jenis_kelamin = "Laki-Laki";
@@ -243,7 +251,7 @@ class CariSiswaController extends BaseController
 
     $aktivitas = LibSiswa::aktivitasAdmisi($auth_data, $nis_siswa);
 
-    return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'jenis_kelamin', 'kota_lahir', 'alamat_jalan_siswa', 'alamat_dusun_siswa', 'alamat_kelurahan_siswa', 'alamat_rt_siswa', 'alamat_rw_siswa', 'alamat_kecamatan_siswa', 'alamat_kodepos_siswa', 'alamat_jalan_ortu', 'alamat_dusun_ortu', 'alamat_kelurahan_ortu', 'alamat_rt_ortu', 'alamat_rw_ortu', 'alamat_kecamatan_ortu', 'alamat_kodepos_ortu', 'alamat_kota_ortu', 'alamat_provinsi_ortu', 'aktivitas', 'grup_semester_kelas'));
+    return view('pendidikan/siswa/cari-siswa/view-detail-siswa-cari-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'siswa', 'jenis_kelamin', 'kota_lahir', 'alamat_jalan_siswa', 'alamat_dusun_siswa', 'alamat_kelurahan_siswa', 'alamat_rt_siswa', 'alamat_rw_siswa', 'alamat_kecamatan_siswa', 'alamat_kodepos_siswa', 'alamat_jalan_ortu', 'alamat_dusun_ortu', 'alamat_kelurahan_ortu', 'alamat_rt_ortu', 'alamat_rw_ortu', 'alamat_kecamatan_ortu', 'alamat_kodepos_ortu', 'alamat_kota_ortu', 'alamat_provinsi_ortu', 'aktivitas', 'grup_semester_kelas', 'email_pengguna'));
   }
 
   public function resetPasswordSiswa(Request $request)
