@@ -54,6 +54,15 @@
                             <input name="status" type="radio" value="0" id="radio_2" />
                             <label for="radio_2">Belum Tuntas</label>
                         </div>
+                        <h2 class="card-inside-title">
+                           Lokasi
+                        </h2>
+                        <div class="demo-radio-button">
+                            <input name="lokasi" type="radio" value="kantor" id="radio_3" checked  />
+                            <label for="radio_3">Kantor</label>
+                            <input name="lokasi" type="radio" value="lapangan" id="radio_4" />
+                            <label for="radio_4">Lapangan</label>
+                        </div>
 
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

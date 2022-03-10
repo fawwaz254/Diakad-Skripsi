@@ -48,8 +48,9 @@
           {{\Carbon\carbon::parse($value->tanggal)->format('d M Y')}}
           @endif
         </td>
-        <td></td>
-        <td></td>
+    
+        <td style="vertical-align:middle;text-align: center;">{{$value->lokasi == "kantor" ? '√' : ''}}</td>
+        <td style="vertical-align:middle;text-align: center;">{{$value->lokasi == "lapangan" ? '√' : ''}}</td>
         <td>{{$value->uraian_kegiatan}}</td>
       </tr>
       @php

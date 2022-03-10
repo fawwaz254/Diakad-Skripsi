@@ -73,6 +73,7 @@ class KerjaHarianController extends BaseController{
                             'tanggal'         => 'required',
                             'uraian_kegiatan' => 'required',
                             'status' => 'required',
+                            'lokasi' => 'required',
                         ];
 
         $validator = Validator::make($request->all(), $list_validator);
@@ -95,6 +96,7 @@ class KerjaHarianController extends BaseController{
                 $data->id_laporan_kerja_harian = $id;
                 $data->id_role                 = $input->auth_data->role_aktif->id_role;
                 $data->tanggal                 = date_format(date_create($input->tanggal),"Y-m-d");
+                $data->lokasi                  = $input->lokasi;
                 $data->uraian_kegiatan         = $input->uraian_kegiatan;
                 $data->status                  = $input->status;
                 $data->created_by              = $input->auth_data->pengguna->id_pengguna;
@@ -141,7 +143,9 @@ class KerjaHarianController extends BaseController{
                 $data                        = LaporanKerjaHarian::find($id);
                 $data->id_role               = $input->auth_data->role_aktif->id_role;
                 $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
+                $data->lokasi                  = $input->lokasi;
                 $data->uraian_kegiatan       = $input->uraian_kegiatan;
+
                 $data->status                = $input->status;
                 $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
 
@@ -244,6 +248,7 @@ class KerjaHarianController extends BaseController{
 
                     $data = array(
                         'id'        => $item->id_laporan_kerja_harian,
+                        'lokasi'    =>$item->lokasi,
                         'status'    => $item->status,
                         'file'      =>$file,
                         'note'      => $note
