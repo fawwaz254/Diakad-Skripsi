@@ -25,6 +25,26 @@
                                     </button>
                                 </div>
                             </form>
+
+<br><br><br>
+                            <h2 class="card-inside-title">
+                                Upload Email Siswa
+                            </h2>
+                            <form id="form-upload" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-file-excel-email')}}" method="post" enctype="multipart/form-data">
+                                {{csrf_field()}}
+                                Pilih File Excel
+                                <input type="file" name="file-excel" id="file-excel" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls">
+                                <br>
+                                <div class="col-xs-6 col-sm-6 col-md-6">
+                                    <button class="btn btn-block bg-red waves-effect" type="submit">
+                                        <i class="material-icons">cloud_upload</i>
+                                        <span>Upload File Excel</span>
+                                    </button>
+                                </div>
+                            </form>
+
+
+
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
