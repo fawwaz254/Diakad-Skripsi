@@ -196,7 +196,9 @@ class HistoriAbsensiController extends BaseController
             $date = Carbon::now()->format('Y-m-d');
         }
 
+
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
+        $shiftPengguna = ShiftPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $date)->first();
         $hasil = [];
 
         $jumlah_hadir = 0;
@@ -216,13 +218,21 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
-            $hasil[$key]['notes'] = '';
+
             $hasil[$key]['id_presensi_pengguna'] = "";
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
             if ($attendance) {
+                if ($attendance->status) {
+                    $hasil[$key]['status'] = $attendance->status;
+                    if ($attendance->status == 'sakit') {
+                        $jumlah_sakit++;
+                    } elseif ($attendance->status == 'izin') {
+                        $jumlah_izin++;
+                    }
+                }
 
                 if ($attendance->id_presensi_pengguna) {
                     $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
@@ -235,7 +245,7 @@ class HistoriAbsensiController extends BaseController
 
                 if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                     $jumlah_telat++;
-                    $hasil[$key]['notes'] = "Telat";
+                    $hasil[$key]['status'] = "Masuk | Telat";
                 }
 
 
@@ -244,32 +254,25 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
                     $jumlah_pulangcepat++;
-                    $hasil[$key]['notes'] = "Pulang lebih awal";
+                    $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
                 }
 
                 if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                    $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
+                    $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 }
                 if ($attendance->check_out) {
                     $hasil[$key]['check_out'] = $attendance->check_out;
                 }
-                if ($attendance->status) {
-                    $hasil[$key]['status'] = $attendance->status;
-                    if ($attendance->status == 'sakit') {
-                        $jumlah_sakit++;
-                    } elseif ($attendance->status == 'izin') {
-                        $jumlah_izin++;
-                    }
-                }
+
                 if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                    $hasil[$key]['notes'] = 'Tidak Checkout';
+                    $hasil[$key]['status'] = 'Masuk | Tidak Checkout';
                     $tidak_checkout++;
                 }
 
 
-                if ($attendance->notes) {
-                    $hasil[$key]['notes'] = $attendance->notes;
-                }
+                // if ($attendance->notes) {
+                //     $hasil[$key]['notes'] = $attendance->notes;
+                // }
             } else {
 
                 if ($shiftMaster) {
@@ -290,7 +293,7 @@ class HistoriAbsensiController extends BaseController
             }
             if ($cek_libur) {
                 $hasil[$key]['status'] = 'Libur';
-                $hasil[$key]['notes'] = $cek_libur->explanation;
+                // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
 

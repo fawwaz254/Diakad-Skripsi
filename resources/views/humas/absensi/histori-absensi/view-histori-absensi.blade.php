@@ -125,7 +125,6 @@
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Status</th>
-                                <th>Notes</th>
                                 <th style="text-align: center;">Action</th>
                               
                             </tr>
@@ -143,7 +142,7 @@
                                 <td>{{$r['check_in']}}</td>
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
-                                <td>{{$r['notes']}}</td>
+                          
                                 <td style="text-align: center;display:flex;justify-content:center">
                                     @if ($r['id_presensi_pengguna'] =='')
                                     <button type="button" class="btn bg-teal waves-effect" onclick="addAbsensi('{{$r['id_pengguna']}}')">
