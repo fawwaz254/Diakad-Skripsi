@@ -85,7 +85,9 @@ class RekapKesehatanController extends BaseController
         $bulan = Bulan::find($id_bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        $data_pengguna = Pengguna::whereIn('status_join_table', [1, 2])->orderBy('nm_pengguna')->get();
+        $data_pengguna = Pengguna::whereHas('status_pengguna', function ($q) {
+            $q->where('aktif_status_pengguna', 1);
+        })->whereIn('status_join_table', [1, 2])->orderBy('nm_pengguna')->get();
 
         $data_pengisian = PengisianKegiatanHarian::whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
         return Excel::download(new RekapKesehatanGuruTendik($auth_data, $dates, $data_bulan, $bulan, $data_pengguna, $data_pengisian, $tahun), 'Download Data Rekap Kesehatan Guru & Tendik Bulan ' . $bulan->nm_bulan . ' ' . $tahun . '.xlsx');
