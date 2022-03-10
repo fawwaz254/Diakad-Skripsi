@@ -198,7 +198,7 @@ class HistoriAbsensiController extends BaseController
 
 
         $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
-        $shiftPengguna = ShiftPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $date)->first();
+        // $shiftPengguna = ShiftPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $date)->first();
         $hasil = [];
 
         $jumlah_hadir = 0;
@@ -223,6 +223,11 @@ class HistoriAbsensiController extends BaseController
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+
+            $hasil[$key]['shift'] = false;
+if($shiftPengguna){
+    $hasil[$key]['shift'] = true;
+}
 
             if ($attendance) {
                 if ($attendance->status) {
