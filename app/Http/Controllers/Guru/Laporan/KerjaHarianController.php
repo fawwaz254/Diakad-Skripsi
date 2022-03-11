@@ -208,11 +208,15 @@ class KerjaHarianController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
+//    dd($auth_data);
         $data['laporan'] = LaporanKerjaHarian::where('created_by',$auth_data->pengguna->id_pengguna)
                                     ->whereBetween('tanggal', [$start_date, $end_date])
                                     ->orderBy('tanggal','asc')->get();
-
-
+   
+         $data['biodata'] = $auth_data->pengguna->nm_pengguna;
+        $data['tanggal'] = Carbon::today()->format('d-M-Y');
+        $data['alamat'] =  $auth_data->sekolah_data->alamat_kecamatan;
+        $data['kepala_sekolah'] =  $auth_data->sekolah_data->nm_kepala_sekolah;
         return view('guru/laporan/kerja-harian/print-kerja-harian',$data);
 
     }
