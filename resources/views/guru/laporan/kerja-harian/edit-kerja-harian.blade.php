@@ -33,6 +33,8 @@
                                     aria-invalid="true">{{$laporan_kerja_harian->uraian_kegiatan}}</textarea>
                             </div>
                         </div>
+                       
+
 
                         <h2 class="card-inside-title">
                             File Pendukung ( pdf , pptx , docx , xlsx , png , jpg , jpeg | max 5 mb )
@@ -53,6 +55,16 @@
                             <label for="radio_1">Tuntas</label>
                             <input name="status" type="radio" value="0" id="radio_2" {{$laporan_kerja_harian->status == 0 ? 'checked' : ''}} />
                             <label for="radio_2">Belum Tuntas</label>
+                        </div>
+
+                        <h2 class="card-inside-title">
+                            Lokasi
+                         </h2>
+                        <div class="demo-radio-button">
+                            <input name="lokasi" type="radio" value="kantor" id="radio_3"  {{$laporan_kerja_harian->lokasi == "kantor" ? 'checked' : ''}} />
+                            <label for="radio_3">Kantor</label>
+                            <input name="lokasi" type="radio" value="lapangan" id="radio_4" {{$laporan_kerja_harian->lokasi == "lapangan" ? 'checked' : ''}}/>
+                            <label for="radio_4">Lapangan</label>
                         </div>
 
                         <div class="row clearfix">

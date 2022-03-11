@@ -18,12 +18,17 @@
                                     <tr>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
+                                        <th colspan="2" style="vertical-align : middle;text-align:center;">Lokasi</th>
+                                      
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
                                         <th colspan="2" style="vertical-align : middle;text-align:center;">Target Pencapaian</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Action</th>
                                     </tr>
                                     <tr>
+                                        <th style="vertical-align : middle;text-align:center;">Kantor</th>
+                                        <th style="vertical-align : middle;text-align:center;">Lapangan</th>
+
                                         <th style="vertical-align : middle;text-align:center;">Tuntas</th>
                                         <th style="vertical-align : middle;text-align:center;">Belum Tuntas</th>
                                     </tr>
@@ -131,6 +136,23 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'tanggal', name: 'tanggal' },
+            {data: 'action', class:'text-center', name: 'action', searchable: false, orderable: false,
+                render : function(data){
+                    if(data.lokasi == "kantor"){
+                        return '<i class="material-icons" style="color:green">done</i>';
+                    }
+                    else{
+                        return '';
+                    }
+                }},
+            {data:'action',class:'text-center', name: 'action', searchable: false, orderable: false,
+                render : function(data){
+                    if(data.lokasi == "lapangan"){
+                        return '<i class="material-icons" style="color:green">done</i>';
+                    }
+                    else{
+                        return '';
+                    }}},
             { data: 'uraian_kegiatan', name: 'uraian_kegiatan' },
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
