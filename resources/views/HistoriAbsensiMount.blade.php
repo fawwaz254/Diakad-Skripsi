@@ -53,6 +53,18 @@
                 <td style="background-color: #ff5e79">{{$produk[$i]['status']}}</td>
                 @elseif($produk[$i]['status'] == "masuk")
                 <td style="background-color: #6cff5e">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "Masuk")
+                <td style="background-color: #6cff5e">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "Telat")
+                <td style="background-color: #ff8e1d">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "Pulang lebih awal")
+                <td style="background-color: #ff8e1d">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "Telat dan Pulang lebih awal")
+                <td style="background-color: #ff8e1d">{{$produk[$i]['status']}}</td>
+                @elseif($produk[$i]['status'] == "Tidak Checkout")
+                <td style="background-color: #ff8e1d">{{$produk[$i]['status']}}</td>
+
+               
                 @else
                 <td>{{$produk[$i]['status']}}</td>
                 @endif

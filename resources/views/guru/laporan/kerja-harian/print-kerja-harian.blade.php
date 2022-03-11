@@ -48,8 +48,9 @@
           {{\Carbon\carbon::parse($value->tanggal)->format('d M Y')}}
           @endif
         </td>
-        <td></td>
-        <td></td>
+    
+        <td style="vertical-align:middle;text-align: center;">{{$value->lokasi == "kantor" ? '√' : ''}}</td>
+        <td style="vertical-align:middle;text-align: center;">{{$value->lokasi == "lapangan" ? '√' : ''}}</td>
         <td>{{$value->uraian_kegiatan}}</td>
       </tr>
       @php
@@ -58,6 +59,47 @@
       @endforeach
     </tbody>
     </table>
+    <br>
+
+    <table style="width:130%">
+      <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>{{$alamat}},{{$tanggal}}</td>
+      </tr>
+      <tr>
+        <td>Mengetahui,</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>Kepala Sekolah,</td>
+        <td></td>
+        <td></td>
+        <td>Penyusun,</td>
+      </tr>
+     
+     <tr style="height:70px">
+     </tr>
+      
+      
+      
+      
+     
+      <tr>
+        <td><b>{{$kepala_sekolah}}</b></td>
+        <td></td>
+        <td></td>
+        <td><b>{{$biodata}}</b></td>
+      </tr>
+    </table>
+
+    
+
+
+
 
     </div>
 
