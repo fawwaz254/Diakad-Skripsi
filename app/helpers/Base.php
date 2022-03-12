@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Storage;
 
 function minimalisTime($time)
 {
-    $currentTime = strtotime($time);
-    return date('H:i', round($currentTime / (15 * 60)) * (15 * 60));
+    
+    return rtrim($time, '0');    
+
 }
 
 

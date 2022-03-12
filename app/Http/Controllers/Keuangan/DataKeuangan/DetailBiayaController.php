@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use App\Models\BiayaSekolah;
 use App\Models\DetailBiaya;
+use App\Models\DetailBiayaInternal;
 use App\Models\KelompokBiaya;
 use App\Models\TagihanBiaya;
 use App\Models\Semester;
@@ -368,10 +369,14 @@ class DetailBiayaController extends BaseController{
             }
 
             elseif($mode == 'delete'){
-                if($tagihanBiaya = TagihanBiaya::where('id_detail_biaya',$id)->first()){
+                $cek_data = DetailBiaya::where('id_detail_biaya',$id)->first();
+                $cek_data2 = DetailBiayaInternal::where('id_kelompok_biaya_internal',$cek_data->id_kelompok_biaya_internal)->first();
+
+
+                if($cek_data2){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Detail Biaya'
+                        'message' => 'Hapus data Terdiri dahulu'
                     ]; 
                 }
                 else{
