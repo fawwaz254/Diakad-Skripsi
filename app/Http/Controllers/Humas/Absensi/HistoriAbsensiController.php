@@ -225,9 +225,9 @@ class HistoriAbsensiController extends BaseController
             $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
             $hasil[$key]['shift'] = false;
-if($shiftPengguna){
-    $hasil[$key]['shift'] = true;
-}
+        if($shiftPengguna){
+            $hasil[$key]['shift'] = true;
+            }
 
             if ($attendance) {
                 if ($attendance->status) {

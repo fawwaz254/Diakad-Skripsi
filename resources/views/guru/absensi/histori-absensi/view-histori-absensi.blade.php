@@ -105,7 +105,7 @@
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Status</th>
-                                <th>Notes</th>
+                                <th>Shift</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -120,8 +120,11 @@
                                 <td>{{$r['check_in']}}</td>
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
-                                <td>{{$r['notes']}}</td>
-                                
+                                @if($r['shift'])
+                                <td>{{$r['shift']}} ({{$r['start']}} - {{$r['end']  }})</td>
+                                @else
+                                <td></td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>
