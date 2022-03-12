@@ -39,7 +39,7 @@ class ShiftPenggunaController extends Controller
                 if ($attendance->id_shift_master) {
                     $hasil[$key]['id_shift_master'] = $attendance->id_shift_master;
                     $shiftM = ShiftMaster::where('code', $attendance->id_shift_master)->first();
-                    $hasil[$key]['time'] = minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
+                    $hasil[$key]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
                 } else {
                     $hasil[$key]['id_shift_master'] = "-";
                 }
