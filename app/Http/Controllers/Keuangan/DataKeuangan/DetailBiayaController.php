@@ -369,16 +369,13 @@ class DetailBiayaController extends BaseController{
             }
 
             elseif($mode == 'delete'){
-                $cek_data = DetailBiaya::where('id_detail_biaya',$id)->first();
-                $cek_data2 = DetailBiayaInternal::where('id_kelompok_biaya_internal',$cek_data->id_kelompok_biaya_internal)->first();
-
-
-                if($cek_data2){
+                if($tagihanBiaya = TagihanBiaya::where('id_detail_biaya',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Hapus data Terdiri dahulu'
+                        'message' => 'Failed To Delete Detail Biaya'
                     ]; 
                 }
+
                 else{
                     // make object to find id
                     $detailBiaya               = DetailBiaya::find($id);
