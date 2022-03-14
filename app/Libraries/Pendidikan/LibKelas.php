@@ -40,7 +40,8 @@ class LibKelas
                 ->leftJoin('wali_kelas', function ($join) use ($semester_aktif) {
                     $join->on('wali_kelas.id_kelas', '=', 'kelas.id_kelas')
                          ->where('wali_kelas.is_aktif', '=', 1)
-                         ->where('wali_kelas.id_semester', '=', $semester_aktif->id_semester);
+                         ->where('wali_kelas.id_semester', '=', $semester_aktif->id_semester)
+                         ->whereNull('wali_kelas.deleted_at');
                 })
                 ->leftJoin('bk_kelas', function ($join) use ($semester_aktif) {
                     $join->on('bk_kelas.id_kelas', '=', 'kelas.id_kelas')
