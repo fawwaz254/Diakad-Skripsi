@@ -8,6 +8,9 @@ $total_file = 0;
 
     .file {
         cursor: pointer;
+        /* overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; */
     }
 
     .delete-one:hover {
