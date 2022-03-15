@@ -20,9 +20,9 @@
                                         <th>Biaya Sekolah</th>
                                         <th>Nama Biaya</th>
                                         <th>Besar Biaya</th>
-                                        <th>Validasi</th>
                                         <th>Biaya Asli</th>
                                         <th>Biaya pungutan lainnya</th>
+                                        <th>Validasi</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
