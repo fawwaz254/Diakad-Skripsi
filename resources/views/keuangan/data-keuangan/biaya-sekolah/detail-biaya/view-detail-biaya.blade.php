@@ -21,7 +21,8 @@
                                         <th>Nama Biaya</th>
                                         <th>Besar Biaya</th>
                                         <th>Validasi</th>
-                                        <th>Terdiri Dari</th>
+                                        <th>Biaya Asli</th>
+                                        <th>Biaya pungutan lainnya</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -54,7 +55,7 @@
             { data: 'biaya_sekolah', name: 'kelompok_biaya.nm_kelompok_biaya' },
             { data: 'nm_biaya', name: 'biaya.nm_biaya' },
             { data: 'besar_biaya', name: 'detail_biaya.besar_biaya' },
-            { data: 'validasi_biaya', name: 'validasi_biaya', searchable: false, orderable: false },
+            { data: 'biaya_asli', searchable: false, orderable: false },
             { data: 'detail_internal', name: 'detail_internal', searchable: false, orderable: false,
                 render: function(data){
                     var html = `<ol>`;
@@ -67,6 +68,7 @@
                     '</a> '
                 }
             },
+            { data: 'validasi_biaya', name: 'validasi_biaya', searchable: false, orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
