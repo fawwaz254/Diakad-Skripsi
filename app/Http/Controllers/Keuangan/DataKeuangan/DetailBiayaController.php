@@ -183,6 +183,14 @@ class DetailBiayaController extends BaseController{
                     );
                     return $data;
                 })
+                ->addColumn('biaya_asli', function($item){
+                    $pungutan = 0;
+                    foreach($item->detail_internal as $detail){
+                        $pungutan += $detail->besar_biaya;
+                    }
+
+                    return "Rp".number_format($item->besar_biaya - $pungutan);
+                })
                 ->addColumn('validasi_biaya', function($item){
                     if($item->validasi_biaya == 0){
                         return "Belum";
