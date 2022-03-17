@@ -79,7 +79,7 @@ class HistoriAbsensiController extends BaseController
                     }
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
                         
-                        $hasil[$key1][$key2]['status'] = " Telat & Tidak Checkout ";
+                        $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
                     }
                 } else {
 
