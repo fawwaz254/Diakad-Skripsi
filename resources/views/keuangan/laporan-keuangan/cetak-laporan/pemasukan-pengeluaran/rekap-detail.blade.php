@@ -119,7 +119,7 @@
             <div class="col-md-4 {{$sekolah == 'SMK PEMUDA KRIAN' ? '' : 'offset-md-4'}}">
                 <p>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
                 @if($sekolah == 'SMK PEMUDA KRIAN')
-                28 Februari 2022
+                31 Maret 2022
                 @else
                 {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
                 @endif
