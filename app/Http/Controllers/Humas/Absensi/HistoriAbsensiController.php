@@ -77,6 +77,10 @@ class HistoriAbsensiController extends BaseController
                     if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
                         $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
                     }
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                        
+                        $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                    }
                 } else {
 
                     if ($shiftMaster) {
@@ -274,6 +278,10 @@ class HistoriAbsensiController extends BaseController
                     $tidak_checkout++;
                 }
 
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                   
+                    $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
+                }
 
                 // if ($attendance->notes) {
                 //     $hasil[$key]['notes'] = $attendance->notes;

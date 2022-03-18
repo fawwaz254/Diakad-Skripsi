@@ -35,7 +35,9 @@
                                     <option value="sakit">sakit</option>
                                     @break
                                     @default
-                                    <h1>error</h1>
+                                    <option value="masuk">masuk</option>
+                                    <option value="sakit">sakit</option>
+                                    <option value="izin">izin</option>
                                     @endswitch
                                 </select>
                             </div>

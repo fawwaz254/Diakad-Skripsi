@@ -122,6 +122,10 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['check_in'] = $attendance->check_in;
                     $jumlah_hadir++;
                 }
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $value->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+                        
+                    $hasil[$key]['status'] = "Masuk | Telat & Tidak Checkout";
+                }
 
                 // if ($attendance->check_in > $shiftMaster['start_time']) {
                 //     $jumlah_telat++;
