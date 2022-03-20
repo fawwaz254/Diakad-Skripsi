@@ -12,7 +12,8 @@
 
 
 .bg{
-  background-image: url("https://i.ibb.co/KzhVbcD/skpzzzzzzzi.png");
+ 
+  background-image: url("{{asset('media/skpi.png')}}");
 
 /* Full height */
 height: 1600px; 
@@ -21,6 +22,18 @@ background-position: center;
 background-repeat: no-repeat;
 background-size: cover;
 }
+.logo{
+  left: 0;
+right: 0;
+padding-left: 10px;
+text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute ;
+
+  margin-top: 45px;
+}
+
 table , td, th {
   border: 1px solid black;
   padding: 8px;
@@ -56,7 +69,7 @@ table {
     
    
     background-image: url("{{asset('media/skpi.png')}}");
-  /* background-image: url("https://i.ibb.co/KzhVbcD/skpzzzzzzzi.png"); */
+
 
 
 /* Center and scale the image nicely */
@@ -73,17 +86,7 @@ background-size: cover;
   margin-right: auto;
 }
 
-.logo{
-  left: 0;
-right: 0;
-padding-left: 10px;
-text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  position: absolute ;
 
-  margin-top: 45px;
-}
 
 
 table , td, th {
@@ -635,7 +638,10 @@ text-align: center;
               
               <img src="{{asset('media/ttd/smpypm1.png')}}" alt="TTD" width="100px" height="100px" class="ttd">
                 @else
-              
+              <br>
+              <br>
+              <br>
+          
                 @endif
                 <br>
                 <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
