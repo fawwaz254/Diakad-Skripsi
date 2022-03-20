@@ -294,6 +294,7 @@ class LibSiswa
             'siswa.thn_masuk_siswa',
             'pengguna.nm_pengguna',
             'kelas.nm_kelas',
+            'kelas.keterangan_kelas',
             'jurusan.nm_jurusan',
             'status_pengguna.nm_status_pengguna',
             'calon_siswa_baru.id_c_siswa',
