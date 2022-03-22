@@ -89,6 +89,8 @@ $category_file_role = category_file_role($role_aktif);
                         @endif
                     </li>
                 @endforeach
+
+                {{-- manajemen file --}}
                 @if (count($category_file_role) && $role_aktif !== 14)
                     <li id="modul-item-manajemen-file" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
@@ -129,6 +131,8 @@ $category_file_role = category_file_role($role_aktif);
                 @endif
             </ul>
         </div>
+        {{-- Manajemen File --}}
+
         <!-- #Menu -->
         <!-- Footer -->
         <div class="legal">

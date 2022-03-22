@@ -8,6 +8,9 @@ $total_file = 0;
 
     .file {
         cursor: pointer;
+        /* overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; */
     }
 
     .delete-one:hover {
@@ -26,7 +29,7 @@ $total_file = 0;
 <div class="container-fluid">
     <div class="block-header">
         <div class="row clearfix">
-            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" id="add-file">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="margin-right:50px" id="add-file">
                 <h2>
                     <a class="btn bg-blue waves-effect target-link"
                         href="{{ url(Request::segment(1) . '#manajemen-file/data-file/add') }}"><i
@@ -70,11 +73,11 @@ $total_file = 0;
                                 @foreach ($file->file_pengguna as $f)
                                     <div class="col-md-3">
                                         <a href="{{ $f->is_google_drive == 1 ? $f->link_file : Storage::disk('spaces')->url($f->link_file) }}"
-                                            target="_blank" style="color: inherit;text-decoration: inherit; ">
+                                            style="color: inherit;text-decoration: inherit;" target="_blank"
+                                            @if ($f->is_google_drive == 0) download="{{ $f->judul }}.{{ $f->extension_file }}" @endif>
                                             @php
                                                 $total_file++;
-                                            @endphp
-                                            <div class="file">
+                                            @endphp <div class="file">
                                                 <div style="text-align: center;">
                                                     @if ($f->extension_file == 'pdf')
                                                         <i class="material-icons"
