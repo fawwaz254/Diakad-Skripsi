@@ -112,12 +112,12 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        <div class="row clearfix">
+                        <!-- <div class="row clearfix">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <a class="btn btn-block bg-btn-submit waves-effect" onclick="refreshAction(this)">Refresh</span></a>
                                 <a class="btn btn-block bg-btn-submit waves-effect" target="_blank" href="{{url('keuangan/sim/spp/pemasukan/'.$tahun_akademik_semester.'/'.$id_bulan.'/report')}}">Download Laporan Bulanan</span></a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
