@@ -35,7 +35,8 @@ $total_file = 0;
                         <div class="row">
                             @foreach ($file->file_pengguna as $f)
                                 <a href="{{ $f->is_google_drive == 1 ? $f->link_file : Storage::disk('spaces')->url($f->link_file) }}"
-                                    target="_blank" style="color: inherit;text-decoration: inherit; ">
+                                    target="_blank" style="color: inherit;text-decoration: inherit; "
+                                    @if ($f->is_google_drive == 0) download="{{ $f->judul }}.{{ $f->extension_file }}" @endif>
                                     @php
                                         $total_file++;
                                     @endphp

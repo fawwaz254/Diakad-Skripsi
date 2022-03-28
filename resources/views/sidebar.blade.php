@@ -195,6 +195,8 @@ $id_guru_mgmp = id_guru($id_pengguna);
                 @endif
             </ul>
         </div>
+        {{-- Manajemen File --}}
+
         <!-- #Menu -->
         <!-- Footer -->
         <div class="legal">
