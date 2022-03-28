@@ -29,7 +29,7 @@ class DataFileMGMPController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-      
+
         $category = CategoriFileMGMP::all();
         return view('akademik/manajemen-file/data-file/view-data-file', compact('auth_data', 'category'));
     }

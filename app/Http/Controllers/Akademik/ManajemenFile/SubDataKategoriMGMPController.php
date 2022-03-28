@@ -21,12 +21,12 @@ use Validator;
 
 class SubDataKategoriMGMPController extends Controller
 {
-    public function viewDataKategori(Request $request){
-    $input = (object) $request->input();
-    $auth_data = $input->auth_data;
+    public function viewDataKategori(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    return view('akademik/manajemen-file/data-sub-kategori/view-data-sub-kategori', compact('auth_data'));
-        
+        return view('akademik/manajemen-file/data-sub-kategori/view-data-sub-kategori', compact('auth_data'));
     }
 
     public function addSubDataKategori(Request $request)
@@ -35,10 +35,19 @@ class SubDataKategoriMGMPController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $category_file = CategoriFileMGMP::all();
-// dd($category_file);
+        // dd($category_file);
         return view('akademik/manajemen-file/data-sub-kategori/add-data-sub-kategori', compact('auth_data', 'category_file'));
-   
-   
+    }
+
+    public function editSubDataKategori(Request $request, $sub_category_file_id = null)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_kategori = CategoriFileMGMP::all();
+        $sub_data_kategori = SubCategoryFileMGMP::where('sub_category_file_id', $sub_category_file_id)->first();
+
+        return view('akademik/manajemen-file/data-sub-kategori/edit-data-sub-kategori', compact('auth_data', 'data_kategori', 'sub_data_kategori'));
     }
 
     public function datatablesSubCategoryfile(Request $request)
@@ -47,7 +56,7 @@ class SubDataKategoriMGMPController extends Controller
         $auth_data = $input->auth_data;
         // $list_data = SubCategoryFileMGMP::all();
         $list_data = SubCategoryFileMGMP::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'sub_category_file_mgmp.category_file_mgmp_id')
-        ->select('category_file_mgmp.category_file_name as category_file_mgmp', 'sub_category_file_mgmp.*');
+            ->select('category_file_mgmp.category_file_name as category_file_mgmp', 'sub_category_file_mgmp.*');
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
@@ -97,28 +106,28 @@ class SubDataKategoriMGMPController extends Controller
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
-                $subdatakategori                                 = SubCategoryFile::find($id);
+                $subdatakategori                                 = SubCategoryFileMGMP::where('sub_category_file_id', $id)->first();
                 $subdatakategori->sub_category_file_name         = $input->sub_category_file_name;
                 $subdatakategori->sub_category_file_explanation  = $input->sub_category_file_explanation;
-                $subdatakategori->category_file_id               = $input->category_file_id;
+                $subdatakategori->sub_category_file_id           = $input->category_file_id;
                 $subdatakategori->updated_by                     = $input->auth_data->pengguna->id_pengguna;
                 $subdatakategori->updated_at                     = $now;
                 $subdatakategori->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'manajemen-file/data-sub-kategori',
+                    'path' => 'mpmp/data-sub-folder-kategori-mapel',
                     'message' => 'Update Data Kategori Succesfully'
                 ];
             } elseif ($mode == 'delete') {
-                if (!SubCategoryFile::where('sub_category_file_id', $id)->first()) {
+                if (!SubCategoryFileMGMP::where('sub_category_file_id', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed to Delete Data Kategori'
                     ];
                 } else {
                     // make object to find id 
-                    $subdatakategori                       = SubCategoryFile::find($id);
+                    $subdatakategori                       = SubCategoryFileMGMP::where('sub_category_file_id', $id)->first();
                     $subdatakategori->deleted_by           = $input->auth_data->pengguna->id_pengguna;
                     $subdatakategori->save();
 
@@ -133,5 +142,4 @@ class SubDataKategoriMGMPController extends Controller
             }
         }
     }
-
 }
