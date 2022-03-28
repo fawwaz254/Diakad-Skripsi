@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\CategoriFileMGMP;
 use App\Models\CategoryFileRole;
+use App\Models\CategoriFileGuru;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -57,13 +59,27 @@ if (!function_exists('get_moduls')) {
 if (!function_exists('category_file_role')) {
     /**
      * get shared file based on active id role 
-     * @return array
+     * @return collection
      */
     function category_file_role($id_role)
     {
         return CategoryFileRole::where('id_role', $id_role)->get();
     }
 }
+
+if (!function_exists('id_guru')) {
+    /**
+     * get shared file based on active id role 
+     * @return collection
+     */
+    function id_guru($id_pengguna)
+    {
+        return CategoriFileGuru::where('id_pengguna', $id_pengguna)->get();
+    }
+}
+
+
+
 
 if (!function_exists('storeFileToCloud')) {
     /**

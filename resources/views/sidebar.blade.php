@@ -6,6 +6,10 @@ $route_menu = Request::segment(3);
 $path = Request::fullUrl();
 $role_aktif = auth_data()->role_aktif->id_role;
 $category_file_role = category_file_role($role_aktif);
+$id_pengguna = auth_data()->pengguna->id_pengguna;
+$id_guru_mgmp = id_guru($id_pengguna);
+
+
 @endphp
 
 <section>
@@ -90,7 +94,67 @@ $category_file_role = category_file_role($role_aktif);
                     </li>
                 @endforeach
 
-                {{-- manajemen file --}}
+                <ul class="ml-menu">
+                    <li class="menu-item" id="menu-item-data-sub-kategori">
+                        <a href="{{ url(Request::segment(1) . '#manajemen-file/data-file') }}"
+                            class="target-link waves-effect waves-block">
+                        
+                        </a>
+                    </li>
+                </ul>
+
+                @if (count($id_guru_mgmp) && $role_aktif !== 7)
+
+                <li id="modul-item-manajemen-file" class="modul-item">
+                    <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                        <span>MGMP</span>
+                    </a>
+                    @if ($role_aktif == 2)
+                        <ul class="ml-menu">
+                            <li class="menu-item" id="menu-item-data-sub-kategori">
+                                <a href="{{ url(Request::segment(1) . '#mgmp/data-file-mapel') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Data File
+                                </a>
+                            </li>
+                        </ul>
+                    {{-- @else
+                        <ul class="ml-menu">
+                            <li class="menu-item" id="menu-item-data-kategori">
+                                <a href="{{ url(Request::segment(1) . '#manajemen-file/data-kategori') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Data Kategori
+                                </a>
+                            </li>
+                            <li class="menu-item" id="menu-item-data-sub-kategori">
+                                <a href="{{ url(Request::segment(1) . '#manajemen-file/data-sub-kategori') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Data Sub Kategori
+                                </a>
+                            </li>
+                            <li class="menu-item" id="menu-item-data-sub-kategori">
+                                <a href="{{ url(Request::segment(1) . '#manajemen-file/data-file') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Data File
+                                </a>
+                            </li>
+                        </ul> --}}
+                    @endif
+                </li>
+            @endif
+        </ul>
+
+
+
+
+
+
+
+
+
+
+
+
                 @if (count($category_file_role) && $role_aktif !== 14)
                     <li id="modul-item-manajemen-file" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">

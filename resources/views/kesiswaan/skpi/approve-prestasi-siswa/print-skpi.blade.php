@@ -212,20 +212,20 @@ table.bg-color tr td{
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Full Name</i> </td>
           @endif
-        <td>: {{$siswa->nm_c_siswa}}</td>
+        <td> {{$siswa->nm_c_siswa}}</td>
       </tr>
       <tr>
         <td style="width: 5%;">1.A2</td>
         @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
         <td style="width: 30%;">Tanggal Lahir </td>
-        <td>: {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
+        <td> {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
         @else
         <td style="width: 30%;">Tempat, Tanggal Lahir
           @if($siswa->keterangan_kelas == 'Internasional')
            <br><i>Place and Date of Birth</i>
           @endif
           </td>
-        <td>: {{ $siswa->calon_siswa->kota_lahir? $siswa->calon_siswa->kota_lahir->nm_kota : ''}}, {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
+        <td> {{ $siswa->calon_siswa->kota_lahir? $siswa->calon_siswa->kota_lahir->nm_kota : ''}}, {{ indonesiaDate($siswa->calon_siswa->tgl_lahir)  }}</td>
         @endif
       </tr>
       <tr>
@@ -235,7 +235,7 @@ table.bg-color tr td{
           <br><i>School and National Student Identification Number</i>
         @endif
         </td>
-        <td>: {{$siswa->nis_siswa}}</td>
+        <td> {{$siswa->nis_siswa}}</td>
       </tr>
       <tr>
         <td style="width: 5%;">1.A4</td>
@@ -244,7 +244,7 @@ table.bg-color tr td{
           <br><i>Admission Year</i>
         @endif
         </td>
-        <td>: {{$siswa->thn_masuk_siswa}}</td>
+        <td> {{$siswa->thn_masuk_siswa}}</td>
       </tr>
       <tr>
         <td style="width: 5%;">1.A5</td>
@@ -253,7 +253,7 @@ table.bg-color tr td{
           <br><i>Graduation Year</i>
         @endif
         </td>
-        <td>: {{ date_format(date_create(), 'Y') }}</td>
+        <td> {{ date_format(date_create(), 'Y') }}</td>
       </tr>
       <tr>
         <td style="width: 5%;">1.A6</td>
@@ -262,7 +262,7 @@ table.bg-color tr td{
           <br><i>Number of Certification</i>
         @endif
         </td>
-        <td>: {{$siswa->pengajuan_wisuda ? $siswa->pengajuan_wisuda->nomor_ijasah : ''}}</td>
+        <td> {{$siswa->pengajuan_wisuda ? $siswa->pengajuan_wisuda->nomor_ijasah : ''}}</td>
       </tr>
     </table>
 
@@ -288,7 +288,7 @@ table.bg-color tr td{
           <br><i>Name of School</i>
         @endif
         </td>
-        <td>: {{ $auth_data->sekolah_data->nm_sekolah }}</td>
+        <td> {{ $auth_data->sekolah_data->nm_sekolah }}</td>
       </tr>
       <tr>
         <td style="width: 5%;">2.A{{$no++}}</td>
@@ -297,7 +297,7 @@ table.bg-color tr td{
         <br><i>Certificate of Establishment</i>
         @endif
         </td>
-        <td>: {{ $auth_data->sekolah_data->nomor_sk_izin_operasional }}</td>
+        <td> {{ $auth_data->sekolah_data->nomor_sk_izin_operasional }}</td>
       </tr>
       <tr>
         <td style="width: 5%;">2.A{{$no++}}</td>
@@ -307,9 +307,9 @@ table.bg-color tr td{
         @endif
         </td>
         @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-        <td>: Pendidikan Formal/Sekolah Menengah Atas</td>
+        <td> Pendidikan Formal/Sekolah Menengah Atas</td>
         @else
-        <td>: Pendidikan Formal/Sekolah Menengah Pertama</td>
+        <td> Pendidikan Formal/Sekolah Menengah Pertama</td>
         @endif
       </tr>
       <tr>
@@ -319,7 +319,7 @@ table.bg-color tr td{
         <br><i>Accreditation Status</i>
         @endif
         </td>
-        <td>: A (Unggul)</td>
+        <td> A (Unggul)</td>
       </tr>
       <tr>
         <td style="width: 5%;">2.A{{$no++}}</td>
@@ -328,7 +328,7 @@ table.bg-color tr td{
           <br><i>Accreditation Number</i>
           @endif
         </td>
-        <td>: 599/BAN-SM/SK/2019</td>
+        <td> 599/BAN-SM/SK/2019</td>
       </tr>
       @if($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
       <tr>
@@ -338,7 +338,7 @@ table.bg-color tr td{
           <br><i>AppropriateLevel of Qualification</i>
         @endif
         </td>
-        <td>: Level 1</td>
+        <td> Level 1</td>
       </tr>
       @endif
       <tr>
@@ -349,9 +349,9 @@ table.bg-color tr td{
           @endif
         </td>
         @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-        <td>: Lulus SMP/Mts dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
+        <td> Lulus SMP/Mts dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
         @else
-        <td>: Lulus SD dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
+        <td> Lulus SD dan Lulus Seleksi Penerimaan Peserta Didik Baru</td>
         @endif
       </tr>
       <tr>
@@ -361,7 +361,7 @@ table.bg-color tr td{
           <br><i>School Language</i>
           @endif
         </td>
-        <td>: Bahasa Indonesia</td>
+        <td> Bahasa Indonesia</td>
       </tr>
       <tr>
         <td style="width: 5%;">2.A{{$no++}}</td>
@@ -370,7 +370,7 @@ table.bg-color tr td{
           <br><i>Reguler Study Period</i>
           @endif
         </td>
-        <td>: Tiga Tahun (3 Tahun)</td>
+        <td> Tiga Tahun (3 Tahun)</td>
       </tr>
       <tr>
         <td style="width: 5%;">2.A{{$no++}}</td>
@@ -380,9 +380,9 @@ table.bg-color tr td{
           @endif
         </td>
         @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-        <td>: Perguruan Tinggi</td>
+        <td> Perguruan Tinggi</td>
         @else
-        <td>: SMA/Sederajat</td>
+        <td> SMA/Sederajat</td>
         @endif
       </tr>
     </table>

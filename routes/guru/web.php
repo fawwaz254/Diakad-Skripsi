@@ -4,6 +4,19 @@ Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'guru'), function () {
         Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
 
+
+Route::group(array('prefix' => 'mgmp'), function () {
+    Route::group(array('prefix' => 'data-file-mapel'), function () {
+        Route::get('/', 'MGMP\DataFileController@viewDataFile');
+        Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
+        Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
+
+    });
+});
+
+
+
+
         /** ==== MODUL MANAJEMEN FILE ==== **/
         // url: /guru/manajemen-file
         Route::group(array('prefix' => 'manajemen-file'), function () {

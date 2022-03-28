@@ -43,6 +43,7 @@ class DataKategoriController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = CategoryFile::with('category_file_role.nama_role')->get();
+      
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
