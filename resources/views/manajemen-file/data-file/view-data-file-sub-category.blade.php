@@ -2,12 +2,16 @@
 $total_file = 0;
 @endphp
 <style type="text/css">
-    .file:hover {
+    .file:hover,
+    .download:hover {
         transform: scale(1.2);
     }
 
     .file {
         cursor: pointer;
+        /* overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis; */
     }
 
     i.file.material-icons {
@@ -15,13 +19,22 @@ $total_file = 0;
     }
 
 </style>
-
 <div class="container-fluid">
+
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#manajemen-file/data-file/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah File</span></a></h2>
+        <div class="row clearfix">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="margin-right:50px" id="add-file">
+                <h2>
+                    <a class="btn bg-blue waves-effect target-link"
+                        href="{{ url(Request::segment(1) . '#manajemen-file/data-file/add') }}"><i
+                            class="material-icons">note_add</i>
+                        <span>Tambah File</span>
+                    </a>
+                </h2>
+            </div>
+        </div>
     </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -29,44 +42,58 @@ $total_file = 0;
                     <h2>Data File Sub Kategori {{ $sub_category->sub_category_file_name }}</h2>
                 </div>
                 <div class="body">
-                    @foreach ($files as $file)
-                        <p>{{ $file->nm_pengguna }}</p>
-                        <hr>
-                        <div class="row">
-                            @foreach ($file->file_pengguna as $f)
-                                <a href="{{ $f->is_google_drive == 1 ? $f->link_file : Storage::disk('spaces')->url($f->link_file) }}"
-                                    target="_blank" style="color: inherit;text-decoration: inherit; "
-                                    @if ($f->is_google_drive == 0) download="{{ $f->judul }}.{{ $f->extension_file }}" @endif>
-                                    @php
-                                        $total_file++;
-                                    @endphp
-                                    <div class="col-md-3 file">
-                                        <div style="text-align: center;">
-                                            @if ($f->extension_file == 'pdf')
-                                                <i class="material-icons"
-                                                    style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
-                                            @elseif($f->extension_file == 'png' || $f->extension_file == 'jpg' || $f->extension_file == 'jpeg')
-                                                <i class="material-icons"
-                                                    style="color:blue;font-size: 45px;width:45px">collections_icon</i>
-                                            @elseif($f->extension_file == 'pptx' || $f->extension_file == 'docx' || $f->extension_file == 'xlsx')
-                                                <i class="material-icons"
-                                                    style="color:blue;font-size: 45px;width:45px">description</i>
-                                            @else
-                                                <i class="material-icons"
-                                                    style="color:green;font-size: 45px;width:45px">add_to_drive</i>
-                                            @endif
-                                        </div>
-
-                                        <div style="text-align: center">
-                                            <span>{{ $f->judul }}</span>
-                                        </div>
+                    <form
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/action-data-file/delete-many/0') }}"
+                        id="form-validation" method="POST">
+                        @foreach ($files as $file)
+                            <div class="row">
+                                <p>{{ $file->nm_pengguna }}</p>
+                                <hr>
+                            </div>
+                            <div class="row">
+                                @foreach ($file->file_pengguna as $f)
+                                    <div class="col-md-3">
+                                        <a href="{{ $f->is_google_drive == 1 ? $f->link_file : Storage::disk('spaces')->url($f->link_file) }}"
+                                            style="color: inherit;text-decoration: inherit;" target="_blank">
+                                            @php
+                                                $total_file++;
+                                            @endphp <div class="file">
+                                                <div style="text-align: center;">
+                                                    @if ($f->extension_file == 'pdf')
+                                                        <i class="material-icons"
+                                                            style="color:red;font-size: 45px;width:45px">picture_as_pdf</i>
+                                                    @elseif($f->extension_file == 'png' || $f->extension_file == 'jpg' || $f->extension_file == 'jpeg')
+                                                        <i class="material-icons"
+                                                            style="color:blue;font-size: 45px;width:45px">collections_icon</i>
+                                                    @elseif($f->extension_file == 'pptx' || $f->extension_file == 'docx' || $f->extension_file == 'xlsx')
+                                                        <i class="material-icons"
+                                                            style="color:blue;font-size: 45px;width:45px">description</i>
+                                                    @else
+                                                        <i class="material-icons"
+                                                            style="color:green;font-size: 45px;width:45px">add_to_drive</i>
+                                                    @endif
+                                                </div>
+                                                <div style="text-align: center">
+                                                    <span>{{ $f->judul }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        @if (!$f->is_google_drive)
+                                            <div style="text-align: center;margin-top: 10px;" class="download">
+                                                <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/download/' . $f->file_pengguna_id) }}"
+                                                    target="_blank">
+                                                    <i style="color:blue;"
+                                                        class="material-icons">download_for_offline</i>
+                                                </a>
+                                            </div>
+                                        @endif
                                     </div>
-                                </a>
-                            @endforeach
-                        </div>
-                    @endforeach
-                    <p>TOTAL FILE : <b>{{ $total_file }}</b> </p>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </form>
                 </div>
+                <p>TOTAL FILE : <b>{{ $total_file }}</b></p>
             </div>
         </div>
     </div>
