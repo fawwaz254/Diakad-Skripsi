@@ -10,14 +10,9 @@ use Illuminate\Support\Facades\Storage;
 
 function minimalisTime($time)
 {
-    
-    return rtrim($time, '0');    
 
+    return rtrim($time, '0');
 }
-
-
-
-
 
 if (!function_exists('auth_data')) {
     /**
@@ -59,11 +54,11 @@ if (!function_exists('get_moduls')) {
 if (!function_exists('category_file_role')) {
     /**
      * get shared file based on active id role 
-     * @return collection
+     * @return collection 
      */
     function category_file_role($id_role)
     {
-        return CategoryFileRole::where('id_role', $id_role)->get();
+        return CategoryFileRole::where('id_role', $id_role)->exists();
     }
 }
 

@@ -2,21 +2,13 @@
 $total_file = 0;
 @endphp
 <style type="text/css">
-    .file:hover {
+    .file:hover,
+    .delete-one:hover,
+    .download:hover {
         transform: scale(1.2);
     }
 
-    .file {
-        cursor: pointer;
-        /* overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis; */
-    }
-
-    .delete-one:hover {
-        transform: scale(1.2);
-    }
-
+    .file,
     .delete-one {
         cursor: pointer;
     }
@@ -118,7 +110,7 @@ $total_file = 0;
                                         @else
                                             <div class="row align-items-center">
                                                 <div style="text-align: right;margin-top: 10px;"
-                                                    class="delete-one col-md-6">
+                                                    class="download col-md-6">
                                                     <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/download/' . $f->file_pengguna_id) }}"
                                                         target="_blank">
                                                         <i style="color:blue;"
@@ -151,6 +143,7 @@ $total_file = 0;
     function toggleDelete() {
         if ($('.delete-one').css('display') === "block") {
             $('.delete-one').hide()
+            $('.download').hide()
             $('.delete-many').show()
             $('#delete-many-files-btn').show()
             $('#add-file').hide()
@@ -159,6 +152,7 @@ $total_file = 0;
                 <span>Batal</span>
             `)
         } else {
+            $('.download').show()
             $('.delete-one').show()
             $('.delete-many').hide()
             $('#add-file').show()
