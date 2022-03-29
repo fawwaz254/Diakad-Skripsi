@@ -1,6 +1,8 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#manajemen-file/data-kategori/')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#manajemen-file/data-kategori/') }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -11,15 +13,17 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/data-kategori/action-data-kategori/edit/'.$data_kategori->category_file_id)}}">
-                        {{csrf_field()}}
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) .'/' .Request::segment(2) .'/data-kategori/action-data-kategori/edit/' .$data_kategori->category_file_id) }}">
+                        {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Nama Kategori File
                         </h2>
-                       <div class="row clearfix">
+                        <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="category_file_name" required="" aria-required="true" aria-invalid="true"
-                                value="{{$data_kategori->category_file_name}}">
+                                <input type="text" class="form-control" name="category_file_name" required=""
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $data_kategori->category_file_name }}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -28,7 +32,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <textarea rows="4" cols="50" class="form-control" name="category_file_explanation" required="" aria-required="true"
-                                    aria-invalid="true">{{$data_kategori->category_file_explanation}}</textarea>
+                                    aria-invalid="true">{{ $data_kategori->category_file_explanation }}</textarea>
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -36,25 +40,30 @@
                             </div>
                         </div>
 
-                            <h2 class="card-inside-title">
-                                Role yang diizinkan mengakses: 
-                            </h2>
-
-                            @foreach($role as $r)
+                        <h2 class="card-inside-title">
+                            Role yang diizinkan mengakses:
+                        </h2>
+                        @foreach ($pengguna as $p)
                             <div class="form-check">
-                                @if (in_array($r->id_role,$allowed_role->toArray()))
-                                <input class="form-check-input" name="allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} 
-                                id="role-checkbox[{{$r->id_role}}]" checked>
-                                @else
-                                <input class="form-check-input" name="allowed_role[{{$r->id_role}}]" type="checkbox" value={{$r->id_role}} 
-                                id="role-checkbox[{{$r->id_role}}]">
-                                @endif
-                                <label class="form-check-label" for="role-checkbox[{{$r->id_role}}]">{{$r->nm_role}}</label>
+                                @foreach ($p->role_pengguna as $role)
+                                    @if (in_array($role->id_role, $allowed_role->toArray()))
+                                        <input class="form-check-input" name="allowed_role[{{ $role->id_role }}]"
+                                            type="checkbox" value={{ $role->id_role }}
+                                            id="role-checkbox[{{ $role->id_role }}]" checked>
+                                    @else
+                                        <input class="form-check-input" name="allowed_role[{{ $role->id_role }}]"
+                                            type="checkbox" value={{ $role->id_role }}
+                                            id="role-checkbox[{{ $role->id_role }}]">
+                                    @endif
+                                    <label class="form-check-label"
+                                        for="role-checkbox[{{ $role->id_role }}]">{{ $p->nm_pengguna }}</label>
+                                @endforeach
                             </div>
-                            @endforeach
+                        @endforeach
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
