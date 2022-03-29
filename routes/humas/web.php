@@ -38,6 +38,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
 				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+				Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
 			});
 		});
 
