@@ -18,6 +18,7 @@ use App\Models\FilePengguna;
 use App\Models\Pengguna;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Redirect;
 use Session;
 use Validator;
 
@@ -233,6 +234,6 @@ class DataFileController extends BaseController
         $input = (object) $request->input();
         $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
 
-        return Storage::disk('spaces')->download($file_pengguna->link_file, $file_pengguna->judul);
+        return Storage::disk('spaces')->download($file_pengguna->link_file, $file_pengguna->judul . "." . $file_pengguna->extension_file);
     }
 }
