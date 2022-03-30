@@ -38,7 +38,7 @@
 
         <!-- Toast -->
         <link rel="stylesheet" href="{{asset('plugins/vex-4.0.1/dist/css/vex.css')}}" >
-        <link rel="stylesheet" href="{{asset('plugins/vex-4.0.1/dist/css/vex-theme-flat-attack.css')}}" >
+        <link rel="stylesheet" href="{{asset('plugins/vex-4.0.1/dist/css/vex-theme-default.css')}}" >
 
         <!-- Bootstrap Select Css -->
         <link href="{{asset('plugins/bootstrap-select/css/bootstrap-select.css')}}" rel="stylesheet" />
@@ -195,7 +195,7 @@
         $(function () {
             var loadingdt = '<div class="progressbar"><div class="stylization"></div><br><p style="font-size:9px;">Loading, mohon rehat sejenak...</p></div>';
 
-            vex.defaultOptions.className = 'vex-theme-flat-attack';
+            vex.defaultOptions.className = 'vex-theme-default';
             $.extend( $.fn.dataTable.defaults, {
                 language: {
                     "processing": "" +loadingdt+""
@@ -237,6 +237,7 @@
         //     newElement.textContent = "message: " + event.data;
         //     eventList.appendChild(newElement);
         // }
+       
     </script>
     @yield('js')
 </html>
