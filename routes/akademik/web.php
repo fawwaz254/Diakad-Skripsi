@@ -4,56 +4,43 @@ Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'akademik'), function () {
         Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
 
+        //modul MGMP
+        Route::group(array('prefix' => 'mpmp'), function () {
+            Route::group(array('prefix' => 'data-kategori-mapel'), function () {
+                Route::get('/', 'Akademik\ManajemenFile\DataKategoriMGMPController@viewDataKategori');
+                Route::get('/datatables', 'Akademik\ManajemenFile\DataKategoriMGMPController@datatablesCategoryfile');
+                Route::get('/add', 'Akademik\ManajemenFile\DataKategoriMGMPController@addDataKategori');
+                Route::get('/edit/{category_file_id}', 'Akademik\ManajemenFile\DataKategoriMGMPController@editDataKategori');
 
+                //action input data kategori
+                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\ManajemenFile\DataKategoriMGMPController@actionDataKategori');
+            });
 
+            Route::group(array('prefix' => 'data-sub-folder-kategori-mapel'), function () {
 
-//modul MGMP
-Route::group(array('prefix' => 'mpmp'), function () {
-    Route::group(array('prefix' => 'data-kategori-mapel'), function () {
-        Route::get('/', 'Akademik\ManajemenFile\DataKategoriMGMPController@viewDataKategori');
-        Route::get('/datatables', 'Akademik\ManajemenFile\DataKategoriMGMPController@datatablesCategoryfile');
-        Route::get('/add', 'Akademik\ManajemenFile\DataKategoriMGMPController@addDataKategori');
-        Route::post('action-data-kategori/{mode}/{id}', 'Akademik\ManajemenFile\DataKategoriMGMPController@actionDataKategori');
-        //belum di ubah
-        Route::get('/edit/{id}', 'Sekretariat\ManajemenFile\DataKategoriController@editDataKategori');
+                Route::get('/', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@viewDataKategori');
+                Route::get('/add', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@addSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@actionSubDataKategori');
+                Route::get('/datatables', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@datatablesSubCategoryfile');
+                //belum diubah
+                Route::get('/edit/{sub_category_file_id}', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@editSubDataKategori');
 
-        //action input data kategori
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@actionSubDataKategori');
+            });
 
-    });
+            Route::group(array('prefix' => 'data-file-mapel'), function () {
+                Route::get('/', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFile');
+                Route::get('category/{category_file_id}', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFileSubCategory');
+                Route::get('add', 'Akademik\ManajemenFile\DataFileMGMPController@addDataFile');
+                Route::post('action-data-file/{mode}/{id}', 'Akademik\ManajemenFile\DataFileMGMPController@actionDataFile');
+                Route::get('dropdown-category', 'Akademik\ManajemenFile\DataFileMGMPController@dropdownCategory');
+                //belum diubah
+                // Route::get('/', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFile');
 
-    Route::group(array('prefix' => 'data-sub-folder-kategori-mapel'), function () {
-        
-        Route::get('/', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@viewDataKategori');
-        Route::get('/add', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@addSubDataKategori');
-        Route::post('action-data-sub-kategori/{mode}/{id}', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@actionSubDataKategori');
-        Route::get('/datatables', 'Akademik\ManajemenFile\SubDataKategoriMGMPController@datatablesSubCategoryfile');
-        //belum diubah
-     
-       
-        Route::get('/edit/{id}', 'Sekretariat\ManajemenFile\SubDataKategoriController@editSubDataKategori');
-
-        //action input sub data kategori
-        
-    });
-
-    Route::group(array('prefix' => 'data-file-mapel'), function () {
-        Route::get('/', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFile');
-        Route::get('category/{category_file_id}', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFileCategory');
-        Route::get('sub-category/{sub_category_file_id}', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFileSubCategory');
-        Route::get('add', 'Akademik\ManajemenFile\DataFileMGMPController@addDataFile');
-        Route::post('action-data-file/{mode}/{id}', 'Akademik\ManajemenFile\DataFileMGMPController@actionDataFile');
-        Route::get('dropdown-category', 'Akademik\ManajemenFile\DataFileMGMPController@dropdownCategory');
-        //belum diubah
-        // Route::get('/', 'Akademik\ManajemenFile\DataFileMGMPController@viewDataFile');
-       
-        
-        
-       
-       
-    });
-  
-
-});
+            });
+        });
 
 
         /** ==== MODUL MANAJEMEN FILE ==== **/
@@ -86,6 +73,7 @@ Route::group(array('prefix' => 'mpmp'), function () {
                 Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
                 Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
             });
         });
 

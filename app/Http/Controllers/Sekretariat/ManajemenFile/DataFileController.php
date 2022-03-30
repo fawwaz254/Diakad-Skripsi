@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sekretariat\ManajemenFile;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Storage;
@@ -17,6 +18,7 @@ use App\Models\FilePengguna;
 use App\Models\Pengguna;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Redirect;
 use Session;
 use Validator;
 
@@ -225,5 +227,13 @@ class DataFileController extends BaseController
                 ];
             }
         }
+    }
+
+    public function downloadDataFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+
+        return Storage::disk('spaces')->download($file_pengguna->link_file, $file_pengguna->judul . "." . $file_pengguna->extension_file);
     }
 }

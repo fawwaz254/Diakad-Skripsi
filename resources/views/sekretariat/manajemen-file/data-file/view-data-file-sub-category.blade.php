@@ -2,21 +2,13 @@
 $total_file = 0;
 @endphp
 <style type="text/css">
-    .file:hover {
+    .file:hover,
+    .delete-one:hover,
+    .download:hover {
         transform: scale(1.2);
     }
 
-    .file {
-        cursor: pointer;
-        /* overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis; */
-    }
-
-    .delete-one:hover {
-        transform: scale(1.2);
-    }
-
+    .file,
     .delete-one {
         cursor: pointer;
     }
@@ -73,8 +65,7 @@ $total_file = 0;
                                 @foreach ($file->file_pengguna as $f)
                                     <div class="col-md-3">
                                         <a href="{{ $f->is_google_drive == 1 ? $f->link_file : Storage::disk('spaces')->url($f->link_file) }}"
-                                            style="color: inherit;text-decoration: inherit;" target="_blank"
-                                            @if ($f->is_google_drive == 0) download="{{ $f->judul }}.{{ $f->extension_file }}" @endif>
+                                            style="color: inherit;text-decoration: inherit;" target="_blank">
                                             @php
                                                 $total_file++;
                                             @endphp <div class="file">
@@ -109,12 +100,32 @@ $total_file = 0;
                                             <input type="hidden" name="sub_category_file_id"
                                                 value="{{ $sub_category->sub_category_file_id }}">
                                         </div>
-                                        <div style="text-align: center;margin-top: 10px;" class="delete-one">
-                                            <a
-                                                onclick="deleteFile('{{ $f->file_pengguna_id }}','{{ $sub_category->sub_category_file_id }}')">
-                                                <i style="color:red;" class="material-icons">cancel</i>
-                                            </a>
-                                        </div>
+                                        @if ($f->is_google_drive)
+                                            <div style="text-align: center;margin-top: 10px;" class="delete-one">
+                                                <a
+                                                    onclick="deleteFile('{{ $f->file_pengguna_id }}','{{ $sub_category->sub_category_file_id }}')">
+                                                    <i style="color:red;" class="material-icons">cancel</i>
+                                                </a>
+                                            </div>
+                                        @else
+                                            <div class="row align-items-center">
+                                                <div style="text-align: right;margin-top: 10px;"
+                                                    class="download col-md-6">
+                                                    <a href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/download/' . $f->file_pengguna_id) }}"
+                                                        target="_blank">
+                                                        <i style="color:blue;"
+                                                            class="material-icons">download_for_offline</i>
+                                                    </a>
+                                                </div>
+                                                <div style="text-align: left;margin-top: 10px;"
+                                                    class="delete-one col-md-6">
+                                                    <a
+                                                        onclick="deleteFile('{{ $f->file_pengguna_id }}','{{ $sub_category->sub_category_file_id }}')">
+                                                        <i style="color:red;" class="material-icons">cancel</i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -132,6 +143,7 @@ $total_file = 0;
     function toggleDelete() {
         if ($('.delete-one').css('display') === "block") {
             $('.delete-one').hide()
+            $('.download').hide()
             $('.delete-many').show()
             $('#delete-many-files-btn').show()
             $('#add-file').hide()
@@ -140,6 +152,7 @@ $total_file = 0;
                 <span>Batal</span>
             `)
         } else {
+            $('.download').show()
             $('.delete-one').show()
             $('.delete-many').hide()
             $('#add-file').show()

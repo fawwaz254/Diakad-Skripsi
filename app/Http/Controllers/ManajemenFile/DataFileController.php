@@ -190,4 +190,12 @@ class DataFileController extends BaseController
             }
         }
     }
+
+    public function downloadDataFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+
+        return Storage::disk('spaces')->download($file_pengguna->link_file, $file_pengguna->judul . "." . $file_pengguna->extension_file);
+    }
 }

@@ -211,7 +211,7 @@ class LibGuru
     /** ========== **/
 
     /** JADWAL UTS GURU BY SEMESTER **/
-    public static function fetchDataJadwalUTS($auth_data, $id_pengguna, $id_semester, $is_online = null, $id_ujian_mp = null)
+    public static function fetchDataJadwalUTS($auth_data, $id_pengguna, $id_semester, $is_online = 0, $id_ujian_mp = null)
     {
         // get id_guru
         $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();

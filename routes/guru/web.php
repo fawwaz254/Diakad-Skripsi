@@ -5,17 +5,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
         Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
 
 
-Route::group(array('prefix' => 'mgmp'), function () {
-    Route::group(array('prefix' => 'data-file-mapel'), function () {
-        Route::get('/', 'MGMP\DataFileController@viewDataFile');
-        Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
-        Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
-
-    });
-});
-
-
-
+        Route::group(array('prefix' => 'mgmp'), function () {
+            Route::group(array('prefix' => 'data-file-mapel'), function () {
+                Route::get('/', 'MGMP\DataFileController@viewDataFile');
+                Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
+                Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
+            });
+        });
 
         /** ==== MODUL MANAJEMEN FILE ==== **/
         // url: /guru/manajemen-file
@@ -30,6 +26,7 @@ Route::group(array('prefix' => 'mgmp'), function () {
                 Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
                 Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
             });
         });
 
