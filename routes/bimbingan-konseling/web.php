@@ -30,9 +30,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
                 Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
                 Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
                 Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
                 Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
             });
         });
 
@@ -128,7 +130,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('input-pelanggaran/add', 'BK\PenangananSiswa\InputPelanggaranController@addInputPelanggaran');
             Route::get('input-pelanggaran/edit/{id}', 'BK\PenangananSiswa\InputPelanggaranController@editInputPelanggaran');
 
-      
+
 
 
             Route::post('action-input-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\InputPelanggaranController@actionInputPelanggaran');
@@ -147,7 +149,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('action-tindakan-pelanggaran-nonkbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@deleteDatatablesBelumTindakanNonKBM');
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
-        
+
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');

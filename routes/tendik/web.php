@@ -30,9 +30,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
                 Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
                 Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
                 Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
                 Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
             });
         });
 
@@ -91,7 +93,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             // MENU Rekap Absen Tanpa Jadwal
             Route::get('rekap-absen-tanpa-jadwal', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@viewRekapAbsenTanpaJadwal');
-            Route::post('post-get-kbm-by-kelas', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@actionGetKBMByKelas');
+            Route::post('post-get-kbm-by-kelas', 'Guru\GuruPiket\RekapAbsenTanpaJadwalCkerja-harianontroller@actionGetKBMByKelas');
 
             Route::post('post-kbm-rekap-absen-tanpa-jadwal', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@actionViewKBMRekapAbsenTanpaJadwal');
             Route::get('rekap-absen-tanpa-jadwal/view-kbm/{id_kelas_mp}', 'Guru\GuruPiket\RekapAbsenTanpaJadwalController@viewKBMRekapAbsenTanpaJadwal');
@@ -119,6 +121,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('datatables', 'Guru\Laporan\KerjaHarianController@datatablesKerjaHarian');
                 Route::get('add', 'Guru\Laporan\KerjaHarianController@addKerjaHarian');
                 Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
+                Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
+                Route::get('print-kerja-harian/{start_date}/{end_date}', 'Guru\Laporan\KerjaHarianController@printKerjaHarian');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
             });
         });

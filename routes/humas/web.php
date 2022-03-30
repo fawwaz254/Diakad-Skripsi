@@ -34,9 +34,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
 				Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
 				Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+				Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
 				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
 				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+				Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
 			});
 		});
 
@@ -107,7 +109,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 
 			Route::group(array('prefix' => 'histori-absensi'), function () {
-
+				Route::get('export-laravel-mount/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
 				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
 				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');

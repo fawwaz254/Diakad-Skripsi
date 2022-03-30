@@ -30,9 +30,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
                 Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
                 Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
                 Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
 
                 Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
             });
         });
 
@@ -51,6 +53,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
             Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+
+            // Menu Rekap Kesehatan Guru
+            Route::get('rekap-kesehatan-guru', 'Humas\KegiatanHarian\RekapKesehatanController@viewRekapFormKesehatan');
+            Route::get('rekap-kesehatan-guru/{bulan}/{tahun}', 'Humas\KegiatanHarian\RekapKesehatanController@viewRekapFormKesehatan');
+            Route::get('rekap-kesehatan-guru/{bulan}/{tahun}/download', 'Humas\KegiatanHarian\RekapKesehatanController@downloadRekapFormKesehatan');
+            Route::get('rekap-kesehatan-guru/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+            Route::get('rekap-kesehatan-guru/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
+
+            Route::post('rekap-kesehatan-guru/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
+            Route::post('rekap-kesehatan-guru/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
         });
 
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
@@ -221,6 +233,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('action-batch-upload-foto', 'Pendidikan\Siswa\UpdateFotoController@actionBatchUploadFoto');
 
             //MENU UPLOAD DATA SISWA
+            Route::post('post-file-excel-email', 'Pendidikan\Siswa\UploadDataSiswaController@uploadEmailExcel');
             Route::get('update-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@updateDataSiswa');
             Route::get('upload-data-siswa', 'Pendidikan\Siswa\UploadDataSiswaController@viewUploadDataSiswa');
             Route::get('/download-file-excel', 'Pendidikan\Siswa\UploadDataSiswaController@downloadFileExcel')->name('siswa/download-file-excel');
@@ -232,6 +245,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('cari-siswa/view-detail/{nis_nama_siswa}', 'Pendidikan\Siswa\CariSiswaController@viewDetailCariSiswa');
             Route::get('cari-siswa/datatables/{nis_nama_siswa}', 'Pendidikan\Siswa\CariSiswaController@datatablesCariSiswa');
             Route::get('cari-siswa/view-detail-siswa/{nis_siswa}/{nis_nama_siswa_asli}', 'Pendidikan\Siswa\CariSiswaController@viewDetailSiswaCariSiswa');
+
+            Route::post('reset-password', 'Pendidikan\Siswa\CariSiswaController@resetPasswordSiswa');
 
             // MENU Evaluasi Siswa
             Route::get('evaluasi-siswa', 'Kesiswaan\Siswa\EvaluasiSiswaController@viewEvaluasiSiswa');

@@ -1,20 +1,18 @@
 <?php
 
+use App\Models\CategoriFileMGMP;
 use App\Models\CategoryFileRole;
+use App\Models\CategoriFileGuru;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 
-function minimalisTime($time){
-    $currentTime = strtotime($time);
-    return date('H:i',round($currentTime / (15 * 60)) * (15 * 60));
+function minimalisTime($time)
+{
 
+    return rtrim($time, '0');
 }
-
-
-
-
 
 if (!function_exists('auth_data')) {
     /**
@@ -55,14 +53,28 @@ if (!function_exists('get_moduls')) {
 
 if (!function_exists('category_file_role')) {
     /**
-     * get category file based on active id role 
-     * @return array
+     * get shared file based on active id role 
+     * @return collection 
      */
     function category_file_role($id_role)
     {
-        return CategoryFileRole::where('id_role', $id_role)->get();
+        return CategoryFileRole::where('id_role', $id_role)->exists();
     }
 }
+
+if (!function_exists('id_guru')) {
+    /**
+     * get shared file based on active id role 
+     * @return collection
+     */
+    function id_guru($id_pengguna)
+    {
+        return CategoriFileGuru::where('id_pengguna', $id_pengguna)->get();
+    }
+}
+
+
+
 
 if (!function_exists('storeFileToCloud')) {
     /**
@@ -166,7 +178,7 @@ if (!function_exists('indonesiaDate')) {
             ];
 
             $split = explode('-', $date);
-            return $split[2] . ' ' . $months[(int)$split[1]] . ' ' . $split[0];
+            return $split[2] . ' ' . $months[(int) $split[1]] . ' ' . $split[0];
         } else {
             return '';
         }

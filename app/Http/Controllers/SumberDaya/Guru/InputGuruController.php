@@ -36,26 +36,28 @@ use DB;
 use Session;
 use Validator;
 
-class InputGuruController extends BaseController{
+class InputGuruController extends BaseController
+{
 
-    public function viewInputGuru(Request $request){
+    public function viewInputGuru(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $status = StatusPengguna::where('status_join_table',2)->get();
+        $status = StatusPengguna::where('status_join_table', 2)->get();
 
-        return view('sumber-daya/guru/input-guru/view-input-guru',compact('auth_data','status'));
-
+        return view('sumber-daya/guru/input-guru/view-input-guru', compact('auth_data', 'status'));
     }
 
     public function getKota($id_provinsi)
     {
-        $kota = Kota::where('id_provinsi','=',$id_provinsi)->get();
+        $kota = Kota::where('id_provinsi', '=', $id_provinsi)->get();
         return response()->json($kota);
     }
 
-    public function addInputGuru(Request $request){
+    public function addInputGuru(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -70,10 +72,10 @@ class InputGuruController extends BaseController{
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        $id_guru = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_guru = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        $kota = Kota::where('kota.is_aktif','=',1)->get();
-        $provinsi = Provinsi::where('provinsi.is_aktif','=',1)->get();
+        $kota = Kota::where('kota.is_aktif', '=', 1)->get();
+        $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
         $agama = Agama::get();
         $pegawai = JenisKepegawaian::get();
         // dd($pegawai);
@@ -87,11 +89,11 @@ class InputGuruController extends BaseController{
 
         /*return view('sumber-daya/guru/input-guru/add-input-guru',compact('auth_data','data_status_aktif_guru','data_jabatan_pegawai','data_unit_kerja','id_guru'));*/
 
-        return view('sumber-daya/guru/input-guru/add-input-guru',compact('auth_data','data_status_aktif_guru','data_unit_kerja','id_guru','kota','provinsi','agama','pegawai','pekerjaan','ptk','pengangkat','gaji','lab'));
-
+        return view('sumber-daya/guru/input-guru/add-input-guru', compact('auth_data', 'data_status_aktif_guru', 'data_unit_kerja', 'id_guru', 'kota', 'provinsi', 'agama', 'pegawai', 'pekerjaan', 'ptk', 'pengangkat', 'gaji', 'lab'));
     }
 
-    public function editInputGuru($id, Request $request){
+    public function editInputGuru($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -105,8 +107,8 @@ class InputGuruController extends BaseController{
 
         $guru = LibGuru::fetchDataAllGuru($auth_data, $id);
 
-        $kota = Kota::where('kota.is_aktif','=',1)->get();
-        $provinsi = Provinsi::where('provinsi.is_aktif','=',1)->get();
+        $kota = Kota::where('kota.is_aktif', '=', 1)->get();
+        $provinsi = Provinsi::where('provinsi.is_aktif', '=', 1)->get();
         $agama = Agama::get();
         $pegawai = JenisKepegawaian::get();
         $pekerjaan = JenisPekerjaan::get();
@@ -117,77 +119,74 @@ class InputGuruController extends BaseController{
 
         /*return view('sumber-daya/guru/input-guru/edit-input-guru',compact('auth_data','data_status_aktif_guru','data_jabatan_pegawai','data_unit_kerja','data_guru'));*/
 
-        return view('sumber-daya/guru/input-guru/edit-input-guru',compact('auth_data','data_status_aktif_guru','data_unit_kerja','guru','kota','provinsi','agama','pegawai','pekerjaan','ptk','pengangkat','gaji','lab'));
-
+        return view('sumber-daya/guru/input-guru/edit-input-guru', compact('auth_data', 'data_status_aktif_guru', 'data_unit_kerja', 'guru', 'kota', 'provinsi', 'agama', 'pegawai', 'pekerjaan', 'ptk', 'pengangkat', 'gaji', 'lab'));
     }
 
-    public function datatablesInputGuru(Request $request){
+    public function datatablesInputGuru(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         $list_data = Guru::select(
-                'guru.id_guru',
-                'guru.id_pengguna',
-                'pengguna.id_status_pengguna',
-                'guru.jenis_jabatan',
-                'pengguna.nm_pengguna',
-                'pengguna.gelar_depan',
-                'pengguna.gelar_belakang',
-                'guru.nip_guru',
-                'unit_kerja.nm_unit_kerja',
-                'status_pengguna.nm_status_pengguna',
-                    DB::raw("(SELECT COUNT(*) FROM pengampu_mp 
+            'guru.id_guru',
+            'guru.id_pengguna',
+            'pengguna.id_status_pengguna',
+            'guru.jenis_jabatan',
+            'pengguna.nm_pengguna',
+            'pengguna.gelar_depan',
+            'pengguna.gelar_belakang',
+            'guru.nip_guru',
+            'unit_kerja.nm_unit_kerja',
+            'status_pengguna.nm_status_pengguna',
+            DB::raw("(SELECT COUNT(*) FROM pengampu_mp 
                                 JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengampu_mp.id_kelas_mp 
                                 JOIN semester ON semester.id_semester = kelas_mp.id_semester 
                                 WHERE pengampu_mp.id_guru = guru.id_guru 
                                 AND semester.is_aktif_semester = 1 AND pengampu_mp.deleted_at IS NULL) 
                                 AS jml_mengajar_semester_aktif")
-                )
-                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                    ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                    ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')
-                    ->with('pengguna')
-                    ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->orderBy('pengguna.nm_pengguna', 'asc');
+        )
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+            ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+            ->join('unit_kerja', 'unit_kerja.id_unit_kerja', '=', 'guru.id_unit_kerja')
+            ->with('pengguna')
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->orderBy('pengguna.nm_pengguna', 'asc');
 
-        if($input->id_status_pengguna){
-            $list_data = $list_data->where('pengguna.id_status_pengguna',$input->id_status_pengguna);
+        if ($input->id_status_pengguna) {
+            $list_data = $list_data->where('pengguna.id_status_pengguna', $input->id_status_pengguna);
         }
 
         return Datatables::of($list_data)
-                ->addColumn('nm_pengguna', function($item){
-                    if( ! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
-                    }
-                    elseif( ! empty($item->gelar_depan)) {
-                        return $item->gelar_depan." ".$item->nm_pengguna;   
-                    }
-                    elseif( ! empty($item->gelar_belakang)) {
-                        return $item->nm_pengguna.", ".$item->gelar_belakang;   
-                    }
-                    else {
-                        return $item->nm_pengguna; 
-                    }
-                })
-                ->addColumn('jml_mengajar_semester_aktif', function($item){
-                    if( ! empty($item->jml_mengajar_semester_aktif)) {
-                        return $item->jml_mengajar_semester_aktif;
-                    }
-                    else {
-                        return 0;
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_guru
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_pengguna', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_pengguna;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_pengguna . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_pengguna;
+                }
+            })
+            ->addColumn('jml_mengajar_semester_aktif', function ($item) {
+                if (!empty($item->jml_mengajar_semester_aktif)) {
+                    return $item->jml_mengajar_semester_aktif;
+                } else {
+                    return 0;
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_guru
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionInputGuru(Request $request, $mode, $id = null) {
+    public function actionInputGuru(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -200,20 +199,19 @@ class InputGuruController extends BaseController{
             'id_status_pengguna'    => 'required'
         ]);
 
-        if($validator->fails() && $mode != 'delete') {
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else {
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             // ACTION ADD
-            if($mode == 'add') {
+            if ($mode == 'add') {
                 $pengguna                           = new Pengguna;
-                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pengguna->id_pengguna              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $pengguna->id_status_pengguna       = $input->id_status_pengguna;
                 $pengguna->id_sekolah               = $input->auth_data->pengguna->id_sekolah;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
@@ -229,7 +227,7 @@ class InputGuruController extends BaseController{
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
                 $pengguna->save();
 
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $guru                           = new Guru;
                 $guru->id_guru                  = $id;
@@ -240,7 +238,7 @@ class InputGuruController extends BaseController{
                 $guru->nik_ptk                  = $input->nik_ptk;
                 $guru->jenis_kelamin            = $input->jenis_kelamin;
                 $guru->id_kota_lahir            = $input->id_kota_lahir;
-                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $guru->alamat_jalan             = $input->alamat_jalan;
                 $guru->alamat_rt                = $input->alamat_rt;
@@ -270,14 +268,14 @@ class InputGuruController extends BaseController{
                 $guru->nuptk                    = $input->nuptk;
                 $guru->id_jenis_ptk             = $input->id_jenis_ptk;
                 $guru->nomor_sk_pengangkatan    = $input->nomor_sk_pengangkatan;
-                $guru->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan),"Y-m-d");;
+                $guru->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan), "Y-m-d");;
                 $guru->id_jenis_lembaga_pengangkat  = $input->id_jenis_lembaga_pengangkat;
                 $guru->nomor_sk_cpns            = $input->nomor_sk_cpns;
-                $guru->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns),"Y-m-d");;
+                $guru->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns), "Y-m-d");;
                 $guru->golongan_ptk             = $input->golongan_ptk;
                 $guru->id_jenis_sumber_gaji     = $input->id_jenis_sumber_gaji;
                 $guru->nomor_kartu_pegawai      = $input->nomor_kartu_pegawai;
-                $guru->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;    
+                $guru->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;
 
                 //section kompetensi khusus
                 $guru->is_lisensi_kepsek        = $input->is_lisensi_kepsek;
@@ -293,7 +291,7 @@ class InputGuruController extends BaseController{
 
                 //section penugasan
                 $guru->is_sekolah_induk         = $input->is_sekolah_induk;
-                $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan),"Y-m-d");;
+                $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $guru->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $guru->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $guru->created_at               = $now;
@@ -320,11 +318,10 @@ class InputGuruController extends BaseController{
                     'path' => 'guru/input-guru',
                     'message' => 'Save Guru successfully'
                 ];
-            }
-            elseif($mode == 'edit') {
+            } elseif ($mode == 'edit') {
                 // get id_pengguna
                 $guru = Guru::select('id_pengguna')
-                    ->where('id_guru','=',$id)
+                    ->where('id_guru', '=', $id)
                     ->first();
 
                 $id_pengguna = $guru->id_pengguna;
@@ -335,7 +332,7 @@ class InputGuruController extends BaseController{
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
 
                 // apabila ada pergantian nip guru
-                if($pengguna->username != $input->nip_guru){
+                if ($pengguna->username != $input->nip_guru) {
                     $pengguna->username                 = $input->nip_guru;
                     $pengguna->password                 = Hash::make($input->nip_guru);
                     $pengguna->must_change_password     = 1;
@@ -359,7 +356,7 @@ class InputGuruController extends BaseController{
                 $guru->nik_ptk                  = $input->nik_ptk;
                 $guru->jenis_kelamin            = $input->jenis_kelamin;
                 $guru->id_kota_lahir            = $input->id_kota_lahir;
-                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir),"Y-m-d");
+                $guru->tgl_lahir                = date_format(date_create($input->tgl_lahir), "Y-m-d");
                 $guru->nm_ibu_kandung           = $input->nm_ibu_kandung;
                 $guru->alamat_jalan             = $input->alamat_jalan;
                 $guru->alamat_rt                = $input->alamat_rt;
@@ -389,14 +386,14 @@ class InputGuruController extends BaseController{
                 $guru->nuptk                    = $input->nuptk;
                 $guru->id_jenis_ptk             = $input->id_jenis_ptk;
                 $guru->nomor_sk_pengangkatan    = $input->nomor_sk_pengangkatan;
-                $guru->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan),"Y-m-d");;
+                $guru->tgl_sk_pengangkatan       = date_format(date_create($input->tgl_sk_pengangkatan), "Y-m-d");;
                 $guru->id_jenis_lembaga_pengangkat  = $input->id_jenis_lembaga_pengangkat;
                 $guru->nomor_sk_cpns            = $input->nomor_sk_cpns;
-                $guru->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns),"Y-m-d");;
+                $guru->tgl_mulai_pns            = date_format(date_create($input->tgl_mulai_pns), "Y-m-d");;
                 $guru->golongan_ptk             = $input->golongan_ptk;
                 $guru->id_jenis_sumber_gaji     = $input->id_jenis_sumber_gaji;
                 $guru->nomor_kartu_pegawai      = $input->nomor_kartu_pegawai;
-                $guru->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;    
+                $guru->nomor_kartu_pasangan     = $input->nomor_kartu_pasangan;
 
                 //section kompetensi khusus
                 $guru->is_lisensi_kepsek        = $input->is_lisensi_kepsek;
@@ -412,7 +409,7 @@ class InputGuruController extends BaseController{
 
                 //section penugasan
                 $guru->is_sekolah_induk         = $input->is_sekolah_induk;
-                $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan),"Y-m-d");;
+                $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $guru->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $guru->save();
 
@@ -429,15 +426,13 @@ class InputGuruController extends BaseController{
                     'path' => 'guru/input-guru',
                     'message' => 'Update Guru successfully'
                 ];
-            }
-            elseif($mode == 'delete') {
-                if($pengampuMp = PengampuMp::where('id_guru',$id)->first()) {
+            } elseif ($mode == 'delete') {
+                if ($pengampuMp = PengampuMp::where('id_guru', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Guru'
-                    ]; 
-                }
-                else {
+                    ];
+                } else {
                     // make object to find id
                     $guru                   = Guru::find($id);
 
@@ -460,5 +455,4 @@ class InputGuruController extends BaseController{
             }
         }
     }
-
 }

@@ -45,36 +45,36 @@
                     <div class="col-md-6">
                         <ul class="dashboard-stat-list">
                             <li>
-                                Hari Kerja
-                                <span class="pull-right"><span class="label bg-red">Coming Soon</span></span>
-                            </li>
-                            <li>
                                 Hadir
                                 <span class="pull-right"><b>{{$jumlah_hadir}}</b></span>
                             </li>
                             <li>
                                 Hadir Terlambat
-                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_telat}}</b></span>
                             </li>
                             <li>
                                 Hadir Pulang Lebih Awal
-                               <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_pulangcepat}}</b></span>
+                            </li>
+                            <li>
+                                Tidak Checkout
+                                <span class="pull-right"><b>{{$tidak_checkout}}</b></span>
                             </li>
                         </ul>
                     </div>
                     <div class="col-md-6">
                         <ul class="dashboard-stat-list">
                             <li>
-                                Sakit
+                                Izin
                                 <span class="pull-right"><b>{{$jumlah_izin}}</b></span>
                             </li>
                             <li>
-                                Izin
+                                Sakit
                                 <span class="pull-right"><b>{{$jumlah_sakit}}</b></span>
                             </li>
                             <li>
                                 Alpha
-                                <span class="pull-right"> <span class="label bg-red">Coming Soon</span></span>
+                                <span class="pull-right"><b>{{$jumlah_alpha}}</b></span>
                             </li>
                         </ul>
                     </div>
@@ -97,7 +97,7 @@
                 <div class="body">
                     
                     <div class="table-responsive">
-                     <table class="table table-bordered">
+                    <table class="table table-bordered">
                         <thead style="background:#9C27B0;color:white">
                             <tr>
                                 <th>Tanggal</th>
@@ -105,12 +105,12 @@
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Status</th>
-                                <th>Notes</th>
+                                <th>Shift</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($hasil as $key => $r)
-                            @if($r['libur']!="-")
+                            @if($r['status']!="Libur")
                             <tr style="background: #FFCCF2">
                             @else
                             <tr>
@@ -120,10 +120,10 @@
                                 <td>{{$r['check_in']}}</td>
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
-                                @if($r['libur']!="-")
-                                <td>{{$r['libur']}}</td>
+                                @if($r['shift'])
+                                <td>{{$r['shift']}} ({{$r['start']}} - {{$r['end']  }})</td>
                                 @else
-                                <td>{{$r['notes']}}</td>
+                                <td></td>
                                 @endif
                             </tr>
                             @endforeach

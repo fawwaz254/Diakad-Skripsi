@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 
 use App\Models\BiayaSekolah;
 use App\Models\DetailBiaya;
+use App\Models\DetailBiayaInternal;
 use App\Models\KelompokBiaya;
 use App\Models\TagihanBiaya;
 use App\Models\Semester;
@@ -181,6 +182,14 @@ class DetailBiayaController extends BaseController{
                         'detail' => $item->detail_internal
                     );
                     return $data;
+                })
+                ->addColumn('biaya_asli', function($item){
+                    $pungutan = 0;
+                    foreach($item->detail_internal as $detail){
+                        $pungutan += $detail->besar_biaya;
+                    }
+
+                    return "Rp".number_format($item->besar_biaya - $pungutan);
                 })
                 ->addColumn('validasi_biaya', function($item){
                     if($item->validasi_biaya == 0){
@@ -374,6 +383,7 @@ class DetailBiayaController extends BaseController{
                         'message' => 'Failed To Delete Detail Biaya'
                     ]; 
                 }
+
                 else{
                     // make object to find id
                     $detailBiaya               = DetailBiaya::find($id);

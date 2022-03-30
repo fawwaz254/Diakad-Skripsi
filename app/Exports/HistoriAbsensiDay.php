@@ -9,20 +9,21 @@ use Maatwebsite\Excel\Concerns\FromView;
 class HistoriAbsensiDay implements FromView
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
 
-public function __construct($products){
-    $this->products = $products;
-}
+    public function __construct($products)
+    {
+        $this->products = $products;
+    }
 
-public function view(): View 
-{
+    public function view(): View
+    {
 
-    return view('HistoriAbsensiDay',[
-        'products'=>$this->products
-    ]);
-}
+        return view('HistoriAbsensiDay', [
+            'products' => $this->products
+        ]);
+    }
 
     // public function collection()
     // {

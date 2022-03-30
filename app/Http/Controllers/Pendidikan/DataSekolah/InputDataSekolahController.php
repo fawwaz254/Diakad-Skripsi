@@ -126,6 +126,11 @@ class InputDataSekolahController extends BaseController
 	{
 		if ($mode == "delete") {
 			FileSekolah::where('id_file_sekolah', $id)->delete();
+			return [
+				'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
+				'path' => 'data-sekolah/input-data-sekolah/',
+				'message' => 'Data File Sekolah Berhasil Di Update'
+			];
 		}
 	}
 }

@@ -1,4 +1,3 @@
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -420,24 +419,31 @@ $(document).on("click", ".remove-tr", function () {
             { title: "Are you sure?", showCancelButton: true },
             function (isConfirm) {
                 if (isConfirm) {
-                    const token = $("meta[name='csrf-token']").attr("content");
                     $('.delete-file').attr("disabled", true);
                     //swall
                     $.ajax({
                         url: `pendidikan/data-sekolah/action-input-file-sekolah/delete/${id}`,
                         type: "post",
-
-                        data: {
-                            _token: token,
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
                         },
-
-                        success: function () {
-                            swal({
-                                title: "Delete Success",
-                                text: "data berhasil dihapus",
-                                icon: "success",
-                            });
-                            loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/');
+                        success: function (response) {
+                            if(response.status == 200){
+                                vex.dialog.alert(response.message);
+                            }else if(response.status == 201){
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            }else if(response.status == 202){
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            }else if(response.status == 203){
+                                vex.dialog.alert(response.message);
+                                primary_table.ajax.reload(null, false);
+                            }else if(response.status == 204){
+                                loadURI(response.path);
+                            }else if(response.status == 300){
+                                vex.dialog.alert(response.message);
+                            }
                         },
                     });
                 }
