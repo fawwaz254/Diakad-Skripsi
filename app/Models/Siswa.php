@@ -78,6 +78,11 @@ class Siswa extends Model
     {
         return $this->hasMany(PrestasiSiswa::class, 'id_siswa');
     }
+
+    public function informasi_tambahan()
+    {
+        return $this->hasMany(InformasiTambahan::class, 'id_siswa');
+    }
     
     public function pengajuan_wisuda()
     {

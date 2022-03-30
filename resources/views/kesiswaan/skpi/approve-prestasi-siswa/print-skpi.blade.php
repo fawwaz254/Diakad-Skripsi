@@ -93,10 +93,10 @@ table , td, th {
 
   border: 1px solid black;
  
- 
+  padding-left: 10px;
   padding: 8px;
 }
-tr:nth-child(even) {background-color: #a19f9f;}
+tr:nth-child(even) {background-color: #6e9c6e;}
 
 .atas{
   background-color: white;
@@ -110,9 +110,13 @@ tr:nth-child(even) {background-color: #a19f9f;}
 table , td, th {
   line-height: normal;
   border: 1px solid black;
- 
 
-  padding: 1px; }}
+
+ padding-top: 1px;
+ padding-bottom: 1px;
+
+ 
+ }}
 </style>
 
 
@@ -169,8 +173,12 @@ table.bg-color tr td{
           </tr>
       </table >
     <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
-      
-    <h4 class="text-center" style="margin-top: 20px;"><b>SURAT KETERANGAN PENDAMPING IJAZAH</b></h4>
+      @if($siswa->keterangan_kelas == 'Internasional')
+      <h4 class="text-center" style="margin-top: 10px; font-family: 'Franklin Gothic Demi Cond, monospace"><b>SURAT KETERANGAN PENDAMPING IJAZAH</b></h4>
+      @else
+      <h4 class="text-center" style="margin-top: 20px;  font-family: 'Franklin Gothic Demi Cond, monospace"><b>SURAT KETERANGAN PENDAMPING IJAZAH</b></h4>
+      @endif
+
     <h5 class="text-center"><b>Diploma Supplement</b></h5>
     <h5 class="text-center">Nomor : 
     @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
@@ -189,7 +197,7 @@ table.bg-color tr td{
   
   </table>
   @if($siswa->keterangan_kelas == 'Internasional')
-  <div class="container" >
+  <div class="container" style="margin-top: -10px;" >
     <h5  style="margin-left: 40px"><b>I.	INFORMASI TENTANG IDENTITAS  DIRI PEMEGANG SKPI
         <br><i>INFORMATION OF PERSONAL DIPLOMA SUPPLEMENT HOLDER</i> </b>
     </h5>
@@ -472,42 +480,44 @@ text-align: center;
   <thead>
     <tr>
         <td></td>
-        <td>Nama Prestasi
+        <td><b>Nama Prestasi</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Achievement Name</i>
         @endif
+      
         </td>
-        <td>Tingkat Prestasi
+        <td><b>Tingkat Prestasi</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Achievement Level</i>
         @endif
+      
         </td>
-        <td>Jenis Prestasi
+        <td><b>Jenis Prestasi</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Achievement Type</i>
           @endif
         </td>
-        <td>Jenis Lomba
+        <td><b>Jenis Lomba</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Type of Competition</i>
           @endif
         </td>
-        <td>Peringkat
+        <td><b>Peringkat</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Rating</i>
           @endif
         </td>
-        <td>Lokasi
+        <td><b>Lokasi</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>location</i>
           @endif
         </td>
-        <td>Penyelenggara
+        <td><b>Penyelenggara</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Organizer</i>
           @endif
         </td>
-        <td>Tanggal
+        <td><b>Tanggal</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Date</i>
           @endif
@@ -569,27 +579,27 @@ text-align: center;
   <thead>
     <tr>
         <td></td>
-        <td>Nama Kegiatan
+        <td><b>Nama Kegiatan</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Activity Name </i>
           @endif
         </td>
-        <td>Lokasi
+        <td><b>Lokasi</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Location</i>
           @endif
         </td>
-        <td>Penyelenggara
+        <td><b>Penyelenggara</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Organizer</i>
           @endif
         </td>
-        <td>Tingkat Kegiatan
+        <td><b>Tingkat Kegiatan</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Activity Level</i>
           @endif
         </td>
-        <td>Tanggal
+        <td><b>Tanggal</b>
           @if($siswa->keterangan_kelas == 'Internasional')
           <br><i>Date</i>
           @endif
@@ -617,7 +627,7 @@ text-align: center;
         <tr>
           <td style="width: 70%; border: none;">
           </td>
-            <td style="border: none;" >{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
+            <td style="border: none;" >Kab. Sidoarjo, 
                 {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
             </td>
         </tr>
@@ -634,9 +644,9 @@ text-align: center;
                 <br>
                 <img src="{{asset('media/ttd/smawh2.png')}}" alt="TTD" style="height:90px;" />
               @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-              <br>
+             
               
-              <img src="{{asset('media/ttd/smpypm1.png')}}" alt="TTD" width="100px" height="100px" class="ttd">
+              <img src="{{asset('media/ttd/smpypm1.png')}}" alt="TTD" width="140px" height="140px" class="ttd">
                 @else
               <br>
               <br>
@@ -645,6 +655,10 @@ text-align: center;
                 @endif
                 <br>
                 <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                @if($auth_data->sekolah_data->nip_kepala_sekolah == NULL)
+                @else
+                <b><u>{{ $auth_data->sekolah_data->nip_kepala_sekolah }}</u></b>
+                @endif
             </td>
         </tr>
     </table>

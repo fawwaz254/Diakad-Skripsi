@@ -32,6 +32,7 @@
                                         <th>Kelas</th>
                                         <th>Prestasi</th>
                                         <th>Kegiatan</th>
+                                        <th>Informasi Tambahan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -101,6 +102,7 @@
             { data: 'nm_kelas', name: 'kelas.nm_kelas' },
             { data: 'prestasi', name: 'prestasi', searchable: false, orderable: false},
             { data: 'kegiatan', name: 'kegiatan', searchable: false, orderable: false},
+            { data: 'informasi_tambahan', name: 'informasi_tambahan', searchable: false, orderable: false},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ detail_url + '/' + data.id + '/' + $('#param').val() + '">'+

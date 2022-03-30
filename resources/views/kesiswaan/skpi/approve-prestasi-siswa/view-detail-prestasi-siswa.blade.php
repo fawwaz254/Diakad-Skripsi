@@ -72,11 +72,162 @@
                     </div>
                 </div>
 
+                <br>
+
+                <div class="card">
+                    {{csrf_field()}}
+                    <div class="header">
+                        <h2>Data Informasi Tambahan</h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table3">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Jenis Kegiatan</th>
+                                        <th>Nama</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
             </div>
         </div>
     </div>
 </div>
 @include('scriptjs')
+
+
+
+<script type="text/javascript">
+
+    function rejectAction(reject_url, element){
+       var item = $(element);
+       $('button').attr('disabled', 'disabled');
+
+       swal({
+           title: "Are you sure?",
+           text: "For Reject this",
+           type: "input",
+           showCancelButton: true,
+           confirmButtonColor: "#DD6B55",
+           confirmButtonText: "Yes, reject it!",
+           cancelButtonText: "No, cancel!",
+           closeOnConfirm: true,
+           closeOnCancel: true,
+           inputPlaceholder: "Alasan Ditolak"
+       }, function (result) {
+           if (result) {
+               $.ajax({
+                   type: "POST",
+                   url: reject_url + '/' + item.attr('data-id'),
+                   data : {keterangan:result},
+                   success: function (response) {
+                       if(response.status == 200){
+                           vex.dialog.alert(response.message);
+                       }else if(response.status == 201){
+                           vex.dialog.alert(response.message);
+                           window.location.href = response.link;
+                       }else if(response.status == 202){
+                           vex.dialog.alert(response.message);
+                           loadURI(response.path);
+                       }else if(response.status == 203){
+                           vex.dialog.alert(response.message);
+                           if(response.from == 'prestasi'){
+                               primary_table.ajax.reload(null, false);
+                           }
+                           else if(respone.from == 'kegiatan'){
+                            primary_table2.ajax.reload(null, false);
+                           }
+                           else{
+                               primary_table3.ajax.reload(null, false);
+                           }
+                       }else if(response.status == 300){
+                           vex.dialog.alert(response.message);
+                       }
+                   },
+                   complete: function() {
+                       $('button').removeAttr('disabled', 'disabled');
+                   }
+               });
+           }else{
+               alert("Alasan Ditolak Harus Diisi");
+               $('button').removeAttr('disabled', 'disabled');
+               return false
+           }
+       });
+   }
+   
+   
+   function approveAction(approve_url, element){
+       var item = $(element);
+       $('button').attr('disabled', 'disabled');
+
+       swal({
+           title: "Are you sure?",
+           text: "For Approve this",
+           type: "warning",
+           showCancelButton: true,
+           confirmButtonColor: "#DD6B55",
+           confirmButtonText: "Yes, approve it!",
+           cancelButtonText: "No, cancel!",
+           closeOnConfirm: true,
+           closeOnCancel: true
+       }, function (result) {
+           if (result) {
+               $.ajax({
+                   type: "POST",
+                   url: approve_url + '/' + item.attr('data-id'),
+                   success: function (response) {
+                       if(response.status == 200){
+                           vex.dialog.alert(response.message);
+                       }else if(response.status == 201){
+                           vex.dialog.alert(response.message);
+                           window.location.href = response.link;
+                       }else if(response.status == 202){
+                           vex.dialog.alert(response.message);
+                           loadURI(response.path);
+                       }else if(response.status == 203){
+                           vex.dialog.alert(response.message);
+                           if(response.from == 'prestasi'){
+                               primary_table.ajax.reload(null, false);
+                           }else if(response.from == 'kegiatan'){
+                            primary_table2.ajax.reload(null, false);
+                           }
+                           else{
+                               primary_table3.ajax.reload(null, false);
+                           }
+                       }else if(response.status == 300){
+                           vex.dialog.alert(response.message);
+                       }
+                   },
+                   complete: function() {
+                       $('button').removeAttr('disabled', 'disabled');
+                   }
+               });
+           } else {
+               $('button').removeAttr('disabled', 'disabled');
+           }
+       });
+   }
+
+</script>
+
+
+
+
+
 <script>
 
     var modul_url       = '{{Request::segment(2)}}';
@@ -225,112 +376,62 @@
         } );
     } ).draw();
 
-</script>
+    //data informasi tambahan
 
-<script type="text/javascript">
+    var datatable_url_kegiatan   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/informasi-tambahan/datatables/'+id_siswa+'/'+param;
+    var approve_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/informasi-tambahan';
+    var reject_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/informasi-tambahan';
+    var edit_kegiatan =  base_url + '/' + role_url + '#' + modul_url + '/' + 'edit-informasi-tambahan-siswa';
 
-     function rejectAction(reject_url, element){
-        var item = $(element);
-        $('button').attr('disabled', 'disabled');
-
-        swal({
-            title: "Are you sure?",
-            text: "For Reject this",
-            type: "input",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, reject it!",
-            cancelButtonText: "No, cancel!",
-            closeOnConfirm: true,
-            closeOnCancel: true,
-            inputPlaceholder: "Alasan Ditolak"
-        }, function (result) {
-            if (result) {
-                $.ajax({
-                    type: "POST",
-                    url: reject_url + '/' + item.attr('data-id'),
-                    data : {keterangan:result},
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            if(response.from == 'prestasi'){
-                                primary_table.ajax.reload(null, false);
-                            }
-                            else{
-                                primary_table2.ajax.reload(null, false);
-                            }
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
-                        }
-                    },
-                    complete: function() {
-                        $('button').removeAttr('disabled', 'disabled');
+        var primary_table3 = $('#primary_table3').DataTable({
+        processing: true,
+        serverSide: true,
+        responsive: true,
+        ajax: {
+            url: datatable_url_kegiatan,
+            type: 'GET'
+        },
+        columns: [
+            { data: null, searchable: false, orderable: false },
+            { data: 'jenis_informasi_tambahan', name: 'jenis_informasi_tambahan' },
+            { data: 'nm_informasi_tambahan', name: 'nm_informasi_tambahan'},
+            { data: 'nm_informasi_tambahan_eng', name: 'nm_informasi_tambahan_eng'},
+            { data: 'keterangan', name: 'keterangan', searchable: false, orderable: false,
+                render:function(data){
+                    return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
+                }
+            },
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function(data){
+                    html = '';
+                    html += ' <a class="target-link btn btn-warning" href="'+ edit_kegiatan + '/' + data.id +'">'+
+                        'Edit'+
+                        '</a> '
+                    if(data.status==0){ 
+                    html += '<button class="btn btn-info" onclick="approveAction(\''+ approve_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    'Aprrove'+
+                    '</button>';
+                    html += ' <button class="btn btn-danger" onclick="rejectAction(\''+ reject_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    'Reject'+
+                    '</button>';
+                        return html;
                     }
-                });
-            }else{
-                alert("Alasan Ditolak Harus Diisi");
-                $('button').removeAttr('disabled', 'disabled');
-                return false
-            }
-        });
-    }
-    
-    function approveAction(approve_url, element){
-        var item = $(element);
-        $('button').attr('disabled', 'disabled');
-
-        swal({
-            title: "Are you sure?",
-            text: "For Approve this",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, approve it!",
-            cancelButtonText: "No, cancel!",
-            closeOnConfirm: true,
-            closeOnCancel: true
-        }, function (result) {
-            if (result) {
-                $.ajax({
-                    type: "POST",
-                    url: approve_url + '/' + item.attr('data-id'),
-                    success: function (response) {
-                        if(response.status == 200){
-                            vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
-                            vex.dialog.alert(response.message);
-                            window.location.href = response.link;
-                        }else if(response.status == 202){
-                            vex.dialog.alert(response.message);
-                            loadURI(response.path);
-                        }else if(response.status == 203){
-                            vex.dialog.alert(response.message);
-                            if(response.from == 'prestasi'){
-                                primary_table.ajax.reload(null, false);
-                            }
-                            else{
-                                primary_table2.ajax.reload(null, false);
-                            }
-                        }else if(response.status == 300){
-                            vex.dialog.alert(response.message);
-                        }
-                    },
-                    complete: function() {
-                        $('button').removeAttr('disabled', 'disabled');
+                    else{
+                        return html;
                     }
-                });
-            } else {
-                $('button').removeAttr('disabled', 'disabled');
+                }
             }
-        });
-    }
+        ],
+        columnDefs: [
+            { className: 'text-center', targets: [4] },
+        ]
+    });
+
+    primary_table3.on( 'draw', function () {
+        primary_table3.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = start + i + 1;
+        } );
+    } ).draw();
 
 </script>

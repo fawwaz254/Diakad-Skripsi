@@ -87,6 +87,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 				Route::get('datatables', 'Siswa\SKPI\DataPrestasiSiswaController@datatablesDataPrestasiSiswa');
 			});
+			Route::group(array('prefix' => 'informasi_tambahan'), function () {
+				Route::get('/', 'Siswa\SKPI\InformasiTambahanController@viewInformasiTambahan');
+				Route::get('add', 'Siswa\SKPI\InformasiTambahanController@viewAddInformasiTambahan');
+				Route::get('edit/{id}', 'Siswa\SKPI\InformasiTambahanController@viewEditInformasiTambahan');
+				Route::post('action/{mode}/{id}', 'Siswa\SKPI\InformasiTambahanController@actionInformasiTambahan');
+
+				Route::get('datatables', 'Siswa\SKPI\InformasiTambahanController@datatablesInformasiTambahan');
+			});
+
+
 		});
 
 		/** ==== MODUL AKADEMIK ==== **/
