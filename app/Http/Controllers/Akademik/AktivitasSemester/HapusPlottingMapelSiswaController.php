@@ -56,18 +56,18 @@ class HapusPlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_semester' =>'required'
+            'id_semester' => 'required'
         ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'aktivitas-semester/hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa/'.$input->id_semester
+                'path' => 'aktivitas-semester/hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa/' . $input->id_semester
             ];
         }
     }
@@ -79,7 +79,7 @@ class HapusPlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $semester   = Semester::where('id_semester', '=', $id)->first();
-       
+
         return view('akademik/aktivitas-semester/hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa', compact('auth_data', 'semester', 'id'));
     }
 
@@ -91,9 +91,9 @@ class HapusPlottingMapelSiswaController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_jadwal = JadwalKelasMp::with('ruangan', 'jadwal_hari', 'jadwal_jam_mulai', 'jadwal_jam_selesai', 'kelas_mp')
-                                        ->whereHas('kelas_mp', function ($q) use ($semester_aktif) {
-                                            $q->where('id_semester', $semester_aktif->id_semester);
-                                        })->where('id_kelas_mp', $id_kelas_mp)->get();
+            ->whereHas('kelas_mp', function ($q) use ($semester_aktif) {
+                $q->where('id_semester', $semester_aktif->id_semester);
+            })->where('id_kelas_mp', $id_kelas_mp)->get();
 
         $data_kelas = KelasMp::with('kelas', 'mata_pelajaran')->where('id_kelas_mp', $id_kelas_mp)->first();
 
@@ -118,19 +118,19 @@ class HapusPlottingMapelSiswaController extends BaseController
             ->where('id_semester', '=', $id_semester);
 
         return Datatables::of($list_data)
-                ->addColumn('jml_siswa', function ($item) {
-                    return $item->pengambilan_mp->count();
-                })
-                ->addColumn('jml_jadwal', function ($item) {
-                    return $item->jadwal_kelas_mp->count();
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_kelas_mp
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('jml_siswa', function ($item) {
+                return $item->pengambilan_mp->count();
+            })
+            ->addColumn('jml_jadwal', function ($item) {
+                return $item->jadwal_kelas_mp->count();
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_kelas_mp
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function actionHapusPlottingMapelSiswa(Request $request)
@@ -183,7 +183,7 @@ class HapusPlottingMapelSiswaController extends BaseController
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
                     'message'   =>  'Delete Plotting Mapel Siswa successfully',
-                    'path'      =>  'aktivitas-semester/hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/'.$input->id_kelas_mp
+                    'path'      =>  'aktivitas-semester/hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/' . $input->id_kelas_mp
                 ];
             } catch (\Exception $e) {
                 DB::rollback();

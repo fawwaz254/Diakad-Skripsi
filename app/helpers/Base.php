@@ -31,24 +31,18 @@ if (!function_exists('auth_data')) {
 
 if (!function_exists('get_keterangan_kelas')) {
 
-    function get_keterangan_kelas($id_pengguna){
-        
-$siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
-if($siswa){
-    $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
-    
-}
+    function get_keterangan_kelas($id_pengguna)
+    {
 
-else{
-    $kelas = null;
-}
-return $kelas;
-
-
-     
+        $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
+        if ($siswa) {
+            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
+        } else {
+            $kelas = null;
+        }
+        return $kelas;
     }
 }
-
 
 
 if (!function_exists('generate_id')) {
@@ -97,8 +91,6 @@ if (!function_exists('id_guru')) {
         return CategoriFileGuru::where('id_pengguna', $id_pengguna)->get();
     }
 }
-
-
 
 
 if (!function_exists('storeFileToCloud')) {
