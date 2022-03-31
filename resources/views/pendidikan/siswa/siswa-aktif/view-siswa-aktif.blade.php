@@ -27,7 +27,9 @@
                                     <td>{{$jurusan->nm_jurusan}}</td>
                                     @foreach($data_tingkat as $tingkat)
                                         @php
-                                            $count_siswa_tingkat = \App\Models\Siswa::whereHas('kelas', function($q) use ($tingkat, $jurusan) { $q->where('tingkat', $tingkat->tingkat)->where('id_jurusan', $jurusan->id_jurusan); })
+                                            $count_siswa_tingkat = \App\Models\Siswa::query()
+                                                                                        ->whereHas('kelas', function($q) use ($tingkat, $jurusan) { $q->where('tingkat', $tingkat->tingkat)->where('id_jurusan', $jurusan->id_jurusan); })
+                                                                                        ->whereHas('pengguna.status_pengguna', function($q) { $q->where('aktif_status_pengguna', 1); })
                                                                                         ->whereNotNull('id_kelas')->count();
                                         @endphp
                                         <td style="text-align:center">{{$count_siswa_tingkat}} Siswa</td>
