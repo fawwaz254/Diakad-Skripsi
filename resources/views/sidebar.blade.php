@@ -4,10 +4,23 @@ $route_modul = Request::segment(2);
 $route_menu = Request::segment(3);
 
 $path = Request::fullUrl();
+
+
+
+
+
 $role_aktif = auth_data()->role_aktif->id_role;
 $category_file_role = category_file_role($role_aktif);
 $id_pengguna = auth_data()->pengguna->id_pengguna;
 $id_guru_mgmp = id_guru($id_pengguna);
+
+$detail_kelas = get_keterangan_kelas($id_pengguna);
+
+
+
+
+
+
 
 @endphp
 
@@ -84,7 +97,15 @@ $id_guru_mgmp = id_guru($id_pengguna);
                                             @else
                                                 <a href="javascript:void(0);" class="waves-effect waves-block">
                                         @endif
+
+                                        {{-- @if($menu->nm_menu == 'Informasi Tambahan' && $detail_kelas->keterangan_kelas !== 'Internasional')
+                                        
+                                         @else
+                                        
                                         {{ $menu->nm_menu }}
+                                        @endif --}}
+                                        {{ $menu->nm_menu }}
+                                        
                                         </a>
                                     </li>
                                 @endforeach

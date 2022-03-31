@@ -22,7 +22,7 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
-
+use App\Models\InformasiTambahan;
 use Auth;
 use DB;
 use Session;
@@ -75,7 +75,39 @@ class ApprovePrestasiSiswaController extends BaseController{
                     ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->get();
 
-        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi',compact('auth_data','siswa','prestasi','kegiatan'));
+                    $informasi_tambahan_ekstrakurikuler = InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+                    ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('informasi_tambahan.status',1)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('jenis_informasi_tambahan', '=', 'ekstrakurikuler')
+                    ->get();
+
+                    $informasi_tambahan_kegiatan_sosial = InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+                    ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('informasi_tambahan.status',1)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('jenis_informasi_tambahan', '=', 'kegiatan_sosial')
+                    ->get();
+
+                    $informasi_tambahan_kegiatan_kegiatan_melatih_keterampilan_hidup = InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+                    ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('informasi_tambahan.status',1)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('jenis_informasi_tambahan', '=', 'kegiatan_melatih_keterampilan_hidup')
+                    ->get();
+                    
+                    $informasi_tambahan =  InformasiTambahan::where('informasi_tambahan.id_siswa', $id)
+                    ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('informasi_tambahan.status',1)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                     ->get();
+
+                   
+        return view('kesiswaan/skpi/approve-prestasi-siswa/print-skpi',compact('auth_data','siswa','prestasi','kegiatan','informasi_tambahan_ekstrakurikuler','informasi_tambahan_kegiatan_sosial','informasi_tambahan_kegiatan_kegiatan_melatih_keterampilan_hidup','informasi_tambahan'));
 
     }
 
@@ -136,6 +168,56 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->make(true);
 
     }
+
+    public function datatablesInformasiTambahan(Request $request, $id,$param){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $siswa =Siswa::findOrFail($id);
+
+    	$list_data = InformasiTambahan::Select(
+        			'informasi_tambahan.id_informasi_tambahan',
+                    'informasi_tambahan.jenis_informasi_tambahan',
+        			'informasi_tambahan.nm_informasi_tambahan',
+                    'informasi_tambahan.nm_informasi_tambahan_eng',
+        			'informasi_tambahan.status'
+        			);
+
+        if($param == 0) $list_data = $list_data->where('status','!=',0)->get();
+        else $list_data = $list_data->where('status',0)->get();
+
+        return Datatables::of($list_data)
+        				->addColumn('keterangan', function ($item) {
+		                    if ($item->status == 0) {
+		                        $status = 'Belum Diapprove';
+		                        $color = 'pink';
+		                    } elseif ($item->status== 1) {
+		                        $status = 'Sudah Diapprove';
+		                        $color = 'teal';
+		                    }
+                            elseif ($item->status== 10) {
+                                $status = 'Reject';
+                                $color = 'red';
+                            }
+		                    $data = array(
+		                        'status' => $status,
+		                        'color'	 => $color
+		                    );
+		                    return $data;
+		                })
+        				->addColumn('action', function($item){
+		                    $data = array(
+		                        'id' => $item->id_informasi_tambahan,
+		                        'status'=>$item->status
+		                    );
+		                    return $data;
+		                })
+        ->make(true);
+
+    }
+
+
+
 
     public function datatablesPrestasiApprovePrestasiSiswa(Request $request,$id,$param)
     {
@@ -273,6 +355,18 @@ class ApprovePrestasiSiswaController extends BaseController{
             $kegiatan->save();
 
     	}
+        elseif($data=='informasi-tambahan'){
+
+            $from = 'informasi-tambahan';
+
+    		$kegiatan = InformasiTambahan::findOrFail($id);
+    		$kegiatan->status = 1;
+    		$kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_at = $now;
+
+            $kegiatan->save();
+
+        }
 
     	 return [
                 'status' => 203, // SUCCESS AND LOAD TABLE
@@ -314,6 +408,17 @@ class ApprovePrestasiSiswaController extends BaseController{
 
             $kegiatan->save();
 
+        }
+        elseif($data=='informasi-tambahan'){
+            $from = 'informasi-tambahan';
+
+            $kegiatan = InformasiTambahan::findOrFail($id);
+            $kegiatan->status = 10;
+            $kegiatan->keterangan = $input->keterangan;
+            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_at = $now;
+
+            $kegiatan->save();
         }
 
          return [
@@ -361,6 +466,16 @@ class ApprovePrestasiSiswaController extends BaseController{
                     $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
                     
                 })
+                ->orWhereHas('informasi_tambahan',function($q) use($auth_data,$param,$wali_kelas){
+                    if($param == 0){
+                        $q->where('status','!=',0);
+                    }
+                    else{
+                        $q->where('status',0);
+                    }
+                    $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                    
+                })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                 ->join('kelas','siswa.id_kelas','kelas.id_kelas')
                 ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
@@ -370,7 +485,12 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
                     'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
                     'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
-                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); },
+                    'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
+                    'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
+                    'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
+                   
+        
                 ]);
 
             }
@@ -387,7 +507,12 @@ class ApprovePrestasiSiswaController extends BaseController{
                                 'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
                                 'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
                                 'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
-                                'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                                'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); },
+                                'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
+                                'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
+                                'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
+                                
+                    
                             ]);
 
             }
@@ -416,6 +541,14 @@ class ApprovePrestasiSiswaController extends BaseController{
                         $q->where('status',0);
                     }
                 })
+                ->orWhereHas('informasi_tambahan',function($q) use($auth_data,$param){
+                    if($param == 0){
+                        $q->where('status','!=',0);
+                    }
+                    else{
+                        $q->where('status',0);
+                    }
+                })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                 ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                 ->join('kelas','siswa.id_kelas','kelas.id_kelas')
@@ -425,7 +558,11 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
                     'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
                     'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
-                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); },
+                    'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
+                    'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
+                    'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
+                   
                 ]);
 
             }
@@ -442,7 +579,11 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
                     'prestasi_siswa as prestasi_siswa_reject' => function($q){ $q->where('status',10); },
                     'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
-                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                    'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); },
+                    'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
+                    'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
+                    'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
+                   
                 ]);
 
             }
@@ -459,6 +600,10 @@ class ApprovePrestasiSiswaController extends BaseController{
                                  return '<button class="btn bg-pink">'.$item->kegiatan_siswa_reject.' reject</button>
                                 <button class="btn bg-teal">'.$item->kegiatan_siswa_approved.' approved</button>';
                             })
+                            ->addColumn('informasi_tambahan',function($item){
+                                return '<button class="btn bg-pink">'.$item->informasi_tambahan_reject.' reject</button>
+                               <button class="btn bg-teal">'.$item->informasi_tambahan_approved.' approved</button>';
+                           })
                             ->addColumn('action', function ($item) {
                                 $data = array(
                                     'id' => $item->id_siswa,
@@ -466,7 +611,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                                 );
                                 return $data;
                             })
-                             ->rawColumns(['prestasi','kegiatan'])
+                             ->rawColumns(['prestasi','kegiatan','informasi_tambahan'])
                             ->make(true);
         }
 
@@ -478,13 +623,16 @@ class ApprovePrestasiSiswaController extends BaseController{
                             ->addColumn('kegiatan',function($item){
                                  return '<button class="btn bg-pink">'.$item->kegiatan_siswa_not_approved.' belum di approve</button>';
                             })
+                            ->addColumn('informasi_tambahan',function($item){
+                                return '<button class="btn bg-pink">'.$item->informasi_tambahan_not_approved.' belum di approve</button>';
+                           })
                             ->addColumn('action', function ($item) {
                                 $data = array(
                                     'id' => $item->id_siswa
                                 );
                                 return $data;
                             })
-                             ->rawColumns(['prestasi','kegiatan'])
+                             ->rawColumns(['prestasi','kegiatan','informasi_tambahan'])
                             ->make(true);
         }
 

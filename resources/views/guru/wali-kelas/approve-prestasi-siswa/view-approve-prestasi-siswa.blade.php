@@ -55,7 +55,7 @@
                     return `<span class="badge bg-pink">`+data.kegiatan_siswa_not_approved+` belum diapprove</span> <span class="badge bg-teal">`+data.kegiatan_siswa_approved+` sudah diapprove</span>`
                 }
             },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
+                { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="'+ detail_url + '/' + data.id +'">'+
                     '    <i class="material-icons">edit</i>'+

@@ -97,6 +97,9 @@ class ApprovePrestasiSiswaController extends BaseController{
 
     }
 
+
+    
+
     public function datatablesPrestasiApprovePrestasiSiswa(Request $request,$id)
     {
         $input = (object) $request->input();
@@ -280,11 +283,13 @@ class ApprovePrestasiSiswaController extends BaseController{
 						->orWhereHas('prestasi_siswa',function($q) use($wali_kelas,$auth_data){
         					$q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas,'pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
         				})
+                       
 						->withCount([
 								'kegiatan_siswa as kegiatan_siswa_not_approved' => function($q){ $q->where('status',0); },
 								'kegiatan_siswa as kegiatan_siswa_approved' => function($q){ $q->where('status',1); },
 								'prestasi_siswa as prestasi_siswa_not_approved' => function($q){ $q->where('status',0); },
 								'prestasi_siswa as prestasi_siswa_approved' => function($q){ $q->where('status',1); }
+                               
 						])
 	                    ->join('pengguna', function ($q) {
 	                        $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
@@ -319,6 +324,7 @@ class ApprovePrestasiSiswaController extends BaseController{
 			                    );
 			                    return $data;
 			                })
+                           
 							->addColumn('action', function ($item) {
 			                    $data = array(
 			                        'id' => $item->id_siswa
