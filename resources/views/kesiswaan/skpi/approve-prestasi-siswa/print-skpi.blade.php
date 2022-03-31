@@ -567,7 +567,7 @@ text-align: center;
 @if($kegiatan->count()>0)
 <h6  style="margin-top: 15px;margin-left: 120px">C.	MACAM KEGIATAN
   @if($siswa->keterangan_kelas == 'Internasional')
-  <br><i>KINDS OF ACTIVITIES</i>
+  <br><i>Kinds Of Activities</i>
   @endif
 </h6>
 <table class="bg-color" style="width: 79%;
@@ -620,6 +620,107 @@ text-align: center;
   </tbody>
 </table>
 @endif
+
+{{-- //informasi tambahan --}}
+@if($informasi_tambahan->count()>0)
+<h6  style="margin-top: 15px;margin-left: 120px">D.	Informasi Tambahan
+  @if($siswa->keterangan_kelas == 'Internasional')
+  <br><i>Additional Information</i>
+  @endif
+</h6>
+<table class="bg-color" style="width: 79%;
+border-collapse: collapse;
+">
+    <tr>
+        <td>3.D1</td>
+        <td>Bahasa Internasional  
+       <br><i>International Language</i>
+        
+        </td>
+        <td>Bahasa Inggris
+         <br><i>English</i>
+         
+       
+    </tr>
+    <p style="color:white; display:none">{{ $no = 1}}</p>
+ 
+ {{-- //ektra --}}
+  
+    
+
+
+
+  	@if($informasi_tambahan_ekstrakurikuler->count()>0)	
+    <tr>
+      <p style="color:white; display:none">{{ $no++}}</p>
+    
+  			<td>3.D{{$no}}</td>
+     		<td>Ekstrakurikuler<br>
+        <i>Extracurricular</i></td>
+        <td>
+          @foreach($informasi_tambahan_ekstrakurikuler as $r)
+          {{$r->nm_informasi_tambahan}}<br>
+        <i>{{$r->nm_informasi_tambahan_eng}}</i>
+        
+        <br>  
+        @endforeach
+    
+      </td>
+ @endif   
+  
+    {{-- kegiatan sosial --}}
+
+    
+  	@if($informasi_tambahan_kegiatan_sosial->count()>0)	
+    <tr>
+      <p style="color:white; display:none">{{ $no++}}</p>
+    
+  			<td>3.D{{$no}}</td>
+     		<td>Kegiatan Sosial <br>
+        <i>Social Activities</i></td>
+        <td>
+          @foreach($informasi_tambahan_kegiatan_sosial as $r)
+          {{$r->nm_informasi_tambahan}}<br>
+        <i>{{$r->nm_informasi_tambahan_eng}}</i>
+        <br>
+        @endforeach
+    
+      
+      </td>
+
+      @endif   
+
+
+    {{-- Kegiatan Melatih Keterampilan Hidup --}}
+
+    
+  	@if($informasi_tambahan_kegiatan_kegiatan_melatih_keterampilan_hidup->count()>0)	
+    <tr>
+      <p style="color:white; display:none">{{ $no++}}</p>
+    
+      <td>3.D{{$no}}</td>
+     		<td>Kegiatan Sosial <br>
+        <i>Social Activities</i></td>
+        <td>
+          @foreach($informasi_tambahan_kegiatan_kegiatan_melatih_keterampilan_hidup as $r)
+          {{$r->nm_informasi_tambahan}}<br>
+        <i>{{$r->nm_informasi_tambahan_eng}}</i>
+        @endforeach
+
+        </td>
+
+      @endif   
+
+
+
+
+
+
+ 
+</table>
+@endif
+
+
 <br>
 <div class="avoid-break mt-4 mb-4">
   
