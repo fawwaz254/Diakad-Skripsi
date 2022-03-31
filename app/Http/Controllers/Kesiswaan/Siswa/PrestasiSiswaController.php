@@ -74,9 +74,9 @@ class PrestasiSiswaController extends BaseController
         $data_tingkat_prestasi = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         $prestasi = PrestasiSiswa::join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                        ->leftjoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-                        ->where('id_prestasi_siswa', '=', $id_prestasi_siswa)->first();
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->leftjoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->where('id_prestasi_siswa', '=', $id_prestasi_siswa)->first();
 
         // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
@@ -94,7 +94,7 @@ class PrestasiSiswaController extends BaseController
 
         return $data_siswa;
     }
-    
+
     public function datatablesPrestasiSiswa(Request $request)
     {
         $input = (object) $request->input();
@@ -122,60 +122,61 @@ class PrestasiSiswaController extends BaseController
             'p2.gelar_depan',
             'p2.gelar_belakang'
         )
-        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
-        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
-        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
-        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
-        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
-        ->orderBy('prestasi_siswa.created_at', 'desc')
-        ->orderBy('semester.thn_akademik_semester', 'desc')
-        ->orderBy('semester.nm_semester', 'desc')
-        ->where('prestasi_siswa.status',1)
-        // ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+            ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+            ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+            ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+            ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->orderBy('prestasi_siswa.created_at', 'desc')
+            ->orderBy('semester.thn_akademik_semester', 'desc')
+            ->orderBy('semester.nm_semester', 'desc')
+            ->where('prestasi_siswa.status', 1)
+            // ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
 
         return Datatables::of($list_data)
-                ->addColumn('semester', function ($item) {
-                    return $item->nm_semester.' ('.$item->tahun_ajaran.')';
-                })
-                ->addColumn('jenis_prestasi', function ($item) {
-                    if ($item->jenis_prestasi_siswa == 1) {
-                        return "Sains";
-                    } elseif ($item->jenis_prestasi_siswa == 2) {
-                        return "Seni";
-                    } elseif ($item->jenis_prestasi_siswa == 3) {
-                        return "Olahraga";
-                    } elseif ($item->jenis_prestasi_siswa == 99) {
-                        return "Lain-Lain";
-                    }
-                })
-              ->addColumn('tgl_prestasi_siswa', function ($item) {
-                  return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
-              })
-              ->addColumn('nm_guru_pendamping', function ($item) {
-                  if (! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                      return $item->gelar_depan." ".$item->nm_guru_pendamping.", ".$item->gelar_belakang;
-                  } elseif (! empty($item->gelar_depan)) {
-                      return $item->gelar_depan." ".$item->nm_guru_pendamping;
-                  } elseif (! empty($item->gelar_belakang)) {
-                      return $item->nm_guru_pendamping.", ".$item->gelar_belakang;
-                  } else {
-                      return $item->nm_guru_pendamping;
-                  }
-              })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_prestasi_siswa,
-                        'link_sertif_prestasi_siswa' => $item->link_sertif_prestasi_siswa
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addIndexColumn()
+            ->addColumn('semester', function ($item) {
+                return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+            })
+            ->addColumn('jenis_prestasi', function ($item) {
+                if ($item->jenis_prestasi_siswa == 1) {
+                    return "Sains";
+                } elseif ($item->jenis_prestasi_siswa == 2) {
+                    return "Seni";
+                } elseif ($item->jenis_prestasi_siswa == 3) {
+                    return "Olahraga";
+                } elseif ($item->jenis_prestasi_siswa == 99) {
+                    return "Lain-Lain";
+                }
+            })
+            ->addColumn('tgl_prestasi_siswa', function ($item) {
+                return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
+            })
+            ->addColumn('nm_guru_pendamping', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_guru_pendamping . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_guru_pendamping;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_guru_pendamping . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_guru_pendamping;
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_prestasi_siswa,
+                    'link_sertif_prestasi_siswa' => $item->link_sertif_prestasi_siswa
+                );
+                return $data;
+            })
+            ->make(true);
     }
-    
+
     public function actionPrestasiSiswa(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
@@ -191,7 +192,7 @@ class PrestasiSiswaController extends BaseController
             'jenis_prestasi_siswa' => 'required',
             'link_sertifikat' => 'required',
             'lokasi_prestasi_siswa' => 'required', 'penyelenggara_prestasi_siswa' => 'required',
-            'peringkat_prestasi_siswa' => 'required' ,'tgl_prestasi_siswa' => 'required'
+            'peringkat_prestasi_siswa' => 'required', 'tgl_prestasi_siswa' => 'required'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -203,9 +204,9 @@ class PrestasiSiswaController extends BaseController
             // ACTION ADD
 
             if ($mode == 'add') {
-                if($siswa = Siswa::find($input->id_siswa)){
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+                if ($siswa = Siswa::find($input->id_siswa)) {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                     $prestasi                                 = new PrestasiSiswa;
                     $prestasi->id_prestasi_siswa              = $id;
                     $prestasi->id_siswa                       = $input->id_siswa;
@@ -230,7 +231,7 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->save();
 
                     $token_siswa = $siswa->pengguna->api_token;
-                    if(!empty($token_siswa)){
+                    if (!empty($token_siswa)) {
                         $message = 'Kamu telah tercatat mendapatkan prestasi';
                         $send_data = array(
                             'title' => 'Informasi',
@@ -241,7 +242,7 @@ class PrestasiSiswaController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $siswa->pengguna->id_pengguna,
                             'id_sekolah' => $siswa->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
@@ -250,12 +251,12 @@ class PrestasiSiswaController extends BaseController
 
                         LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
                     }
-                    
-                    if(!empty($siswa->id_wali_murid)){
+
+                    if (!empty($siswa->id_wali_murid)) {
                         $wali_murid = WaliMurid::find($siswa->id_wali_murid);
-                        if($wali_murid){
+                        if ($wali_murid) {
                             $token_wali_murid = $wali_murid->pengguna->api_token;
-                            if(!empty($token_wali_murid)){
+                            if (!empty($token_wali_murid)) {
                                 $message = 'Putra/Putri Anda telah tercatat mendapatkan prestasi';
                                 $send_data = array(
                                     'title' => 'Informasi',
@@ -266,7 +267,7 @@ class PrestasiSiswaController extends BaseController
                                 );
 
                                 $notifikasi = array(
-                                    'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                    'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                                     'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                     'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                     'isi_notifikasi' => $message,
@@ -276,7 +277,6 @@ class PrestasiSiswaController extends BaseController
                                 LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                             }
                         }
-                        
                     }
 
                     return [
@@ -284,16 +284,16 @@ class PrestasiSiswaController extends BaseController
                         'path' => 'data-kesiswaan/prestasi-siswa',
                         'message' => 'Save Data Prestasi Siswa successfully'
                     ];
-                }else{
+                } else {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Update Data Prestasi siswa gagal'
                     ];
                 }
             } elseif ($mode == 'edit') {
-                if($siswa = Siswa::find($input->id_siswa)){
+                if ($siswa = Siswa::find($input->id_siswa)) {
                     $prestasi                                 = PrestasiSiswa::find($id);
-                    if($input->id_siswa != $prestasi->id_siswa){
+                    if ($input->id_siswa != $prestasi->id_siswa) {
                         $prestasi->id_siswa                       = $input->id_siswa;
                         $prestasi->id_kelas                       = $siswa->id_kelas;
                     }
@@ -318,7 +318,7 @@ class PrestasiSiswaController extends BaseController
                         'path' => 'data-kesiswaan/prestasi-siswa',
                         'message' => 'Save Data Prestasi Siswa successfully'
                     ];
-                }else{
+                } else {
                     return [
                         'status' => 300, // FAILED
                         'message' => 'Update Data Prestasi siswa gagal'
@@ -332,9 +332,9 @@ class PrestasiSiswaController extends BaseController
                 $prestasi->delete();
 
                 return [
-                        'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Prestasi Siswa successfully'
-                    ];
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Data Prestasi Siswa successfully'
+                ];
             }
         }
     }

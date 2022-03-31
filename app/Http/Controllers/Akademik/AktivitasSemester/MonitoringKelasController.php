@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Akademik\LibAkademik;
-
+use App\Models\Semester;
 use Auth;
 use DB;
 use Session;
@@ -44,19 +44,19 @@ class MonitoringKelasController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_semester' =>'required'
+            'id_semester' => 'required'
         ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas/'.$input->id_semester
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'aktivitas-semester/monitoring-kelas/view-semester-monitoring-kelas/' . $input->id_semester
+            ];
         }
     }
 
@@ -77,9 +77,10 @@ class MonitoringKelasController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_semester = PengambilanMp::where('id_kelas_mp', '=', $id)->first();
+        // $data_semester = PengambilanMp::where('id_kelas_mp', '=', $id)->first();
+        $semester = Semester::where('is_aktif_semester', 1)->first();
 
-        return view('akademik/aktivitas-semester/monitoring-kelas/view-daftar-siswa', compact('auth_data', 'data_semester', 'id'));
+        return view('akademik/aktivitas-semester/monitoring-kelas/view-daftar-siswa', compact('auth_data', 'semester', 'id'));
     }
 
     public function datatablesMonitoringKelas(Request $request, $id)
@@ -103,25 +104,25 @@ class MonitoringKelasController extends BaseController
             });
 
         return Datatables::of($list_data)
-                ->addColumn('nm_pengampu', function ($item) {
-                    if (!empty($item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna)) {
-                        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->gelar_depan.' '.
-                                $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna.' '.
-                                $item->kelas_mp->pengampu_mp_utama->guru->pengguna->gelar_belakang;
-                    } else {
-                        return '-';
-                    }
-                })
-                ->addColumn('jml_siswa', function ($item) {
-                    return $item->kelas_mp->pengambilan_mp->count();
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->kelas_mp->id_kelas_mp
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_pengampu', function ($item) {
+                if (!empty($item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna)) {
+                    return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->gelar_depan . ' ' .
+                        $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna . ' ' .
+                        $item->kelas_mp->pengampu_mp_utama->guru->pengguna->gelar_belakang;
+                } else {
+                    return '-';
+                }
+            })
+            ->addColumn('jml_siswa', function ($item) {
+                return $item->kelas_mp->pengambilan_mp->count();
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->kelas_mp->id_kelas_mp
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesDaftarSiswa(Request $request, $id)
@@ -133,6 +134,6 @@ class MonitoringKelasController extends BaseController
             ->where('status_apv_pengambilan_mp', '=', '1');
 
         return Datatables::of($list_data)
-                                ->make(true);
+            ->make(true);
     }
 }
