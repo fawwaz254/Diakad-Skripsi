@@ -642,7 +642,7 @@ border-collapse: collapse;
          
        
     </tr>
-    <p style="color:white; display:none">{{ $no = 1}}</p>
+    <p style="display:none">{{ $no = 1}}</p>
  
  {{-- //ektra --}}
   
@@ -652,17 +652,17 @@ border-collapse: collapse;
 
   	@if($informasi_tambahan_ekstrakurikuler->count()>0)	
     <tr>
-      <p style="color:white; display:none">{{ $no++}}</p>
+      <p style=" display:none">{{ $no++}}</p>
     
   			<td>3.D{{$no}}</td>
      		<td>Ekstrakurikuler<br>
         <i>Extracurricular</i></td>
-        <td>
+        <td style="width: 55%;">
           @foreach($informasi_tambahan_ekstrakurikuler as $r)
           {{$r->nm_informasi_tambahan}}<br>
         <i>{{$r->nm_informasi_tambahan_eng}}</i>
-        
-        <br>  
+                <br>
+            
         @endforeach
     
       </td>
@@ -673,12 +673,12 @@ border-collapse: collapse;
     
   	@if($informasi_tambahan_kegiatan_sosial->count()>0)	
     <tr>
-      <p style="color:white; display:none">{{ $no++}}</p>
+      <p style=" display:none">{{ $no++}}</p>
     
   			<td>3.D{{$no}}</td>
      		<td>Kegiatan Sosial <br>
         <i>Social Activities</i></td>
-        <td>
+        <td style="width: 55%;">
           @foreach($informasi_tambahan_kegiatan_sosial as $r)
           {{$r->nm_informasi_tambahan}}<br>
         <i>{{$r->nm_informasi_tambahan_eng}}</i>
@@ -696,12 +696,12 @@ border-collapse: collapse;
     
   	@if($informasi_tambahan_kegiatan_kegiatan_melatih_keterampilan_hidup->count()>0)	
     <tr>
-      <p style="color:white; display:none">{{ $no++}}</p>
+      <p style="display:none">{{ $no++}}</p>
     
       <td>3.D{{$no}}</td>
-     		<td>Kegiatan Sosial <br>
+     		<td >Kegiatan Sosial <br>
         <i>Social Activities</i></td>
-        <td>
+        <td style="width: 55%;">
           @foreach($informasi_tambahan_kegiatan_kegiatan_melatih_keterampilan_hidup as $r)
           {{$r->nm_informasi_tambahan}}<br>
         <i>{{$r->nm_informasi_tambahan_eng}}</i>
@@ -758,7 +758,9 @@ border-collapse: collapse;
                 <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                 @if($auth_data->sekolah_data->nip_kepala_sekolah == NULL)
                 @else
-                <b><u>{{ $auth_data->sekolah_data->nip_kepala_sekolah }}</u></b>
+                <div style="margin-top: -4px">
+                <b>{{ $auth_data->sekolah_data->nip_kepala_sekolah }}</b>
+                </div>
                 @endif
             </td>
         </tr>
