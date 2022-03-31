@@ -6,7 +6,9 @@ use App\Models\CategoriFileGuru;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\Kelas;
+use App\Models\Siswa;
 
 function minimalisTime($time)
 {
@@ -24,6 +26,29 @@ if (!function_exists('auth_data')) {
         return Session::get('auth_data');
     }
 }
+
+
+
+if (!function_exists('get_keterangan_kelas')) {
+
+    function get_keterangan_kelas($id_pengguna){
+        
+$siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
+if($siswa){
+    $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
+    
+}
+
+else{
+    $kelas = null;
+}
+return $kelas;
+
+
+     
+    }
+}
+
 
 
 if (!function_exists('generate_id')) {
