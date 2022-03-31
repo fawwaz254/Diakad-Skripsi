@@ -98,13 +98,13 @@ $detail_kelas = get_keterangan_kelas($id_pengguna);
                                                 <a href="javascript:void(0);" class="waves-effect waves-block">
                                         @endif
 
-                                        {{-- @if($menu->nm_menu == 'Informasi Tambahan' && $detail_kelas->keterangan_kelas !== 'Internasional')
+                                        @if($menu->nm_menu == 'Informasi Tambahan' && $detail_kelas->keterangan_kelas !== 'Internasional')
                                         
                                          @else
                                         
                                         {{ $menu->nm_menu }}
-                                        @endif --}}
-                                        {{ $menu->nm_menu }}
+                                        @endif
+                                        {{-- {{ $menu->nm_menu }} --}}
                                         
                                         </a>
                                     </li>
