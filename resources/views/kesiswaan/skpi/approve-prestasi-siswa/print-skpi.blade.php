@@ -758,7 +758,9 @@ border-collapse: collapse;
                 <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                 @if($auth_data->sekolah_data->nip_kepala_sekolah == NULL)
                 @else
-                <b><u>{{ $auth_data->sekolah_data->nip_kepala_sekolah }}</u></b>
+                <div style="margin-top: -4px">
+                <b>{{ $auth_data->sekolah_data->nip_kepala_sekolah }}</b>
+                </div>
                 @endif
             </td>
         </tr>
