@@ -47,6 +47,16 @@ class Pengguna extends Authenticatable
 
     protected $guarded = [];
 
+
+
+
+    public function category_file_guru()
+    {
+        return $this->hasMany(CategoriFileGuru::class, 'category_file_mgmp_id', 'category_file_mgmp_id');
+    }
+
+
+
     public function getIsPegawaiAttribute()
     {
         return $this->status_join_table === self::PEGAWAI;

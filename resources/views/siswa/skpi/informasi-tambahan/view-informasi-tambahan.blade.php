@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#skpi/informasi_tambahan/add')}}"><i class="material-icons">note_add</i><span>Tambah Prestasi Siswa</span></a>
+            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#skpi/informasi_tambahan/add')}}"><i class="material-icons">note_add</i><span>Tambah Informasi Tambahan</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -9,7 +9,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>Data Prestasi Siswa</h2>
+                        <h2>Data Informasi Tambahan</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -38,7 +38,7 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url       = '{{Request::segment(2)}}';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'informasi_tambahan/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'data-prestasi-siswa/edit';
+    var edit_url        = role_url + '#' + modul_url + '/' + 'informasi_tambahan/edit';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-prestasi-siswa/action/delete';
 
     var primary_table = $('#primary_table').DataTable({
