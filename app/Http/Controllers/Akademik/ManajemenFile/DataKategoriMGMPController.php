@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\CategoriFileGuru;
 use App\Models\CategoriFileMGMP;
 use App\Models\CategoryFileRole;
+use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Pengguna;
+use App\Models\SubCategoryFileMGMP;
 use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Auth;
@@ -72,9 +74,11 @@ class DataKategoriMGMPController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $mata_pelajaran = MataPelajaran::all();
+    
         $pengguna = Pengguna::where('status_join_table', 2)->get();
         // $pengguna = Role::where('id_role', '<>', '14')->get();
-        return view('akademik/manajemen-file/data-kategori/add-data-kategori', compact('auth_data', 'pengguna'));
+        return view('akademik/manajemen-file/data-kategori/add-data-kategori', compact('auth_data', 'pengguna','mata_pelajaran'));
     }
 
     public function editDataKategori(Request $request, $category_file_id = null)
@@ -83,11 +87,14 @@ class DataKategoriMGMPController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $mata_pelajaran = MataPelajaran::all();
+        $name = CategoriFileMGMP::find($category_file_id)->first();
         $data_kategori = CategoriFileGuru::where('category_file_mgmp_id', $category_file_id)->first();
-        $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_mgmp_id)->pluck('id_role');
-        $pengguna = Pengguna::with('role_pengguna')->where('status_join_table', 2)->get();
+        // $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_mgmp_id)->pluck('id_role');
+        $pengguna = Pengguna::where('status_join_table', 2)->get();
+$allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$category_file_id )->pluck('id_pengguna')->toArray();
 
-        return view('akademik/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role'));
+        return view('akademik/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna','mata_pelajaran','name'));
     }
 
     //action POST
@@ -129,6 +136,26 @@ class DataKategoriMGMPController extends BaseController
                         //  $datakategori_guru->category_file_mgmp_id = $datakategori->category_file_mgmp_id;
                         $datakategori_guru->save();
                     }
+
+                    $uuid1 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $subkategori = new SubCategoryFileMGMP(); 
+                    $subkategori->sub_category_file_id = $uuid1;
+                    $subkategori->sub_category_file_name = 'Folder Akademik';
+                    $subkategori->sub_category_file_explanation = 'untuk mengupload file original';
+                    $subkategori->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
+                    $subkategori->save();
+
+                    $uuid2 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $subkategori2 = new SubCategoryFileMGMP(); 
+                    $subkategori2->sub_category_file_id = $uuid2;
+                    $subkategori2->sub_category_file_name = 'Folder Guru';
+                    $subkategori2->sub_category_file_explanation = 'untuk mengupload file guru';
+                    $subkategori2->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
+                    $subkategori2->save();
+
+
+
+
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'mpmp/data-kategori-mapel',
@@ -141,9 +168,10 @@ class DataKategoriMGMPController extends BaseController
                     ];
                 }
             } elseif ($mode == 'edit') {
-                if ($input->allowed_role ?? false) {
+              
+               
                     // make object to find id
-                    $datakategori                               = CategoryFile::find($id);
+                    $datakategori                               = CategoriFileMGMP::find($id);
                     $datakategori->category_file_name           = $input->category_file_name;
                     $datakategori->category_file_explanation    = $input->category_file_explanation;
                     $datakategori->updated_by                   = $input->auth_data->pengguna->id_pengguna;
@@ -151,28 +179,24 @@ class DataKategoriMGMPController extends BaseController
                     $datakategori->save();
 
                     // replace category file role
-                    CategoryFileRole::where('category_file_id', $id)->delete();
+                    CategoriFileGuru::where('category_file_mgmp_id', $id)->delete();
                     $now = Carbon::now(env('APP_TIMEZONE', ''));
-                    foreach ($input->allowed_role as $key => $value) {
+                    foreach ($input->allowed_guru as $key => $value) {
                         $uuid = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $datakategori_role = new CategoryFileRole;
-                        $datakategori_role->category_file_role_id = $uuid;
-                        $datakategori_role->id_role = $input->allowed_role[$key];
-                        $datakategori_role->category_file_id = $id;
+                        $datakategori_role = new CategoriFileGuru();
+                        $datakategori_role->category_file_guru_id = $uuid;
+                        $datakategori_role->id_pengguna = $input->allowed_guru[$key];
+                        $datakategori_role->category_file_mgmp_id = $id;
                         $datakategori_role->save();
                     }
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'manajemen-file/data-kategori',
+                        'path' => 'mpmp/data-kategori-mapel',
+                      
                         'message' => 'Update Data Kategori Succesfully'
                     ];
-                } else {
-                    return [
-                        'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed to Edit Data Kategori'
-                    ];
-                }
+                
             } elseif ($mode == 'delete') {
                 if (!CategoriFileMGMP::where('category_file_mgmp_id', $id)->first()) {
                     return [

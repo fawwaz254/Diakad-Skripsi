@@ -28,7 +28,7 @@
                                    <i class="material-icons" style="color:#DAA520;font-size: 45px;">folder</i>
                                 </center>
                                 <center>
-                                    <span>{{$r->category_file_mgmp_id}}</span>                 
+                                    <span>{{$r->category_file_name}}</span>                 
                                 </center>
                             </div>
                             </a>

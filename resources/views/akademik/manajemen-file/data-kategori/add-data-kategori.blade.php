@@ -1,7 +1,7 @@
     <div class="container-fluid">
         <div class="block-header">
             <h2><a class="btn bg-blue waves-effect target-link"
-                    href="{{url(Request::segment(1).'#mpmp-file/data-kategori-mapel/')}}"><i
+                    href="{{url(Request::segment(1).'#mpmp/data-kategori-mapel/')}}"><i
                         class="material-icons">backspace</i><span>Kembali</span></a></h2>
         </div>
         <div class="row clearfix">
@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            TAMBAH DATA MATA PELAJARAN
+                            TAMBAH DATA KATEGORI MAPEL
                         </h2>
                     </div>
                     <div class="body">
@@ -17,27 +17,34 @@
                             action="{{url(Request::segment(1).'/'.Request::segment(2).'/data-kategori-mapel/action-data-kategori/add/0')}}">
                             {{csrf_field()}}
                             <h2 class="card-inside-title">
-                                Nama MATA PELAJARAN
+                                Nama Mapel
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control" name="category_file_name" required=""
-                                        aria-required="true" aria-invalid="true" value="">
+                                   
+
+
+                                        <select class="form-control show-tick" name="category_file_name" required="">
+                                            @foreach($mata_pelajaran as $r)
+                                                <option value="{{$r->nm_mata_pelajaran}}">{{$r->nm_mata_pelajaran}}</option>
+                                            @endforeach
+                                        </select>
+
                                 </div>
+
+
+
                             </div>
                             <h2 class="card-inside-title">
-                                Penjelasan MATA PELAJARAN
+                                Jenjang Kelas 
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <textarea rows="4" class="form-control no-resize"
-                                                name="category_file_explanation" required="" aria-required="true"
-                                                aria-invalid="true" value=""></textarea>
-                                        </div>
-                                    </div>
+                                    <input type="text" class="form-control" name="category_file_explanation" required=""
+                                    aria-required="true" aria-invalid="true" value="">
+
                                 </div>
+                                
                             </div>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

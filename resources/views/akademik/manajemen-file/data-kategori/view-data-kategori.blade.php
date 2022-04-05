@@ -3,7 +3,7 @@
         <h2>
             <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#mpmp/data-kategori-mapel/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah Data Kategori</span></a>
+                    class="material-icons">note_add</i><span>Tambah Data Kategori Mapel</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -11,7 +11,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Kategori</h2>
+                    <h2>Data Kategori Mapel</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -21,9 +21,9 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Kategori File</th>
-                                    <th>Role Yang diizinkan mengakses</th>
-                                    <th>Keterangan Kategori File</th>
+                                    <th>Nama Mapel</th>
+                                    <th>Guru Yang diizinkan mengakses</th>
+                                    <th>Jenjang Kelas</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

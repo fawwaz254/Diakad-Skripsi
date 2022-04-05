@@ -221,7 +221,7 @@ class DataFileMGMPController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'manajemen-file/data-file',
+                    'path' => 'mpmp/data-file-mapel',
                     'message' => 'Save File Pegguna successfully'
                 ];
             }
