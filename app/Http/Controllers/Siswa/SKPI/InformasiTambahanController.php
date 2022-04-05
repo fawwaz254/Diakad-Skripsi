@@ -35,7 +35,23 @@ class InformasiTambahanController extends Controller
     }
 
     public function viewEditInformasiTambahan(Request $request,$id){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
+        // $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+        // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
+        // $ekskul = Ekskul::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+        // $guru = Guru::select(
+        //         'id_guru',
+        //         'p2.nm_pengguna as nm_guru_pendamping',
+        //         'p2.gelar_depan',
+        //         'p2.gelar_belakang')
+        //         ->Join('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+        //         ->get();
+
+        $informasi_tambahan = InformasiTambahan::findOrFail($id);
+        
+        return view('siswa/skpi/informasi-tambahan/edit-informasi-tambahan',compact('auth_data','informasi_tambahan'));
     }
 
     public function actionInformasiTambahan(Request $request, $mode , $id=null){

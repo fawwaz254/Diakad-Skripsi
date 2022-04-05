@@ -17,7 +17,7 @@
                             action="{{ url(Request::segment(1) .'/' .Request::segment(2) .'/data-sub-folder-kategori-mapel/action-data-sub-kategori/edit/' .$sub_data_kategori->sub_category_file_id) }}">
                             {{ csrf_field() }}
                             <h2 class="card-inside-title">
-                                Nama Sub Kategori File
+                                Nama Sub Folder Kategori Mapel
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -27,10 +27,13 @@
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
-                                Penjelasan Sub Kategori File
+                                Keterangan Sub Kategori Mapel
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+               
+
                                     <div class="form-group">
                                         <div class="form-line">
                                             <textarea rows="4" class="form-control no-resize" name="sub_category_file_explanation" required="" aria-required="true"

@@ -1,20 +1,20 @@
     <div class="container-fluid">
         <div class="block-header">
-            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#manajemen-file/data-sub-kategori/')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mpmp/data-sub-folder-kategori-mapel/')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
         </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            TAMBAH DATA SUB KATEGORI 
+                            TAMBAH DATA SUB KATEGORI MAPEL
                         </h2>
                     </div>
                     <div class="body">
                         <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/data-sub-folder-kategori-mapel/action-data-sub-kategori/add/0')}}">
                             {{csrf_field()}}
                             <h2 class="card-inside-title">
-                                Nama Sub Kategori File
+                                Nama Sub Folder Kategori Mapel
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -23,16 +23,14 @@
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
-                                Penjelasan Sub Kategori File
+                                Keterangan Sub Kategori Mapel
                             </h2>
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <textarea rows="4" class="form-control no-resize" name="sub_category_file_explanation" required="" aria-required="true"
-                                            aria-invalid="true" value=""></textarea>
-                                        </div>
-                                    </div>
+                                    <input type="text" class="form-control" name="sub_category_file_explanation" required="" aria-required="true"
+                                    aria-invalid="true" value="">
+
+                                   
                                 </div>
                             </div>
                             <h2 class="card-inside-title">

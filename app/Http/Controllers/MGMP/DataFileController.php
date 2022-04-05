@@ -19,10 +19,11 @@ class DataFileController extends Controller
         $pengguna = $input->auth_data->pengguna->id_pengguna;
       
     
-$category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();        
-        // $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
-        //     ->where('category_file_role.id_role', $auth_data)
-        //     ->select('category_file.*')->get();
+        // $category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();        
+        $category = CategoriFileGuru::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
+            ->where('category_file_guru.id_pengguna', $pengguna)
+            ->select('category_file_mgmp.*')->get();
+ 
         return view('guru/mgmp/data-file/view-data-file', compact('auth_data', 'category'));
     }
 
@@ -45,7 +46,7 @@ $category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();
         $auth_data = $input->auth_data;
 
         $sub_category = SubCategoryFileMGMP::where('sub_category_file_id',$id)->first();
-        dd($sub_category);
+        
         $data_file = FilePengguna::where('sub_category_file_id', $id)->get();
         // $data_file = Pengguna::Has('file_pengguna')
         //     ->with(["file_pengguna" => function ($q) use ($id) {

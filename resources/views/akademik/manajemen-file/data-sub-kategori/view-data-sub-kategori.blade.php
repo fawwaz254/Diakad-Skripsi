@@ -3,7 +3,7 @@
         <h2>
             <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#mpmp/data-sub-folder-kategori-mapel/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah Sub Data Kategori</span></a>
+                    class="material-icons">note_add</i><span>Tambah Sub Folder Katagori Mapel</span></a>
         </h2>
     </div>
     <div class="row clearfix">

@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#manajemen-file/data-file') }}"><i
+                href="{{ url(Request::segment(1) . '#mpmp/data-file-mapel') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -19,7 +19,7 @@
 
                         <div class="row clearfix">
                             <div class="col-md-6">
-                                <label>Category File</label>
+                                <label>Category File Mapel</label>
                                 <select class="form-control show-tick" name="category" id="category">
                                     @foreach ($category as $r)
                                         <option value="{{ $r->category_file_mgmp_id }}">{{ $r->category_file_name }}
@@ -29,7 +29,7 @@
                             </div>
 
                             <div class="col-md-6" id="sub_category">
-                                <label>Sub Category File</label>
+                                <label>Sub Folder Category Mapel</label>
                                 <select class="form-control show-tick" name="sub_category_file_id" required=""></select>
                             </div>
                         </div>
