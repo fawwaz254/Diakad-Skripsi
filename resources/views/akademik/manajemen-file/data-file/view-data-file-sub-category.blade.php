@@ -59,7 +59,7 @@ $total_file = 0;
                 </div>
                 <div class="body">
                     <form
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/action-data-file/delete-many/0') }}"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file-mapel/action-data-file/delete-many/0') }}"
                         id="form-validation" method="POST">
                         @foreach ($files as $file)
                             <div class="row">

@@ -20,7 +20,7 @@
                         <div class="row">
                                 
                             @foreach($sub_category as $r)
-                            <a href="{{url(Request::segment(1).'#manajemen-file/data-file/sub-category/'.$r->sub_category_file_id)}}" style="color: inherit;text-decoration: inherit; ">
+                            <a href="{{url(Request::segment(1).'#mgmp/data-file-mapel/sub-category/'.$r->sub_category_file_id)}}" style="color: inherit;text-decoration: inherit; ">
                             <div class="col-md-3 folder">
                                 <center>
                                    <i class="material-icons" style="color:#DAA520;font-size: 45px;">folder</i>

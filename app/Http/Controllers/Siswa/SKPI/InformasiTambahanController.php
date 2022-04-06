@@ -30,7 +30,7 @@ class InformasiTambahanController extends Controller
 
       
         
-    	return view('siswa/skpi/informasi-tambahan/add-informasi-tambahan',compact('auth_data','tingkat'));
+    	return view('siswa/skpi/informasi-tambahan/add-informasi-tambahan',compact('auth_data'));
 
     }
 
