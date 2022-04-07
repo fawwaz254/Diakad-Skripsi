@@ -10,6 +10,10 @@ $total_file = 0;
         cursor: pointer;
     }
 
+    .material-icons{
+        cursor: pointer;
+    }
+
     i.file.material-icons {
         width: 45px;
     }
