@@ -2,7 +2,7 @@
     <div class="block-header">
         <h2>
             <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#manajemen-file/data-file') }}">
+                href="{{ url(Request::segment(1) . '#mgmp/data-file-mapel') }}">
                 <i class="material-icons">backspace</i>
                 <span>Kembali</span>
             </a>
@@ -18,7 +18,7 @@
                 </div>
                 <div class="body">
                     <form id="form-upload" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file/action-data-file/add/0') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-file-mapel/action-data-file/add/0') }}">
                         {{ csrf_field() }}
 
                         <div class="row clearfix">
@@ -27,7 +27,7 @@
                                 <label>Category File</label>
                                 <select class="form-control show-tick" name="category" id="category">
                                     @foreach ($category as $r)
-                                        <option value="{{ $r->category_file_id }}">{{ $r->category_file_name }}
+                                        <option value="{{ $r->category_file_mgmp_id }}">{{ $r->category_file_name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -128,7 +128,7 @@
         $.ajax({
             url: "{{ Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/dropdown-category' }}",
             data: {
-                category_file_id: x,
+                category_file_mgmp_id: x,
             },
             dataType: 'JSON',
             complete: function(data) {
@@ -147,7 +147,7 @@
         $.ajax({
             url: "{{ Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/dropdown-category' }}",
             data: {
-                category_file_id: x,
+                category_file_mgmp_id: x,
             },
             dataType: 'JSON',
             complete: function(data) {
