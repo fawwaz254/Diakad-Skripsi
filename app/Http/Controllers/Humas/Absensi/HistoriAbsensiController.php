@@ -70,7 +70,7 @@ class HistoriAbsensiController extends BaseController
                         $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
                     }
 
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                    if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                         $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
                     }
 
