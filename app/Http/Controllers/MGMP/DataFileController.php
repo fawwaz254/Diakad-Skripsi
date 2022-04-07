@@ -8,6 +8,7 @@ use App\Models\CategoriFileGuru;
 use App\Models\CategoriFileMGMP;
 use App\Models\FilePengguna;
 use App\Models\SubCategoryFileMGMP;
+use App\Models\Pengguna;
 
 class DataFileController extends Controller
 {
@@ -44,22 +45,21 @@ class DataFileController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+      
+        $sub_category = SubCategoryFileMGMP::find($id);
+        $data_file = Pengguna::Has('file_pengguna')
+            ->with(["file_pengguna" => function ($q) use ($id) {
+                return $q->where('sub_category_file_id', $id);
+            }])->get();
 
-        $sub_category = SubCategoryFileMGMP::where('sub_category_file_id',$id)->first();
-        
-        $data_file = FilePengguna::where('sub_category_file_id', $id)->get();
-        // $data_file = Pengguna::Has('file_pengguna')
-        //     ->with(["file_pengguna" => function ($q) use ($id) {
-        //         return $q->where('sub_category_file_id', $id);
-        //     }])->get();
-
-        // $files = collect([]);
-        // foreach ($data_file as $file) {
-        //     if ($file->isNotEmpty()) {
-        //         $files->push($file);
-        //     }
-        // }
-        return view('guru/mgmp/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'data_file'));
+        $files = collect([]);
+        foreach ($data_file as $file) {
+            if ($file->file_pengguna->isNotEmpty()) {
+                $files->push($file);
+            }
+        }
+      
+        return view('guru/mgmp/data-file/view-data-file-sub-category', compact('auth_data', 'sub_category', 'data_file','files'));
     }
 
     public function dropdownCategory(Request $request)
