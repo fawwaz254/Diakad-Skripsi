@@ -10,10 +10,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/', 'MGMP\DataFileController@viewDataFile');
                 Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
                 Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
-                //belum dicoba
-                Route::get('add', 'Akademik\ManajemenFile\DataFileMGMPController@addDataFile');
-                Route::post('action-data-file/{mode}/{id}', 'Akademik\ManajemenFile\DataFileMGMPController@actionDataFile');
-                Route::get('dropdown-category', 'Akademik\ManajemenFile\DataFileMGMPController@dropdownCategory');
+                Route::get('add', 'MGMP\DataFileController@addDataFile');
+                Route::get('dropdown-category', 'MGMP\DataFileController@dropdownCategory');
+                Route::post('action-data-file/{mode}/{id}', 'MGMP\DataFileController@actionDataFile');
+                
             });
         });
 
