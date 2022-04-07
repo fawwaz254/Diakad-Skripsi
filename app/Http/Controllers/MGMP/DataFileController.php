@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\MGMP;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\CategoriFileGuru;
 use App\Models\CategoriFileMGMP;
 use App\Models\FilePengguna;
 use App\Models\SubCategoryFileMGMP;
 use App\Models\Pengguna;
-
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 class DataFileController extends Controller
 {
     public function viewDataFile(Request $request)
@@ -65,7 +68,7 @@ class DataFileController extends Controller
     public function dropdownCategory(Request $request)
     {
         $input = (object) $request->input();
-        $sub_category = SubCategoryFile::where('category_file_id', $input->category_file_id)->get();
+        $sub_category = SubCategoryFileMGMP::where('category_file_mgmp_id', $input->category_file_mgmp_id)->get();
         return $sub_category;
     }
 
@@ -73,17 +76,20 @@ class DataFileController extends Controller
     {
 
         $input = (object) $request->input();
-        $auth_data = $input->auth_data->role_aktif->id_role;
-        $category = CategoryFileRole::join('category_file', 'category_file.category_file_id', '=', 'category_file_role.category_file_id')
-            ->where('category_file_role.id_role', $auth_data)
-            ->select('category_file.*')->get();
-        $sub_category = DB::table('sub_category_file')
-            ->join('category_file', 'category_file.category_file_id', '=', 'sub_category_file.category_file_id')
-            ->join('category_file_role', 'category_file_role.category_file_id', '=', 'category_file.category_file_id')
-            ->where('category_file_role.id_role', '=', $auth_data)
-            ->where('sub_category_file.deleted_at', '=', null)
-            ->select('sub_category_file.*')->distinct()->get();
-        return view('manajemen-file/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
+        $auth_data = $input->auth_data->pengguna->id_pengguna;
+    
+        $category = CategoriFileGuru::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
+            ->where('category_file_guru.id_pengguna', $auth_data)
+            ->select('category_file_mgmp.*')->get();
+            
+        $sub_category = DB::table('sub_category_file_mgmp')
+            ->join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'sub_category_file_mgmp.category_file_mgmp_id')
+            ->join('category_file_guru', 'category_file_guru.category_file_mgmp_id', '=', 'category_file_mgmp.category_file_mgmp_id')
+            ->where('category_file_guru.id_pengguna', '=', $auth_data)
+            ->where('sub_category_file_mgmp.deleted_at', '=', null)
+            ->select('sub_category_file_mgmp.*')->distinct()->get();
+      
+        return view('guru/mgmp/data-file/add-data-file', compact('auth_data', 'category', 'sub_category'));
     }
 
     public function actionDataFile(Request $request, $mode, $id = null)
@@ -92,12 +98,62 @@ class DataFileController extends Controller
 
         $id_pengguna = $input->auth_data->pengguna->id_pengguna;
 
+      
+
+
+        if ($mode == 'delete-many') {
+            $validator = Validator::make($request->all(), [
+                'id_file' => 'required',
+                'sub_category_file_id' => 'required'
+            ]);
+            if ($validator->fails()) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => $validator->errors()->first()
+                ];
+            }
+            foreach ($input->id_file as $id_file) {
+                $file = FilePengguna::where('file_pengguna_id', $id_file)->first();
+                $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);
+                if (!$is_google_drive) {
+                    Storage::disk('spaces')->delete($file->link_file);
+                }
+                $file->delete();
+            }
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'mgmp/data-file-mapel/sub-category/' . $input->sub_category_file_id,
+                'message' => 'Delete File successfully'
+            ];
+        }
+
+        if ($mode == 'delete') {
+            $file = FilePengguna::where('file_pengguna_id', $input->id_file)->first();
+            $is_google_drive = filter_var($file->link_file, FILTER_VALIDATE_URL);
+            if (!$is_google_drive) {
+                Storage::disk('spaces')->delete($file->link_file);
+            }
+            $file->delete();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'mgmp/data-file-mapel/sub-category/' . $input->sub_category_file_id,
+                'message' => 'Delete File successfully'
+            ];
+        }
+      
+
+
         $list_validator = [
             'keterangan'    => 'required',
             'file_from'     => 'required'
         ];
 
         $validator = Validator::make($request->all(), $list_validator);
+
+
+
+
+
 
         if ($validator->fails() && $mode != 'delete') {
 
@@ -174,7 +230,6 @@ class DataFileController extends Controller
                     $data->keterangan = $input->keterangan;
                     $data->sub_category_file_id = $input->sub_category_file_id;
                     $data->created_by = $id_pengguna;
-
                     $data->link_file = $input->link_google_drive;
                     $data->is_google_drive = 1;
                     $data->save();
@@ -183,7 +238,7 @@ class DataFileController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'manajemen-file/data-file',
+                    'path' => 'mgmp/data-file-mapel/sub-category/'.$input->sub_category_file_id,
                     'message' => 'Save File Pegguna successfully'
                 ];
             }
