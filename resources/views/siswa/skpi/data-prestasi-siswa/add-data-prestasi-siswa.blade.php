@@ -15,7 +15,7 @@
                         {{csrf_field()}}
 
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">            
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Nama Prestasi 
                                 </h2>
@@ -29,7 +29,15 @@
                                 <h2 class="card-inside-title">
                                    Peringkat
                                 </h2>
-                                <input type="number" class="form-control" name="peringkat_prestasi_siswa" required="" aria-required="true" aria-invalid="true">
+                                    <select class="form-control show-tick" name="peringkat_prestasi_siswa">
+                                    <option value="Peringkat 1">Peringkat 1</option>
+                                    <option value="Peringkat 2">Peringkat 2</option>
+                                    <option value="Peringkat 3">Peringkat 3</option>
+                                    <option value="Juara Harapan 1">Juara Harapan 1</option>
+                                    <option value="Juara Harapan 2">Juara Harapan 2</option>
+                                    <option value="Juara Harapan 3">Juara Harapan 3</option>
+                                    <option value="Peserta">Peserta</option>
+                               	</select>
                             </div>
 
                             <div class="col-md-4">
@@ -47,7 +55,7 @@
                             </div>
 
                         </div>
-                       
+
                         <div class="row">
                             <div class="col-md-4">
                                 <h2 class="card-inside-title">
@@ -128,7 +136,7 @@
                         </div>
 
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">            
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Link Sertifikat
                                 </h2>
