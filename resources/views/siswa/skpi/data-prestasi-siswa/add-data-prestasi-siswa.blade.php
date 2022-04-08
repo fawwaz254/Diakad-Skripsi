@@ -17,7 +17,7 @@
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Nama Prestasi 
+                                    Nama Prestasi
                                 </h2>
                                 <input type="text" class="form-control" name="nm_prestasi_siswa" required="" aria-required="true" aria-invalid="true">
                             </div>
@@ -55,20 +55,9 @@
                             </div>
 
                         </div>
-
                         <div class="row">
-                            <div class="col-md-4">
-                                <h2 class="card-inside-title">
-                                    Jenis Prestasi
-                                </h2>
-                                <select class="form-control show-tick" name="jenis_prestasi_siswa" required="">
-                                    @foreach($jenis_prestasi as $r)
-                                        <option value="{{$r[0]}}">{{$r[1]}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                 Tingkat Prestasi
                                 </h2>
@@ -79,7 +68,7 @@
                                 </select>
                             </div>
 
-                             <div class="col-md-4">
+                             <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                     Tanggal Kegiatan
                                 </h2>
