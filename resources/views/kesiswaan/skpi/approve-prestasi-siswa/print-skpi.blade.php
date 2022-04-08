@@ -571,7 +571,7 @@ text-align: center;
             <td>3.{{ $urutan }}{{$loop->iteration}}</td>
             <td>{{$r->nm_prestasi_siswa}}</td>
             <td>{{$r->nm_tingkat_prestasi_siswa}}</td>
-            <td>
+            {{-- <td>
               @if($r->jenis_prestasi_siswa == 1)
               Sains
               @if($siswa->keterangan_kelas == 'Internasional')
@@ -593,7 +593,7 @@ text-align: center;
               <br><i>Etc</i>
               @endif
               @endif
-            </td>
+            </td> --}}
             <td>{{$r->jenis_lomba_siswa}}</td>
             <td>{{$r->peringkat_prestasi_siswa}}</td>
             <td>{{$r->lokasi_prestasi_siswa}}</td>
@@ -651,7 +651,7 @@ text-align: center;
             <td>{{$r->nm_kegiatan_siswa}}</td>
             <td>{{$r->lokasi_kegiatan_siswa}}</td>
             <td>{{$r->penyelenggara_kegiatan_siswa}}</td>
-            <td>{{$r->nm_tingkat_prestasi_siswa}}</td>
+            {{-- <td>{{$r->nm_tingkat_prestasi_siswa}}</td> --}}
             <td>{{date("d F Y", strtotime($r->tgl_kegiatan_siswa))}}</td>
           </tr>
           @endforeach

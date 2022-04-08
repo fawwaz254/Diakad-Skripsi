@@ -37,9 +37,6 @@
                                 </h2>
                                 <input type="text" class="form-control" name="penyelenggara_kegiatan_siswa" required="" aria-required="true" aria-invalid="true">
                             </div>
-
-                            
-                            
                         </div>
 
                         <h2 class="card-inside-title">
