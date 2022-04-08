@@ -509,10 +509,10 @@ margin-right: auto;">
       <p style="display: none"> {{ $urutan = "B" }}</p>
 
       @if($prestasi->count()>0)
-      <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. CAPAIAN PRESTASI
+      <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Lomba/Olimpiade
 
         @if($siswa->keterangan_kelas == 'Internasional')
-        <br><i>Achievements</i>
+        <br><i>Competition/Olympics</i>
         @endif
       </h6>
 
@@ -524,7 +524,7 @@ text-align: center;
 ">
         <thead>
           <tr>
-            <td></td>
+            <td>No</td>
             <td><b>Nama Prestasi</b>
               @if($siswa->keterangan_kelas == 'Internasional')
               <br><i>Achievement Name</i>
@@ -537,11 +537,7 @@ text-align: center;
               @endif
 
             </td>
-            <td><b>Jenis Prestasi</b>
-              @if($siswa->keterangan_kelas == 'Internasional')
-              <br><i>Achievement Type</i>
-              @endif
-            </td>
+
             <td><b>Jenis Lomba</b>
               @if($siswa->keterangan_kelas == 'Internasional')
               <br><i>Type of Competition</i>
@@ -611,9 +607,9 @@ text-align: center;
       @endif
 
       @if($kegiatan->count()>0)
-      <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. MACAM KEGIATAN
+      <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. KEGIATAN SOSIAL
         @if($siswa->keterangan_kelas == 'Internasional')
-        <br><i>Kinds Of Activities</i>
+        <br><i>Social Activities</i>
         @endif
       </h6>
     
@@ -625,7 +621,7 @@ text-align: center;
 ">
         <thead>
           <tr>
-            <td></td>
+            <td>No</td>
             <td><b>Nama Kegiatan</b>
               @if($siswa->keterangan_kelas == 'Internasional')
               <br><i>Activity Name </i>
@@ -639,11 +635,6 @@ text-align: center;
             <td><b>Penyelenggara</b>
               @if($siswa->keterangan_kelas == 'Internasional')
               <br><i>Organizer</i>
-              @endif
-            </td>
-            <td><b>Tingkat Kegiatan</b>
-              @if($siswa->keterangan_kelas == 'Internasional')
-              <br><i>Activity Level</i>
               @endif
             </td>
             <td><b>Tanggal</b>
@@ -680,7 +671,6 @@ text-align: center;
         <br><i>Additional Information</i>
         @endif
       </h6>
-      
       <table class="bg-color" style="width: 79%;margin-top: -20px; border-collapse: collapse;">
         <tr>
           <td>3.{{ $urutan }}1</td>
@@ -776,7 +766,6 @@ text-align: center;
               <br>
               <br>
               @endif
-             
   @if($siswa->keterangan_kelas == 'Internasional')
 <br>
   @endif

@@ -43,7 +43,7 @@ class DataPrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
-        $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
+        // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
         $ekskul = Ekskul::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $guru = Guru::select(
                 'id_guru',
@@ -53,7 +53,7 @@ class DataPrestasiSiswaController extends BaseController
                 ->Join('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
                 ->get();
         
-        return view('siswa/skpi/data-prestasi-siswa/add-data-prestasi-siswa',compact('auth_data','tingkat','jenis_prestasi','ekskul','guru'));
+        return view('siswa/skpi/data-prestasi-siswa/add-data-prestasi-siswa',compact('auth_data','tingkat','ekskul','guru'));
 
     }
 
@@ -63,7 +63,7 @@ class DataPrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
-        $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
+        // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
         $ekskul = Ekskul::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $guru = Guru::select(
                 'id_guru',
@@ -75,7 +75,7 @@ class DataPrestasiSiswaController extends BaseController
 
         $prestasi = PrestasiSiswa::findOrFail($id);
         
-        return view('siswa/skpi/data-prestasi-siswa/edit-data-prestasi-siswa',compact('auth_data','tingkat','jenis_prestasi','ekskul','guru','prestasi'));
+        return view('siswa/skpi/data-prestasi-siswa/edit-data-prestasi-siswa',compact('auth_data','tingkat','ekskul','guru','prestasi'));
 
     }
 
@@ -91,7 +91,6 @@ class DataPrestasiSiswaController extends BaseController
             'peringkat_prestasi_siswa' => 'required',
             'lokasi_prestasi_siswa' => 'required',
             'penyelenggara_prestasi_siswa' => 'required',
-            'jenis_prestasi_siswa' => 'required',
             'jenis_lomba_siswa'=>'required',
             'id_tingkat_prestasi_siswa' => 'required',
             'tgl_prestasi_siswa' => 'required',
@@ -117,7 +116,7 @@ class DataPrestasiSiswaController extends BaseController
                 $prestasi->id_kelas = $siswa->id_kelas;
                 $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
                 $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
-                $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
+                // $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
                 $prestasi->jenis_lomba_siswa = $input->jenis_lomba_siswa;
                 $prestasi->nm_prestasi_siswa = $input->nm_prestasi_siswa;
                 $prestasi->lokasi_prestasi_siswa = $input->lokasi_prestasi_siswa;
@@ -154,7 +153,7 @@ class DataPrestasiSiswaController extends BaseController
                $prestasi->id_kelas = $siswa->id_kelas;
                $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
                $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
-               $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
+            //    $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
                $prestasi->jenis_lomba_siswa = $input->jenis_lomba_siswa;
                $prestasi->nm_prestasi_siswa = $input->nm_prestasi_siswa;
                $prestasi->lokasi_prestasi_siswa = $input->lokasi_prestasi_siswa;
@@ -213,7 +212,7 @@ class DataPrestasiSiswaController extends BaseController
             'prestasi_siswa.nm_prestasi_siswa',
             'prestasi_siswa.keterangan',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
-            'prestasi_siswa.jenis_prestasi_siswa',
+            // 'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.link_sertif_prestasi_siswa',
             'prestasi_siswa.status',
@@ -272,17 +271,17 @@ class DataPrestasiSiswaController extends BaseController
                             );
                             return $data;
                         })
-                ->addColumn('jenis_prestasi', function ($item) {
-                    if ($item->jenis_prestasi_siswa == 1) {
-                        return "Sains";
-                    } elseif ($item->jenis_prestasi_siswa == 2) {
-                        return "Seni";
-                    } elseif ($item->jenis_prestasi_siswa == 3) {
-                        return "Olahraga";
-                    } elseif ($item->jenis_prestasi_siswa == 99) {
-                        return "Lain-Lain";
-                    }
-                })
+                // ->addColumn('jenis_prestasi', function ($item) {
+                //     if ($item->jenis_prestasi_siswa == 1) {
+                //         return "Sains";
+                //     } elseif ($item->jenis_prestasi_siswa == 2) {
+                //         return "Seni";
+                //     } elseif ($item->jenis_prestasi_siswa == 3) {
+                //         return "Olahraga";
+                //     } elseif ($item->jenis_prestasi_siswa == 99) {
+                //         return "Lain-Lain";
+                //     }
+                // })
               ->addColumn('tgl_prestasi_siswa', function ($item) {
                   return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
               })
