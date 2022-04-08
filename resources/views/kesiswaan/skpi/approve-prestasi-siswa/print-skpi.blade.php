@@ -524,7 +524,10 @@ text-align: center;
 ">
         <thead>
           <tr>
-            <td>No</td>
+            <td><b>Nomer</b>
+              @if($siswa->keterangan_kelas == 'Internasional')
+              <br><i>Number</i>
+              @endif</td>
             <td><b>Nama Prestasi</b>
               @if($siswa->keterangan_kelas == 'Internasional')
               <br><i>Achievement Name</i>
@@ -621,7 +624,11 @@ text-align: center;
 ">
         <thead>
           <tr>
-            <td>No</td>
+            <td><b>Nomer</b>
+              @if($siswa->keterangan_kelas == 'Internasional')
+              <br><i>Number</i>
+              @endif
+            </td>
             <td><b>Nama Kegiatan</b>
               @if($siswa->keterangan_kelas == 'Internasional')
               <br><i>Activity Name </i>
