@@ -146,7 +146,6 @@ class DataPrestasiSiswaController extends BaseController
             }
 
             elseif ($mode == 'edit') {
-               
                $prestasi = PrestasiSiswa::findOrFail($id);
 
                $prestasi->id_siswa = $siswa->id_siswa;
@@ -177,14 +176,13 @@ class DataPrestasiSiswaController extends BaseController
 
                return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'skpi/data-prestasi-siswa/edit/'.$id,
+                        'path' => 'skpi/data-prestasi-siswa',
                         'message' => 'Edit Prestasi successfully'
             ];
 
             }
 
             elseif ($mode == 'delete') {
-                
                 $prestasi = PrestasiSiswa::findOrFail($id);
                 $prestasi->deleted_by  = $input->auth_data->pengguna->id_pengguna;
                 $prestasi->deleted_at  = $now;
@@ -202,7 +200,6 @@ class DataPrestasiSiswaController extends BaseController
         }
 
     }
-    
     public function datatablesDataPrestasiSiswa(Request $request)
     {
         $input = (object) $request->input();
@@ -271,17 +268,23 @@ class DataPrestasiSiswaController extends BaseController
                             );
                             return $data;
                         })
-                // ->addColumn('jenis_prestasi', function ($item) {
-                //     if ($item->jenis_prestasi_siswa == 1) {
-                //         return "Sains";
-                //     } elseif ($item->jenis_prestasi_siswa == 2) {
-                //         return "Seni";
-                //     } elseif ($item->jenis_prestasi_siswa == 3) {
-                //         return "Olahraga";
-                //     } elseif ($item->jenis_prestasi_siswa == 99) {
-                //         return "Lain-Lain";
-                //     }
-                // })
+                ->addColumn('peringkat_prestasi_siswa', function ($item) {
+                    if ($item->peringkat_prestasi_siswa == 1) {
+                        return "Peringkat 1";
+                    } elseif ($item->peringkat_prestasi_siswa == 2) {
+                        return "Peringkat 2";
+                    } elseif ($item->peringkat_prestasi_siswa == 3) {
+                        return "Peringkat 3";
+                    } elseif ($item->peringkat_prestasi_siswa == 4) {
+                        return "Juara Harapan 1";
+                    }elseif ($item->peringkat_prestasi_siswa == 5) {
+                        return "Juara Harapan 2";
+                    }elseif ($item->peringkat_prestasi_siswa == 6) {
+                        return "Juara Harapan 3";
+                    }elseif ($item->peringkat_prestasi_siswa == 7) {
+                        return "Peserta";
+                    }
+                })
               ->addColumn('tgl_prestasi_siswa', function ($item) {
                   return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
               })

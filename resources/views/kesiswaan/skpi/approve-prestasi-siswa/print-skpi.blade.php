@@ -615,7 +615,6 @@ text-align: center;
         <br><i>Social Activities</i>
         @endif
       </h6>
-    
       <table class="bg-color" style="width: 79%;
 border-collapse: collapse;
 margin-left: auto;
@@ -690,8 +689,25 @@ text-align: center;
             @if ($siswa->keterangan_kelas == 'Internasional')
             <br><i>English</i>
             @endif
+          </td>
         </tr>
-        <p style="display:none">{{ $no = 1}}</p>
+        <tr>
+          <td>3.{{ $urutan }}2</td>
+          <td>Kegiatan Melatih Keterampilan Hidup
+            @if ($siswa->keterangan_kelas == 'Internasional')
+            <br><i>Life Skills Training Activities</i>
+            @endif
+          </td>
+          <td>Pramuka dan Kemah Wisata <br> (Kedisiplinan, kemandirian, kerjasama dan tanggung jawab)
+            @if ($siswa->keterangan_kelas == 'Internasional')
+            <br><i>Scouting and Tourism Camp <br> (Discipline, independence, cooperation and responsibility)</i>
+            @endif
+          </td>
+        </tr>
+
+
+
+        <p style="display:none">{{ $no = 2}}</p>
 
         {{-- //ektra --}}
 

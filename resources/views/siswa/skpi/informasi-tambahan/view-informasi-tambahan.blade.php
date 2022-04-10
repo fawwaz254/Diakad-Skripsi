@@ -21,7 +21,7 @@
                                         <th>Nama</th>
                                         <th>Name</th>
                                         <th>Status</th>
-                                        <th>Keterangan</th> 
+                                        <th>Keterangan</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -39,7 +39,7 @@
     var modul_url       = '{{Request::segment(2)}}';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'informasi_tambahan/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'informasi_tambahan/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-prestasi-siswa/action/delete';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'informasi_tambahan/action/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -73,7 +73,6 @@
                     else{
                         return '-';
                     }
-                    
                 }
             }
         ],
