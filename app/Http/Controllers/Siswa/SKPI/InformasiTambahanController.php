@@ -28,8 +28,6 @@ class InformasiTambahanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-      
-        
     	return view('siswa/skpi/informasi-tambahan/add-informasi-tambahan',compact('auth_data'));
 
     }
@@ -50,7 +48,6 @@ class InformasiTambahanController extends Controller
         //         ->get();
 
         $informasi_tambahan = InformasiTambahan::findOrFail($id);
-        
         return view('siswa/skpi/informasi-tambahan/edit-informasi-tambahan',compact('auth_data','informasi_tambahan'));
     }
 
@@ -94,38 +91,32 @@ class InformasiTambahanController extends Controller
         		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'skpi/informasi_tambahan',
-                    'message' => 'Save Kegiatan successfully'
+                    'message' => 'Save Informasi Tambahan successfully'
                 ];
 
         	}
 
         	elseif ($mode == 'edit') {
-        		
-        		$kegiatan = KegiatanSiswa::find($id);
-        		$kegiatan->id_siswa = $siswa->id_siswa;
-        		$kegiatan->id_kelas = $siswa->id_kelas;
-        		$kegiatan->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
-        		$kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
-                $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
-                $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
-        		$kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
-        		$kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
-        		$kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
-        		$kegiatan->updated_at = $now;
-                $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
-        		$kegiatan->save();
+
+        		$informasi = InformasiTambahan::find($id);
+        		$informasi->jenis_informasi_tambahan = $input->jenis_informasi_tambahan;
+                $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
+                $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
+               	$informasi->updated_at = $now;
+                $informasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+        		$informasi->save();
 
 	    		return [
 	                    'status' => 202, // SUCCESS AND LOAD CONTENT
-	                    'path' => 'skpi/data-kegiatan-siswa/edit/'.$id,
-	                    'message' => 'Edit Kegiatan successfully'
+	                    'path' => 'skpi/informasi_tambahan',
+	                    'message' => 'Edit Informasi Tambahan successfully'
 	                ];
 
         	}
 
         	elseif ($mode == 'delete'){
 
-        		$kegiatan = KegiatanSiswa::find($id);
+        		$kegiatan = InformasiTambahan::find($id);
                 $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
                 $kegiatan->deleted_at  = $now;
                 $kegiatan->save();
@@ -134,12 +125,12 @@ class InformasiTambahanController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Kegiatan successfully'
+                    'message' => 'Delete Informasi Tambahan successfully'
                 ];
 
         	}
 
-        }  
+        }
     }
 
     public function datatablesInformasiTambahan(Request $request){

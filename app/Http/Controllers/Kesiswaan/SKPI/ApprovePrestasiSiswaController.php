@@ -116,9 +116,8 @@ class ApprovePrestasiSiswaController extends BaseController{
         			'kegiatan_siswa.tgl_kegiatan_siswa',
                     'kegiatan_siswa.lokasi_kegiatan_siswa',
                     'kegiatan_siswa.penyelenggara_kegiatan_siswa',
-        			'kegiatan_siswa.nm_kegiatan_scan_sertif',
-        			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa'
-        			)
+                    'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+        			'kegiatan_siswa.nm_kegiatan_scan_sertif')
         ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
         ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
@@ -445,7 +444,6 @@ class ApprovePrestasiSiswaController extends BaseController{
                         $q->where('status',0);
                     }
                     $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
-                  
                 })
                 ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param,$wali_kelas){
                     if($param == 0){

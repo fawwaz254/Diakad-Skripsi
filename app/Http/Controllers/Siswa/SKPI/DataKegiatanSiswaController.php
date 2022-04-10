@@ -25,7 +25,6 @@ use Validator;
 class DataKegiatanSiswaController extends BaseController{
 
     public function viewDataKegiatanSiswa(Request $request){
-        
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -39,9 +38,8 @@ class DataKegiatanSiswaController extends BaseController{
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
-        
-    	return view('siswa/skpi/data-kegiatan-siswa/add-data-kegiatan-siswa',compact('auth_data','tingkat'));
+        // $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+    	return view('siswa/skpi/data-kegiatan-siswa/add-data-kegiatan-siswa',compact('auth_data'));
 
     }
 
@@ -50,10 +48,9 @@ class DataKegiatanSiswaController extends BaseController{
     	$input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+        // $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $kegiatan = KegiatanSiswa::find($id);
-        
-    	return view('siswa/skpi/data-kegiatan-siswa/edit-data-kegiatan-siswa',compact('auth_data','tingkat','kegiatan'));
+    	return view('siswa/skpi/data-kegiatan-siswa/edit-data-kegiatan-siswa',compact('auth_data','kegiatan'));
 
     }
 
@@ -68,7 +65,7 @@ class DataKegiatanSiswaController extends BaseController{
             'nm_kegiatan_siswa' => 'required',
             'lokasi_kegiatan_siswa' => 'required',
             'penyelenggara_kegiatan_siswa' => 'required',
-            'id_tingkat_prestasi_siswa' => 'required',
+            // 'id_tingkat_prestasi_siswa' => 'required',
             'tgl_kegiatan_siswa' => 'required',
             'link_sertifikat' => 'required'
         ]);
@@ -94,7 +91,7 @@ class DataKegiatanSiswaController extends BaseController{
         		$kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
                 $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
                 $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
-        		$kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
+        		$kegiatan->id_tingkat_prestasi_siswa = 0;
         		$kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
         		$kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
         		$kegiatan->created_by = $input->auth_data->pengguna->id_pengguna;
@@ -109,7 +106,6 @@ class DataKegiatanSiswaController extends BaseController{
         	}
 
         	elseif ($mode == 'edit') {
-        		
         		$kegiatan = KegiatanSiswa::find($id);
         		$kegiatan->id_siswa = $siswa->id_siswa;
         		$kegiatan->id_kelas = $siswa->id_kelas;
@@ -117,7 +113,7 @@ class DataKegiatanSiswaController extends BaseController{
         		$kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
                 $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
                 $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
-        		$kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
+        		$kegiatan->id_tingkat_prestasi_siswa = 0;
         		$kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
         		$kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
         		$kegiatan->updated_at = $now;
@@ -126,7 +122,7 @@ class DataKegiatanSiswaController extends BaseController{
 
 	    		return [
 	                    'status' => 202, // SUCCESS AND LOAD CONTENT
-	                    'path' => 'skpi/data-kegiatan-siswa/edit/'.$id,
+	                    'path' => 'skpi/data-kegiatan-siswa',
 	                    'message' => 'Edit Kegiatan successfully'
 	                ];
 
@@ -165,14 +161,14 @@ class DataKegiatanSiswaController extends BaseController{
                     'kegiatan_siswa.lokasi_kegiatan_siswa',
                     'kegiatan_siswa.penyelenggara_kegiatan_siswa',
         			'kegiatan_siswa.nm_kegiatan_scan_sertif',
-        			'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+        			// 'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
                     'kegiatan_siswa.keterangan'
         			)
-        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
+        // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
         ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->get();
 
