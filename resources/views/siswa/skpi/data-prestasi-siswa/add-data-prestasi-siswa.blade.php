@@ -30,13 +30,13 @@
                                    Peringkat
                                 </h2>
                                     <select class="form-control show-tick" name="peringkat_prestasi_siswa">
-                                    <option value="Peringkat 1">Peringkat 1</option>
-                                    <option value="Peringkat 2">Peringkat 2</option>
-                                    <option value="Peringkat 3">Peringkat 3</option>
-                                    <option value="Juara Harapan 1">Juara Harapan 1</option>
-                                    <option value="Juara Harapan 2">Juara Harapan 2</option>
-                                    <option value="Juara Harapan 3">Juara Harapan 3</option>
-                                    <option value="Peserta">Peserta</option>
+                                    <option value="1">Peringkat 1</option>
+                                    <option value="2">Peringkat 2</option>
+                                    <option value="3">Peringkat 3</option>
+                                    <option value="4">Juara Harapan 1</option>
+                                    <option value="5">Juara Harapan 2</option>
+                                    <option value="6">Juara Harapan 3</option>
+                                    <option value="7">Peserta</option>
                                	</select>
                             </div>
 

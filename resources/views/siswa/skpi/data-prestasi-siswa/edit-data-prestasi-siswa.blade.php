@@ -15,7 +15,7 @@
                         {{csrf_field()}}
 
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">            
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Nama Prestasi 
                                 </h2>
@@ -29,7 +29,15 @@
                                 <h2 class="card-inside-title">
                                    Peringkat
                                 </h2>
-                                <input type="number" class="form-control" name="peringkat_prestasi_siswa" required="" value="{{$prestasi->peringkat_prestasi_siswa}}" aria-required="true" aria-invalid="true">
+                            <select class="form-control show-tick" name="peringkat_prestasi_siswa">
+                                <option value="1"{{$prestasi->peringkat_prestasi_siswa == '1' ? 'selected' : ''}}>Peringkat 1</option>
+                                <option value="2"{{$prestasi->peringkat_prestasi_siswa == '2' ? 'selected' : ''}}>Peringkat 2</option>
+                                <option value="3"{{$prestasi->peringkat_prestasi_siswa == '3' ? 'selected' : ''}}>Peringkat 3</option>
+                                <option value="4"{{$prestasi->peringkat_prestasi_siswa == '4' ? 'selected' : ''}}>Juara Harapan 1</option>
+                                <option value="5"{{$prestasi->peringkat_prestasi_siswa == '5' ? 'selected' : ''}}>Juara Harapan 2</option>
+                                <option value="6"{{$prestasi->peringkat_prestasi_siswa == '6' ? 'selected' : ''}}>Juara Harapan 3</option>
+                                <option value="7"{{$prestasi->peringkat_prestasi_siswa == '7' ? 'selected' : ''}}>Peserta</option>
+                               </select>
                             </div>
 
                             <div class="col-md-4">
@@ -47,20 +55,8 @@
                             </div>
 
                         </div>
-                       
-                        <div class="row">
-                            <div class="col-md-4">
-                                <h2 class="card-inside-title">
-                                    Jenis Prestasi
-                                </h2>
-                                <select class="form-control show-tick" name="jenis_prestasi_siswa" required="">
-                                    @foreach($jenis_prestasi as $r)
-                                        <option value="{{$r[0]}}" {{$prestasi->jenis_prestasi_siswa == $r[0] ? 'selected' : ''}}>{{$r[1]}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                 Tingkat Prestasi
                                 </h2>
@@ -71,14 +67,12 @@
                                 </select>
                             </div>
 
-                             <div class="col-md-4">
+                             <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                     Tanggal Kegiatan
                                 </h2>
                                 <input type="text" class="datepicker form-control" name="tgl_prestasi_siswa" required="" aria-required="true" value="{{date('d F Y', strtotime($prestasi->tgl_prestasi_siswa))}}" aria-invalid="true">
                             </div>
-
-                        </div>
 
                         <div class="row">
 
@@ -128,7 +122,7 @@
                         </div>
 
                         <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">            
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Link Sertifikat
                                 </h2>
