@@ -402,7 +402,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::get('edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@editPrestasiSiswa');
             Route::get('edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@editKegiatanSiswa');
-       
 
             Route::post('action-edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditPrestasiSiswa');
             Route::post('action-edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditKegiatanSiswa');
