@@ -119,7 +119,7 @@
             <div class="col-md-4 {{$sekolah == 'SMK PEMUDA KRIAN' ? '' : 'offset-md-4'}}">
                 <p>{{ $auth_data->sekolah_data->alamat_kecamatan !== null ? $auth_data->sekolah_data->alamat_kecamatan . ', ' : null }}
                 {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }}
-               <br>Keuangan<br><br><br><br> 
+               <br>Keuangan<br><br><br><br>
                 <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b></p>
             </div>
         </div>
