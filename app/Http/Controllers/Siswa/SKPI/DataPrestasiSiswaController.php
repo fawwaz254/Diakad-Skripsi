@@ -44,7 +44,7 @@ class DataPrestasiSiswaController extends BaseController
 
         $tingkat = TingkatPrestasiSiswa::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
-        $ekskul = Ekskul::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+        // $ekskul = Ekskul::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
         $guru = Guru::select(
                 'id_guru',
                 'p2.nm_pengguna as nm_guru_pendamping',
@@ -52,8 +52,8 @@ class DataPrestasiSiswaController extends BaseController
                 'p2.gelar_belakang')
                 ->Join('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
                 ->get();
-        
-        return view('siswa/skpi/data-prestasi-siswa/add-data-prestasi-siswa',compact('auth_data','tingkat','ekskul','guru'));
+
+        return view('siswa/skpi/data-prestasi-siswa/add-data-prestasi-siswa',compact('auth_data','tingkat','guru'));
 
     }
 
@@ -74,7 +74,6 @@ class DataPrestasiSiswaController extends BaseController
                 ->get();
 
         $prestasi = PrestasiSiswa::findOrFail($id);
-        
         return view('siswa/skpi/data-prestasi-siswa/edit-data-prestasi-siswa',compact('auth_data','tingkat','ekskul','guru','prestasi'));
 
     }
@@ -223,7 +222,7 @@ class DataPrestasiSiswaController extends BaseController
             'prestasi_siswa.lokasi_prestasi_siswa',
             'prestasi_siswa.penyelenggara_prestasi_siswa',
             'prestasi_siswa.tgl_prestasi_siswa',
-            'ekskul.nm_ekskul',
+            // 'ekskul.nm_ekskul',
             'prestasi_siswa.id_prestasi_siswa',
             'prestasi_siswa.id_guru_pendamping',
             'p2.nm_pengguna as nm_guru_pendamping',
@@ -235,7 +234,7 @@ class DataPrestasiSiswaController extends BaseController
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
         ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+        // ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
         ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
         ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
         ->orderBy('prestasi_siswa.created_at', 'desc')

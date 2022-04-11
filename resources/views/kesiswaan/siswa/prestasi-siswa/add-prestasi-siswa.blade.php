@@ -137,15 +137,15 @@
                             </div>
 
                             <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">            
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <h2 class="card-inside-title">
                                         Link Sertifikat
                                     </h2>
                                     <input type="text" class="form-control" name="link_sertifikat" required="" aria-required="true" aria-invalid="true">
                                 </div>
                             </div>
-                        
-                             <h2 class="card-inside-title">
+
+                             {{-- <h2 class="card-inside-title">
                                 Ekstrakurikuler <small><b>* Tidak Wajib Diisi. Hanya Diisi Bila Prestasi Berhubungan dengan Ekstrakurikuler</b></small>
                             </h2>
                             <div class="row clearfix">
@@ -159,7 +159,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <h2 class="card-inside-title">
                                 Guru Pendamping <small><b>* Tidak Wajib Diisi. Hanya Diisi Bila Ada Guru Pendamping</b></small>
                             </h2>
