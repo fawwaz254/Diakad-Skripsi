@@ -112,7 +112,6 @@
                     '    <i class="material-icons">print</i>'+
                     '</a>';
                 }
-                  
             }
         ]
     });
