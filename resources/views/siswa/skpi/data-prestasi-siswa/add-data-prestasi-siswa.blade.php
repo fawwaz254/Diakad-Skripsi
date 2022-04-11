@@ -79,7 +79,7 @@
 
                         <div class="row">
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                     Guru Pendamping
                                 </h2>
@@ -90,7 +90,7 @@
                                     @endforeach
                                 </select>
                             </div>
-
+{{-- 
                             <div class="col-md-4">
                                 <h2 class="card-inside-title">
                                     Jenis Ekskul
@@ -101,9 +101,9 @@
                                         <option value="{{$r->id_ekskul}}">{{$r->nm_ekskul}}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> --}}
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                     Jenis Lomba
                                 </h2>
