@@ -217,7 +217,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.nm_prestasi_siswa',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
-            // 'prestasi_siswa.peringkat_prestasi_siswa',
+            'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.status',
             'prestasi_siswa.jenis_lomba_siswa',
             'prestasi_siswa.link_sertif_prestasi_siswa',
@@ -230,7 +230,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.lokasi_prestasi_siswa',
             'prestasi_siswa.penyelenggara_prestasi_siswa',
             'prestasi_siswa.tgl_prestasi_siswa',
-            // 'ekskul.nm_ekskul',
+            'ekskul.nm_ekskul',
             'prestasi_siswa.id_prestasi_siswa',
             'prestasi_siswa.id_guru_pendamping',
             'p2.nm_pengguna as nm_guru_pendamping',
@@ -242,7 +242,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
         ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        // ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
         ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
         ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
         ->orderBy('prestasi_siswa.created_at', 'desc')
@@ -258,7 +258,18 @@ class ApprovePrestasiSiswaController extends BaseController{
         return Datatables::of($list_data)
                 ->addColumn('semester', function ($item) {
                     return $item->nm_semester.' ('.$item->tahun_ajaran.')';
+                })->addColumn('jenis_prestasi', function ($item) {
+                    if ($item->jenis_prestasi_siswa == 1) {
+                        return "Sains";
+                    } elseif ($item->jenis_prestasi_siswa == 2) {
+                        return "Seni";
+                    } elseif ($item->jenis_prestasi_siswa == 3) {
+                        return "Olahraga";
+                    } elseif ($item->jenis_prestasi_siswa == 99) {
+                        return "Lain-Lain";
+                    }
                 })
+
                 ->addColumn('peringkat_prestasi_siswa', function ($item) {
                     if ($item->peringkat_prestasi_siswa == 1) {
                         return "Peringkat 1";
@@ -461,7 +472,6 @@ class ApprovePrestasiSiswaController extends BaseController{
                         $q->where('status',0);
                     }
                     $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
-                    
                 })
                 ->orWhereHas('informasi_tambahan',function($q) use($auth_data,$param,$wali_kelas){
                     if($param == 0){
@@ -471,7 +481,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                         $q->where('status',0);
                     }
                     $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
-                    
+
                 })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                 ->join('kelas','siswa.id_kelas','kelas.id_kelas')
@@ -486,8 +496,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
                     'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
                     'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
-                   
-        
+
                 ]);
 
             }
@@ -508,8 +517,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                                 'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
                                 'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
                                 'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
-                                
-                    
+
                             ]);
 
             }
@@ -528,7 +536,6 @@ class ApprovePrestasiSiswaController extends BaseController{
                     else{
                         $q->where('status',0);
                     }
-                  
                 })
                 ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param){
                     if($param == 0){
@@ -559,7 +566,6 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
                     'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
                     'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
-                   
                 ]);
 
             }
