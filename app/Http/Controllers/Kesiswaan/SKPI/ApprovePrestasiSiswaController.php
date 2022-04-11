@@ -217,7 +217,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.nm_prestasi_siswa',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
-            'prestasi_siswa.peringkat_prestasi_siswa',
+            // 'prestasi_siswa.peringkat_prestasi_siswa',
             'prestasi_siswa.status',
             'prestasi_siswa.jenis_lomba_siswa',
             'prestasi_siswa.link_sertif_prestasi_siswa',
@@ -230,7 +230,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'prestasi_siswa.lokasi_prestasi_siswa',
             'prestasi_siswa.penyelenggara_prestasi_siswa',
             'prestasi_siswa.tgl_prestasi_siswa',
-            'ekskul.nm_ekskul',
+            // 'ekskul.nm_ekskul',
             'prestasi_siswa.id_prestasi_siswa',
             'prestasi_siswa.id_guru_pendamping',
             'p2.nm_pengguna as nm_guru_pendamping',
@@ -242,7 +242,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
         ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+        // ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
         ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
         ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
         ->orderBy('prestasi_siswa.created_at', 'desc')
@@ -254,20 +254,28 @@ class ApprovePrestasiSiswaController extends BaseController{
 
         if($param == 0) $list_data = $list_data->where('status','!=',0)->get();
         else $list_data = $list_data->where('status',0)->get();
-        
 
         return Datatables::of($list_data)
                 ->addColumn('semester', function ($item) {
                     return $item->nm_semester.' ('.$item->tahun_ajaran.')';
                 })
-                ->addColumn('jenis_prestasi', function ($item) {
-                    if ($item->jenis_prestasi_siswa == 1) {
-                        return "Sains";
-                    } elseif ($item->jenis_prestasi_siswa == 2) {
-                        return "Seni";
-                    } elseif ($item->jenis_prestasi_siswa == 3) {
-                        return "Olahraga";
-                    } elseif ($item->jenis_prestasi_siswa == 99) {
+                ->addColumn('peringkat_prestasi_siswa', function ($item) {
+                    if ($item->peringkat_prestasi_siswa == 1) {
+                        return "Peringkat 1";
+                    } elseif ($item->peringkat_prestasi_siswa == 2) {
+                        return "Peringkat 2";
+                    } elseif ($item->peringkat_prestasi_siswa == 3) {
+                        return "Peringkat 3";
+                    } elseif ($item->peringkat_prestasi_siswa == 4) {
+                        return "Juara Harapan 1";
+                    }
+                    elseif ($item->peringkat_prestasi_siswa == 5) {
+                        return "Juara Harapan 2";
+                    }
+                    elseif ($item->peringkat_prestasi_siswa == 6) {
+                        return "Juara Harapan 3";
+                    }
+                    elseif ($item->peringkat_prestasi_siswa == 7) {
                         return "Lain-Lain";
                     }
                 })

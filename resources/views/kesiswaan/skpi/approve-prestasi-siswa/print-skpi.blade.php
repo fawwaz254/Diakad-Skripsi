@@ -442,7 +442,7 @@ table.bg-color tr td{
           <br><i>INFORMATION OF PROFICIENCY AND LEARNING OUTCOME</i>
           @endif
         </b></h5>
-      <h6 style="margin-top: 15px;margin-left: 120px">A. CAPAIAN PERMBELAJARAN
+      <h6 style="margin-top: 15px;margin-left: 120px">A. CAPAIAN PEMBELAJARAN
         @if($siswa->keterangan_kelas == 'Internasional')
         <br><i>Learning Outcome</i>
         @endif
@@ -598,7 +598,23 @@ text-align: center;
               @endif
             </td> --}}
             <td>{{$r->jenis_lomba_siswa}}</td>
-            <td>{{$r->peringkat_prestasi_siswa}}</td>
+            <td>
+              @if($r->peringkat_prestasi_siswa == 1)
+              Peringkat 1
+              @elseif($r->peringkat_prestasi_siswa == 2)
+              Peringkat 2
+              @elseif($r->peringkat_prestasi_siswa == 3)
+              Peringkat 3
+              @elseif($r->peringkat_prestasi_siswa == 4)
+              Juara Harapan 1
+              @elseif($r->peringkat_prestasi_siswa == 5)
+              Juara Harapan 2
+              @elseif($r->peringkat_prestasi_siswa == 6)
+              Juara Harapan 3
+              @elseif($r->peringkat_prestasi_siswa == 7)
+              Peserta
+              @endif
+            </td>
             <td>{{$r->lokasi_prestasi_siswa}}</td>
             <td>{{$r->penyelenggara_prestasi_siswa}}</td>
             <td>{{ indonesiaDate($r->tgl_prestasi_siswa)  }}</td>

@@ -29,7 +29,7 @@
                                         <th>Lokasi</th>
                                         <th>Penyelenggara</th>
                                         <th>Tanggal</th>
-                                        <th>Ekstrakurikuler</th>
+                                        {{-- <th>Ekstrakurikuler</th> --}}
                                         <th>Guru Pendamping</th>
                                         <th>Action</th>
                                     </tr>
@@ -82,7 +82,7 @@
             { data: 'lokasi_prestasi_siswa', name: 'lokasi_prestasi_siswa' },
             { data: 'penyelenggara_prestasi_siswa', name: 'penyelenggara_prestasi_siswa' },
             { data: 'tgl_prestasi_siswa', name: 'tgl_prestasi_siswa' },
-            { data: 'nm_ekskul', name: 'nm_ekskul' },
+            // { data: 'nm_ekskul', name: 'nm_ekskul' },
             { data: 'nm_guru_pendamping', name: 'nm_guru_pendamping' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
