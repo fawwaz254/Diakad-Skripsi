@@ -116,13 +116,13 @@ class ApprovePrestasiSiswaController extends BaseController{
         			'kegiatan_siswa.tgl_kegiatan_siswa',
                     'kegiatan_siswa.lokasi_kegiatan_siswa',
                     'kegiatan_siswa.penyelenggara_kegiatan_siswa',
-                    'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+                    // 'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
         			'kegiatan_siswa.nm_kegiatan_scan_sertif')
         // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 0)
         ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->where('p1.id_pengguna', '=', $siswa->id_pengguna)
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         if($param == 0) $list_data = $list_data->where('status','!=',0)->get();
@@ -237,7 +237,7 @@ class ApprovePrestasiSiswaController extends BaseController{
             'p2.gelar_depan',
             'p2.gelar_belakang'
         )
-        // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
         ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
         ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
         ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
@@ -248,7 +248,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->orderBy('prestasi_siswa.created_at', 'desc')
         ->orderBy('semester.thn_akademik_semester', 'desc')
         ->orderBy('semester.nm_semester', 'desc')
-        // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
         ->where('prestasi_siswa.id_siswa',$id)
         ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
