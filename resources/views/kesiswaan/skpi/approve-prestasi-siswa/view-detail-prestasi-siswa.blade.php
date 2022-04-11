@@ -25,7 +25,7 @@
                                         <th>Nama Prestasi</th>
                                         <th>Tingkat Prestasi</th>
                                         <th>Jenis Prestasi</th>
-                                        <th>Jenis Lomba</th>
+                                        {{-- <th>Jenis Lomba</th> --}}
                                         <th>Peringkat</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
@@ -34,7 +34,7 @@
                                         <th>Lokasi</th>
                                         <th>Penyelenggara</th>
                                         <th>Tanggal</th>
-                                        <th>Ekstrakurikuler</th>
+                                        {{-- <th>Ekstrakurikuler</th> --}}
                                         <th>Guru Pendamping</th>
                                         <th>Action</th>
                                     </tr>
@@ -60,7 +60,7 @@
                                         <th>Nama Kegiatan</th>
                                         <th>Lokasi</th>
                                         <th>Penyelenggara</th>
-                                        <th>Tingkat Kegiatan</th>
+                                        {{-- <th>Tingkat Kegiatan</th> --}}
                                         <th>Tanggal</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
@@ -168,8 +168,7 @@
            }
        });
    }
-   
-   
+
    function approveAction(approve_url, element){
        var item = $(element);
        $('button').attr('disabled', 'disabled');
@@ -253,7 +252,7 @@
             { data: null, searchable: false, orderable: false },
             { data: 'nm_prestasi_siswa', name: 'nm_prestasi_siswa' },
             { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
-            { data: 'jenis_prestasi', name: 'jenis_prestasi' },
+            // { data: 'jenis_prestasi', name: 'jenis_prestasi' },
             { data: 'jenis_lomba_siswa', name: 'jenis_lomba_siswa' },
             { data: 'peringkat_prestasi_siswa', name: 'peringkat_prestasi_siswa' },
             { data: 'action', name: 'link_sertifikat', searchable: false, orderable: false,
@@ -273,7 +272,7 @@
             { data: 'lokasi_prestasi_siswa', name: 'lokasi_prestasi_siswa' },
             { data: 'penyelenggara_prestasi_siswa', name: 'penyelenggara_prestasi_siswa' },
             { data: 'tgl_prestasi_siswa', name: 'tgl_prestasi_siswa' },
-            { data: 'nm_ekskul', name: 'nm_ekskul' },
+            // { data: 'nm_ekskul', name: 'nm_ekskul' },
             { data: 'nm_guru_pendamping', name: 'nm_guru_pendamping' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
@@ -293,7 +292,6 @@
                     else{
                         return html;
                     }
-                   
                 }
             }
         ],
@@ -329,7 +327,7 @@
             { data: 'nm_kegiatan_siswa', name: 'nm_kegiatan_siswa' },
             { data: 'lokasi_kegiatan_siswa', name: 'lokasi_kegiatan_siswa'},
             { data: 'penyelenggara_kegiatan_siswa', name: 'penyelenggara_kegiatan_siswa'},
-            { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
+            // { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'tgl_kegiatan_siswa', name: 'tgl_kegiatan_siswa'},
             { data: 'action', name: 'nm_kegiatan_siswa', searchable: false, orderable: false,
                 render:function(data){
@@ -349,7 +347,7 @@
                     html += ' <a class="target-link btn btn-warning" href="'+ edit_kegiatan + '/' + data.id +'">'+
                         'Edit'+
                         '</a> '
-                    if(data.status==0){ 
+                    if(data.status==0){
                     html += '<button class="btn btn-info" onclick="approveAction(\''+ approve_kegiatan +'\', this)" data-id="'+  data.id +'">'+
                     'Aprrove'+
                     '</button>';
@@ -378,17 +376,17 @@
 
     //data informasi tambahan
 
-    var datatable_url_kegiatan   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/informasi-tambahan/datatables/'+id_siswa+'/'+param;
-    var approve_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/informasi-tambahan';
-    var reject_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/informasi-tambahan';
-    var edit_kegiatan =  base_url + '/' + role_url + '#' + modul_url + '/' + 'edit-informasi-tambahan-siswa';
+    var datatable_url_informasi_tambahan   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/informasi-tambahan/datatables/'+id_siswa+'/'+param;
+    var approve_informasi_tambahan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/informasi-tambahan';
+    var reject_informasi_tambahan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/informasi-tambahan';
+    var edit_informasi_tambahan =  base_url + '/' + role_url + '#' + modul_url + '/' + 'edit-informasi-tambahan-siswa';
 
         var primary_table3 = $('#primary_table3').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
         ajax: {
-            url: datatable_url_kegiatan,
+            url: datatable_url_informasi_tambahan,
             type: 'GET'
         },
         columns: [
@@ -404,14 +402,14 @@
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     html = '';
-                    html += ' <a class="target-link btn btn-warning" href="'+ edit_kegiatan + '/' + data.id +'">'+
+                    html += ' <a class="target-link btn btn-warning" href="'+ edit_informasi_tambahan + '/' + data.id +'">'+
                         'Edit'+
                         '</a> '
                     if(data.status==0){ 
-                    html += '<button class="btn btn-info" onclick="approveAction(\''+ approve_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    html += '<button class="btn btn-info" onclick="approveAction(\''+ approve_informasi_tambahan +'\', this)" data-id="'+  data.id +'">'+
                     'Aprrove'+
                     '</button>';
-                    html += ' <button class="btn btn-danger" onclick="rejectAction(\''+ reject_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    html += ' <button class="btn btn-danger" onclick="rejectAction(\''+ reject_informasi_tambahan +'\', this)" data-id="'+  data.id +'">'+
                     'Reject'+
                     '</button>';
                         return html;
