@@ -474,6 +474,7 @@ class LibCetakKeuangan{
 
         return $data;
     }
+    
     /** Get Laporan Keuangan */
     public static function fetchLaporanKeuangan($auth_data, $start_date = null, $end_date = null)
     {
@@ -879,6 +880,8 @@ class LibCetakKeuangan{
                 }
             }
         }
+
+        $kas_spp = collect($tempDataLaporan)->sum('nominal');
         
         $dataRealisasi = Realisasi::with('rapb.subkategori.kategori');
         if (!empty($start_date) && !empty($end_date)) {
@@ -890,6 +893,9 @@ class LibCetakKeuangan{
         }else{
             $allDataRealisasi = $dataRealisasi->get();
         }
+
+        $kas_rapb_penerimaan = $allDataRealisasi->where('rapb.subkategori.kategori.tipe_kategori_rapb', 1)->sum('dana_realisasi');
+        $kas_rapb_pengeluaran = $allDataRealisasi->where('rapb.subkategori.kategori.tipe_kategori_rapb', 2)->sum('dana_realisasi');
 
         foreach($allDataRealisasi as $x){
             $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
@@ -922,6 +928,55 @@ class LibCetakKeuangan{
             'total_debit' => $totalDebit,
             'total_kredit' => $totalKredit
         ];
+
+        $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
+        
+        $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
+        $id_bulan       = $sc_bulan->month;
+        $id_bulan_lalu  = $sc_bulan->subMonth()->month;
+
+        $sc_tahun       = Carbon::createFromFormat('Y-m-d', $start_date);
+        $tahun          = $sc_tahun->year;
+        $tahun_lalu     = $sc_tahun->subYear()->year;
+
+        if($id_bulan < 7){
+            $tahun_semester = $tahun - 1;
+        }else{
+            $tahun_semester = $tahun;
+        }
+
+        $id_semester_mulai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'1')->first()->id_semester;
+        $id_semester_selesai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu.'2')->first()->id_semester;
+
+        $semester_mulai = Semester::where('kode_semester', $tahun_semester.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun_semester.'2')->first();
+
+        $id_semester_mulai = $semester_mulai->id_semester;
+        $id_semester_selesai = $semester_selesai->id_semester;
+
+        if($id_bulan_lalu < 7){
+            // Semester lama kurang dari bulan 7
+            $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+        }else{
+            // Semester ini mulai bulan 7
+            $tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+        }
+
+        if($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()){
+            $tutup_buku_bulanan_kas_now->updated_by                   = $auth_data->pengguna->id_pengguna;
+        }else{
+            $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
+            $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas    = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $tutup_buku_bulanan_kas_now->id_semester_mulai            = $id_semester_mulai;
+            $tutup_buku_bulanan_kas_now->id_semester_selesai          = $id_semester_selesai;
+            $tutup_buku_bulanan_kas_now->id_bulan                     = $id_bulan;
+            $tutup_buku_bulanan_kas_now->created_by                   = $auth_data->pengguna->id_pengguna;
+        }
+        $tutup_buku_bulanan_kas_now->kas_spp                = $kas_spp;
+        $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $kas_rapb_penerimaan;
+        $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $kas_rapb_pengeluaran;
+        $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
+        $tutup_buku_bulanan_kas_now->save();
 
         return $data;
     }
