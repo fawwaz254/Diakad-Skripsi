@@ -78,8 +78,8 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nis_siswa', name: 'nis_siswa'},
-            { data: 'nm_pengguna', name: 'nm_pengguna'},
-            { data: 'nm_kelas', name: 'nm_kelas'},
+            { data: 'nm_pengguna', name: 'pengguna.nm_pengguna'},
+            { data: 'nm_kelas', name: 'kelas.nm_kelas'},
             { data : 'status_apv_pengambilan_magang',name : 'status_apv_pengambilan_magang'},
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
