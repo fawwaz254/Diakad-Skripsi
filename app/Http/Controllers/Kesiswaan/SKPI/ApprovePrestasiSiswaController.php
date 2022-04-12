@@ -176,6 +176,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         if($param == 0) $list_data = $list_data->where('status','!=',0)->get();
         else $list_data = $list_data->where('status',0)->get();
 
+
         return Datatables::of($list_data)
         				->addColumn('keterangan', function ($item) {
 		                    if ($item->status == 0) {
@@ -205,6 +206,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         ->make(true);
 
     }
+
 
 
 
@@ -586,7 +588,7 @@ class ApprovePrestasiSiswaController extends BaseController{
                     'informasi_tambahan as informasi_tambahan_reject' => function($q){ $q->where('status',10); },
                     'informasi_tambahan as informasi_tambahan_approved'  => function($q){ $q->where('status',1); },
                     'informasi_tambahan as informasi_tambahan_not_approved' => function($q){ $q->where('status',0); },
-                   
+
                 ]);
 
             }
