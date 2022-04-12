@@ -67,12 +67,12 @@ class ApprovePrestasiSiswaController extends BaseController{
                     ->get();
 
         $kegiatan = KegiatanSiswa::where('kegiatan_siswa.id_siswa',$id)
-                    ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
+                   // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
                     ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
                     ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
                     ->where('kegiatan_siswa.status',1)
                     ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-                    ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                  //  ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->get();
 
                     $informasi_tambahan_ekstrakurikuler = InformasiTambahan::where('informasi_tambahan.id_siswa', $id)

@@ -10,114 +10,114 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-  <style type="text/css">* {
+  <style type="text/css">
+    * {
 
-    font-family: 'Times New Roman', Times, serif;
-  }
-
-  .bg {
-
-    background-image: url("{{asset('media/skpi.png')}}");
-
-    /* Full height */
-    height: 1600px;
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .logo {
-    left: 0;
-    right: 0;
-    padding-left: 10px;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
-    position: absolute;
-
-    margin-top: 45px;
-  }
-
-  table,
-  td,
-  th {
-    border: 1px solid black;
-    padding: 8px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .header,
-  .header tr td {
-    border: none;
-  }
-
-  .avoid-break {
-    page-break-inside: avoid;
-  }
-
-  .mt-4 {
-    margin-top: 40px;
-  }
-
-  .mb-4 {
-    margin-bottom: 40px;
-  }
-
-  @media print {
-
-    .ttd {
-      position: relative;
-    }
-
-    .break-after {
-      page-break-after: always;
+      font-family: 'Times New Roman', Times, serif;
     }
 
     .bg {
 
       background-image: url("{{asset('media/skpi.png')}}");
 
-
-
+      /* Full height */
+      height: 1600px;
       /* Center and scale the image nicely */
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
-
     }
 
-    .bg-color {
-      width: 93%;
-      border-collapse: collapse;
+    .logo {
+      left: 0;
+      right: 0;
+      padding-left: 10px;
+      text-align: center;
       margin-left: auto;
       margin-right: auto;
+      position: absolute;
+
+      margin-top: 45px;
     }
 
     table,
     td,
     th {
-
       border: 1px solid black;
-      padding-left: 10px;
       padding: 8px;
     }
 
-    tr:nth-child(even) {
-      background-color: #6e9c6e;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .atas {
-      background-color: white;
+    .header,
+    .header tr td {
+      border: none;
     }
-  }
 
+    .avoid-break {
+      page-break-inside: avoid;
+    }
+
+    .mt-4 {
+      margin-top: 40px;
+    }
+
+    .mb-4 {
+      margin-bottom: 40px;
+    }
+
+    @media print {
+
+      .ttd {
+        position: relative;
+      }
+
+      .break-after {
+        page-break-after: always;
+      }
+
+      .bg {
+
+        background-image: url("{{asset('media/skpi.png')}}");
+
+
+
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+      }
+
+      .bg-color {
+        width: 93%;
+        border-collapse: collapse;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      table,
+      td,
+      th {
+
+        border: 1px solid black;
+        padding-left: 10px;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #6e9c6e;
+      }
+
+      .atas {
+        background-color: white;
+      }
+    }
   </style>
 
   @if($siswa->keterangan_kelas == 'Internasional')
@@ -177,7 +177,12 @@ table.bg-color tr td{
       <tr>
         <td colspan="10">
           <h5 align="center" style="font-family: Segoe Print; color:green; margin-top: 5px">
-            {{ strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah) }}</h5>
+            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+            Yayasan Pendidikan & Sosial Ma'arif
+            @else
+            {{ strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah) }}
+            @endif
+           </h5>
         </td>
     </table>
     <table class="header" cellspacing="0" cellpadding="10" style="width: 100%; margin-top:-15px">
@@ -237,8 +242,8 @@ table.bg-color tr td{
     </table>
     @if($siswa->keterangan_kelas == 'Internasional')
     <div class="container" style="margin-top: -10px;">
-      <h5 style="margin-left: 40px"><b>I. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI
-          <br><i>INFORMATION OF PERSONAL DIPLOMA SUPPLEMENT HOLDER</i> </b>
+      <h5 style="margin-left: 15px"><b>I. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI
+          <br><i style="margin-left: 17px">INFORMATION OF PERSONAL DIPLOMA SUPPLEMENT HOLDER</i> </b>
       </h5>
       @else
       <div class="container" style="margin-top: 20px;">
@@ -246,11 +251,6 @@ table.bg-color tr td{
           </b>
         </h5>
         @endif
-
-
-
-
-
 
         <table class="bg-color">
           <tr>
@@ -319,8 +319,8 @@ table.bg-color tr td{
         @endphp
 
         @if($siswa->keterangan_kelas == 'Internasional')
-        <h5 style="margin-top: 5px;  margin-left: 40px"><b>II. INFORMASI TENTANG IDENTITAS PENYELENGGARA
-            <br><i>INFORMATION OF IDENTITYHIGHER EDUCATION INSTITUTION</i>
+        <h5 style="margin-top: 5px;  margin-left: 10px"><b>II. INFORMASI TENTANG IDENTITAS PENYELENGGARA
+            <br><i style="margin-left: 25px">INFORMATION OF IDENTITYHIGHER EDUCATION INSTITUTION</i>
           </b></h5>
 
         @else
@@ -436,20 +436,19 @@ table.bg-color tr td{
         </table>
       </div>
       <br>
-
-      <h5 style="margin-top: 80px;margin-left: 120px"><b>III. INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN
+      <h5 style="margin-top: 80px;margin-left: 90px"><b>III. INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN
           @if($siswa->keterangan_kelas == 'Internasional')
-          <br><i>INFORMATION OF PROFICIENCY AND LEARNING OUTCOME</i>
+          <br><i style="margin-left: 30px">INFORMATION OF PROFICIENCY AND LEARNING OUTCOME</i>
           @endif
         </b></h5>
-      <h6 style="margin-top: 15px;margin-left: 120px">A. CAPAIAN PEMBELAJARAN
+      <h6 style="margin-top: 15px;margin-left: 120px">A. Capaian Pembelajaran
         @if($siswa->keterangan_kelas == 'Internasional')
-        <br><i>Learning Outcome</i>
+        <br><i style="margin-left: 17px">Learning Outcome</i>
         @endif
       </h6>
       <table class="bg-color" style="width: 79%;
 border-collapse: collapse;
-margin-left: auto;
+margin-left: 140px;
 margin-right: auto;">
         <tr>
           <td style="width: 5%;">3.A1</td>
@@ -512,13 +511,13 @@ margin-right: auto;">
       <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Lomba/Olimpiade
 
         @if($siswa->keterangan_kelas == 'Internasional')
-        <br><i>Competition/Olympics</i>
+        <br><i style="margin-left: 17px">Competition/Olympics</i>
         @endif
       </h6>
 
       <table class="bg-color" style="width: 79%;
 border-collapse: collapse;
-margin-left: auto;
+margin-left: 140px;
 margin-right: auto;
 text-align: center;
 ">
@@ -628,12 +627,12 @@ text-align: center;
       @if($kegiatan->count()>0)
       <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. KEGIATAN SOSIAL
         @if($siswa->keterangan_kelas == 'Internasional')
-        <br><i>Social Activities</i>
+        <br><i style="margin-left: 17px">Social Activities</i>
         @endif
       </h6>
       <table class="bg-color" style="width: 79%;
 border-collapse: collapse;
-margin-left: auto;
+margin-left: 140px;
 margin-right: auto;
 text-align: center;
 ">
@@ -690,10 +689,10 @@ text-align: center;
       {{-- @if($informasi_tambahan->count()>0) --}}
       <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Informasi Tambahan
         @if($siswa->keterangan_kelas == 'Internasional')
-        <br><i>Additional Information</i>
+        <br><i style="margin-left: 17px">Additional Information</i>
         @endif
       </h6>
-      <table class="bg-color" style="width: 79%;margin-top: -20px; border-collapse: collapse;">
+      <table class="bg-color" style="width: 79%;margin-top: -20px; border-collapse: collapse; margin-left: 140px;">
         <tr>
           <td>3.{{ $urutan }}1</td>
           <td>Bahasa Internasional
@@ -758,7 +757,7 @@ text-align: center;
           <td>Produk Lomba
             @if ($siswa->keterangan_kelas == 'Internasional')
             <br>
-            <i>Competition Produc</i></td>
+            <i style="margin-left: 17px">Competition Produc</i></td>
           @endif
           <td style="width: 55%;">
             @foreach($informasi_produk_lomba as $r)
@@ -799,15 +798,16 @@ text-align: center;
               <br>
               <br>
               <br>
-              <br>
               @else
               <br>
               <br>
               <br>
               @endif
-  @if($siswa->keterangan_kelas == 'Internasional')
-<br>
-  @endif
+              @if($siswa->keterangan_kelas == 'Internasional')
+              <br>
+
+              <br>
+              @endif
               <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
             </td>
           </tr>
@@ -815,7 +815,6 @@ text-align: center;
         {{-- @endif --}}
       </div>
     </div>
-
     <script>
       window.print();
     </script>
