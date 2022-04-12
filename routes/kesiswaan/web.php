@@ -90,7 +90,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesPrestasiApprovePrestasiSiswa');
             Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesKegiatanApprovePrestasiSiswa');
-
+            Route::get('approve-prestasi-siswa/informasi-tambahan/datatables/{id}/{param}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@datatablesInformasiTambahan');
 
             Route::post('approve-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
             Route::post('reject-prestasi-siswa/{data}/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionRejectPrestasiSiswa');
