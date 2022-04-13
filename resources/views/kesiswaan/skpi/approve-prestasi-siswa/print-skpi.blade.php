@@ -536,43 +536,43 @@ text-align: center;
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Number</i>
+                            <br><b><i>Number</i></b>
                         @endif
                     </td>
                     <td><b>Nama Lomba/Olimpiade</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Name Of Competition/Olympics</i>
+                            <br><b><i>Name Of Competition/Olympics</i></b>
                         @endif
                     </td>
                     <td><b>Tingkat Lomba/Olimpiade</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Competition/Olympic Level</i>
+                            <br><b><i>Competition/Olympic Level</i></b>
                         @endif
                     </td>
                     <td><b>Jenis Lomba/Olimpiade</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>
-                                Type of Competition/Olympic</i>
+                            <br><b><i>
+                                    Type of Competition/Olympic</i></b>
                         @endif
                     </td>
                     <td><b>Peringkat</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Rating</i>
+                            <br><b><i>Rating</i></b>
                         @endif
                     </td>
                     <td><b>Lokasi</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>location</i>
+                            <br><b><i>location</i></b>
                         @endif
                     </td>
                     <td><b>Penyelenggara</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Organizer</i>
+                            <br><b><i>Organizer</i></b>
                         @endif
                     </td>
                     <td><b>Tanggal</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Date</i>
+                            <br><b><i>Date</i></b>
                         @endif
                     </td>
                 </tr>
@@ -635,7 +635,7 @@ text-align: center;
     @endif
 
     @if ($kegiatan->count() > 0)
-        <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. KEGIATAN SOSIAL
+        <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Kegiatan Sosial
             @if ($siswa->keterangan_kelas == 'Internasional')
                 <br><i style="margin-left: 17px">Social Activities</i>
             @endif
@@ -650,27 +650,28 @@ text-align: center;
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Number</i>
+                            <br><b><i>Number</i></b>
                         @endif
                     </td>
                     <td><b>Nama Kegiatan</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Activity Name </i>
+                            <br><b><i>Activity Name </i></b>
                         @endif
                     </td>
                     <td><b>Lokasi</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Location</i>
+                            <br><b><i>Location</i></b>
                         @endif
                     </td>
                     <td><b>Penyelenggara</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Organizer</i>
+                            <br><b><i>Organizer</i></b>
                         @endif
                     </td>
                     <td><b>Tanggal</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
-                            <br><i>Date</i>
+                            <br><b><i>Date</i>
+                            </b>
                         @endif
                     </td>
                 </tr>
@@ -767,7 +768,7 @@ text-align: center;
                 <td>Produk Lomba
                     @if ($siswa->keterangan_kelas == 'Internasional')
                         <br>
-                        <i style="margin-left: 17px">Competition Produc</i>
+                        <i>Competition Product</i>
                 </td>
         @endif
         <td style="width: 55%;">
