@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Humas\MagangSiswa;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-
 use App\Models\PengambilanMagang as PengajuanSiswaMagang;
 use App\Models\PeriodeMagang as PeriodeMagang;
 use App\Models\StatusPengguna as StatusPengguna;
@@ -13,10 +12,8 @@ use App\Models\Pengguna as Pengguna;
 use App\Models\KomponenMagang;
 use App\Models\PeraturanNilai as PeraturanNilai;
 use App\Models\NilaiMagang as NilaiMagang;
-
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
-
 use App\Libraries\Pendidikan\LibMagangSiswa;
 use App\Libraries\Pendidikan\LibSiswa;
 
@@ -51,29 +48,57 @@ class LaporanMagangController extends BaseController
                                  ->groupBy('id_rekanan_magang','id_periode_magang')
                                  ->when($id_periode_magang,function($q) use($id_periode_magang){
                                       $q->where('pengambilan_magang.id_periode_magang',$id_periode_magang);
-                                 })    
+                                 })
                                 ->get();
 
-    return Datatables::of($data)
-                     ->editColumn('nm_periode_magang',function($item){
-                        return $item->periode->nm_periode_magang;
-                     })
-                     ->editColumn('nm_rekanan_magang',function($item){
-                        return $item->rekanan->nm_rekanan_magang;
-                     })
-                     ->addColumn('action', function($item){
-                        $data = array(
-                            'id' => $item->id_pengambilan_magang,
-                            'id_rekanan_magang' => $item->id_rekanan_magang,
-                            'id_periode_magang' => $item->id_periode_magang
-                        );
-                  
-                        return $data;
-                    })
-                    ->make(true);
+if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
+    return Datatables::of($data)->editColumn('nm_periode_magang',function($item){
+        return $item->periode->nm_periode_magang;
+     })
+     ->editColumn('nm_rekanan_magang',function($item){
+        return $item->rekanan->nm_rekanan_magang;
+     })
+     ->addColumn('action', function($item){
+             $data = array(
+                 'smkypm3taman'=> true,
+                 'id' => $item->id_pengambilan_magang,
+                 'id_rekanan_magang' => $item->id_rekanan_magang,
+                 'id_periode_magang' => $item->id_periode_magang
+             );
+        return $data;
+    })->make(true);
+}else{
+    return Datatables::of($data)->editColumn('nm_periode_magang',function($item){
+        return $item->periode->nm_periode_magang;
+     })
+     ->editColumn('nm_rekanan_magang',function($item){
+        return $item->rekanan->nm_rekanan_magang;
+     })
+     ->addColumn('action', function($item){
+             $data = array(
+                 //setelah migrate ubah jadi false
+                 'smkypm3taman'=> false,
+                 'id' => $item->id_pengambilan_magang,
+                 'id_rekanan_magang' => $item->id_rekanan_magang,
+                 'id_periode_magang' => $item->id_periode_magang
+             );
+        return $data;
+    })->make(true);
+
+} }
 
 
-  }
+public function viewInputLaporanMagang(Request $request,$id_rekanan_magang,$id_periode_magang){
+
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+
+    return view('humas/magang-siswa/laporan-magang/view-laporan-input-magang',compact('auth_data','id_rekanan_magang','id_periode_magang'));
+}
+
+public function actionInputLaporanMagang(Request $request,$mode,$id_laporan){
+    dd($mode);
+}
 
   public function printLaporanMagang(Request $request,$id_rekanan_magang,$id_periode_magang){
 
