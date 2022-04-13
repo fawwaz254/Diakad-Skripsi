@@ -92,12 +92,11 @@
                             '    <i class="material-icons">input</i>'+
                             '</button> ';
                         }
-                       
                         html += '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\''+ data.id +'\', \`hapus-data`\)">'+
                         '    <i class="material-icons">delete</i>'+
                         '</button> ';
                         return html;
-                       
+
                    }
                    else{
                        return '<button class="btn btn-info btn-circle waves-effect waves-circle waves-float" onclick="pengajuanAction(\''+ data.id +'\', \`pengajuan`\)">'+
