@@ -44,7 +44,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>DATA TENAGA PENDIDIK</h2>
+                        <h2>DATA TENAGA KEPENDIDIKAN</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">

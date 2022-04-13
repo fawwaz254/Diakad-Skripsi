@@ -193,7 +193,7 @@ class InputTendikController extends BaseController{
                 $pengguna->gelar_depan              = $input->gelar_depan;
                 $pengguna->gelar_belakang           = $input->gelar_belakang;
                 $pengguna->save();
-                
+
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $staff                           = new Staff;
