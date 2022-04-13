@@ -59,6 +59,7 @@
     var modul_url       = 'magang-siswa';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-magang/datatables';
     var print_url       = role_url + '/' + modul_url + '/' + 'laporan-magang/print';
+    var input_url       = role_url + '#' + modul_url + '/' + 'laporan-magang/input';
 
         var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -75,13 +76,17 @@
             { data: null, searchable: false, orderable: false },
             { data: 'nm_rekanan_magang', name: 'nm_rekanan_magang' },
             { data: 'nm_periode_magang', name: 'nm_periode_magang' },
-            { data: 'action',  name: 'action', searchable: false, orderable: false,
-                render: function(data){
+            {data: 'action',  name: 'action', searchable: false, orderable: false,
+            render: function(data){
+                if(data.smkypm3taman){
                     var html = '';
-
-                    html += `<a target="_blank" href="`+print_url+`/`+data.id_rekanan_magang+`/`+data.id_periode_magang+`"><button class="btn btn-info btn-circle waves-effect waves-circle waves-float"><i class="material-icons">print</i></button></a>`
-
+                    html += `<a href="`+input_url+`/`+data.id_rekanan_magang+`/`+data.id_periode_magang+`"><button class="btn btn-info btn-circle waves-effect waves-circle waves-float"><i class="material-icons">input</i></button></a>`
                     return html;
+                }else{
+                    var html = '';
+                    html += `<a target="_blank" href="`+print_url+`/`+data.id_rekanan_magang+`/`+data.id_periode_magang+`"><button class="btn btn-info btn-circle waves-effect waves-circle waves-float"><i class="material-icons">print</i></button></a>`
+                    return html;
+                }
                 }
             }
         ]
