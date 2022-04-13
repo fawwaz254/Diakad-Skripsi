@@ -81,6 +81,7 @@ Route::post('signin', 'SignInController@actionSignIn');
 Route::get('report-pimpinan', 'ReportController@viewAllDiakad');
 Route::get('report-pimpinan-print', 'ReportController@printAllDiakad');
 
+
 Route::group(array('prefix' => 'reporting-dashboard'), function () {
     Route::get('/', 'SignInController@indexReportingDashboard');
     Route::get('all-diakad/{id}', 'ReportController@checkProgress');

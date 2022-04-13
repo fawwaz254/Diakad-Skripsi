@@ -532,7 +532,7 @@ margin-left: 140px;
 margin-right: auto;
 text-align: center;
 ">
-            <thead>
+            <thead style="background-color: #6e9c6e;">
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
@@ -646,7 +646,7 @@ margin-left: 140px;
 margin-right: auto;
 text-align: center;
 ">
-            <thead>
+            <thead style="background-color: #6e9c6e;">
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
