@@ -19,7 +19,7 @@ class PengambilanMagang extends Model
 	public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_periode_magang',
         'id_rekanan_magang',
