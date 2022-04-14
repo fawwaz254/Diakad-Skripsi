@@ -227,8 +227,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::get('laporan-magang/datatables', 'Humas\MagangSiswa\LaporanMagangController@datatablesLaporanMagang');
 			Route::get('laporan-magang/print/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@printLaporanMagang');
 			Route::get('laporan-magang/input/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@viewInputLaporanMagang');
+			Route::get('laporan-magang/edit/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@editInputLaporanMagang');
+			Route::get('laporan-magang/open/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@openLink');
+			Route::get('laporan-magang/delete/{id_rekanan_magang}/{id_periode_magang}', 'Humas\MagangSiswa\LaporanMagangController@actionDeleteLaporanLinkMagang');
 
-			Route::post('input/action-laporan-input-siswa/{mode}/{id_laporan}', 'Humas\MagangSiswa\LaporanMagangController@actionInputLaporanMagang');
+			Route::post('input/action-laporan-input-siswa/{mode}/{id}', 'Humas\MagangSiswa\LaporanMagangController@actionInputLaporanMagang');
 
 
 			//MENU Periode Magang
