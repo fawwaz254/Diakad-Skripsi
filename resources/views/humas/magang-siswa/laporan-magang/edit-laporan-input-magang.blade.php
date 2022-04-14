@@ -1,5 +1,3 @@
-
-
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#magang-siswa/laporan-magang')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
@@ -9,11 +7,11 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH LINK LAPORAN MAGANG SISWA
+                        EDIT LINK LAPORAN MAGANG SISWA
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/input/action-laporan-input-siswa/add/0')}}">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/input/action-laporan-input-siswa/edit/'.$data->link_laporan_magang_id)}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
                             Link Google Drive
@@ -21,13 +19,13 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" name="link_google_drive" required="" aria-required="true"
-                                aria-invalid="true">
+                                aria-invalid="true" value="{{ $data->link_google_drive }}">
                             </div>
                         </div>
-                        <input type="hidden" class="form-control" name="id_rekanan_magang" required="" aria-required="true"
-                                aria-invalid="true" value="{{ $id_rekanan_magang }}">
+                        {{-- <input type="hidden" class="form-control" name="id_rekanan_magang" required="" aria-required="true"
+                                aria-invalid="true" value="{{ $data->$id_rekanan_magang }}">
                         <input type="hidden" class="form-control" name="id_periode_magang" required="" aria-required="true"
-                                aria-invalid="true" value="{{ $id_periode_magang }}">
+                                aria-invalid="true" value="{{ $data->id_periode_magang }}"> --}}
 
 
                         <div class="alert alert-warning">
@@ -50,7 +48,7 @@
 </div>
 </div>
 
-@include('scriptjs')
+@include('scriptjs');
 
 <script type="text/javascript">
 
