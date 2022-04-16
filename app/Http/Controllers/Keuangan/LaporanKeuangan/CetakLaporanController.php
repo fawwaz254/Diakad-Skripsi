@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Libraries\Keuangan\LibCetakKeuangan;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Bulan;
+use App\Models\Semester;
 use App\Models\TutupBukuBulananKas;
 
 use Carbon\Carbon;
