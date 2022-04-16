@@ -89,8 +89,28 @@ class CetakLaporanController extends BaseController
         $sekolah = $auth_data->sekolah_data->nm_sekolah;
 
         $month_before = Carbon::parse($start_date)->subMonth()->format('m');
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $saldo_before = TutupBukuBulananKas::where('id_semester_mulai',$semester_aktif->id_semester)->where('id_bulan',$month_before)->first();
+        
+        $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
+        $id_bulan       = $sc_bulan->month;
+        $id_bulan_lalu  = $sc_bulan->subMonth()->month;
+
+        $sc_tahun       = Carbon::createFromFormat('Y-m-d', $start_date);
+        $tahun          = $sc_tahun->year;
+        $tahun_lalu     = $sc_tahun->subYear()->year;
+        
+        if($id_bulan < 7){
+            $tahun_semester = $tahun - 1;
+        }else{
+            $tahun_semester = $tahun;
+        }
+
+        $semester_mulai = Semester::where('kode_semester', $tahun_semester.'1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun_semester.'2')->first();
+
+        $id_semester_mulai = $semester_mulai->id_semester;
+        $id_semester_selesai = $semester_selesai->id_semester;
+
+        $saldo_before = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu])->first();
 
         $validator = Validator::make([
             'start_date' => $start_date,
