@@ -13,7 +13,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
             });
 
-            // MENU Data Sub Kategori 
+            // MENU Data Sub Kategori
             Route::group(array('prefix' => 'data-sub-kategori'), function () {
                 Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
                 Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
@@ -24,7 +24,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
             });
 
-            // MENU Data File 
+            // MENU Data File
             Route::group(array('prefix' => 'data-file'), function () {
 
                 Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');

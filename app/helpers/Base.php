@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Kelas;
+use App\Models\link_laporan_magang;
 use App\Models\Siswa;
 
 function minimalisTime($time)
@@ -28,21 +29,36 @@ if (!function_exists('auth_data')) {
 }
 
 
-
-if (!function_exists('get_keterangan_kelas')) {
-
-    function get_keterangan_kelas($id_pengguna)
+if (!function_exists('link_laporan_googledrive')) {
+    /**
+     * get auth data from session
+     * @return auth_data
+     */
+    function link_laporan_googledrive($id_rekanan_magang,$id_periode_magang)
     {
-
-        $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
-        if ($siswa) {
-            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
-        } else {
-            $kelas = null;
-        }
-        return $kelas;
+        $laporan_magang = link_laporan_magang::select('link_laporan_magang_id')->where('id_rekanan_magang', $id_rekanan_magang)
+        ->where('id_periode_magang',$id_periode_magang)->first();
+        return $laporan_magang;
     }
 }
+
+
+
+
+// if (!function_exists('get_keterangan_kelas')) {
+
+//     function get_keterangan_kelas($id_pengguna)
+//     {
+
+//         $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
+//         if ($siswa) {
+//             $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
+//         } else {
+//             $kelas = null;
+//         }
+//         return $kelas;
+//     }
+// }
 
 
 if (!function_exists('generate_id')) {

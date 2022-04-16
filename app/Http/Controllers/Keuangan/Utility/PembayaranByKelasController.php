@@ -81,7 +81,7 @@ class PembayaranByKelasController extends BaseController
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
-        
+
         if(!empty($id_kelas) && !empty($tahun_akademik_semester)){
             $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
             $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();

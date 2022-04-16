@@ -14,7 +14,7 @@ $category_file_role = category_file_role($role_aktif);
 $id_pengguna = auth_data()->pengguna->id_pengguna;
 $id_guru_mgmp = id_guru($id_pengguna);
 
-$detail_kelas = get_keterangan_kelas($id_pengguna);
+// $detail_kelas = get_keterangan_kelas($id_pengguna);
 
 
 
