@@ -24,7 +24,11 @@ class ShiftPenggunaController extends Controller
             $date = Carbon::now()->format('Y-m-d');
         }
 
-        $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
+        $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
+        ->with('status_pengguna')
+        ->whereHas('status_pengguna', function($query) {
+        $query->where('nm_status_pengguna','=','AKTIF');
+        })->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
@@ -48,7 +52,6 @@ class ShiftPenggunaController extends Controller
                 }
             }
         }
-
         return view('humas/absensi/shift-pengguna/view-shift-pengguna', compact('date', 'hasil'));
     }
 
@@ -56,7 +59,11 @@ class ShiftPenggunaController extends Controller
     {
 
         $shifts = ShiftMaster::all();
-        $penggunas = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
+        $penggunas = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
+        ->with('status_pengguna')
+        ->whereHas('status_pengguna', function($query) {
+        $query->where('nm_status_pengguna','=','AKTIF');
+        })->get();
 
         // foreach($penggunas as $pengguna){}
         $date =  Carbon::now()->format('Y-m-d');
@@ -65,12 +72,8 @@ class ShiftPenggunaController extends Controller
         return view('humas/absensi/shift-pengguna/add-shift-pengguna', compact('shifts', 'penggunas', 'shiftsPengguna'));
     }
 
-
-
     public function storeShiftPengguna(Request $request)
     {
-
-
         $v = Validator::make($request->all(), [
 
             'pengguna' => 'required',
@@ -81,11 +84,8 @@ class ShiftPenggunaController extends Controller
 
             return [
                 'status' => 300, // fail
-
                 'message' => 'Harus pilih minimal 1 user'
-
             ];
-
             // $eror = ('Harus dicentang 1');
             // $pesan = "Harus dicentang salah satu";
             // return redirect("/humas#absensi/shift_pengguna/add/" . $pesan);
@@ -96,31 +96,23 @@ class ShiftPenggunaController extends Controller
 
         //validasi cekin
 
-
         $pengguna = $input->pengguna;
-
-
-
 
         $startDate = new Carbon('first day of' . $input->firstMount . '2022');
         $endDate =  new Carbon('last day of' . $input->endMount . '2022');
         // $nameDay =  ;
-
 
         $prefix = Sekolah::first()->prefix;
 
         if ($startDate > $endDate) {
             return [
                 'status' => 300, // fail
-
                 'message' => 'Bulan awal harus lebih kecil dari bulan akhir'
-
             ];
         }
 
 
         $dates = CarbonPeriod::create($startDate, $endDate);
-
         foreach ($pengguna as $user) {
             foreach ($dates as $value) {
                 $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user)
@@ -143,33 +135,6 @@ class ShiftPenggunaController extends Controller
             }
         }
 
-        // $start_date = carbon::parse($value->start_date)->format('d M Y');
-        // $end_date = carbon::parse($value->end_date)->format('d M Y');
-
-        //         foreach ($pengguna as $user) {
-
-        // foreach(){
-
-        // }
-
-
-        //         }
-
-        // $input = (object) $request->input();
-
-        // dd($input['firstMount']);
-
-        // if ($input['firstMount'] > $input['endMount']) {
-        //     // dd($input['firstMount']);
-        //     echo "gk boleh lebih";
-        //     // return view('humas/absensi/shift-pengguna/view-shift-pengguna/add');
-        // } else {
-        //     return view('humas/absensi/shift-pengguna/view-shift-pengguna');
-        // }
-
-
-
-        // var_dump($request);
         return [
             'status' => 201, // SUCCESS AND LOAD CONTENT
             'link' => '/humas#absensi/shift_pengguna',
