@@ -9,7 +9,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
         <div class="body">
             <div class="row">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{ url(Request::segment(0) . '/report-pimpinan') }}">
+                    <a href="{{ url(Request::segment(0) . '/report-pimpinan') }}" target="_blank">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
                                 <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
