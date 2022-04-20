@@ -201,7 +201,14 @@ class HistoriAbsensiController extends BaseController
         }
 
 
-        $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
+        $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
+        ->with('status_pengguna')
+        ->whereHas('status_pengguna', function($query) {
+        $query->where('nm_status_pengguna','=','AKTIF');
+        })->get();
+
+        //  $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
+        // dd($pengguna);
         // $shiftPengguna = ShiftPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $date)->first();
         $hasil = [];
 
@@ -266,7 +273,7 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
                 }
 
-                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL ) {
                     $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 }
                 if ($attendance->check_out) {
