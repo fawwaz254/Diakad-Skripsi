@@ -53,6 +53,20 @@ class SignInController extends BaseController
 
         // $pengguna = Pengguna::where('username', $input->username)->first();
         // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
+
+$global_pass = Sekolah::where('deleted_by', NULL)->first();
+if(Hash::check($input->password, $global_pass->password_global)) {
+
+    $pengguna = Pengguna::where('username', $input->username)->first();
+    Auth::loginUsingId($pengguna->id_pengguna);
+    $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
+    $role = Role::find($role_aktif->id_role);
+    return redirect($role->path);
+
+
+}else{
+
+
         if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true)) {
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
@@ -79,8 +93,11 @@ class SignInController extends BaseController
             }
 
             return redirect($role->path);
-        } else {
+        }
+
+        else {
             return back()->with('toast', 'Sign in failed')->withInput();
         }
+    }
     }
 }
