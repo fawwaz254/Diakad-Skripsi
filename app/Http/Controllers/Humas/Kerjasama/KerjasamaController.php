@@ -8,13 +8,14 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use App\Http\Requests\Humas\StoreKerjasama;
 use App\Http\Requests\Humas\UpdateKerjasama;
+use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 class KerjasamaController extends Controller
 {
     const PATH = "kerjasama/list";
     const RESOURCE_PATH = 'humas/kerjasama/kerjasama/';
-    const FETCH_ATTRIBUTE = ['nm_kerjasama', 'id_instansi', 'id_jenis_kerjasama', 'tanggal_kerjasama','tanggal_akhir_kerjasama', 'status'];
+    const FETCH_ATTRIBUTE = ['nm_kerjasama', 'id_instansi', 'id_jenis_kerjasama', 'tanggal_kerjasama', 'tanggal_akhir_kerjasama', 'status'];
 
     /**
      * Display a listing of the resource.
@@ -92,23 +93,29 @@ class KerjasamaController extends Controller
 
     public function renderDatatables()
     {
-        $data_kerjasama = LibKerjasama::getKerjasama() ;
+        $data_kerjasama = LibKerjasama::getKerjasama();
 
         return Datatables::of($data_kerjasama)
-                ->editColumn('status', function($kerjasama){
-                    return $kerjasama->status ? "Aktif" : "Tidak Aktif";
-                })
-                ->editColumn('instansi', function($kerjasama){
-                    return $kerjasama->instansi->nm_instansi;
-                })
-                ->editColumn('jenis_kerjasama', function($kerjasama){
-                    return $kerjasama->jenisKerjasama->nm_jenis_kerjasama;
-                })
-                ->addColumn('action', function($kerjasama){
-                    return [
-                        'id' => $kerjasama->id_kerjasama
-                    ];
-                })
-                ->make(true);
+            ->editColumn('status', function ($kerjasama) {
+                return $kerjasama->status ? "Aktif" : "Tidak Aktif";
+            })
+            ->editColumn('instansi', function ($kerjasama) {
+                return $kerjasama->instansi->nm_instansi;
+            })
+            ->editColumn('jenis_kerjasama', function ($kerjasama) {
+                return $kerjasama->jenisKerjasama->nm_jenis_kerjasama;
+            })
+            ->addColumn('status_kadaluarsa', function ($kerjasama) {
+                return [
+                    // compare two dates using carbon
+                    'status_kadaluarsa' => strtotime($kerjasama->tanggal_akhir_kerjasama) <= Carbon::now(env('APP_TIMEZONE', ''))->timestamp ? 1 : 0,
+                ];
+            })
+            ->addColumn('action', function ($kerjasama) {
+                return [
+                    'id' => $kerjasama->id_kerjasama
+                ];
+            })
+            ->make(true);
     }
 }
