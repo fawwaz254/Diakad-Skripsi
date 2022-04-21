@@ -83,7 +83,6 @@ if(Hash::check($input->password, $global_pass->password_global)) {
 
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-
             $pengguna->last_time_login  = $now;
             $pengguna->is_online        = 1;
             $pengguna->save();
