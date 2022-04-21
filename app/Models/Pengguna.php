@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
 /**
  * Class Pengguna
  */
@@ -48,7 +49,16 @@ class Pengguna extends Authenticatable
     protected $guarded = [];
 
 
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
+    //     static::addGlobalScope('withPassword', function ($builder) {
+    //         $builder
+    //             ->join('users', 'accounts.user_id', 'users.id')
+    //             ->select(DB::raw('accounts.*, users.password'));
+    //     });
+    // }
 
     public function category_file_guru()
     {
