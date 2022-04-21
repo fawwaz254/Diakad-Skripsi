@@ -77,7 +77,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
         $data_jenis_pendidikan = JenisPendidikan::get();
         $data_jenis_pekerjaan = JenisPekerjaan::get();
         $data_jenis_penghasilan = JenisPenghasilan::get();
-        
+
         $arr = array();
         foreach ($data as $key => $data_row) {
             $value = new \stdClass();
@@ -93,7 +93,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             // $check_nisn_siswa = Siswa::where('nisn_siswa', (string) $value->nisn)->first();
 
             // if ($check_nis_siswa) {
-                // Debugbar::error( 
+                // Debugbar::error(
                 // 	'Upload Data Siswa Gagal, NIS ' . $value->nis . ' ditemukan sama di dalam sistem'
                 // );
             // } else {
@@ -172,7 +172,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->agama)) {
                     $agama = null;
                 } else {
-                    $find_agama = $data_agama->firstWhere('nm_agama', $value->agama);
+                    $find_agama = $data_agama->firstWhere('kode_agama', $value->agama);
                     if ($find_agama) {
                         $agama = $find_agama->id_agama;
                     } else {
@@ -253,7 +253,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->kebutuhan_khusus)) {
                     $kebutuhan_khusus = null;
                 } else {
-                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('nm_kebutuhan_khusus', $value->kebutuhan_khusus);
+                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('kode_kebutuhan_khusus', $value->kebutuhan_khusus);
                     if ($find_kebutuhan_khusus) {
                         $kebutuhan_khusus = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                     } else {
@@ -359,7 +359,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_tinggal)) {
                     $jenis_tinggal = null;
                 } else {
-                    $find_jenis_tinggal = $data_jenis_tinggal->firstWhere('nm_jenis_tinggal', $value->jenis_tinggal);
+                    $find_jenis_tinggal = $data_jenis_tinggal->firstWhere('kode_jenis_tinggal', $value->jenis_tinggal);
                     if ($find_jenis_tinggal) {
                         $jenis_tinggal = $find_jenis_tinggal->id_jenis_tinggal;
                     } else {
@@ -406,7 +406,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_transportasi)) {
                     $jenis_transportasi = null;
                 } else {
-                    $find_jenis_transportasi = $data_jenis_transportasi->firstWhere('nm_jenis_transportasi', $value->jenis_transportasi);
+                    $find_jenis_transportasi = $data_jenis_transportasi->firstWhere('kode_jenis_transportasi', $value->jenis_transportasi);
                     if ($find_jenis_transportasi) {
                         $jenis_transportasi = $find_jenis_transportasi->id_jenis_transportasi;
                     } else {
@@ -570,7 +570,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_pendidikan_ayah)) {
                     $jenis_pendidikan_ayah = null;
                 } else {
-                    $find_jenis_pendidikan = $data_jenis_pendidikan->firstWhere('nm_jenis_pendidikan', $value->jenis_pendidikan_ayah);
+                    $find_jenis_pendidikan = $data_jenis_pendidikan->firstWhere('kode_jenis_pendidikan', $value->jenis_pendidikan_ayah);
                     if ($find_jenis_pendidikan) {
                         $jenis_pendidikan_ayah = $find_jenis_pendidikan->id_jenis_pendidikan;
                     } else {
@@ -584,7 +584,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_pekerjaan_ayah)) {
                     $jenis_pekerjaan_ayah = null;
                 } else {
-                    $find_jenis_pekerjaan = $data_jenis_pekerjaan->firstWhere('nm_jenis_pekerjaan', $value->jenis_pekerjaan_ayah);
+                    $find_jenis_pekerjaan = $data_jenis_pekerjaan->firstWhere('kode_jenis_pekerjaan', $value->jenis_pekerjaan_ayah);
                     if ($find_jenis_pekerjaan) {
                         $jenis_pekerjaan_ayah = $find_jenis_pekerjaan->id_jenis_pekerjaan;
                     } else {
@@ -598,7 +598,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_penghasilan_ayah)) {
                     $jenis_penghasilan_ayah = null;
                 } else {
-                    $find_jenis_penghasilan = $data_jenis_penghasilan->firstWhere('nm_jenis_penghasilan', $value->jenis_penghasilan_ayah);
+                    $find_jenis_penghasilan = $data_jenis_penghasilan->firstWhere('kode_jenis_penghasilan', $value->jenis_penghasilan_ayah);
                     if ($find_jenis_penghasilan) {
                         $jenis_penghasilan_ayah = $find_jenis_penghasilan->id_jenis_penghasilan;
                     } else {
@@ -612,7 +612,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->kebutuhan_khusus_ayah)) {
                     $kebutuhan_khusus_ayah = null;
                 } else {
-                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('nm_kebutuhan_khusus', $value->kebutuhan_khusus_ayah);
+                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('kode_kebutuhan_khusus', $value->kebutuhan_khusus_ayah);
                     if ($find_kebutuhan_khusus) {
                         $kebutuhan_khusus_ayah = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                     } else {
@@ -647,7 +647,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_pendidikan_ibu)) {
                     $jenis_pendidikan_ibu = null;
                 } else {
-                    $find_jenis_pendidikan = $data_jenis_pendidikan->firstWhere('nm_jenis_pendidikan', $value->jenis_pendidikan_ibu);
+                    $find_jenis_pendidikan = $data_jenis_pendidikan->firstWhere('kode_jenis_pendidikan', $value->jenis_pendidikan_ibu);
                     if ($find_jenis_pendidikan) {
                         $jenis_pendidikan_ibu = $find_jenis_pendidikan->id_jenis_pendidikan;
                     } else {
@@ -661,7 +661,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_pekerjaan_ibu)) {
                     $jenis_pekerjaan_ibu = null;
                 } else {
-                    $find_jenis_pekerjaan = $data_jenis_pekerjaan->firstWhere('nm_jenis_pekerjaan', $value->jenis_pekerjaan_ibu);
+                    $find_jenis_pekerjaan = $data_jenis_pekerjaan->firstWhere('kode_jenis_pekerjaan', $value->jenis_pekerjaan_ibu);
                     if ($find_jenis_pekerjaan) {
                         $jenis_pekerjaan_ibu = $find_jenis_pekerjaan->id_jenis_pekerjaan;
                     } else {
@@ -675,7 +675,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_penghasilan_ibu)) {
                     $jenis_penghasilan_ibu = null;
                 } else {
-                    $find_jenis_penghasilan = $data_jenis_penghasilan->firstWhere('nm_jenis_penghasilan', $value->jenis_penghasilan_ibu);
+                    $find_jenis_penghasilan = $data_jenis_penghasilan->firstWhere('kode_jenis_penghasilan', $value->jenis_penghasilan_ibu);
                     if ($find_jenis_penghasilan) {
                         $jenis_penghasilan_ibu = $find_jenis_penghasilan->id_jenis_penghasilan;
                     } else {
@@ -689,7 +689,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->kebutuhan_khusus_ibu)) {
                     $kebutuhan_khusus_ibu = null;
                 } else {
-                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('nm_kebutuhan_khusus', $value->kebutuhan_khusus_ibu);
+                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('kode_kebutuhan_khusus', $value->kebutuhan_khusus_ibu);
                     if ($find_kebutuhan_khusus) {
                         $kebutuhan_khusus_ibu = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                     } else {
@@ -724,7 +724,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_pendidikan_wali)) {
                     $jenis_pendidikan_wali = null;
                 } else {
-                    $find_jenis_pendidikan = $data_jenis_pendidikan->firstWhere('nm_jenis_pendidikan', $value->jenis_pendidikan_wali);
+                    $find_jenis_pendidikan = $data_jenis_pendidikan->firstWhere('kode_jenis_pendidikan', $value->jenis_pendidikan_wali);
                     if ($find_jenis_pendidikan) {
                         $jenis_pendidikan_wali = $find_jenis_pendidikan->id_jenis_pendidikan;
                     } else {
@@ -738,7 +738,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_pekerjaan_wali)) {
                     $jenis_pekerjaan_wali = null;
                 } else {
-                    $find_jenis_pekerjaan = $data_jenis_pekerjaan->firstWhere('nm_jenis_pekerjaan', $value->jenis_pekerjaan_wali);
+                    $find_jenis_pekerjaan = $data_jenis_pekerjaan->firstWhere('kode_jenis_pekerjaan', $value->jenis_pekerjaan_wali);
                     if ($find_jenis_pekerjaan) {
                         $jenis_pekerjaan_wali = $find_jenis_pekerjaan->id_jenis_pekerjaan;
                     } else {
@@ -752,7 +752,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_penghasilan_wali)) {
                     $jenis_penghasilan_wali = null;
                 } else {
-                    $find_jenis_penghasilan = $data_jenis_penghasilan->firstWhere('nm_jenis_penghasilan', $value->jenis_penghasilan_wali);
+                    $find_jenis_penghasilan = $data_jenis_penghasilan->firstWhere('kode_jenis_penghasilan', $value->jenis_penghasilan_wali);
                     if ($find_jenis_penghasilan) {
                         $jenis_penghasilan_wali = $find_jenis_penghasilan->id_jenis_penghasilan;
                     } else {
@@ -766,7 +766,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->kebutuhan_khusus_wali)) {
                     $kebutuhan_khusus_wali = null;
                 } else {
-                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('nm_kebutuhan_khusus', $value->kebutuhan_khusus_wali);
+                    $find_kebutuhan_khusus = $data_kebutuhan_khusus->firstWhere('kode_kebutuhan_khusus', $value->kebutuhan_khusus_wali);
                     if ($find_kebutuhan_khusus) {
                         $kebutuhan_khusus_wali = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                     } else {
