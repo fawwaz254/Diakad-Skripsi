@@ -45,7 +45,10 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
     {
         $this->auth_data = $auth_data;
         $this->now = $now;
+
     }
+
+
     /**
      * @param Collection $row
      *
@@ -61,12 +64,11 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
         }
 
         $data_siswa = Siswa::whereIn('nis_siswa', $data_nis)->get();
-
         $data_status_pengguna = StatusPengguna::where('status_join_table', '=', '3')->get();
         $data_kelas = Kelas::get();
         $data_jalur = Jalur::get();
         $data_semester_masuk = Semester::get();
-        $data_penerimaan = Penerimaan::where('jenis_penerimaan', '=', '2')->get();
+        $data_penerimaan = Penerimaan::get();
         $data_agama = Agama::get();
         $data_kota = Kota::get();
         $data_kebutuhan_khusus = KebutuhanKhusus::get();
@@ -467,7 +469,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if (empty($value->jenis_layak_pip)) {
                     $jenis_layak_pip = null;
                 } else {
-                    $find_jenis_layak = $data_jenis_layak_pip->firstWhere('nm_jenis_layak_pip', $value->jenis_layak_pip);
+                    $find_jenis_layak = $data_jenis_layak_pip->firstWhere('kode_jenis_layak_pip', $value->jenis_layak_pip);
                     if ($find_jenis_layak) {
                         $jenis_layak_pip = $find_jenis_layak->id_jenis_layak_pip;
                     } else {
@@ -1058,7 +1060,8 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             // }
         }
 
-        // dd($arr);
+        // if ($arr) {
+            // dd($arr);
         if (count($arr) != 0) {
             foreach ($arr as $data_siswa_1) {
                 $jumlah_nis = 0;
@@ -1140,9 +1143,9 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                         'nomor_ijasah_sebelumnya'		=> $data_siswa['nomor_ijasah_sebelumnya'],
                         'nomor_skhus_sebelumnya'		=> $data_siswa['nomor_skhus_sebelumnya'],
 
-                        'created_at'					=> $now,
+                        'created_at'					=> $this->now,
                         'created_by' 					=> $data_siswa['created_by'],
-                        'updated_at'					=> $now,
+                        'updated_at'					=> $this->now,
                         'updated_by' 					=> $data_siswa['created_by']
                     ];
 
@@ -1164,9 +1167,9 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                         'golongan_darah'				=> $data_siswa['golongan_darah'],
                         'riwayat_kelainan_jasmani'		=> $data_siswa['riwayat_kelainan_jasmani'],
 
-                        'created_at'					=> $now,
+                        'created_at'					=> $this->now,
                         'created_by' 					=> $data_siswa['created_by'],
-                        'updated_at'					=> $now,
+                        'updated_at'					=> $this->now,
                         'updated_by' 					=> $data_siswa['created_by']
                     ];
 
@@ -1213,9 +1216,9 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                         'nomor_hp_ortu'					=> $data_siswa['nomor_hp_ortu'],
                         'email_ortu'					=> $data_siswa['email_ortu'],
 
-                        'created_at'					=> $now,
+                        'created_at'					=> $this->now,
                         'created_by' 					=> $data_siswa['created_by'],
-                        'updated_at'					=> $now,
+                        'updated_at'					=> $this->now,
                         'updated_by' 					=> $data_siswa['created_by']
                     ];
 
@@ -1237,18 +1240,18 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                         'nomor_peserta_unas'	=> $data_siswa['nomor_peserta_unas'],
                         'nisn'					=> $data_siswa['nisn'],
 
-                        'created_at'	=> $now,
+                        'created_at'	=> $this->now,
                         'created_by' 	=> $data_siswa['created_by'],
-                        'updated_at'	=> $now,
+                        'updated_at'	=> $this->now,
                         'updated_by' 	=> $data_siswa['created_by']
                     ];
 
                     if($check_nis_siswa){
-                        DB::table('calon_siswa_sekolah')->where('id_c_siswa', $check_nis_siswa->id_c_siswa)->update($row_calon_siswa_sekolah);
+                        DB::table('calon_siswa_sekolah')->where('id_c_siswa', $check_nis_siswa->id_c_siswa)->update($calon_siswa_sekolah);
                     }else{
-                        $row_calon_siswa_sekolah['id_c_siswa'] 	= $data_siswa['id_c_siswa'];
+                        $calon_siswa_sekolah['id_c_siswa'] 	= $data_siswa['id_c_siswa'];
 
-                        DB::table('calon_siswa_sekolah')->insert($row_calon_siswa_sekolah);
+                        DB::table('calon_siswa_sekolah')->insert($calon_siswa_sekolah);
                     }
 
                     if($check_nis_siswa){
@@ -1264,7 +1267,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                                 'password'				=> Hash::make($data_siswa['nis']),
                                 'must_change_password' 	=> 1,
                                 'status_join_table' 	=> 3,
-                                'created_at'			=> $now,
+                                'created_at'			=> $this->now,
                                 'created_by' 			=> $data_siswa['created_by']
                             ]
                         );
@@ -1277,9 +1280,9 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                         'is_orang_tua'	=> $data_siswa['is_orang_tua'],
 
                         'thn_masuk_siswa'		=> $data_siswa['tahun_masuk'],
-                        'created_at'			=> $now,
+                        'created_at'			=> $this->now,
                         'created_by' 			=> $data_siswa['created_by'],
-                        'updated_at'			=> $now,
+                        'updated_at'			=> $this->now,
                         'updated_by' 			=> $data_siswa['created_by']
                     ];
 
@@ -1304,7 +1307,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                                 'id_semester' 			=> $data_siswa['semester_masuk'],
                                 'id_status_pengguna' 	=> $data_siswa['status_siswa'],
                                 'id_jalur' 				=> $data_siswa['jalur'],
-                                'created_at'			=> $now,
+                                'created_at'			=> $this->now,
                                 'created_by' 			=> $data_siswa['created_by']
                             ]
                         );
@@ -1317,7 +1320,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                                 'id_jalur' 				=> $data_siswa['jalur'],
                                 'id_admisi' 			=> $data_siswa['id_admisi'],
                                 'is_jalur_aktif' 		=> 1,
-                                'created_at'			=> $now,
+                                'created_at'			=> $this->now,
                                 'created_by' 			=> $data_siswa['created_by']
                             ]
                         );
@@ -1328,7 +1331,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                                 'id_role' 					=> 3,
                                 'keterangan_role_pengguna' 	=> "Input Pendidikan",
                                 'is_aktif'					=> 1,
-                                'created_at'				=> $now,
+                                'created_at'				=> $this->now,
                                 'created_by' 				=> $data_siswa['created_by']
                             ]
                         );
@@ -1338,8 +1341,8 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                                 'id_log_kelas_siswa'		=> $data_siswa['id_log_kelas_siswa'],
                                 'id_siswa' 					=> $data_siswa['id_siswa'],
                                 'id_kelas' 					=> $data_siswa['kelas'],
-                                'created_at'				=> $now,
-                                'updated_at'				=> $now,
+                                'created_at'				=> $this->now,
+                                'updated_at'				=> $this->now,
                                 'created_by' 				=> $data_siswa['created_by']
                             ]
                         );
@@ -1359,7 +1362,6 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             } catch (\Exception $e) {
                 DB::rollback();
                 // something went wrong
-                
                 Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error');
             }
         } else {
