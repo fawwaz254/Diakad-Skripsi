@@ -805,7 +805,7 @@ text-align: center;
                         <br>
                         <img src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" style="height:90px;" />
                     @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                        <img style="position: absolute; top: 5%;" src="{{ asset('media/ttd/smpypm1.png') }}"
+                        <img style="position: absolute; top: 5%; margin-left:-40px;" src="{{ asset('media/ttd/smpypm1.png') }}"
                             alt="TTD" width="160px" height="160px" class="ttd">
                         <br>
                         <br>
