@@ -76,7 +76,15 @@ class DataKategoriMGMPController extends BaseController
         $auth_data = $input->auth_data;
         $mata_pelajaran = MataPelajaran::all();
     
-        $pengguna = Pengguna::where('status_join_table', 2)->get();
+
+        $pengguna = pengguna::where('status_join_table', 2)
+        ->with('status_pengguna')
+        ->whereHas('status_pengguna', function($query) {
+        $query->where('nm_status_pengguna','=','AKTIF');
+        })->get();
+
+
+        // $pengguna = Pengguna::where('status_join_table', 2)->get();
         // $pengguna = Role::where('id_role', '<>', '14')->get();
         return view('akademik/manajemen-file/data-kategori/add-data-kategori', compact('auth_data', 'pengguna','mata_pelajaran'));
     }
@@ -91,7 +99,13 @@ class DataKategoriMGMPController extends BaseController
         $name = CategoriFileMGMP::find($category_file_id)->first();
         $data_kategori = CategoriFileGuru::where('category_file_mgmp_id', $category_file_id)->first();
         // $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_mgmp_id)->pluck('id_role');
-        $pengguna = Pengguna::where('status_join_table', 2)->get();
+        // $pengguna = Pengguna::where('status_join_table', 2)->get();
+        
+        $pengguna = pengguna::where('status_join_table', 2)
+        ->with('status_pengguna')
+        ->whereHas('status_pengguna', function($query) {
+        $query->where('nm_status_pengguna','=','AKTIF');
+        })->get();
 $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$category_file_id )->pluck('id_pengguna')->toArray();
 
         return view('akademik/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna','mata_pelajaran','name'));
