@@ -23,7 +23,7 @@ class DataFileController extends Controller
         $pengguna = $input->auth_data->pengguna->id_pengguna;
       
     
-        // $category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();        
+        // $category = CategoriFileGuru::where('id_pengguna' , $pengguna)->get();
         $category = CategoriFileGuru::join('category_file_mgmp', 'category_file_mgmp.category_file_mgmp_id', '=', 'category_file_guru.category_file_mgmp_id')
             ->where('category_file_guru.id_pengguna', $pengguna)
             ->select('category_file_mgmp.*')->get();
