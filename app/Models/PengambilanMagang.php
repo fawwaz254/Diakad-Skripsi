@@ -47,5 +47,9 @@ class PengambilanMagang extends Model
         return $this->belongsTo(RekananMagang::class, 'id_rekanan_magang');
     }
 
+    public function kelas(){
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
+
 
 }

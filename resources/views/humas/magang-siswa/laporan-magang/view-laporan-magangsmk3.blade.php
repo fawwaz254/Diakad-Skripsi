@@ -34,7 +34,7 @@
                             <thead>
                                 <tr>
                                     <th>No. </th>
-                                    <th>Rekanan Magang</th>
+                                    <th>Kelas</th>
                                     <th>Periode Magang</th>
                                     <th></th>
                                 </tr>
@@ -77,14 +77,31 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'nm_rekanan_magang', name: 'nm_rekanan_magang' },
+            { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'nm_periode_magang', name: 'nm_periode_magang' },
             {data: 'action',  name: 'action', searchable: false, orderable: false,
             render: function(data){
+                if(data.smkypm3taman){
+
+                    if(data.laporan){
+                        var html = '';
+                    html += `<a target="_blank" href="`+open_url+`/`+data.id_kelas+`/`+data.id_periode_magang+`"><button class="btn btn-success btn-circle waves-effect waves-circle waves-float"><i class="material-icons">attach_file</i></button></a>`
+                    html += `<a href="`+edit_url+`/`+data.id_kelas+`/`+data.id_periode_magang+`"><button class="btn btn-warning btn-circle waves-effect waves-circle waves-float"><i class="material-icons">edit</i></button></a>`
+                    html += `<a href="`+delete_url+`/`+data.id_kelas+`/`+data.id_periode_magang+`"><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float"><i class="material-icons">delete</i></button></a>`
+
+                    return html;
+                    }else{
+                        var html = '';
+                    html += `<a href="`+input_url+`/`+data.id_kelas+`/`+data.id_periode_magang+`"><button class="btn btn-danger btn-circle waves-effect waves-circle waves-float"><i class="material-icons">add_box</i></button></a>`
+                    return html;
+                    }
+                }else{
                     var html = '';
                     html += `<a target="_blank" href="`+print_url+`/`+data.id_rekanan_magang+`/`+data.id_periode_magang+`"><button class="btn btn-info btn-circle waves-effect waves-circle waves-float"><i class="material-icons">print</i></button></a>`
                     return html;
-            } }
+                }
+                }
+            }
         ]
     });
 
