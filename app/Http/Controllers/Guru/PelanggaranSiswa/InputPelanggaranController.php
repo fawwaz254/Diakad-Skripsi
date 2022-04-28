@@ -252,6 +252,23 @@ class InputPelanggaranController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
+
+
+                $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
+                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran',$time)->where('id_semester',$input->id_semester)->where('id_siswa',$input->id_siswa )->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
+    
+                $users = DB::table('siswa')
+                ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->where('id_siswa', $input->id_siswa)
+                ->first();
+
+                if($pelanggaran){
+                    return [
+                             'status' => 300, // FAILED
+                             'message' => 'Data Pelanggaran '.$users->nm_pengguna .' sudah terinput'
+                         ];}
+     
+
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
