@@ -18,7 +18,7 @@
 
         .bg {
 
-            background-image: url("{{ asset('media/skpi.png') }}");
+            background-image: url("{{ asset('media/vxskpi.png') }}");
 
             /* Full height */
             height: 1600px;
@@ -83,7 +83,7 @@
 
             .bg {
 
-                background-image: url("{{ asset('media/skpi.png') }}");
+                background-image: url("{{ asset('media/vxskpi.png') }}");
 
 
 
