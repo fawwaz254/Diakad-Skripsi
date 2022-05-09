@@ -231,12 +231,16 @@ class InputPelanggaranController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
+
+                
+                $PecahSiswa = explode("/", $input->id_siswa);
+
                 $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
-                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran',$time)->where('id_semester',$input->id_semester)->where('id_siswa',$input->id_siswa )->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
-    
+                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran',$time)->where('id_semester',$input->id_semester)->where('id_siswa',$PecahSiswa[1] )->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
+
                 $users = DB::table('siswa')
                 ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
-                ->where('id_siswa', $input->id_siswa)
+                ->where('id_siswa', $PecahSiswa[1])
                 ->first();
 
                 if($pelanggaran){
@@ -260,10 +264,6 @@ class InputPelanggaranController extends BaseController
 
                 $idSiswa = $input->id_siswa;
                 $PecahStr = explode("/", $idSiswa);
-                 
-        
-             
-
 
                 $siswa = Siswa::where('id_siswa', '=', $PecahStr[1])->first();
 
