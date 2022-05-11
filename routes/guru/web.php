@@ -13,7 +13,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('add', 'MGMP\DataFileController@addDataFile');
                 Route::get('dropdown-category', 'MGMP\DataFileController@dropdownCategory');
                 Route::post('action-data-file/{mode}/{id}', 'MGMP\DataFileController@actionDataFile');
-                
             });
         });
 

@@ -2,25 +2,13 @@
 $theme_name = Request::segment(1);
 $route_modul = Request::segment(2);
 $route_menu = Request::segment(3);
-
 $path = Request::fullUrl();
-
-
-
-
-
 $role_aktif = auth_data()->role_aktif->id_role;
 $category_file_role = category_file_role($role_aktif);
 $id_pengguna = auth_data()->pengguna->id_pengguna;
 $id_guru_mgmp = id_guru($id_pengguna);
 
 // $detail_kelas = get_keterangan_kelas($id_pengguna);
-
-
-
-
-
-
 
 @endphp
 

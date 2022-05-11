@@ -30,15 +30,15 @@ class TracerAlumniController extends Controller
 {
 
     const PATH = 'alumni/tracer-alumni';
-    const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat_instansi', 'kontak_instansi', 'bidang_usaha_instansi', 'tahun_masuk_instansi','kapan_mulai_bekerja','lama_bekerja'];
+    const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat_instansi', 'kontak_instansi', 'bidang_usaha_instansi', 'tahun_masuk_instansi', 'kapan_mulai_bekerja', 'lama_bekerja'];
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat_perguruan', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk_perguruan'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat_usaha', 'kontak_usaha', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
     const FETCH_IDLE_ATTRIBUTE = ['status_menunggu'];
 
-	public function viewTracerAlumni(Request $request){
+    public function viewTracerAlumni(Request $request)
+    {
 
-    	return view('humas.alumni.tracer-alumni.view-tracer-alumni');
-
+        return view('humas.alumni.tracer-alumni.view-tracer-alumni');
     }
 
     public function datatablesTracerAlumni(Request $request)
@@ -46,58 +46,58 @@ class TracerAlumniController extends Controller
         $alumnis    = LibAlumni::getAlumnis();
 
         return Datatables::of($alumnis)
-        ->addColumn('status_verifikasi',function($item){
-            if($item->status_verifikasi == 0){
-               $data['status'] = 'Belum Diverikasi';
-               $data['color'] = 'pink';
-            }
-            else{
-                $data['status'] = 'Sudah Diverikasi';
-                $data['color'] = 'teal';
-            }
-            return $data;
-        })
-        ->editColumn('status', function($item){
-            return ucfirst($item->status);
-        })
-        ->addColumn('action', function($item){
-            return [ 'id' => $item->id_alumni];
-        })
-        ->make(true);
+            ->addColumn('status_verifikasi', function ($item) {
+                if ($item->status_verifikasi == 0) {
+                    $data['status'] = 'Belum Diverifikasi';
+                    $data['color'] = 'pink';
+                } else {
+                    $data['status'] = 'Sudah Diverifikasi';
+                    $data['color'] = 'teal';
+                }
+                return $data;
+            })
+            ->editColumn('status', function ($item) {
+                return ucfirst($item->status);
+            })
+            ->addColumn('action', function ($item) {
+                return ['id' => $item->id_alumni];
+            })
+            ->make(true);
     }
 
-    public function addTracerAlumni(Request $request){
+    public function addTracerAlumni(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat',3)->get();
+        $data_kelas = Kelas::where('tingkat', 3)->get();
         $alumni = null;
 
-        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni',compact('auth_data','data_jurusan','alumni','data_kelas'));
-
+        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
-    public function editTracerAlumni($id, Request $request){
+    public function editTracerAlumni($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat',9)->get();
+        $data_kelas = Kelas::where('tingkat', 9)->get();
         $alumni = Alumni::find($id);
 
-        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni',compact('auth_data','data_jurusan','alumni','data_kelas'));
-
+        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
-    public function actionTracerAlumni(Request $request, $mode, $id = null){
+    public function actionTracerAlumni(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if($mode == 'add'){
+        if ($mode == 'add') {
 
             DB::beginTransaction();
 
@@ -107,7 +107,7 @@ class TracerAlumniController extends Controller
                 $data['nomor_hp']          = $request->nomor_hp;
                 $data['id_jurusan']        = $request->jurusan;
                 $data['alamat_jalan']      = $request->alamat_siswa;
-                $data['id_c_siswa']        = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();        
+                $data['id_c_siswa']        = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data['id_penerimaan']     = 0;
                 $data['status_verifikasi'] = 0;
                 $data['created_by']        = $auth_data->pengguna->id_pengguna;
@@ -131,14 +131,14 @@ class TracerAlumniController extends Controller
                 $data3['username']              = str_replace(' ', '_', $request->nama_siswa);
                 $data3['id_status_pengguna']    = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
                 $data3['id_sekolah']            = $auth_data->pengguna->id_sekolah;
-                $data3['id_pengguna']           = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+                $data3['id_pengguna']           = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data3['created_by']            = $auth_data->pengguna->id_pengguna;
                 $data3['created_at']            = Carbon::now(env('APP_TIMEZONE', ''));
 
                 Pengguna::insert($data3);
 
                 Siswa::insert([
-                    'id_siswa'      => $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid(), 
+                    'id_siswa'      => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
                     'id_pengguna'   => $data3['id_pengguna'],
                     'id_c_siswa'    => $data['id_c_siswa'],
                     'created_by'    => $auth_data->pengguna->id_pengguna,
@@ -149,7 +149,7 @@ class TracerAlumniController extends Controller
                 $data4['email']         = $request->email;
                 $data4['tahun_lulus']   = $request->tahun_lulus;
                 $data4['status']        = $request->status;
-                $data4['id_alumni']     = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
+                $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $data['id_c_siswa'];
                 $data4['created_by']    = $auth_data->pengguna->id_pengguna;
                 $data4['created_at']    = Carbon::now(env('APP_TIMEZONE', ''));
@@ -159,59 +159,46 @@ class TracerAlumniController extends Controller
                 switch ($request->status) {
                     case 'bekerja':
                         $data5 = $request->only(self::FETCH_WORK_ATTRIBUTE);
-                        $data5['id_alumni_bekerja']    = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                    break;
+                        $data5['id_alumni_bekerja']    = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
                     case 'usaha':
                         $data5 = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
-                        $data5['id_alumni_wirausaha']  = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                    break;
+                        $data5['id_alumni_wirausaha']  = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
                     case 'kuliah':
                         $data5 = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
-                        $data5['id_alumni_kuliah']     = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                    break;
+                        $data5['id_alumni_kuliah']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
                     case 'menunggu':
                         $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
-                        $data5['id_alumni_menunggu']   = $auth_data->sekolah_data->prefix.strtotime(Carbon::now()).uniqid();
-                    break;
+                        $data5['id_alumni_menunggu']   = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
                 }
 
                 $data5['id_alumni']              = $data4['id_alumni'];
                 $data5['created_by']             = $auth_data->pengguna->id_pengguna;
                 $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
 
-                if($request->status == 'bekerja'){
+                if ($request->status == 'bekerja') {
                     LibAlumni::storeWorkplace($data5);
-                }
-
-                elseif($request->status == 'usaha'){
-                    LibAlumni::storeBusiness($data5); 
-                }
-
-                elseif($request->status == 'kuliah'){
+                } elseif ($request->status == 'usaha') {
+                    LibAlumni::storeBusiness($data5);
+                } elseif ($request->status == 'kuliah') {
                     LibAlumni::storeUniversity($data5);
-                }
-
-                elseif($request->status == 'menunggu'){
+                } elseif ($request->status == 'menunggu') {
                     LibAlumni::storeIdleAlumni($data5);
                 }
 
                 DB::commit();
 
                 return web_response(202, "Update successfully", self::PATH);
+            } catch (\Exception $e) {
 
+                DB::rollback();
+
+                return error_response($e);
             }
-
-            catch (\Exception $e) {
-
-               DB::rollback();
-
-               return error_response($e);
-
-            }
-
-        }
-
-        elseif($mode == 'delete'){
+        } elseif ($mode == 'delete') {
 
             $alumni               = Alumni::find($id);
             $alumni->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -223,9 +210,6 @@ class TracerAlumniController extends Controller
                 'status' => 203, // SUCCESS AND LOAD TABLE
                 'message' => 'Delete Alumni successfully'
             ];
-
         }
-
     }
-
 }

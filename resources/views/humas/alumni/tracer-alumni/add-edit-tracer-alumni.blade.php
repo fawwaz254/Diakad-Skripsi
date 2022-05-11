@@ -1,6 +1,6 @@
 <style>
     .status-header {
-        margin: 0 1.5rem;
+        /* margin: 0 1.5rem; */
         font-size: 18px;
         font-weight: normal;
         color: #111;
@@ -152,6 +152,26 @@
                         <div class="form_layout" id="idle_state">
                             @include('./humas.alumni.forms.idle_state')
                         </div>
+                        {{-- handle senior high school data --}}
+                        <div class="form_layout" id="senior_high_school">
+                            @include(
+                                './humas.alumni.forms.senior_high_school'
+                            )
+                        </div>
+                        {{-- handle vocational high school data --}}
+                        <div class="form_layout" id="vocational_high_school">
+                            @include(
+                                './humas.alumni.forms.vocational_high_school'
+                            )
+                        </div>
+                        {{-- handle vocational high school data --}}
+                        <div class="form_layout" id="state_madrasah">
+                            @include('./humas.alumni.forms.state_madrasah')
+                        </div>
+                        {{-- handle drop out data --}}
+                        <div class="form_layout" id="drop_out">
+                            @include('./humas.alumni.forms.drop_out')
+                        </div>
 
 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -198,6 +218,10 @@
                 break;
             case 'menunggu':
                 $('.form_layout#idle_state').show();
+                $('button#submit').attr('disabled', false);
+                break;
+            case 'sma':
+                $('.form_layout#senior_high_school').show();
                 $('button#submit').attr('disabled', false);
                 break;
         }
