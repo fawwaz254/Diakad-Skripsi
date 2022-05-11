@@ -34,7 +34,11 @@ class LaporanMagangController extends BaseController
 
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
-        return view('humas/magang-siswa/laporan-magang/view-laporan-magang', compact('auth_data', 'data_periode_magang'));
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+            return view('humas/magang-siswa/laporan-magang/view-laporan-magangsmk3', compact('auth_data', 'data_periode_magang'));
+        }else{
+            return view('humas/magang-siswa/laporan-magang/view-laporan-magang', compact('auth_data', 'data_periode_magang'));
+        }
     }
 
     public function openLink(Request $request, $id_rekanan_magang, $id_periode_magang)
@@ -58,35 +62,41 @@ class LaporanMagangController extends BaseController
 
         $id_periode_magang = $input->id_periode_magang;
 
-        $data = PengajuanSiswaMagang::with('periode', 'rekanan')
+
+
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+            $data = PengajuanSiswaMagang::with('periode', 'kelas')
+            ->select('id_kelas', 'id_periode_magang')
+            ->groupBy('id_kelas', 'id_periode_magang')
+            ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
+                $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
+            })
+            ->get();
+
+            return Datatables::of($data)->editColumn('nm_periode_magang', function ($item) {
+                return $item->periode->nm_periode_magang;
+            })
+                ->editColumn('nm_kelas', function ($item) {
+                    return $item->kelas->nm_kelas;
+                })
+                ->addColumn('action', function ($item) {
+                    $data = array(
+                        'smkypm3taman' => true,
+                        'id' => $item->id_pengambilan_magang,
+                        'id_kelas' => $item->id_kelas,
+                        'id_periode_magang' => $item->id_periode_magang,
+                        'laporan' => link_laporan_googledrive($item->id_kelas, $item->id_periode_magang)
+                    );
+                    return $data;
+                })->make(true);
+        } else {
+            $data = PengajuanSiswaMagang::with('periode', 'rekanan')
             ->select('id_rekanan_magang', 'id_periode_magang')
             ->groupBy('id_rekanan_magang', 'id_periode_magang')
             ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
                 $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
             })
             ->get();
-
-
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
-
-
-            return Datatables::of($data)->editColumn('nm_periode_magang', function ($item) {
-                return $item->periode->nm_periode_magang;
-            })
-                ->editColumn('nm_rekanan_magang', function ($item) {
-                    return $item->rekanan->nm_rekanan_magang;
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'smkypm3taman' => true,
-                        'id' => $item->id_pengambilan_magang,
-                        'id_rekanan_magang' => $item->id_rekanan_magang,
-                        'id_periode_magang' => $item->id_periode_magang,
-                        'laporan' => link_laporan_googledrive($item->id_rekanan_magang, $item->id_periode_magang)
-                    );
-                    return $data;
-                })->make(true);
-        } else {
 
             return Datatables::of($data)->editColumn('nm_periode_magang', function ($item) {
                 return $item->periode->nm_periode_magang;
@@ -184,13 +194,11 @@ class LaporanMagangController extends BaseController
         $linkLaporanMagang     = link_laporan_magang::where('id_rekanan_magang', $id_rekanan_magang)->where('id_periode_magang', $id_periode_magang)->first();
 
         $linkLaporanMagang->delete();
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
 
-        return view('humas/magang-siswa/laporan-magang/view-laporan-magang', compact('auth_data', 'data_periode_magang'));
+        return view('humas/magang-siswa/laporan-magang/view-laporan-magangsmk3', compact('auth_data', 'data_periode_magang'));
     }
 
 

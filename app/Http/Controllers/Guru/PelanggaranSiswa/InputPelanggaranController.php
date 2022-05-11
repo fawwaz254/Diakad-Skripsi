@@ -40,7 +40,6 @@ class InputPelanggaranController extends BaseController
         $data_kbm = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester);
 
         $grup_kbm_perhari = $data_kbm->groupBy('nm_jadwal_hari');
-
         return view('guru/pelanggaran-siswa/input-pelanggaran/view-input-pelanggaran-mp', compact('auth_data', 'grup_kbm_perhari'));
     }
 
@@ -55,7 +54,6 @@ class InputPelanggaranController extends BaseController
 
     public function ajaxGetPertemuanByJadwalKelasMp(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -64,11 +62,11 @@ class InputPelanggaranController extends BaseController
         $data_pertemuan = array();
         $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
 
-        for ($i=1; $i < ($data_presensiMp->count() +1); $i++) {
+        for ($i=1; $i < 26; $i++) {
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
                 $pertemuan = array(
-                    'text' => $i." (Sudah Absensi)",
+                    'text' => $i." (Sudah)",
                     'value' => $i
                 );
             } else {
@@ -252,6 +250,23 @@ class InputPelanggaranController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
+
+
+                $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
+                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran',$time)->where('id_semester',$input->id_semester)->where('id_siswa',$input->id_siswa )->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
+    
+                $users = DB::table('siswa')
+                ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->where('id_siswa', $input->id_siswa)
+                ->first();
+
+                if($pelanggaran){
+                    return [
+                             'status' => 300, // FAILED
+                             'message' => 'Data Pelanggaran '.$users->nm_pengguna .' sudah terinput'
+                         ];}
+     
+
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();

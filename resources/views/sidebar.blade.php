@@ -113,12 +113,26 @@ $id_guru_mgmp = id_guru($id_pengguna);
                         @if ($role_aktif == 2)
                             <ul class="ml-menu">
                                 <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#mgmp/data-file-mapel') }}"
+                                    <a href="{{ url(Request::segment(1) . '#mgmp/laporan-harian-mgmp') }}"
                                         class="target-link waves-effect waves-block">
-                                        Data File
+                                        Laporan Harian MGMP
+                                    </a>
+                                </li>
+                                <li class="menu-item" id="menu-item-data-sub-kategori">
+                                    <a href="{{ url(Request::segment(1) . '#mgmp/laporan-kelompok-mgmp') }}"
+                                        class="target-link waves-effect waves-block">
+                                        Laporan Kelompok
                                     </a>
                                 </li>
                             </ul>
+                            {{-- <ul class="ml-menu">
+                                <li class="menu-item" id="menu-item-data-sub-kategori">
+                                    <a href="{{ url(Request::segment(1) . '#mgmp/laporan-kelompok-mgmp') }}"
+                                        class="target-link waves-effect waves-block">
+                                        Laporan Kelompok
+                                    </a>
+                                </li>
+                            </ul> --}}
                             {{-- @else
                             <ul class="ml-menu">
                                 <li class="menu-item" id="menu-item-data-kategori">

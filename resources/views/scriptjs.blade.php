@@ -32,7 +32,9 @@
                         window.location.href = response.link;
                     }else if(response.status == 202){
                         vex.dialog.alert(response.message);
-                        loadURI(response.path);
+                        setTimeout(() => {
+                            loadURI(response.path);
+                        }, 2000);
                     }else if(response.status == 203){
                         vex.dialog.alert(response.message);
                         primary_table.ajax.reload(null, false);
