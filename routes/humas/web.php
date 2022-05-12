@@ -3,8 +3,6 @@
 // ROLE ALUMNI
 Route::group(array('middleware' => ['token_staff']), function () {
 
-
-
 	Route::group(array('prefix' => 'humas'), function () {
 		Route::get('welcome', 'Humas\WelcomeController@indexWelcome');
 
@@ -105,9 +103,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			});
 
 
-
-
-
 			Route::group(array('prefix' => 'histori-absensi'), function () {
 				Route::get('export-laravel-mount/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
 				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
@@ -133,6 +128,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 		});
 
 		/** ==== MODUL BURSA KERJA ==== **/
+
 		Route::group(array('prefix' => 'bursa-kerja'), function () {
 
 			Route::group(array('prefix' => 'lowongan-kerja'), function () {
