@@ -24,10 +24,10 @@ class HistoriAbsensiController extends BaseController
     {
         set_time_limit(1800);
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
+            ->with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
         // if (empty($date) || empty($end_date)) {
         //     $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
         //     $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
@@ -81,7 +81,7 @@ class HistoriAbsensiController extends BaseController
                         $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
                     }
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
-                        
+
                         $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
                     }
                 } else {
@@ -111,10 +111,10 @@ class HistoriAbsensiController extends BaseController
     public function export_excel_day(Request $request, $date = null)
     {
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
+            ->with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
 
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
@@ -167,6 +167,10 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['notes'] = 'Tidak Checkout';
                 }
 
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+
+                    $hasil[$key]['notes'] = "Telat & Tidak Checkout";
+                }
 
                 if ($attendance->notes) {
                     $hasil[$key]['notes'] = $attendance->notes;
@@ -209,10 +213,10 @@ class HistoriAbsensiController extends BaseController
 
 
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
+            ->with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
 
         //  $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
         // dd($pengguna);
@@ -243,8 +247,8 @@ class HistoriAbsensiController extends BaseController
             $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
             $hasil[$key]['shift'] = false;
-        if($shiftPengguna){
-            $hasil[$key]['shift'] = true;
+            if ($shiftPengguna) {
+                $hasil[$key]['shift'] = true;
             }
 
             if ($attendance) {
@@ -280,7 +284,7 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
                 }
 
-                if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL ) {
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL) {
                     $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 }
                 if ($attendance->check_out) {
@@ -293,7 +297,7 @@ class HistoriAbsensiController extends BaseController
                 }
 
                 if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
-                   
+
                     $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
                 }
 

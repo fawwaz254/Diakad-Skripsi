@@ -40,10 +40,8 @@
             @elseif($r['status'] == 'masuk')
                 <td style="background-color: #6cff5e">{{ $r['status'] }}</td>
             @else
-                <td></td>
+                <td>{{ $r['status'] }}</td>
             @endif
-            <td>{{ $r['status'] }}</td>
-
             <td>{{ $r['notes'] }}</td>
             </tr>
         @endforeach
