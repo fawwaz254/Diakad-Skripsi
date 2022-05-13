@@ -9,6 +9,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Models\KategoriPelanggaran;
 use App\Models\PresensiMp as PresensiMp;
+use App\Models\PelanggaranSiswa;
 use App\Models\PresensiMpPelanggaran as PresensiMpPelanggaran;
 use App\Models\Siswa as Siswa;
 use App\Models\WaliMurid;
@@ -21,7 +22,7 @@ use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\LibGlobal;
-
+use App\Models\TindakanPelanggaran;
 use Auth;
 use DB;
 use Session;
@@ -62,11 +63,11 @@ class InputPelanggaranController extends BaseController
         $data_pertemuan = array();
         $data_presensiMp = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->get();
 
-        for ($i=1; $i < 26; $i++) {
+        for ($i = 1; $i < 26; $i++) {
             $presensiMp = $data_presensiMp->firstWhere('pertemuan_ke', $i);
             if ($presensiMp) {
                 $pertemuan = array(
-                    'text' => $i." (Sudah)",
+                    'text' => $i . " (Sudah)",
                     'value' => $i
                 );
             } else {
@@ -102,7 +103,7 @@ class InputPelanggaranController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'pelanggaran-siswa/input-pelanggaran-mp/view-kbm/'.$input->id_jadwal_kelas_mp.'/'.$input->pertemuan_ke
+                'path' => 'pelanggaran-siswa/input-pelanggaran-mp/view-kbm/' . $input->id_jadwal_kelas_mp . '/' . $input->pertemuan_ke
             ];
         }
     }
@@ -118,17 +119,15 @@ class InputPelanggaranController extends BaseController
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
-        
+
         return view('guru/pelanggaran-siswa/input-pelanggaran/view-kbm-input-pelanggaran-mp', compact('auth_data', 'semester_aktif', 'data_kelas', 'presensi_mp_aktif'));
     }
-    
+
     public function datatablesInputPelanggaran(Request $request, $id_presensi_mp)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         $presensi_mp_aktif = PresensiMp::where('id_presensi_mp', '=', $id_presensi_mp)->first();
-
         $list_data = LibSiswa::fetchDataSiswaKelasMp($auth_data, $presensi_mp_aktif->id_jadwal_kelas_mp, $presensi_mp_aktif->pertemuan_ke);
 
         return Datatables::of($list_data)
@@ -145,28 +144,27 @@ class InputPelanggaranController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
         $list_data = LibDataPelanggaran::fetchDataPresensiPelanggaran($auth_data, null, null, 'guru');
 
         return Datatables::of($list_data)
-                ->addColumn('nm_siswa', function ($item) {
-                    return $item->nm_pengguna;
-                })
-                ->addColumn('is_sudah_tindakan', function ($item) {
-                    if ($item->is_sudah_tindakan == 0) {
-                        return "Belum";
-                    } elseif ($item->is_sudah_tindakan == 1) {
-                        return "Sudah";
-                    }
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_presensi_mp_pelanggaran,
-                        'is_sudah_tindakan' => $item->is_sudah_tindakan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_siswa', function ($item) {
+                return $item->nm_pengguna;
+            })
+            ->addColumn('is_sudah_tindakan', function ($item) {
+                if ($item->is_sudah_tindakan == 0) {
+                    return "Belum";
+                } elseif ($item->is_sudah_tindakan == 1) {
+                    return "Sudah";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_presensi_mp_pelanggaran,
+                    'is_sudah_tindakan' => $item->is_sudah_tindakan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function addInputPelanggaran(Request $request, $id_presensi_mp, $id_siswa)
@@ -174,20 +172,20 @@ class InputPelanggaranController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-        
+
         $presensi_mp_aktif = PresensiMp::where('id_presensi_mp', '=', $id_presensi_mp)->first();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $presensi_mp_aktif->id_jadwal_kelas_mp);
-        
+
         // ambil data siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $id_siswa);
 
-        $id_presensi_mp_pelanggaran = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_presensi_mp_pelanggaran = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
         $data_kategori = KategoriPelanggaran::with('subkategori_pelanggaran')->where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
 
@@ -219,7 +217,7 @@ class InputPelanggaranController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $presensi_mp_aktif->id_jadwal_kelas_mp);
-        
+
         // ambil data siswa
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $data_pelanggaran_siswa->id_siswa);
 
@@ -232,6 +230,7 @@ class InputPelanggaranController extends BaseController
     public function actionInputPelanggaran(Request $request, $mode, $id = null)
     {
         $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
             'id_presensi_mp'              => 'required',
@@ -239,7 +238,7 @@ class InputPelanggaranController extends BaseController
             'id_subkategori_pelanggaran'    => 'required',
             'catatan_pelanggaran'   => 'required',
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -250,24 +249,27 @@ class InputPelanggaranController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
+                $presensi_mp = PresensiMp::find($input->id_presensi_mp);
 
+                $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-                $time = Carbon::parse($input->tgl_pelanggaran)->toDateString();
-                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran',$time)->where('id_semester',$input->id_semester)->where('id_siswa',$input->id_siswa )->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
-    
+                $time = Carbon::parse($presensi_mp->tgl_presensi)->toDateString();
+                $pelanggaran = PelanggaranSiswa::whereDate('tgl_pelanggaran', $time)->where('id_semester', $semester_aktif->id_semester)->where('id_siswa', $input->id_siswa)->where('id_subkategori_pelanggaran', $input->id_subkategori_pelanggaran)->first();
+
                 $users = DB::table('siswa')
-                ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
-                ->where('id_siswa', $input->id_siswa)
-                ->first();
+                    ->join('pengguna', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                    ->where('id_siswa', $input->id_siswa)
+                    ->first();
 
-                if($pelanggaran){
+                if ($pelanggaran) {
                     return [
-                             'status' => 300, // FAILED
-                             'message' => 'Data Pelanggaran '.$users->nm_pengguna .' sudah terinput'
-                         ];}
-     
+                        'status' => 300, // FAILED
+                        'message' => 'Data Pelanggaran ' . $users->nm_pengguna . ' sudah terinput'
+                    ];
+                }
 
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
 
@@ -283,11 +285,11 @@ class InputPelanggaranController extends BaseController
                 $presensiMpPelanggaran->created_by                   = $input->auth_data->pengguna->id_pengguna;
                 $presensiMpPelanggaran->save();
 
-                if(!empty($siswa->id_wali_murid)){
+                if (!empty($siswa->id_wali_murid)) {
                     $wali_murid = WaliMurid::find($siswa->id_wali_murid);
-                    
+
                     $token_wali_murid = $wali_murid->pengguna->api_token;
-                    if(!empty($token_wali_murid)){
+                    if (!empty($token_wali_murid)) {
                         $message = 'Putra/Putri Anda melanggar peraturan sekolah';
                         $send_data = array(
                             'title' => 'Informasi',
@@ -298,13 +300,13 @@ class InputPelanggaranController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                             'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
                             'created_by' => $input->auth_data->pengguna->id_pengguna
                         );
-                        
+
                         LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                     }
                 }
