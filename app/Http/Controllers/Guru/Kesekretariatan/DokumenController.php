@@ -252,7 +252,7 @@ class DokumenController extends BaseController
             'tgl_penyusunan'        => 'required',
             'contact_person'        => 'required',
             'is_publik'             => 'required',
-            'file'                  => 'file|nullable|max 50000|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
+            'file'                  => 'file|nullable|max:500000|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
         ]);
 
         if ($validator->fails() && $mode != 'delete' && $mode != 'upload' && $mode != 'delete-file') {
