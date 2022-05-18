@@ -257,7 +257,7 @@ class PembayaranByKelasController extends BaseController
                                 ->get();
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-                                ->get();
+                            ->orderBy('nis_siswa')->get();
 
             $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->values()->all();
         }else{
