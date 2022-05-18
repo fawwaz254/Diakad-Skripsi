@@ -96,6 +96,8 @@
                     </h2>
                 </div>
                 <div class="body">
+                    <a href="/keuangan/utility/pembayaran-by-kelas/print/{{$tahun_akademik_semester}}/{{$id_kelas}}" target="_blank" class="btn btn-success">Print Pembayaran Siswa</a>
+
                     <h2 class="card-inside-title">
                         Tanggal Pembayaran
                     </h2>
