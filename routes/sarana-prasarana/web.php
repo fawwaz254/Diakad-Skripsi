@@ -111,6 +111,22 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('action-inventaris/{mode}/{id}', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@actionInventaris');
         });
 
+
+        /** ==== MODUL DATA SARPRAS INVENTARIS BERGERAK ==== **/
+        Route::group(array('prefix' => 'data-inventaris-bergerak'), function () {
+
+            // MENU Data Inventaris
+            Route::get('data-inventaris', 'SaranaPrasarana\DataSarprasBergerak\InventarisController@viewInventaris');
+            Route::get('inventaris/datatables', 'SaranaPrasarana\DataSarprasBergerak\InventarisController@datatablesInventaris');
+            Route::get('data-inventaris/add', 'SaranaPrasarana\DataSarprasBergerak\InventarisController@addInventaris');
+            Route::get('inventaris/edit/{id}', 'SaranaPrasarana\DataSarprasBergerak\InventarisController@editInventaris');
+            // Route::get('inventaris/import-excel', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@importExcel');
+            // Route::post('inventaris/import-excel', 'SaranaPrasarana\DataSarprasRuangan\InventarisController@importExcelAction');
+
+            Route::post('action-inventaris/{mode}/{id}', 'SaranaPrasarana\DataSarprasBergerak\InventarisController@actionInventaris');
+        });
+
+
         Route::group(array('prefix' => 'kegiatan-harian'), function () {
 
             Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
