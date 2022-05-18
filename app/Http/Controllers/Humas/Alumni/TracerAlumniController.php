@@ -48,10 +48,10 @@ class TracerAlumniController extends Controller
         return Datatables::of($alumnis)
             ->addColumn('status_verifikasi', function ($item) {
                 if ($item->status_verifikasi == 0) {
-                    $data['status'] = 'Belum Diverifikasi';
+                    $data['status'] = 'Belum Diverikasi';
                     $data['color'] = 'pink';
                 } else {
-                    $data['status'] = 'Sudah Diverifikasi';
+                    $data['status'] = 'Sudah Diverikasi';
                     $data['color'] = 'teal';
                 }
                 return $data;
