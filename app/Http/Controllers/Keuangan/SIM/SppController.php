@@ -701,7 +701,7 @@ class SppController extends BaseController
                                 ->get();
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-                                                    ->get();
+                                                    ->orderBy('nis_siswa')->get();
             $data_bulan_tagihan = $data_tagihan->unique('nm_bulan')->sortBy('id_bulan')->sortBy('kode_semester')->values()->all();
         }else{
             $data_siswa = array();
