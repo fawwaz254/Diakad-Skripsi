@@ -92,6 +92,52 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('action-manajemen-materi-ajar/{mode}/{id}', 'Guru\ELearning\ManajemenMateriAjarController@actionManajemenMateriAjar');
         });
 
+        /** ==== MODUL E-Learning Soal==== **/
+
+        Route::group(array('prefix' => 'e-learning-soal'), function () {
+
+          
+
+            Route::group(array('prefix' => 'soal'), function () {
+
+                Route::get('/', 'Guru\ELearningSoal\SoalController@indexList');
+                Route::get('new', 'Guru\ELearningSoal\SoalController@indexNew');
+                Route::post('new', 'Guru\ELearningSoal\SoalController@actionSave');
+                Route::post('/table', 'Guru\ELearningSoal\SoalController@commonList');
+
+
+
+                Route::get('edit/{id}', 'Guru\ELearningSoal\SoalController@indexManage');
+                Route::get('test/{id}', 'Guru\ELearningSoal\SoalController@indexTest');
+               
+                Route::get('detail/{id}', 'Guru\ELearningSoal\SoalController@indexOrder');
+                // Route::post('order/save', 'Organizer\QuestionController@actionOrderSave');
+                Route::post('/delete', 'Guru\ELearningSoal\SoalController@actionDelete');
+
+            });
+            Route::group(array('prefix' => 'paket-soal'), function () {
+                Route::get('/', 'Guru\ELearningSoal\PaketSoalController@indexList');
+                Route::get('manage', 'Guru\ELearningSoal\PaketSoalController@indexManage');
+                // Route::get('manage/{id}', 'Organizer\QuestionPackageController@indexManage');
+                
+                Route::post('table', 'Guru\ELearningSoal\PaketSoalController@commonList');
+                Route::post('/', 'Guru\ELearningSoal\PaketSoalController@actionSave');
+                Route::post('delete', 'Guru\ELearningSoal\PaketSoalController@actionDelete');
+                
+                Route::get('detail/{id}', 'Guru\ELearningSoal\PaketSoalController@indexDetail');
+
+                Route::get('test/{id}', 'Guru\ELearningSoal\PaketSoalController@indexTest');
+                //coba mengambil data tanpa id
+                //   Route::post('detail/table', 'Guru\ELearningSoal\PaketSoalController@detailList');
+                Route::post('detail/table/{id}/{tipe}', 'Guru\ELearningSoal\PaketSoalController@detailList');
+                Route::post('detail/add', 'Guru\ELearningSoal\PaketSoalController@actionDetailAdd');
+                // Route::post('detail/delete', 'Organizer\QuestionPackageController@actionDetailDelete');
+            });
+
+
+        });
+
+
         /** ==== MODUL Absensi ==== **/
         Route::group(array('prefix' => 'absensi'), function () {
 
