@@ -33,30 +33,23 @@ class AddMoodulElerningRoleGuru extends Migration
 
         $modul->menus()->createMany([
             [
-                "nm_menu"      => "Kategori Soal",
-                "page"         => "kategori-soal",
-                "urutan"       => 1,
-                "akses"        => 1,
-                "created_at"   => $now
-            ],
-            [
                 "nm_menu"      => "Soal",
                 "page"         => "soal",
-                "urutan"       => 2,
+                "urutan"       => 1,
                 "akses"        => 1,
                 "created_at"   => $now
             ],
             [
                 "nm_menu"      => "Paket Soal",
                 "page"         => "paket-soal",
-                "urutan"       => 3,
+                "urutan"       => 2,
                 "akses"        => 1,
                 "created_at"   => $now
             ],
             [
                 "nm_menu"      => "Hasil Test",
                 "page"         => "hasil-test",
-                "urutan"       => 4,
+                "urutan"       => 3,
                 "akses"        => 1,
                 "created_at"   => $now
             ],

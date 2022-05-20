@@ -20,18 +20,18 @@ class SoalController extends Controller
     }
 
     public function indexNew(Request $request, $account_id = 0, $event_id = 0){
-        $question_categories = KategoriSoal::get();
-        return view('guru/e-learning-soal/soal/add-soal', compact('question_categories'));
+
+        return view('guru/e-learning-soal/soal/add-soal');
     }
 
     public function indexManage(Request $request, $id_soal = 0){
-        $question_categories = KategoriSoal::get();
+       
         if($item = Soal::find($id_soal)){
             $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
         }else{
             $question_options = null;
         }
-        return view('guru/e-learning-soal/soal/edit-soal', compact('item', 'question_categories', 'question_options'));
+        return view('guru/e-learning-soal/soal/edit-soal', compact('item', 'question_options'));
     }
 
 
@@ -61,7 +61,6 @@ class SoalController extends Controller
 
     public function actionSave(Request $request){
         $validator = Validator::make($request->all(), [
-            'kategori' => 'required',
             'soal' => 'required',
             'jawaban_benar' => 'required'
         ]);
@@ -77,7 +76,7 @@ class SoalController extends Controller
             // try {
             //     $bom = '\xEF\xBB\xBF';
                 // dd($input);
-                $question->id_kategori_soal = $input->kategori;
+              
                 $question->content = $input->soal;
                 $question->text = $input->soal;
                 $question->save();
@@ -120,7 +119,7 @@ class SoalController extends Controller
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
                 $question = new Soal;
                 $question->id_soal =  $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                $question->id_kategori_soal = $input->kategori;
+                $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;;
                 $question->content = $input->soal;
                 $question->text = $input->soal;
                
@@ -180,7 +179,7 @@ class SoalController extends Controller
 
 
         public function commonList(Request $request){
-            $list_data = Soal::with('kategori_soal')->orderBy('soal.created_at', 'desc');
+            $list_data = Soal::with('pengguna')->get();
     
             return Datatables::of($list_data)
                     ->addColumn('action', function($item){

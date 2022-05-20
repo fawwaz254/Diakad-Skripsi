@@ -27,8 +27,8 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Category</th>
-                                    <th>Question</th>
+                                    <th>Pembuat</th>
+                                    <th>Pertanyaan</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -60,7 +60,7 @@
             },
             columns: [
                 { data: null, searchable: false, orderable: false },
-                { data: 'kategori_soal.nama' },
+                { data: 'pengguna.nm_pengguna' },
                 { data: 'text', name: 'text', orderable: false },
                 { data: 'action', name: 'action', searchable: false, orderable: false,
                     render: function(data) {

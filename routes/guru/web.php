@@ -96,15 +96,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
         Route::group(array('prefix' => 'e-learning-soal'), function () {
 
-            Route::group(array('prefix' => 'kategori-soal'), function () {
-
-                Route::get('/', 'Guru\ELearningSoal\KategoriSoalController@indexList');
-                Route::get('/manage', 'Guru\ELearningSoal\KategoriSoalController@indexManage');
-                Route::post('/manage', 'Guru\ELearningSoal\KategoriSoalController@actionSave');
-                Route::post('/table', 'Guru\ELearningSoal\KategoriSoalController@commonList');
-                Route::get('/manage/{id}', 'Guru\ELearningSoal\KategoriSoalController@indexManage');
-                Route::post('/delete', 'Guru\ELearningSoal\KategoriSoalController@actionDelete');
-            });
+          
 
             Route::group(array('prefix' => 'soal'), function () {
 

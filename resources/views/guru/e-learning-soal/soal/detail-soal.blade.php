@@ -29,8 +29,7 @@
                     <form class="form-validation" method="POST" action="{{url('organizer/question/order/save')}}">
                         {{csrf_field()}}
                         <input type="hidden" name="question_id" value="{{$item->id_soal}}">
-                        <h2 class="card-inside-title">Category</h2>
-                        <label class="form-label">@if($item) {{$item->kategori_soal->nama}} @endif</label>
+                        
                         <h2 class="card-inside-title">Question</h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

@@ -80,9 +80,9 @@ class PaketSoalController extends Controller
         $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
         $list_question_selected = $question_package_details->pluck('id_soal');
         if($tipe == 1){
-            $list_data = Soal::with('kategori_soal')->whereNotIn('id_soal', $list_question_selected);
+            $list_data = Soal::with('pengguna')->whereNotIn('id_soal', $list_question_selected);
         }else{
-            $list_data = Soal::with('kategori_soal')->whereIn('id_soal', $list_question_selected);
+            $list_data = Soal::with('pengguna')->whereIn('id_soal', $list_question_selected);
         }
 
         return Datatables::of($list_data)

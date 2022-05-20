@@ -25,16 +25,7 @@
                     <form class="form-validation" method="POST" id="form-validation"  action="{{url(Request::segment(1).'/'.Request::segment(2).'/soal/new')}}">
                         {{csrf_field()}}
                         <input type="hidden" name="id_soal" value="{{$item->id_soal}}">
-                        <h2 class="card-inside-title">Kategori</h2>
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="kategori" required="">
-                                    @foreach($question_categories as $question_category)
-                                    <option value="{{$question_category->id_kategori_soal}}" @if($item->id_kategori_soal == $question_category->id_kategori_soal) selected="" @endif>{{$question_category->nama}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                       
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

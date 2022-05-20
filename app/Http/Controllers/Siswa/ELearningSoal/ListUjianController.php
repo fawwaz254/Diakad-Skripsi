@@ -61,12 +61,19 @@ class ListUjianController extends Controller
 
         $input = (object) $request->input();
         $soal = PaketSoal::find($id_paket_soal);
+        $account = $input->auth_data->pengguna->id_pengguna;
+        if($cek = Test::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->where('id_paket_soal', $soal->id_paket_soal)->first()){
+            $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $cek->id_test)->first();
+            // dd($soaltest->);
+            return redirect('siswa/e-learning-soal/list-ujian/test/'.$soaltest->id_test.'/1');
+        
+        }else{
+
         $waktu = $soal->waktu_pengerjaan;
         $test_duration = $waktu; // Minutes
         $start_time = Carbon::now('Asia/Jakarta');
         $end_time = Carbon::now('Asia/Jakarta')->addMinutes($test_duration);
-        $account = $input->auth_data->pengguna->id_pengguna;
-
+       
     DB::transaction(function () use ($start_time, $end_time, $soal, $account, $input) {
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $test = new Test;
@@ -78,7 +85,7 @@ class ListUjianController extends Controller
         $test->status = 0;
         $test->save();
 
-        $question_package_details = DetailPaketSoal::with('soal', 'soal.kategori_soal')->where('id_paket_soal', $test->id_paket_soal)->inRandomOrder()->get();
+        $question_package_details = DetailPaketSoal::with('soal')->where('id_paket_soal', $test->id_paket_soal)->inRandomOrder()->get();
         $question_number = 1;
         foreach($question_package_details->chunk(40) as $chunk){
             $data = array();
@@ -103,11 +110,13 @@ class ListUjianController extends Controller
             JawabanTest::insert($data);
         }
     }, 1);
-
-    $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->first();
+    $idtest = Test::where('id_paket_soal', $soal->id_paket_soal)->first();
+    $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $idtest->id_test)->first();
     // dd($soaltest->);
     return redirect('siswa/e-learning-soal/list-ujian/test/'.$soaltest->id_test.'/1');
 
+}
+   
     // return [
     //     'status' => 202, // SUCCESS AND LOAD CONTENT
     //     'path' => 'e-learning-soal/kategori-soal',

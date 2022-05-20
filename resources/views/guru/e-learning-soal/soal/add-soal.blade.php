@@ -20,16 +20,7 @@
                         <div class="body">
                             <form class="form-validation" id="form-validation"  method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/soal/new')}}">
                                 {{csrf_field()}}
-                                <h2 class="card-inside-title">Category</h2>
-                                <div class="row clearfix">
-                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                        <select class="form-control show-tick" name="kategori" required="">
-                                            @foreach($question_categories as $question_category)
-                                            <option value="{{$question_category->id_kategori_soal}}">{{$question_category->nama}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
+
                                 <h2 class="card-inside-title">Soal</h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

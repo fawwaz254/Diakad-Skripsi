@@ -16,7 +16,7 @@ class CreateSoalsTable extends Migration
         Schema::create('soal', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id_soal', 40)->primary();
-            $table->string('id_kategori_soal', 40)->nullable();
+            $table->string('id_pengguna', 40)->nullable();
             $table->string('id_pilihan_soal_benar', 40)->nullable();
             $table->string('content', 256)->nullable();
             $table->string('text', 256)->nullable();

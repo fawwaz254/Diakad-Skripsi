@@ -18,7 +18,7 @@ class Soal extends Model
     public $incrementing = false;
     
     protected $fillable = [
-        'id_ketegori_soal',
+        'id_pengguna',
         'id_pilihan_soal_benar',
         'content',
         'text',
@@ -29,8 +29,8 @@ class Soal extends Model
 
     protected $guarded = [];
 
-    public function kategori_soal(){
-        return $this->belongsTo('App\Models\KategoriSoal', 'id_kategori_soal');
+    public function pengguna(){
+        return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
     }
 
     public function pilihan_soal(){

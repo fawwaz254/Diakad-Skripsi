@@ -25,14 +25,14 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="not">
-                            <b>List Question</b>
+                            <b>List Soal</b>
                             <div class="table-responsive">
                                 <table id="primary_table" class="table table-bordered table-striped table-hover dataTable" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Category</th>
-                                            <th>Question</th>
+                                            <th>Pembuat</th>
+                                            <th>Soal</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -42,14 +42,14 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="selected">
-                            <b>List Question Selected</b>
+                            <b>List Soal Selected</b>
                             <div class="table-responsive">
                                 <table id="secondary_table" class="table table-bordered table-striped table-hover dataTable" style="width: 100%;">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Category</th>
-                                            <th>Question</th>
+                                            <th>Pembuat</th>
+                                            <th>Soal</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -86,7 +86,7 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'kategori_soal.nama' },
+            { data: 'pengguna.nm_pengguna' },
             { data: 'text', name: 'text', orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data) {
@@ -114,7 +114,7 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'kategori_soal.nama' },
+            { data: 'pengguna.nm_pengguna' },
             { data: 'text', name: 'text', orderable: false },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data) {
