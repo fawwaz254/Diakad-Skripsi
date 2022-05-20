@@ -13,9 +13,8 @@
 
                     <!-- --> 
                     <!--  -->
-                     @foreach ($data_jurusan as $jurusan)
                 <div class="header bg-lime">
-                    <h2>{{ $jurusan->nm_jurusan }} ({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
+                    <h2>({{ $data_penerimaan->nm_penerimaan }} Gelombang {{ $data_penerimaan->gelombang_penerimaan }} Tahun {{ $data_penerimaan->tahun_penerimaan }})</h2>
                 </div>
 
                      <!----> 

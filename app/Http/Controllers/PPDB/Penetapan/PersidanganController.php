@@ -58,12 +58,13 @@ class PersidanganController extends BaseController {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_penerimaan = Penerimaan::where('id_penerimaan',$id)->first();
         $data_penetapan = Penetapan::where('id_penetapan',$id)->first();
+        $data_penetapan_penerimaan = PenetapanPenerimaan::where('id_penetapan',$id)->first();
+        $data_penerimaan = Penerimaan::where('id_penerimaan',$data_penetapan_penerimaan->id_penerimaan)->first();
         //$data_jurusan = LibPenerimaan::fetchDataJurusanDetailPendaftaran($auth_data, $id);
         //dd('data_jurusan');
         
-        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan', 'data_penerimaan', 'data_jurusan'));
+        return view('ppdb/penetapan/persidangan/view-persidangan-gelombang',compact('auth_data','data_penetapan', 'data_penerimaan'));
     }
 
     public function editPersidangan2($tahun, Request $request) {

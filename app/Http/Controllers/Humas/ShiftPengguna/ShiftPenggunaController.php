@@ -136,7 +136,7 @@ class ShiftPenggunaController extends Controller
         }
 
         return [
-            'status' => 201, // SUCCESS AND LOAD CONTENT
+            'status' => 202, // SUCCESS AND LOAD CONTENT
             'link' => '/humas#absensi/shift_pengguna',
             'message' => 'Tambah data Shift berhasil '
 
