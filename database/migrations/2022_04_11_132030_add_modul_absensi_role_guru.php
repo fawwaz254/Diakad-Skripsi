@@ -11,7 +11,7 @@ use App\Models\Modul;
 use App\Models\Role;
 use Carbon\Carbon;
 
-class AddModulAbsensiRoleGuru extends Migration
+class AddModulAbsensiRoleGuru2 extends Migration
 {
     /**
      * Run the migrations.
