@@ -34,10 +34,10 @@ if (!function_exists('link_laporan_googledrive')) {
      * get auth data from session
      * @return auth_data
      */
-    function link_laporan_googledrive($id_rekanan_magang,$id_periode_magang)
+    function link_laporan_googledrive($id_rekanan_magang, $id_periode_magang)
     {
         $laporan_magang = link_laporan_magang::select('link_laporan_magang_id')->where('id_rekanan_magang', $id_rekanan_magang)
-        ->where('id_periode_magang',$id_periode_magang)->first();
+            ->where('id_periode_magang', $id_periode_magang)->first();
         return $laporan_magang;
     }
 }

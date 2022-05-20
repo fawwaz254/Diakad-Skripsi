@@ -25,7 +25,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             // });
 
             Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {
-                 Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanHarianMGMP');
+                Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanHarianMGMP');
                 // Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
                 // Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
                 // Route::get('add', 'MGMP\DataFileController@addDataFile');

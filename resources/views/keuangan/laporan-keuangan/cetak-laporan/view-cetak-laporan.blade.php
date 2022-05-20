@@ -7,6 +7,23 @@
                 </div>
                 <div class="body">
                     <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Setting bulan/tanggal ({{now()->format('Y')}})</h2>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 1)">Januari</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 2)">Februari</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 3)">Maret</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 4)">April</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 5)">Mei</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 6)">Juni</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 7)">Juli</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 8)">Agustus</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 9)">September</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 10)">Oktober</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 11)">November</button>
+                            <button class="btn waves-effect btn-filter-month" onclick="filterMonth(this, 12)">Desember</button>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <div class="form-line">
@@ -199,5 +216,38 @@
                 console.log('Success ' + response);
             },
         });
+    }
+
+    var this_year = {{now()->format('Y')}};
+
+    function filterMonth(el, month){
+        $('.btn-filter-month').removeClass('btn-primary');
+        $(el).addClass('btn-primary');
+
+        var firstDay = new Date(this_year, month, 1).getDate();
+        var lastDay = new Date(this_year, month, 0).getDate();
+
+        if ((month + "").length < 2) 
+            month = '0' + month;
+
+        if ((firstDay + "").length < 2) 
+            firstDay = '0' + firstDay;
+
+        $('input[name=start_date]').val([this_year, month, firstDay].join('-'));
+        $('input[name=end_date]').val([this_year, month, lastDay].join('-'));
+    }
+
+    function formatDate(date) {
+        var d = date,
+            month = '' + d.getMonth(),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+
+        return [year, month, day].join('-');
     }
 </script>
