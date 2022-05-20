@@ -15,10 +15,10 @@ class EditStatusPenggunaPegawai extends Migration
     public function up()
     {
         //
-        $status_pengguna = StatusPengguna::where('status_join_table', 1)->where('nm_status_pengguna', 'KELUAR')->first();
-
-        $status_pengguna->nm_status_pengguna = 'KELUAR (meninggal, pensiun, mengundurkan diri)';
-        $status_pengguna->save();
+        if($status_pengguna = StatusPengguna::where('status_join_table', 1)->where('nm_status_pengguna', 'KELUAR')->first()){
+            $status_pengguna->nm_status_pengguna = 'KELUAR (meninggal, pensiun, mengundurkan diri)';
+            $status_pengguna->save();
+        }
     }
 
     /**
