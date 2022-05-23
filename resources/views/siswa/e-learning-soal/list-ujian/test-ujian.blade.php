@@ -9,6 +9,7 @@
                     <h2>
                         Jawablah soal di bawah
                     
+                 
                     </h2>
                 </div>
                 <div class="body">
@@ -16,7 +17,63 @@
                         {{$test->soal->content}}
                     </div>
                     <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+
+
+
+                        <div class="row clearfix">
+                            <form id="question-form" class="form-validation" method="POST" action="{{url('siswa/e-learning-soal/list-ujian/test/answer')}}">
+                                <input type="hidden" name="question" value="{{$test->soal->id_soal}}">
+                                <input type="hidden" name="test" value="{{$test->id_test}}">
+                                <input type="hidden" name="no" value="{{$no}}">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    {{csrf_field()}}
+                                    <div class="demo-radio-button">
+                                    @foreach($question_options as $no_option => $question_option)
+                                    @if(empty($test->id_pilihan_soal ))
+                                        <input name="question_option" type="radio" id="radio_{{$no_option}}" value="{{$question_option->id_pilihan_soal}}">
+                                        <label for="radio_{{$no_option}}"><pre class="is-answer">{!!$question_option->content!!}</pre></label>
+                                    @else
+                                        @if($test->id_pilihan_soal == $question_option->id_pilihan_soal)
+                                        <input name="question_option" type="radio" checked="" id="radio_{{$no_option}}" value="{{$question_option->question_option_id}}">
+                                        <label for="radio_{{$no_option}}"><pre class="is-answer">{!!$question_option->content!!}</pre></label>
+                                        @else
+                                        <input name="question_option" type="radio" id="radio_{{$no_option}}" value="{{$question_option->question_option_id}}">
+                                        <label for="radio_{{$no_option}}"><pre class="is-answer">{!!$question_option->content!!}</pre></label>
+                                        @endif
+                                    @endif
+                                        <br>
+                                    @endforeach
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <button class="btn btn-block bg-green waves-effect" type="submit">Simpan jawaban</button>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <button class="btn btn-block bg-pink waves-effect" type="button" onclick="deleteAnswerAction()">Hapus jawaban</button>
+                                </div>
+                            </form>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             {{csrf_field()}}
                             <div class="demo-radio-button">
                             @foreach($question_options as $no_option => $question_option)
@@ -35,13 +92,16 @@
                                 <br>
                             @endforeach
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        </div> --}}
+
+
+
+                        {{-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-green waves-effect">Simpan jawaban</button>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-pink waves-effect">Hapus jawaban</button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -66,6 +126,42 @@
                 </div>
                 <div class="body">
                     <div class="row clearfix">
+
+
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            @php
+                                $nomor = 1;
+                            @endphp
+                            @foreach($PaketSoal->detail_paket_soal->sortBy('number')->all() as $other_test_answer)
+                            @if($test_answer->number == $other_test_answer->number)
+                                <a type="button" href="{{url('test/question/'.$other_test_answer->question_id)}}" class="btn bg-amber btn-circle waves-effect waves-circle waves-float">
+                            @else
+                                @if(empty($other_test_answer->question_option_id))
+                                <a type="button" href="{{url('test/question/'.$other_test_answer->question_id)}}" class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
+                                @else
+                                <a type="button" href="{{url('test/question/'.$other_test_answer->question_id)}}" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                                @endif
+                            @endif
+                                {{$other_test_answer->number}}
+                            </a>
+
+                            @if($nomor == 5)
+                            @php
+                                $nomor = 1;
+                            @endphp
+                            <br>
+                            @else
+                            @php
+                                $nomor++;
+                            @endphp
+                            @endif
+                            @endforeach
+                        </div>
+
+
+
+
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             @foreach($paket_soal->detail_paket_soal as $index  => $soal )
                             <a type="button" href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}" class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
@@ -77,7 +173,7 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button type="button" class="btn btn-block bg-cyan waves-effect">
+                            <button type="button" onclick="endAction()" class="btn btn-block bg-cyan waves-effect">
                                 Selesai mengerjakan
                             </button>
                         </div>
@@ -87,3 +183,72 @@
         </div>
     </div>
 </div>
+<script>
+   
+var id_test = '{{ $test->id_test }}';
+var var_url = 'siswa/e-learning-soal/list-ujian/test/end' ;
+
+    function endAction(){
+
+        vex.dialog.confirm({
+            message: 'Apakah yakin sudah selesai mengerjakan.??',
+            callback: function (value) {
+                // alert(url)
+                if(value){
+                    // alert(url);
+                    $.ajax({
+                        type: "POST",
+                        url: var_url,
+                        data:{
+                            test: id_test
+                        },
+                        success: function (response) {
+
+
+                            vex.dialog.alert(response.message);
+                        setTimeout(() => {
+                            loadURI(response.path);
+                        }, 2000);
+
+                        //     vex.dialog.alert(data.message);
+                        // setTimeout(() => {
+                        //     // $('.primary_table').DataTable().ajax.reload(null, false);
+                        //     // primary_table.ajax.reload(null, false);
+                        //     primary_table.ajax.reload(null, false);
+                        //     //    location.reload();
+                        // }, 2000);
+                        
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }else{
+                    item.prop('disabled', false);
+                }
+            }
+        })}
+
+
+
+
+
+
+
+
+    //     vex.dialog.confirm({
+    //         message: 'Apakah kamu yakin sudah selesai mengerjakan?',
+    //         callback: function (value) {
+    //             if(value){
+    //                 var url = var_url;
+    //                 window.location = url; 
+    //             }
+    //         }
+    //     })
+    // }
+
+    // function deleteAnswerAction(){
+    //     $('input[name=question_option]').prop('checked', false);
+    //     $('#question-form').submit();
+    // }
+</script>
