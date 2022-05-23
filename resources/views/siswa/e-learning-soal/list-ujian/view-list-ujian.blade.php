@@ -1,8 +1,4 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>DASHBOARD | {{Carbon\Carbon::now('Asia/Jakarta')->format('d M Y')}}</h2>
-    </div>
-    <!-- Basic Examples -->
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -20,9 +16,9 @@
                                     <th>No</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
-                                    <th>Total Question</th>
-                                    <th>Total Answer</th>
-                                    <th>Nilai Jawaban</th>
+                                    <th>Jumlah Soal</th>
+                                    <th>Jumlah Jawaban</th>
+                                    <th>Nilai Tiap Soal</th>
                                     <th>Waktu Mulai</th>
                                     <th>Waktu Akhir</th>
                                     <th>Durasi Pengerjaan</th>

@@ -3,10 +3,9 @@
                 <h2>
                 <h2><a type="button" class="btn bg-grey waves-effect" href="{{url(Request::segment(1).'#'.Request::segment(2).'/soal')}}">
                     <i class="material-icons">keyboard_backspace</i>
-                    <span>Back</span>
+                    <span>Kembali</span>
                 </a> 
-                &nbsp; &nbsp; &nbsp;
-                MANAGE QUESTION
+            
                 </h2>
             </div>
             <div class="row clearfix">
@@ -14,7 +13,7 @@
                     <div class="card">
                         <div class="header bg-pink">
                             <h2>
-                                SOAL
+                                TAMBAH SOAL
                             </h2>
                         </div>
                         <div class="body">
@@ -35,12 +34,12 @@
                                     </div>
                                 </div>
                                 @endfor
-                                <h2 class="card-inside-title">True Answer</h2>
+                                <h2 class="card-inside-title">Jawaban Benar</h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <select class="form-control show-tick" name="jawaban_benar" required="">
                                             @for($i=0; $i < 4; $i++)
-                                            <option value="{{$i}}">Answer {{$i + 1}}</option>
+                                            <option value="{{$i}}">Jawaban {{$i + 1}}</option>
                                             @endfor
                                         </select>
                                     </div>

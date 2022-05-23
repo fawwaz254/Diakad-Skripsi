@@ -1,18 +1,16 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a type="button" class="btn bg-grey waves-effect" href="{{url('organizer/question/package')}}">
+        <h2><a type="button" class="btn bg-grey waves-effect" href="{{url(Request::segment(1).'#'.Request::segment(2).'/paket-soal')}}">
             <i class="material-icons">keyboard_backspace</i>
-            <span>Back</span>
-        </a> 
-        &nbsp; &nbsp; &nbsp;
-        MANAGE PACKAGE
+            <span>Kembali</span>
+        </a>
     </div>
     <div class="row clearfix">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header bg-pink">
                     <h2>
-                        PACKAGE
+                        Paket Soal
                     </h2>
                 </div>
                 <div class="body">
@@ -46,7 +44,7 @@
                                         <div class="form-line">
                                             <select class="form-control show-tick" name="nilai" required="">
                                                 <option disabled selected value="">-- Pilih Nilai --</option>
-                                                <option value="0">Otomatis</option>
+                                                {{-- <option value="0">Otomatis</option> --}}
                                                 <option value="20">20 Point per Soal</option>
                                                 <option value="10">10 Point per Soal</option>
                                                 <option value="5">5 Point per Soal</option>

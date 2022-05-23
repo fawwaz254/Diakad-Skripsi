@@ -1,16 +1,17 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>DASHBOARD | {{Carbon\Carbon::now('Asia/Jakarta')->format('d M Y')}}</h2>
-    </div>
-    <!-- Basic Examples -->
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px" href="{{url('guru#e-learning-soal/paket-soal/manage')}}">
+                <i class="material-icons">add_box</i>
+                <span>Tambah Paket Soal</span>
+            </a> 
             <div class="card">
                 <div class="header">
                     <h2>
                         List Paket Soal
                     </h2>
-                    <ul class="header-dropdown m-r--5">
+                    {{-- <ul class="header-dropdown m-r--5">
                         <li class="dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">more_vert</i>
@@ -19,7 +20,7 @@
                                 <li><a href="{{url('guru#e-learning-soal/paket-soal/manage')}}">Adding new package</a></li>
                             </ul>
                         </li>
-                    </ul>
+                    </ul> --}}
                 </div>
                 <div class="body">
                     <div class="table-responsive">
