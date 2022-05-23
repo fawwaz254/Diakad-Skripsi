@@ -65,6 +65,7 @@ class ListUjianController extends Controller
         if($cek = Test::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->where('id_paket_soal', $soal->id_paket_soal)->first()){
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $cek->id_test)->first();
             // dd($soaltest->);
+          
             return redirect('siswa/e-learning-soal/list-ujian/test/'.$soaltest->id_test.'/1');
         
         }else{
@@ -125,7 +126,100 @@ class ListUjianController extends Controller
 
      }
 
+///////////////////////////////////sekarang yang ini
+public function actionSaveAnswer(Request $request){
+    $input = (object) $request->input();
+
+    $validator = Validator::make($request->all(), [
+        'question' => 'required'
+    ]);
+
+    $test_answer = JawabanTest::where('id_test',$input->test)->where('nomer',$input->no)->first();
+
+    $test_answer->id_pilihan_soal = $input->question_option;
+     $test_answer->save();
+    return redirect('siswa/e-learning-soal/list-ujian/test/'.$input->test.'/'.$input->no);
+    // dd($input);
+    // return redirect()->back();
+    // if($validator->fails()) {
+    //     return back()->with('toast', $validator->errors()->first());
+    // }
+
+    // $account = Auth::user();
+    // if($test = Test::with('event_time')->where('account_id', $account->account_id)->first()){
+        // if(true){
+        // $check_running = TestTime::checkRunning($test);
+        // if($check_running->code == 500){
+        //     $message = $check_running->message;
+        //     return view('blank-page', compact('message'));
+        // }else{
+            // if($check_running->code == 200){
+                // if($test_answer = TestAnswer::where(['account_id' => $account->account_id, 'test_id' => $test->test_id, 'question_id' => $input->question])->first()){
+                //     if(!empty($input->question_option)){
+                //         if($question_option = QuestionOption::where(['question_id' => $test_answer->question_id, 'question_option_id' => $input->question_option])->first()){
+                //             $question_category = QuestionCategory::join('questions', 'questions.question_category_id', '=', 'question_categories.question_category_id')->where('question_id', $test_answer->question_id)->first();
+                //             $test_answer->question_option_id = $question_option->question_option_id;
+                //             if($question_option->correct == 1){
+                //                 $test_answer->correct = 1;
+                //                 $test_answer->value = $question_category->true_value;
+                //             }else{
+                //                 $test_answer->correct = 2;
+                //                 $test_answer->value = $question_category->false_value;
+                //             }
+                //             $test_answer->submit_answer = now();
+                //             $test_answer->save();
+
+                //             if($next_test_answer = TestAnswer::where(['account_id' => $account->account_id, 'test_id' => $test->test_id, 'number' => ($test_answer->number + 1)])->first()){
+                //                 return redirect('test/question/'.$next_test_answer->question_id);
+                //             }else{
+                //                 return back();
+
+                //             }
+                //         }else{
+                //             $message = 'Tidak bisa memjawab soal';
+                //             return view('blank-page', compact('message'));
+                //         }
+                //     }else{
+                //         $question_category = QuestionCategory::join('questions', 'questions.question_category_id', '=', 'question_categories.question_category_id')->where('question_id', $test_answer->question_id)->first();
+                //         $test_answer->question_option_id = null;
+                //         $test_answer->correct = 0;
+                //         $test_answer->value = $question_category->null_value;
+                //         $test_answer->save();
+
+                //         return back();
+                //     }
+                // }else{
+                //     $message = 'Tidak bisa memjawab soal';
+                //     return view('blank-page', compact('message'));
+
+
+    //             }
+    //         }else{
+    //             $message = $check_running->message;
+    //             return view('blank-page', compact('message'));
+    //         }
+    //     }
+    // }else{
+    //     $message = 'Tidak bisa menjawab soal';
+    //     return view('blank-page', compact('message'));
+    // }
+}
      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
  public function indexTest2(Request $request,$id_soal = 0,$no=0){
     
@@ -139,7 +233,52 @@ class ListUjianController extends Controller
             //  dd($paket_soal->detail_paket_soal);
         $question_options = PilihanSoal::where('id_soal', $test->id_soal)->orderBy('number_option')->get();
         
-            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact( 'test','paket_soal', 'question_options'));
+            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact( 'test','paket_soal', 'question_options','no'));
+    }
+
+    
+
+
+
+
+
+
+
+    public function actionEndTest(Request $request){
+        $input = (object) $request->input();
+       
+     
+      
+
+$testi = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test',$input->test)->first();
+
+$testi->status = 1;
+ $testi->save();
+ return [
+    'status' => 202, // SUCCESS AND LOAD CONTENT
+    'path' => 'e-learning-soal/list-ujian',
+    'message' => 'Berhasil menjawab Soal'
+];
+        // $account = Auth::user();
+        // if($test = Test::with('event_time')->where('account_id', $account->account_id)->first()){
+        //     $check_running = TestTime::checkRunning($test);
+        //     if($check_running->code == 500){
+        //         $message = $check_running->message;
+        //         return view('blank-page', compact('message'));
+        //     }else{
+        //         if($check_running->code == 200){
+        //             $test->end_at = Carbon::now('Asia/Jakarta');
+        //             $test->save();
+        //             return back()->with('toast', 'Test Anda sudah selesai dikerjakan');
+        //         }else{
+        //             $message = $check_running->message;
+        //             return view('blank-page', compact('message'));
+        //         }
+        //     }
+        // }else{
+        //     $message = 'Tidak bisa mengerjakan soal';
+        //     return view('blank-page', compact('message'));
+        // }
     }
 
 

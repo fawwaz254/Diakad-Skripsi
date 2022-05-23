@@ -28,4 +28,14 @@ class Test extends Model
     ];
 
     protected $guarded = [];  //
+
+    public function pengguna()
+    {
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
+    }
+
+    // public function jawaban_test()
+    // {
+    //     return $this->hasMany(JawabanTest::class, 'id_jawaban_test');
+    // }
 }

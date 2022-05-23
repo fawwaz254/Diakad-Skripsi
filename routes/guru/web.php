@@ -135,6 +135,18 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
 
 
+            Route::group(array('prefix' => 'hasil-test'), function () {
+                Route::get('/', 'Guru\ELearningSoal\HasilTestController@indexList');
+                
+                Route::post('table', 'Guru\ELearningSoal\HasilTestController@commonList');
+                Route::get('detail/{id}', 'Guru\ELearningSoal\HasilTestController@indexDetail');
+                Route::post('detail/table/{id}', 'Guru\ELearningSoal\HasilTestController@detailList');
+              
+           
+            });
+
+
+
         });
 
 
