@@ -1,31 +1,29 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a type="button" class="btn bg-grey waves-effect" href="{{url('organizer/question/package')}}">
+        <h2><a type="button" class="btn bg-grey waves-effect" href="{{url(Request::segment(1).'#'.Request::segment(2).'/paket-soal')}}">
             <i class="material-icons">keyboard_backspace</i>
-            <span>Back</span>
+            <span>Kembali</span>
         </a> 
-        &nbsp; &nbsp; &nbsp;
-        List {{$question_package->text}} ({{$question_package->kelas->nm_kelas}})
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header bg-pink">
                     <h2>
-                        Pick Question
+                       Pilih Soal
                     </h2>
                 </div>
                 <div class="body">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                        <li role="presentation" class="active"><a href="#not" data-toggle="tab" class="col-pink">Not Selected Question</a></li>
-                        <li role="presentation"><a href="#selected" data-toggle="tab" class="col-green">Selected Question</a></li>
+                        <li role="presentation" class="active"><a href="#not" data-toggle="tab" class="col-pink">List Belum Dipilih</a></li>
+                        <li role="presentation"><a href="#selected" data-toggle="tab" class="col-green">List Sudah Dipilih</a></li>
                     </ul>
 
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade in active" id="not">
-                            <b>List Soal</b>
+                            <b>List Soal belum dipilih</b>
                             <div class="table-responsive">
                                 <table id="primary_table" class="table table-bordered table-striped table-hover dataTable" style="width: 100%;">
                                     <thead>
@@ -42,7 +40,7 @@
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="selected">
-                            <b>List Soal Selected</b>
+                            <b>List Soal sudah dipilih</b>
                             <div class="table-responsive">
                                 <table id="secondary_table" class="table table-bordered table-striped table-hover dataTable" style="width: 100%;">
                                     <thead>

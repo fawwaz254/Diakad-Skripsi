@@ -1,27 +1,33 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>DASHBOARD | {{Carbon\Carbon::now('Asia/Jakarta')->format('d M Y')}}</h2>
-    </div>
-    <!-- Basic Examples -->
     <div class="row clearfix">
+        
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px" href="{{url('guru#e-learning-soal/soal/new')}}">
+            <i class="material-icons">add_box</i>
+            <span>Tambah Soal</span>
+        </a> 
             <div class="card">
                 <div class="header">
                     <h2>
-                        List Question
+                        Bank Soal
+                        {{-- <a href=""> <i class="material-icons">add_box</i></a> --}}
                     </h2>
-                    <ul class="header-dropdown m-r--5">
+                    {{-- <button type="button" class="btn btn-success">Tambah Soal</button> --}}
+                    {{-- <ul class="header-dropdown m-r--5">
                         <li class="dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">more_vert</i>
                             </a>
                             <ul class="dropdown-menu pull-right">
-                                <li><a href="{{url('guru#e-learning-soal/soal/new')}}">Adding new question</a></li>
+                                <li><a href="{{url('guru#e-learning-soal/soal/new')}}">tambah soal baru</a></li>
                             </ul>
                         </li>
-                    </ul>
+                    </ul> --}}
                 </div>
                 <div class="body">
+                    
+                    
+                    {{-- <button type="button" class="btn btn-success" style="margin-bottom: 15px"><i class="material-icons"></i> Tambah Soal</button> --}}
                     <div class="table-responsive">
                         <table id="primary_table" class="table table-bordered table-striped table-hover dataTable">
                             <thead>
@@ -49,8 +55,6 @@
   var detail_url      =  role_url + '#' + modul_url + '/' + 'soal';
   var delete_url      =  role_url + '/' + modul_url + '/' + 'soal';
 
-
-    
         var primary_table = $('#primary_table').DataTable({
             processing: true,
             serverSide: true,
@@ -84,77 +88,14 @@
                 cell.innerHTML = i + 1;
             } );
         } ).draw();
-   
-
-    
-//     function actionDelete(element){
-//        var item = $(element);
-//        $('button').attr('disabled', 'disabled');
-
-//        swal({
-//            title: "Are you sure?",
-//            text: "For Reject this",
-//            showCancelButton: true,
-//            confirmButtonColor: "#DD6B55",
-//            confirmButtonText: "Yes, reject it!",
-//            cancelButtonText: "No, cancel!",
-//            closeOnConfirm: true,
-//            closeOnCancel: true,
-//         //    idnya:item.attr('data-id'),
-//        }, function (result) {
-//            if (result) {
-//         //   alert(detail_url + '/delete/' + item.attr('data-id'))
-//                $.ajax({
-//                    type: "POST",
-//                    url: delete_url + '/delete/' + item.attr('data-id'),
-//                    data : {keterangan:item.attr('data-id')},
-//                    success: function (response) {
-//                        if(response.status == 200){
-//                            vex.dialog.alert(response.message);
-//                        }else if(response.status == 201){
-//                            vex.dialog.alert(response.message);
-//                            window.location.href = response.link;
-//                        }else if(response.status == 202){
-//                            vex.dialog.alert(response.message);
-//                            loadURI(response.path);
-//                        }else if(response.status == 203){
-//                            vex.dialog.alert(response.message);
-//                            if(response.from == 'prestasi'){
-//                                primary_table.ajax.reload(null, false);
-//                            }
-//                            else if(respone.from == 'kegiatan'){
-//                             primary_table2.ajax.reload(null, false);
-//                            }
-//                            else{
-//                                primary_table3.ajax.reload(null, false);
-//                            }
-//                        }else if(response.status == 300){
-//                            vex.dialog.alert(response.message);
-//                        }
-//                    },
-//                    complete: function() {
-//                        $('button').removeAttr('disabled', 'disabled');
-//                    }
-//                });
-//            }else{
-//                alert("Alasan Ditolak Harus Diisi");
-//                $('button').removeAttr('disabled', 'disabled');
-//                return false
-//            }
-//        });
-//    }
-
-
-
-
+ 
     function actionDelete(element){
         var item = $(element);
         item.prop('disabled', true);
-        
         var url = delete_url + '/delete' ;
         // var url = '{{url('organizer/question/delete')}}';
         vex.dialog.confirm({
-            message: 'Are you sure to delete this item?',
+            message: 'Apakah yakin mau menghapus soal?',
             callback: function (value) {
                 // alert(url)
                 if(value){
@@ -172,8 +113,7 @@
                             // primary_table.ajax.reload(null, false);
                             primary_table.ajax.reload(null, false);
                             //    location.reload();
-                        }, 2000);
-                        
+                        }, 2000)
                         },
                         error: function (xhr, status, error) {
                             console.log(xhr.responseText);

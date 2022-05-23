@@ -138,7 +138,7 @@ public function actionSaveAnswer(Request $request){
 
     $test_answer->id_pilihan_soal = $input->question_option;
      $test_answer->save();
-    return redirect('siswa/e-learning-soal/list-ujian/test/'.$input->test.'/'.$input->no);
+    return redirect('siswa#e-learning-soal/list-ujian/test/'.$input->test.'/'.$input->no);
     // dd($input);
     // return redirect()->back();
     // if($validator->fails()) {
@@ -204,23 +204,6 @@ public function actionSaveAnswer(Request $request){
     //     return view('blank-page', compact('message'));
     // }
 }
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  public function indexTest2(Request $request,$id_soal = 0,$no=0){
     
      $test =JawabanTest::where('id_test',$id_soal)->where('nomer',$no)->with('test','soal')->first();
@@ -228,7 +211,6 @@ public function actionSaveAnswer(Request $request){
     //  $soal = Soal::where('id_soal',$test->id_soal)-get();
    
         $paket_soal =  PaketSoal::where('id_paket_soal',$test->test->id_paket_soal)->with('detail_paket_soal')->first();
-    
             //  $question = Soal::find();
             //  dd($paket_soal->detail_paket_soal);
         $question_options = PilihanSoal::where('id_soal', $test->id_soal)->orderBy('number_option')->get();
