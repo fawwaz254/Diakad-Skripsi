@@ -1,15 +1,10 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>{{env('APP_NAME', '')}}</h2>
-    </div>
     <div class="row clearfix">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header bg-pink">
                     <h2>
                         Jawablah soal di bawah
-                    
-                 
                     </h2>
                 </div>
                 <div class="body">
@@ -17,11 +12,6 @@
                         {{$test->soal->content}}
                     </div>
                     <div class="row clearfix">
-
-
-
-
-
                         <div class="row clearfix">
                             <form id="question-form" class="form-validation" method="POST" action="{{url('siswa/e-learning-soal/list-ujian/test/answer')}}">
                                 <input type="hidden" name="question" value="{{$test->soal->id_soal}}">
@@ -55,23 +45,6 @@
                                 </div>
                             </form>
                         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                         {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             {{csrf_field()}}
@@ -127,23 +100,22 @@
                 <div class="body">
                     <div class="row clearfix">
 
-
-
+{{-- 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             @php
                                 $nomor = 1;
                             @endphp
-                            @foreach($PaketSoal->detail_paket_soal->sortBy('number')->all() as $other_test_answer)
-                            @if($test_answer->number == $other_test_answer->number)
-                                <a type="button" href="{{url('test/question/'.$other_test_answer->question_id)}}" class="btn bg-amber btn-circle waves-effect waves-circle waves-float">
+                            @foreach($paket_soal->detail_paket_soal->sortBy('nomor')->all() as $other_test_answer)
+                            @if($test->test->nomor == $other_test_answer->nomor)
+                                <a type="button" href="{{url('test/question/'.$other_test_answer->id_soal)}}" class="btn bg-amber btn-circle waves-effect waves-circle waves-float">
                             @else
-                                @if(empty($other_test_answer->question_option_id))
-                                <a type="button" href="{{url('test/question/'.$other_test_answer->question_id)}}" class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
+                                @if(empty($other_test_answer->id_pilihan_jawaban))
+                                <a type="button" href="{{url('test/question/'.$other_test_answer->id_soal)}}" class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
                                 @else
-                                <a type="button" href="{{url('test/question/'.$other_test_answer->question_id)}}" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
+                                <a type="button" href="{{url('test/question/'.$other_test_answer->id_soal)}}" class="btn bg-green btn-circle waves-effect waves-circle waves-float">
                                 @endif
                             @endif
-                                {{$other_test_answer->number}}
+                                {{$other_test_answer->nomor}}
                             </a>
 
                             @if($nomor == 5)
@@ -157,9 +129,7 @@
                             @endphp
                             @endif
                             @endforeach
-                        </div>
-
-
+                        </div> --}}
 
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

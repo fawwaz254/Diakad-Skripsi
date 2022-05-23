@@ -1,11 +1,10 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a type="button" class="btn bg-grey waves-effect" href="{{url('organizer/question')}}">
+        <h2><a type="button" class="btn bg-grey waves-effect" href="{{url(Request::segment(1).'#'.Request::segment(2).'/soal')}}">
             <i class="material-icons">keyboard_backspace</i>
-            <span>Back</span>
+            <span>Kembali</span>
         </a> 
-        &nbsp; &nbsp; &nbsp;
-        MANAGE QUESTION
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -25,7 +24,6 @@
                     <form class="form-validation" method="POST" id="form-validation"  action="{{url(Request::segment(1).'/'.Request::segment(2).'/soal/new')}}">
                         {{csrf_field()}}
                         <input type="hidden" name="id_soal" value="{{$item->id_soal}}">
-                       
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -41,12 +39,12 @@
                             </div>
                         </div>
                         @endforeach
-                        <h2 class="card-inside-title">True Answer</h2>
+                        <h2 class="card-inside-title">Jawaban Benar</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="jawaban_benar" required="">
                                     @foreach($question_options as $i => $question_option)
-                                    <option value="{{$i}}" @if($question_option->correct == 1) selected="" @endif>Answer {{$i + 1}}</option>
+                                    <option value="{{$i}}" @if($question_option->correct == 1) selected="" @endif>Jawaban {{$i + 1}}</option>
                                     @endforeach
                                 </select>
                             </div>

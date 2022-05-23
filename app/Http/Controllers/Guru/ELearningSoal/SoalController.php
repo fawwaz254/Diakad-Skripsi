@@ -37,7 +37,6 @@ class SoalController extends Controller
 
     public function actionDelete(Request $request){
         $input = (object) $request->input();
-        // dd( );
         if($question = Soal::find($input->id_soal)){
             
     //  dd($question);
@@ -102,7 +101,7 @@ class SoalController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'e-learning-soal/soal',
-                    'message' => 'Berhasil Menambah Soal'
+                    'message' => 'Berhasil Merubah Soal'
                 ];
             //     DB::commit();
 
@@ -122,9 +121,8 @@ class SoalController extends Controller
                 $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;;
                 $question->content = $input->soal;
                 $question->text = $input->soal;
-               
                 $question->save();
-                
+
                 $true_answer_id = 0;
                 foreach($input->jawaban as $no_answer => $answer){
                     $now = Carbon::now(env('APP_TIMEZONE', ''));

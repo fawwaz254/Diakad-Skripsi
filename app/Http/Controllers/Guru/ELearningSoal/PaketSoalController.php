@@ -144,14 +144,14 @@ class PaketSoalController extends Controller
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'e-learning-soal/paket-soal',
-                'message' => 'Berhasil Menambah paket Soal'
+                'message' => 'Berhasil Menghapus paket Soal'
             ];
 
         }else{
-            return response()->json([
-                'status' => 500,
-                'message' => 'Error'
-            ]);
+            // return response()->json([
+            //     'status' => 500,
+            //     'message' => 'Error'
+            // ]);
         }    
     }
 
