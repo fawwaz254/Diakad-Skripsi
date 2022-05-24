@@ -13,7 +13,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
 			});
 
-			// MENU Data Sub Kategori 
+			// MENU Data Sub Kategori
 			Route::group(array('prefix' => 'data-sub-kategori'), function () {
 				Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
 				Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
@@ -24,7 +24,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
 			});
 
-			// MENU Data File 
+			// MENU Data File
 			Route::group(array('prefix' => 'data-file'), function () {
 
 				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
@@ -39,7 +39,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 		});
 
 		Route::group(array('prefix' => 'e-learning'), function () {
-
 			Route::group(array('prefix' => 'materi-ajar'), function () {
 
 				Route::get('/', 'Siswa\Elearning\MateriAjarController@viewMateriAjar');
@@ -51,8 +50,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 
 		Route::group(array('prefix' => 'e-learning-soal'), function () {
-
-         
             Route::group(array('prefix' => 'list-ujian'), function () {
                 Route::get('/', 'Siswa\ELearningSoal\ListUjianController@indexList');
                 Route::post('test/end', 'Siswa\ELearningSoal\ListUjianController@actionEndTest');
@@ -66,11 +63,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
 		
 				Route::post('test/answer', 'Siswa\ELearningSoal\ListUjianController@actionSaveAnswer');
 				// Route::get('test/result', 'Participant\TestController@indexReview');
-				
-			
+
             });
-
-
         });
 
 

@@ -1,7 +1,4 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>{{env('APP_NAME', '')}}</h2>
-    </div>
     <div class="row clearfix">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <div class="card">
