@@ -157,6 +157,23 @@
    
 var id_test = '{{ $test->id_test }}';
 var var_url = 'siswa/e-learning-soal/list-ujian/test/end' ;
+var distance = '{{$sisaWaktu}}';
+clearInterval(x);
+    var x = setInterval(function () {
+        var hours = Math.floor((distance % (1 * 60 * 60 * 24)) / (1 * 60 * 60));
+        var minutes = Math.floor((distance % (1 * 60 * 60)) / (1 * 60));
+        var seconds = Math.floor((distance % (1 * 60)) / 1);
+
+        document.getElementById("timeleft").innerHTML = "Waktu tersisa: " + hours + "h " +
+            minutes + "m " + seconds + "s ";
+
+        if (distance <= 0) {
+            clearInterval(x);
+            // location.reload();
+        }else{
+distance--
+        }
+    }, 1000);
 
     function endAction(){
 
@@ -173,8 +190,6 @@ var var_url = 'siswa/e-learning-soal/list-ujian/test/end' ;
                             test: id_test
                         },
                         success: function (response) {
-
-
                             vex.dialog.alert(response.message);
                         setTimeout(() => {
                             loadURI(response.path);
@@ -198,13 +213,6 @@ var var_url = 'siswa/e-learning-soal/list-ujian/test/end' ;
                 }
             }
         })}
-
-
-
-
-
-
-
 
     //     vex.dialog.confirm({
     //         message: 'Apakah kamu yakin sudah selesai mengerjakan?',
