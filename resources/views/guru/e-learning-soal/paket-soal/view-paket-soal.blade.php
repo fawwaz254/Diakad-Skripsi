@@ -77,7 +77,7 @@
                         return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
                             '    <i class="material-icons">library_add</i>'+
                             '</a>'+
-                            '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="{{url('organizer/question/package/manage')}}/'+ data.id +'">'+
+                            '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/manage/' + data.id +'">'+
                             '    <i class="material-icons">mode_edit</i>'+
                             '</a>'+
                             '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/test/' + data.id +'">'+

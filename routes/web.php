@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\Sekolah;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,7 @@ Route::post('upload', function (Request $request) {
 // END CONTOH UPLOAD DO
 
 Route::get('guid', function () {
+    Log::info("tesst");
     $now = Carbon::now(env('APP_TIMEZONE', ''));
     $prefix = Sekolah::first()->prefix;
 

@@ -26,7 +26,7 @@
                                         <textarea id="q1" class="form-control" required="" name="soal" rows="3"></textarea>
                                     </div>
                                 </div>
-                                @for($i=0; $i < 4; $i++)
+                                @for($i=0; $i < 5; $i++)
                                 <h2 class="card-inside-title">Jawaban {{$i + 1}}</h2>
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -38,7 +38,7 @@
                                 <div class="row clearfix">
                                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                         <select class="form-control show-tick" name="jawaban_benar" required="">
-                                            @for($i=0; $i < 4; $i++)
+                                            @for($i=0; $i < 5; $i++)
                                             <option value="{{$i}}">Jawaban {{$i + 1}}</option>
                                             @endfor
                                         </select>

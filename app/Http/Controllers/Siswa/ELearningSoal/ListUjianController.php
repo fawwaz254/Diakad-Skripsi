@@ -26,12 +26,13 @@ class ListUjianController extends Controller
 
     public function commonList(Request $request){
         $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal')->with(['detail_paket_soal.soal.pilihan_soal' => function($q){ return $q->whereNotNull('content'); }]);
-// dd($list_data);
+
         return Datatables::of($list_data)
                 ->addColumn('total_question', function($item){
 // dd($item->detail_paket_soal->count());
                     return $item->detail_paket_soal->count();
                 })
+                ->editColumn('waktu_pengerjaan', '{{$waktu_pengerjaan}} Menit')
                 ->addColumn('total_answer', function($item){
                     $value = 0;
                     foreach($item->detail_paket_soal as $data){
@@ -113,7 +114,6 @@ class ListUjianController extends Controller
     }, 1);
     $idtest = Test::where('id_paket_soal', $soal->id_paket_soal)->first();
     $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $idtest->id_test)->first();
-    // dd($soaltest->);
     return redirect('siswa/e-learning-soal/list-ujian/test/'.$soaltest->id_test.'/1');
 
 }
@@ -126,7 +126,6 @@ class ListUjianController extends Controller
 
      }
 
-///////////////////////////////////sekarang yang ini
 public function actionSaveAnswer(Request $request){
     $input = (object) $request->input();
 
@@ -209,28 +208,24 @@ public function actionSaveAnswer(Request $request){
      $test =JawabanTest::where('id_test',$id_soal)->where('nomer',$no)->with('test','soal')->first();
 
     //  $soal = Soal::where('id_soal',$test->id_soal)-get();
-   
+//  $time = $test->test->waktu_selesai_pengerjaan;
+ 
+// $time2 =  Carbon::now('Asia/Jakarta');
+
+// $siswaWaktu = $time2->diffInSeconds($time);
+
+$sisaWaktu=  Carbon::now('Asia/Jakarta')->diffInSeconds($test->test->waktu_selesai_pengerjaan);
+
         $paket_soal =  PaketSoal::where('id_paket_soal',$test->test->id_paket_soal)->with('detail_paket_soal')->first();
             //  $question = Soal::find();
             //  dd($paket_soal->detail_paket_soal);
         $question_options = PilihanSoal::where('id_soal', $test->id_soal)->orderBy('number_option')->get();
         
-            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact( 'test','paket_soal', 'question_options','no'));
+            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact( 'test','paket_soal', 'question_options','no','sisaWaktu'));
     }
-
-    
-
-
-
-
-
-
 
     public function actionEndTest(Request $request){
         $input = (object) $request->input();
-       
-     
-      
 
 $testi = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test',$input->test)->first();
 

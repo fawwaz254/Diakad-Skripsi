@@ -107,12 +107,21 @@ class PaketSoalController extends Controller
 
         $input = (object) $request->input();
 
-        if($question_package = PaketSoal::find($input->question_package_id)){
-            // $question_package->title = $input->title;
-            // $question_package->event_id = $input->event;
-            // $question_package->save();
+        if($paket_soal = PaketSoal::find($input->id_paket_soal)){
+            $paket_soal->text = $input->title;
+            $paket_soal->id_kelas = $input->kelas;
+            $paket_soal->nilai = $input->nilai;
+            $paket_soal->waktu_mulai = $input->waktu_mulai;
+            $paket_soal->waktu_selesai = $input->waktu_selesai;
+            $paket_soal->waktu_pengerjaan = $input->waktu_pengerjaan;
+            $paket_soal->save();
 
-            // return back()->with('toast', 'Your changed save successfully');
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'e-learning-soal/paket-soal',
+                'message' => 'Berhasil Merubah paket Soal'
+            ];
+
         }else{
     
             $now = Carbon::now(env('APP_TIMEZONE', ''));
