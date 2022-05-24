@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Guru\ELearningSoal;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\DetailPaketSoal;
 use App\Models\KategoriSoal;
+use App\Models\PaketSoal;
 use App\Models\PilihanSoal;
 use App\Models\Soal;
 use Yajra\Datatables\Datatables;
@@ -37,25 +39,20 @@ class SoalController extends Controller
 
     public function actionDelete(Request $request){
         $input = (object) $request->input();
-        if($question = Soal::find($input->id_soal)){
-            
-    //  dd($question);
-            $question->delete();
-
+        if($soal = DetailPaketSoal::where('id_soal',$input->id_soal)->first()){
             return [
-                // 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => 'e-learning-soal/soal',
-                'message' => 'Berhasil Menghapus Soal'
+                'status' => 300, // FAILED
+                'message' => 'Gagal dihapus, Soal sudah digunakan'
             ];
-        
-        }
-        // else{
-        //     return response()->json([
-        //         'status' => 500,
-        //         'message' => 'Error'
-        //     ]);
-        // }   
-    }
+        }else{
+            $question = Soal::find($input->id_soal);
+            $question->delete();
+                return [
+                    // 'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'e-learning-soal/soal',
+                    'message' => 'Berhasil Menghapus Soal'
+                ];
+        }}
 
 
     public function actionSave(Request $request){
@@ -101,7 +98,7 @@ class SoalController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'e-learning-soal/soal',
-                    'message' => 'Berhasil Merubah Soal'
+                    'message' => 'Berhasil Mengubah Soal'
                 ];
             //     DB::commit();
 
@@ -177,7 +174,7 @@ class SoalController extends Controller
 
 
         public function commonList(Request $request){
-            $list_data = Soal::with('pengguna')->get();
+            $list_data = Soal::with('pengguna')->orderBy('created_at', 'DESC')->get();
     
             return Datatables::of($list_data)
                     ->addColumn('action', function($item){

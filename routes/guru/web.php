@@ -112,14 +112,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::group(array('prefix' => 'paket-soal'), function () {
                 Route::get('/', 'Guru\ELearningSoal\PaketSoalController@indexList');
                 Route::get('manage', 'Guru\ELearningSoal\PaketSoalController@indexManage');
-                // Route::get('manage/{id}', 'Organizer\QuestionPackageController@indexManage');
+                Route::get('manage/{id}', 'Guru\ELearningSoal\PaketSoalController@indexManage');
                 Route::post('table', 'Guru\ELearningSoal\PaketSoalController@commonList');
                 Route::post('/', 'Guru\ELearningSoal\PaketSoalController@actionSave');
                 Route::post('delete', 'Guru\ELearningSoal\PaketSoalController@actionDelete');
                 Route::get('detail/{id}', 'Guru\ELearningSoal\PaketSoalController@indexDetail');
                 Route::get('test/{id}', 'Guru\ELearningSoal\PaketSoalController@indexTest');
-                //coba mengambil data tanpa id
-                //   Route::post('detail/table', 'Guru\ELearningSoal\PaketSoalController@detailList');
+                // Route::post('detail/table', 'Guru\ELearningSoal\PaketSoalController@detailList');
                 Route::post('detail/table/{id}/{tipe}', 'Guru\ELearningSoal\PaketSoalController@detailList');
                 Route::post('detail/add', 'Guru\ELearningSoal\PaketSoalController@actionDetailAdd');
                 // Route::post('detail/delete', 'Organizer\QuestionPackageController@actionDetailDelete');

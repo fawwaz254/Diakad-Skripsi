@@ -71,7 +71,7 @@
                         return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/edit/' +  data.id +'">'+
                             '    <i class="material-icons">mode_edit</i>'+
                             '</a>'+
-                            '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/detail/' +  data.id +'">'+
+                            '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/test/' +  data.id +'">'+
                             '    <i class="material-icons">reorder</i>'+
                             '</a>'+
                             '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="'+data.id+'" onclick="actionDelete(this)">'+
