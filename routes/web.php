@@ -60,6 +60,25 @@ Route::get('guid', function () {
     return $html;
 });
 
+use Symfony\Component\Process\Process;
+
+Route::get('test-merge', function () {
+    $process = new Process(['git', 'merge', 'test-branch']);
+    $process->run();
+
+    $process = new Process(['git', 'push', 'origin']);
+    $process->run();
+    
+    $process = new Process(['git', 'checkout', 'latest-release']);
+    $process->run();
+    
+    $process = new Process(['git', 'merge', 'master']);
+    $process->run();
+    
+    $process = new Process(['git', 'push', 'origin']);
+    $process->run();
+});
+
 Route::view('success-page', 'form-pengisian-alumni.success-page');
 Route::view('error-page', 'form-pengisian-alumni.error-page');
 Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
