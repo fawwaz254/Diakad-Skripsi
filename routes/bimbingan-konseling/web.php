@@ -130,9 +130,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('input-pelanggaran/add', 'BK\PenangananSiswa\InputPelanggaranController@addInputPelanggaran');
             Route::get('input-pelanggaran/edit/{id}', 'BK\PenangananSiswa\InputPelanggaranController@editInputPelanggaran');
 
-
-
-
             Route::post('action-input-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\InputPelanggaranController@actionInputPelanggaran');
 
             // MENU Tindakan Pelanggaran
