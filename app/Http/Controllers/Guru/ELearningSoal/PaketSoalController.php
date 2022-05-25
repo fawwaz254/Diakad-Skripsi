@@ -75,8 +75,6 @@ class PaketSoalController extends Controller
     }
 
     public function detailList(Request $request,$question_package_id = 0, $tipe ){
-        // $id_paket_soal = 'D4Ka216526782936281de9586433';
-        // $tipe = 1;
         $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
         $list_question_selected = $question_package_details->pluck('id_soal');
         if($tipe == 1){
@@ -196,28 +194,29 @@ class PaketSoalController extends Controller
         }
     }
 
-    // public function actionDetailDelete(Request $request){
-    //     $validator = Validator::make($request->all(), [
-    //         'question_package_id' => 'required',
-    //         'question_id' => 'required'
-    //     ]);
+    public function actionDetailDelete(Request $request){
+        // $validator = Validator::make($request->all(), [
+        //     'question_package_id' => 'required',
+        //     'question_id' => 'required'
+        // ]);
 
-    //     if($validator->fails()) {
-    //         return back()->with('toast', $validator->errors()->first());
-    //     }
+        // if($validator->fails()) {
+        //     return back()->with('toast', $validator->errors()->first());
+        // }
 
-    //     $input = (object) $request->input();
-    //     if($question_package_detail = QuestionPackageDetail::where(['question_package_id' => $input->question_package_id, 'question_id' => $input->question_id])->first()){
-    //         $question_package_detail->delete();
-    //         return response()->json([
-    //             'status' => 200,
-    //             'message' => 'Delete successfully'
-    //         ]);
-    //     }else{
-    //         return response()->json([
-    //             'status' => 500,
-    //             'message' => 'Error'
-    //         ]);
-    //     }
-    // }
+        $input = (object) $request->input();
+        if($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()){
+            $question_package_detail->delete();
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'e-learning-soal/paket-soal',
+                'message' => 'Berhasil Menghapus paket Soal'
+            ];}
+        // }else{
+        //     return response()->json([
+        //         'status' => 500,
+        //         'message' => 'Error'
+        //     ]);
+        // }
+    }
 }

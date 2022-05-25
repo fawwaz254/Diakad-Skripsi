@@ -158,12 +158,20 @@
 
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            @foreach ($paket_soal->detail_paket_soal as $index => $soal)
-                                <a type="button"
-                                    href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
-                                    class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
-                                    {{ $index + 1 }}
-                                </a>
+                            @foreach ($jawabanTest->sortBy('nomer')->all() as $index => $soal)
+                                @if ($soal->id_pilihan_soal != null)
+                                    <a type="button"
+                                        href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
+                                        class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
+                                        {{ $index + 1 }}
+                                    </a>
+                                @else
+                                    <a type="button"
+                                        href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
+                                        class="btn bg-success btn-circle waves-effect waves-circle waves-float">
+                                        {{ $index + 1 }}
+                                    </a>
+                                @endif
                             @endforeach
 
                         </div>
@@ -180,9 +188,11 @@
         </div>
     </div>
 </div>
+@include('scriptjs')
 <script>
     var id_test = '{{ $test->id_test }}';
     var var_url = 'siswa/e-learning-soal/list-ujian/test/end';
+    var timeout = 'siswa#e-learning-soal/list-ujian/';
     var distance = '{{ $sisaWaktu }}';
     clearInterval(x);
     var x = setInterval(function() {
@@ -195,7 +205,8 @@
 
         if (distance <= 0) {
             clearInterval(x);
-            // location.reload();
+            var url = timeout;
+            //                 window.location = url; 
         } else {
             distance--
         }
@@ -236,7 +247,7 @@
     //         message: 'Apakah kamu yakin sudah selesai mengerjakan?',
     //         callback: function (value) {
     //             if(value){
-    //                 var url = var_url;
+    //                 var url = timeout;
     //                 window.location = url; 
     //             }
     //         }
