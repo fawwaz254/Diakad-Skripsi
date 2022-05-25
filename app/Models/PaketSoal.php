@@ -37,4 +37,5 @@ class PaketSoal extends Model
     public function detail_paket_soal(){
         return $this->hasMany('App\Models\DetailPaketSoal', 'id_paket_soal');
     }
+  
 }

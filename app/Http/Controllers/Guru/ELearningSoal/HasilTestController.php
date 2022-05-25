@@ -18,22 +18,22 @@ class HasilTestController extends Controller
 {
     public function indexList(Request $request){
         return view('guru/e-learning-soal/hasil-test/view-hasil-test');
+  
     }
 
     public function commonList(Request $request){
         $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal')->with(['detail_paket_soal.soal.pilihan_soal' => function($q){ return $q->whereNotNull('content'); }]);
 // dd($list_data);
         return Datatables::of($list_data)
-                ->addColumn('total_question', function($item){
-// dd($item->detail_paket_soal->count());
-                    return $item->detail_paket_soal->count();
+                ->addColumn('total_siswa', function($item){
+                    $total = Siswa::where('id_kelas',$item->id_kelas)->count();
+                    // $statusTest = Test::where('id_paket_soal', $item->id_paket_soal)->where('id_pengguna', Auth::id())->first();
+                    return $total;
                 })
-                ->addColumn('total_answer', function($item){
-                    $value = 0;
-                    foreach($item->detail_paket_soal as $data){
-                        $value += $data->soal->pilihan_soal->count();
-                    }
-                    return $value;
+                ->addColumn('total_mengerjakan', function($item){
+                    $mengerjakan = Test::where('id_paket_soal',$item->id_paket_soal)->count();
+               
+                    return $mengerjakan;
                 })
                 ->addColumn('action', function($item){
                     $data = array(
@@ -72,6 +72,16 @@ $test = Test::where('id_paket_soal',$question_package_id)->with('pengguna')->get
         // }
         // ,$new_val)->make(true);
         return Datatables::of($test)
+        ->addColumn('total_nilai', function($item){
+            $data = JawabanTest::where('id_test',$item->id_test)->get();
+            $total = 0;
+            foreach($data as $da){
+                $total = $total + $da->nilai;
+
+            }
+
+            return $total;
+        })
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->pengguna->id_pengguna
