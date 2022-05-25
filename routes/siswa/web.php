@@ -47,20 +47,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			});
 		});
 
-
-
 		Route::group(array('prefix' => 'e-learning-soal'), function () {
             Route::group(array('prefix' => 'list-ujian'), function () {
                 Route::get('/', 'Siswa\ELearningSoal\ListUjianController@indexList');
                 Route::post('test/end', 'Siswa\ELearningSoal\ListUjianController@actionEndTest');
-               
 				//untuk bagian data table
                 Route::post('table', 'Siswa\ELearningSoal\ListUjianController@commonList');
         		//untuk bagian test
 				// Route::get('test', 'Participant\TestController@index');
                 Route::get('cek/{id_paket_soal}', 'Siswa\ELearningSoal\ListUjianController@indexTest');
 				Route::get('test/{id_soal}/{no}', 'Siswa\ELearningSoal\ListUjianController@indexTest2');
-		
 				Route::post('test/answer', 'Siswa\ELearningSoal\ListUjianController@actionSaveAnswer');
 				// Route::get('test/result', 'Participant\TestController@indexReview');
 
