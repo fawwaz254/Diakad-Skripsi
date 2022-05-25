@@ -1,4 +1,5 @@
 @extends('app')
+
 @section('meta')
 <!-- Meta -->
 @endsection
@@ -10,6 +11,7 @@
 </section>
 @include('footer')
 @endsection
+
 @section('js')
 <!-- Javascript -->
 <script>
