@@ -80,28 +80,25 @@ class ListUjianController extends Controller
             ->make(true);
     }
 
-    // public function indexTest(Request $request, $id_soal = 0){
-    //     $paket_soal =  PaketSoal::where('id_paket_soal',$id_soal)->with('detail_paket_soal')->first();
-    //         //  $question = Soal::find();
-    //         //  dd($paket_soal->detail_paket_soal);
-    //        // $question_options = PilihanSoal::where('id_soal', $paket_soal->detail_paket_soal->id_soal->orderBy('number_option')->get();
-
-    //         return view('siswa/e-learning-soal/list-ujian/test-ujian', compact( 'paket_soal'));
-    // }
-
     public function indexTest(Request $request, $id_paket_soal = 0)
     {
+        $soal = PaketSoal::find($id_paket_soal);
+        // $waktu = Carbon::now('Asia/Jakarta');
+        // $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $soal->waktu_mulai);
+        // if(strtotime($start_date) > strtotime($waktu)){
+        //     return redirect('siswa/e-learning-soal/list-ujian');
+        //     }
+
+
+
 
         $input = (object) $request->input();
-        $soal = PaketSoal::find($id_paket_soal);
+       
         $account = $input->auth_data->pengguna->id_pengguna;
         if ($cek = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_paket_soal', $soal->id_paket_soal)->first()) {
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $cek->id_test)->first();
-            // dd($soaltest->);
-
             return redirect('siswa/e-learning-soal/list-ujian/test/' . $soaltest->id_test . '/1');
         } else {
-
             $waktu = $soal->waktu_pengerjaan;
             $test_duration = $waktu; // Minutes
             $start_time = Carbon::now('Asia/Jakarta');
@@ -147,13 +144,6 @@ class ListUjianController extends Controller
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $idtest->id_test)->first();
             return redirect('siswa/e-learning-soal/list-ujian/test/' . $soaltest->id_test . '/1');
         }
-
-        // return [
-        //     'status' => 202, // SUCCESS AND LOAD CONTENT
-        //     'path' => 'e-learning-soal/kategori-soal',
-        //     'message' => 'Tambah data Kategori berhasil'
-        // ];
-
     }
 
     public function actionSaveAnswer(Request $request)
@@ -164,16 +154,16 @@ class ListUjianController extends Controller
             'question' => 'required'
         ]);
 
-//logika nilai jika jawabannya benar maka input nilai 
-//untuk cari pilihan yang benar
-$pilihan_soal = PilihanSoal::where('id_pilihan_soal', $input->question_option)->first();
-$paket_soal = PaketSoal::where('id_paket_soal',$input->paket_soal)->first();
-//untuk cari nilai jika benar
-$betul = PilihanSoal::where('id_pilihan_soal',$input->question_option)->first();
-$nilai = 0;
-if( $betul->correct == 1){
-   $nilai = $paket_soal->nilai;
-}
+        //logika nilai jika jawabannya benar maka input nilai 
+        //untuk cari pilihan yang benar
+        // $pilihan_soal = PilihanSoal::where('id_pilihan_soal', $input->question_option)->first();
+        $paket_soal = PaketSoal::where('id_paket_soal', $input->paket_soal)->first();
+        //untuk cari nilai jika benar
+        $betul = PilihanSoal::where('id_pilihan_soal', $input->question_option)->first();
+        $nilai = 0;
+        if ($betul->correct == 1) {
+            $nilai = $paket_soal->nilai;
+        }
 
         $test_answer = JawabanTest::where('id_test', $input->test)->where('nomer', $input->no)->first();
 
@@ -261,11 +251,27 @@ if( $betul->correct == 1){
         $sisaWaktu =  Carbon::now('Asia/Jakarta')->diffInSeconds($test->test->waktu_selesai_pengerjaan);
 
         $paket_soal =  PaketSoal::where('id_paket_soal', $test->test->id_paket_soal)->with('detail_paket_soal')->first();
-        //  $question = Soal::find();
-        //  dd($paket_soal->detail_paket_soal);
+
         $question_options = PilihanSoal::where('id_soal', $test->id_soal)->orderBy('number_option')->get();
 
-        return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('test', 'paket_soal', 'question_options', 'no', 'sisaWaktu'));
+// $jawaban = JawabanTest::where('id_test',$id_soal)->whereNotNull('id_pilihan_soal')->get()->pluck('id_soal')->toArray();
+$jawabanTest = JawabanTest::where('id_test',$id_soal)->get();
+
+        $waktu = Carbon::now('Asia/Jakarta');
+
+        $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $paket_soal->waktu_mulai);
+        $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $paket_soal->waktu_selesai);
+
+        if(strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)){
+
+            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('test', 'paket_soal', 'question_options', 'no', 'sisaWaktu','jawabanTest'));
+            }else {
+                $input = (object) $request->input();
+                $testi = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', $test->test->id_test)->first();
+                $testi->status = 1;
+                $testi->save();
+                return redirect('siswa/e-learning-soal/list-ujian');
+            }
     }
 
     public function actionEndTest(Request $request)
@@ -279,7 +285,7 @@ if( $betul->correct == 1){
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
             'path' => 'e-learning-soal/list-ujian',
-            'message' => 'Berhasil menjawab Soal'
+            'message' => 'Berhasil menyelesaikan Soal'
         ];
         // $account = Auth::user();
         // if($test = Test::with('event_time')->where('account_id', $account->account_id)->first()){

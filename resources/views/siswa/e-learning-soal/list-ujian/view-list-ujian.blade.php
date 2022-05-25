@@ -17,7 +17,6 @@
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Jumlah Soal</th>
-                                    <th>Jumlah Jawaban</th>
                                     <th>Nilai Tiap Soal</th>
                                     <th>Waktu Mulai</th>
                                     <th>Waktu Akhir</th>
@@ -36,7 +35,7 @@
     </div>
     <!-- #END# Basic Examples -->
 </div>
-
+@include('scriptjs')
 <script>
     var modul_url       = '{{Request::segment(2)}}';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'list-ujian/table';
@@ -56,12 +55,11 @@
                { data: 'text', name: 'text'},
                { data: 'kelas.nm_kelas' },
                { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
-               { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
                { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},{ data: 'status'},
                { data: 'action', searchable: false, orderable: false,
                    render: function(data) {
                        if(data.status == 1){
-                        return '<a type="button" class="btn btn-primary btn-circle waves-effect waves-circle waves-float" href="">' +
+                        return '<a type="button" style="pointer-events: none" class="btn btn-primary btn-circle waves-effect waves-circle waves-float" href="">' +
                            '    <i class="material-icons">done</i>'+
                            '</a>';
                        }else if(data.status == 2){
