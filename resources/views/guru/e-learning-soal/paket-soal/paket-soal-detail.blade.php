@@ -76,6 +76,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/1';
     var datatable2_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/2';
     var add_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/add';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/delete';
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
@@ -153,12 +154,7 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="{{ url('organizer/question/order') }}/' +
-                        data.id +
-                        '?question_package_id={{ $question_package->question_package_id }}">' +
-                        '    <i class="material-icons">reorder</i>' +
-                        '</a>' +
-                        '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
+                    return '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
                         data.id + '" onclick="actionDelete(this)">' +
                         '    <i class="material-icons">delete</i>' +
                         '</button>';
@@ -205,7 +201,7 @@
     function actionDelete(element) {
         var item = $(element);
         item.prop('disabled', true);
-        var url = '{{ url('organizer/question/package/detail/delete') }}';
+        var url = delete_url ;
         if (item.is(":disabled")) {
             $.ajax({
                 type: "POST",

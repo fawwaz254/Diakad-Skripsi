@@ -36,7 +36,6 @@
                                     <th>Waktu Mulai</th>
                                     <th>Waktu Akhir</th>
                                     <th>Durasi Pengerjaan</th>
-                                    <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -71,7 +70,7 @@
                 { data: 'kelas.nm_kelas' },
                 { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
                 { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
-                { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},{ data: 'waktu_pengerjaan'},
+                { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},
                 { data: 'action', name: 'action', searchable: false, orderable: false,
                     render: function(data) {
                         return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
