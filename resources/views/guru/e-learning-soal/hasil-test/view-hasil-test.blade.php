@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        List Paket Soal
+                        List Hasil Test
                     </h2>
                 
                 </div>
@@ -18,9 +18,8 @@
                                     <th>Kelas</th>
                                     <th>Total Siswa</th>
                                     <th>Siswa Mengerjakan</th>
-                                    <th>Siswa Tidak Mengerjakan</th>
-                                    <th>Jumlah Nilai diatas 75</th>
-                                    <th>Jumlah Nilai dibawah 75</th>
+                                    {{-- <th>Jumlah Nilai diatas 75</th>
+                                    <th>Jumlah Nilai dibawah 75</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -53,9 +52,9 @@
                 { data: null, searchable: false, orderable: false },
                 { data: 'text', name: 'text'},
                 { data: 'kelas.nm_kelas' },
-                { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
-                { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
-                { data: 'nilai'},                { data: 'nilai'},                { data: 'nilai'},
+                { data: 'total_siswa', name: 'total_siswa', searchable: false, orderable: false },
+                { data: 'total_mengerjakan', name: 'total_mengerjakan', searchable: false, orderable: false },
+                // { data: 'nilai'},                     { data: 'nilai'},
                 { data: 'action', name: 'action', searchable: false, orderable: false,
                     render: function(data) {
                         return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +

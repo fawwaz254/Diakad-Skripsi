@@ -1,8 +1,10 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>DASHBOARD | {{Carbon\Carbon::now('Asia/Jakarta')->format('d M Y')}}</h2>
-    </div>
-    <!-- Basic Examples -->
+ 
+    <h2><a type="button" class="btn bg-grey waves-effect"
+        href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/hasil-test') }}">
+        <i class="material-icons">keyboard_backspace</i>
+        <span>Kembali</span>
+    </a></h2>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -29,9 +31,10 @@
                                     <th>Betul</th>
                                     <th>Salah</th>
                                     <th>Tidak Menjawab</th>--}}
-                                    <th>Jam Pengerjaan</th> 
-                                    <th>Status</th>
-                                    {{-- <th>Nilai</th> --}}
+                                    {{-- <th>Jam Pengerjaan</th>  --}}
+                                         <th>Nilai</th>
+                                    {{-- <th>Detail</th> --}}
+                               
                                 </tr>
                             </thead>
                         
@@ -64,19 +67,19 @@ var paket_soal = '{{ $question_package->id_paket_soal }}';
             columns: [
                 { data: null, searchable: false, orderable: false },
                 { data: 'pengguna.nm_pengguna', name: 'pengguna.nm_pengguna'},
-                { data: 'status' },
+                { data: 'total_nilai' },
                 // { data: 'waktu_mulai_pengerjaan' },
                 // { data: 'jawaban_test' },
                 // { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
                 // { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
                 // { data: 'nilai'},                { data: 'nilai'},                { data: 'nilai'},
-                { data: 'action', name: 'action', searchable: false, orderable: false,
-                    render: function(data) {
-                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
-                            '    <i class="material-icons">remove_red_eye</i>'+
-                            '</a>'
-                    }
-                }
+                // { data: 'action', name: 'action', searchable: false, orderable: false,
+                //     render: function(data) {
+                //         return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
+                //             '    <i class="material-icons">remove_red_eye</i>'+
+                //             '</a>'
+                //     }
+                // }
             ],
             order: [[2, 'asc'], [1, 'asc']]
         });
