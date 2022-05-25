@@ -1,11 +1,12 @@
 <div class="container-fluid">
     <div class="row clearfix">
-        
+
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <a type="button" class="btn btn-success" style="margin-bottom: 15px" href="{{url('guru#e-learning-soal/soal/new')}}">
-            <i class="material-icons">add_box</i>
-            <span>Tambah Soal</span>
-        </a> 
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                href="{{ url('guru#e-learning-soal/soal/new') }}">
+                <i class="material-icons">add_box</i>
+                <span>Tambah Soal</span>
+            </a>
             <div class="card">
                 <div class="header">
                     <h2>
@@ -25,8 +26,8 @@
                     </ul> --}}
                 </div>
                 <div class="body">
-                    
-                    
+
+
                     {{-- <button type="button" class="btn btn-success" style="margin-bottom: 15px"><i class="material-icons"></i> Tambah Soal</button> --}}
                     <div class="table-responsive">
                         <table id="primary_table" class="table table-bordered table-striped table-hover dataTable">
@@ -50,76 +51,95 @@
 </div>
 @include('scriptjs')
 <script>
-  var modul_url       = '{{Request::segment(2)}}';
-  var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'soal/table';
-  var detail_url      =  role_url + '#' + modul_url + '/' + 'soal';
-  var delete_url      =  role_url + '/' + modul_url + '/' + 'soal';
+    var modul_url = '{{ Request::segment(2) }}';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'soal/table';
+    var detail_url = role_url + '#' + modul_url + '/' + 'soal';
+    var delete_url = role_url + '/' + modul_url + '/' + 'soal';
 
-        var primary_table = $('#primary_table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: datatable_url,
-                type: 'POST'
+    var primary_table = $('#primary_table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: datatable_url,
+            type: 'POST'
+        },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
             },
-            columns: [
-                { data: null, searchable: false, orderable: false },
-                { data: 'pengguna.nm_pengguna' },
-                { data: 'text', name: 'text', orderable: false },
-                { data: 'action', name: 'action', searchable: false, orderable: false,
-                    render: function(data) {
-                        return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/edit/' +  data.id +'">'+
-                            '    <i class="material-icons">mode_edit</i>'+
-                            '</a>'+
-                            '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/test/' +  data.id +'">'+
-                            '    <i class="material-icons">reorder</i>'+
-                            '</a>'+
-                            '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="'+data.id+'" onclick="actionDelete(this)">'+
-                            '    <i class="material-icons">delete</i>'+
-                            '</button>';
-                    }
+            {
+                data: 'pengguna.nm_pengguna'
+            },
+            {
+                data: 'text',
+                name: 'text',
+                orderable: false
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        detail_url + '/edit/' + data.id + '">' +
+                        '    <i class="material-icons">mode_edit</i>' +
+                        '</a>' +
+                        '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        detail_url + '/test/' + data.id + '">' +
+                        '    <i class="material-icons">reorder</i>' +
+                        '</a>' +
+                        '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="' +
+                        data.id + '" onclick="actionDelete(this)">' +
+                        '    <i class="material-icons">delete</i>' +
+                        '</button>';
                 }
-            ]
-        });
+            }
+        ]
+    });
 
-        primary_table.on( 'draw', function () {
-            primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-                var start = this.page.info().page * this.page.info().length;
-                cell.innerHTML = i + 1;
-            } );
-        } ).draw();
- 
-    function actionDelete(element){
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = i + 1;
+        });
+    }).draw();
+
+    function actionDelete(element) {
         var item = $(element);
         item.prop('disabled', true);
-        var url = delete_url + '/delete' ;
-        // var url = '{{url('organizer/question/delete')}}';
+        var url = delete_url + '/delete';
+        // var url = '{{ url('organizer/question/delete') }}';
         vex.dialog.confirm({
             message: 'Apakah yakin mau menghapus soal?',
-            callback: function (value) {
+            callback: function(value) {
                 // alert(url)
-                if(value){
+                if (value) {
                     // alert(url);
                     $.ajax({
                         type: "POST",
                         url: url,
-                        data:{
+                        data: {
                             id_soal: item.attr('data-id')
                         },
-                        success: function (data) {
+                        success: function(data) {
                             vex.dialog.alert(data.message);
-                        setTimeout(() => {
-                            // $('.primary_table').DataTable().ajax.reload(null, false);
-                            // primary_table.ajax.reload(null, false);
-                            primary_table.ajax.reload(null, false);
-                            //    location.reload();
-                        }, 2000)
+                            setTimeout(() => {
+                                // $('.primary_table').DataTable().ajax.reload(null, false);
+                                // primary_table.ajax.reload(null, false);
+                                primary_table.ajax.reload(null, false);
+                                //    location.reload();
+                            }, 2000)
                         },
-                        error: function (xhr, status, error) {
+                        error: function(xhr, status, error) {
                             console.log(xhr.responseText);
                         }
                     });
-                }else{
+                } else {
                     item.prop('disabled', false);
                 }
             }

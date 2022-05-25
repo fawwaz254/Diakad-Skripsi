@@ -121,7 +121,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 // Route::post('detail/table', 'Guru\ELearningSoal\PaketSoalController@detailList');
                 Route::post('detail/table/{id}/{tipe}', 'Guru\ELearningSoal\PaketSoalController@detailList');
                 Route::post('detail/add', 'Guru\ELearningSoal\PaketSoalController@actionDetailAdd');
-                // Route::post('detail/delete', 'Organizer\QuestionPackageController@actionDetailDelete');
+                Route::post('detail/delete', 'Guru\ELearningSoal\PaketSoalController@actionDetailDelete');
             });
 
             Route::group(array('prefix' => 'hasil-test'), function () {
