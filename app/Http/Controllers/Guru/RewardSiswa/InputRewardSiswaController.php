@@ -68,7 +68,7 @@ class InputRewardSiswaController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'reward-siswa/input-reward-siswa/view-kelas/'.$input->id_kelas
+                'path' => 'reward-siswa/input-reward-siswa/view-kelas/' . $input->id_kelas
             ];
         }
     }
@@ -82,10 +82,10 @@ class InputRewardSiswaController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
-        
+
         return view('guru/reward-siswa/input-reward-siswa/view-kelas-input-reward-siswa', compact('auth_data', 'semester_aktif', 'data_kelas'));
     }
-    
+
     public function datatablesInputRewardSiswa(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
@@ -111,13 +111,13 @@ class InputRewardSiswaController extends BaseController
         $list_data = RewardSiswa::with('siswa', 'siswa.pengguna', 'kelas', 'pemberi_reward');
 
         return Datatables::of($list_data)
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_reward_siswa
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_reward_siswa
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function addInputRewardSiswa(Request $request, $id_siswa)
@@ -125,7 +125,7 @@ class InputRewardSiswaController extends BaseController
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
@@ -157,7 +157,7 @@ class InputRewardSiswaController extends BaseController
             'id_siswa'              => 'required',
             'nm_reward_siswa'    => 'required',
         ]);
-        
+
         if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
@@ -168,7 +168,7 @@ class InputRewardSiswaController extends BaseController
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 if ($siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first()) {
                     $reward_siswa                               = new RewardSiswa;
@@ -184,7 +184,7 @@ class InputRewardSiswaController extends BaseController
                     $reward_siswa->save();
 
                     $token_siswa = $siswa->pengguna->api_token;
-                    if(!empty($token_siswa)){
+                    if (!empty($token_siswa)) {
                         $message = 'Kamu telah tercatat mendapatkan reward dari guru';
                         $send_data = array(
                             'title' => 'Informasi',
@@ -195,7 +195,7 @@ class InputRewardSiswaController extends BaseController
                         );
 
                         $notifikasi = array(
-                            'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                            'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                             'id_pengguna' => $siswa->pengguna->id_pengguna,
                             'id_sekolah' => $siswa->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
@@ -204,12 +204,12 @@ class InputRewardSiswaController extends BaseController
 
                         LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
                     }
-                    
-                    if(!empty($siswa->id_wali_murid)){
+
+                    if (!empty($siswa->id_wali_murid)) {
                         $wali_murid = WaliMurid::find($siswa->id_wali_murid);
 
                         $token_wali_murid = $wali_murid->pengguna->api_token;
-                        if(!empty($token_wali_murid)){
+                        if (!empty($token_wali_murid)) {
                             $message = 'Putra/Putri Anda telah tercatat mendapatkan reward dari guru';
                             $send_data = array(
                                 'title' => 'Informasi',
@@ -220,7 +220,7 @@ class InputRewardSiswaController extends BaseController
                             );
 
                             $notifikasi = array(
-                                'id' => $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid(),
+                                'id' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
                                 'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                 'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                 'isi_notifikasi' => $message,
@@ -235,7 +235,7 @@ class InputRewardSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'reward-siswa/rekap-input-reward-siswa',
-                    'message' => 'Save Pelanggaran Siswa successfully'
+                    'message' => 'Input Reward Siswa successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
