@@ -205,7 +205,8 @@
 
         if (distance <= 0) {
             clearInterval(x);
-            var url = timeout;
+       
+            loadURI(timeout);
             //                 window.location = url; 
         } else {
             distance--

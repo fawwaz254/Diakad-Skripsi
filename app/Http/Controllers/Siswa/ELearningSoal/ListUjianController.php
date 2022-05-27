@@ -49,28 +49,61 @@ class ListUjianController extends Controller
                 return $value;
             })->addColumn('status', function ($item) {
                 $statusTest = Test::where('id_paket_soal', $item->id_paket_soal)->where('id_pengguna', Auth::id())->first();
-                if ($statusTest) {
-                    if ($statusTest->status == 1) {
-                        $status = "Sudah Mengerjakan";
-                    } else {
-                        $status = "Sedang dikerjakan";
-                    }
+
+                $waktu = Carbon::now('Asia/Jakarta');
+
+                $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
+
+                $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_selesai);
+
+
+                if (!$statusTest && strtotime($waktu) > strtotime($end_date)) {
+                    $status = "Waktu Berakhir";
                 } else {
-                    $status = "Siap dimulai";
+                    if (strtotime($start_date) > strtotime($waktu)) {
+                        $status = "Test Belum dimulai";
+                    } else {
+                        if ($statusTest) {
+                            if ($statusTest->status == 1) {
+                                $status = "Sudah Mengerjakan";
+                            } else {
+                                $status = "Sedang dikerjakan";
+                            }
+                        } else {
+                            $status = "Siap dimulai";
+                        }
+                    }
                 }
+
+
                 return $status;
             })
             ->addColumn('action', function ($item) {
                 $statusTest = Test::where('id_paket_soal', $item->id_paket_soal)->where('id_pengguna', Auth::id())->first();
-                if ($statusTest) {
-                    if ($statusTest->status == 1) {
-                        $status = "1";
-                    } else {
-                        $status = "2";
-                    }
+
+                $waktu = Carbon::now('Asia/Jakarta');
+
+                $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
+                $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_selesai);
+
+
+                if (!$statusTest && strtotime($waktu) > strtotime($end_date)) {
+                    $status = "98";
                 } else {
-                    $status = "0";
-                }
+                    if (strtotime($start_date) > strtotime($waktu)) {
+                        $status = "99";
+                    } else {
+                        if ($statusTest) {
+                            if ($statusTest -> status == 1) {
+                                $status = "1";
+                            } else {
+                                $status = "2";
+                            }
+                        } else {
+                            $status = "0";
+                        }
+                    }
+                    }
                 $data = array(
                     'id' => $item->id_paket_soal,
                     'status' => $status
@@ -93,7 +126,7 @@ class ListUjianController extends Controller
 
 
         $input = (object) $request->input();
-       
+
         $account = $input->auth_data->pengguna->id_pengguna;
         if ($cek = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_paket_soal', $soal->id_paket_soal)->first()) {
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $cek->id_test)->first();
@@ -254,24 +287,24 @@ class ListUjianController extends Controller
 
         $question_options = PilihanSoal::where('id_soal', $test->id_soal)->orderBy('number_option')->get();
 
-// $jawaban = JawabanTest::where('id_test',$id_soal)->whereNotNull('id_pilihan_soal')->get()->pluck('id_soal')->toArray();
-$jawabanTest = JawabanTest::where('id_test',$id_soal)->get();
+        // $jawaban = JawabanTest::where('id_test',$id_soal)->whereNotNull('id_pilihan_soal')->get()->pluck('id_soal')->toArray();
+        $jawabanTest = JawabanTest::where('id_test', $id_soal)->get();
 
         $waktu = Carbon::now('Asia/Jakarta');
 
         $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $paket_soal->waktu_mulai);
         $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $paket_soal->waktu_selesai);
 
-        if(strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)){
+        if (strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)) {
 
-            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('test', 'paket_soal', 'question_options', 'no', 'sisaWaktu','jawabanTest'));
-            }else {
-                $input = (object) $request->input();
-                $testi = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', $test->test->id_test)->first();
-                $testi->status = 1;
-                $testi->save();
-                return redirect('siswa/e-learning-soal/list-ujian');
-            }
+            return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('test', 'paket_soal', 'question_options', 'no', 'sisaWaktu', 'jawabanTest'));
+        } else {
+            $input = (object) $request->input();
+            $testi = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_test', $test->test->id_test)->first();
+            $testi->status = 1;
+            $testi->save();
+            return redirect('siswa/e-learning-soal/list-ujian');
+        }
     }
 
     public function actionEndTest(Request $request)
