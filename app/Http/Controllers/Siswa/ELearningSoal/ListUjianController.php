@@ -49,6 +49,16 @@ class ListUjianController extends Controller
                 return $value;
             })->addColumn('status', function ($item) {
                 $statusTest = Test::where('id_paket_soal', $item->id_paket_soal)->where('id_pengguna', Auth::id())->first();
+                          
+        $waktu = Carbon::now('Asia/Jakarta');
+
+        $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
+
+        if(strtotime($start_date) > strtotime($waktu)){
+        $status = "Test Belum dimulai";
+        }else{
+              
+              
                 if ($statusTest) {
                     if ($statusTest->status == 1) {
                         $status = "Sudah Mengerjakan";
@@ -57,20 +67,28 @@ class ListUjianController extends Controller
                     }
                 } else {
                     $status = "Siap dimulai";
-                }
+                } }
                 return $status;
-            })
+           })
             ->addColumn('action', function ($item) {
                 $statusTest = Test::where('id_paket_soal', $item->id_paket_soal)->where('id_pengguna', Auth::id())->first();
-                if ($statusTest) {
-                    if ($statusTest->status == 1) {
-                        $status = "1";
-                    } else {
-                        $status = "2";
-                    }
+                
+        $waktu = Carbon::now('Asia/Jakarta');
+
+        $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $item->waktu_mulai);
+
+        if(strtotime($start_date) > strtotime($waktu)){
+        $status = "99";
+        }else{
+            if ($statusTest) {
+                if ($statusTest->status == 1) {
+                    $status = "1";
                 } else {
-                    $status = "0";
+                    $status = "2";
                 }
+            } else {
+                $status = "0";
+            }}
                 $data = array(
                     'id' => $item->id_paket_soal,
                     'status' => $status
