@@ -415,8 +415,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('post-rekap-absensi-kelas-daring', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@actionViewRekapAbsensiKelasDaring');
             Route::get('rekap-absensi-kelas-daring/view/{id_kelas_mp_grup}', 'Guru\WaliKelas\RekapAbsensiKelasDaringController@viewDetailRekapAbsensiKelasDaring');
 
+            // MENU Rekap Keuangan Kelas
+            Route::get('rekap-keuangan-kelas', 'Guru\WaliKelas\RekapKeuanganKelasController@viewRekapKeuanganKelas');
+            Route::get('rekap-keuangan-kelas/print/{id_semester}/{id_kelas}', 'Guru\WaliKelas\RekapKeuanganKelasController@printRekapKeuanganKelas');
+
             // MENU Rekap Pelanggaran Kelas
-            Route::get('rekap-pelanggaran-kelas', 'Guru\WaliKelas\RekapPelanggaranKelasController@viewTindakanPelanggaran');
+            Route::get('rekap-pelanggaran-kelas', 'Guru\WaliKelas\RekapPelanggaranKelasController@viewRekapPelanggaranKelas');
             Route::get('rekap-pelanggaran-kelas/datatables-belum-nonkbm', 'Guru\WaliKelas\RekapPelanggaranKelasController@datatablesBelumTindakanNonKBM');
             Route::get('rekap-pelanggaran-kelas/datatables-belum-kbm', 'Guru\WaliKelas\RekapPelanggaranKelasController@datatablesBelumTindakanKBM');
             Route::get('rekap-pelanggaran-kelas/datatables-sudah', 'Guru\WaliKelas\RekapPelanggaranKelasController@datatablesSudahTindakan');
