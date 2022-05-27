@@ -279,13 +279,13 @@ class LibGuru
     /** ========== **/
 
     /** JADWAL UAS GURU BY SEMESTER **/
-    public static function fetchDataJadwalUAS($auth_data, $id_pengguna, $id_semester, $is_online = null, $id_ujian_mp = null)
+    public static function fetchDataJadwalUAS($auth_data, $id_pengguna, $id_semester, $is_online = 100, $id_ujian_mp = null)
     {
         // get id_guru
         $guru = Guru::where('id_pengguna', '=', $id_pengguna)->first();
         $id_guru = $guru->id_guru;
 
-        if ($is_online == 0 || $is_online != null) {
+        if ($is_online == 0 || $is_online == 1) {
             if (! empty($id_ujian_mp)) {
                 $jadwalUAS = Guru::select('guru.id_guru', 'guru.id_pengguna', 'ujian_mp.id_ujian_mp', 'mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'kelas.nm_kelas', 'pengampu_mp.pjmp_uts', 'ujian_mp.is_online')
                     ->join('pengampu_mp', 'pengampu_mp.id_guru', '=', 'guru.id_guru')
