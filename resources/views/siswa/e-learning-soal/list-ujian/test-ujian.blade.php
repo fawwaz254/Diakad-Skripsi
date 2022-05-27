@@ -29,20 +29,20 @@
                                                     id="radio_{{ $no_option }}"
                                                     value="{{ $question_option->id_pilihan_soal }}">
                                                 <label for="radio_{{ $no_option }}">
-                                                    <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                    <pre class="is-answer" >{!! $question_option->content !!}</pre>
                                                 </label>
                                             @else
                                                 @if ($test->id_pilihan_soal == $question_option->id_pilihan_soal)
                                                     <input name="question_option" type="radio" checked=""
                                                         id="radio_{{ $no_option }}"
-                                                        value="{{ $question_option->question_option_id }}">
+                                                        value="{{ $question_option->id_pilihan_soal }}">
                                                     <label for="radio_{{ $no_option }}">
-                                                        <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                        <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
                                                     </label>
                                                 @else
                                                     <input name="question_option" type="radio"
                                                         id="radio_{{ $no_option }}"
-                                                        value="{{ $question_option->question_option_id }}">
+                                                        value="{{ $question_option->id_pilihan_soal }}">
                                                     <label for="radio_{{ $no_option }}">
                                                         <pre class="is-answer">{!! $question_option->content !!}</pre>
                                                     </label>
