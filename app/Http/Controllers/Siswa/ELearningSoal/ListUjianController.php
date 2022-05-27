@@ -60,7 +60,7 @@ class ListUjianController extends Controller
                 if (!$statusTest && strtotime($waktu) > strtotime($end_date)) {
                     $status = "Waktu Berakhir";
                 } else {
-                    if (strtotime($start_date) > strtotime($waktu)) {
+                    if (strtotime($start_date) > strtotime($waktu) || $item->detail_paket_soal->count() == 0) {
                         $status = "Test Belum dimulai";
                     } else {
                         if ($statusTest) {
@@ -90,7 +90,7 @@ class ListUjianController extends Controller
                 if (!$statusTest && strtotime($waktu) > strtotime($end_date)) {
                     $status = "98";
                 } else {
-                    if (strtotime($start_date) > strtotime($waktu)) {
+                    if (strtotime($start_date) > strtotime($waktu) || $item->detail_paket_soal->count() == 0) {
                         $status = "99";
                     } else {
                         if ($statusTest) {
@@ -183,9 +183,9 @@ class ListUjianController extends Controller
     {
         $input = (object) $request->input();
 
-        $validator = Validator::make($request->all(), [
-            'question' => 'required'
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'question' => 'required'
+        // ]);
 
         //logika nilai jika jawabannya benar maka input nilai 
         //untuk cari pilihan yang benar
