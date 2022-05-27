@@ -71,6 +71,11 @@
                            '    <i class="material-icons">access_time</i>'+
                            '</a>';
                        }
+                       else if(data.status == 98){
+                        return '<a type="button" style="pointer-events: none" class="btn btn-danger btn-circle waves-effect waves-circle waves-float" href="">' +
+                           '    <i class="material-icons">access_time</i>'+
+                           '</a>';
+                       }
                        else{
                         return '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' + detail_url  + data.id +'">' +
                            '    <i class="material-icons">play_arrow</i>'+
