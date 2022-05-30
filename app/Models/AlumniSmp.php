@@ -28,4 +28,8 @@ class AlumniSmp extends Model
     'updated_by',
     'deleted_by'
   ];
+  public function alumni()
+  {
+      return $this->belongsTo(Alumni::class, 'id_alumni');
+  }
 }

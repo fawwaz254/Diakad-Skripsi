@@ -93,6 +93,53 @@
                             <textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
                                 aria-invalid="true"> {{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
                         </div>
+
+                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian');
+                        <input type="hidden"name="status" value="smp">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <hr>
+                            <h2 class="card-inside-title">Jenis Sekolah:</h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <select class="form-control show-tick" name="jenis_sekolah">
+
+                                        
+
+                                        <option  disabled >Pilih Jenis</option>
+                                        <option @if(isset($alumni) && $alumni->jenis_sekolah == "sma")selected @endif value="sma">SMA (Sekolah Menengah Atas)</option>
+                                        <option  @if(isset($alumni) && $alumni->jenis_sekolah == "smk")selected @endif value="smk">SMK (Sekolah Menengah Kejuruan)</option>
+                                        <option   @if(isset($alumni) && $alumni->jenis_sekolah == "ma")selected @endif value="ma"> MA (Madrasah Aliyah)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            </div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title"> Nama Sekolah</h2>
+							<textarea class="form-control" name="nm_sekolah" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->nm_sekolah : ''}} </textarea>
+						</div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title"> Alamat Sekolah</h2>
+							<textarea class="form-control" name="alamat_sekolah" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->alamat_sekolah : ''}} </textarea>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title">Jurusan</h2>
+							<textarea class="form-control" name="jurusan" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->jurusan : ''}} </textarea>
+                        </div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
+
+                                <input type="number" class="form-control" name="tahun_masuk_sekolah" required=""
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ !empty($alumni) ? $alumni->smp->tahun_masuk_sekolah : '' }}">
+
+							{{-- <textarea class="form-control" name="tahun_masuk_sekolah" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea> --}}
+						</div>
+						@else
+
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Status </h2>
                             <input class="with-gap radio-col-light-green form-control validate" type="radio"
@@ -112,7 +159,7 @@
                                 {{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }}>
                             <label for="idle_status"> Belum Bekerja </label>
                         </div>
-
+                        @endif
                         {{-- handle work data --}}
                         <div class="form_layout" id="work_state">
                             @include('./humas.alumni.forms.work_state')
@@ -129,13 +176,19 @@
                         <div class="form_layout" id="idle_state">
                             @include('./humas.alumni.forms.idle_state')
                         </div>
-
-
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
+                            <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
+                                <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
+                                </span>
+                            </button>
+                            @else
                             <button id="submit" disabled class="btn btn-block bg-red waves-effect" type="submit">
                                 <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
                                 </span>
                             </button>
+                            @endif
+                           
                         </div>
                     </form>
                 </div>
