@@ -174,6 +174,7 @@ class UjianUASController extends BaseController
           ->whereRaw('kegiatan.kode_kegiatan = "UAS"');
       })
       ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+      ->where('semester.is_aktif_semester', '=', 1)
       ->get();
 
     return Datatables::of($list_data)
