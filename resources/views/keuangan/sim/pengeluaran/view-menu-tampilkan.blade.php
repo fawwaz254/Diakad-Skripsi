@@ -99,8 +99,8 @@ var primary_table = $('#primary_table').DataTable({
             render: function(data){
                 return '<a class="btn btn-success btn-circle waves-effect waves-float" target="_blank" href="'
                         + print_url + '/' + data.id +'">' + '<i class="material-icons">print</i>' + '</a>' 
-                        + '<a class="target-link btn btn-info btn-circle waves-effect waves-float" href="'+ edit_url 
-                        + '/' + data.id + '">' + '<i class="material-icons">edit</i>' + '</a> ' 
+                        // + '<a class="target-link btn btn-info btn-circle waves-effect waves-float" href="'+ edit_url 
+                        // + '/' + data.id + '">' + '<i class="material-icons">edit</i>' + '</a> ' 
                         + '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionKhusus(\'' + delete_url + '\', this)" data-id="'+  data.id + '">'
                         + '<i class="material-icons">close</i>' + '</button>';
             }

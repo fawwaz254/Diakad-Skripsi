@@ -32,6 +32,7 @@ use App\Models\TutupBukuBulananKas;
 use App\Models\TutupBukuTahunanBiaya;
 
 use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Keuangan\LibDataKeuangan;
 use App\Libraries\Pendidikan\LibDataAkademik;
 
 use Auth;
@@ -1695,5 +1696,15 @@ class SppController extends BaseController
                 ]);
             }
         }
+    }
+
+    public function printPembayaran(Request $request, $id){
+        $auth_data = $request->auth_data;
+
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->where('id_pembayaran_biaya', $id)->first();
+
+        $terbilang = LibDataKeuangan::getTerbilang($pembayaran->besar_pembayaran);
+        
+        return view('keuangan/sim/spp/print-pembayaran-spp', compact('auth_data', 'pembayaran', 'terbilang')); 
     }
 }
