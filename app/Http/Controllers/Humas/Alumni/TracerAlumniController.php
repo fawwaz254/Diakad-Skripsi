@@ -34,16 +34,29 @@ class TracerAlumniController extends Controller
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat_perguruan', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk_perguruan'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat_usaha', 'kontak_usaha', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
     const FETCH_IDLE_ATTRIBUTE = ['status_menunggu'];
+    const FETCH_SMP = ['nm_sekolah','alamat_sekolah','jurusan','jenis_sekolah','tahun_masuk_sekolah'];
 
     public function viewTracerAlumni(Request $request)
     {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if( $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1'){
+            return view('humas.alumni.tracer-alumni.view-tracer-alumni-smp');
+        }else{
+            return view('humas.alumni.tracer-alumni.view-tracer-alumni');
+        }
 
-        return view('humas.alumni.tracer-alumni.view-tracer-alumni');
     }
 
     public function datatablesTracerAlumni(Request $request)
     {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if( $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ){
+        $alumnis    = LibAlumni::getAlumnisSmp();
+         }else{
         $alumnis    = LibAlumni::getAlumnis();
+    }
 
         return Datatables::of($alumnis)
             ->addColumn('status_verifikasi', function ($item) {
@@ -72,7 +85,7 @@ class TracerAlumniController extends Controller
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 3)->get();
+        $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat',9)->get();
         $alumni = null;
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
@@ -86,7 +99,14 @@ class TracerAlumniController extends Controller
 
         $data_jurusan = Jurusan::all();
         $data_kelas = Kelas::where('tingkat', 9)->get();
-        $alumni = Alumni::find($id);
+        if( $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ){
+
+            $alumni = Alumni::where('id_alumni',$id)->with('smp')->first();
+          
+        }else{
+            $alumni = Alumni::find($id);
+        }
+       
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
@@ -173,6 +193,10 @@ class TracerAlumniController extends Controller
                         $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
                         $data5['id_alumni_menunggu']   = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                         break;
+                    case 'smp';
+                    $data5 = $request->only(self::FETCH_SMP);
+                    $data5['id_alumni_smp']   = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                    break;
                 }
 
                 $data5['id_alumni']              = $data4['id_alumni'];
@@ -187,6 +211,8 @@ class TracerAlumniController extends Controller
                     LibAlumni::storeUniversity($data5);
                 } elseif ($request->status == 'menunggu') {
                     LibAlumni::storeIdleAlumni($data5);
+                } elseif ($request->status == 'smp') {
+                    LibAlumni::storeSMP($data5);
                 }
 
                 DB::commit();

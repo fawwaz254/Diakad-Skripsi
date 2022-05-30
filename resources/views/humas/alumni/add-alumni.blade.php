@@ -70,6 +70,31 @@
 							<textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
 								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
 						</div>
+
+						@if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title"> Nama Sekolah</h2>
+							<textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title">Jurusan</h2>
+							<textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title">Jenis Sekolah</h2>
+							<textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
+							<textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
+								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea>
+						</div>
+
+
+						@else
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Status </h2>
 							<input class="with-gap radio-col-light-green form-control validate" type="radio"
@@ -89,6 +114,10 @@
 								{{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }}>
 							<label for="idle_status"> Belum Bekerja </label>
 						</div>
+						@endif
+
+						
+
 
 						{{-- handle work data --}}
 						<div class="form_layout" id="work_state">

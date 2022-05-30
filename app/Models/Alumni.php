@@ -51,4 +51,8 @@ class Alumni extends Model
     {
         return $this->hasOne(AlumniMenunggu::class, 'id_alumni');
     }
+    public function smp()
+    {
+        return $this->hasOne(AlumniSmp::class, 'id_alumni');
+    }
 }
