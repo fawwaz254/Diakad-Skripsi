@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+use App\Models\Modul;
+use App\Models\Menu;
+use App\Models\Role;
+use Carbon\Carbon;
+
 class HideModulRolePpdb220530 extends Migration
 {
     /**
