@@ -67,7 +67,7 @@
             <div class="row" style="background-color:#f7f7f7;margin-right:0;margin-left:0;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;padding-top:25px;padding-bottom:25px ">
                     <div class="row">
                             <div class="col-xs-12 align-center">
-                                Powered By <a href="https://dsmartedu.com" target="_blank">DSMART EDU</a></span>
+                                Powered By <a href="https://edumate.id" target="_blank">DSMART EDU</a></span>
                             </div>
                         </div>
             </div>

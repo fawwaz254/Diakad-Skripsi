@@ -210,7 +210,7 @@ $id_guru_mgmp = id_guru($id_pengguna);
             </div>
             <div class="version">
                 Made with <span style="color: #e25555;">&hearts;</span> by <a
-                    href="https://dsmartedu.com">@eduschool</a>
+                    href="https://edumate.id">@eduschool</a>
             </div>
         </div>
         <!-- #Footer -->
