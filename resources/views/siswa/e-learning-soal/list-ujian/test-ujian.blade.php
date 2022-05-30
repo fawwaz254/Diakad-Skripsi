@@ -192,7 +192,7 @@
 <script>
     var id_test = '{{ $test->id_test }}';
     var var_url = 'siswa/e-learning-soal/list-ujian/test/end';
-    var timeout = 'siswa#e-learning-soal/list-ujian/';
+    var timeout = 'e-learning-soal/list-ujian';
     var distance = '{{ $sisaWaktu }}';
     clearInterval(x);
     var x = setInterval(function() {
