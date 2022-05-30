@@ -69,7 +69,7 @@
                             return '<a>LULUS</a>';
                         }
                         else if(data.status_wisuda == 1) {
-                            return '';
+                            return 'Sudah diajukan';
                         }
                     }
                     else {
