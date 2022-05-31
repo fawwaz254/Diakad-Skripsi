@@ -454,35 +454,37 @@ class ApprovePrestasiSiswaController extends BaseController{
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
+            $id_kelas = $wali_kelas? $wali_kelas->id_kelas : ''; 
+
             if($param_semua_siswa==0){
 
                 $data = Siswa::select('siswa.id_siswa','calon_siswa_baru.nm_c_siswa','nm_pengguna','nm_kelas')
-                ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param,$wali_kelas){
+                ->whereHas('kegiatan_siswa',function($q) use($auth_data,$param,$id_kelas){
                     if($param == 0){
                         $q->where('status','!=',0);
                     }
                     else{
                         $q->where('status',0);
                     }
-                    $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                    $q->where(['siswa.id_kelas'=>$id_kelas]);
                 })
-                ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param,$wali_kelas){
+                ->orWhereHas('prestasi_siswa',function($q) use($auth_data,$param,$id_kelas){
                     if($param == 0){
                         $q->where('status','!=',0);
                     }
                     else{
                         $q->where('status',0);
                     }
-                    $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                    $q->where(['siswa.id_kelas'=>$id_kelas]);
                 })
-                ->orWhereHas('informasi_tambahan',function($q) use($auth_data,$param,$wali_kelas){
+                ->orWhereHas('informasi_tambahan',function($q) use($auth_data,$param,$id_kelas){
                     if($param == 0){
                         $q->where('status','!=',0);
                     }
                     else{
                         $q->where('status',0);
                     }
-                    $q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas]);
+                    $q->where(['siswa.id_kelas'=>$id_kelas]);
 
                 })
                 ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
