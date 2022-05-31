@@ -180,17 +180,22 @@ class InputNilaiMagangController extends BaseController
 
             // ACTION SAVE
             if($mode == 'save') {
-            	
+            	$input_array = (array) $input;
         		$list_data = KomponenMagang::where('id_periode_magang','=',$id)->get();
         		$list_siswa = LibMagangSiswa::fetchDataPengajuanSiswaMagangDetailPeriode($auth_data, $id);
+
         		$rentangNilai = PeraturanNilai::join('standar_nilai','standar_nilai.id_standar_nilai','=','peraturan_nilai.id_standar_nilai')->where('standar_nilai.id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('peraturan_nilai.is_mata_pelajaran','=',0)->get();
             	$nilai_akhir_arr = array();
             	$nilai_akhir_final = array();
             	foreach($list_siswa as $dataSiswa => $siswa){
             		foreach($list_data as $dataKomponen => $data){
-            			$nameInput = 'nilai'.$data->id_komponen_magang.'-'.$siswa->id_siswa;           			
-            			$nilaiCount = ($input->$nameInput*($data->persentase_komponen_magang/100));
-            			$nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_magang]=$nilaiCount;
+            			$nameInput = 'nilai'.$data->id_komponen_magang.'-'.$siswa->id_siswa;
+                        if(isset($input_array[$nameInput])){
+                            $nilaiCount = ($input_array[$nameInput]*($data->persentase_komponen_magang/100));
+                        }else{
+                            $nilaiCount = 0;
+                        }
+                        $nilai_akhir_final['nilai_angka'.$siswa->id_siswa][$data->id_komponen_magang]=$nilaiCount;
             		}
             		$namePengambilan = 'id_pengambilan_magang_'.$siswa->id_siswa;
             		$idSiswa = substr($namePengambilan, 22);
@@ -198,7 +203,7 @@ class InputNilaiMagangController extends BaseController
 
 						$pengajuanMagang = PengajuanSiswaMagang::where('id_periode_magang','=',$input->id_periode_magang)
 		                	->where('id_siswa','=',$idSiswa)
-		                	->where('id_pengambilan_magang','=',$input->$namePengambilan)
+		                	->where('id_pengambilan_magang','=',$input_array[$namePengambilan])
 		                	->first();
 		                if($pengajuanMagang){
 		                	//input nilai per-komponen
@@ -208,7 +213,7 @@ class InputNilaiMagangController extends BaseController
                                     $nameInput = 'nilai'.$key.'-'.$idSiswa;                    
                                     $nilaiMagang                            = new NilaiMagang;
                                     $nilaiMagang->id_nilai_magang           = $id_nilai_magang;
-                                    $nilaiMagang->id_pengambilan_magang     = $input->$namePengambilan;
+                                    $nilaiMagang->id_pengambilan_magang     = $input_array[$namePengambilan];
                                     $nilaiMagang->id_komponen_magang        = $key;
                                     $nilaiMagang->besar_nilai_magang        = $input->$nameInput;
                                     $nilaiMagang->created_by                = $input->auth_data->pengguna->id_pengguna;
@@ -224,21 +229,31 @@ class InputNilaiMagangController extends BaseController
                                 }
                             }		                	
 		                	//Input Nilai Magang
-		                    $inputNilaiMagang                  = PengajuanSiswaMagang::find($input->$namePengambilan);
+		                    $inputNilaiMagang                  = PengajuanSiswaMagang::find($input_array[$namePengambilan]);
 		                    $inputNilaiMagang->nilai_angka	   = array_sum($nilai_akhir_final['nilai_angka'.$idSiswa]);		
                             $inputNilaiMagang->status_magang   = 1;		
 		                    $inputNilaiMagang->updated_by      = $input->auth_data->pengguna->id_pengguna;
 		                    $inputNilaiMagang->save();
 		                }else{
-                            return redirect('humas#magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang);
-							
+                            return [
+                                'status' => 202,
+                                'message' => 'Save successfully',
+                                'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang
+                            ];
 						}	
 					}else{
-                          return redirect('humas#magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang);
-						
+                          return [
+                              'status' => 202,
+                              'message' => 'Save successfully',
+                              'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang
+                          ];
 					}	
             	}
-                  return redirect('humas#magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang);
+                return [
+                    'status' => 202,
+                    'message' => 'Save successfully',
+                    'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang
+                ];
             }
         }
     }
