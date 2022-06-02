@@ -141,8 +141,11 @@ class UploadDataSiswaController extends BaseController
 		if ($request->hasFile('file-excel')) {
 			// $path = $request->file('file-excel')->getRealPath();
 			// $data = Excel::load($path)->get();
-	Excel::import(new UploadToInsertUpdateSiswa($auth_data, $now), $request->file('file-excel'));
-	return back();
+			Excel::import(new UploadToInsertUpdateSiswa($auth_data, $now), $request->file('file-excel'));
+			return [
+				'status' 	=> 200, // FAILED
+				'message' 	=> "Upload Sukses"
+			];;
 		} else {
 			return [
 				'status' 	=> 300, // FAILED
