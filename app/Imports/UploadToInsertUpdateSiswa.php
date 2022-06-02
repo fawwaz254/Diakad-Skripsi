@@ -27,6 +27,7 @@ use App\Models\JenisLayakPip;
 use App\Models\JenisPendidikan;
 use App\Models\JenisPekerjaan;
 use App\Models\JenisPenghasilan;
+use App\Imports\Hash;
 
 use App\Libraries\LibGlobal;
 
@@ -56,6 +57,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
      */
     public function collection(Collection $data)
     {
+          set_time_limit(9800);
         $data_nis = array();
         foreach ($data as $key => $data_row) {
             if (!empty($data_row['nis'])) {
@@ -91,16 +93,17 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            $check_nis_siswa = $data_siswa->firstWhere('nis_siswa', (string) $value->nis);
+            $check_nis_siswa = Siswa::where('nis_siswa', (string) $value->nis)->first();
+
             // $check_nisn_siswa = Siswa::where('nisn_siswa', (string) $value->nisn)->first();
 
             // if ($check_nis_siswa) {
-                // Debugbar::error(
-                // 	'Upload Data Siswa Gagal, NIS ' . $value->nis . ' ditemukan sama di dalam sistem'
-                // );
-            // } else {
+            //     Debugbar::error(
+            //     	'Upload Data Siswa Gagal, NIS ' . $value->nis . ' ditemukan sama di dalam sistem'
+            //     );
+            // } else{
 
-                //find id_status_pengguna
+
                 $status 		= $data_status_pengguna->firstWhere('nm_status_pengguna', '=', $value->status_siswa);
 
                 if (empty($status)) {
@@ -169,6 +172,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 } else {
                     $nik = $value->nik;
                 }
+
 
                 //find id agama
                 if (empty($value->agama)) {
@@ -1057,11 +1061,10 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
 
                     );
                 }
-            // }
-        }
+           
 
         // if ($arr) {
-            // dd($arr);
+   
         if (count($arr) != 0) {
             foreach ($arr as $data_siswa_1) {
                 $jumlah_nis = 0;
@@ -1088,6 +1091,8 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                     );
                 }
             }
+
+       
             DB::beginTransaction();
             try {
                 $pengguna_center = [];
@@ -1360,12 +1365,16 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
 
                 Debugbar::error( 'Save Siswa successfully');
             } catch (\Exception $e) {
+           
                 DB::rollback();
                 // something went wrong
+                //    Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? 'tesst' : 'Operation error');
                 Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error');
+          
             }
         } else {
             Debugbar::error( "File Excel Anda Kosong");
         }
     }
 }
+    }

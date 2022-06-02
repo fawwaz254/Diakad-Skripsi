@@ -132,10 +132,7 @@ class UploadDataSiswaController extends BaseController
 		// return redirect('/siswa');
 	}
 
-
-
-
-
+	
 	public function uploadFileExcel(Request $request)
 	{
 		$input = (object) $request->input();
@@ -144,7 +141,8 @@ class UploadDataSiswaController extends BaseController
 		if ($request->hasFile('file-excel')) {
 			// $path = $request->file('file-excel')->getRealPath();
 			// $data = Excel::load($path)->get();
-			return Excel::import(new UploadToInsertUpdateSiswa($auth_data, $now), $request->file('file-excel'));
+	Excel::import(new UploadToInsertUpdateSiswa($auth_data, $now), $request->file('file-excel'));
+	return back();
 		} else {
 			return [
 				'status' 	=> 300, // FAILED
