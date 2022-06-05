@@ -23,5 +23,8 @@ class CategoriFileGuru extends Model
     {
         return $this->belongsTo(pengguna::class, 'id_pengguna', 'id_pengguna');
     }
+    public function categori_file_mgmp(){
+        return $this->belongsTo(CategoriFileMGMP::class, 'category_file_mgmp_id');
+    }
    
 }
