@@ -357,7 +357,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::post('cari/datatables', 'Keuangan\SIM\SppController@datatablesMenuCari');
 
                 Route::get('pembayaran', 'Keuangan\SIM\SppController@viewMenuPembayaran');
-                Route::get('pembayaran/{tahun_akademik_semester}/{id_kelas}', 'Keuangan\SIM\SppController@viewMenuPembayaran');
+                Route::get('pembayaran/{tahun_akademik_semester}/{id_kelas}/{waktu}', 'Keuangan\SIM\SppController@viewMenuPembayaran');
                 Route::get('print-pembayaran/{id}', 'Keuangan\SIM\SppController@printPembayaran');
 
                 Route::get('pemasukan', 'Keuangan\SIM\SppController@viewMenuPemasukan');

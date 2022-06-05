@@ -240,11 +240,20 @@ class LibMagangSiswa{
             'pengambilan_magang.id_periode_magang', 'pengambilan_magang.id_rekanan_magang',
             'periode_magang.nm_periode_magang', 'rekanan_magang.nm_rekanan_magang',
             'siswa.nis_siswa','pengguna.nm_pengguna','pengambilan_magang.nilai_angka','siswa.id_siswa')
-            ->join('periode_magang','periode_magang.id_periode_magang','=','pengambilan_magang.id_periode_magang')
-            ->join('rekanan_magang','rekanan_magang.id_rekanan_magang','=','pengambilan_magang.id_rekanan_magang')
-            ->join('siswa','siswa.id_siswa','=','pengambilan_magang.id_siswa')
-            ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
+            ->join('periode_magang', function($q){
+                $q->on('periode_magang.id_periode_magang','=','pengambilan_magang.id_periode_magang')->whereNull('periode_magang.deleted_at');
+            })
+            ->join('rekanan_magang', function($q){
+                $q->on('rekanan_magang.id_rekanan_magang','=','pengambilan_magang.id_rekanan_magang')->whereNull('rekanan_magang.deleted_at');
+            })
+            ->join('siswa', function($q){
+                $q->on('siswa.id_siswa','=','pengambilan_magang.id_siswa')->whereNull('siswa.deleted_at');
+            })
+            ->join('pengguna', function($q){
+                $q->on('pengguna.id_pengguna','=','siswa.id_pengguna')->whereNull('pengguna.deleted_at');
+            })
             ->where('pengambilan_magang.id_periode_magang','=',$id_periode_magang)
+            ->where('status_magang',1)
             ->get();
 
         return $siswa;
