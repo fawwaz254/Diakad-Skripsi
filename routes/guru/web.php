@@ -10,9 +10,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {
                 Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanHarianMGMP');
                 Route::get('add', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@addLaporanHarianMGMP');
-                Route::post('action-kerja-harian/{mode}/{no}','Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
+                Route::post('action-kerja-harian/{mode}/{id}','Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
                 Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
-            //    Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
+               Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
                 // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
             });
 
@@ -22,8 +22,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
                 // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
             });
-
-
         });
 
         /** ==== MODUL MANAJEMEN FILE ==== **/

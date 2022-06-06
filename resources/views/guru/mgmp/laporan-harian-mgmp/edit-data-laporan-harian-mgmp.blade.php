@@ -11,7 +11,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/add/0')}}">
+                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/edit/'. $laporan_kerja_harian_mgmp->id_laporan_kerja_harian_mgmp)}}">
                         {{csrf_field()}}
 
                         <h2 class="card-inside-title">
@@ -20,7 +20,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tanggal" required="" aria-required="true"
-                                        aria-invalid="true" value="{{ $waktu }}">
+                                        aria-invalid="true" value="{{ $laporan_kerja_harian_mgmp->tanggal }}">
                             </div>
                         </div>
 
@@ -28,9 +28,9 @@
                             Mata Pelajaran
                          </h2>
                          <select class="form-control show-tick" name="mata_pelajaran">
-                             <option  value="" selected>-- Pilih Mata Pelajaran--</option>
+                             <option value="">-- Pilih Mata Pelajaran--</option>
                              @foreach($mapel as $mata_pelajaran)
-                             <option value="{{ $mata_pelajaran->categori_file_mgmp->category_file_mgmp_id}}" @if(!empty($mata_pelajaran->category_file_mgmp_id))    @endif>
+                             <option value="{{ $mata_pelajaran->categori_file_mgmp->category_file_mgmp_id}}" @if($mata_pelajaran->category_file_mgmp_id == $laporan_kerja_harian_mgmp->mapel)  selected  @endif>
                                  {{ $mata_pelajaran->categori_file_mgmp->category_file_name }}
                              </option>
                              @endforeach
@@ -40,13 +40,13 @@
                             Jenis
                         </h2>
                         <div class="demo-radio-button">
-                            <input name="jenis" type="radio" value="Silabus" id="radio_1"  />
+                            <input name="jenis" type="radio" value="Silabus" id="radio_1" @if($laporan_kerja_harian_mgmp->jenis == "Silabus") checked="checked"  @endif />
                             <label for="radio_1">Silabus</label>
-                            <input name="jenis" type="radio" value="RPP" id="radio_2" />
+                            <input name="jenis" type="radio" value="RPP" id="radio_2" @if($laporan_kerja_harian_mgmp->jenis == "RPP") checked="checked"  @endif />
                             <label for="radio_2">RPP</label>
-                            <input name="jenis" type="radio" value="Prota" id="radio_3" />
+                            <input name="jenis" type="radio" value="Prota" id="radio_3" @if($laporan_kerja_harian_mgmp->jenis == "Prota") checked="checked"  @endif/>
                             <label for="radio_3">Prota</label>
-                            <input name="jenis" type="radio" value="Promes" id="radio_4" />
+                            <input name="jenis" type="radio" value="Promes" id="radio_4" @if($laporan_kerja_harian_mgmp->jenis == "Promes") checked="checked"  @endif />
                             <label for="radio_4">Promes</label>
                         </div>
 
@@ -54,9 +54,9 @@
                             Status
                         </h2>
                         <div class="demo-radio-button">
-                            <input name="status" type="radio" value="1" id="target_1"   />
+                            <input name="status" type="radio" value="1" id="target_1"  @if($laporan_kerja_harian_mgmp->status == "1") checked="checked"  @endif />
                             <label for="target_1">Selesai</label>
-                            <input name="status" type="radio" value="0" id="target_2" />
+                            <input name="status" type="radio" value="0" id="target_2" @if($laporan_kerja_harian_mgmp->status == "0") checked="checked"  @endif/>
                             <label for="target_2">Belum Selesai</label>
                         </div>
 
@@ -78,10 +78,14 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <textarea rows="4" cols="50" class="form-control" name="keterangan" required="" aria-required="true"
-                                    aria-invalid="true"></textarea>
+                                    aria-invalid="true" >{{ $laporan_kerja_harian_mgmp->keterangan_progres }}</textarea >
                             </div>
                         </div>
 
+                       
+
+                       
+               
 
                         {{-- @foreach($mapel as $mata_pelajaran)
                         {{ $mata_pelajaran->categori_file_mgmp->category_file_name }}
