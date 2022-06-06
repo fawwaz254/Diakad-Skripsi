@@ -4,9 +4,9 @@ $route_modul = Request::segment(2);
 $route_menu = Request::segment(3);
 $path = Request::fullUrl();
 $role_aktif = auth_data()->role_aktif->id_role;
-$category_file_role = category_file_role($role_aktif);
-$id_pengguna = auth_data()->pengguna->id_pengguna;
-$id_guru_mgmp = id_guru($id_pengguna);
+// $category_file_role = category_file_role($role_aktif);
+// $id_pengguna = auth_data()->pengguna->id_pengguna;
+// $id_guru_mgmp = id_guru($id_pengguna);
 
 // $detail_kelas = get_keterangan_kelas($id_pengguna);
 
@@ -104,7 +104,7 @@ $id_guru_mgmp = id_guru($id_pengguna);
                 </ul>
 
                 {{-- MGMP --}}
-                @if (count($id_guru_mgmp) && $role_aktif !== 7)
+                {{-- @if ($role_aktif !== 7)
 
                     <li id="modul-item-manajemen-file" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
@@ -153,14 +153,14 @@ $id_guru_mgmp = id_guru($id_pengguna);
                                         Data File
                                     </a>
                                 </li>
-                            </ul> --}}
+                            </ul>
                         @endif
                     </li>
-                @endif
+                @endif --}}
                 {{-- MGMP --}}
 
                 {{-- Manajemen File --}}
-                @if ($category_file_role && $role_aktif !== 14)
+                @if ( $role_aktif !== 14)
                     <li id="modul-item-manajemen-file" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                             <span>Manajemen File</span>

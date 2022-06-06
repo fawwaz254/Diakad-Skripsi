@@ -6,33 +6,24 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 
         Route::group(array('prefix' => 'mgmp'), function () {
-            // Route::group(array('prefix' => 'data-file-mapel'), function () {
-            //     Route::get('/', 'MGMP\DataFileController@viewDataFile');
-            //     Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
-            //     Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
-            //     Route::get('add', 'MGMP\DataFileController@addDataFile');
-            //     Route::get('dropdown-category', 'MGMP\DataFileController@dropdownCategory');
-            //     Route::post('action-data-file/{mode}/{id}', 'MGMP\DataFileController@actionDataFile');
-
-            // });
-            // Route::group(array('prefix' => 'kerja-harian'), function () {
-            //     Route::get('/', 'Guru\Laporan\KerjaHarianController@viewKerjaHarian');
-            //     Route::get('datatables', 'Guru\Laporan\KerjaHarianController@datatablesKerjaHarian');
-            //     Route::get('add', 'Guru\Laporan\KerjaHarianController@addKerjaHarian');
-            //     Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
-            //     Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
-            //     Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
-            // });
 
             Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {
                 Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanHarianMGMP');
-                // Route::get('category/{category_file_id}', 'MGMP\DataFileController@viewDataFileCategory');
-                // Route::get('sub-category/{sub_category_file_id}', 'MGMP\DataFileController@viewDataFileSubCategory');
-                // Route::get('add', 'MGMP\DataFileController@addDataFile');
-                // Route::get('dropdown-category', 'MGMP\DataFileController@dropdownCategory');
-                // Route::post('action-data-file/{mode}/{id}', 'MGMP\DataFileController@actionDataFile');
-
+                Route::get('add', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@addLaporanHarianMGMP');
+                Route::post('action-kerja-harian/{mode}/{no}','Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
+                Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
+            //    Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
+                // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
             });
+
+            Route::group(array('prefix' => 'laporan-kelompok-mgmp'), function () {
+                Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanKelompokMGMP');
+                Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianKelompokMGMP');
+
+                // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
+            });
+
+
         });
 
         /** ==== MODUL MANAJEMEN FILE ==== **/
