@@ -113,7 +113,7 @@
 
     var modul_url        = 'mgmp';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'kerja-harian/edit';
+    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-kelompok-mgmp/edit';
     var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/action-kerja-harian/delete';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
 
@@ -151,7 +151,6 @@
                     else{
                         return `-`;
                     }
-                    
                 }
             },
             { data: 'pengguna.nm_pengguna', name: 'action', searchable: false, orderable: false}
