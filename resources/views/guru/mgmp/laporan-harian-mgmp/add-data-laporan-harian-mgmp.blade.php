@@ -40,14 +40,14 @@
                             Jenis
                         </h2>
                         <div class="demo-radio-button">
-                            <input name="jenis" type="radio" value="mgmp" id="radio_1"  />
-                            <label for="radio_1">MGMP</label>
-                            <input name="jenis" type="radio" value="silabus" id="radio_2" />
-                            <label for="radio_2">Silabus</label>
-                            <input name="jenis" type="radio" value="rpp" id="radio_3" />
-                            <label for="radio_3">RPP</label>
-                            <input name="jenis" type="radio" value="kurikulum" id="radio_4" />
-                            <label for="radio_4">KURIKULUM</label>
+                            <input name="jenis" type="radio" value="Silabus" id="radio_1"  />
+                            <label for="radio_1">Silabus</label>
+                            <input name="jenis" type="radio" value="RPP" id="radio_2" />
+                            <label for="radio_2">RPP</label>
+                            <input name="jenis" type="radio" value="Prota" id="radio_3" />
+                            <label for="radio_3">Prota</label>
+                            <input name="jenis" type="radio" value="Promes" id="radio_4" />
+                            <label for="radio_4">Promes</label>
                         </div>
 
                         <h2 class="card-inside-title">
