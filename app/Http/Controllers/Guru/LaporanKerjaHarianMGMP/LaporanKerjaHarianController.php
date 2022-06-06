@@ -113,67 +113,65 @@ class LaporanKerjaHarianController extends Controller
 
             }
 
-//             elseif($mode == 'edit'){
- 
-//                 // $data                        = LaporanKerjaHarian::find($id);
-//                 // $data->id_role               = $input->auth_data->role_aktif->id_role;
-//                 // $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
-//                 // $data->lokasi                  = $input->lokasi;
-//                 // $data->uraian_kegiatan       = $input->uraian_kegiatan;
+            elseif($mode == 'edit'){
+                $data                        = LaporanKerjaHarianMGMP::find($id);
+                $data->id_role               = $input->auth_data->role_aktif->id_role;
+                $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
+                $data->jenis                        = $input->jenis;
+                $data->mapel                        = $input->mata_pelajaran;
+                $data->keterangan_progres           = $input->keterangan;
+                $data->status                       = $input->status;
+                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
-//                 // $data->status                = $input->status;
-//                 // $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
-// dd($input);
-//                 if($request->hasFile('file')){ 
+                if($request->hasFile('file')){ 
 
-//                     $validator = Validator::make($request->all(),[
-//                         'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
-//                     ]);
-        
-//                     if($validator->fails()) {
-//                         return [
-//                             'status' => 300, // FAILED
-//                             'message' => $validator->errors()->first()
-//                         ];
-//                     }
+                    $validator = Validator::make($request->all(),[
+                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+                    if($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    }
 
-//                     else{
+                    else{
 
-//                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-//                         $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru-tendik/'.$id, request()->file, 'public');
-//                         $data->path_file = $file;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$id, request()->file, 'public');
+                        $data->path_file = $file;
 
-//                         $upload = $request->file('file');
-//                         $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
-//                         $data->nm_file = $filename;
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
 
-//                     }
+                    }
 
-//                 }
+                }
 
-//                 $data->save();
+                $data->save();
 
-//                 return [
-//                     'status' => 202, // SUCCESS AND LOAD CONTENT
-//                     'path' => 'laporan/kerja-harian',
-//                     'message' => 'Update Laporan Laporan Kerja Harian  successfully'
-//                 ];
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'mgmp/laporan-harian-mgmp/',
+                    'message' => 'Update Laporan Laporan Kerja Harian  successfully'
+                ];
 
-//             }
+            }
 
-//             elseif($mode == 'delete'){
+            elseif($mode == 'delete'){
 
-//                 $data               = LaporanKerjaHarian::find($id);
-//                 $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-//                 $data->save();
-//                 $data->delete();
+                $data               = LaporanKerjaHarianMGMP::find($id);
+                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $data->save();
+                $data->delete();
 
-//                 return [
-//                     'status' => 203, // SUCCESS AND LOAD TABLE
-//                     'message' => 'Delete Laporan Kerja Harian successfully'
-//                 ];
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Laporan Kerja Harian successfully'
+                ];
 
-//             }
+            }
 
         }
     }
@@ -218,6 +216,20 @@ class LaporanKerjaHarianController extends Controller
                 })
                 ->make(true);
     }
+
+
+public function editKerjaHarian(Request $request, $id = null){
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $laporan_kerja_harian_mgmp = LaporanKerjaHarianMGMP::findOrFail($id);
+    // $tanggal = $laporan_kerja_harian_mgmp->tanggal;
+    $mapel = CategoriFileGuru::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
+    // $waktu = Carbon::today()->toDateString();
+    // dd($laporan_kerja_harian_mgmp);
+   
+    return view('guru/mgmp/laporan-harian-mgmp/edit-data-laporan-harian-mgmp',compact('auth_data','mapel','laporan_kerja_harian_mgmp'));
+}
+
 
 
     public function viewLaporanKelompokMGMP(Request $request){

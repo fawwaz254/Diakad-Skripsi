@@ -118,8 +118,8 @@
 
     var modul_url        = 'mgmp';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-harian-mgmp/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'kerja-harian/edit';
-    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/action-kerja-harian/delete';
+    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-harian-mgmp/edit';
+    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-harian-mgmp/action-kerja-harian/delete';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
 
     var primary_table = $('#primary_table').DataTable({
@@ -156,7 +156,6 @@
                     else{
                         return `-`;
                     }
-                    
                 }
             },
             { data: 'action', name: 'action', searchable: false, orderable: false,
