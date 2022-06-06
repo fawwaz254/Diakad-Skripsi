@@ -11,9 +11,9 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/add/0')}}">
+                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/add/0')}}" enctype="multipart/form-data">
                         {{csrf_field()}}
-
+            
                         <h2 class="card-inside-title">
                             Tanggal
                         </h2>

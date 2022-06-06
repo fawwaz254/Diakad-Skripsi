@@ -1,219 +1,183 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2>
-            <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#laporan/kerja-harian/add')}}"><i class="material-icons">add</i><span>Tambah Laporan Kerja Harian</span></a>
-            <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
-        </h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-harian-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
-                    <div class="header">
-                        <h2>Data Laporan Kerja Harian</h2>
-                    </div>
-                    <div class="body">
-                       <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
-                                 <thead>
-                                    <tr>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Lokasi</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
-                                        <th colspan="2" style="vertical-align : middle;text-align:center;">Target Pencapaian</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Action</th>
-                                    </tr>
-                                    <tr>
-                                        <th style="vertical-align : middle;text-align:center;">Tuntas</th>
-                                        <th style="vertical-align : middle;text-align:center;">Belum Tuntas</th>
-                                    </tr>
-                                </thead>
-                            </table>
+                <div class="header">
+                    <h2>
+                        TAMBAH LAPORAN KERJA HARIAN
+                    </h2>
+                </div>
+                <div class="body">
+                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/add/0')}}">
+                        {{csrf_field()}}
+
+                        <h2 class="card-inside-title">
+                            Tanggal
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="datepicker form-control" name="tanggal" required="" aria-required="true"
+                                        aria-invalid="true" value="{{ $waktu }}">
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="modal-opsi" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="defaultModalLabel">Opsi File</h4>
-            </div>
-            <div class="modal-body">
+                        <h2 class="card-inside-title">
+                            Mata Pelajaran
+                         </h2>
+                         <select class="form-control show-tick" name="mata_pelajaran">
+                             <option value="">-- Pilih Mata Pelajaran--</option>
+                             @foreach($mapel as $mata_pelajaran)
+                             <option value="{{ $mata_pelajaran->categori_file_mgmp->category_file_mgmp_id}}" @if(!empty($mata_pelajaran->category_file_mgmp_id))  selected  @endif>
+                                 {{ $mata_pelajaran->categori_file_mgmp->category_file_name }}
+                             </option>
+                             @endforeach
+                         </select>
 
-                <center id="place">
-                    
+                         <h2 class="card-inside-title">
+                            Jenis
+                        </h2>
+                        <div class="demo-radio-button">
+                            <input name="jenis" type="radio" value="mgmp" id="radio_1"  />
+                            <label for="radio_1">MGMP</label>
+                            <input name="jenis" type="radio" value="silabus" id="radio_2" />
+                            <label for="radio_2">Silabus</label>
+                            <input name="jenis" type="radio" value="rpp" id="radio_3" />
+                            <label for="radio_3">RPP</label>
+                            <input name="jenis" type="radio" value="kurikulum" id="radio_4" />
+                            <label for="radio_4">KURIKULUM</label>
+                        </div>
 
-                </center>
+                        <h2 class="card-inside-title">
+                            Status
+                        </h2>
+                        <div class="demo-radio-button">
+                            <input name="status" type="radio" value="1" id="target_1"   />
+                            <label for="target_1">Selesai</label>
+                            <input name="status" type="radio" value="0" id="target_2" />
+                            <label for="target_2">Belum Selesai</label>
+                        </div>
+
+                        <h2 class="card-inside-title">
+                            File Pendukung ( pdf , pptx , docx , xlsx , png , jpg , jpeg | max 5 mb )
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>
+                                    <input type="file" class="form-control" name="file" />
+                                </label>
+                            </div>
+                        </div>
+
+
+                        <h2 class="card-inside-title">
+                            Keterangan
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea rows="4" cols="50" class="form-control" name="keterangan" required="" aria-required="true"
+                                    aria-invalid="true"></textarea>
+                            </div>
+                        </div>
+
+                       
+
+                       
                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+
+                        {{-- @foreach($mapel as $mata_pelajaran)
+                        {{ $mata_pelajaran->categori_file_mgmp->category_file_name }}
+                        @endforeach --}}
+                        {{-- <div class="demo-radio-button">
+                            <input name="lokasi" type="radio" value="kantor" id="radio_3" checked  />
+                            <label for="radio_3">Kantor</label>
+                            <input name="lokasi" type="radio" value="lapangan" id="radio_4" />
+                            <label for="radio_4">Lapangan</label>
+                        </div> --}}
+
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<div class="modal" id="modal_print" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Print Laporan Kerja Harian</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-                
-            <div class="row">
-
-                <div class="col-md-6">
-                    <label>
-                        Tanggal Awal
-                    </label>
-                    <input type="date" class="datepicker form-control" id="start_date" name="start_date" required="" aria-required="true" aria-invalid="true">
-                </div>
-
-                <div class="col-md-6">
-                    <label>
-                        Tanggal Akhir
-                    </label>
-                    <input type="date" class="datepicker form-control" id="end_date" name="end_date" required="" aria-required="true" aria-invalid="true">
-                </div>
-
-            </div>
-
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="print_laporan" class="btn btn-primary">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-{{-- <script type="text/javascript">
-        
-    $('#print').click(function(){
-        $('#modal_print').modal('show');
+@include('scriptjs')
+<script>
+    $(function(){    
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'DD MMMM YYYY',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
     });
+</script>
 
-    $('#print_laporan').click(function(){
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
-
-        if(!start_date || !end_date){
-            alert('Mohon diisi start date dan end date terlebih dahulu');
-            return;
-        }
-
-        window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
-    })
-
-    var modul_url        = 'laporan';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'kerja-harian/edit';
-    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'kerja-harian/action-kerja-harian/delete';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
-
-    var primary_table = $('#primary_table').DataTable({
-        processing: true,
-        serverSide: true,
-        responsive: true,
-        ajax: {
-            url: datatable_url,
-            type: 'GET'
-        },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'tanggal', name: 'tanggal' },
-            {data: 'action', class:'text-center', name: 'action', searchable: false, orderable: false,
-                render : function(data){
-                    if(data.lokasi == "kantor"){
-                        return '<i class="material-icons" style="color:green">done</i>';
-                    }
-                    else{
-                        return '';
-                    }
-                }},
-            {data:'action',class:'text-center', name: 'action', searchable: false, orderable: false,
-                render : function(data){
-                    if(data.lokasi == "lapangan"){
-                        return '<i class="material-icons" style="color:green">done</i>';
-                    }
-                    else{
-                        return '';
-                    }}},
-            { data: 'uraian_kegiatan', name: 'uraian_kegiatan' },
-            { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
-                render : function(data){
-                    if(data.status == 1){
-                        return '<i class="material-icons" style="color:green">done</i>';
-                    }
-                    else{
-                        return '';
-                    }
-                }
+<script>    
+    $('#form-upload').validate({
+        rules: {
+            'checkbox': {
+                required: true
             },
-            { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
-                render : function(data){
-                    if(data.status == 0){
-                        return '<i class="material-icons" style="color:red">clear</i>';
-                    }
-                    else{
-                        return '';
-                    }
-                }
-            },
-            { data: 'action', name: 'file',class: 'text-center', searchable: false, orderable: false,
-                render:function(data){
-                    if(data.file){
-                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="'+data.file+'" onclick="open_modal(\''+data.id+'\' , this)">'+
-                        '    <i class="material-icons">insert_drive_file</i>'+
-                        '</a> '                   
-                    }
-                    else{
-                        return `-`;
-                    }
-                    
-                }
-            },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a> '
-                    +
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
-                }
+            'gender': {
+                required: true
             }
-        ]
+        },
+        highlight: function (input) {
+            $(input).parents('.form-group').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-group').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        },
+        submitHandler: function(form) {
+            $('button').attr('disabled', 'disabled');
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                enctype: 'multipart/form-data',
+                data: new FormData($('#form-upload')[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if(response.status == 200){
+                        vex.dialog.alert(response.message);
+                    }else if(response.status == 201){
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    }else if(response.status == 202){
+                        vex.dialog.alert(response.message);
+                        loadURI(response.path);
+                    }else if(response.status == 203){
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    }else if(response.status == 204){
+                        loadURI(response.path);
+                    }else if(response.status == 300){
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('input').removeAttr('readonly', 'readonly');
+                    $('button').removeAttr('disabled');
+                }
+            });
+        }
     });
+</script>
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            var start = this.page.info().page * this.page.info().length;
-            cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
-
-    function open_modal(id,element){
-
-        var item = $(element);
-        $('#place').empty();
-        $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
-            <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
-            <span>Download File</span></button></a>
-        `);
-        $('#modal-opsi').modal('show');
-    }
-
-</script> --}}
