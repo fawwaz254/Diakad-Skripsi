@@ -7,12 +7,14 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\CategoriFileGuru;
 use App\Models\CategoriFileMGMP;
 use App\Models\CategoryFileRole;
+use App\Models\LaporanKerjaHarianMGMP;
 use App\Models\MataPelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Pengguna;
 use App\Models\SubCategoryFileMGMP;
 use Yajra\Datatables\Datatables;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
 use DB;
@@ -29,7 +31,7 @@ class DataKategoriMGMPController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data->role_aktif->id_pengguna;
 
-        return view('akademik/manajemen-file/data-kategori/view-data-kategori', compact('auth_data'));
+        return view('akademik/mgmp/data-kategori/view-data-kategori', compact('auth_data'));
     }
 
     public function datatablesCategoryfile(Request $request)
@@ -106,7 +108,7 @@ class DataKategoriMGMPController extends BaseController
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();
-$allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$category_file_id )->pluck('id_pengguna')->toArray();
+        $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$category_file_id )->pluck('id_pengguna')->toArray();
 
         return view('akademik/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna','mata_pelajaran','name'));
     }
@@ -168,8 +170,6 @@ $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$catego
                     $subkategori2->save();
 
 
-
-
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'mpmp/data-kategori-mapel',
@@ -182,8 +182,6 @@ $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$catego
                     ];
                 }
             } elseif ($mode == 'edit') {
-              
-               
                     // make object to find id
                     $datakategori                               = CategoriFileMGMP::find($id);
                     $datakategori->category_file_name           = $input->category_file_name;
@@ -207,10 +205,8 @@ $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$catego
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'mpmp/data-kategori-mapel',
-                      
                         'message' => 'Update Data Kategori Succesfully'
                     ];
-                
             } elseif ($mode == 'delete') {
                 if (!CategoriFileMGMP::where('category_file_mgmp_id', $id)->first()) {
                     return [
@@ -235,4 +231,53 @@ $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$catego
             }
         }
     }
+    public function viewLaporanAllMGMP(Request $request){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('akademik/mgmp/data-kategori/laporan-data-mgmp',compact('auth_data'));
+
+    }
+
+    public function datatablesKerjaHarianAllMGMP(Request $request){
+
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+
+        $list_data = LaporanKerjaHarianMGMP::with('mapel','pengguna')->get();
+
+        return Datatables::of($list_data)
+                ->editColumn('tanggal',function($item){
+                    return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->addColumn('action', function($item){
+                    if($item->path_file){
+                        $file =  Storage::disk('spaces')->url($item->path_file);
+                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                            $note = 'file';
+                        }
+                        else{
+                            $note= 'image';
+                        }
+                    }
+                    else{
+                        $file = null;
+                        $note = null;
+                    }
+
+                    $data = array(
+                        'id'        => $item->id_laporan_kerja_harian_mgmp,
+                        'jenis'    =>$item->jenis,
+                        'status'    => $item->status,
+                        'file'      =>$file,
+                        'note'      => $item->mapel,
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
+
+
 }

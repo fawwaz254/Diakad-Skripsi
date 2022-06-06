@@ -23,4 +23,11 @@ class LaporanKerjaHarianMGMP extends Model
     {
         return $this->belongsTo(Role::class, 'id_role');
     }
+    public function mapel()
+    {
+        return  $this->belongsTo(CategoriFileMGMP::class,'mapel', 'category_file_mgmp_id');
+    }
+    public function pengguna(){
+        return  $this->belongsTo(Pengguna::class,'id_pengguna');
+    }
 }
