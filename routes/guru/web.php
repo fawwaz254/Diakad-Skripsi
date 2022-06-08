@@ -12,7 +12,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('add', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@addLaporanHarianMGMP');
                 Route::post('action-kerja-harian/{mode}/{id}','Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
                 Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
-               Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
+                Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
                 // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
             });
 
