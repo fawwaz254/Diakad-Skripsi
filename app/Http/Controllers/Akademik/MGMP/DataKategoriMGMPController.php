@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Akademik\ManajemenFile;
+namespace App\Http\Controllers\Akademik\MGMP;
 
 use Illuminate\Support\Facades\Hash;
 

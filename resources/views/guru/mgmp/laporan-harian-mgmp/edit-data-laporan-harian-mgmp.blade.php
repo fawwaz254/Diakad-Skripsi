@@ -36,7 +36,20 @@
                              @endforeach
                          </select>
 
+
                          <h2 class="card-inside-title">
+                            Jenis MGMP
+                         </h2>
+                         <select class="form-control show-tick" name="jenis">
+                             <option  value="" selected>-- Pilih Jenis MGMP--</option>
+                             @foreach($jenis as $nama_jenis)
+                             <option value="{{ $nama_jenis->jenis_MGMP}}"  @if($nama_jenis->jenis_MGMP == $laporan_kerja_harian_mgmp->jenis)  selected  @endif>
+                                 {{ $nama_jenis->jenis_MGMP}}
+                             </option>
+                             @endforeach
+                         </select>
+
+                         {{-- <h2 class="card-inside-title">
                             Jenis
                         </h2>
                         <div class="demo-radio-button">
@@ -48,7 +61,7 @@
                             <label for="radio_3">Prota</label>
                             <input name="jenis" type="radio" value="Promes" id="radio_4" @if($laporan_kerja_harian_mgmp->jenis == "Promes") checked="checked"  @endif />
                             <label for="radio_4">Promes</label>
-                        </div>
+                        </div> --}}
 
                         <h2 class="card-inside-title">
                             Status

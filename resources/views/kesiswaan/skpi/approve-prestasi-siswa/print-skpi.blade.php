@@ -266,7 +266,7 @@ table.bg-color tr td{
             <h5 class="text-center"><b>Diploma Supplement</b></h5>
             <h5 class="text-center">Nomor :
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                    448/C-3/WH-2/VI/2021
+                    466/C-3/WH2/VI/2022
                 @endif
             </h5>
 
