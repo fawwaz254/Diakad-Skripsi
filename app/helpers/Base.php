@@ -86,16 +86,16 @@ if (!function_exists('get_moduls')) {
     }
 }
 
-// if (!function_exists('category_file_role')) {
-//     /**
-//      * get shared file based on active id role 
-//      * @return collection 
-//      */
-//     function category_file_role($id_role)
-//     {
-//         return CategoryFileRole::where('id_role', $id_role)->exists();
-//     }
-// }
+if (!function_exists('category_file_role')) {
+    /**
+     * get shared file based on active id role 
+     * @return collection 
+     */
+    function category_file_role($id_role)
+    {
+        return CategoryFileRole::where('id_role', $id_role)->exists();
+    }
+}
 
 // if (!function_exists('id_guru')) {
 //     /**
