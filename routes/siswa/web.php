@@ -4,6 +4,19 @@ Route::group(array('middleware' => ['token_staff']), function () {
 	Route::group(array('prefix' => 'siswa'), function () {
 		Route::get('welcome', 'Siswa\WelcomeController@indexWelcome');
 
+
+		/** ==== MODUL Tracer Alumni ==== **/
+
+		Route::group(array('prefix' => 'tracer-alumni'), function () {
+			Route::get('/', 'Siswa\Alumni\TracerAlumniSiswaController@viewTracerAlumni');
+			Route::get('datatables', 'Siswa\Alumni\TracerAlumniSiswaController@datatablesTracerAlumni');
+			Route::get('add', 'Siswa\Alumni\TracerAlumniSiswaController@addTracerAlumni');
+			Route::get('edit/{id}', 'Siswa\Alumni\TracerAlumniSiswaController@editTracerAlumni');
+			//action arahkan ke humas
+			Route::post('action/{mode}/{id}', 'Humas\Alumni\TracerAlumniController@actionTracerAlumni');
+		});
+
+
 		/** ==== MODUL MANAJEMEN FILE ==== **/
 		// url: /siswa/manajemen-file
 		Route::group(array('prefix' => 'manajemen-file'), function () {

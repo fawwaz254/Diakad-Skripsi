@@ -286,9 +286,6 @@ public function editKerjaHarian(Request $request, $id = null){
     }
 
 
-
-
-
     }
 
 

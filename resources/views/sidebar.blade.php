@@ -5,10 +5,10 @@ $route_menu = Request::segment(3);
 $path = Request::fullUrl();
 $role_aktif = auth_data()->role_aktif->id_role;
 // $category_file_role = category_file_role($role_aktif);
-// $id_pengguna = auth_data()->pengguna->id_pengguna;
+$id_pengguna = auth_data()->pengguna->id_pengguna;
 // $id_guru_mgmp = id_guru($id_pengguna);
 
-// $detail_kelas = get_keterangan_kelas($id_pengguna);
+$detail_kelas = get_keterangan_kelas($id_pengguna);
 
 @endphp
 
@@ -102,6 +102,26 @@ $role_aktif = auth_data()->role_aktif->id_role;
                         </a>
                     </li>
                 </ul>
+
+                {{-- Tracer Alumni --}}
+            @if ($role_aktif == 3 )
+            @if( $detail_kelas->tingkat == 9)
+            <li id="modul-item-manajemen-file" class="modul-item">
+                <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                    <span>Alumni</span>
+                </a>
+            <ul class="ml-menu">
+             <li class="menu-item" id="menu-item-data-sub-kategori">
+                <a href="{{ url(Request::segment(1) . '#tracer-alumni') }}"
+                class="target-link waves-effect waves-block">
+                Tracer Alumni
+                </a>
+             </li>
+            </ul>
+            </li>
+            @endif
+            @endif
+
 
                 {{-- MGMP --}}
                 {{-- @if ($role_aktif !== 7)
