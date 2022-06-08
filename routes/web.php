@@ -44,6 +44,17 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
+// START USING FOR FINGERPRINT
+// url: /iclock
+Route::group(array('prefix' => 'iclock'), function () {
+    Route::get('getrequest', 'Administrator\Device\FingerprintController@actionCheck');
+    Route::get('cdata', function(){
+        return 'OK';
+    });
+    Route::post('cdata', 'Administrator\Device\FingerprintController@actionGetFinger');
+});
+// END USING FOR FINGERPRINT
+
 Route::get('guid', function () {
     Log::info("tesst");
     $now = Carbon::now(env('APP_TIMEZONE', ''));
