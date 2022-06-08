@@ -15,11 +15,16 @@
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                  <thead>
                                     <tr>
-                                        <th style="vertical-align : middle;text-align:center;">No</th>
-                                        <th style="vertical-align : middle;text-align:center;">Nama Mapel</th>
-                                        <th style="vertical-align : middle;text-align:center;">Guru yang sudah selesai</th>
-                                        <th style="vertical-align : middle;text-align:center;">Jenjang kelas</th>
-                                        <th style="vertical-align : middle;text-align:center;">Action</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
+                                        <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="vertical-align : middle;text-align:center;">Jenis</th>
+                                        <th style="vertical-align : middle;text-align:center;">Mapel</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -59,6 +64,7 @@
         </button>
       </div>
       <div class="modal-body">
+                
             <div class="row">
 
                 <div class="col-md-6">
@@ -104,10 +110,10 @@
         window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
     })
 
-    var modul_url        = 'mgmp';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/datatables';
-    var detail_url         = role_url + '#' + modul_url + '/' + 'laporan-kelompok-mgmp/detail';
+    var modul_url        = 'mpmp';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
+
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -119,31 +125,33 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
-            { data: 'categori_file_mgmp.category_file_name', name: 'category_file_mgmp.category_file_name' },
-            {
-                data: 'selesai',
-                name: 'selesai',
-                render: function(data) {
-                    var role_text = '';
-                    data.forEach((d, i) => {
-                        if(d.status == 1){
-                            role_text += `<li>${d.pengguna} (${d.jenis}) </li>`
-                        }});
-                    return `<ul>${role_text}</ul>`
+            { data: 'tanggal', name: 'tanggal' },
+            {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
+            {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
+            // { data: 'keterangan_progres', name: 'keterangan_progres' },
+            { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
+                render : function(data){
+                    if(data.status == 1){
+                        return '<i class="material-icons" style="color:green">done</i>';
+                    }
+                    else{
+                        return '<i class="material-icons" style="color:red">clear</i>';
+                    }
                 }
-        },
-            { data: 'categori_file_mgmp.category_file_explanation', name: 'category_file_mgmp.category_file_explanation' },
-            {   data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                    detail_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">pageview</i>' +
-                        '</a> ';
-                } },
-
+            },
+            { data: 'action', name: 'file',class: 'text-center', searchable: false, orderable: false,
+                render:function(data){
+                    if(data.file){
+                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="'+data.file+'" onclick="open_modal(\''+data.id+'\' , this)">'+
+                        '    <i class="material-icons">insert_drive_file</i>'+
+                        '</a> '
+                    }
+                    else{
+                        return `-`;
+                    }
+                }
+            },
+            { data: 'pengguna.nm_pengguna', name: 'action', searchable: false, orderable: false}
         ]
     });
 
