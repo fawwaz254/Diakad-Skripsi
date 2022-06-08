@@ -9,30 +9,31 @@
 </style>
 
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/tracer-alumni') }}">
-                <i class="material-icons">backspace</i><span>Kembali</span></a></h2>
-    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
                     <h2>
-                        {{ !empty($alumni) ? 'EDIT' : 'TAMBAH' }} ALUMNI
+                        {{ !empty($alumni) ? 'EDIT' : 'TAMBAH' }} DATA ALUMNI
                     </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST" class="row"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }}">
+                        action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add2/0' }}">
                         {{ csrf_field() }}
+                        {{-- {{ url(Request::segment(1) . '/' . Request::segment(2)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }} --}}
+                        {{-- {{ url(Request::segment(1) . '/' ) }} --}}
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
+                        <input type="hidden" name="id_kelas" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_kelas  }}">
+                        <input type="hidden" name="id_c_siswa" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_c_siswa  }}">
+                        {{-- <input type="text" name="jurusan" value="{{!empty($alumni) ? $alumni->id_alumni : $data_jurusan->id_jurusan  }}"> --}}
+                        {{-- humas/alumni/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }} --}}
                         <div class="col-md-8">
                             <h2 class="card-inside-title"> Nama Siswa </h2>
                             <input type="text" class="form-control" name="nama_siswa" aria-required="true"
                                 aria-invalid="true"
-                                value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : '' }}"
-                                {{ !empty($alumni) ? 'readonly' : '' }}>
+                                value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : $siswa->pengguna->nm_pengguna }}"
+                              disabled>
                         </div>
 
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
@@ -59,42 +60,46 @@
                                 value="{{ !empty($alumni) ? $alumni->tahun_lulus : '' }}">
                         </div>
 
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title"> Kelas </h2>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <select class="form-control show-tick" name="id_kelas"
-                                        {{ !empty($alumni) ? 'readonly' : '' }}>
-                                        <option value="" selected disabled> Pilih Kelas </option>
-                                        @foreach ($data_kelas as $kelas)
-                                            <option value="{{ $kelas->id_kelas }}"
-                                                {{ isset($alumni) && $alumni->id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
-                                                {{ $kelas->nm_kelas }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
+                        @if(!empty($alumni))
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Nomor Telepon/HP/WA </h2>
-                            <input type="text" class="form-control" name="nomor_hp" required="" aria-required="true"
+                            <input type="number" class="form-control" name="nomor_hp" required="" aria-required="true"
                                 aria-invalid="true"
-                                value="{{ !empty($alumni) ? $alumni->calon_siswa->nomor_hp : '' }}">
+                                value="{{  $alumni->calon_siswa->nomor_hp  }}">
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Email </h2>
                             <input type="text" class="form-control" name="email" required="" aria-required="true"
-                                aria-invalid="true" value="{{ !empty($alumni) ? $alumni->email : '' }}">
+                                aria-invalid="true" value="{{  $alumni->email  }}">
                         </div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             <h2 class="card-inside-title"> Alamat </h2>
-                            <textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
-                                aria-invalid="true"> {{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
+                            <input type="text"  class="form-control" name="alamat_siswa" required="" aria-required="true"
+                                aria-invalid="true" value="{{ $alumni->calon_siswa->alamat_jalan  }}">  
                         </div>
 
-                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian');
+
+                        @else
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Nomor Telepon/HP/WA </h2>
+                            <input type="number" class="form-control" name="nomor_hp" required="" aria-required="true"
+                                aria-invalid="true"
+                                value="{{ $siswa->pengguna->nomor_hp_pengguna }}">
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Email </h2>
+                            <input type="text" class="form-control" name="email" required="" aria-required="true"
+                                aria-invalid="true" value="{{  $siswa->pengguna->email_pengguna  }}">
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <h2 class="card-inside-title"> Alamat </h2>
+                            <input type="text"  class="form-control" name="alamat_siswa" required="" aria-required="true"
+                                aria-invalid="true" @if(!empty($siswa->calon_siswa->alamat_kecamatan && $siswa->calon_siswa->alamat_kelurahan &&  $siswa->calon_siswa->alamat_dusun && $siswa->calon_siswa->alamat_rt && $siswa->calon_siswa->alamat_rw)) value="{{ $siswa->calon_siswa->alamat_kecamatan}},{{ $siswa->calon_siswa->alamat_kelurahan }},{{ $siswa->calon_siswa->alamat_dusun }},{{ $siswa->calon_siswa->alamat_rt }},{{ $siswa->calon_siswa->alamat_rw }}" @endif>  
+                        </div>
+                        @endif
+
+
+                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
                         <input type="hidden"name="status" value="smp">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <hr>
@@ -102,7 +107,7 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="jenis_sekolah">
-                                        <option  disabled >Pilih Jenis</option>
+                                        <option @if(!isset($alumni)) selected  @endif disabled >Pilih Jenis</option>
                                         <option @if(isset($alumni) && $alumni->jenis_sekolah == "sma")selected @endif value="sma">SMA (Sekolah Menengah Atas)</option>
                                         <option  @if(isset($alumni) && $alumni->jenis_sekolah == "smk")selected @endif value="smk">SMK (Sekolah Menengah Kejuruan)</option>
                                         <option   @if(isset($alumni) && $alumni->jenis_sekolah == "ma")selected @endif value="ma"> MA (Madrasah Aliyah)</option>
@@ -113,17 +118,17 @@
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Nama Sekolah</h2>
 							<textarea class="form-control" name="nm_sekolah" required="" aria-required="true"
-								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->nm_sekolah : ''}} </textarea>
+								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->nm_sekolah : ''}} </textarea>
 						</div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Alamat Sekolah</h2>
 							<textarea class="form-control" name="alamat_sekolah" required="" aria-required="true"
-								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->alamat_sekolah : ''}} </textarea>
+								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->alamat_sekolah : ''}} </textarea>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title">Jurusan</h2>
 							<textarea class="form-control" name="jurusan" required="" aria-required="true"
-								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->jurusan : ''}} </textarea>
+								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->jurusan : ''}} </textarea>
                         </div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
@@ -185,7 +190,6 @@
                                 </span>
                             </button>
                             @endif
-                           
                         </div>
                     </form>
                 </div>

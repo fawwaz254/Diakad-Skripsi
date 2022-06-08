@@ -80,12 +80,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 		Route::group(array('prefix' => 'absensi'), function () {
 
-
-
 			Route::group(array('prefix' => 'shift_pengguna'), function () {
-
-
-
 
 				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
 				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');

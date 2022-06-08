@@ -13,6 +13,7 @@ class CreateAlumniSmpTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('alumni_smp');
         Schema::create('alumni_smp', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->string('id_alumni_smp', 40)->primary();
@@ -26,7 +27,6 @@ class CreateAlumniSmpTable extends Migration
             $table->string('created_by', 40)->nullable();
             $table->string('updated_by', 40)->nullable();
             $table->softDeletes();
-            $table->string('deleted_by', 40)->nullable();
         });
     }
 

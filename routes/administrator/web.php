@@ -4,6 +4,15 @@ Route::group(array('middleware' => ['token_staff']), function () {
 	Route::group(array('prefix' => 'administrator'), function () {
 		Route::get('welcome', 'Administrator\WelcomeController@indexWelcome');
 
+		// url: /administrator/devices
+		Route::group(array('prefix' => 'device'), function () {
+			// MENU Data Fingerprint
+			Route::group(array('prefix' => 'fingerprint'), function () {
+				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
+				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
+			});
+		});
+
 		/** ==== MODUL MANAJEMEN FILE ==== **/
 		// url: /administrator/manajemen-file
 		Route::group(array('prefix' => 'manajemen-file'), function () {

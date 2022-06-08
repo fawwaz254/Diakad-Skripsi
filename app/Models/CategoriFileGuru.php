@@ -26,5 +26,9 @@ class CategoriFileGuru extends Model
     public function categori_file_mgmp(){
         return $this->belongsTo(CategoriFileMGMP::class, 'category_file_mgmp_id');
     }
+
+    public function laporan_kerja_harian_mgmp(){
+        return $this->hasMany(LaporanKerjaHarianMGMP::class, 'mapel','category_file_mgmp_id');
+    }
    
 }
