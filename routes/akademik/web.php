@@ -6,18 +6,24 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
         //modul MGMP
         Route::group(array('prefix' => 'mpmp'), function () {
+            Route::group(array('prefix' => 'jenis-mgmp'), function () {
+                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
+                Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
+                Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
+                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
+            });
+
             Route::group(array('prefix' => 'data-kategori-mapel'), function () {
-                Route::get('/', 'Akademik\ManajemenFile\DataKategoriMGMPController@viewDataKategori');
-                Route::get('/datatables', 'Akademik\ManajemenFile\DataKategoriMGMPController@datatablesCategoryfile');
-                Route::get('/add', 'Akademik\ManajemenFile\DataKategoriMGMPController@addDataKategori');
-                Route::get('/edit/{category_file_id}', 'Akademik\ManajemenFile\DataKategoriMGMPController@editDataKategori');
-                //action input data kategori
-                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\ManajemenFile\DataKategoriMGMPController@actionDataKategori');
+                Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewDataKategori');
+                Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesCategoryfile');
+                Route::get('/add', 'Akademik\MGMP\DataKategoriMGMPController@addDataKategori');
+                Route::get('/edit/{category_file_id}', 'Akademik\MGMP\DataKategoriMGMPController@editDataKategori');
+                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\DataKategoriMGMPController@actionDataKategori');
             });
 
             Route::group(array('prefix' => 'laporan-mgmp'), function () {
-                Route::get('/', 'Akademik\ManajemenFile\DataKategoriMGMPController@viewLaporanAllMGMP');
-                Route::get('/datatables', 'Akademik\ManajemenFile\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
+                Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
+                Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
             });
 
         });

@@ -9,6 +9,7 @@ use App\Models\CategoriFileGuru;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use App\Models\CategoriFileMGMP;
+use App\Models\JenisMGMP;
 use App\Models\LaporanKerjaHarianMGMP;
 use Yajra\Datatables\Datatables;
 use Auth;
@@ -35,8 +36,8 @@ class LaporanKerjaHarianController extends Controller
         $auth_data = $input->auth_data;
         $waktu = Carbon::today()->toDateString();
         $mapel = CategoriFileGuru::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
-
-        return view('guru/mgmp/laporan-harian-mgmp/add-data-laporan-harian-mgmp',compact('auth_data','mapel','waktu'));
+        $jenis = JenisMGMP::all();
+        return view('guru/mgmp/laporan-harian-mgmp/add-data-laporan-harian-mgmp',compact('auth_data','mapel','waktu','jenis'));
 
     }
     public function actionLaporanHarianMGMP(Request $request, $mode = 0,$id=0){
@@ -226,8 +227,8 @@ public function editKerjaHarian(Request $request, $id = null){
     $mapel = CategoriFileGuru::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
     // $waktu = Carbon::today()->toDateString();
     // dd($laporan_kerja_harian_mgmp);
-   
-    return view('guru/mgmp/laporan-harian-mgmp/edit-data-laporan-harian-mgmp',compact('auth_data','mapel','laporan_kerja_harian_mgmp'));
+    $jenis = JenisMGMP::all();
+    return view('guru/mgmp/laporan-harian-mgmp/edit-data-laporan-harian-mgmp',compact('auth_data','mapel','laporan_kerja_harian_mgmp','jenis'));
 }
 
 
