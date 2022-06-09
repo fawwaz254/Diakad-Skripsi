@@ -394,11 +394,7 @@ class TracerAlumniController extends BaseController
         $alumnis    = LibAlumni::getAlumnis();
     }
 
-
         return Datatables::of($alumnis)->make(true);
     }
-
-
-
 
 }

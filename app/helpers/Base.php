@@ -10,6 +10,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Kelas;
 use App\Models\link_laporan_magang;
 use App\Models\Siswa;
+use App\Models\WaliKelas;
 
 function minimalisTime($time)
 {
@@ -55,6 +56,30 @@ if (!function_exists('get_keterangan_kelas')) {
             $kelas = null;
         }
         return $kelas;
+    }
+}
+
+
+if (!function_exists('get_keterangan_wali_kelas')) {
+
+    function get_keterangan_wali_kelas($id_pengguna)
+    {
+        $wali_kelas = WaliKelas::where('is_aktif', 1)->with('guru')
+            ->whereHas('guru', function ($query) use ($id_pengguna) {
+                $query->where('id_pengguna', '=', $id_pengguna);
+            })->first();
+        if ($wali_kelas) {
+            $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat', 9)->get();
+            $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
+            if ($find_kelas) {
+                $kelas = $find_kelas;
+            } else {
+                $kelas = null;
+            }
+            return $kelas;
+        } else {
+            return null;
+        }
     }
 }
 
