@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Humas\Alumni;
 
+
+
 use Error;
 use Exception;
 use Carbon\Carbon;
+use App\Exports\ExportAlumni;
 use App\Models\Siswa;
 use App\Models\Alumni;
 use App\Models\Kelas;
@@ -25,8 +28,10 @@ use App\Libraries\Humas\LibAlumni;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibSiswa;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Routing\Controller as BaseController;
 
-class TracerAlumniController extends Controller
+class TracerAlumniController extends BaseController
 {
 
     const PATH = 'alumni/tracer-alumni';
@@ -333,8 +338,6 @@ class TracerAlumniController extends Controller
                 return error_response($e);
             }
         }
-        
-        
         elseif ($mode == 'delete') {
 
             $alumni               = Alumni::find($id);
@@ -349,4 +352,53 @@ class TracerAlumniController extends Controller
             ];
         }
     }
+
+    public function cetakTracerAlumni(Request $request, $id_kelas = null, $tahun_lulus = null){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat',9)->get();
+        return view('humas.alumni.tracer-alumni.export-tracer-alumni', compact('auth_data','data_kelas','id_kelas','tahun_lulus'));
+    }
+
+    public function changeTracerAlumni(Request $request){
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+        // dd($input->id_kelas . "/" . $input->tahun_lulus);
+
+        return [
+            'status' => 204, // SUCCESS AND LOAD CONTENT
+            'path' => 'alumni/tracer-alumni/cetak/' . $input->id_kelas . '/' . $input->tahun_lulus,
+            // 'message' => 'change'
+        ];
+
+        //return redirect("/humas#alumni/tracer-alumni/cetak/" . $input->id_kelas . "/" . $input->tahun_lulus);
+
+    }
+
+
+    public function exportAlumnni(Request $request, $id_kelas, $tahun_lulus) {
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+        $alumni = Alumni::where('id_kelas',$id_kelas)->where('tahun_lulus',$tahun_lulus)->with('smp','calon_siswa','kelas')->get();
+        return Excel::download(new ExportAlumni($alumni), 'download_harian.xlsx');
+    }
+
+
+    public function datatablesCetakTracerAlumni(Request $request, $id_kelas, $tahun_lulus)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if( $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ){
+        $alumnis    = LibAlumni::getAlumnisSearchSmp($id_kelas,$tahun_lulus);
+         }else{
+        $alumnis    = LibAlumni::getAlumnis();
+    }
+
+
+        return Datatables::of($alumnis)->make(true);
+    }
+
+
+
+
 }
