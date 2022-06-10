@@ -76,7 +76,7 @@ $category_file_role = category_file_role($role_aktif);
                         @if (count($modul->menus))
                             <ul class="ml-menu">
                                 @foreach ($modul->menus as $menu)
-                                        @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null)
+                                        @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 ) 
                                         @else
                                             <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}"
                                                 class="menu-item">

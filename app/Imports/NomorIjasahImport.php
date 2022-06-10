@@ -25,11 +25,11 @@ class NomorIjasahImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row) {
             $siswa = Siswa::where('nis_siswa', $row['nis'])->first();
 
-            // $pengguna = Pengguna::where('id_pengguna', $siswa->id_pengguna)->first();
-            // dd($pengguna);
-            PengajuanWisuda::where('id_siswa', $siswa->id_siswa)->update([
-                'nomor_ijasah' => $row['nomor_ijasah'],
-            ]);
+            if ($siswa) {
+                PengajuanWisuda::where('id_siswa', $siswa->id_siswa)->update([
+                    'nomor_ijasah' => $row['nomor_ijasah'],
+                ]);
+            } else { }
         }
     }
 
