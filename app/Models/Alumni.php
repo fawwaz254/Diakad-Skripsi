@@ -55,4 +55,9 @@ class Alumni extends Model
     {
         return $this->hasOne(AlumniSmp::class, 'id_alumni');
     }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
 }

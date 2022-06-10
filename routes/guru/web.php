@@ -465,6 +465,14 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('action-edit-prestasi-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditPrestasiSiswa');
             Route::post('action-edit-kegiatan-siswa/{id}', 'Kesiswaan\SKPI\ApprovePrestasiSiswaController@actionEditKegiatanSiswa');
 
+
+            //Menu Tracer Alumni
+            Route::get('tracer-alumni', 'Guru\WaliKelas\TracerAlumniWaliKelasController@cetakTracerAlumniWaliKelas');
+            Route::post('tracer-alumni', 'Guru\WaliKelas\TracerAlumniWaliKelasController@changeTracerAlumniWaliKelas');
+            Route::get('tracer-alumni/{id_kelas}/{tahun_lulus}', 'Guru\WaliKelas\TracerAlumniWaliKelasController@cetakTracerAlumniWaliKelas');
+            Route::get('tracer-alumni/datatables/{id_kelas}/{tahun_lulus}','Guru\WaliKelas\TracerAlumniWaliKelasController@datatablesCetakTracerAlumniWaliKelas');
+            Route::get('tracer-alumni/export-alumni/{id_kelas}/{tahun_lulus}','Guru\WaliKelas\TracerAlumniWaliKelasController@exportAlumnniWaliKelas');
+
             // Route::get('approve-prestasi-siswa', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
             // Route::get('approve-prestasi-siswa/datatables', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');
             // Route::get('approve-prestasi-siswa/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewDetailPrestasiSiswa');

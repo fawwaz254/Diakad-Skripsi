@@ -412,6 +412,14 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::post('action-entri-wisuda/{mode}/{id}/{id_siswa}/{id_periode_wisuda}', 'Pendidikan\Wisuda\EntriWisudaController@actionEntriWisuda');
 
+            //Import nomor ijasah
+            Route::get('import_nomor_ijazah', 'Pendidikan\Wisuda\EntriWisudaController@viewImportNomorIjasah');
+            Route::post('post-file-excel-nomor-ijasah', 'Pendidikan\Wisuda\EntriWisudaController@uploadNomorIjasah');
+
+
+
+
+
             // MENU Set Lulus Siswa ==== (BELOM SEMUA) ====
             Route::get('set-lulus', 'Pendidikan\Wisuda\SetLulusController@viewSetLulus');
             Route::post('post-view-set-lulus', 'Pendidikan\Wisuda\SetLulusController@actionViewDetailSetLulus');
