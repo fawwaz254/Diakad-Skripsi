@@ -51,7 +51,7 @@ if (!function_exists('get_keterangan_kelas')) {
 
         $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
         if ($siswa) {
-            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
+            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->where('tingkat',9)->first();
         } else {
             $kelas = null;
         }

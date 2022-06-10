@@ -107,8 +107,8 @@ $category_file_role = category_file_role($role_aktif);
                 </ul>
 
                 {{-- Tracer Alumni --}}
-                @if ($role_aktif == 3)
-                    @if ($detail_kelas->tingkat == 9)
+                @if ($role_aktif == 3 && $detail_kelas)
+                   
                         <li id="modul-item-manajemen-file" class="modul-item">
                             <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                                 <span>Alumni</span>
@@ -122,7 +122,7 @@ $category_file_role = category_file_role($role_aktif);
                                 </li>
                             </ul>
                         </li>
-                    @endif
+    
                 @endif
 
                 {{-- Manajemen File --}}
