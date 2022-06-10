@@ -68,6 +68,23 @@ class LibAlumni {
       ->get();
   }
 
+  public static function getAlumnisSearchSmp($id_kelas,$tahun_lulus)
+  {
+    return DB::table('alumni')
+      ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
+      ->join('alumni_smp', 'alumni.id_alumni','=','alumni_smp.id_alumni')
+      ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus','alumni_smp.nm_sekolah',  'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
+      ->where('alumni.deleted_at', null)
+      ->where('alumni.id_kelas', $id_kelas)
+      ->where('alumni.tahun_lulus', $tahun_lulus)
+      ->get();
+  }
+
+  
+
+
+
 
   public static function getAlumnisSmp()
   {
