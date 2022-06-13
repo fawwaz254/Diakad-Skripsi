@@ -35,7 +35,7 @@ class PrestasiController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('wali-murid/kesiswaan/prestasi/view-prestasi', compact('auth_data', 'data_kelas', 'id_kelas'));
+        return view('wali-murid/kesiswaan/prestasi/view-prestasi', compact('auth_data'));
     }
 
     public function datatablesPrestasi(Request $request)
