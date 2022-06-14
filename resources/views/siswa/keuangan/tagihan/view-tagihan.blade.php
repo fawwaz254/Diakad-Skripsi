@@ -35,7 +35,7 @@
                                         <button class="btn btn-warning button_open_modal" data-link="{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}" data-keterangan="{{$pembayaran_trs->keterangan}}" type="button" waves-effect><i class="material-icons">share</i>
                                         <span>Share Link Pembayaran</span></button>
                                         <a target="_blank" href="{{url('payment/detail/'.$pembayaran_trs->id_pembayaran_trs)}}"><button class="btn btn-success waves-effect"><i class="material-icons">attach_money</i>
-                                        <span>Bayar Sekarang</span></button></a>                       
+                                        <span>Bayar Sekarang</span></button></a>
                                     </td>
                                 </tr>
                             </tbody>
