@@ -45,6 +45,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('kalender-akademik', 'WaliMurid\Akademik\KalenderAkademikController@viewKalenderAkademik');
             Route::get('kalender-akademik/datatables', 'WaliMurid\Akademik\KalenderAkademikController@datatablesKalenderAkademik');
 
+            //Menu Lihat Absensi
+            Route::group(array('prefix' => 'lihat-absensi'), function () {
+				Route::get('/', 'WaliMurid\Akademik\AbsensiController@viewLihatAbsensi');
+				Route::get('/{id_bulan}/{tahun}', 'WaliMurid\Akademik\AbsensiController@viewLihatAbsensi');
+			});
+
+
             // MENU Jadwal KBM
             Route::get('jadwal-kbm', 'WaliMurid\Akademik\JadwalKBMController@viewJadwalKBM');
             Route::get('jadwal-kbm/datatables', 'WaliMurid\Akademik\JadwalKBMController@datatablesJadwalKBM');
