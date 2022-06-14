@@ -10,6 +10,7 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Kelas;
 use App\Models\link_laporan_magang;
 use App\Models\Siswa;
+use App\Models\WaliKelas;
 
 function minimalisTime($time)
 {
@@ -43,22 +44,44 @@ if (!function_exists('link_laporan_googledrive')) {
 }
 
 
+if (!function_exists('get_keterangan_kelas')) {
+
+    function get_keterangan_kelas($id_pengguna)
+    {
+
+        $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
+        if ($siswa) {
+            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->where('tingkat',9)->first();
+        } else {
+            $kelas = null;
+        }
+        return $kelas;
+    }
+}
 
 
-// if (!function_exists('get_keterangan_kelas')) {
+if (!function_exists('get_keterangan_wali_kelas')) {
 
-//     function get_keterangan_kelas($id_pengguna)
-//     {
-
-//         $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
-//         if ($siswa) {
-//             $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->first();
-//         } else {
-//             $kelas = null;
-//         }
-//         return $kelas;
-//     }
-// }
+    function get_keterangan_wali_kelas($id_pengguna)
+    {
+        $wali_kelas = WaliKelas::where('is_aktif', 1)->with('guru')
+            ->whereHas('guru', function ($query) use ($id_pengguna) {
+                $query->where('id_pengguna', '=', $id_pengguna);
+            })->first();
+        if ($wali_kelas) {
+            $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat', 9)->get();
+            $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
+            if ($find_kelas) {
+                $kelas = $find_kelas;
+            } else {
+                $kelas = null;
+            }
+            return $kelas;
+        } else {
+            return null;
+        }
+    }
+}
 
 
 if (!function_exists('generate_id')) {
@@ -86,16 +109,16 @@ if (!function_exists('get_moduls')) {
     }
 }
 
-// if (!function_exists('category_file_role')) {
-//     /**
-//      * get shared file based on active id role 
-//      * @return collection 
-//      */
-//     function category_file_role($id_role)
-//     {
-//         return CategoryFileRole::where('id_role', $id_role)->exists();
-//     }
-// }
+if (!function_exists('category_file_role')) {
+    /**
+     * get shared file based on active id role 
+     * @return collection 
+     */
+    function category_file_role($id_role)
+    {
+        return CategoryFileRole::where('id_role', $id_role)->exists();
+    }
+}
 
 // if (!function_exists('id_guru')) {
 //     /**

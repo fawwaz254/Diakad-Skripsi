@@ -4,12 +4,12 @@ $route_modul = Request::segment(2);
 $route_menu = Request::segment(3);
 $path = Request::fullUrl();
 $role_aktif = auth_data()->role_aktif->id_role;
-// $category_file_role = category_file_role($role_aktif);
-// $id_pengguna = auth_data()->pengguna->id_pengguna;
-// $id_guru_mgmp = id_guru($id_pengguna);
+$id_pengguna = auth_data()->pengguna->id_pengguna;
 
-// $detail_kelas = get_keterangan_kelas($id_pengguna);
+$detail_kelas = get_keterangan_kelas($id_pengguna);
+$detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
 
+$category_file_role = category_file_role($role_aktif);
 @endphp
 
 <section>
@@ -76,18 +76,21 @@ $role_aktif = auth_data()->role_aktif->id_role;
                         @if (count($modul->menus))
                             <ul class="ml-menu">
                                 @foreach ($modul->menus as $menu)
-                                    <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}"
-                                        class="menu-item">
-                                        @if (!empty($menu->page))
-                                            <a class="target-link"
-                                                href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
-                                                class="waves-effect waves-block">
-                                            @else
-                                                <a href="javascript:void(0);" class="waves-effect waves-block">
+                                        @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 ) 
+                                        @else
+                                            <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}"
+                                                class="menu-item">
+                                                @if (!empty($menu->page))
+                                                    <a class="target-link"
+                                                        href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
+                                                        class="waves-effect waves-block">
+                                                    @else
+                                                        <a href="javascript:void(0);" class="waves-effect waves-block">
+                                                @endif
+                                                {{ $menu->nm_menu }}
+                                                </a>
+                                            </li>
                                         @endif
-                                        {{ $menu->nm_menu }}
-                                        </a>
-                                    </li>
                                 @endforeach
                             </ul>
                         @endif
@@ -103,64 +106,27 @@ $role_aktif = auth_data()->role_aktif->id_role;
                     </li>
                 </ul>
 
-                {{-- MGMP --}}
-                {{-- @if ($role_aktif !== 7)
-
-                    <li id="modul-item-manajemen-file" class="modul-item">
-                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
-                            <span>MGMP</span>
-                        </a>
-                        @if ($role_aktif == 2)
+                {{-- Tracer Alumni --}}
+                @if ($role_aktif == 3 && $detail_kelas)
+                   
+                        <li id="modul-item-manajemen-file" class="modul-item">
+                            <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                                <span>Alumni</span>
+                            </a>
                             <ul class="ml-menu">
                                 <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#mgmp/laporan-harian-mgmp') }}"
+                                    <a href="{{ url(Request::segment(1) . '#tracer-alumni') }}"
                                         class="target-link waves-effect waves-block">
-                                        Laporan Harian MGMP
-                                    </a>
-                                </li>
-                                <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#mgmp/laporan-kelompok-mgmp') }}"
-                                        class="target-link waves-effect waves-block">
-                                        Laporan Kelompok
+                                        Tracer Alumni
                                     </a>
                                 </li>
                             </ul>
-                            {{-- <ul class="ml-menu">
-                                <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#mgmp/laporan-kelompok-mgmp') }}"
-                                        class="target-link waves-effect waves-block">
-                                        Laporan Kelompok
-                                    </a>
-                                </li>
-                            </ul> --}}
-                            {{-- @else
-                            <ul class="ml-menu">
-                                <li class="menu-item" id="menu-item-data-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#manajemen-file/data-kategori') }}"
-                                        class="target-link waves-effect waves-block">
-                                        Data Kategori
-                                    </a>
-                                </li>
-                                <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#manajemen-file/data-sub-kategori') }}"
-                                        class="target-link waves-effect waves-block">
-                                        Data Sub Kategori
-                                    </a>
-                                </li>
-                                <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#manajemen-file/data-file') }}"
-                                        class="target-link waves-effect waves-block">
-                                        Data File
-                                    </a>
-                                </li>
-                            </ul>
-                        @endif
-                    </li>
-                @endif --}}
-                {{-- MGMP --}}
+                        </li>
+    
+                @endif
 
                 {{-- Manajemen File --}}
-                @if ( $role_aktif !== 14)
+                @if ($category_file_role && $role_aktif !== 14)
                     <li id="modul-item-manajemen-file" class="modul-item">
                         <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
                             <span>Manajemen File</span>
@@ -209,8 +175,7 @@ $role_aktif = auth_data()->role_aktif->id_role;
                 Copyright &copy;2018
             </div>
             <div class="version">
-                Made with <span style="color: #e25555;">&hearts;</span> by <a
-                    href="https://edumate.id">@eduschool</a>
+                Made with <span style="color: #e25555;">&hearts;</span> by <a href="https://edumate.id">@eduschool</a>
             </div>
         </div>
         <!-- #Footer -->

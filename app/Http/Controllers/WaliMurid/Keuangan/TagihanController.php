@@ -31,11 +31,21 @@ class TagihanController extends BaseController
 
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
 
-        $winpay = new Winpay;
-        $grup_payment_channel = $winpay->getPaymentChannel();
+        // $winpay = new Winpay;
+        // $grup_payment_channel = $winpay->getPaymentChannel();
+        $cek_winpay = env("WINPAY_PRIVATE_KEY1");
+        if($cek_winpay==""){
+            $grup_payment_channel = null;
+        }
 
-        $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $data_anak_murid_aktif->id_siswa)->where('status_pembayaran', 0)->get();
+        else{
+            $winpay = new Winpay;
+            $grup_payment_channel = $winpay->getPaymentChannel();
+        }
 
+        $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $data_anak_murid_aktif->id_siswa)->where('status_pembayaran', 0)->orderBy('created_at', 'desc')->get();
+        // $pembayaran_aktif = PembayaranTrs::with('siswa', 'siswa.pengguna')->where('id_siswa', $data_anak_murid_aktif->id_siswa)->where('status_pembayaran', 0)->get();
+// dd($pembayaran_aktif);
         return view('wali-murid/keuangan/tagihan/view-tagihan', compact('auth_data', 'grup_payment_channel', 'pembayaran_aktif'));
     }
 
@@ -107,6 +117,8 @@ class TagihanController extends BaseController
                 'message' => 'Mohon pilih siswa terlebih dahulu',
             ]);
         } 
+        // $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
+        // dd($data_anak_murid_aktif->id_siswa);
 
         DB::beginTransaction();
         

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Akademik\ManajemenFile;
+namespace App\Http\Controllers\Akademik\MGMP;
 
 use Illuminate\Support\Facades\Hash;
 
@@ -88,7 +88,7 @@ class DataKategoriMGMPController extends BaseController
 
         // $pengguna = Pengguna::where('status_join_table', 2)->get();
         // $pengguna = Role::where('id_role', '<>', '14')->get();
-        return view('akademik/manajemen-file/data-kategori/add-data-kategori', compact('auth_data', 'pengguna','mata_pelajaran'));
+        return view('akademik/mgmp/data-kategori/add-data-kategori', compact('auth_data', 'pengguna','mata_pelajaran'));
     }
 
     public function editDataKategori(Request $request, $category_file_id = null)
@@ -102,7 +102,6 @@ class DataKategoriMGMPController extends BaseController
         $data_kategori = CategoriFileGuru::where('category_file_mgmp_id', $category_file_id)->first();
         // $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_mgmp_id)->pluck('id_role');
         // $pengguna = Pengguna::where('status_join_table', 2)->get();
-        
         $pengguna = pengguna::where('status_join_table', 2)
         ->with('status_pengguna')
         ->whereHas('status_pengguna', function($query) {
@@ -110,7 +109,7 @@ class DataKategoriMGMPController extends BaseController
         })->get();
         $allowed_role_pengguna = CategoriFileGuru::where('category_file_mgmp_id',$category_file_id )->pluck('id_pengguna')->toArray();
 
-        return view('akademik/manajemen-file/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna','mata_pelajaran','name'));
+        return view('akademik/mgmp/data-kategori/edit-data-kategori', compact('auth_data', 'data_kategori', 'pengguna', 'allowed_role_pengguna','mata_pelajaran','name'));
     }
 
     //action POST

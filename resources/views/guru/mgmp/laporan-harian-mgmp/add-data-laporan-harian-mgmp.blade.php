@@ -28,27 +28,38 @@
                             Mata Pelajaran
                          </h2>
                          <select class="form-control show-tick" name="mata_pelajaran">
-                             <option value="">-- Pilih Mata Pelajaran--</option>
+                             <option  value="" selected>-- Pilih Mata Pelajaran--</option>
                              @foreach($mapel as $mata_pelajaran)
-                             <option value="{{ $mata_pelajaran->categori_file_mgmp->category_file_mgmp_id}}" @if(!empty($mata_pelajaran->category_file_mgmp_id))  selected  @endif>
+                             <option value="{{ $mata_pelajaran->categori_file_mgmp->category_file_mgmp_id}}">
                                  {{ $mata_pelajaran->categori_file_mgmp->category_file_name }}
                              </option>
                              @endforeach
                          </select>
 
                          <h2 class="card-inside-title">
+                            Jenis MGMP
+                         </h2>
+                         <select class="form-control show-tick" name="jenis">
+                             <option  value="" selected>-- Pilih Jenis MGMP--</option>
+                             @foreach($jenis as $nama_jenis)
+                             <option value="{{ $nama_jenis->jenis_MGMP}}">
+                                 {{ $nama_jenis->jenis_MGMP}}
+                             </option>
+                             @endforeach
+                         </select>
+                         {{-- <h2 class="card-inside-title">
                             Jenis
                         </h2>
                         <div class="demo-radio-button">
-                            <input name="jenis" type="radio" value="mgmp" id="radio_1"  />
-                            <label for="radio_1">MGMP</label>
-                            <input name="jenis" type="radio" value="silabus" id="radio_2" />
-                            <label for="radio_2">Silabus</label>
-                            <input name="jenis" type="radio" value="rpp" id="radio_3" />
-                            <label for="radio_3">RPP</label>
-                            <input name="jenis" type="radio" value="kurikulum" id="radio_4" />
-                            <label for="radio_4">KURIKULUM</label>
-                        </div>
+                            <input name="jenis" type="radio" value="Silabus" id="radio_1"  />
+                            <label for="radio_1">Silabus</label>
+                            <input name="jenis" type="radio" value="RPP" id="radio_2" />
+                            <label for="radio_2">RPP</label>
+                            <input name="jenis" type="radio" value="Prota" id="radio_3" />
+                            <label for="radio_3">Prota</label>
+                            <input name="jenis" type="radio" value="Promes" id="radio_4" />
+                            <label for="radio_4">Promes</label>
+                        </div> --}}
 
                         <h2 class="card-inside-title">
                             Status
@@ -82,10 +93,6 @@
                             </div>
                         </div>
 
-                       
-
-                       
-               
 
                         {{-- @foreach($mapel as $mata_pelajaran)
                         {{ $mata_pelajaran->categori_file_mgmp->category_file_name }}

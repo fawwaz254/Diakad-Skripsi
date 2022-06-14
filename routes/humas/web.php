@@ -70,7 +70,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
 				Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
 				Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
-
 				Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
 				Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
 			});
@@ -80,12 +79,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 		Route::group(array('prefix' => 'absensi'), function () {
 
-
-
 			Route::group(array('prefix' => 'shift_pengguna'), function () {
-
-
-
 
 				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
 				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');
@@ -312,6 +306,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('add', 'TracerAlumniController@addTracerAlumni');
 				Route::get('edit/{id}', 'TracerAlumniController@editTracerAlumni');
 				Route::post('action/{mode}/{id}', 'TracerAlumniController@actionTracerAlumni');
+				Route::get('cetak','TracerAlumniController@cetakTracerAlumni');
+				Route::post('cetak','TracerAlumniController@changeTracerAlumni');
+				Route::get('cetak/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni');
+				Route::get('export-alumni/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni');
+
 			});
 		});
 

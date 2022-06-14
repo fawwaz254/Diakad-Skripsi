@@ -102,9 +102,6 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="jenis_sekolah">
-
-                                        
-
                                         <option  disabled >Pilih Jenis</option>
                                         <option @if(isset($alumni) && $alumni->jenis_sekolah == "sma")selected @endif value="sma">SMA (Sekolah Menengah Atas)</option>
                                         <option  @if(isset($alumni) && $alumni->jenis_sekolah == "smk")selected @endif value="smk">SMK (Sekolah Menengah Kejuruan)</option>

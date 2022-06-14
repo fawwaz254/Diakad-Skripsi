@@ -15,11 +15,8 @@
 
             font-family: 'Times New Roman', Times, serif;
         }
-
         .bg {
-
             background-image: url("{{ asset('media/vxskpi.png') }}");
-
             /* Full height */
             height: 1600px;
             /* Center and scale the image nicely */
@@ -120,6 +117,47 @@
         }
 
     </style>
+
+
+
+
+@if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+<style type="text/css">
+
+.bg {
+    
+    background-image: url("{{ asset('media/skpi-wh2.png') }}");
+}
+@media print {
+    .bg {
+    background-image: url("{{ asset('media/skpi-wh2.png') }}"); 
+    }
+    tr:nth-child(even) {
+                background-color: #439dd6;
+            }
+    .logo {
+            left: 0;
+            right: 0;
+            padding-left: 0px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            position: absolute;
+
+            margin-top: 45px;
+        }
+        tr:nth-child(even) {
+                background-color: #439dd6;
+            }
+
+}
+
+
+</style>
+
+
+
+@endif
 
     @if ($siswa->keterangan_kelas == 'Internasional')
         <style>
@@ -228,7 +266,7 @@ table.bg-color tr td{
             <h5 class="text-center"><b>Diploma Supplement</b></h5>
             <h5 class="text-center">Nomor :
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                    448/C-3/WH-2/VI/2021
+                    466/C-3/WH2/VI/2022
                 @endif
             </h5>
 
@@ -698,6 +736,7 @@ text-align: center;
 
     {{-- //informasi tambahan --}}
     {{-- @if ($informasi_tambahan->count() > 0) --}}
+    @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
     <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Informasi Tambahan
         @if ($siswa->keterangan_kelas == 'Internasional')
             <br><i style="margin-left: 17px">Additional Information</i>
@@ -783,27 +822,38 @@ text-align: center;
         </td>
         </tr>
         @endif
+
         <br>
     </table>
+    @endif
     <div class="avoid-break mt-4 mb-4">
         <table cellspacing="0" style="width: 80%; border:none; margin:auto; text-align:left; ">
             <tr>
                 <td style="width: 70%; border: none;">
                 </td>
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <td style="border: none;"></td>
+                @endif
                 <td style="border: none;">Kab. Sidoarjo,
                     {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                 </td>
             </tr>
-            <tr></tr>
+            <tr>
             <tr style="vertical-align: top;top:20px">
                 <td style="width: 70%; border: none;">
                 </td>
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <td style="border: none;">
+                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $siswa->pengguna->path_foto_pengguna }}" alt="img" style="height:165px; width:124px"/>
+                </td>
+                @endif
                 <td style="border: none; position: relative;">
                     Kepala Sekolah
                     <br>
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                         <br>
-                        <img src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" style="height:90px;" />
+                        <img  src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" style="height:90px; margin-left:-40px;"  width="220px" />
+                        <br>
                     @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                         <img style="position: absolute; top: 5%; margin-left:-40px;" src="{{ asset('media/ttd/smpypm1.png') }}"
                             alt="TTD" width="160px" height="160px" class="ttd">
@@ -822,6 +872,7 @@ text-align: center;
                     @endif
                     <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                 </td>
+            </tr>
             </tr>
         </table>
         {{-- @endif --}}
