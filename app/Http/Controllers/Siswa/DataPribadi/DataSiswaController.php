@@ -34,31 +34,31 @@ use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
 use App\Models\CalonSiswaBeasiswa;
-
+use App\Models\WaliMurid;
 use Auth;
 use DB;
 use Session;
 use Validator;
 
-class DataSiswaController extends BaseController{
+class DataSiswaController extends BaseController
+{
 
-    public function viewDataSiswa(Request $request){
-        # code...
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+	public function viewDataSiswa(Request $request)
+	{
+		# code...
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
 
-        $data_siswa = Siswa::where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
+		$data_siswa = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
 
-        if($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)){
-
-		}else{
+		if ($siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $data_siswa->nis_siswa)) { } else {
 			return [
 				'status' => 300, // FAILED
 				'message' => 'NIS tidak ditemukan'
 			];
 		}
 
-        $agama = Agama::get();
+		$agama = Agama::get();
 		$kebutuhanKhusus = KebutuhanKhusus::get();
 		$jenisTinggal = JenisTinggal::get();
 		$jenisTransportasi = JenisTransportasi::get();
@@ -70,20 +70,20 @@ class DataSiswaController extends BaseController{
 		$kota = Kota::get();
 		$kotaTinggal = Kota::get();
 		$provinsi = Provinsi::get();
-		
-		$kotaLahir = Kota::where('id_kota','=',$siswa->id_kota_lahir)->first();
 
-    	return view('siswa/data-pribadi/data-siswa/view-data-siswa',compact('auth_data','siswa','agama','kebutuhanKhusus','jenisTinggal','jenisTransportasi','jenisPip','jenisPendidikan','jenisPenghasilan','jenisPekerjaan','tingkatPrestasi','kotaLahir','kota','provinsi','kotaTinggal'));
+		$kotaLahir = Kota::where('id_kota', '=', $siswa->id_kota_lahir)->first();
 
-    }
+		return view('siswa/data-pribadi/data-siswa/view-data-siswa', compact('auth_data', 'siswa', 'agama', 'kebutuhanKhusus', 'jenisTinggal', 'jenisTransportasi', 'jenisPip', 'jenisPendidikan', 'jenisPenghasilan', 'jenisPekerjaan', 'tingkatPrestasi', 'kotaLahir', 'kota', 'provinsi', 'kotaTinggal'));
+	}
 
-    public function viewPrintSiswa(Request $request, $nis_nama_siswa){
+	public function viewPrintSiswa(Request $request, $nis_nama_siswa)
+	{
 
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
 		$siswa = LibSiswa::fetchDataDetailSiswa($auth_data, $nis_nama_siswa);
-		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa',$siswa->id_c_siswa)->get();
+		$beasiswa = CalonSiswaBeasiswa::where('id_c_siswa', $siswa->id_c_siswa)->get();
 
 		$semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -91,53 +91,77 @@ class DataSiswaController extends BaseController{
 		$data_beasiswa[0]['urutan_2'] = 'Menerima Beasiswa';
 		$data_beasiswa[0]['urutan_3'] = ': ';
 
-		if($beasiswa){
+		if ($beasiswa) {
 			foreach ($beasiswa as $key => $value) {
-			if($key==0){
-				$data_beasiswa[$key]['urutan_1'] = '61.';
-				$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
-				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
+				if ($key == 0) {
+					$data_beasiswa[$key]['urutan_1'] = '61.';
+					$data_beasiswa[$key]['urutan_2'] = 'Menerima Beasiswa';
+					$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
+				} else {
+					$data_beasiswa[$key]['urutan_1'] = '';
+					$data_beasiswa[$key]['urutan_2'] = '';
+					$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa . ' Tahun ' . $value->tahun_mulai_beasiswa_c_siswa . ' - ' . $value->tahun_selesai_beasiswa_c_siswa;
+				}
 			}
-			else{
-				$data_beasiswa[$key]['urutan_1'] = '';
-				$data_beasiswa[$key]['urutan_2'] = '';
-				$data_beasiswa[$key]['urutan_3'] = $value->keterangan_beasiswa_c_siswa.' Tahun '.$value->tahun_mulai_beasiswa_c_siswa.' - '.$value->tahun_selesai_beasiswa_c_siswa;
-			}
-			}
-
 		}
 
-		return view('siswa/data-pribadi/data-siswa/view-print-siswa',compact('auth_data','siswa','data_beasiswa', 'semester_aktif'));
-
+		return view('siswa/data-pribadi/data-siswa/view-print-siswa', compact('auth_data', 'siswa', 'data_beasiswa', 'semester_aktif'));
 	}
 
-    public function actionUpdateSiswa(Request $request,$id){
+	public function actionUpdateSiswa(Request $request, $id)
+	{
 
-    	$input = (object) $request->input();
+		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 		$now = Carbon::now(env('APP_TIMEZONE', ''));
 
-    	$validator = Validator::make($request->all(), [
+		$validator = Validator::make($request->all(), []);
 
-		]);
-		
-		if($validator->fails()) {
-				return [
-	            'status' => 300, // FAILED
-	            'message' => $validator->errors()->first()
-	        ];
-    	}
-    	//jika validasi benar
-    	else{
-    		$siswa = Siswa::where('nis_siswa','=',$input->nis_siswa)->orWhere('nisn_siswa','=',$input->nisn_siswa)->first();
-    		$calonSiswa = CalonSiswaBaru::where('id_c_siswa','=',$input->id_c_siswa)->first();
-	    	$id_c_siswa_prestasi 		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-	    	$id_c_siswa_beasiswa		= $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+		if ($validator->fails()) {
+			return [
+				'status' => 300, // FAILED
+				'message' => $validator->errors()->first()
+			];
+		}
+		//jika validasi benar
+		else {
+			$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
+			$calonSiswa = CalonSiswaBaru::where('id_c_siswa', '=', $input->id_c_siswa)->first();
+			$wali_murid = WaliMurid::where('id_pengguna', $input->id_pengguna)->first();
+			$id_c_siswa_prestasi 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+			$id_c_siswa_beasiswa		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-    		if($siswa != null || $calonSiswa != null){
-    			DB::beginTransaction();
-    			try{
-    				DB::table('pengguna')->where('id_pengguna', $input->id_pengguna)->update([
+
+			if ($wali_murid != null) {
+				// if siswa have wali murid
+				$wali_murid = WaliMurid::where('id_pengguna', $input->id_pengguna)->first();
+				$wali_murid->nm_wali_murid = $input->nm_ayah;
+				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
+				$wali_murid->updated_at = $now;
+				$wali_murid->updated_by = $input->auth_data->pengguna->id_pengguna;
+
+				if ($siswa->id_wali_murid == null) {
+					$siswa->id_wali_murid = $wali_murid->id_wali_murid;
+					$siswa->save();
+				}
+			} else {
+				// if siswa doesnt have wali murid
+				$wali_murid = new WaliMurid;
+				$wali_murid->id_wali_murid =	$input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+				$wali_murid->id_pengguna = $input->id_pengguna;
+				$wali_murid->nm_wali_murid = $input->nm_ayah;
+				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
+				$wali_murid->updated_at = $now;
+				$wali_murid->save();
+
+				$siswa->id_wali_murid = $wali_murid->id_wali_murid;
+				$siswa->save();
+			}
+
+			if ($siswa != null || $calonSiswa != null) {
+				DB::beginTransaction();
+				try {
+					DB::table('pengguna')->where('id_pengguna', $input->id_pengguna)->update([
 						'nm_pengguna' 			=> $input->nm_pengguna,
 						'username' 				=> $input->nis_siswa,
 						'password' 				=> Hash::make($input->nis_siswa),
@@ -150,7 +174,7 @@ class DataSiswaController extends BaseController{
 						'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 					]);
 
-    				DB::table('calon_siswa_baru')->where('id_c_siswa', $input->id_c_siswa)->update([
+					DB::table('calon_siswa_baru')->where('id_c_siswa', $input->id_c_siswa)->update([
 						'id_penerimaan' 		=> $calonSiswa->id_penerimaan,
 						'kode_voucher' 			=> $calonSiswa->kode_voucher,
 						'password' 				=> $calonSiswa->password,
@@ -198,7 +222,7 @@ class DataSiswaController extends BaseController{
 						'updated_by' 			=> $input->auth_data->pengguna->id_pengguna
 					]);
 
-    				DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
+					DB::table('calon_siswa_ortu')->where('id_c_siswa', $input->id_c_siswa)->update([
 						'nm_ayah'					=> $input->nm_ayah,
 						'status_ayah'				=> $input->status_ayah,
 						'nik_ayah'					=> $input->nik_ayah,
@@ -248,41 +272,37 @@ class DataSiswaController extends BaseController{
 						'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 					]);
 
-    				DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
+					DB::table('calon_siswa_fisik')->where('id_c_siswa', $input->id_c_siswa)->update([
 						'tinggi_badan'				=> $input->tinggi_badan,
 						'berat_badan'				=> $input->berat_badan,
 						'updated_at' 				=> $now,
 						'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 					]);
 
-    				DB::table('calon_siswa_prestasi')->where('id_c_siswa', $input->id_c_siswa)->update([	
+					DB::table('calon_siswa_prestasi')->where('id_c_siswa', $input->id_c_siswa)->update([
 						'updated_at' 				=> $now,
 						'updated_by' 				=> $input->auth_data->pengguna->id_pengguna
 					]);
 
-    				DB::commit();
-	    			return [
+					DB::commit();
+					return [
 						'status' => 200, // SUCCESS AND LOAD TABLE
 						'message' => 'Update Data Siswa Berhasil!'
-		            ];
-    			}
-    			catch (\Exception $e) {
+					];
+				} catch (\Exception $e) {
 					DB::rollback();
-					
-                    return [
+
+					return [
 						'status' 	=> 200, // GAGAL
-						'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
-                    ];
-    			}
-    		}
-    		else{
-    			return [
-		                'status' => 200, // SUCCESS AND LOAD TABLE
-		               	'message' => 'Siswa Tidak Ditemukan!'
-		        ];
-    		}
-    	}	
-
-    }
-
+						'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+					];
+				}
+			} else {
+				return [
+					'status' => 200, // SUCCESS AND LOAD TABLE
+					'message' => 'Siswa Tidak Ditemukan!'
+				];
+			}
+		}
+	}
 }
