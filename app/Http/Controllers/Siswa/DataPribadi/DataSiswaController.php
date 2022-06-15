@@ -156,6 +156,18 @@ class DataSiswaController extends BaseController
 
 				$siswa->id_wali_murid = $wali_murid->id_wali_murid;
 				$siswa->save();
+
+				$pengguna = new Pengguna;
+				$pengguna->id_pengguna = $wali_murid->id_wali_murid;
+				$pengguna->nm_pengguna = $input->nm_ayah;
+				$pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
+				$pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
+				$pengguna->username = $input->nomor_hp_ortu;
+				$pengguna->password = Hash::make($input->nomor_hp_ortu);
+				$pengguna->status_join_table = 4;
+
+
+				$pengguna->save();
 			}
 
 			if ($siswa != null || $calonSiswa != null) {
