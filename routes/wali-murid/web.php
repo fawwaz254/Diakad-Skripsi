@@ -89,6 +89,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
             //MENU Beasiswa
             Route::get('beasiswa', 'WaliMurid\Kesiswaan\BeasiswaController@viewBeasiswa');
             Route::get('beasiswa/datatables', 'WaliMurid\Kesiswaan\BeasiswaController@datatablesBeasiswa');
+
+            Route::group(array('prefix' => 'absensi-ekskul'), function () {
+				Route::get('/', 'WaliMurid\Kesiswaan\AbsensiEkskulController@viewAbsensiEkskul');
+				Route::get('detail/{id_semester}/{id_ekskul}', 'WaliMurid\Kesiswaan\AbsensiEkskulController@viewDetailAbsensiEkskul');
+			});
+
+			Route::group(array('prefix' => 'nilai-ekskul'), function () {
+				Route::get('/', 'WaliMurid\Kesiswaan\NilaiEkskulController@viewNilaiEkskul');
+				Route::get('detail/{id_semester}/{id_ekskul}', 'WaliMurid\Kesiswaan\NilaiEkskulController@viewDetailNilaiEkskul');
+			});
         });
 
         /** ==== MODUL PELANGGARAN ==== **/

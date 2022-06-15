@@ -17,7 +17,6 @@ class AbsensiController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_anak_murid_aktif = LibSiswa::fetchDataSiswaWaliMurid($auth_data, $auth_data->pengguna->id_pengguna, 1);
-        // dd($data_anak_murid_aktif->id_pengguna);
     
         $now = Carbon::today();
         if(empty($id_bulan)){
