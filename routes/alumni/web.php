@@ -4,6 +4,18 @@ Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'alumni'), function () {
         Route::get('welcome', 'Alumni\WelcomeController@indexWelcome');
 
+       /** ==== MODUL Tracer Alumni ==== **/
+       Route::group(array('prefix' => 'alumni'), function () {
+        Route::group(array('prefix' => 'tracer-alumni'), function () {
+            Route::get('/', 'Siswa\Alumni\TracerAlumniSiswaController@viewTracerAlumni');
+            Route::get('datatables', 'Siswa\Alumni\TracerAlumniSiswaController@datatablesTracerAlumni');
+            Route::get('add', 'Alumni\TracerAlumni\TracerAlumnicontroller@addTracerAlumni');
+            Route::get('edit/{id}', 'Siswa\Alumni\TracerAlumniSiswaController@editTracerAlumni');
+            //action arahkan ke humas
+            Route::post('action/{mode}/{id}', 'Humas\Alumni\TracerAlumniController@actionTracerAlumni');
+        });
+    });
+
         /** ==== MODUL MANAJEMEN FILE ==== **/
         // url: /alumni/manajemen-file
         Route::group(array('prefix' => 'manajemen-file'), function () {
@@ -37,6 +49,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
             });
         });
+
+ 
 
         Route::group(array('prefix' => 'bursa-kerja'), function () {
 
