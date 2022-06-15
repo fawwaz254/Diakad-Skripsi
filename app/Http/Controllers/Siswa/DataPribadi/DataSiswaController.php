@@ -34,6 +34,7 @@ use App\Models\TingkatPrestasiSiswa as TingkatPrestasiSiswa;
 use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
 use App\Models\CalonSiswaBeasiswa;
+use App\Models\RolePengguna;
 use App\Models\WaliMurid;
 use Auth;
 use DB;
@@ -150,6 +151,7 @@ class DataSiswaController extends BaseController
 				$wali_murid->id_wali_murid =	$input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 				$wali_murid->id_pengguna = $input->id_pengguna;
 				$wali_murid->nm_wali_murid = $input->nm_ayah;
+				$wali_murid->is_aktif = 1;
 				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
 				$wali_murid->updated_at = $now;
 				$wali_murid->save();
@@ -165,9 +167,11 @@ class DataSiswaController extends BaseController
 				$pengguna->username = $input->nomor_hp_ortu;
 				$pengguna->password = Hash::make($input->nomor_hp_ortu);
 				$pengguna->status_join_table = 4;
-
-
 				$pengguna->save();
+
+				$role = RolePengguna::where('id_pengguna', $wali_murid->id_wali_murid)->first();
+				$role->id_role = 4;
+				$role->save();
 			}
 
 			if ($siswa != null || $calonSiswa != null) {
