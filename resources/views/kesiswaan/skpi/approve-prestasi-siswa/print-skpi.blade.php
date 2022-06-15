@@ -844,7 +844,7 @@ text-align: center;
                 </td>
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
                 <td style="border: none;">
-                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $siswa->pengguna->path_foto_pengguna }}" alt="img" style="height:165px; width:124px"/>
+                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $siswa->pengguna->path_foto_pengguna }}" alt="img" style="height:165px; width:124px; margin-left:-160px;"/>
                 </td>
                 @endif
                 <td style="border: none; position: relative;">
