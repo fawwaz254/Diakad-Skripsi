@@ -66,50 +66,50 @@ class PrestasiController extends BaseController
             'p2.gelar_depan',
             'p2.gelar_belakang'
         )
-        ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
-        ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-        ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-        ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
-        ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
-        ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
-        ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
-        ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
-        ->orderBy('prestasi_siswa.created_at', 'desc')
-        ->orderBy('semester.thn_akademik_semester', 'desc')
-        ->orderBy('semester.nm_semester', 'desc')
-        ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
-        ->get();
-
+            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+            ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+            ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+            ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+            ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->orderBy('prestasi_siswa.created_at', 'desc')
+            ->orderBy('semester.thn_akademik_semester', 'desc')
+            ->orderBy('semester.nm_semester', 'desc')
+            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('siswa.id_pengguna', $data_anak_murid_aktif->id_pengguna)
+            ->get();
+        // dd($list_data);
         return Datatables::of($list_data)
-                ->addColumn('semester', function ($item) {
-                    return $item->nm_semester.' ('.$item->tahun_ajaran.')';
-                })
-                ->addColumn('jenis_prestasi', function ($item) {
-                    if ($item->jenis_prestasi_siswa == 1) {
-                        return "Sains";
-                    } elseif ($item->jenis_prestasi_siswa == 2) {
-                        return "Seni";
-                    } elseif ($item->jenis_prestasi_siswa == 3) {
-                        return "Olahraga";
-                    } elseif ($item->jenis_prestasi_siswa == 99) {
-                        return "Lain-Lain";
-                    }
-                })
-                ->addColumn('tgl_prestasi_siswa', function ($item) {
-                    return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
-                })
-                ->addColumn('nm_guru_pendamping', function ($item) {
-                    if (! empty($item->gelar_depan) && ! empty($item->gelar_belakang)) {
-                        return $item->gelar_depan." ".$item->nm_guru_pendamping.", ".$item->gelar_belakang;
-                    } elseif (! empty($item->gelar_depan)) {
-                        return $item->gelar_depan." ".$item->nm_guru_pendamping;
-                    } elseif (! empty($item->gelar_belakang)) {
-                        return $item->nm_guru_pendamping.", ".$item->gelar_belakang;
-                    } else {
-                        return $item->nm_guru_pendamping;
-                    }
-                })
-                ->make(true);
+            ->addColumn('semester', function ($item) {
+                return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+            })
+            ->addColumn('jenis_prestasi', function ($item) {
+                if ($item->jenis_prestasi_siswa == 1) {
+                    return "Sains";
+                } elseif ($item->jenis_prestasi_siswa == 2) {
+                    return "Seni";
+                } elseif ($item->jenis_prestasi_siswa == 3) {
+                    return "Olahraga";
+                } elseif ($item->jenis_prestasi_siswa == 99) {
+                    return "Lain-Lain";
+                }
+            })
+            ->addColumn('tgl_prestasi_siswa', function ($item) {
+                return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
+            })
+            ->addColumn('nm_guru_pendamping', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_guru_pendamping . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_guru_pendamping;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_guru_pendamping . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_guru_pendamping;
+                }
+            })
+            ->make(true);
     }
 }

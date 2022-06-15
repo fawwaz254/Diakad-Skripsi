@@ -141,8 +141,7 @@ class SettingWaliMuridController extends BaseController
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->leftJoin('wali_murid', 'wali_murid.id_wali_murid', '=', 'siswa.id_wali_murid')
             ->leftjoin('pengguna AS pwm', 'pwm.id_pengguna', '=', 'wali_murid.id_pengguna')
-            ->where('id_kelas', '=', $id_kelas)->get();
-
+            ->where('id_kelas', '=', $id_kelas);
         return Datatables::of($list_data)
             ->editColumn('nm_wali_murid', function ($item) {
                 return $item->gd . ' ' . $item->nm_wali_murid . ' ' . $item->gb;
