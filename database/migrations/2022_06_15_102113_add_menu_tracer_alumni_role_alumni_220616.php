@@ -40,7 +40,7 @@ class AddMenuTracerAlumniRoleAlumni220616 extends Migration
               "created_at"   => $now
           ],
       ]);
-      Modul::where('nm_modul', 'Tracer Study')->where('id_role', '12')->first()->delete();
+    //   Modul::where('nm_modul', 'Tracer Study')->where('id_role', '12')->first()->delete();
     }
 
     /**
