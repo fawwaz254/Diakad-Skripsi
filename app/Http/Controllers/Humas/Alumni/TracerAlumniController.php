@@ -421,7 +421,12 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         // $auth_data = $input->auth_data;
-        $alumni = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->with('calon_siswa', 'kelas')->get();
+        $alumni['alumni_bekerja'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','bekerja')->with('calon_siswa', 'kelas','bekerja')->get();
+        $alumni['alumni_kuliah'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','kuliah')->with('calon_siswa', 'kelas','kuliah')->get();
+        $alumni['alumni_menunggu'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','menunggu')->with('calon_siswa', 'kelas','menunggu')->get();
+        $alumni['alumni_wirausaha'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','usaha')->with('calon_siswa', 'kelas','usaha')->get();
+        // $alumni = $data;
+        // dd($alumni);
         return Excel::download(new ExportAlumni2($alumni), 'download_harian.xlsx');
     }
 
