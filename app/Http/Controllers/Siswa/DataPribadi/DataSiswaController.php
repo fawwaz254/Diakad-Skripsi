@@ -147,20 +147,21 @@ class DataSiswaController extends BaseController
 				}
 			} else {
 				// if siswa doesnt have wali murid
+				$now1 = Carbon::now(env('APP_TIMEZONE', ''));
 				$wali_murid = new WaliMurid;
-				$wali_murid->id_wali_murid =	$input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-				$wali_murid->id_pengguna = $input->id_pengguna;
+				$wali_murid->id_wali_murid =$input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid()	;
+				$wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 				$wali_murid->nm_wali_murid = $input->nm_ayah;
 				$wali_murid->is_aktif = 1;
 				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
 				$wali_murid->updated_at = $now;
 				$wali_murid->save();
 
-				$siswa->id_wali_murid = $wali_murid->id_wali_murid;
-				$siswa->save();
+				// $siswa->id_wali_murid = $wali_murid->id_wali_murid;
+				// $siswa->save();
 
 				$pengguna = new Pengguna;
-				$pengguna->id_pengguna = $wali_murid->id_wali_murid;
+				$pengguna->id_pengguna = $wali_murid->id_pengguna;
 				$pengguna->nm_pengguna = $input->nm_ayah;
 				$pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
 				$pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
@@ -168,10 +169,23 @@ class DataSiswaController extends BaseController
 				$pengguna->password = Hash::make($input->nomor_hp_ortu);
 				$pengguna->status_join_table = 4;
 				$pengguna->save();
+				$now = Carbon::now(env('APP_TIMEZONE', ''));
 
-				$role = RolePengguna::where('id_pengguna', $wali_murid->id_wali_murid)->first();
-				$role->id_role = 4;
-				$role->save();
+				$role_wali_murid = new RolePengguna;
+				// $role_wali_murid->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+				$role_wali_murid->id_role = 4;
+				$role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
+				$role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
+				$role_wali_murid->is_aktif = 1;
+				$role_wali_murid->save();
+
+				$siswa1 = Siswa::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->first();
+				$siswa1->id_wali_murid = $wali_murid->id_wali_murid;
+				$siswa1->save();
+
+				// $role = RolePengguna::where('id_pengguna', $wali_murid->id_wali_murid)->first();
+				// $role->id_role = 4;
+				// $role->save();
 			}
 
 			if ($siswa != null || $calonSiswa != null) {
