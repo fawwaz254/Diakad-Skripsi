@@ -152,6 +152,7 @@ class DataSiswaController extends BaseController
 				$wali_murid->id_wali_murid =$input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid()	;
 				$wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 				$wali_murid->nm_wali_murid = $input->nm_ayah;
+				$wali_murid->is_aktif = 1;
 				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
 				$wali_murid->updated_at = $now;
 				$wali_murid->save();
@@ -181,6 +182,10 @@ class DataSiswaController extends BaseController
 				$siswa1 = Siswa::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->first();
 				$siswa1->id_wali_murid = $wali_murid->id_wali_murid;
 				$siswa1->save();
+
+				// $role = RolePengguna::where('id_pengguna', $wali_murid->id_wali_murid)->first();
+				// $role->id_role = 4;
+				// $role->save();
 			}
 
 			if ($siswa != null || $calonSiswa != null) {
