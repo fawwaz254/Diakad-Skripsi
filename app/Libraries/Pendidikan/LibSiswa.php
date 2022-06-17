@@ -23,9 +23,10 @@ class LibSiswa
     {
 
         // get id_wali_murid
+        // dd($id_pengguna);
         $wali_murid = WaliMurid::where('id_pengguna', '=', $id_pengguna)->first();
         $id_wali_murid = $wali_murid->id_wali_murid;
-
+// dd($id_wali_murid);
         $siswa = Siswa::select('siswa.id_siswa', 'pengguna.id_pengguna', 'siswa.nis_siswa', 'siswa.nisn_siswa', 'siswa.thn_masuk_siswa', 'pengguna.nm_pengguna', 'status_pengguna.nm_status_pengguna', 'kelas.nm_kelas')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')

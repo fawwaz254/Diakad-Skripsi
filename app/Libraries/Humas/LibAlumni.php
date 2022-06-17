@@ -11,8 +11,9 @@ use App\Models\AlumniSmp;
 use Illuminate\Support\Facades\DB;
 
 
-class LibAlumni {
-  
+class LibAlumni
+{
+
   public static function store($data)
   {
     return Alumni::insert($data);
@@ -37,7 +38,7 @@ class LibAlumni {
   {
     return AlumniMenunggu::insert($data);
   }
-  
+
   public static function storeSMP($data)
   {
     return AlumniSmp::insert($data);
@@ -48,9 +49,9 @@ class LibAlumni {
   {
     return DB::table('alumni')
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
-      ->join('alumni_smp', 'alumni.id_alumni','=','alumni_smp.id_alumni')
+      ->join('alumni_smp', 'alumni.id_alumni', '=', 'alumni_smp.id_alumni')
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus','alumni_smp.nm_sekolah',  'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'alumni_smp.nm_sekolah',  'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->where('alumni.id_c_siswa', $id)
       ->get();
@@ -60,39 +61,49 @@ class LibAlumni {
   {
     return DB::table('alumni')
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
-      ->join('alumni_smp', 'alumni.id_alumni','=','alumni_smp.id_alumni')
+      ->join('jurusan', 'siswa.id_jurusan', '=', 'jurusan.id_jurusan')
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus','alumni_smp.nm_sekolah',  'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->where('alumni.id_c_siswa', $id)
       ->get();
   }
 
-  public static function getAlumnisSearchSmp($id_kelas,$tahun_lulus)
+  public static function getAlumnisSearchSmp($id_kelas, $tahun_lulus)
   {
     return DB::table('alumni')
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
-      ->join('alumni_smp', 'alumni.id_alumni','=','alumni_smp.id_alumni')
+      ->join('alumni_smp', 'alumni.id_alumni', '=', 'alumni_smp.id_alumni')
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus','alumni_smp.nm_sekolah',  'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'alumni_smp.nm_sekolah',  'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->where('alumni.id_kelas', $id_kelas)
       ->where('alumni.tahun_lulus', $tahun_lulus)
       ->get();
   }
 
-  
-
-
+  public static function getAlumnisSearch($id_kelas, $tahun_lulus)
+  {
+    return DB::table('alumni')
+    ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
+    ->join('jurusan', 'siswa.id_jurusan', '=', 'jurusan.id_jurusan')
+    ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
+    ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
+    ->where('alumni.deleted_at', null)
+    ->where('alumni.id_kelas', $id_kelas)
+    ->where('alumni.tahun_lulus', $tahun_lulus)
+    ->get();
+ 
+  }
 
 
   public static function getAlumnisSmp()
   {
     return DB::table('alumni')
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
-      ->join('alumni_smp', 'alumni.id_alumni','=','alumni_smp.id_alumni')
+      ->join('alumni_smp', 'alumni.id_alumni', '=', 'alumni_smp.id_alumni')
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus','alumni_smp.nm_sekolah',  'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'alumni_smp.nm_sekolah',  'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->get();
   }
@@ -103,9 +114,8 @@ class LibAlumni {
       ->join('calon_siswa_baru as siswa', 'alumni.id_c_siswa', '=', 'siswa.id_c_siswa')
       ->join('jurusan', 'siswa.id_jurusan', '=', 'jurusan.id_jurusan')
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
-      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status','alumni.status_verifikasi','kelas.nm_kelas')
+      ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'jurusan.nm_jurusan', 'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
       ->get();
   }
-
 }

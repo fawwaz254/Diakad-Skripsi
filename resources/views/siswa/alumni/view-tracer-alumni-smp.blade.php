@@ -1,8 +1,14 @@
 <div class="container-fluid">
     <div class="block-header">
+        @if (empty($alumni))
         <h2><a class="btn bg-blue waves-effect target-link"
             href="{{url(Request::segment(1).'#tracer-alumni/add')}}">
                 <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
+                @else
+            <h2><a class="btn bg-grey  waves-effect target-link"
+                     style="pointer-events: none">
+                    <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
+        @endif
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

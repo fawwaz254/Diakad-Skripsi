@@ -1,6 +1,8 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#pendaftaran/penerimaan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#pendaftaran/penerimaan') }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -11,17 +13,19 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-penerimaan/add/'.$id_penerimaan)}}">
-                        {{csrf_field()}}
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-penerimaan/add/' . $id_penerimaan) }}">
+                        {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Tahun <small><b>* Tahun Yang Ada Pada Data Nama Semester</b></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="tahun_penerimaan">
-                                @foreach($data_semester_tahun as $data)
-                                    <option value="{{$data->thn_akademik_semester}}">{{$data->thn_akademik_semester}}</option>
-                                @endforeach
+                                    @foreach ($data_semester_tahun as $data)
+                                        <option value="{{ $data->thn_akademik_semester }}">
+                                            {{ $data->thn_akademik_semester }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -31,9 +35,9 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_jalur">
-                                @foreach($data_jalur as $data)
-                                    <option value="{{$data->id_jalur}}">{{$data->nm_jalur}}</option>
-                                @endforeach
+                                    @foreach ($data_jalur as $data)
+                                        <option value="{{ $data->id_jalur }}">{{ $data->nm_jalur }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -42,7 +46,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_penerimaan" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nm_penerimaan" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -65,9 +70,9 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="nm_semester_penerimaan">
-                                @foreach($data_semester_nama as $data)
-                                    <option value="{{$data->nm_semester}}">{{$data->nm_semester}}</option>
-                                @endforeach
+                                    @foreach ($data_semester_nama as $data)
+                                        <option value="{{ $data->nm_semester }}">{{ $data->nm_semester }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -89,7 +94,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_awal_registrasi" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_awal_registrasi"
+                                    required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -97,7 +103,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_akhir_registrasi" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_akhir_registrasi"
+                                    required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -105,7 +112,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_awal_verifikasi" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_awal_verifikasi"
+                                    required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -113,7 +121,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_akhir_verifikasi" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_akhir_verifikasi"
+                                    required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -121,7 +130,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_awal_voucher" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_awal_voucher" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -129,7 +139,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_akhir_voucher" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_akhir_voucher" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -137,7 +148,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker form-control" name="tgl_penetapan" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker form-control" name="tgl_penetapan" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -145,7 +157,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="datepicker-time form-control" name="tgl_pengumuman" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="datepicker-time form-control" name="tgl_pengumuman"
+                                    required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -189,7 +202,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nomor_rekening_transfer" required="" aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_rekening_transfer" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -204,14 +218,14 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                        {{-- <h2 class="card-inside-title">
                             Biaya Daftar Ulang
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="number" class="form-control" name="biaya_daftar_ulang" required="" aria-required="true" aria-invalid="true">
                             </div>
-                        </div>
+                        </div> --}}
                         <h2 class="card-inside-title">
                             Status Aktif
                         </h2>
@@ -229,7 +243,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
@@ -240,22 +255,22 @@
 </div>
 @include('scriptjs')
 <script>
-$(function(){    
-    $('.datepicker').bootstrapMaterialDatePicker({
-        format: 'DD MMMM YYYY',
-        //lang : 'id',
-        clearButton: true,
-        weekStart: 1,
-        time: false
-    });
+    $(function() {
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'DD MMMM YYYY',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
 
-    $('.datepicker-time').bootstrapMaterialDatePicker({
-        format: 'DD MMMM YYYY HH:mm:00',
-        //lang : 'id',
-        clearButton: true,
-        weekStart: 1,
-        time: true
-    });
+        $('.datepicker-time').bootstrapMaterialDatePicker({
+            format: 'DD MMMM YYYY HH:mm:00',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: true
+        });
 
-});
+    });
 </script>

@@ -54,7 +54,7 @@
                             <div class="body">
                                 <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                                     <table class="table table-bordered table-striped table-hover dataTable display"
-                                        id="primary_table_belum_kbm">
+                                        id="primary_table_belum_kbm" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -75,7 +75,7 @@
                             <div class="body">
                                 <div class="table-responsive" style="overflow-x: auto;width: 100%;">
                                     <table class="table table-bordered table-striped table-hover dataTable display"
-                                        id="primary_table_sudah">
+                                        id="primary_table_sudah" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
