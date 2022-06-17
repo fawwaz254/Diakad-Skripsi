@@ -29,6 +29,7 @@ use App\Libraries\Humas\LibAlumni;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\AlumniSmp;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -91,7 +92,7 @@ class TracerAlumniController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat', 9)->get();
+        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 9)->get();
         $alumni = null;
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
@@ -104,16 +105,17 @@ class TracerAlumniController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 9)->get();
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
 
-            $alumni = Alumni::where('id_alumni', $id)->with('smp')->first();
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
+            $data_kelas = Kelas::where('tingkat', 9)->get();
+            $alumni = Alumni::where('id_alumni', $id)->with('smp', 'calon_siswa')->first();
         } else {
-            $alumni = Alumni::find($id);
+            $data_kelas = Kelas::where('tingkat', 12)->get();
+            $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
         }
 
 
-        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
+        return view('siswa.alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
     public function actionTracerAlumni(Request $request, $mode, $id = null)
@@ -230,54 +232,16 @@ class TracerAlumniController extends BaseController
                 return error_response($e);
             }
         } elseif ($mode == 'add2') {
+         
 
             DB::beginTransaction();
 
             try {
 
-                // $data['nm_c_siswa']        = $request->nama_siswa;
-                // $data['nomor_hp']          = $request->nomor_hp;
-                // $data['id_jurusan']        = $request->jurusan;
-                // $data['alamat_jalan']      = $request->alamat_siswa;
-                // $data['id_c_siswa']        = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                // $data['id_penerimaan']     = 0;
-                // $data['status_verifikasi'] = 0;
-                // $data['created_by']        = $auth_data->pengguna->id_pengguna;
-                // $data['created_at']        = Carbon::now(env('APP_TIMEZONE', ''));
-
-                // CalonSiswaBaru::insert($data);
-
-                // $data2 = [
-                //     'id_c_siswa'    => $data['id_c_siswa'],
-                //     'created_by'    => $auth_data->pengguna->id_pengguna,
-                //     'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
-                // ];
-
-                // CalonSiswaOrtu::insert($data2);
-                // CalonSiswaFisik::insert($data2);
-                // CalonSiswaSekolah::insert($data2);
-
-                // $data3['nm_pengguna']           = $request->nama_siswa;
-                // $data3['email_pengguna']        = $request->email;
-                // $data3['nomor_hp_pengguna']     = $request->nomor_hp;
-                // $data3['username']              = str_replace(' ', '_', $request->nama_siswa);
-                // $data3['id_status_pengguna']    = StatusPengguna::where('nm_status_pengguna', 'Lulus')->first()->id_status_pengguna;
-                // $data3['id_sekolah']            = $auth_data->pengguna->id_sekolah;
-                // $data3['id_pengguna']           = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
-                // $data3['created_by']            = $auth_data->pengguna->id_pengguna;
-                // $data3['created_at']            = Carbon::now(env('APP_TIMEZONE', ''));
-
-                // Pengguna::insert($data3);
-
-                // Siswa::insert([
-                //     'id_siswa'      => $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid(),
-                //     'id_pengguna'   => $data3['id_pengguna'],
-                //     'id_c_siswa'    => $data['id_c_siswa'],
-                //     'created_by'    => $auth_data->pengguna->id_pengguna,
-                //     'created_at'    => Carbon::now(env('APP_TIMEZONE', ''))
-                // ]);
                 $jurusan = CalonSiswaBaru::where('id_c_siswa',  $request->id_c_siswa)->first();
                 $jurusan->id_jurusan = $request->jurusan;
+                $jurusan->alamat_jalan = $request->alamat_siswa;
+                $jurusan->nomor_hp = $request->nomor_hp;
                 $jurusan->save();
 
                 $data4['id_kelas']      = $request->id_kelas;
@@ -332,11 +296,108 @@ class TracerAlumniController extends BaseController
 
                 DB::commit();
 
+
                 if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
                     return web_response(202, "Update successfully", self::PATH);
                 } else {
                     return web_response(202, "Update successfully", self::PATH2);
                 }
+            } catch (\Exception $e) {
+
+                DB::rollback();
+
+                return error_response($e);
+            }
+        } elseif ($mode == 'edit') {
+            DB::beginTransaction();
+
+            try {
+
+                $jurusan = CalonSiswaBaru::where('id_c_siswa',  $request->id_c_siswa)->first();
+                $jurusan->id_jurusan = $request->jurusan;
+                $jurusan->alamat_jalan = $request->alamat_siswa;
+                $jurusan->nomor_hp = $request->nomor_hp;
+                $jurusan->save();
+
+                $alumni =   Alumni::where('id_alumni', $request->id_alumni)->first();
+                $alumni->id_kelas  = $request->id_kelas;
+                $alumni->email  = $request->email;
+                $alumni->tahun_lulus  = $request->tahun_lulus;
+                $alumni->status  = $request->status;
+                $alumni->updated_by = $auth_data->pengguna->id_pengguna;
+                $alumni->save();
+
+                switch ($request->status) {
+                    case 'bekerja':
+                        $data5 = $request->only(self::FETCH_WORK_ATTRIBUTE);
+                        $data5['id_alumni_bekerja']    = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
+                    case 'usaha':
+                        $data5 = $request->only(self::FETCH_ENTERPRENEUR_ATTRIBUTE);
+                        $data5['id_alumni_wirausaha']  = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
+                    case 'kuliah':
+                        $data5 = $request->only(self::FETCH_COLLEGE_ATTRIBUTE);
+                        $data5['id_alumni_kuliah']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
+                    case 'menunggu':
+                        $data5 = $request->only(self::FETCH_IDLE_ATTRIBUTE);
+                        $data5['id_alumni_menunggu']   = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
+                    case 'smp';
+                        $data5 = $request->only(self::FETCH_SMP);
+                        $data5['id_alumni_smp']   = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
+                        break;
+                }
+
+                $data5['id_alumni']              = $request->id_alumni;
+                $data5['updated_by']             = $auth_data->pengguna->id_pengguna;
+                $data5['created_by']             = $auth_data->pengguna->id_pengguna;
+                $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
+
+
+                if ($request->old_status == 'bekerja') {
+                    $hapus_old_status = AlumniBekerja::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status->delete();
+                } elseif ($request->old_status == 'usaha') {
+                    $hapus_old_status = AlumniWirausaha::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status->delete();
+                } elseif ($request->old_status == 'kuliah') {
+                    $hapus_old_status = AlumniKuliah::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status->delete();
+                } elseif ($request->old_status == 'menunggu') {
+                    $hapus_old_status = AlumniMenunggu::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status->delete();
+                } elseif ($request->old_status == 'smp') {
+                    $hapus_old_status = AlumniSmp::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status->delete();
+                }
+
+                if ($request->status == 'bekerja') {
+                    LibAlumni::storeWorkplace($data5);
+                } elseif ($request->status == 'usaha') {
+                    LibAlumni::storeBusiness($data5);
+                } elseif ($request->status == 'kuliah') {
+                    LibAlumni::storeUniversity($data5);
+                } elseif ($request->status == 'menunggu') {
+                    LibAlumni::storeIdleAlumni($data5);
+                } elseif ($request->status == 'smp') {
+                    LibAlumni::storeSMP($data5);
+                }
+
+                DB::commit();
+            
+                if($cek = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()){
+                    if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
+                        return web_response(202, "Update successfully", self::PATH);
+                    } else {
+                        return web_response(202, "Update successfully", self::PATH2);
+                    }
+                }else{
+                    return web_response(202, "Update successfully", self::PATH);
+                }
+
+                
             } catch (\Exception $e) {
 
                 DB::rollback();
@@ -376,16 +437,10 @@ class TracerAlumniController extends BaseController
     public function changeTracerAlumni(Request $request)
     {
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
-        // dd($input->id_kelas . "/" . $input->tahun_lulus);
-
         return [
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'alumni/tracer-alumni/cetak/' . $input->id_kelas . '/' . $input->tahun_lulus,
-            // 'message' => 'change'
         ];
-
-        //return redirect("/humas#alumni/tracer-alumni/cetak/" . $input->id_kelas . "/" . $input->tahun_lulus);
 
     }
 
@@ -393,16 +448,10 @@ class TracerAlumniController extends BaseController
     public function changeTracerAlumni2(Request $request)
     {
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
-        // dd($input->id_kelas . "/" . $input->tahun_lulus);
-
         return [
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'alumni/tracer-alumni/cetak2/' . $input->id_kelas . '/' . $input->tahun_lulus,
-            // 'message' => 'change'
         ];
-
-        //return redirect("/humas#alumni/tracer-alumni/cetak/" . $input->id_kelas . "/" . $input->tahun_lulus);
 
     }
 
@@ -411,7 +460,6 @@ class TracerAlumniController extends BaseController
     public function exportAlumnni(Request $request, $id_kelas, $tahun_lulus)
     {
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
         $alumni = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->with('smp', 'calon_siswa', 'kelas')->get();
         return Excel::download(new ExportAlumni($alumni), 'download_harian.xlsx');
     }
@@ -420,11 +468,10 @@ class TracerAlumniController extends BaseController
     public function exportAlumnni2(Request $request, $id_kelas, $tahun_lulus)
     {
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
-        $alumni['alumni_bekerja'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','bekerja')->with('calon_siswa', 'kelas','bekerja')->get();
-        $alumni['alumni_kuliah'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','kuliah')->with('calon_siswa', 'kelas','kuliah')->get();
-        $alumni['alumni_menunggu'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','menunggu')->with('calon_siswa', 'kelas','menunggu')->get();
-        $alumni['alumni_wirausaha'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status','usaha')->with('calon_siswa', 'kelas','usaha')->get();
+        $alumni['alumni_bekerja'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'bekerja')->with('calon_siswa', 'kelas', 'bekerja')->get();
+        $alumni['alumni_kuliah'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'kuliah')->with('calon_siswa', 'kelas', 'kuliah')->get();
+        $alumni['alumni_menunggu'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'menunggu')->with('calon_siswa', 'kelas', 'menunggu')->get();
+        $alumni['alumni_wirausaha'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'usaha')->with('calon_siswa', 'kelas', 'usaha')->get();
         // $alumni = $data;
         // dd($alumni);
         return Excel::download(new ExportAlumni2($alumni), 'download_harian.xlsx');

@@ -290,7 +290,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 		/** === MODUL MAGANG ALUMNI === **/
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function () {
-
+			
 			// Route::get('/tracer-alumni', 'AlumniController@index');
 			// Route::get('/tambah-alumni', 'AlumniController@create');
 			// Route::get('/edit/{alumni}', 'AlumniController@show');

@@ -9,26 +9,25 @@
 </style>
 
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1). '#' . Request::segment(2))}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
                     <h2>
                         {{ !empty($alumni) ? 'EDIT' : 'TAMBAH' }} DATA ALUMNI
+                        {{-- {{url(Request::segment(1). '#' . Request::segment(2))}} --}}
                     </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST" class="row"
                         action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'alumni/tracer-alumni/action/edit/' . $alumni->id_alumni : 'alumni/tracer-alumni/action/add2/0' }}">
                         {{ csrf_field() }}
-                        {{-- {{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add2/0' }} --}}
-                        {{-- {{ url(Request::segment(1) . '/' . Request::segment(2)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }} --}}
-                        {{-- {{ url(Request::segment(1) . '/' ) }} --}}
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
-                        {{-- <input type="hidden" name="id_kelas" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_kelas  }}"> --}}
-                        <input type="hidden" name="id_c_siswa" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_c_siswa  }}">
-                        {{-- <input type="text" name="jurusan" value="{{!empty($alumni) ? $alumni->id_alumni : $data_jurusan->id_jurusan  }}"> --}}
-                        {{-- humas/alumni/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }} --}}
+                        <input type="hidden" name="old_status" value="{{ !empty($alumni) ? $alumni->status : '' }}">
+                        <input type="hidden" name="id_c_siswa" value="{{!empty($alumni) ? $alumni->id_c_siswa : $siswa->id_c_siswa  }}">
                         <div class="col-md-4">
                             <h2 class="card-inside-title"> Nama Siswa </h2>
                             <input type="text" class="form-control" name="nama_siswa" aria-required="true"
