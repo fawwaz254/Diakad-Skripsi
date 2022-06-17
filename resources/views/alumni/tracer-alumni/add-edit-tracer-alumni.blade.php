@@ -19,12 +19,13 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST" class="row"
-                        action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add2/0' }}">
+                        action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'alumni/tracer-alumni/action/edit/' . $alumni->id_alumni : 'alumni/tracer-alumni/action/add2/0' }}">
                         {{ csrf_field() }}
+                        {{-- {{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add2/0' }} --}}
                         {{-- {{ url(Request::segment(1) . '/' . Request::segment(2)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }} --}}
                         {{-- {{ url(Request::segment(1) . '/' ) }} --}}
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
-                        <input type="hidden" name="id_kelas" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_kelas  }}">
+                        {{-- <input type="hidden" name="id_kelas" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_kelas  }}"> --}}
                         <input type="hidden" name="id_c_siswa" value="{{!empty($alumni) ? $alumni->id_kelas : $siswa->id_c_siswa  }}">
                         {{-- <input type="text" name="jurusan" value="{{!empty($alumni) ? $alumni->id_alumni : $data_jurusan->id_jurusan  }}"> --}}
                         {{-- humas/alumni/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }} --}}
@@ -34,6 +35,23 @@
                                 aria-invalid="true"
                                 value="{{ !empty($alumni) ? $alumni->calon_siswa->nm_c_siswa : $siswa->pengguna->nm_pengguna }}"
                               disabled>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title"> Kelas </h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <select class="form-control show-tick" name="id_kelas"
+                                        {{ !empty($alumni) ? 'readonly' : '' }}>
+                                        <option value="" selected disabled> Pilih Kelas </option>
+                                        @foreach ($data_kelas as $kelas)
+                                            <option value="{{ $kelas->id_kelas }}"
+                                                {{ isset($alumni) && $alumni->id_kelas == $kelas->id_kelas ? 'selected' : '' }}>
+                                                {{ $kelas->nm_kelas }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">

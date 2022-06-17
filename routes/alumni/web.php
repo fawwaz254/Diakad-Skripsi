@@ -6,6 +6,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
        /** ==== MODUL Tracer Alumni ==== **/
        Route::group(array('prefix' => 'alumni'), function () {
+        Route::get('/', 'Siswa\Alumni\TracerAlumniSiswaController@viewTracerAlumni');
         Route::group(array('prefix' => 'tracer-alumni'), function () {
             Route::get('/', 'Siswa\Alumni\TracerAlumniSiswaController@viewTracerAlumni');
             Route::get('datatables', 'Siswa\Alumni\TracerAlumniSiswaController@datatablesTracerAlumni');
