@@ -116,6 +116,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::group(array('prefix' => 'hasil-test'), function () {
                 Route::get('/', 'Guru\ELearningSoal\HasilTestController@indexList');
+                Route::get('koreksi/{id_test}/{id_pengguna}', 'Guru\ELearningSoal\HasilTestController@indexKoreksi');
+                Route::get('koreksi/{id_paket_soal}/{id_test}/{id_pengguna}', 'Guru\ELearningSoal\HasilTestController@indexKoreksi');
+                Route::post('koreksi', 'Guru\ELearningSoal\HasilTestController@actionKoreksiHasilTest');
                 Route::post('table', 'Guru\ELearningSoal\HasilTestController@commonList');
                 Route::get('detail/{id}', 'Guru\ELearningSoal\HasilTestController@indexDetail');
                 Route::post('detail/table/{id}', 'Guru\ELearningSoal\HasilTestController@detailList');
