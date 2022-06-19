@@ -10,7 +10,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {
                 Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanHarianMGMP');
                 Route::get('add', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@addLaporanHarianMGMP');
-                Route::post('action-kerja-harian/{mode}/{id}','Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
+                Route::post('action-kerja-harian/{mode}/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
                 Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
                 Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
                 // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
@@ -89,7 +89,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::group(array('prefix' => 'soal'), function () {
 
                 Route::get('/', 'Guru\ELearningSoal\SoalController@indexList');
-                Route::get('new', 'Guru\ELearningSoal\SoalController@indexNew');
+                Route::get('new/{tipe_soal}', 'Guru\ELearningSoal\SoalController@indexNew');
                 Route::post('new', 'Guru\ELearningSoal\SoalController@actionSave');
                 Route::post('/table', 'Guru\ELearningSoal\SoalController@commonList');
                 Route::get('edit/{id}', 'Guru\ELearningSoal\SoalController@indexManage');
@@ -470,8 +470,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('tracer-alumni', 'Guru\WaliKelas\TracerAlumniWaliKelasController@cetakTracerAlumniWaliKelas');
             Route::post('tracer-alumni', 'Guru\WaliKelas\TracerAlumniWaliKelasController@changeTracerAlumniWaliKelas');
             Route::get('tracer-alumni/{id_kelas}/{tahun_lulus}', 'Guru\WaliKelas\TracerAlumniWaliKelasController@cetakTracerAlumniWaliKelas');
-            Route::get('tracer-alumni/datatables/{id_kelas}/{tahun_lulus}','Guru\WaliKelas\TracerAlumniWaliKelasController@datatablesCetakTracerAlumniWaliKelas');
-            Route::get('tracer-alumni/export-alumni/{id_kelas}/{tahun_lulus}','Guru\WaliKelas\TracerAlumniWaliKelasController@exportAlumnniWaliKelas');
+            Route::get('tracer-alumni/datatables/{id_kelas}/{tahun_lulus}', 'Guru\WaliKelas\TracerAlumniWaliKelasController@datatablesCetakTracerAlumniWaliKelas');
+            Route::get('tracer-alumni/export-alumni/{id_kelas}/{tahun_lulus}', 'Guru\WaliKelas\TracerAlumniWaliKelasController@exportAlumnniWaliKelas');
 
             // Route::get('approve-prestasi-siswa', 'Guru\WaliKelas\ApprovePrestasiSiswaController@viewApprovePrestasiSiswa');
             // Route::get('approve-prestasi-siswa/datatables', 'Guru\WaliKelas\ApprovePrestasiSiswaController@datatablesApprovePrestasiSiswa');

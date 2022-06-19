@@ -94,7 +94,7 @@ class ListUjianController extends Controller
                         $status = "99";
                     } else {
                         if ($statusTest) {
-                            if ($statusTest -> status == 1) {
+                            if ($statusTest->status == 1) {
                                 $status = "1";
                             } else {
                                 $status = "2";
@@ -103,7 +103,7 @@ class ListUjianController extends Controller
                             $status = "0";
                         }
                     }
-                    }
+                }
                 $data = array(
                     'id' => $item->id_paket_soal,
                     'status' => $status

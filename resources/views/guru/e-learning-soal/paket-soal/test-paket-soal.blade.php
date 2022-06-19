@@ -25,17 +25,20 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                {{ csrf_field() }}
-                                <div class="demo-radio-button">
-                                    @foreach ($question_options as $no_option => $question_option)
-                                        <input name="question_option" type="radio" id="radio_{{ $no_option }}"
-                                            value="{{ $question_option->id_pilihan_soal }}">
-                                        <label for="radio_{{ $no_option }}">
-                                            <pre @if ($question_option->correct == 1) style="background-color: #CFE795;" @endif>{!! $question_option->content !!}</pre>
-                                        </label>
-                                        <br>
-                                    @endforeach
-                                </div>
+                                @if ($question->id_tipe_soal == 1)
+                                    <div class="demo-radio-button">
+                                        @foreach ($question_options as $no_option => $question_option)
+                                            <input name="question_option" type="radio" id="radio_{{ $no_option }}"
+                                                value="{{ $question_option->id_pilihan_soal }}">
+                                            <label for="radio_{{ $no_option }}">
+                                                <pre @if ($question_option->correct == 1) style="background-color: #CFE795;" @endif>{!! $question_option->content !!}</pre>
+                                            </label>
+                                            <br>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <textarea id="q1" class="form-control" name="soal" data-sample-short></textarea>
+                                @endif
                             </div>
                         </div>
                     @endforeach

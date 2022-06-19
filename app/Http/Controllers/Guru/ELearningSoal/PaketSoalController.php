@@ -17,83 +17,98 @@ use Carbon\Carbon;
 
 class PaketSoalController extends Controller
 {
-    public function indexList(Request $request){
+    public function indexList(Request $request)
+    {
         return view('guru/e-learning-soal/paket-soal/view-paket-soal');
     }
 
-    public function indexDetail(Request $request, $id_paket_soal = 0){
-        if($question_package = PaketSoal::find($id_paket_soal)){
-         
+    public function indexDetail(Request $request, $id_paket_soal = 0)
+    {
+        if ($question_package = PaketSoal::find($id_paket_soal)) {
+
             return view('guru/e-learning-soal/paket-soal/paket-soal-detail', compact('question_package'));
-        }else{
-         
+        } else {
+
             // return abort();
         }
     }
 
-    public function indexManage(Request $request, $id = 0){
+    public function indexManage(Request $request, $id = 0)
+    {
         $kelas = Kelas::get();
         // $events = Event::get();
         // $events = null;
-        if(!empty($id)){
+        if (!empty($id)) {
             $item = PaketSoal::find($id);
-        }else{
+        } else {
             $item = null;
         }
         return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas'));
     }
 
-    public function indexTest(Request $request, $id = 0){
+    public function indexTest(Request $request, $id = 0)
+    {
         $item = PaketSoal::find($id);
         $question_package_details = DetailPaketSoal::with('soal', 'soal.pilihan_soal')->where('id_paket_soal', $item->id_paket_soal)->get();
 
         return view('guru/e-learning-soal/paket-soal/test-paket-soal', compact('item', 'question_package_details'));
     }
 
-    public function commonList(Request $request){
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal')->with(['detail_paket_soal.soal.pilihan_soal' => function($q){ return $q->whereNotNull('content'); }]);
-// dd($list_data);
+    public function commonList(Request $request)
+    {
+        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+            return $q->whereNotNull('content');
+        }]);
+        // dd($list_data);
         return Datatables::of($list_data)
-                ->addColumn('total_question', function($item){
-// dd($item->detail_paket_soal->count());
-                    return $item->detail_paket_soal->count();
-                })
-                ->addColumn('total_answer', function($item){
-                    $value = 0;
-                    foreach($item->detail_paket_soal as $data){
-                        $value += $data->soal->pilihan_soal->count();
-                    }
-                    return $value;
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_paket_soal
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('total_question', function ($item) {
+                // dd($item->detail_paket_soal->count());
+                return $item->detail_paket_soal->count();
+            })
+            ->addColumn('total_answer', function ($item) {
+                $value = 0;
+                foreach ($item->detail_paket_soal as $data) {
+                    $value += $data->soal->pilihan_soal->count();
+                }
+                return $value;
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_paket_soal
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function detailList(Request $request,$question_package_id = 0, $tipe ){
+    public function detailList(Request $request, $question_package_id = 0, $tipe)
+    {
         $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
         $list_question_selected = $question_package_details->pluck('id_soal');
-        if($tipe == 1){
+        if ($tipe == 1) {
             $list_data = Soal::with('pengguna')->whereNotIn('id_soal', $list_question_selected);
-        }else{
+        } else {
             $list_data = Soal::with('pengguna')->whereIn('id_soal', $list_question_selected);
         }
 
         return Datatables::of($list_data)
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_soal
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_soal
+                );
+                return $data;
+            })
+            ->addColumn('tipe_soal', function ($item) {
+                if ($item->id_tipe_soal == 1) {
+                    return "Pilihan Ganda";
+                }
+                return "Essay";
+            })
+            ->make(true);
     }
 
-    public function actionSave(Request $request){
+    public function actionSave(Request $request)
+    {
         // $validator = Validator::make($request->all(), [
         //     'title' => 'required',
         //     'event' => 'required'
@@ -105,7 +120,7 @@ class PaketSoalController extends Controller
 
         $input = (object) $request->input();
 
-        if($paket_soal = PaketSoal::find($input->id_paket_soal)){
+        if ($paket_soal = PaketSoal::find($input->id_paket_soal)) {
             $paket_soal->text = $input->title;
             $paket_soal->id_kelas = $input->kelas;
             $paket_soal->nilai = $input->nilai;
@@ -119,12 +134,11 @@ class PaketSoalController extends Controller
                 'path' => 'e-learning-soal/paket-soal',
                 'message' => 'Berhasil Merubah paket Soal'
             ];
+        } else {
 
-        }else{
-    
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $question_package = new PaketSoal;
-            $question_package->id_paket_soal = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $question_package->id_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $question_package->text = $input->title;
             $question_package->id_kelas = $input->kelas;
             $question_package->nilai = $input->nilai;
@@ -143,9 +157,10 @@ class PaketSoalController extends Controller
         }
     }
 
-    public function actionDelete(Request $request){
+    public function actionDelete(Request $request)
+    {
         $input = (object) $request->input();
-        if($question_package = PaketSoal::find($input->question_package_id)){
+        if ($question_package = PaketSoal::find($input->question_package_id)) {
             $question_package->delete();
 
             return [
@@ -153,16 +168,16 @@ class PaketSoalController extends Controller
                 'path' => 'e-learning-soal/paket-soal',
                 'message' => 'Berhasil Menghapus paket Soal'
             ];
-
-        }else{
+        } else {
             // return response()->json([
             //     'status' => 500,
             //     'message' => 'Error'
             // ]);
-        }    
+        }
     }
 
-    public function actionDetailAdd(Request $request){
+    public function actionDetailAdd(Request $request)
+    {
         // $validator = Validator::make($request->all(), [
         //     'question_package_id' => 'required',
         //     'question_id' => 'required'
@@ -173,15 +188,15 @@ class PaketSoalController extends Controller
         // }
 
         $input = (object) $request->input();
-        if($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()){
+        if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) {
             // return response()->json([
             //     'status' => 500,
             //     'message' => 'Error'
             // ]);
-        }else{
+        } else {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $question_package_detail = new DetailPaketSoal;
-            $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $question_package_detail->id_detail_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $question_package_detail->id_paket_soal = $input->id_paket_soal;
             $question_package_detail->id_soal = $input->id_soal;
             $question_package_detail->save();
@@ -194,7 +209,8 @@ class PaketSoalController extends Controller
         }
     }
 
-    public function actionDetailDelete(Request $request){
+    public function actionDetailDelete(Request $request)
+    {
         // $validator = Validator::make($request->all(), [
         //     'question_package_id' => 'required',
         //     'question_id' => 'required'
@@ -205,13 +221,14 @@ class PaketSoalController extends Controller
         // }
 
         $input = (object) $request->input();
-        if($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()){
+        if ($question_package_detail = DetailPaketSoal::where(['id_paket_soal' => $input->id_paket_soal, 'id_soal' => $input->id_soal])->first()) {
             $question_package_detail->delete();
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'e-learning-soal/paket-soal',
                 'message' => 'Berhasil Menghapus paket Soal'
-            ];}
+            ];
+        }
         // }else{
         //     return response()->json([
         //         'status' => 500,
