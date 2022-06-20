@@ -3,9 +3,14 @@
 
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
-                href="{{ url('guru#e-learning-soal/soal/new') }}">
+                href="{{ url('guru#e-learning-soal/soal/new/pilihan-ganda') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Soal</span>
+                <span>Tambah Pilihan Ganda</span>
+            </a>
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+                href="{{ url('guru#e-learning-soal/soal/new/essay') }}">
+                <i class="material-icons">add_box</i>
+                <span>Tambah Soal Essay</span>
             </a>
             <div class="card">
                 <div class="header">
@@ -34,6 +39,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Tipe Soal</th>
                                     <th>Pembuat</th>
                                     <th>Pertanyaan</th>
                                     <th>Action</th>
@@ -67,6 +73,9 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'tipe_soal'
             },
             {
                 data: 'pengguna.nm_pengguna'
