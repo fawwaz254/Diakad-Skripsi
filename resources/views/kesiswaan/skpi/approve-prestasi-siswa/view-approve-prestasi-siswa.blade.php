@@ -7,12 +7,16 @@
             <button type="button" id="button0" onclick="datatable(0)" class="btn btn-primary">
                 Siswa yang memiliki prestasi / kegiatan
             </button>
-             <button type="button" id="button1" onclick="datatable(1)" class="btn btn-default">
+             <button type="button" id="button1" onclick="datatable(1)" class="btn btn-default" style="margin-right: 10px"> 
                 Siswa yang menunggu approval
             </button>
 
+            <input type="checkbox" id="data_alumni" class="checkbox">
+            <label for="data_alumni"> Tampilkan Data Alumni</label>
+
             <input type="hidden" id="param" value="0">
             <input type="hidden" id="param_semua_siswa" value="0">
+            <input type="hidden" id="alumni" value="0">
             <input type="hidden" name="role" id="role" value="{{Request::segment(1)}}">
 
             <p></p>
@@ -51,6 +55,20 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/datatables';
     var detail_url        = role_url + '#' + modul_url + '/' + 'approve-prestasi-siswa';
     var print_url =   base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/print/skpi'; 
+
+
+    $('.checkbox').on('change', function(){ // on change of state
+   if(this.checked) // if changed state is "CHECKED"
+    {
+        $('#alumni').val(1);
+        primary_table.draw();
+    }
+    else{
+        $('#alumni').val(0);
+        primary_table.draw();
+    }
+    });
+
 
     function datatable(id){
 
@@ -93,7 +111,9 @@
             data:function(d){
                 d.param = $('#param').val(),
                 d.role = $('#role').val(),
-                d.param_semua_siswa = $('#param_semua_siswa').val()
+                d.param_semua_siswa = $('#param_semua_siswa').val(),
+                d.alumni = $('#alumni').val()
+                
             }
         },
         columns: [
