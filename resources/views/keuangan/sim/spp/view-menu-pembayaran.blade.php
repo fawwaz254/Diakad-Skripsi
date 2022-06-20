@@ -53,6 +53,12 @@
         min-height: 75px;
     }
 
+    table.datatable.dataTable.no-footer.fixedHeader-floating {
+        top: 0px;
+        width: 100% !important;
+        display: block;
+        overflow-x: auto;
+    }
 </style>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -60,7 +66,7 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        PEMABAYARAN SISWA
+                        PEMBAYARAN SISWA
                     </h2>
                 </div>
                 @include('keuangan/sim/spp/partials/header-card-menu')
@@ -292,6 +298,11 @@
     }
 </script>
 <script>
+    $('.block').scroll(function() {
+        var scrollAmt = $(this).scrollLeft();
+        $('.fixedHeader-floating').css('left', 0 - parseInt(scrollAmt) + 'px');
+    });
+
     $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
@@ -307,6 +318,11 @@
         scrollX: true,
         fixedColumns: {
             leftColumns: 3
+        },
+        fixedHeader: {
+            header: true,
+            footer: false,
+            headerOffset: 65,
         },
         scrollCollapse: true,
         paging: false

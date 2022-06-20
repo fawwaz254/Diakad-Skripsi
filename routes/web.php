@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\Sekolah;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ Route::post('upload', function (Request $request) {
 // url: /iclock
 Route::group(array('prefix' => 'iclock'), function () {
     Route::get('getrequest', 'Administrator\Device\FingerprintController@actionCheck');
-    Route::get('cdata', function(){
+    Route::get('cdata', function () {
         return 'OK';
     });
     Route::post('cdata', 'Administrator\Device\FingerprintController@actionGetFinger');
@@ -56,10 +56,8 @@ Route::group(array('prefix' => 'iclock'), function () {
 // END USING FOR FINGERPRINT
 
 Route::get('guid', function () {
-    Log::info("tesst");
     $now = Carbon::now(env('APP_TIMEZONE', ''));
     $prefix = Sekolah::first()->prefix;
-
     if (!empty($_GET['c'])) {
         $html = '';
         for ($i = 0; $i < $_GET['c']; $i++) {

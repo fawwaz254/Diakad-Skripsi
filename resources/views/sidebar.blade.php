@@ -8,10 +8,16 @@ $id_pengguna = auth_data()->pengguna->id_pengguna;
 
 $detail_kelas = get_keterangan_kelas($id_pengguna);
 $detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
-
 $category_file_role = category_file_role($role_aktif);
-@endphp
 
+$nm_kelas = null;
+if ($role_aktif == 3) {
+    $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
+    $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
+    $nm_kelas = $kelas->nm_kelas;
+}
+
+@endphp
 <section>
     <!-- Left Sidebar -->
     <aside id="leftsidebar" class="sidebar">
@@ -31,7 +37,10 @@ $category_file_role = category_file_role($role_aktif);
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ auth_data()->pengguna->nm_pengguna }}
                 </div>
-                <div class="email">{{ auth_data()->pengguna->username }}</div>
+                <div class="email">{{ auth_data()->pengguna->username }}@if ($role_aktif == 3)
+                        {{ ' / ' }}({{ $nm_kelas }})
+                    @endif
+                </div>
                 @if (!empty(auth_data()->nm_anak_murid))
                     <small style="font-size: x-small; color: white;">(Siswa) {{ auth_data()->nm_anak_murid }}</small>
                 @endif
@@ -76,21 +85,21 @@ $category_file_role = category_file_role($role_aktif);
                         @if (count($modul->menus))
                             <ul class="ml-menu">
                                 @foreach ($modul->menus as $menu)
-                                        @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12 ) 
-                                        @else
-                                            <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}"
-                                                class="menu-item">
-                                                @if (!empty($menu->page))
-                                                    <a class="target-link"
-                                                        href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
-                                                        class="waves-effect waves-block">
-                                                    @else
-                                                        <a href="javascript:void(0);" class="waves-effect waves-block">
-                                                @endif
-                                                {{ $menu->nm_menu }}
-                                                </a>
-                                            </li>
-                                        @endif
+                                    @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12)
+                                    @else
+                                        <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}"
+                                            class="menu-item">
+                                            @if (!empty($menu->page))
+                                                <a class="target-link"
+                                                    href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
+                                                    class="waves-effect waves-block">
+                                                @else
+                                                    <a href="javascript:void(0);" class="waves-effect waves-block">
+                                            @endif
+                                            {{ $menu->nm_menu }}
+                                            </a>
+                                        </li>
+                                    @endif
                                 @endforeach
                             </ul>
                         @endif
@@ -108,21 +117,19 @@ $category_file_role = category_file_role($role_aktif);
 
                 {{-- Tracer Alumni --}}
                 @if ($role_aktif == 3 && $detail_kelas)
-                   
-                        <li id="modul-item-manajemen-file" class="modul-item">
-                            <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
-                                <span>Alumni</span>
-                            </a>
-                            <ul class="ml-menu">
-                                <li class="menu-item" id="menu-item-data-sub-kategori">
-                                    <a href="{{ url(Request::segment(1) . '#tracer-alumni') }}"
-                                        class="target-link waves-effect waves-block">
-                                        Tracer Alumni
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-    
+                    <li id="modul-item-manajemen-file" class="modul-item">
+                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                            <span>Alumni</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li class="menu-item" id="menu-item-data-sub-kategori">
+                                <a href="{{ url(Request::segment(1) . '#tracer-alumni') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Tracer Alumni
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 @endif
 
                 {{-- Manajemen File --}}
