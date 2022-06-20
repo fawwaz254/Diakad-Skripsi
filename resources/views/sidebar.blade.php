@@ -9,6 +9,14 @@ $id_pengguna = auth_data()->pengguna->id_pengguna;
 $detail_kelas = get_keterangan_kelas($id_pengguna);
 $detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
 $category_file_role = category_file_role($role_aktif);
+
+$nm_kelas = null;
+if ($role_aktif == 3) {
+    $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
+    $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
+    $nm_kelas = $kelas->nm_kelas;
+}
+
 @endphp
 <section>
     <!-- Left Sidebar -->
@@ -28,15 +36,9 @@ $category_file_role = category_file_role($role_aktif);
             <div class="info-container">
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ auth_data()->pengguna->nm_pengguna }}
-                    @if ($role_aktif == 3)
-                        @php
-                            $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
-                            $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
-                        @endphp
-                        ({{ $kelas->nm_kelas }})
-                    @endif
                 </div>
-                <div class="email">{{ auth_data()->pengguna->username }}</div>
+                <div class="email">{{ $kelas->nm_kelas }}</div>
+                <div class="email">{{ auth_data()->pengguna->username }} / ({{ $nm_kelas }})</div>
                 @if (!empty(auth_data()->nm_anak_murid))
                     <small style="font-size: x-small; color: white;">(Siswa) {{ auth_data()->nm_anak_murid }}</small>
                 @endif
