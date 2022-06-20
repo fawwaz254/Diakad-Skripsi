@@ -50,7 +50,8 @@
                                 <label>Mata Pelajaran</label>
                                 <select class="form-control show-tick" name="id_mata_pelajaran">
                                     @foreach ($list_mapel as $r)
-                                        <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }}</option>
+                                        <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -66,27 +67,52 @@
                         <hr>
 
                         <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>Pilih Upload File Dari Mana</label>
+                                <div class="demo-radio-button">
+                                    <input name="file_from" onchange="change_file_from()" type="radio" id="radio_1"
+                                        value="1" checked="" class="with-gap" />
+                                    <label for="radio_1">File Dari Komputer</label>
+                                    <input name="file_from" onchange="change_file_from()" type="radio" id="radio_2"
+                                        value="2" class="with-gap" />
+                                    <label for="radio_2">Dari Link</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row clearfix">
 
                             <div class="col-md-5">
-                                <label>Nama File</label>
+                                <label>Keterangan</label>
                                 <input type="text" class="form-control" name="nm_file[]" required=""
                                     aria-required="true" aria-invalid="true">
                             </div>
 
-                            <div class="col-md-5">
-                                <label>File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
-                                <input type="file" class="form-control" name="file[]" required="" aria-required="true"
-                                    aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                            <div class="col-md-5" style="display:none;" id="place_link">
+                                <label>Link</label>
+                                <input type="text" class="form-control" name="link[]" aria-required="true" required=""
+                                    aria-invalid="true" />
                             </div>
 
-                            <div class="col-md-2" style="margin-top: 23px;">
-                                <button class="btn btn-success btn-block" type="button" id="tambah_file"><i
+                            <div class="col-md-5" id="place_file">
+                                <label>File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
+                                <input type="file" class="form-control" name="file[]" required=""
+                                    aria-required="true" aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
+                            </div>
+
+                            <div class="col-md-2" style="margin-top: 23px;" id="tambah_file">
+                                <button class="btn btn-success btn-block" type="button"><i
+                                        class="material-icons">add</i> Tambah</button>
+                            </div>
+
+                            <div class="col-md-2" style="display:none; margin-top: 23px;" id="tambah_link">
+                                <button class="btn btn-success btn-block" type="button"><i
                                         class="material-icons">add</i> Tambah</button>
                             </div>
 
                         </div>
 
-                        <div id="place_file">
+                        <div id="place">
 
                         </div>
 
@@ -112,6 +138,25 @@
 @include('scriptjs')
 
 <script type="text/javascript">
+    function change_file_from() {
+
+        var x = $("input[name='file_from']:checked").val()
+
+        if (x == 1) {
+            $('#place_file').show();
+            $('#tambah_file').show();
+            $('#tambah_link').hide();
+            $('#place_link').hide();
+            $('#form-upload')[0].reset();
+        } else {
+            $('#place_file').hide();
+            $('#tambah_file').hide();
+            $('#tambah_link').show();
+            $('#place_link').show();
+        }
+
+    }
+
     $('#form-upload').validate({
         rules: {
             'checkbox': {
@@ -149,9 +194,9 @@
                     } else if (response.status == 202) {
                         vex.dialog.alert(response.message);
                         loadURI(response.path);
-                    } else if (response.status == 203) {
-                        vex.dialog.alert(response.message);
-                        primary_table.ajax.reload(null, false);
+                    // } else if (response.status == 203) {
+                    //     vex.dialog.alert(response.message);
+                    //     primary_table.ajax.reload(null, false);
                     } else if (response.status == 204) {
                         loadURI(response.path);
                     } else if (response.status == 300) {
@@ -170,12 +215,12 @@
 <script type="text/javascript">
     $('#tambah_file').click(function() {
 
-        $('#place_file').append(`
+        $('#place').append(`
 
             <div class="row clearfix">
 
             <div class="col-md-5">
-                <label>Nama File</label>
+                <label>Keterangan</label>
                 <input type="text" class="form-control" name="nm_file[]" required="" aria-required="true" aria-invalid="true">
             </div>
 
@@ -184,7 +229,7 @@
                 <input type="file" class="form-control" name="file[]" required="" aria-required="true" aria-invalid="true">
             </div>
 
-            <div class="col-md-2" style="margin-top: 23px;">
+            <div class="col-md-2" style="margin-top: 23px;" >
                 <button class="btn btn-danger btn-block delete_file" type="button"><i class="material-icons">delete</i> Hapus</button>
             </div>
 
@@ -193,7 +238,33 @@
 
     })
 
-    $("#place_file").on("click", ".delete_file", function() {
+    $('#tambah_link').click(function() {
+
+        $('#place').append(`
+
+    <div class="row clearfix">
+
+    <div class="col-md-5">
+        <label>Keterangan</label>
+        <input type="text" class="form-control" name="nm_file[]" required="" aria-required="true" aria-invalid="true">
+    </div>
+
+    <div class="col-md-5">
+        <label>Link</label>
+        <input type="text" class="form-control" name="link[]" aria-required="true" required=""
+        aria-invalid="true" />
+    </div>
+
+    <div class="col-md-2" style="margin-top: 23px;">
+        <button class="btn btn-danger btn-block delete_file" type="button"><i class="material-icons">delete</i> Hapus</button>
+    </div>
+
+    </div>
+`);
+
+    })
+
+    $("#place").on("click", ".delete_file", function() {
         $(this).parent().parent().remove();
     })
 </script>
