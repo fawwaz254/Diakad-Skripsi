@@ -22,35 +22,45 @@
                                 <input type="hidden" name="paket_soal" value="{{ $paket_soal->id_paket_soal }}">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     {{ csrf_field() }}
-                                    <div class="demo-radio-button">
-                                        @foreach ($question_options as $no_option => $question_option)
-                                            @if (empty($test->id_pilihan_soal))
-                                                <input name="question_option" type="radio"
-                                                    id="radio_{{ $no_option }}"
-                                                    value="{{ $question_option->id_pilihan_soal }}">
-                                                <label for="radio_{{ $no_option }}">
-                                                    <pre class="is-answer" >{!! $question_option->content !!}</pre>
-                                                </label>
-                                            @else
-                                                @if ($test->id_pilihan_soal == $question_option->id_pilihan_soal)
-                                                    <input name="question_option" type="radio" checked=""
-                                                        id="radio_{{ $no_option }}"
-                                                        value="{{ $question_option->id_pilihan_soal }}">
-                                                    <label for="radio_{{ $no_option }}">
-                                                        <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
-                                                    </label>
-                                                @else
+                                    @if ($test->soal->id_tipe_soal == 1)
+                                        <input type="hidden" name="id_tipe_soal"
+                                            value="{{ $test->soal->id_tipe_soal }}">
+                                        <div class="demo-radio-button">
+                                            @foreach ($question_options as $no_option => $question_option)
+                                                <input type="hidden" name="{{ $test->soal_id_tipe_soal }}">
+                                                @if (empty($test->id_pilihan_soal))
                                                     <input name="question_option" type="radio"
                                                         id="radio_{{ $no_option }}"
-                                                        value="{{ $question_option->id_pilihan_soal }}">
+                                                        value="{{ $question_option->id_pilihan_soal }}" required>
                                                     <label for="radio_{{ $no_option }}">
                                                         <pre class="is-answer">{!! $question_option->content !!}</pre>
                                                     </label>
+                                                @else
+                                                    @if ($test->id_pilihan_soal == $question_option->id_pilihan_soal)
+                                                        <input name="question_option" type="radio" checked=""
+                                                            id="radio_{{ $no_option }}"
+                                                            value="{{ $question_option->id_pilihan_soal }}">
+                                                        <label for="radio_{{ $no_option }}">
+                                                            <pre class="is-answer " style="background-color: #CFE795;">{!! $question_option->content !!}</pre>
+                                                        </label>
+                                                    @else
+                                                        <input name="question_option" type="radio"
+                                                            id="radio_{{ $no_option }}"
+                                                            value="{{ $question_option->id_pilihan_soal }}">
+                                                        <label for="radio_{{ $no_option }}">
+                                                            <pre class="is-answer">{!! $question_option->content !!}</pre>
+                                                        </label>
+                                                    @endif
                                                 @endif
-                                            @endif
-                                            <br>
-                                        @endforeach
-                                    </div>
+                                                <br>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <h2 class="card-inside-title">Jawaban</h2>
+                                        <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
+                                        <input type="hidden" name="id_tipe_soal"
+                                            value="{{ $test->soal->id_tipe_soal }}">
+                                    @endif
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <button class="btn btn-block bg-green waves-effect" type="submit">Simpan
@@ -159,7 +169,7 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             @foreach ($jawabanTest->sortBy('nomer')->all() as $index => $soal)
-                                @if ($soal->id_pilihan_soal != null)
+                                @if ($soal->id_pilihan_soal != null || $soal->jawaban_essay != null)
                                     <a type="button"
                                         href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
                                         class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
@@ -178,7 +188,7 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button type="button" onclick="endAction()" class="btn btn-block bg-cyan waves-effect">
+                            <button type="button" onclick="endAction(this)" class="btn btn-block bg-cyan waves-effect">
                                 Selesai mengerjakan
                             </button>
                         </div>
@@ -205,7 +215,7 @@
 
         if (distance <= 0) {
             clearInterval(x);
-       
+
             loadURI(timeout);
             //                 window.location = url; 
         } else {
@@ -213,8 +223,8 @@
         }
     }, 1000);
 
-    function endAction() {
-
+    function endAction(item) {
+        var item = $(item);
         vex.dialog.confirm({
             message: 'Apakah yakin sudah selesai mengerjakan.??',
             callback: function(value) {

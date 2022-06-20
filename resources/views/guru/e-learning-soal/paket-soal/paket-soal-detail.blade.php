@@ -17,8 +17,8 @@
                 <div class="body">
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs tab-nav-right" role="tablist">
-                        <li role="presentation" class="active"><a href="#not" data-toggle="tab"
-                                class="col-pink">List Belum Dipilih</a></li>
+                        <li role="presentation" class="active"><a href="#not" data-toggle="tab" class="col-pink">List
+                                Belum Dipilih</a></li>
                         <li role="presentation"><a href="#selected" data-toggle="tab" class="col-green">List Sudah
                                 Dipilih</a></li>
                     </ul>
@@ -34,6 +34,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Tipe Soal</th>
                                             <th>Pembuat</th>
                                             <th>Soal</th>
                                             <th>Action</th>
@@ -53,6 +54,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Tipe Soal</th>
                                             <th>Pembuat</th>
                                             <th>Soal</th>
                                             <th>Action</th>
@@ -77,6 +79,7 @@
     var datatable2_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/table/' + test + '/2';
     var add_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/add';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/detail/delete';
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="token"]').attr('content')
@@ -94,6 +97,9 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'tipe_soal'
             },
             {
                 data: 'pengguna.nm_pengguna'
@@ -139,6 +145,9 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'tipe_soal'
             },
             {
                 data: 'pengguna.nm_pengguna'
@@ -201,7 +210,7 @@
     function actionDelete(element) {
         var item = $(element);
         item.prop('disabled', true);
-        var url = delete_url ;
+        var url = delete_url;
         if (item.is(":disabled")) {
             $.ajax({
                 type: "POST",

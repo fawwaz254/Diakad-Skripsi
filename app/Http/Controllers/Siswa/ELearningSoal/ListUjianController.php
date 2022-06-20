@@ -94,7 +94,7 @@ class ListUjianController extends Controller
                         $status = "99";
                     } else {
                         if ($statusTest) {
-                            if ($statusTest -> status == 1) {
+                            if ($statusTest->status == 1) {
                                 $status = "1";
                             } else {
                                 $status = "2";
@@ -103,7 +103,7 @@ class ListUjianController extends Controller
                             $status = "0";
                         }
                     }
-                    }
+                }
                 $data = array(
                     'id' => $item->id_paket_soal,
                     'status' => $status
@@ -121,9 +121,6 @@ class ListUjianController extends Controller
         // if(strtotime($start_date) > strtotime($waktu)){
         //     return redirect('siswa/e-learning-soal/list-ujian');
         //     }
-
-
-
 
         $input = (object) $request->input();
 
@@ -186,22 +183,28 @@ class ListUjianController extends Controller
         // $validator = Validator::make($request->all(), [
         //     'question' => 'required'
         // ]);
-
         //logika nilai jika jawabannya benar maka input nilai 
         //untuk cari pilihan yang benar
         // $pilihan_soal = PilihanSoal::where('id_pilihan_soal', $input->question_option)->first();
-        $paket_soal = PaketSoal::where('id_paket_soal', $input->paket_soal)->first();
-        //untuk cari nilai jika benar
-        $betul = PilihanSoal::where('id_pilihan_soal', $input->question_option)->first();
-        $nilai = 0;
-        if ($betul->correct == 1) {
-            $nilai = $paket_soal->nilai;
-        }
-
         $test_answer = JawabanTest::where('id_test', $input->test)->where('nomer', $input->no)->first();
+        $test_answer->id_tipe_soal = $input->id_tipe_soal;
+        if ($input->id_tipe_soal == 1) {
+            $paket_soal = PaketSoal::where('id_paket_soal', $input->paket_soal)->first();
+            //untuk cari nilai jika benar
+            $benar = PilihanSoal::where('id_pilihan_soal', $input->question_option)->first();
+            $nilai = 0;
+            if ($benar->correct == 1) {
+                $nilai = $paket_soal->nilai;
+            }
 
-        $test_answer->id_pilihan_soal = $input->question_option;
-        $test_answer->nilai = $nilai;
+            $test_answer->id_pilihan_soal = $input->question_option;
+            $test_answer->status_koreksi = 1;
+            $test_answer->nilai = $nilai;
+        } else {
+            $test_answer->status_koreksi = 0;
+            $test_answer->jawaban_essay = $input->jawaban_essay;
+            $test_answer->nilai = 0;
+        }
         $test_answer->save();
         return redirect('siswa#e-learning-soal/list-ujian/test/' . $input->test . '/' . $input->no);
         // dd($input);
@@ -294,7 +297,7 @@ class ListUjianController extends Controller
 
         $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $paket_soal->waktu_mulai);
         $end_date = Carbon::createFromFormat('Y-m-d H:i:s', $paket_soal->waktu_selesai);
-
+        // dd($test);
         if (strtotime($start_date) < strtotime($waktu) && strtotime($end_date) > strtotime($waktu)) {
 
             return view('siswa/e-learning-soal/list-ujian/test-ujian', compact('test', 'paket_soal', 'question_options', 'no', 'sisaWaktu', 'jawabanTest'));
