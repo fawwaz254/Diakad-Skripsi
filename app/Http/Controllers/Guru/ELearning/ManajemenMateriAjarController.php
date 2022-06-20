@@ -45,13 +45,6 @@ class ManajemenMateriAjarController extends BaseController
         return view('guru/e-learning/manajemen-materi-ajar/add-manajemen-materi-ajar', compact('auth_data'), $data);
     }
 
-
-
-
-
-
-
-
     public function editManajemenMateriAjar(Request $request, $id)
     {
 
@@ -99,10 +92,10 @@ class ManajemenMateriAjarController extends BaseController
                 'id_jurusan'        => 'required',
                 'tingkat'           => 'required',
                 'status'            => 'required',
-                'nm_file'           => 'required|array',
-                'nm_file.*'         => 'required',
-                'file'              => 'required|array',
-                'file.*'            => 'required|file|mimes:pptx,docx,xlsx,pdf|max:10240',
+                // 'nm_file'           => 'required|array',
+                // 'nm_file.*'         => 'required',
+                // 'file'              => 'required|array',
+                // 'file.*'            => 'required|file|mimes:pptx,docx,xlsx,pdf|max:10240',
             ]);
         } elseif ($mode == 'edit') {
             $validator = Validator::make($request->all(), [
@@ -126,7 +119,8 @@ class ManajemenMateriAjarController extends BaseController
 
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
             $nm_file = $request->nm_file;
-            $files = request()->file;
+            // $files = request()->file;
+            // $links = request()->link;
 
             if ($mode == 'add') {
 
@@ -148,18 +142,31 @@ class ManajemenMateriAjarController extends BaseController
                     $materi_ajar->save();
 
                     foreach ($nm_file as $key => $value) {
+                        if(isset(request()->file[$key])){
+                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', request()->file[$key], 'public');
 
-                        $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', $files[$key], 'public');
+                            $materi_ajar_file                        = new MateriAjarFile;
+                            $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $materi_ajar_file->id_materi_ajar        = $id;
+                            $materi_ajar_file->nm_file               = $value;
+                            $materi_ajar_file->link_file             = $file;
+                            $materi_ajar_file->type_file             = pathinfo(request()->file[$key]->getClientOriginalName(), PATHINFO_EXTENSION);
+                            $materi_ajar_file->views                 = 0;
+                            $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $materi_ajar_file->save();
+                        }else{
+                            $materi_ajar_file                        = new MateriAjarFile;
+                            $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $materi_ajar_file->id_materi_ajar        = $id;
+                            $materi_ajar_file->nm_file               = $value;
+                            $materi_ajar_file->link_file             = $request->link[$key];
+                            $materi_ajar_file->type_file             = "link";
+                            $materi_ajar_file->views                 = 0;
+                            $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            $materi_ajar_file->save();
+                        }
 
-                        $materi_ajar_file                        = new MateriAjarFile;
-                        $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $materi_ajar_file->id_materi_ajar        = $id;
-                        $materi_ajar_file->nm_file               = $value;
-                        $materi_ajar_file->link_file             = $file;
-                        $materi_ajar_file->type_file             = pathinfo($files[$key]->getClientOriginalName(), PATHINFO_EXTENSION);
-                        $materi_ajar_file->views                 = 0;
-                        $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
-                        $materi_ajar_file->save();
+                       
                     }
 
                     DB::Commit();
@@ -193,21 +200,44 @@ class ManajemenMateriAjarController extends BaseController
                     $materi_ajar->updated_by        = $input->auth_data->pengguna->id_pengguna;
                     $materi_ajar->save();
 
-                    if ($files) {
+                    if ($nm_file) {
 
-                        foreach ($files as $key => $value) {
+                        foreach ($nm_file as $key => $value) {
+                            if(isset(request()->file[$key])){
+                                $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', request()->file[$key], 'public');
+    
+                                $materi_ajar_file                        = new MateriAjarFile;
+                                $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $materi_ajar_file->id_materi_ajar        = $id;
+                                $materi_ajar_file->nm_file               = $value;
+                                $materi_ajar_file->link_file             = $file;
+                                $materi_ajar_file->type_file             = pathinfo(request()->file[$key]->getClientOriginalName(), PATHINFO_EXTENSION);
+                                $materi_ajar_file->views                 = 0;
+                                $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
+                                $materi_ajar_file->save();
+                            }else{
+                                $materi_ajar_file                        = new MateriAjarFile;
+                                $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $materi_ajar_file->id_materi_ajar        = $id;
+                                $materi_ajar_file->nm_file               = $value;
+                                $materi_ajar_file->link_file             = $request->link[$key];
+                                $materi_ajar_file->type_file             = "link";
+                                $materi_ajar_file->views                 = 0;
+                                $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
+                                $materi_ajar_file->save();
+                            }
 
-                            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', $files[$key], 'public');
+                            // $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', $files[$key], 'public');
 
-                            $materi_ajar_file                        = new MateriAjarFile;
-                            $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $materi_ajar_file->id_materi_ajar        = $id;
-                            $materi_ajar_file->nm_file               = $nm_file[$key];
-                            $materi_ajar_file->link_file             = $file;
-                            $materi_ajar_file->type_file             = pathinfo($files[$key]->getClientOriginalName(), PATHINFO_EXTENSION);
-                            $materi_ajar_file->views                 = 0;
-                            $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
-                            $materi_ajar_file->save();
+                            // $materi_ajar_file                        = new MateriAjarFile;
+                            // $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            // $materi_ajar_file->id_materi_ajar        = $id;
+                            // $materi_ajar_file->nm_file               = $nm_file[$key];
+                            // $materi_ajar_file->link_file             = $file;
+                            // $materi_ajar_file->type_file             = pathinfo($files[$key]->getClientOriginalName(), PATHINFO_EXTENSION);
+                            // $materi_ajar_file->views                 = 0;
+                            // $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
+                            // $materi_ajar_file->save();
                         }
                     }
 
@@ -248,7 +278,8 @@ class ManajemenMateriAjarController extends BaseController
                 foreach ($item->materi_ajar_file as $key => $r) {
                     $file[$key]['nm_file'] = $r->nm_file;
                     $file[$key]['type_file'] = $r->type_file;
-                    $file[$key]['link_file'] =  Storage::disk('spaces')->url($r->link_file);
+                    $file[$key]['link_file'] = $r->type_file == "link" ? $r->link_file : Storage::disk('spaces')->url($r->link_file) ;
+                    // $file[$key]['link_file'] =  Storage::disk('spaces')->url($r->link_file);
                 }
 
                 $data = array(
