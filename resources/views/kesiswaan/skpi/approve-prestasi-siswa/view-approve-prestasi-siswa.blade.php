@@ -62,6 +62,7 @@
     {
         $('#alumni').val(1);
         primary_table.draw();
+        
     }
     else{
         $('#alumni').val(0);

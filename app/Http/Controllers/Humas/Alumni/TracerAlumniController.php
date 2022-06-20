@@ -233,7 +233,6 @@ class TracerAlumniController extends BaseController
             }
         } elseif ($mode == 'add2') {
          
-
             DB::beginTransaction();
 
             try {

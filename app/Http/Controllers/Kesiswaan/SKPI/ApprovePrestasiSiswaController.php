@@ -23,6 +23,8 @@ use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\InformasiTambahan;
+use App\Models\Kelas;
+use App\Models\LogKelasSiswa;
 use Auth;
 use DB;
 use Session;
@@ -437,116 +439,114 @@ class ApprovePrestasiSiswaController extends BaseController
         if ($alumni == 1) {
             if ($input->role == 'guru') {
 
-                // $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
-                // $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-                // $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+                $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+                $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+                $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-                // $id_kelas = $wali_kelas ? $wali_kelas->id_kelas : '';
+                $id_kelas = $wali_kelas ? $wali_kelas->id_kelas : '';
 
-                // if ($param_semua_siswa == 0) {
+                if ($param_semua_siswa == 0) {
 
-                //     $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
-                //         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param, $id_kelas) {
-                //             if ($param == 0) {
-                //                 $q->where('status', '!=', 0);
-                //             } else {
-                //                 $q->where('status', 0);
-                //             }
-                //             $q->where(['siswa.id_kelas' => $id_kelas]);
-                //         })
-                //         ->orWhereHas('prestasi_siswa', function ($q) use ($auth_data, $param, $id_kelas) {
-                //             if ($param == 0) {
-                //                 $q->where('status', '!=', 0);
-                //             } else {
-                //                 $q->where('status', 0);
-                //             }
-                //             $q->where(['siswa.id_kelas' => $id_kelas]);
-                //         })
-                //         ->orWhereHas('informasi_tambahan', function ($q) use ($auth_data, $param, $id_kelas) {
-                //             if ($param == 0) {
-                //                 $q->where('status', '!=', 0);
-                //             } else {
-                //                 $q->where('status', 0);
-                //             }
-                //             $q->where(['siswa.id_kelas' => $id_kelas]);
-                //         })
-                //         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                //         ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
-                //         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                //         ->withCount([
-                //             'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
-                //                 $q->where('status', 10);
-                //             },
-                //             'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
-                //                 $q->where('status', 1);
-                //             },
-                //             'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
-                //                 $q->where('status', 0);
-                //             },
-                //             'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
-                //                 $q->where('status', 10);
-                //             },
-                //             'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
-                //                 $q->where('status', 0);
-                //             },
-                //             'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
-                //                 $q->where('status', 1);
-                //             },
-                //             'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
-                //                 $q->where('status', 10);
-                //             },
-                //             'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
-                //                 $q->where('status', 1);
-                //             },
-                //             'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
-                //                 $q->where('status', 0);
-                //             },
+                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                        ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param, $id_kelas) {
+                            if ($param == 0) {
+                                $q->where('status', '!=', 0);
+                            } else {
+                                $q->where('status', 0);
+                            }
+                            $q->where(['siswa.id_kelas' => $id_kelas]);
+                        })
+                        ->orWhereHas('prestasi_siswa', function ($q) use ($auth_data, $param, $id_kelas) {
+                            if ($param == 0) {
+                                $q->where('status', '!=', 0);
+                            } else {
+                                $q->where('status', 0);
+                            }
+                            $q->where(['siswa.id_kelas' => $id_kelas]);
+                        })
+                        ->orWhereHas('informasi_tambahan', function ($q) use ($auth_data, $param, $id_kelas) {
+                            if ($param == 0) {
+                                $q->where('status', '!=', 0);
+                            } else {
+                                $q->where('status', 0);
+                            }
+                            $q->where(['siswa.id_kelas' => $id_kelas]);
+                        })
+                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                        ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                        ->withCount([
+                            'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
+                                $q->where('status', 10);
+                            },
+                            'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
+                                $q->where('status', 1);
+                            },
+                            'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
+                                $q->where('status', 0);
+                            },
+                            'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
+                                $q->where('status', 10);
+                            },
+                            'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
+                                $q->where('status', 0);
+                            },
+                            'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
+                                $q->where('status', 1);
+                            },
+                            'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
+                                $q->where('status', 10);
+                            },
+                            'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
+                                $q->where('status', 1);
+                            },
+                            'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
+                                $q->where('status', 0);
+                            },
 
-                //         ]);
-                // } else {
+                        ]);
+                } else {
 
-                //     $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
-                //         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                //         ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
-                //         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                //         ->withCount([
-                //             'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
-                //                 $q->where('status', 10);
-                //             },
-                //             'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
-                //                 $q->where('status', 1);
-                //             },
-                //             'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
-                //                 $q->where('status', 0);
-                //             },
-                //             'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
-                //                 $q->where('status', 10);
-                //             },
-                //             'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
-                //                 $q->where('status', 0);
-                //             },
-                //             'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
-                //                 $q->where('status', 1);
-                //             },
-                //             'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
-                //                 $q->where('status', 10);
-                //             },
-                //             'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
-                //                 $q->where('status', 1);
-                //             },
-                //             'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
-                //                 $q->where('status', 0);
-                //             },
+                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                        ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                        ->withCount([
+                            'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
+                                $q->where('status', 10);
+                            },
+                            'kegiatan_siswa as kegiatan_siswa_approved' => function ($q) {
+                                $q->where('status', 1);
+                            },
+                            'kegiatan_siswa as kegiatan_siswa_not_approved' => function ($q) {
+                                $q->where('status', 0);
+                            },
+                            'prestasi_siswa as prestasi_siswa_reject' => function ($q) {
+                                $q->where('status', 10);
+                            },
+                            'prestasi_siswa as prestasi_siswa_not_approved' => function ($q) {
+                                $q->where('status', 0);
+                            },
+                            'prestasi_siswa as prestasi_siswa_approved' => function ($q) {
+                                $q->where('status', 1);
+                            },
+                            'informasi_tambahan as informasi_tambahan_reject' => function ($q) {
+                                $q->where('status', 10);
+                            },
+                            'informasi_tambahan as informasi_tambahan_approved'  => function ($q) {
+                                $q->where('status', 1);
+                            },
+                            'informasi_tambahan as informasi_tambahan_not_approved' => function ($q) {
+                                $q->where('status', 0);
+                            },
 
-                //         ]);
-                // }
-            } 
-            ///bukan role guru
+                        ]);
+                }
+            }
             else {
 
                 if ($param_semua_siswa == 0) {
 
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                        // ->with('logKelasSiswa.kelas')
                         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
                             if ($param == 0) {
                                 $q->where('status', '!=', 0);
@@ -567,14 +567,14 @@ class ApprovePrestasiSiswaController extends BaseController
                             } else {
                                 $q->where('status', 0);
                             }
-                        })
-                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                        })->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                        // ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
-                        ->join('log_kelas_siswa','log_kelas_siswa.id_siswa','siswa.id_siswa')
+                        // ->join('kelas', 'log_kelas_siswa.id_kelas', 'kelas.id_kelas')
+                        // ->join('log_kelas_siswa','log_kelas_siswa.id_siswa','siswa.id_siswa')
                         // ->groupBy('log_kelas_siswa.created_at')
                         // ->orderBy('log_kelas_siswa', 'des')
-                         ->join('kelas', 'log_kelas_siswa.id_kelas', 'kelas.id_kelas')
+                        //  ->join('kelas', 'siswa.logKelasSiswa.id_kelas', 'kelas.id_kelas')
+                        //  ->where('kelas.tingkat','=','12')
                         ->withCount([
                             'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
                                 $q->where('status', 10);
@@ -604,16 +604,10 @@ class ApprovePrestasiSiswaController extends BaseController
                                 $q->where('status', 0);
                             },
                         ]);
-                        // dd($data);
                 } else {
-
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                        ->join('log_kelas_siswa','log_kelas_siswa.id_siswa','siswa.id_siswa')
-                        // ->groupBy('log_kelas_siswa.created_at')
-                        // ->orderBy('log_kelas_siswa', 'des')
-                         ->join('kelas', 'log_kelas_siswa.id_kelas', 'kelas.id_kelas')
                         ->withCount([
                             'kegiatan_siswa as kegiatan_siswa_reject' => function ($q) {
                                 $q->where('status', 10);
@@ -850,50 +844,104 @@ class ApprovePrestasiSiswaController extends BaseController
             }
         }
 
-        ////////////////////////////
-        if ($param == 0) {
-            return Datatables::of($data)
-                ->addColumn('prestasi', function ($item) {
-                    return '<button class="btn bg-pink">' . $item->prestasi_siswa_reject . ' reject</button>
-                                <button class="btn bg-teal">' . $item->prestasi_siswa_approved . ' approved</button>';
-                })
-                ->addColumn('kegiatan', function ($item) {
-                    return '<button class="btn bg-pink">' . $item->kegiatan_siswa_reject . ' reject</button>
-                                <button class="btn bg-teal">' . $item->kegiatan_siswa_approved . ' approved</button>';
-                })
-                ->addColumn('informasi_tambahan', function ($item) {
-                    return '<button class="btn bg-pink">' . $item->informasi_tambahan_reject . ' reject</button>
-                               <button class="btn bg-teal">' . $item->informasi_tambahan_approved . ' approved</button>';
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_siswa,
-                        'id2' => 1
-                    );
-                    return $data;
-                })
-                ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
-                ->make(true);
-        } else {
-            return Datatables::of($data)
-                ->addColumn('prestasi', function ($item) {
-                    return '<button class="btn bg-pink">' . $item->prestasi_siswa_not_approved . ' belum di approve</button>';
-                })
-                ->addColumn('kegiatan', function ($item) {
-                    return '<button class="btn bg-pink">' . $item->kegiatan_siswa_not_approved . ' belum di approve</button>';
-                })
-                ->addColumn('informasi_tambahan', function ($item) {
-                    return '<button class="btn bg-pink">' . $item->informasi_tambahan_not_approved . ' belum di approve</button>';
-                })
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_siswa
-                    );
-                    return $data;
-                })
-                ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
-                ->make(true);
+        if ($alumni == 1) {
+            if ($param == 0) {
+                return Datatables::of($data)
+                    ->addColumn('prestasi', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_reject . ' reject</button>
+                                    <button class="btn bg-teal">' . $item->prestasi_siswa_approved . ' approved</button>';
+                    })
+                    ->addColumn('kegiatan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_reject . ' reject</button>
+                                    <button class="btn bg-teal">' . $item->kegiatan_siswa_approved . ' approved</button>';
+                    })
+                    ->addColumn('informasi_tambahan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_reject . ' reject</button>
+                                   <button class="btn bg-teal">' . $item->informasi_tambahan_approved . ' approved</button>';
+                    })
+                    ->addColumn('action', function ($item) {
+                        $data = array(
+                            'id' => $item->id_siswa,
+                            'id2' => 1
+                        );
+                        return $data;
+                    })->addColumn('nm_kelas', function ($item) {
+                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'des')->first();
+                        // $kelas = Kelas::where('id_kelas',$id_kelas->id_id_kelas)->first();
+                        if (isset($id_kelas->kelas->nm_kelas)) {
+                            return $id_kelas->kelas->nm_kelas;
+                        } else {
+                            return 'Kosong';
+                        }
+                    })
+                    ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
+                    ->make(true);
+            } else {
+                return Datatables::of($data)
+                    ->addColumn('prestasi', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_not_approved . ' belum di approve</button>';
+                    })
+                    ->addColumn('kegiatan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_not_approved . ' belum di approve</button>';
+                    })
+                    ->addColumn('informasi_tambahan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_not_approved . ' belum di approve</button>';
+                    })
+                    ->addColumn('action', function ($item) {
+                        $data = array(
+                            'id' => $item->id_siswa
+                        );
+                        return $data;
+                    })
+                    ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
+                    ->make(true);
+            }
+        }else{
+            if ($param == 0) {
+                return Datatables::of($data)
+                    ->addColumn('prestasi', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_reject . ' reject</button>
+                                    <button class="btn bg-teal">' . $item->prestasi_siswa_approved . ' approved</button>';
+                    })
+                    ->addColumn('kegiatan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_reject . ' reject</button>
+                                    <button class="btn bg-teal">' . $item->kegiatan_siswa_approved . ' approved</button>';
+                    })
+                    ->addColumn('informasi_tambahan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_reject . ' reject</button>
+                                   <button class="btn bg-teal">' . $item->informasi_tambahan_approved . ' approved</button>';
+                    })
+                    ->addColumn('action', function ($item) {
+                        $data = array(
+                            'id' => $item->id_siswa,
+                            'id2' => 1
+                        );
+                        return $data;
+                    })
+                    ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
+                    ->make(true);
+            } else {
+                return Datatables::of($data)
+                    ->addColumn('prestasi', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->prestasi_siswa_not_approved . ' belum di approve</button>';
+                    })
+                    ->addColumn('kegiatan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->kegiatan_siswa_not_approved . ' belum di approve</button>';
+                    })
+                    ->addColumn('informasi_tambahan', function ($item) {
+                        return '<button class="btn bg-pink">' . $item->informasi_tambahan_not_approved . ' belum di approve</button>';
+                    })
+                    ->addColumn('action', function ($item) {
+                        $data = array(
+                            'id' => $item->id_siswa
+                        );
+                        return $data;
+                    })
+                    ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
+                    ->make(true);
+            }
         }
+       
     }
 
     public function editPrestasiSiswa(Request $request, $id)
@@ -989,10 +1037,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
         $tingkat = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-
         $kegiatan = KegiatanSiswa::join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_kegiatan_siswa', '=', $id)->first();
-
-        // $id_jenis_mata_pelajaran = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/edit-kegiatan-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'tingkat', 'kegiatan'));
     }
