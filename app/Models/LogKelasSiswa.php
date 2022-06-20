@@ -28,6 +28,10 @@ class LogKelasSiswa extends Model
 
     protected $guarded = [];
 
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
 
 
 

@@ -213,6 +213,7 @@ table.bg-color tr td{
         <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan="10">
+                
                     <h5 align="center" style="font-family: Segoe Print; color:green; margin-top: 5px">
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                             Yayasan Pendidikan & Sosial Ma'arif
@@ -234,8 +235,14 @@ table.bg-color tr td{
             </td>
             </tr>
         </table>
+        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
         <table class="header" cellspacing="0" cellpadding="10" style="width: 80%; border:1px solid; margin-left: auto;
-  margin-right: auto; background-color: rgb(214, 227, 188);">
+        margin-right: auto; background-color: rgb(158, 198, 255);">
+        @else
+        <table class="header" cellspacing="0" cellpadding="10" style="width: 80%; border:1px solid; margin-left: auto;
+        margin-right: auto; background-color: rgb(214, 227, 188);">
+        @endif
+
             <tr>
                 <td colspan=9>
                     <p align="center">Alamat : {{ $auth_data->sekolah_data->alamat_jalan }}
@@ -570,7 +577,13 @@ margin-left: 140px;
 margin-right: auto;
 text-align: center;
 ">
-            <thead style="background-color: #6e9c6e;">
+
+@if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+<thead style="background-color: #439dd6;">
+@else
+<thead style="background-color: #6e9c6e;">
+@endif
+  
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
@@ -684,7 +697,11 @@ margin-left: 140px;
 margin-right: auto;
 text-align: center;
 ">
-            <thead style="background-color: #6e9c6e;">
+@if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+<thead style="background-color: #439dd6;">
+@else
+<thead style="background-color: #6e9c6e;">
+@endif
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
