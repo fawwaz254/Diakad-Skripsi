@@ -37,8 +37,10 @@ if ($role_aktif == 3) {
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ auth_data()->pengguna->nm_pengguna }}
                 </div>
-                <div class="email">{{ $kelas->nm_kelas }}</div>
-                <div class="email">{{ auth_data()->pengguna->username }} / ({{ $nm_kelas }})</div>
+                <div class="email">{{ auth_data()->pengguna->username }}@if ($role_aktif == 3)
+                        {{ ' / ' }}({{ $nm_kelas }})
+                    @endif
+                </div>
                 @if (!empty(auth_data()->nm_anak_murid))
                     <small style="font-size: x-small; color: white;">(Siswa) {{ auth_data()->nm_anak_murid }}</small>
                 @endif
