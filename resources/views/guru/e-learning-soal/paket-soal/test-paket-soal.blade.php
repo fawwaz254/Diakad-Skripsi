@@ -1,4 +1,11 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a type="button" class="btn bg-grey waves-effect"
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/paket-soal') }}">
+                <i class="material-icons">keyboard_backspace</i>
+                <span>Kembali</span>
+            </a>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <div class="card">
