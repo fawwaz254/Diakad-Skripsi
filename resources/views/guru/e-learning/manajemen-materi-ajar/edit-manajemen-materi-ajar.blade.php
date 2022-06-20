@@ -80,7 +80,7 @@
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Nama File</th>
+                                            <th>Keterangan</th>
                                             <th>Tipe File</th>
                                             <th>Dilihat</th>
                                             <th>Aksi</th>
@@ -307,7 +307,7 @@ if (x == 1) {
             <div class="row clearfix">
 
             <div class="col-md-5">
-                <label>Nama File</label>
+                <label>Keterangan</label>
                 <input type="text" class="form-control" name="nm_file[]" aria-required="true" aria-invalid="true">
             </div>
 
