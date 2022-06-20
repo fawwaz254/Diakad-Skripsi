@@ -120,7 +120,7 @@
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_pengguna', name: 'pengguna.nm_pengguna' },
-            { data: 'nm_kelas', name: 'kelas.nm_kelas' },
+            { data: 'nm_kelas', name: 'kelas.nm_kelas', searchable: false, orderable: false },
             { data: 'prestasi', name: 'prestasi', searchable: false, orderable: false},
             { data: 'kegiatan', name: 'kegiatan', searchable: false, orderable: false},
             { data: 'informasi_tambahan', name: 'informasi_tambahan', searchable: false, orderable: false},
