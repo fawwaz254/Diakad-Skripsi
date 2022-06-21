@@ -44,7 +44,7 @@
     var menu_url       = '{{Request::segment(3)}}';
 
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/tracer-alumni/edit';
+    var edit_url        = role_url + '#' + modul_url + '/edit';
     var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/action/delete';
 // alert(datatable_url);
@@ -69,7 +69,9 @@
             // },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return'<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
+                    return'<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">edit</i>'+
+                    '</a> '+'<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">delete_forever</i>'+
                     '</button>';
                 }

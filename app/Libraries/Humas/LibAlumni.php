@@ -53,6 +53,7 @@ class LibAlumni
       ->leftjoin('kelas', 'alumni.id_kelas', '=', 'kelas.id_kelas')
       ->select('alumni.id_alumni', 'siswa.nm_c_siswa', 'alumni.tahun_lulus', 'alumni_smp.nm_sekolah',  'alumni.status', 'alumni.status_verifikasi', 'kelas.nm_kelas')
       ->where('alumni.deleted_at', null)
+      ->where('alumni_smp.deleted_at', null)
       ->where('alumni.id_c_siswa', $id)
       ->get();
   }
