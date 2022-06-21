@@ -73,7 +73,7 @@ class MateriAjarController extends BaseController
                     foreach($item->materi_ajar_file as $key => $r){
                         $file[$key]['nm_file'] = $r->nm_file;
                         $file[$key]['type_file'] = $r->type_file;
-                        $file[$key]['link_file'] =  Storage::disk('spaces')->url($r->link_file);
+                        $file[$key]['link_file'] = $r->type_file == "link" ? $r->link_file : Storage::disk('spaces')->url($r->link_file) ;
                     }
 
                     $data = array(
