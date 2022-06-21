@@ -66,6 +66,15 @@
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="jurusan"
                                         {{ !empty($alumni) ? 'readonly' : '' }}>
+                                        
+                                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
+                                        <option value="" disabled> Pilih Jurusan </option>
+                                        @foreach ($data_jurusan as $jurusan)
+                                        <option value="{{ $jurusan->id_jurusan }}" selected>
+                                            {{ $jurusan->nm_jurusan }}
+                                        </option>
+                                        @endforeach
+                                        @else
                                         <option value="" selected disabled> Pilih Jurusan </option>
                                         @foreach ($data_jurusan as $jurusan)
                                             <option value="{{ $jurusan->id_jurusan }}"
@@ -73,6 +82,8 @@
                                                 {{ $jurusan->nm_jurusan }}
                                             </option>
                                         @endforeach
+                                        @endif
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -132,9 +143,9 @@
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="jenis_sekolah">
                                         <option @if(!isset($alumni)) selected  @endif disabled >Pilih Jenis</option>
-                                        <option @if(isset($alumni) && $alumni->jenis_sekolah == "sma")selected @endif value="sma">SMA (Sekolah Menengah Atas)</option>
-                                        <option  @if(isset($alumni) && $alumni->jenis_sekolah == "smk")selected @endif value="smk">SMK (Sekolah Menengah Kejuruan)</option>
-                                        <option   @if(isset($alumni) && $alumni->jenis_sekolah == "ma")selected @endif value="ma"> MA (Madrasah Aliyah)</option>
+                                        <option @if(isset($alumni) && $alumni->smp->jenis_sekolah == "sma")selected @endif value="sma">SMA (Sekolah Menengah Atas)</option>
+                                        <option  @if(isset($alumni) && $alumni->smp->jenis_sekolah == "smk")selected @endif value="smk">SMK (Sekolah Menengah Kejuruan)</option>
+                                        <option   @if(isset($alumni) && $alumni->smp->jenis_sekolah == "ma")selected @endif value="ma"> MA (Madrasah Aliyah)</option>
                                     </select>
                                 </div>
                             </div>
