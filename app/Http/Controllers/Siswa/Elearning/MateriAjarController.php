@@ -42,7 +42,7 @@ class MateriAjarController extends BaseController
         
         $data['list_mapel'] = MataPelajaran::all();
         $data['list_jurusan'] = Jurusan::all();
-        $data['list_tingkat'] = Kelas::select('tingkat')->groupBy('tingkat')->get();
+        $data['list_kelas'] = Kelas::all();
 
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
         return view('siswa/e-learning/materi-ajar/detail-materi-ajar',compact('auth_data','materi_ajar'),$data);
@@ -54,10 +54,9 @@ class MateriAjarController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = Siswa::with('kelas')->where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
-
         $list_data = MateriAjar::with('materi_ajar_file','mapel','guru.pengguna')
                             ->where('id_jurusan',$siswa->kelas->id_jurusan)
-                            ->where('tingkat',$siswa->kelas->tingkat)
+                            ->where('tingkat', $siswa->kelas->id_kelas)
                             ->get();
 
         return Datatables::of($list_data)

@@ -22,7 +22,7 @@
 
                             <div class="col-md-4">
                                 <label>Jurusan</label>
-                                <select class="form-control show-tick" name="id_jurusan">
+                                <select class="form-control show-tick" name="id_jurusan"  id="jurusan">
                                     @foreach ($list_jurusan as $r)
                                         <option value="{{ $r->id_jurusan }}"
                                             {{ $materi_ajar->id_jurusan == $r->id_jurusan ? 'selected' : '' }}>
@@ -32,12 +32,12 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label>Tingkat</label>
-                                <select class="form-control show-tick" name="tingkat">
-                                    @foreach ($list_tingkat as $r)
-                                        <option value="{{ $r->tingkat }}"
-                                            {{ $materi_ajar->tingkat == $r->tingkat ? 'selected' : '' }}>
-                                            {{ $r->tingkat }}</option>
+                                <label>Kelas</label>
+                                <select class="form-control show-tick" name="kelas" id="kelas">
+                                    @foreach ($list_kelas as $r)
+                                        <option value="{{ $r->id_kelas }}"
+                                            {{ $materi_ajar->tingkat == $r->id_kelas ? 'selected' : '' }}>
+                                            {{ $r->nm_kelas }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -200,6 +200,37 @@
 @include('scriptjs')
 
 <script type="text/javascript">
+$(document).ready(function() {
+        $('select').select();
+    });
+
+
+
+    var modul_url = 'e-learning';
+
+    $('#jurusan').on('change', function(e) {
+        console.log(e);
+        var id_jurusan = e.target.value;
+        // alert(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan);
+        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan,
+            function(data) {
+                console.log(data);
+                $('#kelas').empty();
+
+                $('#kelas').append($("<option>")
+                    .text("-- Pilih Kelas --")
+                );
+                $.each(data, function(index, kelas) {
+                    $('#kelas').append($("<option>")
+                        .attr("value", kelas.id_kelas)
+                        .text(kelas.nm_kelas)
+                    );
+                })
+
+                $('select').select();
+            });
+    });
+
 
 
 function change_file_from() {
