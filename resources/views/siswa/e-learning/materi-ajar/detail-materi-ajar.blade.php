@@ -1,4 +1,9 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#e-learning/materi-ajar') }}"><i
+                    class="material-icons">keyboard_backspace</i><span>Kembali</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -13,7 +18,7 @@
 
                         <div class="col-md-4">
                             <label>Jurusan</label>
-                             <select class="form-control show-tick" name="id_jurusan">
+                             <select class="form-control show-tick" name="id_jurusan" disabled>
                                 @foreach($list_jurusan as $r)
                                 <option value="{{$r->id_jurusan}}" {{$materi_ajar->id_jurusan == $r->id_jurusan ? 'selected' : ''}}>{{$r->nm_jurusan}}</option>
                                 @endforeach
@@ -21,17 +26,17 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label>Tingkat</label>
-                            <select class="form-control show-tick" name="tingkat">
-                            @foreach($list_tingkat as $r)
-                                <option value="{{$r->tingkat}}" {{$materi_ajar->tingkat == $r->tingkat ? 'selected' : ''}}>{{$r->tingkat}}</option>
+                            <label>Kelas</label>
+                            <select class="form-control show-tick" name="tingkat" disabled>
+                            @foreach($list_kelas as $r)
+                                <option value="{{$r->id_kelas}}" {{$materi_ajar->tingkat == $r->list_kelas ? 'selected' : ''}}>{{$r->nm_kelas}}</option>
                             @endforeach
                             </select>
                         </div>
 
                         <div class="col-md-4">
                             <label>Status</label>
-                            <select class="form-control show-tick" name="status">
+                            <select class="form-control show-tick" name="status" disabled>
                                 <option value="0" {{$materi_ajar->status == 0 ? 'selected' : ''}}>Tidak Aktif</option>
                                 <option value="1" {{$materi_ajar->status == 1 ? 'selected' : ''}}>Aktif</option>
                             </select>
@@ -39,7 +44,7 @@
 
                         <div class="col-md-6">
                             <label>Mata Pelajaran</label>
-                            <select class="form-control show-tick" name="id_mata_pelajaran">
+                            <select class="form-control show-tick" name="id_mata_pelajaran" disabled>
                                 @foreach($list_mapel as $r)
                                 <option value="{{$r->id_mata_pelajaran}}" {{$materi_ajar->id_mata_pelajaran == $r->id_mata_pelajaran ? 'selected' : ''}}>{{$r->nm_mata_pelajaran}}</option>
                                 @endforeach
@@ -48,7 +53,7 @@
 
                         <div class="col-md-6">
                             <label>Judul Materi</label>
-                            <input type="text" class="form-control" name="judul_materi" value="{{$materi_ajar->judul_materi}}" required="" aria-required="true" aria-invalid="true">
+                            <input type="text" class="form-control" disabled name="judul_materi" value="{{$materi_ajar->judul_materi}}" required="" aria-required="true" aria-invalid="true">
                         </div>
 
                     </div>

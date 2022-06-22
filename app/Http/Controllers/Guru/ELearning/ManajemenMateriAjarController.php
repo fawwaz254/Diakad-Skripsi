@@ -40,7 +40,7 @@ class ManajemenMateriAjarController extends BaseController
 
         $data['list_mapel'] = MataPelajaran::all();
         $data['list_jurusan'] = Jurusan::all();
-        $data['list_tingkat'] = Kelas::select('tingkat')->groupBy('tingkat')->get();
+        $data['list_kelas'] = Kelas::all();
 
         return view('guru/e-learning/manajemen-materi-ajar/add-manajemen-materi-ajar', compact('auth_data'), $data);
     }
@@ -53,10 +53,16 @@ class ManajemenMateriAjarController extends BaseController
 
         $data['list_mapel'] = MataPelajaran::all();
         $data['list_jurusan'] = Jurusan::all();
-        $data['list_tingkat'] = Kelas::select('tingkat')->groupBy('tingkat')->get();
+       
 
         $materi_ajar = MateriAjar::with('materi_ajar_file')->find($id);
+        $data['list_kelas'] = Kelas::where('id_jurusan',$materi_ajar->id_jurusan)->get();
         return view('guru/e-learning/manajemen-materi-ajar/edit-manajemen-materi-ajar', compact('auth_data', 'materi_ajar'), $data);
+    }
+
+    public function getKelas($id_jurusan){
+        $kelas = Kelas::where('id_jurusan','=',$id_jurusan)->orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
+        return response()->json($kelas);
     }
 
     public function actionManajemenMateriAjar(Request $request, $mode, $id = null)
@@ -90,7 +96,7 @@ class ManajemenMateriAjarController extends BaseController
                 'judul_materi'      => 'required',
                 'id_mata_pelajaran' => 'required',
                 'id_jurusan'        => 'required',
-                'tingkat'           => 'required',
+                'kelas'              => 'required',
                 'status'            => 'required',
                 // 'nm_file'           => 'required|array',
                 // 'nm_file.*'         => 'required',
@@ -103,7 +109,7 @@ class ManajemenMateriAjarController extends BaseController
                 'status'        => 'required',
                 'id_mata_pelajaran' => 'required',
                 'id_jurusan'        => 'required',
-                'tingkat'           => 'required',
+                'kelas'           => 'required',
             ]);
         }
 
@@ -135,7 +141,7 @@ class ManajemenMateriAjarController extends BaseController
                     $materi_ajar->judul_materi      = $input->judul_materi;
                     $materi_ajar->id_mata_pelajaran = $input->id_mata_pelajaran;
                     $materi_ajar->id_jurusan        = $input->id_jurusan;
-                    $materi_ajar->tingkat           = $input->tingkat;
+                    $materi_ajar->tingkat           = $input->kelas;
                     $materi_ajar->status            = $input->status;
                     $materi_ajar->id_guru           = $guru->id_guru;
                     $materi_ajar->created_by        = $input->auth_data->pengguna->id_pengguna;
@@ -195,17 +201,15 @@ class ManajemenMateriAjarController extends BaseController
                     $materi_ajar->judul_materi      = $input->judul_materi;
                     $materi_ajar->id_mata_pelajaran = $input->id_mata_pelajaran;
                     $materi_ajar->id_jurusan        = $input->id_jurusan;
-                    $materi_ajar->tingkat           = $input->tingkat;
+                    $materi_ajar->tingkat           = $input->kelas;
                     $materi_ajar->status            = $input->status;
                     $materi_ajar->updated_by        = $input->auth_data->pengguna->id_pengguna;
                     $materi_ajar->save();
 
-                    if ($nm_file) {
-
                         foreach ($nm_file as $key => $value) {
+                            if ($value) {
                             if(isset(request()->file[$key])){
                                 $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $guru->id_guru . '/materi-ajar/', request()->file[$key], 'public');
-    
                                 $materi_ajar_file                        = new MateriAjarFile;
                                 $materi_ajar_file->id_materi_ajar_file   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $materi_ajar_file->id_materi_ajar        = $id;
@@ -238,8 +242,8 @@ class ManajemenMateriAjarController extends BaseController
                             // $materi_ajar_file->views                 = 0;
                             // $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
                             // $materi_ajar_file->save();
-                        }
-                    }
+                        }  }
+                    
 
                     DB::Commit();
 
@@ -266,7 +270,7 @@ class ManajemenMateriAjarController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = MateriAjar::with('materi_ajar_file', 'mapel')->where('created_by', $auth_data->pengguna->id_pengguna)->get();
+        $list_data = MateriAjar::with('materi_ajar_file', 'mapel','kelas')->where('created_by', $auth_data->pengguna->id_pengguna)->get();
 
         return Datatables::of($list_data)
             ->addColumn('mapel', function ($item) {
