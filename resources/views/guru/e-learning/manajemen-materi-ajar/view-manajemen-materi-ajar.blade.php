@@ -16,6 +16,7 @@
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Judul Materi</th>
+                                    <th>Kelas</th>
                                     <th>File Materi</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -48,6 +49,7 @@
             { data: null, searchable: false, orderable: false , className:'align-center'  },
             { data: 'mapel', name: 'mapel',className:'align-center' },
             { data: 'judul_materi', name: 'judul_materi',className:'align-center' },
+            { data: 'kelas.nm_kelas', name: 'kelas.nm_kelas',className:'align-center' },
             { data: 'action', name: 'action',
                 render:function(data){
                     console.log(data.materi_ajar_file);

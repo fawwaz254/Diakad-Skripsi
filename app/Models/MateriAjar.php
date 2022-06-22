@@ -37,4 +37,11 @@ class MateriAjar extends Model
         return $this->belongsTo(Guru::class, 'id_guru');
     }
 
+    
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class,'tingkat', 'id_kelas');
+    }
+
+
 }
