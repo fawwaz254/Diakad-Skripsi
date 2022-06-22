@@ -71,8 +71,20 @@
                                         <td>{{$r->nm_file}}</td>
                                         <td>{{$r->type_file}}</td>
                                         <td style="text-align:center;">
-                                            <a href="{{Storage::disk('spaces')->url($r->link_file)}}" target="_blank"><button class="btn btn-success">Download</button></a>
-                                            <button class="btn btn-warning lihat" data-type="{{$r->type_file}}" data-link="{{Storage::disk('spaces')->url($r->link_file)}}">Lihat Disini</button></td>
+                                            @if ($r->type_file == 'link')
+                                            <a href="{{ $r->link_file }}" target="_blank"><button
+                                                    class="btn btn-success"
+                                                    type="button">Kunjungi</button></a>
+                                        @else
+                                            <a href="{{ Storage::disk('spaces')->url($r->link_file) }}"
+                                                target="_blank"><button class="btn btn-success"
+                                                    type="button">Download</button></a>
+                                            <button class="btn btn-warning lihat" type="button"
+                                                data-type="{{ $r->type_file }}"
+                                                data-link="{{ Storage::disk('spaces')->url($r->link_file) }}">Lihat
+                                                Disini</button>
+                                        @endif
+
                                     </tr>
                                     @endforeach
                                 </tbody>
