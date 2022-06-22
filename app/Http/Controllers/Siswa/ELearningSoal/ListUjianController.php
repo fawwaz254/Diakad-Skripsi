@@ -9,6 +9,7 @@ use App\Models\JawabanTest;
 use App\Models\Kelas;
 use App\Models\PaketSoal;
 use App\Models\PilihanSoal;
+use App\Models\Siswa;
 use App\Models\Soal;
 use App\Models\Test;
 use Yajra\Datatables\Datatables;
@@ -27,8 +28,13 @@ class ListUjianController extends Controller
 
     public function commonList(Request $request)
     {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        
+        $siswa = Siswa::with('kelas')->where('id_pengguna',$auth_data->pengguna->id_pengguna)->first();
 
-        $list_data = PaketSoal::with(
+        $list_data = PaketSoal::where('id_kelas', $siswa->kelas->id_kelas)
+        ->with(
             'kelas',
             'detail_paket_soal',
             'detail_paket_soal.soal'
