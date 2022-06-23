@@ -31,6 +31,7 @@
     var modul_url       = 'e-learning';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'materi-ajar/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'materi-ajar/detail';
+    // var view_url        =  role_url + '#' + modul_url + '/' + 'materi-ajar/view';
 
         var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -51,7 +52,7 @@
                     let html = '';
                     html += '<ul>';
                     $.each(data.materi_ajar_file,function(i,value){
-                        html += `<li><a href="`+value.link_file+`" target="_blank">`+value.nm_file+` ( `+value.type_file+` ) </a></li>`;
+                        html += `<li><p >`+value.nm_file+` ( `+value.type_file+` ) </p></li>`;
                     })
                     html += '</ul>';
 
@@ -75,5 +76,38 @@
             cell.innerHTML = start + i + 1;
         } );
     } ).draw();
+
+//     window.addEventListener("load", function () {
+//   // do things after the DOM loads fully
+//   alert(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan);
+// });
+
+//     var modul_url = 'e-learning';
+
+// $('#materi').on('click', function(e) {
+//     alert(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan);
+//     console.log(e);
+//     var id_jurusan = e.target.value;
+//     // alert(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan);
+//     $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan,
+//         function(data) {
+//             console.log(data);
+//             $('#kelas').empty();
+
+//             $('#kelas').append($("<option>")
+//                 .text("-- Pilih Kelas --")
+//             );
+//             $.each(data, function(index, kelas) {
+//                 $('#kelas').append($("<option>")
+//                     .attr("value", kelas.id_kelas)
+//                     .text(kelas.nm_kelas)
+//                 );
+//             })
+
+//             $('select').select();
+//         });
+// });
+
+
 
 </script>

@@ -43,5 +43,9 @@ class MateriAjar extends Model
         return $this->belongsTo(Kelas::class,'tingkat', 'id_kelas');
     }
 
+    public function  materi_ajar_view(){
+        return $this->hasMany(MateriAjarView::class, 'id_materi_ajar','id_materi_ajar');
+    }
+
 
 }

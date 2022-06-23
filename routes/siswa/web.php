@@ -57,6 +57,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/', 'Siswa\Elearning\MateriAjarController@viewMateriAjar');
 				Route::get('datatables', 'Siswa\Elearning\MateriAjarController@datatablesMateriAjar');
 				Route::get('detail/{id}', 'Siswa\Elearning\MateriAjarController@viewDetailMateriAjar');
+				// Route::get('view/{id}', 'Siswa\Elearning\MateriAjarController@addViewMateriAjar');
 			});
 		});
 
