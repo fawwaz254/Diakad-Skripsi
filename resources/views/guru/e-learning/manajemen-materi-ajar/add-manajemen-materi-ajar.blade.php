@@ -22,7 +22,8 @@
 
                             <div class="col-md-4">
                                 <label>Jurusan</label>
-                                <select class="form-control show-tick" name="id_jurusan">
+                                <select class="form-control show-tick" name="id_jurusan" id="jurusan">
+                                    <option selected disabled>-- Pilih Kelas --</option>
                                     @foreach ($list_jurusan as $r)
                                         <option value="{{ $r->id_jurusan }}">{{ $r->nm_jurusan }}</option>
                                     @endforeach
@@ -30,11 +31,9 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label>Tingkat</label>
-                                <select class="form-control show-tick" name="tingkat">
-                                    @foreach ($list_tingkat as $r)
-                                        <option value="{{ $r->tingkat }}">{{ $r->tingkat }}</option>
-                                    @endforeach
+                                <label>Kelas</label>
+                                <select class="form-control show-tick" name="kelas" id="kelas">
+                                    <option selected disabled>-- Pilih Kelas --</option>
                                 </select>
                             </div>
 
@@ -138,6 +137,37 @@
 @include('scriptjs')
 
 <script type="text/javascript">
+ $(document).ready(function() {
+        $('select').select();
+    });
+
+
+
+    var modul_url = 'e-learning';
+
+    $('#jurusan').on('change', function(e) {
+        console.log(e);
+        var id_jurusan = e.target.value;
+        // alert(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan);
+        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan,
+            function(data) {
+                console.log(data);
+                $('#kelas').empty();
+
+                $('#kelas').append($("<option>")
+                    .text("-- Pilih Kelas --")
+                );
+                $.each(data, function(index, kelas) {
+                    $('#kelas').append($("<option>")
+                        .attr("value", kelas.id_kelas)
+                        .text(kelas.nm_kelas)
+                    );
+                })
+
+                $('select').select();
+            });
+    });
+
     function change_file_from() {
 
         var x = $("input[name='file_from']:checked").val()
@@ -210,9 +240,7 @@
             });
         }
     });
-</script>
 
-<script type="text/javascript">
     $('#tambah_file').click(function() {
 
         $('#place').append(`

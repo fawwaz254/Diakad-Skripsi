@@ -77,6 +77,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('datatables', 'Guru\ELearning\ManajemenMateriAjarController@datatablesManajemenMateriAjar');
                 Route::get('add', 'Guru\ELearning\ManajemenMateriAjarController@addManajemenMateriAjar');
                 Route::get('edit/{id}', 'Guru\ELearning\ManajemenMateriAjarController@editManajemenMateriAjar');
+                Route::get('get-kelas/{id_jurusan}', 'Guru\ELearning\ManajemenMateriAjarController@getKelas');
+                Route::get('view/{id}', 'Guru\ELearning\ManajemenMateriAjarController@listViewManajemenMateriAjar');
+                Route::get('view/datatables/{id}', 'Guru\ELearning\ManajemenMateriAjarController@datatablesViewManajemenMateriAjar');
+
             });
 
             Route::post('action-manajemen-materi-ajar/{mode}/{id}', 'Guru\ELearning\ManajemenMateriAjarController@actionManajemenMateriAjar');
