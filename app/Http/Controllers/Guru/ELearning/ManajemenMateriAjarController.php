@@ -16,7 +16,8 @@ use App\Models\MateriAjarFile;
 use App\Models\MataPelajaran;
 use App\Models\Jurusan;
 use App\Models\Kelas;
-
+use App\Models\MateriAjarView;
+use App\Models\Siswa;
 use Auth;
 use DB;
 use Session;
@@ -243,7 +244,6 @@ class ManajemenMateriAjarController extends BaseController
                             // $materi_ajar_file->created_by            = $input->auth_data->pengguna->id_pengguna;
                             // $materi_ajar_file->save();
                         }  }
-                    
 
                     DB::Commit();
 
@@ -270,11 +270,21 @@ class ManajemenMateriAjarController extends BaseController
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = MateriAjar::with('materi_ajar_file', 'mapel','kelas')->where('created_by', $auth_data->pengguna->id_pengguna)->get();
+        $list_data = MateriAjar::with('materi_ajar_file', 'mapel','kelas','materi_ajar_view')->where('created_by', $auth_data->pengguna->id_pengguna)->get();
 
         return Datatables::of($list_data)
             ->addColumn('mapel', function ($item) {
                 return $item->mapel->nm_mata_pelajaran;
+            })
+            ->addColumn('jumlah', function ($item) {
+                $data = array(
+                    'jumlah_view'     => $item->materi_ajar_view->count(),
+                    'jumlah_siswa' => Siswa::where('id_kelas',$item->kelas->id_kelas)->count(),
+                    'id'     => $item->id_materi_ajar,
+                );
+                return $data;
+                // $jumlah = MateriAjarView::where('id_materi_ajar')->
+                // return $item->mapel->nm_mata_pelajaran;
             })
             ->addColumn('action', function ($item) {
 
@@ -295,4 +305,25 @@ class ManajemenMateriAjarController extends BaseController
             })
             ->make(true);
     }
+
+    public function listViewManajemenMateriAjar(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // $list = MateriAjarView::where('id_materi_ajar', $id)->with('pengguna')->get();
+        return view('guru/e-learning/manajemen-materi-ajar/view-jumlah-siswa-manajemen-materi-ajar', compact('auth_data','id'));
+    }
+
+    public function datatablesViewManajemenMateriAjar(Request $request, $id = null)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+         $list_data = MateriAjarView::where('id_materi_ajar', $id)->with('pengguna')->get();
+        // $list_data = MateriAjar::with('materi_ajar_file', 'mapel','kelas','materi_ajar_view')->where('created_by', $auth_data->pengguna->id_pengguna)->get();
+
+        return Datatables::of($list_data)
+            ->make(true);
+    }
+
 }
