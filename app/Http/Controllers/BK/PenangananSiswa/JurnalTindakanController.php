@@ -104,7 +104,7 @@ class JurnalTindakanController extends BaseController
         if($setting_bk){
             $catatan_sekolah = 'Mohon orang tua untuk mempertahankan dan meningkatkan perilaku siswa untuk lebih positif, sehingga tidak melakukan pelanggaran tata tertib sekolah';
             $kategori_pelanggaran = 'Tidak Ada';
-            $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercata di BK';
+            $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercatat di BK';
             $deskripsi_perilaku_2 = '';
             if($list_data->count()>0){
                 $total_poin = $list_data->sum('jumlah_poin');
