@@ -72,50 +72,7 @@
 
                         </div>
 
-                        <div class="row clearfix">
-                            <div class="col-md-12">
-                                <table
-                                    class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                                    id="primary_table">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Keterangan</th>
-                                            <th>Tipe File</th>
-                                            <th>Dilihat</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($materi_ajar->materi_ajar_file as $r)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $r->nm_file }}</td>
-                                                <td>{{ $r->type_file }}</td>
-                                                <td>{{ $r->views }} kali</td>
-                                                <td style="text-align:center;">
-                                                    @if ($r->type_file == 'link')
-                                                        <a href="{{ $r->link_file }}" target="_blank"><button
-                                                                class="btn btn-success"
-                                                                type="button">Kunjungi</button></a>
-                                                    @else
-                                                        <a href="{{ Storage::disk('spaces')->url($r->link_file) }}"
-                                                            target="_blank"><button class="btn btn-success"
-                                                                type="button">Download</button></a>
-                                                        <button class="btn btn-warning lihat" type="button"
-                                                            data-type="{{ $r->type_file }}"
-                                                            data-link="{{ Storage::disk('spaces')->url($r->link_file) }}">Lihat
-                                                            Disini</button>
-                                                    @endif
-
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
+                        
                         <hr>
 
                         <div class="row clearfix">
@@ -195,19 +152,104 @@
 
         </div>
     </div>
+
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="body">
+                <table
+                    class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                    id="primary_table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Keterangan</th>
+                            <th>Tipe File</th>
+                            {{-- <th>Dilihat</th> --}}
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($materi_ajar->materi_ajar_file as $r)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $r->nm_file }}</td>
+                                <td>{{ $r->type_file }}</td>
+                                {{-- <td>{{ $r->views }} kali</td> --}}
+                                <td style="text-align:center;">
+                                    @if ($r->type_file == 'link')
+                                        <a href="{{ $r->link_file }}" target="_blank"><button
+                                                class="btn btn-success"
+                                                type="button">Kunjungi</button></a>
+                                               <button data-id="{{  $r['id_materi_ajar_file'] }}" style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
+                            <i class="material-icons">delete</i>
+                        </button>
+                                    @else
+                                        <a href="{{ Storage::disk('spaces')->url($r->link_file) }}"
+                                            target="_blank"><button class="btn btn-success"
+                                                type="button">Download</button></a>
+                                        <button class="btn btn-warning lihat" type="button"
+                                            data-type="{{ $r->type_file }}"
+                                            data-link="{{ Storage::disk('spaces')->url($r->link_file) }}">Lihat
+                                            Disini</button>
+                                            <button data-id="{{  $r['id_materi_ajar_file'] }}" style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
+                                                <i class="material-icons">delete</i>
+                                            </button>
+                                    @endif
+
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+                </div>
+            </div>
+        </div>
 </div>
 
 @include('scriptjs')
 
 <script type="text/javascript">
+
+$(".delete-record").click(function () {
+        var token = $("meta[name='csrf-token']").attr("content");
+        var id = $(this).data("id");
+        swal(
+        { title: "Are you sure?", showCancelButton: true},
+        function (isConfirm) {
+            if (isConfirm) {
+                $('.delete-record').attr("disabled", true);
+                //swall
+                $.ajax({
+                    url: ` /guru/e-learning/manajemen-materi-ajar/deleteItem/${id}`,
+                    type: "post",
+
+                    data: {
+                        _token: token,
+                    },
+
+                    success: function () {
+                        swal({
+                            title: "Delete Success",
+                            text: "data berhasil dihapus",
+                            icon: "success",
+                        });
+                        location.reload(); 
+                    },
+                });
+            }
+            return;
+        }
+    );
+});
+
+
 $(document).ready(function() {
         $('select').select();
     });
 
-
-
     var modul_url = 'e-learning';
-
     $('#jurusan').on('change', function(e) {
         console.log(e);
         var id_jurusan = e.target.value;
@@ -331,6 +373,9 @@ if (x == 1) {
 </script>
 
 <script type="text/javascript">
+
+
+
     $('#tambah_file').click(function() {
 
         $('#place').append(`
