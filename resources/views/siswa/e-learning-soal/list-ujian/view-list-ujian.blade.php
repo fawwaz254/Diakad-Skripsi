@@ -16,6 +16,7 @@
                                     <th>No</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
+                                    <th>Mapel</th>
                                     <th>Jumlah Soal</th>
                                     <th>Nilai Tiap Soal</th>
                                     <th>Waktu Mulai</th>
@@ -54,6 +55,7 @@
                { data: null, searchable: false, orderable: false },
                { data: 'text', name: 'text'},
                { data: 'kelas.nm_kelas' },
+               { data: 'kategori_soal.nm_kategori_soal' },
                { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
                { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},{ data: 'status'},
                { data: 'action', searchable: false, orderable: false,

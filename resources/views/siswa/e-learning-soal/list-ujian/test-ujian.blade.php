@@ -12,7 +12,7 @@
                         style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">
                         {{ $test->soal->content }}
                     </div>
-                    <div class="row clearfix">
+                    {{-- <div class="row clearfix"> --}}
                         <div class="row clearfix">
                             <form id="question-form" class="form-validation" method="POST"
                                 action="{{ url('siswa/e-learning-soal/list-ujian/test/answer') }}">
@@ -71,7 +71,7 @@
                                         onclick="deleteAnswerAction()">Hapus jawaban</button>
                                 </div> --}}
                             </form>
-                        </div>
+                        {{-- </div> --}}
 
                         {{-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             {{csrf_field()}}

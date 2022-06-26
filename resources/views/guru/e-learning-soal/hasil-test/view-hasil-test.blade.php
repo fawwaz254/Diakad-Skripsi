@@ -16,6 +16,7 @@
                                     <th>No</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
+                                    <th>Mapel</th>
                                     <th>Total Siswa</th>
                                     <th>Siswa Mengerjakan</th>
                                     {{-- <th>Jumlah Nilai diatas 75</th>
@@ -52,6 +53,7 @@
                 { data: null, searchable: false, orderable: false },
                 { data: 'text', name: 'text'},
                 { data: 'kelas.nm_kelas' },
+                { data: 'kategori_soal.nm_kategori_soal' },
                 { data: 'total_siswa', name: 'total_siswa', searchable: false, orderable: false },
                 { data: 'total_mengerjakan', name: 'total_mengerjakan', searchable: false, orderable: false },
                 // { data: 'nilai'},                     { data: 'nilai'},

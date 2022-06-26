@@ -27,15 +27,29 @@
                                         <span class="input-group-addon">Mapel :</span>
                                     </div>
                                 </div>
+                                @if($item)
                                 <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                                    <select class="form-control show-tick" name="kategori">
-                                        <option selected disabled>-- Pilih Mata Pelajaran --</option>
+                                    <select class="form-control show-tick" name="kategori" >
+                                        <option  disabled>-- Pilih Mata Pelajaran --</option>
                                         @foreach ($kategori as $r)
-                                        <option value="{{ $r->id_kategori_soal }}" @if($r->id_kategori_soal == $item->id_kategori_soal) selected @endif>{{ $r->nm_kategori_soal }}</option>
+                                        <option value="{{ $r->id_kategori_soal }}" @if($r->id_kategori_soal == $item->id_kategori_soal) selected @else disabled @endif >{{ $r->nm_kategori_soal }}</option>
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+                           
+                                @else
+                                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                                    <select class="form-control show-tick" name="kategori">
+                                        <option  selected disabled>-- Pilih Mata Pelajaran --</option>
+                                        @foreach ($kategori as $r)
+                                        <option value="{{ $r->id_kategori_soal }}">{{ $r->nm_kategori_soal }}</option>
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                           
+                                @endif
                             </div>
                    
                     <div class="row clearfix">

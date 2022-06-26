@@ -34,6 +34,16 @@ class Test extends Model
         return $this->belongsTo(Pengguna::class, 'id_pengguna');
     }
 
+    public function paket_soal()
+    {
+        return $this->belongsTo(PaketSoal::class, 'id_paket_soal');
+    }
+
+    public function detail_paket_soal()
+    {
+        return $this->hasMany(DetailPaketSoal::class, 'id_paket_soal','id_paket_soal');
+    }
+
     // public function jawaban_test()
     // {
     //     return $this->hasMany(JawabanTest::class, 'id_jawaban_test');
