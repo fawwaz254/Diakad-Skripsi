@@ -12,6 +12,11 @@
                 <i class="material-icons">add_box</i>
                 <span>Tambah Soal Essay</span>
             </a>
+            <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
+            href="{{ url('guru#e-learning-soal/soal/kategori') }}">
+            <i class="material-icons">settings</i>
+            <span>kategori Mata Pelajaran</span>
+        </a>
             <div class="card">
                 <div class="header">
                     <h2>
@@ -40,6 +45,7 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Tipe Soal</th>
+                                    <th>Mata Pelajaran</th>
                                     <th>Pembuat</th>
                                     <th>Pertanyaan</th>
                                     <th>Action</th>
@@ -76,6 +82,9 @@
             },
             {
                 data: 'tipe_soal'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
             },
             {
                 data: 'pengguna.nm_pengguna'

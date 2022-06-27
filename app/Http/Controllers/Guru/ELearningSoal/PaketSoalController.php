@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Guru\ELearningSoal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\DetailPaketSoal;
+use App\Models\KategoriSoal;
 use App\Models\Kelas;
 use App\Models\PaketSoal;
 use App\Models\Soal;
@@ -36,6 +37,7 @@ class PaketSoalController extends Controller
     public function indexManage(Request $request, $id = 0)
     {
         $kelas = Kelas::get();
+        $kategori = KategoriSoal::all();
         // $events = Event::get();
         // $events = null;
         if (!empty($id)) {
@@ -43,7 +45,7 @@ class PaketSoalController extends Controller
         } else {
             $item = null;
         }
-        return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas'));
+        return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas','kategori'));
     }
 
     public function indexTest(Request $request, $id = 0)
@@ -56,7 +58,7 @@ class PaketSoalController extends Controller
 
     public function commonList(Request $request)
     {
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return $q->whereNotNull('content');
         }]);
         // dd($list_data);
@@ -85,10 +87,11 @@ class PaketSoalController extends Controller
     {
         $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
         $list_question_selected = $question_package_details->pluck('id_soal');
+        $paket_soal = PaketSoal::find($question_package_id);
         if ($tipe == 1) {
-            $list_data = Soal::with('pengguna')->whereNotIn('id_soal', $list_question_selected);
+            $list_data = Soal::where('id_kategori_soal',$paket_soal->id_kategori_soal)->with('pengguna','kategori_soal')->whereNotIn('id_soal', $list_question_selected);
         } else {
-            $list_data = Soal::with('pengguna')->whereIn('id_soal', $list_question_selected);
+            $list_data = Soal::where('id_kategori_soal',$paket_soal->id_kategori_soal)->with('pengguna','kategori_soal')->whereIn('id_soal', $list_question_selected);
         }
 
         return Datatables::of($list_data)
@@ -122,6 +125,7 @@ class PaketSoalController extends Controller
 
         if ($paket_soal = PaketSoal::find($input->id_paket_soal)) {
             $paket_soal->text = $input->title;
+            $paket_soal->id_kategori_soal = $input->kategori;
             $paket_soal->id_kelas = $input->kelas;
             $paket_soal->nilai = $input->nilai;
             $paket_soal->waktu_mulai = $input->waktu_mulai;
@@ -140,6 +144,7 @@ class PaketSoalController extends Controller
             $question_package = new PaketSoal;
             $question_package->id_paket_soal = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $question_package->text = $input->title;
+            $question_package->id_kategori_soal = $input->kategori;
             $question_package->id_kelas = $input->kelas;
             $question_package->nilai = $input->nilai;
             $question_package->waktu_mulai = $input->waktu_mulai;
