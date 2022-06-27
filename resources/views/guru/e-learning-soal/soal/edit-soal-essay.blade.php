@@ -27,6 +27,17 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="id_soal" value="{{ $item->id_soal }}">
                         <input type="hidden" name="id_tipe_soal" value="{{ $item->id_tipe_soal }}">
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Mata Pelajaran</label>
+                            <select class="form-control show-tick" name="kategori" >
+                                <option disabled>-- Pilih Mata Pelajaran --</option>
+                                @foreach ($kategori as $r)
+                                    <option value="{{ $r->id_kategori_soal }}" @if($r->id_kategori_soal == $item->id_kategori_soal) selected @endif>{{ $r->nm_kategori_soal }}</option>
+                                @endforeach
+                            </select>
+                            </div>
+                        </div>
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

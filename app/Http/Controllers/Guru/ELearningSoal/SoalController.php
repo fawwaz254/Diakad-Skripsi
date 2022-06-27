@@ -24,22 +24,77 @@ class SoalController extends Controller
 
     public function indexNew(Request $request, $tipe_soal)
     {
+        $kategori = KategoriSoal::all();
         if ($tipe_soal == "pilihan-ganda") {
-            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda');
+            return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda',compact('kategori'));
         } elseif ($tipe_soal == "essay") {
-            return view('guru/e-learning-soal/soal/add-soal-essay');
+            return view('guru/e-learning-soal/soal/add-soal-essay',compact('kategori'));
         }
         return view('404');
     }
+    public function addKategori(Request $request)
+    {
+        return view('guru/e-learning-soal/soal/add-kategori-soal');
+    }
+
+    public function actionKategori(Request $request)
+    {
+        $input = (object) $request->input();
+        $validator = Validator::make($request->all(), [
+            'nm_mata_pelajar' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300,
+                'message' => $validator->errors()->first()
+            ];
+        }
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $kategori_soal = new KategoriSoal();
+        $kategori_soal->id_kategori_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+        $kategori_soal->nm_kategori_soal = $input->nm_mata_pelajar;
+        $kategori_soal->id_pengguna = $input->auth_data->pengguna->id_pengguna;
+        $kategori_soal->save();
+        return [
+            'status' => 203,
+            'message' => 'Berhasil Menambah Kategori Mata Pelajaran'
+        ];
+    }
+
+    public function commonListKategori(Request $request)
+    {
+        $list_data = KategoriSoal::orderBy('created_at', 'DESC')->get();
+
+        return Datatables::of($list_data)
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_kategori_soal
+                );
+                return $data;
+            })->make(true);
+    }
+
+    public function actionDeleteKategori(Request $request)
+    {
+        $input = (object) $request->input();
+        $kategori_soal = KategoriSoal::find($input->id_kategori_soal);
+        $kategori_soal->delete();
+        return [
+            'message' => 'Berhasil Menghapus Kategori'
+        ];
+    }
+
 
     public function indexManage(Request $request, $id_soal = 0)
     {
+        $kategori = KategoriSoal::all();
         if ($item = Soal::find($id_soal)) {
             if ($item->id_tipe_soal == 1) {
                 $question_options = PilihanSoal::where('id_soal', $item->id_soal)->orderBy('number_option')->get();
-                return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda', compact('item', 'question_options'));
+                return view('guru/e-learning-soal/soal/edit-soal-pilihan-ganda', compact('item', 'question_options','kategori'));
             } else {
-                return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item'));
+                return view('guru/e-learning-soal/soal/edit-soal-essay', compact('item','kategori'));
             }
         }
 
@@ -78,11 +133,13 @@ class SoalController extends Controller
         if ($input->id_tipe_soal == 1) {
             $validator = Validator::make($request->all(), [
                 'soal' => 'required',
-                'jawaban_benar' => 'required'
+                'jawaban_benar' => 'required',
+                'kategori' => 'required'
             ]);
         } else {
             $validator = Validator::make($request->all(), [
                 'soal' => 'required',
+                'kategori' => 'required'
             ]);
         }
 
@@ -97,6 +154,7 @@ class SoalController extends Controller
 
             $question->content = $input->soal;
             $question->text = $input->soal;
+            $question->id_kategori_soal = $input->kategori;
             if ($input->id_tipe_soal == 1) {
                 $id_pilihan_soal_benar = 0;
                 foreach ($input->jawaban as $no_answer => $answer) {
@@ -124,6 +182,7 @@ class SoalController extends Controller
         } else {
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $question = new Soal;
+            $question->id_kategori_soal = $input->kategori;
             $question->id_soal =  $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
             $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
             $question->id_tipe_soal = $input->id_tipe_soal;
@@ -180,7 +239,7 @@ class SoalController extends Controller
 
     public function commonList(Request $request)
     {
-        $list_data = Soal::with('pengguna')->orderBy('created_at', 'DESC')->get();
+        $list_data = Soal::with('pengguna','kategori_soal')->orderBy('created_at', 'DESC')->get();
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {

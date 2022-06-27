@@ -19,6 +19,17 @@
                     action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/soal/new') }}">
                     {{ csrf_field() }}
                     <input type="hidden" name="id_tipe_soal" value="2">
+                    <div class="row clearfix">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <label>Mata Pelajaran</label>
+                        <select class="form-control show-tick" name="kategori" >
+                            <option selected disabled>-- Pilih Mata Pelajaran --</option>
+                            @foreach ($kategori as $r)
+                                <option value="{{ $r->id_kategori_soal }}">{{ $r->nm_kategori_soal }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                    </div>
                     <h2 class="card-inside-title">Soal</h2>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">

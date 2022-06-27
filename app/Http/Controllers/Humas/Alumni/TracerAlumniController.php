@@ -92,7 +92,7 @@ class TracerAlumniController extends BaseController
         $auth_data = $input->auth_data;
 
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 9)->get();
+        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 9)->orWhere('tingkat', 3)->get();
         $alumni = null;
 
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
@@ -110,7 +110,7 @@ class TracerAlumniController extends BaseController
             $data_kelas = Kelas::where('tingkat', 9)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('smp', 'calon_siswa')->first();
         } else {
-            $data_kelas = Kelas::where('tingkat', 12)->get();
+            $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
         }
 
@@ -429,7 +429,7 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $data_kelas = Kelas::where('tingkat', 12)->get();
+        $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
         return view('humas.alumni.tracer-alumni.export-tracer-alumni2', compact('auth_data', 'data_kelas', 'id_kelas', 'tahun_lulus'));
     }
 

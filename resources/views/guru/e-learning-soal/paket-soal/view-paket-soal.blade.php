@@ -30,6 +30,7 @@
                                     <th>No</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
+                                    <th>Mapel</th>
                                     <th>Total Question</th>
                                     <th>Total Answer</th>
                                     <th>Nilai Jawaban</th>
@@ -68,6 +69,7 @@
                 { data: null, searchable: false, orderable: false },
                 { data: 'text', name: 'text'},
                 { data: 'kelas.nm_kelas' },
+                { data: 'kategori_soal.nm_kategori_soal' },
                 { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
                 { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
                 { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},

@@ -42,7 +42,11 @@ class TracerAlumniSiswaController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data_jurusan = Jurusan::all();
-        $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat',9)->get();
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
+            $data_kelas = Kelas::Where('tingkat',9)->get();
+        }else{
+            $data_kelas = Kelas::where('tingkat', 3)->orwhere('tingkat', 12)->get();
+        }
         $alumni = null;
         $siswa = Siswa::where('id_pengguna',$auth_data->pengguna->id_pengguna)->with('calon_siswa','pengguna')->first();
         return view('siswa.alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas','siswa'));
@@ -60,7 +64,7 @@ class TracerAlumniSiswaController extends Controller
             $data_kelas = Kelas::where('tingkat', 9)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('smp','calon_siswa')->first();
         } else {
-            $data_kelas = Kelas::where('tingkat', 12)->get();
+            $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
         }
 

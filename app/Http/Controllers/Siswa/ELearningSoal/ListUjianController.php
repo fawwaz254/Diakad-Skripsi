@@ -37,7 +37,8 @@ class ListUjianController extends Controller
         ->with(
             'kelas',
             'detail_paket_soal',
-            'detail_paket_soal.soal'
+            'detail_paket_soal.soal',
+            'kategori_soal'
         )->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
             return
                 $q->whereNotNull('content');
