@@ -35,6 +35,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tipe Soal</th>
+                                            <th>Mapel</th>
                                             <th>Pembuat</th>
                                             <th>Soal</th>
                                             <th>Action</th>
@@ -55,6 +56,7 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Tipe Soal</th>
+                                            <th>Mapel</th>
                                             <th>Pembuat</th>
                                             <th>Soal</th>
                                             <th>Action</th>
@@ -100,6 +102,9 @@
             },
             {
                 data: 'tipe_soal'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
             },
             {
                 data: 'pengguna.nm_pengguna'
@@ -148,6 +153,9 @@
             },
             {
                 data: 'tipe_soal'
+            },
+            {
+                data: 'kategori_soal.nm_kategori_soal'
             },
             {
                 data: 'pengguna.nm_pengguna'

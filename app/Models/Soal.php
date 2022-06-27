@@ -33,7 +33,12 @@ class Soal extends Model
         return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
     }
 
+    public function kategori_soal(){
+        return $this->belongsTo('App\Models\KategoriSoal', 'id_kategori_soal');
+    }
+
     public function pilihan_soal(){
         return $this->hasMany('App\Models\PilihanSoal', 'id_soal');
     }
+
 }

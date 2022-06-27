@@ -27,13 +27,12 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Siswa</th>
-                                    {{-- <th>Kelas</th>
-                                    <th>Betul</th>
-                                    <th>Salah</th>
-                                    <th>Tidak Menjawab</th> --}}
                                     {{-- <th>Jam Pengerjaan</th> --}}
-                                    <th>Nilai</th>
-                                    {{-- <th>Detail</th> --}}
+                                    <th>Nilai Tiap Soal Benar</th>
+                                    <th>Jumlah Soal</th>
+                                    <th>Total Nilai Pilihan Ganda</th>
+                                    <th>Total Nilai Essay</th>
+                                    <th>Total Nilai</th>
 
                                 </tr>
                             </thead>
@@ -73,13 +72,35 @@
                 name: 'pengguna.nm_pengguna'
             },
             {
+                data: 'paket_soal.nilai',
+            },
+            {
+                data: 'detail_paket_soal',
+              
+            },
+            {
+                data: 'total_nilai',
+                render: function(data) {
+                 
+                        return data.nilai_pilihan_ganda
+                    
+                }
+            },
+            {
                 data: 'total_nilai',
                 render: function(data) {
                     if (!data.status_koreksi) {
                         return `<a href="${koreksi_hasil_test_url}/${data.id_paket_soal}/${data.id_test}/${data.id_pengguna}">Koreksi Soal Essay</a>`
                     } else {
-                        return data.nilai
+                        return data.nilai_pilihan_essay
                     }
+                }},
+                {
+                data: 'total_nilai',
+                render: function(data) {
+                   
+                        return data.nilai
+                 
                 }
             }
             // { data: 'waktu_mulai_pengerjaan' },
