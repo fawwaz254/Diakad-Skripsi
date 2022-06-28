@@ -44,7 +44,7 @@
                                         @endforeach
                                     </div>
                                 @else
-                                    <textarea id="q1" class="form-control" name="soal" data-sample-short></textarea>
+                                    <textarea  class="form-control"  data-sample-short></textarea>
                                 @endif
                             </div>
                         </div>

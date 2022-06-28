@@ -18,13 +18,15 @@
                 <h2 class="card-inside-title">Soal</h2>
                 <div class="row clearfix">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <textarea id="q1" class="form-control" name="soal" data-sample-short disabled>{!! $question->content !!}</textarea>
+
+                        {!! $question->content  !!}
+                        
                     </div>
                 </div>
                 <h2 class="card-inside-title">Jawaban</h2>
                 <div class="row clearfix">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <textarea id="q1" class="form-control" name="soal" data-sample-short disabled></textarea>
+                        <input  class="form-control"  disabled>
                     </div>
                 </div>
             </div>

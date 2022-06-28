@@ -27,6 +27,7 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="id_soal" value="{{ $item->id_soal }}">
                         <input type="hidden" name="id_tipe_soal" value="{{ $item->id_tipe_soal }}">
+                        <input type="hidden" id="t1" name="text" >
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <label>Mata Pelajaran</label>
@@ -41,7 +42,7 @@
                         <h2 class="card-inside-title">Soal</h2>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <textarea id="q1" class="form-control" name="soal" data-sample-short>{!! $item->content !!}</textarea>
+                                <textarea id="q1" class="form-control q1" name="soal" data-sample-short>{!! $item->content !!}</textarea>
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -57,3 +58,20 @@
     </div>
 </div>
 @include('scriptjs')
+<!-- CKeditor Plugin Js -->
+<script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+
+<script>
+CKEDITOR.replace( 'q1'); 
+
+// custom code to key binding ckeditor
+timer = setInterval(updateDiv,100);
+function updateDiv(){
+    var editorText = CKEDITOR.instances.q1.getData();
+    $('#q1').val(editorText);
+    var text = CKEDITOR.instances.q1.document.getBody().getText();
+    $('#t1').val(text);
+
+}
+
+</script>
