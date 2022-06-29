@@ -10,7 +10,8 @@
                 <div class="body">
                     <div
                         style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">
-                        {{ $test->soal->content }}
+                        {{-- {{ $test->soal->content }} --}}
+                        {!!$test->soal->content!!}
                     </div>
                     {{-- <div class="row clearfix"> --}}
                         <div class="row clearfix">
@@ -57,7 +58,7 @@
                                         </div>
                                     @else
                                         <h2 class="card-inside-title">Jawaban</h2>
-                                        <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
+                                        <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short @if(!empty($test))  style="background-color: #CFE795;"@endif>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
                                         <input type="hidden" name="id_tipe_soal"
                                             value="{{ $test->soal->id_tipe_soal }}">
                                     @endif
