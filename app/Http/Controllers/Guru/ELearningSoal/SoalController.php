@@ -153,7 +153,7 @@ class SoalController extends Controller
         if (!empty($input->id_soal) && $question = Soal::find($input->id_soal)) {
 
             $question->content = $input->soal;
-            $question->text = $input->soal;
+            $question->text = $input->text;
             $question->id_kategori_soal = $input->kategori;
             if ($input->id_tipe_soal == 1) {
                 $id_pilihan_soal_benar = 0;
@@ -187,7 +187,7 @@ class SoalController extends Controller
             $question->id_pengguna = $input->auth_data->pengguna->id_pengguna;
             $question->id_tipe_soal = $input->id_tipe_soal;
             $question->content = $input->soal;
-            $question->text = $input->soal;
+            $question->text = $input->text;
             $question->save();
 
             // $true_answer_id = 0;

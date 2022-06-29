@@ -27,6 +27,7 @@
                         {{ csrf_field() }}
                         <input type="hidden" name="id_soal" value="{{ $item->id_soal }}">
                         <input type="hidden" name="id_tipe_soal" value="{{ $item->id_tipe_soal }}">
+                        <input type="hidden" id="t1" name="text" >
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <label>Mata Pelajaran</label>
@@ -79,3 +80,84 @@
     </div>
 </div>
 @include('scriptjs')
+<!-- CKeditor Plugin Js -->
+<script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+
+<script>
+CKEDITOR.replace( 'q1'); 
+
+// custom code to key binding ckeditor
+timer = setInterval(updateDiv,100);
+function updateDiv(){
+    var editorText = CKEDITOR.instances.q1.getData();
+    $('#q1').val(editorText);
+    var text = CKEDITOR.instances.q1.document.getBody().getText();
+    $('#t1').val(text);
+
+}
+</script>
+
+<script>
+CKEDITOR.replace( 'a0', {
+      height: 50
+    } );
+
+// custom code to key binding ckeditor
+timer = setInterval(updateDiv,100);
+function updateDiv(){
+    var editorText = CKEDITOR.instances.a0.getData();
+    $('#a0').val(editorText);
+}
+</script>
+
+<script>
+CKEDITOR.replace( 'a1', {
+      height: 50
+    }  );
+
+// custom code to key binding ckeditor
+timer = setInterval(updateDiv,100);
+function updateDiv(){
+    var editorText = CKEDITOR.instances.a1.getData();
+    $('#a1').val(editorText);
+}
+</script> 
+
+<script>
+    CKEDITOR.replace( 'a2', {
+      height: 50
+    }  );
+    
+    // custom code to key binding ckeditor
+    timer = setInterval(updateDiv,100);
+    function updateDiv(){
+        var editorText = CKEDITOR.instances.a2.getData();
+        $('#a2').val(editorText);
+    }
+    </script> 
+
+<script>
+    CKEDITOR.replace( 'a3', {
+      height: 50
+    }  );
+    
+    // custom code to key binding ckeditor
+    timer = setInterval(updateDiv,100);
+    function updateDiv(){
+        var editorText = CKEDITOR.instances.a3.getData();
+        $('#a3').val(editorText);
+    }
+    </script> 
+
+<script>
+    CKEDITOR.replace( 'a4', {
+      height: 50
+    }  );
+    
+    // custom code to key binding ckeditor
+    timer = setInterval(updateDiv,100);
+    function updateDiv(){
+        var editorText = CKEDITOR.instances.a4.getData();
+        $('#a4').val(editorText);
+    }
+    </script> 
