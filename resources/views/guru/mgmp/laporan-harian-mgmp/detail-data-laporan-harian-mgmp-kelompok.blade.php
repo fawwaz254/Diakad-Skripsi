@@ -1,6 +1,9 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2>
+       
+            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-kelompok-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
+
+     
             <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
         </h2>
     </div>
@@ -108,10 +111,10 @@
         }
 
         window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
-    })
-
-    var modul_url        = 'mpmp';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
+    });
+    var id_mapel = "{{ $id }}";
+    var modul_url        = 'mgmp';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/detail/datatables/' + id_mapel;
     var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
 
 
