@@ -12,6 +12,11 @@
                 <i class="material-icons">add_box</i>
                 <span>Tambah Soal Essay</span>
             </a>
+            <a type="button" class="btn btn-success" style="margin-bottom: 15px"
+            href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
+            <i class="material-icons">add_box</i>
+            <span>Tambah Soal Submit</span>
+        </a>
             <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
             href="{{ url('guru#e-learning-soal/soal/kategori') }}">
             <i class="material-icons">settings</i>
