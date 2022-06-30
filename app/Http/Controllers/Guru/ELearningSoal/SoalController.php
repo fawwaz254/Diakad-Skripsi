@@ -29,6 +29,8 @@ class SoalController extends Controller
             return view('guru/e-learning-soal/soal/add-soal-pilihan-ganda',compact('kategori'));
         } elseif ($tipe_soal == "essay") {
             return view('guru/e-learning-soal/soal/add-soal-essay',compact('kategori'));
+        }elseif ($tipe_soal == "submit") {
+            return view('guru/e-learning-soal/soal/add-soal-submit',compact('kategori'));
         }
         return view('404');
     }
@@ -60,6 +62,19 @@ class SoalController extends Controller
             'status' => 203,
             'message' => 'Berhasil Menambah Kategori Mata Pelajaran'
         ];
+    }
+
+    public function uploadImageCkeditor(Request $request)
+    {
+       if($request->hasFile('upload')) 
+       {$originName = $request->file('upload')->getClientOriginalName();
+        $fileName = pathinfo($originName, PATHINFO_FILENAME);
+        $extension = $request->file('upload')->getClientOriginalExtension();
+        $fileName = $fileName.'_'.time().'.'.$extension;$request->file('upload')->move(public_path('pages'), $fileName);
+        $CKEditorFuncNum = $request->input('CKEditorFuncNum');
+        $url = asset('pages/'.$fileName);
+        $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url')</script>";
+        echo $response;}
     }
 
     public function commonListKategori(Request $request)
@@ -129,6 +144,8 @@ class SoalController extends Controller
     public function actionSave(Request $request)
     {
         $input = (object) $request->input();
+
+
 
         if ($input->id_tipe_soal == 1) {
             $validator = Validator::make($request->all(), [
