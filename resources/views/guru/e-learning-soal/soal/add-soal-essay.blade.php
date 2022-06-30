@@ -56,7 +56,17 @@
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
 
 <script>
-CKEDITOR.replace( 'q1'); 
+
+var options = {
+    filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+    filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+  };
+
+</script>
+<script>
+CKEDITOR.replace( 'q1', options); 
 
 // custom code to key binding ckeditor
 timer = setInterval(updateDiv,100);
