@@ -276,13 +276,51 @@ public function editKerjaHarian(Request $request, $id = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data = CategoriFileGuru::where('category_file_mgmp_id', $id)->with('pengguna')->get();
-        return view('guru/mgmp/laporan-harian-mgmp/detail-data-laporan-harian-mgmp-kelompok',compact('auth_data','data'));
+        return view('guru/mgmp/laporan-harian-mgmp/detail-data-laporan-harian-mgmp-kelompok',compact('auth_data','data','id'));
     }
 
 
 
-    public function datatablesDetailKerjaHarianKelompokMGMP(Request $request){
+    public function datatablesDetailKerjaHarianKelompokMGMP(Request $request, $id  = null){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
+        $list_data = LaporanKerjaHarianMGMP::
+                                    where('id_role',$input->auth_data->role_aktif->id_role)
+                                    ->where('mapel',$id)
+                                    ->with('mapel','pengguna')
+                                    ->get();
+
+        return Datatables::of($list_data)
+                ->editColumn('tanggal',function($item){
+                    return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->addColumn('action', function($item){
+                    if($item->path_file){
+                        $file =  Storage::disk('spaces')->url($item->path_file);
+                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                            $note = 'file';
+                        }
+                        else{
+                            $note= 'image';
+                        }
+                    }
+                    else{
+                        $file = null;
+                        $note = null;
+                    }
+
+                    $data = array(
+                        'id'        => $item->id_laporan_kerja_harian_mgmp,
+                        'jenis'    =>$item->jenis,
+                        'status'    => $item->status,
+                        'file'      =>$file,
+                        'note'      => $item->mapel,
+                    );
+                    return $data;
+                })
+                ->make(true);
 
     }
 
