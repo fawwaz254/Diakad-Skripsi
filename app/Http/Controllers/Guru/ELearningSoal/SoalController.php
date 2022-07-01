@@ -249,8 +249,12 @@ class SoalController extends Controller
         if ($question->id_tipe_soal == 1) {
             $question_options = PilihanSoal::where('id_soal', $question->id_soal)->orderBy('number_option')->get();
             return view('guru/e-learning-soal/soal/test-soal-pilihan-ganda', compact('question', 'question_options'));
+        }else if($question->id_tipe_soal == 2){
+            return view('guru/e-learning-soal/soal/test-soal-essay', compact('question'));
+        }else{
+            return view('guru/e-learning-soal/soal/test-soal-submit', compact('question'));
         }
-        return view('guru/e-learning-soal/soal/test-soal-essay', compact('question'));
+       
     }
 
 
@@ -268,8 +272,10 @@ class SoalController extends Controller
             ->addColumn('tipe_soal', function ($item) {
                 if ($item->id_tipe_soal == 1) {
                     return "Pilihan Ganda";
+                }else if($item->id_tipe_soal == 2){
+                    return "Essay";
                 }
-                return "Essay";
+                return "Submit";
             })
             ->make(true);
     }
