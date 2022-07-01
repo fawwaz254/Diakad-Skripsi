@@ -8,7 +8,7 @@ use App\Models\Modul;
 use App\Models\Role;
 use Carbon\Carbon;
 
-class UpdateRouteMengajarDaringRoleGuru extends Migration
+class UpdateRouteMengajarDaringRoleGuru2 extends Migration
 {
     /**
      * Run the migrations.
