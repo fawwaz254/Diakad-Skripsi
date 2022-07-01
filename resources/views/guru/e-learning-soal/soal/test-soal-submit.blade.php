@@ -17,11 +17,9 @@
             <div class="body">
                 <h2 class="card-inside-title">Soal</h2>
                 <div class="row clearfix">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-
-                        {!! $question->content  !!}
-                        
-                    </div>
+                 
+                        <pre>{!! $question->content  !!}</pre>
+                    
                 </div>
                 <div class="row clearfix">
                 <div class="ol-lg-6 col-md-6 col-sm-12 col-xs-12" id="place_file">

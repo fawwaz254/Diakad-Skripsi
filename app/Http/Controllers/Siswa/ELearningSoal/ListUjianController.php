@@ -10,6 +10,7 @@ use App\Models\Kelas;
 use App\Models\PaketSoal;
 use App\Models\PilihanSoal;
 use App\Models\Siswa;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Soal;
 use App\Models\Test;
 use Yajra\Datatables\Datatables;
@@ -207,9 +208,16 @@ class ListUjianController extends Controller
             $test_answer->id_pilihan_soal = $input->question_option;
             $test_answer->status_koreksi = 1;
             $test_answer->nilai = $nilai;
-        } else {
+        }elseif($input->id_tipe_soal == 2){
             $test_answer->status_koreksi = 0;
             $test_answer->jawaban_essay = $input->jawaban_essay;
+            $test_answer->nilai = 0;
+        }else {
+            $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jawaban_test/', request()->file, 'public');
+            $test_answer->status_koreksi = 0;
+            $test_answer->link_file = $file;
+            $test_answer->type_file = pathinfo(request()->file->getClientOriginalName(), PATHINFO_EXTENSION);
             $test_answer->nilai = 0;
         }
         $test_answer->save();

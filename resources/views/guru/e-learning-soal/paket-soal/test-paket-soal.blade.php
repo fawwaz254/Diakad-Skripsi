@@ -24,12 +24,11 @@
                             $question_options = $question->pilihan_soal;
                         @endphp
                         <hr>
-                        <p>Soal no. {{ $nomor++ }}</p>
-                        <div
-                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">
-                            {!! $question->content !!}
-
-                        </div>
+                        
+                     
+                            <p>Soal no. {{ $nomor++ }}</p>
+                        <pre
+                            style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->content !!}</pre>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 @if ($question->id_tipe_soal == 1)
@@ -43,8 +42,12 @@
                                             <br>
                                         @endforeach
                                     </div>
+                                @elseif($question->id_tipe_soal == 2)
+                                <textarea  class="form-control"  data-sample-short></textarea>
                                 @else
-                                    <textarea  class="form-control"  data-sample-short></textarea>
+                                <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
+                                <input type="file" class="form-control" name="file[]" required=""
+                                    aria-required="true" aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
                                 @endif
                             </div>
                         </div>

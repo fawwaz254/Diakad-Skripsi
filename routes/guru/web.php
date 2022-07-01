@@ -94,9 +94,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::group(array('prefix' => 'soal'), function () {
 
                 Route::get('/', 'Guru\ELearningSoal\SoalController@indexList');
-                Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-                    \UniSharp\LaravelFilemanager\Lfm::routes();
-                });
                 // Route::get('uploadImage', 'Guru\ELearningSoal\SoalController@uploadImageCkeditor');
                 Route::get('new/{tipe_soal}', 'Guru\ELearningSoal\SoalController@indexNew');
                 Route::get('kategori', 'Guru\ELearningSoal\SoalController@addKategori');
