@@ -14,9 +14,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <div style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">
-                        {!!$question->content!!}
-                    </div>
+                    <pre style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!!$question->content!!}</pre>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             {{-- {{csrf_field()}} --}}
