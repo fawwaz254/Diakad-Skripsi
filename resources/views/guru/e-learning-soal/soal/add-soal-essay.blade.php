@@ -37,9 +37,6 @@
                             <textarea id="q1" class="form-control q1" required="" name="soal" rows="3"></textarea>
                         </div>
                     </div>
-               
-                           
-                  
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-pink waves-effect" id="btn-submit"
@@ -51,24 +48,17 @@
         </div>
     </div>
 </div>
+
 @include('scriptjs')
-<!-- CKeditor Plugin Js -->
+
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+<script src="{{asset('plugins/ckfinder/ckfinder.js')}}"></script>
 
 <script>
 
-var options = {
-    filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
-    filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
-    filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-    filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
-  };
+var editor = CKEDITOR.replace('q1');
+CKFinder.setupCKEditor(editor);
 
-</script>
-<script>
-CKEDITOR.replace( 'q1', options); 
-
-// custom code to key binding ckeditor
 timer = setInterval(updateDiv,100);
 function updateDiv(){
     var editorText = CKEDITOR.instances.q1.getData();

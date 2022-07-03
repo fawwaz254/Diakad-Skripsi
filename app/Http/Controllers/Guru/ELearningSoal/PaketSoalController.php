@@ -104,8 +104,10 @@ class PaketSoalController extends Controller
             ->addColumn('tipe_soal', function ($item) {
                 if ($item->id_tipe_soal == 1) {
                     return "Pilihan Ganda";
+                }else if($item->id_tipe_soal == 2){
+                    return "Essay";
                 }
-                return "Essay";
+                return "Submit";
             })
             ->make(true);
     }

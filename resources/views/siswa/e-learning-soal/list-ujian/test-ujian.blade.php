@@ -8,24 +8,19 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <div
-                        style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">
-                        {{-- {{ $test->soal->content }} --}}
-                        {!!$test->soal->content!!}
-                    </div>
+                    <pre style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!!$test->soal->content!!}</pre>
                     {{-- <div class="row clearfix"> --}}
                         <div class="row clearfix">
-                            <form id="question-form" class="form-validation" method="POST"
+                            <form id="question-form" class="form-validation" method="POST" enctype="multipart/form-data"
                                 action="{{ url('siswa/e-learning-soal/list-ujian/test/answer') }}">
                                 <input type="hidden" name="question" value="{{ $test->soal->id_soal }}">
                                 <input type="hidden" name="test" value="{{ $test->id_test }}">
                                 <input type="hidden" name="no" value="{{ $no }}">
+                                <input type="hidden" name="id_tipe_soal" value="{{ $test->soal->id_tipe_soal }}">
                                 <input type="hidden" name="paket_soal" value="{{ $paket_soal->id_paket_soal }}">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     {{ csrf_field() }}
                                     @if ($test->soal->id_tipe_soal == 1)
-                                        <input type="hidden" name="id_tipe_soal"
-                                            value="{{ $test->soal->id_tipe_soal }}">
                                         <div class="demo-radio-button">
                                             @foreach ($question_options as $no_option => $question_option)
                                                 <input type="hidden" name="{{ $test->soal_id_tipe_soal }}">
@@ -56,11 +51,15 @@
                                                 <br>
                                             @endforeach
                                         </div>
-                                    @else
-                                        <h2 class="card-inside-title">Jawaban</h2>
-                                        <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short @if(!empty($test))  style="background-color: #CFE795;"@endif>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
+                                    @elseif($test->soal->id_tipe_soal == 2)
+                                    <h2 class="card-inside-title">Jawaban</h2>
+                                        <textarea id="q1" class="form-control" name="jawaban_essay" data-sample-short @if(!empty($test->jawaban_essay ))  style="background-color: #CFE795;"@endif>{{ !empty($test) ? $test->jawaban_essay : '' }}</textarea>
                                         <input type="hidden" name="id_tipe_soal"
                                             value="{{ $test->soal->id_tipe_soal }}">
+                                    @else
+                                    <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
+                                    <input type="file" class="form-control" name="file" required=""
+                                        aria-required="true" aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
                                     @endif
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
