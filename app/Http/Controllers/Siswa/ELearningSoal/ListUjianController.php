@@ -214,7 +214,7 @@ class ListUjianController extends Controller
             $test_answer->nilai = 0;
         }else {
             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jawaban_test/', request()->file, 'public');
+            $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/jawaban_test', request()->file, 'public');
             $test_answer->status_koreksi = 0;
             $test_answer->link_file = $file;
             $test_answer->type_file = pathinfo(request()->file->getClientOriginalName(), PATHINFO_EXTENSION);

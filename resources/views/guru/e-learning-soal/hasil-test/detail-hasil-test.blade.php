@@ -1,5 +1,4 @@
 <div class="container-fluid">
-
     <h2><a type="button" class="btn bg-grey waves-effect"
             href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/hasil-test') }}">
             <i class="material-icons">keyboard_backspace</i>
@@ -31,13 +30,10 @@
                                     <th>Nilai Tiap Soal Benar</th>
                                     <th>Jumlah Soal</th>
                                     <th>Total Nilai Pilihan Ganda</th>
-                                    <th>Total Nilai Essay</th>
+                                    <th>Total Nilai Essay / Jawaban Submit</th>
                                     <th>Total Nilai</th>
-
                                 </tr>
                             </thead>
-
-
                             <tbody>
                             </tbody>
                         </table>
@@ -76,14 +72,11 @@
             },
             {
                 data: 'detail_paket_soal',
-              
             },
             {
                 data: 'total_nilai',
                 render: function(data) {
-                 
-                        return data.nilai_pilihan_ganda
-                    
+                    return data.nilai_pilihan_ganda
                 }
             },
             {
@@ -92,15 +85,14 @@
                     if (!data.status_koreksi) {
                         return `<a href="${koreksi_hasil_test_url}/${data.id_paket_soal}/${data.id_test}/${data.id_pengguna}">Koreksi Soal Essay</a>`
                     } else {
-                        return data.nilai_pilihan_essay
+                        return data.nilai_pilihan_essay_submit
                     }
-                }},
-                {
+                }
+            },
+            {
                 data: 'total_nilai',
                 render: function(data) {
-                   
-                        return data.nilai
-                 
+                    return data.nilai
                 }
             }
             // { data: 'waktu_mulai_pengerjaan' },
