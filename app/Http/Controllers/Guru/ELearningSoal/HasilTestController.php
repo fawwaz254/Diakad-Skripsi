@@ -133,10 +133,10 @@ class HasilTestController extends Controller
                 } else {
                     $nilai = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->pluck('nilai')->sum();
                     $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal',1)->pluck('nilai')->sum();
-                    $nilai_pilihan_essay = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal',2)->pluck('nilai')->sum();
+                    $nilai_pilihan_essay_submit = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->whereIn('id_tipe_soal',[2,3])->pluck('nilai')->sum();
                     $data = array(
                         'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
-                        'nilai_pilihan_essay' => $nilai_pilihan_essay,
+                        'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,
                         'nilai' => $nilai,
                         'status_koreksi' => 1,
                     );
