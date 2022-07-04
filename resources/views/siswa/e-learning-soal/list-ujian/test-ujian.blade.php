@@ -8,6 +8,7 @@
                     </h2>
                 </div>
                 <div class="body">
+                    <p><b>Nomor Soal {{ $no }}</b></p>
                     <pre style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!!$test->soal->content!!}</pre>
                     {{-- <div class="row clearfix"> --}}
                         <div class="row clearfix">
@@ -58,7 +59,7 @@
                                             value="{{ $test->soal->id_tipe_soal }}">
                                     @else
                                     <label>Jawaban File ( pdf, ppt, docx, xlsx | max 10 mb )</label>
-                                    <input type="file" class="form-control" name="file" required=""
+                                    <input type="file" class="form-control" name="file" required="" @if(!empty($test->link_file ))  style="background-color: #CFE795;"@endif
                                         aria-required="true" aria-invalid="true" accept=".pdf, .doc, .docx, .ppt, .xlsx">
                                     @endif
                                 </div>
@@ -169,13 +170,20 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             @foreach ($jawabanTest->sortBy('nomer')->all() as $index => $soal)
-                                @if ($soal->id_pilihan_soal != null || $soal->jawaban_essay != null)
+                                @if ($index + 1 == $no)
+                                <a type="button"
+                                href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
+                                class="btn bg-red btn-circle waves-effect waves-circle waves-float" style="pointer-events: none">
+                                {{ $index + 1 }}
+                            </a>
+                                @elseif($soal->id_pilihan_soal != null || $soal->jawaban_essay != null || $soal->link_file != null)
                                     <a type="button"
-                                        href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
-                                        class="btn bg-pink btn-circle waves-effect waves-circle waves-float">
-                                        {{ $index + 1 }}
-                                    </a>
-                                @else
+                                    href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
+                                    class="btn bg-blue btn-circle waves-effect waves-circle waves-float">
+                                    {{ $index + 1 }}
+                                </a>
+                                
+                                    @else
                                     <a type="button"
                                         href="siswa#e-learning-soal/list-ujian/test/{{ $test->test->id_test }}/{{ $index + 1 }}"
                                         class="btn bg-success btn-circle waves-effect waves-circle waves-float">
