@@ -2,8 +2,7 @@
 // ROLE GURU
 Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'guru'), function () {
-        // Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
-        // Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->;
+        
         Route::get('/filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('show');
         Route::any('/filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('unisharp.lfm.upload');
         Route::get('/filemanager/errors', '\UniSharp\LaravelFilemanager\Controllers\LfmController@getErrors')->name('getErrors');
@@ -21,11 +20,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
         Route::get('/filemanager/download', '\UniSharp\LaravelFilemanager\Controllers\DownloadController@getDownload')->name('getDownload');
         Route::get('/filemanager/delete', '\UniSharp\LaravelFilemanager\Controllers\DeleteController@getDelete')->name('getDelete');
         Route::get('/filemanager/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index')->name('getDelete');
-        // Route::any('/filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('unisharp.lfm.upload');
-Route::group(array('prefix' => 'laravel-filemanager'), function () {
-   
-           \UniSharp\LaravelFilemanager\Lfm::routes();
-});
+
+
         Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
 
         Route::group(array('prefix' => 'mgmp'), function () {
