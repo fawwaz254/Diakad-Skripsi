@@ -46,7 +46,30 @@ Route::post('upload', function (Request $request) {
 // END CONTOH UPLOAD DO
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
+    Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
+    // display integration error messages
+    Route::get('/errors', '\UniSharp\LaravelFilemanager\Controllers\LfmController@getErrors')->name('unisharp.lfm.getErrors');
+    // upload
+    Route::any('/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('unisharp.lfm.upload');
+    // list images & files
+    Route::get('/jsonitems', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@getItems')->name('unisharp.lfm.getItems');
+    Route::get('/move', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@move')->name('unisharp.lfm.move');
+    Route::get('/domove', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@domove')->name('unisharp.lfm.domov');
+    // folders
+    Route::get('/newfolder', '\UniSharp\LaravelFilemanager\Controllers\FolderController@getAddfolder')->name('unisharp.lfm.getAddfolder');
+    // list folders
+    Route::get('/folders', '\UniSharp\LaravelFilemanager\Controllers\FolderController@getFolders')->name('unisharp.lfm.getFolders');
+    // crop
+    Route::get('/crop', '\UniSharp\LaravelFilemanager\Controllers\CropController@getCrop')->name('unisharp.lfm.getCrop');
+    // rename
+    Route::get('/rename', '\UniSharp\LaravelFilemanager\Controllers\RenameController@getRename')->name('unisharp.lfm.getRename');
+    // scale/resize
+    Route::get('/resize', '\UniSharp\LaravelFilemanager\Controllers\ResizeController@getResize')->name('unisharp.lfm.getResize');
+    // download
+    Route::get('/download', '\UniSharp\LaravelFilemanager\Controllers\DownloadController@getDownload')->name('unisharp.lfm.getDownload');
+    // delete
+    Route::get('/delete', '\UniSharp\LaravelFilemanager\Controllers\DeleteController@getDelete')->name('unisharp.lfm.getDelete');
+    Route::get('/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index'); 
 });
 
 // START USING FOR FINGERPRINT
