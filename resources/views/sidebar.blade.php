@@ -25,8 +25,13 @@ if ($role_aktif == 2) {
     $wali_kelas = App\Models\WaliKelas::where('id_guru', $guru->id_guru)
         ->where('is_aktif', 1)
         ->first();
-    $kelas = App\Models\Kelas::where('id_kelas', $wali_kelas->id_kelas)->first();
-    $nm_kelas = $kelas->nm_kelas;
+
+    if (!empty($wali_kelas)) {
+        $kelas = App\Models\Kelas::where('id_kelas', $wali_kelas->id_kelas)->first();
+        if (!empty($kelas)) {
+            $nm_kelas = $kelas->nm_kelas;
+        }
+    }
 }
 @endphp
 <section>
@@ -49,7 +54,10 @@ if ($role_aktif == 2) {
                     {{ auth_data()->pengguna->nm_pengguna }}
                 </div>
                 <div class="email">{{ auth_data()->pengguna->username }}
-                    @if ($role_aktif == 3 || $role_aktif == 2)
+                    @if ($role_aktif == 3)
+                        {{ ' / ' }}({{ $nm_kelas }})
+                    @endif
+                    @if ($role_aktif == 2 && !empty($wali_kelas) && !empty($kelas))
                         {{ ' / ' }}({{ $nm_kelas }})
                     @endif
                 </div>
