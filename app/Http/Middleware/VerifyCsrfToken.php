@@ -15,6 +15,7 @@ class VerifyCsrfToken extends Middleware
         'api/v1/*',
         'payment/notification/*',
         'payment/callback/*',
+        'laravel-filemanager/*',
         'iclock/*',
     ];
 }

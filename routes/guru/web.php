@@ -4,7 +4,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'guru'), function () {
         Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
 
-
         Route::group(array('prefix' => 'mgmp'), function () {
 
             Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {

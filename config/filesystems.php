@@ -71,6 +71,7 @@ return [
             'region' => env('DO_SPACES_REGION'),
             'bucket' => env('DO_SPACES_BUCKET'),
             'url' => str_replace(env('DO_SPACES_REGION'),env('DO_SPACES_BUCKET').'.'.env('DO_SPACES_REGION'), str_replace("digitaloceanspaces","cdn.digitaloceanspaces",env('DO_SPACES_ENDPOINT'))),
+            'visibility' => 'public',
         ],
 
     ],
