@@ -53,6 +53,7 @@
 
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
 {{-- <script src="{{asset('plugins/ckfinder/ckfinder.js')}}"></script> --}}
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
  var options = {
