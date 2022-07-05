@@ -11,12 +11,23 @@ $detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
 $category_file_role = category_file_role($role_aktif);
 
 $nm_kelas = null;
+
+// if siswa
 if ($role_aktif == 3) {
     $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
     $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
     $nm_kelas = $kelas->nm_kelas;
 }
 
+// if guru
+if ($role_aktif == 2) {
+    $guru = App\Models\Guru::where('id_pengguna', $id_pengguna)->first();
+    $wali_kelas = App\Models\WaliKelas::where('id_guru', $guru->id_guru)
+        ->where('is_aktif', 1)
+        ->first();
+    $kelas = App\Models\Kelas::where('id_kelas', $wali_kelas->id_kelas)->first();
+    $nm_kelas = $kelas->nm_kelas;
+}
 @endphp
 <section>
     <!-- Left Sidebar -->
@@ -37,7 +48,8 @@ if ($role_aktif == 3) {
                 <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ auth_data()->pengguna->nm_pengguna }}
                 </div>
-                <div class="email">{{ auth_data()->pengguna->username }}@if ($role_aktif == 3)
+                <div class="email">{{ auth_data()->pengguna->username }}
+                    @if ($role_aktif == 3 || $role_aktif == 2)
                         {{ ' / ' }}({{ $nm_kelas }})
                     @endif
                 </div>
