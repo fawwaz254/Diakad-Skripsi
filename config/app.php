@@ -189,7 +189,7 @@ return [
         Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         JD\Cloudder\CloudderServiceProvider::class,
-           
+        UniSharp\LaravelFilemanager\LaravelFilemanagerServiceProvider::class,
     ],
 
     /*

@@ -2,8 +2,31 @@
 // ROLE GURU
 Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'guru'), function () {
+        // Route::get('/laravel-filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show');
+        // Route::post('/laravel-filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->;
+        Route::get('/filemanager', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('show');
+        Route::any('/filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('unisharp.lfm.upload');
+        Route::get('/filemanager/errors', '\UniSharp\LaravelFilemanager\Controllers\LfmController@getErrors')->name('getErrors');
+        Route::get('/filemanager/jsonitems', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@getItems')->name('getItems');
+        Route::get('/filemanager/move', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@move')->name('move');
+        Route::get('/filemanager/domove', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@move')->name('domove');
+        Route::get('/filemanager/newfolder', '\UniSharp\LaravelFilemanager\Controllers\FolderController@getAddfolder')->name('getAddfolder');
+        Route::get('/filemanager/folders', '\UniSharp\LaravelFilemanager\Controllers\FolderController@getFolders')->name('getFolders');
+        Route::get('/filemanager/crop', '\UniSharp\LaravelFilemanager\Controllers\CropController@getCrop')->name('getCrop');
+        Route::get('/filemanager/cropimage', '\UniSharp\LaravelFilemanager\Controllers\CropController@getCropimage')->name('getCropimage');
+        Route::get('/filemanager/cropnewimage', '\UniSharp\LaravelFilemanager\Controllers\CropController@getNewCropimage')->name('getCropimage');
+        Route::get('/filemanager/rename', '\UniSharp\LaravelFilemanager\Controllers\RenameController@getRename')->name('getRename');
+        Route::get('/filemanager/resize', '\UniSharp\LaravelFilemanager\Controllers\ResizeController@getResize')->name('getResize');
+        Route::get('/filemanager/doresize', '\UniSharp\LaravelFilemanager\Controllers\ResizeController@performResize')->name('performResize');
+        Route::get('/filemanager/download', '\UniSharp\LaravelFilemanager\Controllers\DownloadController@getDownload')->name('getDownload');
+        Route::get('/filemanager/delete', '\UniSharp\LaravelFilemanager\Controllers\DeleteController@getDelete')->name('getDelete');
+        Route::get('/filemanager/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index')->name('getDelete');
+        // Route::any('/filemanager/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('unisharp.lfm.upload');
+Route::group(array('prefix' => 'laravel-filemanager'), function () {
+   
+           \UniSharp\LaravelFilemanager\Lfm::routes();
+});
         Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
-
 
         Route::group(array('prefix' => 'mgmp'), function () {
 

@@ -45,8 +45,14 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
+Route::group(array('prefix' => 'laravel-filemanager'), function () {
+   
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+
 // START USING FOR FINGERPRINT
 // url: /iclock
+
 Route::group(array('prefix' => 'iclock'), function () {
     Route::get('getrequest', 'Administrator\Device\FingerprintController@actionCheck');
     Route::get('cdata', function () {
