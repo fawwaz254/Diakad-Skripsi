@@ -45,8 +45,7 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
-Route::group(array('prefix' => 'laravel-filemanager'), function () {
-   
+RouRoute::group(['prefix' => 'laravel-filemanager'], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });
 
