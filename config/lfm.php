@@ -33,7 +33,7 @@ return [
     // Then you can rewrite userField function in App\Handler\ConfigHandler class
     // And set 'user_field' to App\Handler\ConfigHandler::class
     // Ex: The private folder of user will be named as the user id.
-    'private_folder_name'      => UniSharp\LaravelFilemanager\Handlers\ConfigHandler::class,
+    'private_folder_name'      => App\Handlers\LfmConfigHandler::class,
 
     'allow_shared_folder'      => true,
 
@@ -47,7 +47,7 @@ return [
 
     'folder_categories'        => [
         'file'  => [
-            'folder_name'  => 'files',
+            'folder_name'  => '/',
             'startup_view' => 'list',
             'max_size'     => 50000, // size in KB
             'thumb' => true,
@@ -63,7 +63,7 @@ return [
             ],
         ],
         'image' => [
-            'folder_name'  => 'photos',
+            'folder_name'  => '/',
             'startup_view' => 'grid',
             'max_size'     => 50000, // size in KB
             'thumb' => true,
@@ -94,7 +94,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'disk'                     => 'public',
+    'disk'                     => 'spaces',
 
     'rename_file'              => false,
 
