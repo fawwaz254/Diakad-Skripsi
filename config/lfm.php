@@ -15,7 +15,7 @@ return [
     |--------------------------------------------------------------------------
      */
 
-    'use_package_routes'       => true,
+    'use_package_routes'       => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -100,7 +100,7 @@ return [
 
     'rename_duplicates'        => false,
 
-    'alphanumeric_filename'    => false,
+    'alphanumeric_filename'    => true,
 
     'alphanumeric_directory'   => false,
 
