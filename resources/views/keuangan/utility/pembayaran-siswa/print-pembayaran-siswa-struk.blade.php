@@ -34,7 +34,7 @@
         <table>
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:50px;" /></td>
-                <td colspan=6><h1 style="font-size: 14pt;" align="center">KWITANSI PEMBAYARAN<br> {{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h1></td>
+                <td colspan=6><h1 style="font-size: 10pt;" align="center">KWITANSI PEMBAYARAN<br> {{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h1></td>
             </tr>
         </table>
         <table style="width: 100%; font-size:12px;font-weight: 700;">
