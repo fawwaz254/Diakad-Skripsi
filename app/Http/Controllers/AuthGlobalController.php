@@ -244,7 +244,7 @@ class AuthGlobalController extends BaseController
                 $process = new Process(['git', 'fetch']);
                 $process->run();
     
-                $process = new Process(['git', 'merge', 'origin/'.$name_branch]);
+                $process = new Process(['git', 'merge', 'origin/'.$name_branch, '-m', '"Merge branch '.$name_branch.' into master"']);
                 $process->run();
         
                 $process = new Process(['git', 'push', 'origin', 'master']);
@@ -253,7 +253,7 @@ class AuthGlobalController extends BaseController
                 $process = new Process(['git', 'checkout', 'latest-release']);
                 $process->run();
                 
-                $process = new Process(['git', 'merge', 'master']);
+                $process = new Process(['git', 'merge', 'master', '-m', '"Merge branch master into latest-release"']);
                 $process->run();
                 
                 $process = new Process(['git', 'push', 'origin', 'latest-release']);
