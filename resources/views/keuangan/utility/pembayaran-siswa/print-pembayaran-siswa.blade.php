@@ -26,7 +26,7 @@
     </style>
     <style type="text/css" media="print">
         @page {
-            size: A4;
+            size: auto !important;
         }
     </style>
 </head>
