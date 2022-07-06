@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\Process\Process;
 
 use Carbon\Carbon;
 
@@ -232,5 +233,33 @@ class AuthGlobalController extends BaseController
         Session::flush();
         Auth::logout();
         return redirect('/');
+    }
+
+    public function actionMerge(Request $request){
+        $input = (object) $request->input();
+
+        if(!empty($input->b)){
+            $name_branch = $input->b;
+            $process = new Process(['git', 'fetch']);
+            $process->run();
+
+            $process = new Process(['git', 'merge', $name_branch]);
+            $process->run();
+    
+            $process = new Process(['git', 'push', 'origin']);
+            $process->run();
+            
+            $process = new Process(['git', 'checkout', 'latest-release']);
+            $process->run();
+            
+            $process = new Process(['git', 'merge', 'master']);
+            $process->run();
+            
+            $process = new Process(['git', 'push', 'origin']);
+            $process->run();
+
+            $process = new Process(['git', 'checkout', 'master']);
+            $process->run();
+        }
     }
 }

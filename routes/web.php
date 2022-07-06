@@ -45,6 +45,8 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge'); 
+
 Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
     // display integration error messages
