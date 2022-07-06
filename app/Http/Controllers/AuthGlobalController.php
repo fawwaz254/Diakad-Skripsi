@@ -242,6 +242,8 @@ class AuthGlobalController extends BaseController
             $name_branch = $input->b;
 
             $cmd = [];
+            $cmd[] = 'git config --global user.email "riordhn@gmail.com"';
+            $cmd[] = 'git config --global user.name "Rio Ramadhan D"';
             $cmd[] = 'git fetch';
             $cmd[] = 'git merge origin '. $name_branch . ' -m "Merge branch '.$name_branch.' into master"';
             $cmd[] = 'git push origin master';
