@@ -82,9 +82,19 @@
 @include('scriptjs')
 <!-- CKeditor Plugin Js -->
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
-CKEDITOR.replace( 'q1'); 
+   var options = {
+    filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+    filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+  };
+
+
+
+CKEDITOR.replace( 'q1',options); 
 
 // custom code to key binding ckeditor
 timer = setInterval(updateDiv,100);
@@ -98,9 +108,7 @@ function updateDiv(){
 </script>
 
 <script>
-CKEDITOR.replace( 'a0', {
-      height: 50
-    } );
+CKEDITOR.replace( 'a0',options );
 
 // custom code to key binding ckeditor
 timer = setInterval(updateDiv,100);
@@ -111,9 +119,7 @@ function updateDiv(){
 </script>
 
 <script>
-CKEDITOR.replace( 'a1', {
-      height: 50
-    }  );
+CKEDITOR.replace( 'a1',options);
 
 // custom code to key binding ckeditor
 timer = setInterval(updateDiv,100);
@@ -124,9 +130,7 @@ function updateDiv(){
 </script> 
 
 <script>
-    CKEDITOR.replace( 'a2', {
-      height: 50
-    }  );
+    CKEDITOR.replace( 'a2',options);
     
     // custom code to key binding ckeditor
     timer = setInterval(updateDiv,100);
@@ -137,9 +141,7 @@ function updateDiv(){
     </script> 
 
 <script>
-    CKEDITOR.replace( 'a3', {
-      height: 50
-    }  );
+    CKEDITOR.replace( 'a3',options);
     
     // custom code to key binding ckeditor
     timer = setInterval(updateDiv,100);
@@ -150,9 +152,7 @@ function updateDiv(){
     </script> 
 
 <script>
-    CKEDITOR.replace( 'a4', {
-      height: 50
-    }  );
+    CKEDITOR.replace( 'a4',options );
     
     // custom code to key binding ckeditor
     timer = setInterval(updateDiv,100);
