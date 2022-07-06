@@ -239,27 +239,35 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
 
         if(!empty($input->b)){
-            $name_branch = $input->b;
-            $process = new Process(['git', 'fetch']);
-            $process->run();
-
-            $process = new Process(['git', 'merge', $name_branch]);
-            $process->run();
+            try{
+                $name_branch = $input->b;
+                $process = new Process(['git', 'fetch']);
+                $process->run();
     
-            $process = new Process(['git', 'push', 'origin']);
-            $process->run();
-            
-            $process = new Process(['git', 'checkout', 'latest-release']);
-            $process->run();
-            
-            $process = new Process(['git', 'merge', 'master']);
-            $process->run();
-            
-            $process = new Process(['git', 'push', 'origin']);
-            $process->run();
+                $process = new Process(['git', 'merge', $name_branch]);
+                $process->run();
+        
+                $process = new Process(['git', 'push', 'origin']);
+                $process->run();
+                
+                $process = new Process(['git', 'checkout', 'latest-release']);
+                $process->run();
+                
+                $process = new Process(['git', 'merge', 'master']);
+                $process->run();
+                
+                $process = new Process(['git', 'push', 'origin']);
+                $process->run();
+    
+                $process = new Process(['git', 'checkout', 'master']);
+                $process->run();
 
-            $process = new Process(['git', 'checkout', 'master']);
-            $process->run();
+                return true;
+            } catch (\Exception $e){
+                dd($e);
+            }
         }
+
+        return false;
     }
 }
