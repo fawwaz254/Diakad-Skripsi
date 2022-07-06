@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use App\Models\Sekolah;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -105,8 +104,6 @@ Route::get('cekHashPassword',function(){
     $password =  Hash::make($_GET['c']);
     return  $password;
 });
-
-
 
 Route::view('success-page', 'form-pengisian-alumni.success-page');
 Route::view('error-page', 'form-pengisian-alumni.error-page');
