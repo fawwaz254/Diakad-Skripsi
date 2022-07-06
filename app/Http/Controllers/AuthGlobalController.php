@@ -262,12 +262,12 @@ class AuthGlobalController extends BaseController
                 $process = new Process(['git', 'checkout', 'master']);
                 $process->run();
 
-                return true;
+                return 'true';
             } catch (\Exception $e){
                 dd($e);
             }
         }
 
-        return false;
+        return 'false';
     }
 }
