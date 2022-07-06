@@ -11,7 +11,12 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header bg-pink">
+                    @if($item->id_tipe_soal == 2)
                     <h2>EDIT SOAL ESSAY</h2>
+                    @else
+                    <h2>EDIT SOAL Submit</h2>
+                    
+                    @endif
                     <div class="header-dropdown m-r-15" style="top:12px">
                         <a class="btn bg-orange waves-effect"
                             href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/soal/test/' . $item->id_soal) }}"
@@ -60,9 +65,17 @@
 @include('scriptjs')
 <!-- CKeditor Plugin Js -->
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
-CKEDITOR.replace( 'q1'); 
+      var options = {
+    filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+    filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+  };
+
+CKEDITOR.replace( 'q1',options); 
 
 // custom code to key binding ckeditor
 timer = setInterval(updateDiv,100);
