@@ -45,6 +45,7 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
+// DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge'); 
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
