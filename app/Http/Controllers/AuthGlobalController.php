@@ -239,33 +239,25 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
 
         if(!empty($input->b)){
-            try{
-                $name_branch = $input->b;
-                $process = new Process(['git', 'fetch']);
-                $process->run();
-    
-                $process = new Process(['git', 'merge', 'origin/'.$name_branch, '-m', '"Merge branch '.$name_branch.' into master"']);
-                $process->run();
-        
-                $process = new Process(['git', 'push', 'origin', 'master']);
-                $process->run();
-                
-                $process = new Process(['git', 'checkout', 'latest-release']);
-                $process->run();
-                
-                $process = new Process(['git', 'merge', 'master', '-m', '"Merge branch master into latest-release"']);
-                $process->run();
-                
-                $process = new Process(['git', 'push', 'origin', 'latest-release']);
-                $process->run();
-    
-                $process = new Process(['git', 'checkout', 'master']);
-                $process->run();
+            $name_branch = $input->b;
 
-                return 'true';
-            } catch (\Exception $e){
-                dd($e);
+            $cmd = [];
+            $cmd[] = 'git fetch';
+            $cmd[] = 'git merge origin '. $name_branch . ' -m "Merge branch '.$name_branch.' into master"';
+            $cmd[] = 'git push origin master';
+            $cmd[] = 'git checkout latest-release';
+            $cmd[] = 'git merge master -m "Merge branch master into latest-release"';
+            $cmd[] = 'git push origin latest-release';
+            $cmd[] = 'git checkout master';
+            
+            $process = new Process(implode(' && ', $cmd));
+            $process->setTimeout(360);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                throw new \RuntimeException($process->getErrorOutput());
             }
+
+            return 'true';
         }
 
         return 'false';
