@@ -15,6 +15,7 @@
                     <h2>EDIT SOAL ESSAY</h2>
                     @else
                     <h2>EDIT SOAL Submit</h2>
+                    
                     @endif
                     <div class="header-dropdown m-r-15" style="top:12px">
                         <a class="btn bg-orange waves-effect"
