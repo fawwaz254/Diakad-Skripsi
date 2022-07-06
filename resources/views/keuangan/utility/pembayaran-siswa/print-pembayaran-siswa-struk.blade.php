@@ -7,6 +7,9 @@
     <title>Cetak Pembayaran Siswa</title>
 
     <style>
+       body {
+        font-family: sans-serif;
+        }
         .page {
             width: <?= $lebar ?>mm;
         }
