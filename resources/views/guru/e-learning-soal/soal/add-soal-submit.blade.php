@@ -54,12 +54,18 @@
 @include('scriptjs')
 
 <script src="{{asset('plugins/ckeditor/ckeditor.js')}}"></script>
-<script src="{{asset('plugins/ckfinder/ckfinder.js')}}"></script>
+{{-- <script src="{{asset('plugins/ckfinder/ckfinder.js')}}"></script> --}}
+<script src="/vendor/laravel-filemanager/js/stand-alone-button.js"></script>
 
 <script>
+        var options = {
+    filebrowserImageBrowseUrl: 'laravel-filemanager?type=Images',
+    filebrowserImageUploadUrl: 'laravel-filemanager/upload?type=Images&_token=',
+    filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
+    filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
+  };
 
-var editor = CKEDITOR.replace('q1');
-CKFinder.setupCKEditor(editor);
+var editor = CKEDITOR.replace('q1',options);
 
 timer = setInterval(updateDiv,100);
 function updateDiv(){

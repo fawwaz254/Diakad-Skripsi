@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use App\Models\Sekolah;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 /*
@@ -44,6 +43,8 @@ Route::post('upload', function (Request $request) {
     return redirect()->back();
 });*/
 // END CONTOH UPLOAD DO
+
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge'); 
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
