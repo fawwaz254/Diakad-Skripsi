@@ -81,6 +81,7 @@
     filebrowserBrowseUrl: 'laravel-filemanager?type=Files',
     filebrowserUploadUrl: 'laravel-filemanager/upload?type=Files&_token='
   };
+
     var editorq1 = CKEDITOR.replace('q1',options);
     // CKFinder.setupCKEditor(editorq1);
 
@@ -97,9 +98,7 @@
 </script>
 
 <script>
-    var editora0 = CKEDITOR.replace('a0',options {
-        height: 50
-    });
+    var editora0 = CKEDITOR.replace('a0',options);
     // CKFinder.setupCKEditor(editora0);
 
     // custom code to key binding ckeditor
@@ -112,11 +111,7 @@
 </script>
 
 <script>
-    var editora1 = CKEDITOR.replace('a1',options {
-        height: 50
-    });
-   
-
+    var editora1 = CKEDITOR.replace('a1',options);
     // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
 
@@ -127,10 +122,7 @@
 </script>
 
 <script>
-    var editora2 = CKEDITOR.replace('a2',options {
-        height: 50
-    });
-
+    var editora2 = CKEDITOR.replace('a2',options);
 
 
     // custom code to key binding ckeditor
@@ -143,11 +135,7 @@
 </script>
 
 <script>
-    var editora3 = CKEDITOR.replace('a3',options {
-        height: 50
-    });
-  
-
+    var editora3 = CKEDITOR.replace('a3',options);
 
     // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
@@ -159,11 +147,7 @@
 </script>
 
 <script>
-    var editora4 = CKEDITOR.replace('a4',options {
-        height: 50
-    });
-  
-
+    var editora4 = CKEDITOR.replace('a4',options);
 
     // custom code to key binding ckeditor
     timer = setInterval(updateDiv, 100);
