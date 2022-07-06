@@ -71,7 +71,7 @@ Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/download', '\UniSharp\LaravelFilemanager\Controllers\DownloadController@getDownload')->name('unisharp.lfm.getDownload');
     // delete
     Route::get('/delete', '\UniSharp\LaravelFilemanager\Controllers\DeleteController@getDelete')->name('unisharp.lfm.getDelete');
-    Route::get('/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index'); 
+    Route::get('/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index');
 });
 
 // START USING FOR FINGERPRINT
@@ -100,7 +100,7 @@ Route::get('guid', function () {
     return $html;
 });
 
-Route::get('cekHashPassword',function(){
+Route::get('cekHashPassword', function () {
     $password =  Hash::make($_GET['c']);
     return  $password;
 });
