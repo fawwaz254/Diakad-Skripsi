@@ -79,6 +79,7 @@ class HasilTestController extends Controller
         foreach ($input->id_jawaban_test as $id_jawaban_test) {
             $jawaban_test = JawabanTest::where('id_jawaban_test', $id_jawaban_test)->first();
             $jawaban_test->nilai = $input->nilai[$id_jawaban_test];
+            $jawaban_test->tangapan = $input->tangapan[$id_jawaban_test];
             $jawaban_test->status_koreksi = 1;
             $jawaban_test->save();
         }

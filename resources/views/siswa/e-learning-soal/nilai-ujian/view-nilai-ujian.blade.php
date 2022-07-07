@@ -1,15 +1,10 @@
 <div class="container-fluid">
-    <h2><a type="button" class="btn bg-grey waves-effect"
-            href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/hasil-test') }}">
-            <i class="material-icons">keyboard_backspace</i>
-            <span>Kembali</span>
-        </a></h2>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
                     <h2>
-                        List Hasil Test
+                        List Nilai Ujian
                     </h2>
                     {{-- @foreach ($question_package as $peng)
                     <p>{{ $peng}}</p>
@@ -25,7 +20,8 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Siswa</th>
+                                    <th>Nama Test</th>
+                                    <th>Mapel</th>
                                     {{-- <th>Jam Pengerjaan</th> --}}
                                     <th>Nilai Soal Pilihan Ganda</th>
                                     <th>Jumlah Soal</th>
@@ -44,12 +40,13 @@
     </div>
     <!-- #END# Basic Examples -->
 </div>
+@include('scriptjs')
 <script>
-    var paket_soal = '{{ $question_package->id_paket_soal }}';
     var modul_url = '{{ Request::segment(2) }}';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'hasil-test/detail/table/' + paket_soal;
-    var detail_url = role_url + '#' + modul_url + '/' + 'paket-soal';
-    var koreksi_hasil_test_url = role_url + '#' + modul_url + '/' + 'hasil-test' + '/' + 'koreksi';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'nilai-ujian/table';
+    var detail_url = role_url + '#' + modul_url + '/' + 'list-ujian/cek/';
+    var koreksi_hasil_test_url = role_url + '#' + modul_url + '/' + 'nilai-ujian' + '/' + 'koreksi';
+    //  alert(datatable_url);
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -64,14 +61,20 @@
                 orderable: false
             },
             {
-                data: 'pengguna.nm_pengguna',
-                name: 'pengguna.nm_pengguna'
+                data: 'paket_soal.text',
+                name: 'paket_soal.text'
+            },
+            {
+                data: 'paket_soal.kategori_soal.nm_kategori_soal',
+                name: 'paket_soal.kategori_soal.nm_kategori_soal'
             },
             {
                 data: 'paket_soal.nilai',
+                name: 'paket_soal.nilai'
             },
             {
                 data: 'detail_paket_soal',
+                name: 'detail_paket_soal'
             },
             {
                 data: 'total_nilai',
@@ -82,10 +85,10 @@
             {
                 data: 'total_nilai',
                 render: function(data) {
-                    if (!data.status_koreksi) {
-                        return `<a href="${koreksi_hasil_test_url}/${data.id_paket_soal}/${data.id_test}/${data.id_pengguna}">Koreksi Jawaban</a>`
-                    } else {
-                        return data.nilai_pilihan_essay_submit
+                    if(data.validasi_pilihan_essay_submit){
+                        return `${data.nilai_pilihan_essay_submit} <a href="${koreksi_hasil_test_url}/${data.id_test}">(Lihat Penilaian)</a>`
+                    }else{
+                        return '-'
                     }
                 }
             },
@@ -95,18 +98,6 @@
                     return data.nilai
                 }
             }
-            // { data: 'waktu_mulai_pengerjaan' },
-            // { data: 'jawaban_test' },
-            // { data: 'total_question', name: 'total_question', searchable: false, orderable: false },
-            // { data: 'total_answer', name: 'total_answer', searchable: false, orderable: false },
-            // { data: 'nilai'},                { data: 'nilai'},                { data: 'nilai'},
-            // { data: 'action', name: 'action', searchable: false, orderable: false,
-            //     render: function(data) {
-            //         return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
-            //             '    <i class="material-icons">remove_red_eye</i>'+
-            //             '</a>'
-            //     }
-            // }
         ],
         order: [
             [2, 'asc'],

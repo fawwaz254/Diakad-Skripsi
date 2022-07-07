@@ -71,12 +71,12 @@
                     </div>
 
                     <div class="row clearfix">
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                             <div class="input-group">
-                                <span class="input-group-addon">Nilai :</span>
+                                <span class="input-group-addon">Nilai Soal Pilihan Ganda :</span>
                             </div>
                         </div>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="nilai" required="">
