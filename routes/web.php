@@ -44,6 +44,7 @@ Route::post('upload', function (Request $request) {
 });*/
 // END CONTOH UPLOAD DO
 
+// DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge'); 
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
@@ -70,7 +71,7 @@ Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/download', '\UniSharp\LaravelFilemanager\Controllers\DownloadController@getDownload')->name('unisharp.lfm.getDownload');
     // delete
     Route::get('/delete', '\UniSharp\LaravelFilemanager\Controllers\DeleteController@getDelete')->name('unisharp.lfm.getDelete');
-    Route::get('/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index'); 
+    Route::get('/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index');
 });
 
 // START USING FOR FINGERPRINT
@@ -99,7 +100,7 @@ Route::get('guid', function () {
     return $html;
 });
 
-Route::get('cekHashPassword',function(){
+Route::get('cekHashPassword', function () {
     $password =  Hash::make($_GET['c']);
     return  $password;
 });
