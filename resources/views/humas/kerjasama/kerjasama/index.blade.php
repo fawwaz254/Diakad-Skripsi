@@ -5,12 +5,17 @@
         padding: 10px;
     }
 
+    #will-expired {
+        background: yellow;
+        color: white;
+        padding: 10px;
+    }
+
     #not-expired {
         background: green;
         color: white;
         padding: 10px;
     }
-
 </style>
 <div class="container-fluid">
     <div class="block-header">
@@ -81,10 +86,19 @@
             {
                 data: 'status_kadaluarsa',
                 render: function(data) {
-                    if (data.status_kadaluarsa) {
+                    // console.log(data.status_kadaluarsa)
+                    if (data.status_kadaluarsa == 10) {
                         return `<span id="expired">Sudah Expired</span>`
                     }
-                    return `<span id="not-expired">Belum Expired</span>`
+                    if (data.status_kadaluarsa >= 1) {
+                        return `<span id="not-expired">Belum Expired</span>`
+                    }
+                    if (data.status_kadaluarsa == 1) {
+                        return `<span id="will-expired">Akan Expired</span>`
+                    }
+                    if (data.status_kadaluarsa == 0) {
+                        return `<span id="will-expired">Akan Expired</span>`
+                    }
                 }
             },
             {
