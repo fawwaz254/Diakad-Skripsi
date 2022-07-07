@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Libraries\Humas\LibKerjasama;
 use Yajra\Datatables\Datatables;
+use Validator;
 
 class InstansiController extends Controller
 {
@@ -21,7 +22,7 @@ class InstansiController extends Controller
      */
     public function index()
     {
-        return view( self::RESOURCE_PATH . 'index');
+        return view(self::RESOURCE_PATH . 'index');
     }
 
     /**
@@ -42,9 +43,23 @@ class InstansiController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'nm_instansi' => 'required',
+            'bidang_usaha' => 'required',
+            'kontak' => 'required',
+            'website' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $instansi = LibKerjasama::storeInstansi($data);
-        return web_response(202, "Create Instansi successfully", self::PATH);
+        return web_response(202, "Save Data Successfully", self::PATH);
     }
 
     /**
@@ -69,7 +84,7 @@ class InstansiController extends Controller
     {
         $data = $request->only(self::FETCH_ATTRIBUTE);
         $instansi->update($data);
-        return web_response(202, "Update Instansi successfully", self::PATH);
+        return web_response(202, "Save Data Successfully", self::PATH);
     }
 
     /**
@@ -81,20 +96,20 @@ class InstansiController extends Controller
     public function destroy(Instansi $instansi)
     {
         $instansi->delete();
-        return web_response(203, "Delete Instansi successfully");
+        return web_response(203, "Delete Data Successfully");
     }
 
     public function renderDatatables()
     {
-        $data_instansi = libKerjasama::getInstansi() ;
+        $data_instansi = libKerjasama::getInstansi();
 
         return Datatables::of($data_instansi)
-                ->addColumn('action', function($instansi){
-                    $data = array(
-                        'id' => $instansi->id_instansi
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($instansi) {
+                $data = array(
+                    'id' => $instansi->id_instansi
+                );
+                return $data;
+            })
+            ->make(true);
     }
 }

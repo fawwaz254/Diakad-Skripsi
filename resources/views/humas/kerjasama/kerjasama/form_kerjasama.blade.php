@@ -5,7 +5,6 @@
         font-weight: normal;
         color: #111;
     }
-
 </style>
 
 <div class="container-fluid">
@@ -31,7 +30,8 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Nama Kerjasama </h2>
                             <input type="text" class="form-control" name="nm_kerjasama" aria-required="true"
-                                aria-invalid="true" value="{{ !empty($kerjasama) ? $kerjasama->nm_kerjasama : '' }}">
+                                aria-invalid="true" value="{{ !empty($kerjasama) ? $kerjasama->nm_kerjasama : '' }}"
+                                required="">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Instansi </h2>
@@ -40,7 +40,7 @@
                                     <select class="form-control show-tick" name="id_instansi">
                                         <option value="" selected disabled> Pilih Instansi </option>
                                         @foreach ($data_instansi as $instansi)
-                                            <option value="{{ $instansi->id_instansi }}"
+                                            <option value="{{ $instansi->id_instansi }}" required=""
                                                 {{ isset($kerjasama) && $kerjasama->id_instansi == $instansi->id_instansi ? 'selected' : '' }}>
                                                 {{ $instansi->nm_instansi }}
                                             </option>
@@ -68,19 +68,19 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Tanggal Awal Kerjasama </h2>
                             <input type="date" class="form-control" name="tanggal_kerjasama" aria-required="true"
-                                aria-invalid="true"
+                                aria-invalid="true" required=""
                                 value="{{ !empty($kerjasama) ? $kerjasama->tanggal_kerjasama : '' }}">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Tanggal Akhir Kerjasama </h2>
                             <input type="date" class="form-control" name="tanggal_akhir_kerjasama"
-                                aria-required="true" aria-invalid="true"
+                                aria-required="true" aria-invalid="true" required=""
                                 value="{{ !empty($kerjasama) ? $kerjasama->tanggal_akhir_kerjasama : '' }}">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Status </h2>
-                            <input id="aktif" class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="status" value="1" required="required"
+                            <input id="aktif" class="with-gap radio-col-light-green form-control validate"
+                                type="radio" name="status" value="1" required=""
                                 {{ isset($kerjasama) && $kerjasama->status == '1' ? 'checked' : '' }}>
                             <label for="aktif"> Aktif </label>
                             <input id="non-aktif" class="with-gap radio-col-light-green form-control validate"
