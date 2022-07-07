@@ -242,15 +242,7 @@ class AuthGlobalController extends BaseController
             $name_branch = $input->b;
 
             $cmd = [];
-            $cmd[] = 'git config --global user.email "riordhn@gmail.com"';
-            $cmd[] = 'git config --global user.name "Rio Ramadhan D"';
-            $cmd[] = 'git fetch';
-            $cmd[] = 'git merge origin '. $name_branch . ' -m "Merge branch '.$name_branch.' into master"';
-            $cmd[] = 'git push origin master';
-            $cmd[] = 'git checkout latest-release';
-            $cmd[] = 'git merge master -m "Merge branch master into latest-release"';
-            $cmd[] = 'git push origin latest-release';
-            $cmd[] = 'git checkout master';
+            $cmd[] = 'sh /usr/local/bin/merge-diakad.sh "'. $name_branch .'"';
             
             $process = new Process(implode(' && ', $cmd));
             $process->setTimeout(360);
