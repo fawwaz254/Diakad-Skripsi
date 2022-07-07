@@ -14,11 +14,11 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama</th>
+                                    <th>Nama Ujian</th>
                                     <th>Kelas</th>
                                     <th>Mapel</th>
                                     <th>Jumlah Soal</th>
-                                    <th>Nilai Tiap Soal</th>
+                                    <th>Nilai Soal Pilihan Ganda</th>
                                     <th>Waktu Mulai</th>
                                     <th>Waktu Akhir</th>
                                     <th>Durasi Pengerjaan</th>

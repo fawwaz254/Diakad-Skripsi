@@ -8,17 +8,13 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form class="form-validation" method="POST" id="form-validation"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/hasil-test/koreksi') }}">
-                        {{ csrf_field() }}
                         @php
                             $nomor = 1;
                         @endphp
-                        <input type="hidden" name="id_paket_soal" value="{{ $id_paket_soal }}">
+                   
                         @foreach ($questions as $question)
                             <hr style="height:1px;border:none;color:#333;background-color:#333;">
                             <p>Soal no. {{ $nomor++ }}</p>
-                            <input type="hidden" name="id_jawaban_test[]" value="{{ $question->id_jawaban_test }}">
                             <pre
                                 style="background:white; border: 1px solid #ccc; border-radius: 4px; display: block; padding: 9.5px; margin-bottom: 10px;">{!! $question->soal->content !!}</pre>
                             <p>Jawaban</p>
@@ -39,25 +35,20 @@
                             <p>Nilai</p>
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                    <input type="number" class="form-control"
-                                        name="nilai[{{ $question->id_jawaban_test }}]" required>
+                                    <input type="number" class="form-control" disabled
+                              value="{{ $question->nilai }}">
                                 </div>
                             </div>
                             <p>Tangapan (Opsional)</p>
                             <div class="row clearfix">
                                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                    <input type="text" class="form-control"
-                                        name="tangapan[{{ $question->id_jawaban_test }}]">
+                                    <input type="text" class="form-control" disabled
+                                    value="{{ $question->tangapan }}">
                                 </div>
                             </div>
                         @endforeach
-                        <div class="row clearfix">
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-pink waves-effect" id="btn-submit"
-                                    type="submit">Save</button>
-                            </div>
+                        
                         </div>
-                    </form>
                 </div>
             </div>
         </div>
