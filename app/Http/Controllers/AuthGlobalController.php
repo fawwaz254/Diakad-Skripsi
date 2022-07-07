@@ -242,7 +242,7 @@ class AuthGlobalController extends BaseController
             $name_branch = $input->b;
 
             $cmd = [];
-            $cmd[] = 'sh /root/merge-diakad.sh "'. $name_branch .'"';
+            $cmd[] = 'sh /usr/local/bin/merge-diakad.sh "'. $name_branch .'"';
             
             $process = new Process(implode(' && ', $cmd));
             $process->setTimeout(360);
