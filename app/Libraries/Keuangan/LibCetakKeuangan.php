@@ -439,7 +439,7 @@ class LibCetakKeuangan{
                                         $q->on('kategori_rapb.id_kategori_rapb', '=' ,'subkategori_rapb.id_kategori_rapb')
                                             ->whereNull('kategori_rapb.deleted_at');
                                     })
-                                    // ->where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])
+                                    ->where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])
                                     ->orderBy('subkategori_rapb.kode_subkategori_rapb');
 
         if($print_setting == 'self'){
