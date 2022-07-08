@@ -75,6 +75,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				// Route::get('test/result', 'Participant\TestController@indexReview');
 
 			});
+			Route::group(array('prefix' => 'nilai-ujian'), function () {
+				Route::get('/', 'Siswa\ELearningSoal\NilaiUjianController@indexList');
+				Route::post('table', 'Siswa\ELearningSoal\NilaiUjianController@commonList');
+				Route::get('koreksi/{id_test}/','Siswa\ELearningSoal\NilaiUjianController@indexPenilaian');
+			});
 		});
 
 
