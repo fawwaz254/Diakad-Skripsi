@@ -23,10 +23,10 @@
                                     <th>Nama Test</th>
                                     <th>Mapel</th>
                                     {{-- <th>Jam Pengerjaan</th> --}}
-                                    <th>Nilai Soal Pilihan Ganda</th>
+                                    <th>Nilai Pilihan Ganda</th>
                                     <th>Jumlah Soal</th>
                                     <th>Total Nilai Pilihan Ganda</th>
-                                    <th>Total Nilai Essay / Jawaban Submit</th>
+                                    <th>Total Nilai Essay / File</th>
                                     <th>Total Nilai</th>
                                 </tr>
                             </thead>

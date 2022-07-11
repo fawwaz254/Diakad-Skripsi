@@ -53,12 +53,12 @@
                             </div>
                    
                     <div class="row clearfix">
-                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                             <div class="input-group">
-                                <span class="input-group-addon">Nama :</span>
+                                <span class="input-group-addon">Nama Paket Soal :</span>
                             </div>
                         </div>
-                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <input type="text" class="form-control" name="title" required=""
@@ -73,7 +73,7 @@
                     <div class="row clearfix">
                         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                             <div class="input-group">
-                                <span class="input-group-addon">Nilai Soal Pilihan Ganda :</span>
+                                <span class="input-group-addon">Nilai Pilihan Ganda :</span>
                             </div>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
@@ -118,9 +118,9 @@
                                                     value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                             @endforeach
                                         @else
-                                            <option disabled selected value="">-- Pilih kelas --</option>
+                                            <option disabled value="">-- Pilih kelas --</option>
                                             @foreach ($kelas as $k)
-                                                <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
+                                                <option @if($wali_kelas->id_kelas == $k->id_kelas) selected @endif value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
                                                 </option>
                                             @endforeach
                                         @endif
@@ -157,9 +157,9 @@
                                                 10
                                                 Menit</option>
                                         @else
-                                            <option disabled selected value="">-- Pilih Durasi Pengerjaan --
+                                            <option disabled  value="">-- Pilih Durasi Pengerjaan --
                                             </option>
-                                            <option value="60">1 Jam</option>
+                                            <option value="60" selected>1 Jam</option>
                                             <option value="50">50 Menit</option>
                                             <option value="40">40 Menit</option>
                                             <option value="30">30 Menit</option>
@@ -172,8 +172,7 @@
                             </div>
                         </div>
                     </div>
-
-
+                    
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                         <div class="input-group">
                             <span class="input-group-addon">Waktu Mulai :</span>
@@ -186,7 +185,7 @@
                                 {{-- <label class="form-label">Title</label> --}}
                                 <input type="datetime-local" class="form-control" name="waktu_mulai" required=""
                                     aria-required="true" aria-invalid="true"
-                                    @if ($item) value="{{ $item->waktu_mulai }}" @endif>
+                                    @if ($item) value="{{ $item->waktu_mulai }}" @else value="{{  Carbon\Carbon::now()}}" @endif>
 
                             </div>
                         </div>
@@ -202,7 +201,7 @@
                             <div class="form-line">
                                 <input type="datetime-local" class="form-control" name="waktu_selesai"
                                     required="" aria-required="true" aria-invalid="true"
-                                    @if ($item) value="{{ $item->waktu_selesai }}" @endif>
+                                    @if ($item) value="{{ $item->waktu_selesai }}" @else value="{{  Carbon\Carbon::now()->yesterday()->addDays(7)}}" @endif>
 
                             </div>
                         </div>

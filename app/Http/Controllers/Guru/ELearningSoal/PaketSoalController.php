@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailPaketSoal;
 use App\Models\KategoriSoal;
 use App\Models\Kelas;
+
 use App\Models\PaketSoal;
 use App\Models\Soal;
+use App\Models\WaliKelas;
 use Yajra\Datatables\Datatables;
 use Auth;
 use DB;
@@ -36,8 +38,10 @@ class PaketSoalController extends Controller
 
     public function indexManage(Request $request, $id = 0)
     {
+        $input = (object) $request->input();
         $kelas = Kelas::get();
         $kategori = KategoriSoal::all();
+        $wali_kelas = get_keterangan_wali_kelas($input->auth_data->pengguna->id_pengguna);
         // $events = Event::get();
         // $events = null;
         if (!empty($id)) {
@@ -45,7 +49,7 @@ class PaketSoalController extends Controller
         } else {
             $item = null;
         }
-        return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas','kategori'));
+        return view('guru/e-learning-soal/paket-soal/manage-paket-soal', compact('item', 'kelas','kategori','wali_kelas'));
     }
 
     public function indexTest(Request $request, $id = 0)
@@ -107,7 +111,7 @@ class PaketSoalController extends Controller
                 }else if($item->id_tipe_soal == 2){
                     return "Essay";
                 }
-                return "Submit";
+                return "File";
             })
             ->make(true);
     }

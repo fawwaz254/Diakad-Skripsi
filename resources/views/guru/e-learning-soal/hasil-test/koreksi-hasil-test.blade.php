@@ -15,6 +15,9 @@
                             $nomor = 1;
                         @endphp
                         <input type="hidden" name="id_paket_soal" value="{{ $id_paket_soal }}">
+                        <input type="hidden" name="id_pengguna" value="{{ $id_pengguna }}">
+                        <input type="hidden" name="total_nilai" value="{{ $total_nilai }}">
+                        Total Nilai Pilihan Ganda : {{  $total_nilai  }}
                         @foreach ($questions as $question)
                             <hr style="height:1px;border:none;color:#333;background-color:#333;">
                             <p>Soal no. {{ $nomor++ }}</p>
@@ -45,7 +48,7 @@
                             </div>
                             <p>Tangapan (Opsional)</p>
                             <div class="row clearfix">
-                                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
                                     <input type="text" class="form-control"
                                         name="tangapan[{{ $question->id_jawaban_test }}]">
                                 </div>

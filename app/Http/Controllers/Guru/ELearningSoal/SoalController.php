@@ -275,7 +275,7 @@ class SoalController extends Controller
                 }else if($item->id_tipe_soal == 2){
                     return "Essay";
                 }
-                return "Submit";
+                return "File";
             })
             ->make(true);
     }

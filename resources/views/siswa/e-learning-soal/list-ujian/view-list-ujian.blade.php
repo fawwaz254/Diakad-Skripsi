@@ -18,7 +18,7 @@
                                     <th>Kelas</th>
                                     <th>Mapel</th>
                                     <th>Jumlah Soal</th>
-                                    <th>Nilai Soal Pilihan Ganda</th>
+                                    <th>Nilai Pilihan Ganda</th>
                                     <th>Waktu Mulai</th>
                                     <th>Waktu Akhir</th>
                                     <th>Durasi Pengerjaan</th>
