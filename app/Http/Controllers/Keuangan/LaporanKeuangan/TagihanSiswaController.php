@@ -82,7 +82,7 @@ class TagihanSiswaController extends BaseController
             // })->get();
 
             $list_data = Siswa::with(['tagihan_tertagih' => function($q) use ($data_id_biaya_sekolah, $jenis_tagihan){
-                                    $q->with('pembayaran')
+                                    $q->with('pembayaran', 'potongan')
                                         ->whereHas('detail_biaya', function($query) use ($data_id_biaya_sekolah, $jenis_tagihan){
                                             $query->whereIn('id_biaya_sekolah', $data_id_biaya_sekolah);
 
@@ -92,7 +92,7 @@ class TagihanSiswaController extends BaseController
                                                 }
                                             }
                                         });
-                                },'pengguna','kelas','tagihan_biaya.potongan']);
+                                },'pengguna','kelas']);
 
             if(!empty($kelas)){
                 $list_data = $list_data->where('id_kelas', $kelas);
@@ -101,17 +101,17 @@ class TagihanSiswaController extends BaseController
 
         return Datatables::of($list_data)
                 ->addColumn('total_tagihan_bulan', function ($item) {
-                    $sumPembayaran = $item->tagihan_biaya->sum(function($sum){
+                    $sumPembayaran = $item->tagihan_tertagih->sum(function($sum){
                                             return $sum->pembayaran->sum('besar_pembayaran');
                                         });
-                    $diskonTagihan = $item->tagihan_biaya->sum(function($sum){
+                    $diskonTagihan = $item->tagihan_tertagih->sum(function($sum){
                         return $sum->potongan->total_potongan ?? 0;
                     });
-                    return 'Rp'.number_format($item->tagihan_biaya->sum('besar_biaya') - $sumPembayaran - $diskonTagihan);
+                    return 'Rp'.number_format($item->tagihan_tertagih->sum('besar_biaya') - $sumPembayaran - $diskonTagihan);
                 })
                 ->addColumn('tagihan_bulan', function ($item) use ($tahun) {
                     $array_tagihan_bulan = array();
-                    foreach($item->tagihan_biaya as $tagihan){
+                    foreach($item->tagihan_tertagih as $tagihan){
                             
                         // $x =   $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan->id_detail_biaya);
                         $x =   $tagihan->detail_biaya;
