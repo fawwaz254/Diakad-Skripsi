@@ -59,7 +59,12 @@ class HasilTestController extends Controller
     public function indexKoreksi(Request $request, $id_paket_soal = null, $id_test = null, $id_pengguna = null)
     {
         $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $id_pengguna)->where('status_koreksi', 0)->with('soal')->get();
-        return view('guru/e-learning-soal/hasil-test/koreksi-hasil-test', compact('questions', 'id_paket_soal', 'id_pengguna'));
+        $jawaban_test = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $id_pengguna)->where('id_tipe_soal', 1)->get();
+        $total_nilai = 0;
+        foreach ($jawaban_test as $test) {
+            $total_nilai = $total_nilai + $test->nilai;
+        }
+        return view('guru/e-learning-soal/hasil-test/koreksi-hasil-test', compact('questions', 'id_paket_soal', 'id_pengguna', 'total_nilai'));
     }
 
     public function actionKoreksiHasilTest(Request $request)
@@ -76,6 +81,20 @@ class HasilTestController extends Controller
                 'message' => $validator->errors()->first()
             ];
         };
+
+        $total_nilai = 0;
+        foreach ($input->id_jawaban_test as $id_jawaban_test) {
+            $total_nilai =  $total_nilai + $input->nilai[$id_jawaban_test];
+        }
+        $total_nilai = $total_nilai + $input->total_nilai;
+
+        if ($total_nilai > 100) {
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Total Nilai tidak boleh Lebih dari 100'
+            ];
+        }
+
         foreach ($input->id_jawaban_test as $id_jawaban_test) {
             $jawaban_test = JawabanTest::where('id_jawaban_test', $id_jawaban_test)->first();
             $jawaban_test->nilai = $input->nilai[$id_jawaban_test];
@@ -95,8 +114,8 @@ class HasilTestController extends Controller
         // $id_paket_soal = 'D4Ka216526782936281de9586433';
         // $tipe = 1;
 
-        $test = Test::where('id_paket_soal', $question_package_id)->with('pengguna','paket_soal','detail_paket_soal')->get();
-    
+        $test = Test::where('id_paket_soal', $question_package_id)->with('pengguna', 'paket_soal', 'detail_paket_soal')->get();
+
         // $jawaban_test = JawabanTest('id_test', $test->id_test)
 
         // $question_package_details = DetailPaketSoal::where('id_paket_soal', $question_package_id)->get();
@@ -108,20 +127,20 @@ class HasilTestController extends Controller
         // }
         // ,$new_val)->make(true);
         return Datatables::of($test)
-        ->editColumn('detail_paket_soal',function($item){
-            return $item->detail_paket_soal->count();
-            // $counter = 0 ;
-            // foreach($item->detail_paket_soal as $k ){
-            //     $counter++;
-            // }
-          
-            // return  $counter;
-        })
+            ->editColumn('detail_paket_soal', function ($item) {
+                return $item->detail_paket_soal->count();
+                // $counter = 0 ;
+                // foreach($item->detail_paket_soal as $k ){
+                //     $counter++;
+                // }
+
+                // return  $counter;
+            })
             ->addColumn('total_nilai', function ($item) use ($question_package_id) {
 
                 // Jika jawaban ada soal essay
                 if ($jawaban_test = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('status_koreksi', 0)->first()) {
-                    $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal',1)->pluck('nilai')->sum();
+                    $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal', 1)->pluck('nilai')->sum();
                     $nilai = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->pluck('nilai')->sum();
                     $data = array(
                         'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
@@ -133,8 +152,8 @@ class HasilTestController extends Controller
                     );
                 } else {
                     $nilai = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->pluck('nilai')->sum();
-                    $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal',1)->pluck('nilai')->sum();
-                    $nilai_pilihan_essay_submit = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->whereIn('id_tipe_soal',[2,3])->pluck('nilai')->sum();
+                    $nilai_pilihan_ganda = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->where('id_tipe_soal', 1)->pluck('nilai')->sum();
+                    $nilai_pilihan_essay_submit = JawabanTest::where('id_test', $item->id_test)->where('id_pengguna', $item->id_pengguna)->whereIn('id_tipe_soal', [2, 3])->pluck('nilai')->sum();
                     $data = array(
                         'nilai_pilihan_ganda' => $nilai_pilihan_ganda,
                         'nilai_pilihan_essay_submit' => $nilai_pilihan_essay_submit,

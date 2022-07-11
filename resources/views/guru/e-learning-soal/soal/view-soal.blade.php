@@ -10,12 +10,12 @@
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
                 href="{{ url('guru#e-learning-soal/soal/new/essay') }}">
                 <i class="material-icons">add_box</i>
-                <span>Tambah Soal Essay</span>
+                <span>Tambah Jawaban Essay</span>
             </a>
             <a type="button" class="btn btn-success" style="margin-bottom: 15px"
             href="{{ url('guru#e-learning-soal/soal/new/submit') }}">
             <i class="material-icons">add_box</i>
-            <span>Tambah Jawaban Submit</span>
+            <span>Tambah Jawaban File</span>
         </a>
             <a type="button" class="btn btn-primary" style="margin-bottom: 15px"
             href="{{ url('guru#e-learning-soal/soal/kategori') }}">

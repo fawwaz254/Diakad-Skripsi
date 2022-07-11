@@ -12,9 +12,9 @@
             <div class="card">
                 <div class="header bg-pink">
                     @if($item->id_tipe_soal == 2)
-                    <h2>EDIT SOAL ESSAY</h2>
+                    <h2>EDIT JAWABAN ESSAY</h2>
                     @else
-                    <h2>EDIT SOAL Submit</h2>
+                    <h2>EDIT JAWABAN FILE</h2>
                     
                     @endif
                     <div class="header-dropdown m-r-15" style="top:12px">
