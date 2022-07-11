@@ -118,13 +118,20 @@
                                                     value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                             @endforeach
                                         @else
+                                        @if(isset($wali_kelas))
                                             <option disabled value="">-- Pilih kelas --</option>
                                             @foreach ($kelas as $k)
-                                                <option @if($wali_kelas->id_kelas == $k->id_kelas) selected @endif value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
-                                                </option>
+                                            <option @if($wali_kelas->id_kelas == $k->id_kelas) selected @endif value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
+                                            </option>
                                             @endforeach
+                                            @else
+                                            <option disabled selected value="">-- Pilih kelas --</option>
+                                            @foreach ($kelas as $k)
+                                            <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}
+                                            </option>
+                                            @endforeach
+                                            @endif
                                         @endif
-
                                     </select>
                                 </div>
                             </div>

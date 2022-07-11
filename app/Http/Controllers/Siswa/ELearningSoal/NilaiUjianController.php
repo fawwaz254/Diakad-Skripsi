@@ -47,7 +47,7 @@ class NilaiUjianController extends Controller
         
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('soal')->get();
+        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereIn('nomer',[2,3])->with('soal')->get();
         return view('siswa/e-learning-soal/nilai-ujian/view-penilaian-ujian', compact('questions'));
     }
 }
