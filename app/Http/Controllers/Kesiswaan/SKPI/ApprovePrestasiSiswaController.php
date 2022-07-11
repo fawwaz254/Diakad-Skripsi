@@ -241,11 +241,11 @@ class ApprovePrestasiSiswaController extends BaseController
             'p2.gelar_depan',
             'p2.gelar_belakang'
         )
-            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
-            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
-            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
-            ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
-            ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+            ->leftjoin('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->leftjoin('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->leftjoin('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->leftjoin('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+            ->leftjoin('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
             ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
             ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
             ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
