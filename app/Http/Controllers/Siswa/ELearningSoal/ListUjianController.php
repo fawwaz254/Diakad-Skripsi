@@ -124,14 +124,7 @@ class ListUjianController extends Controller
     public function indexTest(Request $request, $id_paket_soal = 0)
     {
         $soal = PaketSoal::find($id_paket_soal);
-        // $waktu = Carbon::now('Asia/Jakarta');
-        // $start_date = Carbon::createFromFormat('Y-m-d H:i:s', $soal->waktu_mulai);
-        // if(strtotime($start_date) > strtotime($waktu)){
-        //     return redirect('siswa/e-learning-soal/list-ujian');
-        //     }
-
         $input = (object) $request->input();
-
         $account = $input->auth_data->pengguna->id_pengguna;
         if ($cek = Test::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->where('id_paket_soal', $soal->id_paket_soal)->first()) {
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $cek->id_test)->first();
@@ -178,6 +171,10 @@ class ListUjianController extends Controller
                     JawabanTest::insert($data);
                 }
             }, 1);
+
+            $soal->status = 1;
+            $soal->save();
+
             $idtest = Test::where('id_paket_soal', $soal->id_paket_soal)->first();
             $soaltest = JawabanTest::where('nomer', 1)->where(['id_pengguna' => $account])->where('id_test', $idtest->id_test)->first();
             return redirect('siswa/e-learning-soal/list-ujian/test/' . $soaltest->id_test . '/1');

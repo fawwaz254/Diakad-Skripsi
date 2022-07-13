@@ -2,15 +2,20 @@
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-            <a type="button" class="btn btn-success" style="margin-bottom: 15px" href="{{url('guru#e-learning-soal/paket-soal/manage')}}">
+            <a type="button" class="btn btn-success" style=" margin-right: 10px" href="{{url('guru#e-learning-soal/paket-soal/manage')}}">
                 <i class="material-icons">add_box</i>
                 <span>Tambah Paket Soal</span>
-            </a> 
+            </a>
+            <input type="checkbox" id="data_alumni" class="checkbox" >
+            <label for="data_alumni"> Tampilkan Semua Paket Soal</label>
+            <input type="hidden" id="status" value="0"> 
+            <br><br>
             <div class="card">
                 <div class="header">
                     <h2>
                         List Paket Soal
                     </h2>
+                    
                     {{-- <ul class="header-dropdown m-r--5">
                         <li class="dropdown">
                             <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -52,6 +57,19 @@
     <!-- #END# Basic Examples -->
 </div>
 <script>
+
+$('.checkbox').on('change', function(){ // on change of state
+   if(this.checked) // if changed state is "CHECKED"
+    {
+        $('#status').val(1);
+        primary_table.draw();
+    }
+    else{
+        $('#status').val(0);
+        primary_table.draw();
+    }
+    });
+
      var modul_url       = '{{Request::segment(2)}}';
      var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'paket-soal/table';
      var detail_url     =  role_url + '#' + modul_url + '/' + 'paket-soal';
@@ -60,10 +78,15 @@
   
         var primary_table = $('#primary_table').DataTable({
             processing: true,
+            serverSide: true,
+            responsive: true,
             // serverSide: true,
             ajax: {
                 url: datatable_url,
-                type: 'POST'
+                type: 'POST',
+                data:function(d){
+                d.status = $('#status').val()
+            }
             },
             columns: [
                 { data: null, searchable: false, orderable: false },

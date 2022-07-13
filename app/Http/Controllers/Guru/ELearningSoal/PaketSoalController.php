@@ -10,6 +10,7 @@ use App\Models\Kelas;
 
 use App\Models\PaketSoal;
 use App\Models\Soal;
+use App\Models\Test;
 use App\Models\WaliKelas;
 use Yajra\Datatables\Datatables;
 use Auth;
@@ -62,9 +63,20 @@ class PaketSoalController extends Controller
 
     public function commonList(Request $request)
     {
-        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
-            return $q->whereNotNull('content');
-        }]);
+        $input = (object) $request->input();
+       
+        if($input->status == 0){
+            $list_data = PaketSoal::where('status',0)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+                return $q->whereNotNull('content');
+            }]);
+        }else{
+            $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+                return $q->whereNotNull('content');
+            }]);
+        }
+
+        
+        // $list_data = $paket_soal->orderBy('id', 'DESC');
         // dd($list_data);
         return Datatables::of($list_data)
             ->addColumn('total_question', function ($item) {
@@ -156,6 +168,7 @@ class PaketSoalController extends Controller
             $question_package->waktu_mulai = $input->waktu_mulai;
             $question_package->waktu_selesai = $input->waktu_selesai;
             $question_package->waktu_pengerjaan = $input->waktu_pengerjaan;
+            $question_package->status = 0;
             $question_package->save();
 
             return [
@@ -171,6 +184,13 @@ class PaketSoalController extends Controller
     public function actionDelete(Request $request)
     {
         $input = (object) $request->input();
+        $cek = Test::where('id_paket_soal',$input->question_package_id)->first();
+        if( $cek){
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Gagal dihapus, Paket Soal sudah digunakan'
+            ];
+        }
         if ($question_package = PaketSoal::find($input->question_package_id)) {
             $question_package->delete();
 
