@@ -114,7 +114,7 @@
                 d.role = $('#role').val(),
                 d.param_semua_siswa = $('#param_semua_siswa').val(),
                 d.alumni = $('#alumni').val()
-                
+
             }
         },
         columns: [
