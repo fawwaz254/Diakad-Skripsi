@@ -65,22 +65,14 @@ class PaketSoalController extends Controller
     {
         $input = (object) $request->input();
        
-        if($input->status == 0){
-            $list_data = PaketSoal::where('status',0)->with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
-                return $q->whereNotNull('content');
-            }]);
-        }else{
-            $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
-                return $q->whereNotNull('content');
-            }]);
-        }
+        $list_data = PaketSoal::with('kelas', 'detail_paket_soal', 'detail_paket_soal.soal','kategori_soal')->with(['detail_paket_soal.soal.pilihan_soal' => function ($q) {
+            return $q->whereNotNull('content');
+        }])->when($input->status == 0, function($q){
+            $q->where('status',0);
+        });
 
-        
-        // $list_data = $paket_soal->orderBy('id', 'DESC');
-        // dd($list_data);
         return Datatables::of($list_data)
             ->addColumn('total_question', function ($item) {
-                // dd($item->detail_paket_soal->count());
                 return $item->detail_paket_soal->count();
             })
             ->addColumn('total_answer', function ($item) {
@@ -90,9 +82,10 @@ class PaketSoalController extends Controller
                 }
                 return $value;
             })
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item) use ($input ) {
                 $data = array(
-                    'id' => $item->id_paket_soal
+                    'id' => $item->id_paket_soal,
+                    'status' => $input->status 
                 );
                 return $data;
             })

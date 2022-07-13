@@ -98,7 +98,9 @@ $('.checkbox').on('change', function(){ // on change of state
                 { data: 'nilai'},{ data: 'waktu_mulai'},{ data: 'waktu_selesai'},{ data: 'waktu_pengerjaan'},
                 { data: 'action', name: 'action', searchable: false, orderable: false,
                     render: function(data) {
-                        return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
+
+                        if(data.status == 0){
+                            return '<a type="button" class="btn btn-info btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/detail/' + data.id +'">' +
                             '    <i class="material-icons">library_add</i>'+
                             '</a>'+
                             '<a type="button" class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/manage/' + data.id +'">'+
@@ -110,6 +112,13 @@ $('.checkbox').on('change', function(){ // on change of state
                             '<button type="button" class="btn btn-warning btn-circle waves-effect waves-circle waves-float" data-id="'+data.id+'" onclick="actionDelete(this)">'+
                             '    <i class="material-icons">delete</i>'+
                             '</button>';
+                        }else{
+                            return '<a type="button" class="btn btn-orange btn-circle waves-effect waves-circle waves-float" href="' + detail_url +'/test/' + data.id +'">'+
+                            '    T'+
+                            '</a>';
+
+                        }
+                   
                     }
                 }
             ],
