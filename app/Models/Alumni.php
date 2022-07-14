@@ -22,6 +22,7 @@ class Alumni extends Model
         'id_c_siswa',
         'tahun_lulus',
         'status',
+        'url_medsos',
         'created_by',
         'updated_by',
         'deleted_by'
