@@ -11,6 +11,8 @@
             <td style="background-color: #d8d8d8">Jenis Sekolah</td>
             <td style="background-color: #d8d8d8">Jurusan</td>
             <td style="background-color: #d8d8d8">Email Siswa</td>
+            <td style="background-color: #d8d8d8">Url Medsos</td>
+           
         </tr>
     </thead>
     <tbody>
@@ -27,6 +29,8 @@
             <td>{{ $detail_alumni->smp->jenis_sekolah }}</td>
             <td>{{ $detail_alumni->smp->jurusan }}</td>
             <td>{{ $detail_alumni->email }}</td>
+            <td>{{ $detail_alumni->url_medsos }}</td>
+          
 
         </tr>
         @endforeach

@@ -175,6 +175,7 @@ class TracerAlumniController extends BaseController
                 $data4['id_kelas']      = $request->id_kelas;
                 $data4['email']         = $request->email;
                 $data4['tahun_lulus']   = $request->tahun_lulus;
+                $data4['url_medsos']    = $request->url_medsos;
                 $data4['status']        = $request->status;
                 $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $data['id_c_siswa'];
@@ -247,6 +248,7 @@ class TracerAlumniController extends BaseController
                 $data4['email']         = $request->email;
                 $data4['tahun_lulus']   = $request->tahun_lulus;
                 $data4['status']        = $request->status;
+                $data4['url_medsos']    = $request->url_medsos;
                 $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $request->id_c_siswa;
                 $data4['created_by']    = $auth_data->pengguna->id_pengguna;
@@ -322,6 +324,7 @@ class TracerAlumniController extends BaseController
                 $alumni->id_kelas  = $request->id_kelas;
                 $alumni->email  = $request->email;
                 $alumni->tahun_lulus  = $request->tahun_lulus;
+                $alumni->url_medsos = $request->url_medsos;
                 $alumni->status  = $request->status;
                 $alumni->updated_by = $auth_data->pengguna->id_pengguna;
                 $alumni->save();
