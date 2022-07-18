@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SignInController;
 use Carbon\Carbon;
 use App\Models\Sekolah;
 use Illuminate\Support\Facades\Hash;
@@ -45,7 +46,7 @@ Route::post('upload', function (Request $request) {
 // END CONTOH UPLOAD DO
 
 // DO NOT CHANGE
-Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge'); 
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge');
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
@@ -122,16 +123,15 @@ Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@ac
 
 Route::get('check/payment/expired', 'Keuangan\SIM\PembayaranOnlineController@actionCheckExp');
 
-Route::get('/', 'SignInController@indexSignIn');
-Route::post('signin', 'SignInController@actionSignIn');
+Route::get('/', [SignInController::class, 'indexSignIn']);
+Route::post('signin', [SignInController::class, 'actionSignIn']);
 
 Route::get('report-pimpinan', 'ReportController@viewAllDiakad');
 Route::get('report-pimpinan-print', 'ReportController@printAllDiakad');
 
-
-Route::group(array('prefix' => 'reporting-dashboard'), function () {
-    Route::get('/', 'SignInController@indexReportingDashboard');
-    Route::get('all-diakad/{id}', 'ReportController@checkProgress');
+Route::prefix('reporting-dashboard')->group(function () {
+    Route::get('/', [SignInController::class, 'indexReportingDashboard']);
+    Route::get('all-diakad/{id}', [ReportController::class, 'checkProgress']);
     Route::get('akademik', function () {
         return view('reporting-dashboard/akademik');
     });
@@ -156,20 +156,34 @@ Route::group(array('prefix' => 'reporting-dashboard'), function () {
     });
 });
 
+Route::middleware(['token_staff'])->group(function () { });
 
-Route::group(array('middleware' => ['token_staff']), function () {
-    //
-    Route::group(array('prefix' => '{global}'), function () {
-        Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
-        Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
-        Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
+Route::prefix('{global}')->group(function () {
+    Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
+    Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
+    Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
 
-        Route::get('/', 'AuthGlobalController@indexDashboard');
-        Route::get('search', 'AuthGlobalController@indexSearch');
-        Route::get('profile', 'AuthGlobalController@indexProfile');
-        Route::post('profile', 'AuthGlobalController@actionSaveProfile');
-        Route::get('password', 'AuthGlobalController@indexPassword');
-        Route::post('password', 'AuthGlobalController@actionChangePassword');
-        Route::get('signout', 'AuthGlobalController@actionSignOut');
-    });
+    Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
+    Route::get('search', [AuthGlobalController::class, 'indexSearch']);
+    Route::get('profile', [AuthGlobalController::class, 'indexProfile']);
+    Route::post('profile', [AuthGlobalController::class, 'actionSaveProfile']);
+    Route::get('password', [AuthGlobalController::class, 'indexPassword']);
+    Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
+    Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
 });
+// Route::group(array('middleware' => ['token_staff']), function () {
+//     //
+//     Route::group(array('prefix' => '{global}'), function () {
+//         Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
+//         Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
+//         Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
+
+//         Route::get('/', 'AuthGlobalController@indexDashboard');
+//         Route::get('search', 'AuthGlobalController@indexSearch');
+//         Route::get('profile', 'AuthGlobalController@indexProfile');
+//         Route::post('profile', 'AuthGlobalController@actionSaveProfile');
+//         Route::get('password', 'AuthGlobalController@indexPassword');
+//         Route::post('password', 'AuthGlobalController@actionChangePassword');
+//         Route::get('signout', 'AuthGlobalController@actionSignOut');
+//     });
+// });

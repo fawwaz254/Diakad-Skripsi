@@ -1,0 +1,153 @@
+<div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#data-keuangan/biaya-sekolah/detail-biaya/'.$data_detail_biaya->id_biaya_sekolah)}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="header">
+                    <h2>
+                        EDIT DETAIL BIAYA
+                    </h2>
+                </div>
+                <div class="body">
+                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/biaya-sekolah/detail-biaya/action-detail-biaya/edit/'.$data_detail_biaya->id_detail_biaya)}}">
+                        {{csrf_field()}}
+                       
+                        <h2 class="card-inside-title">
+                            Nama Biaya
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_biaya">
+                                    <option value="" disabled selected >-- Pilih Nama Biaya --</option>
+                                    @foreach($data_biaya as $data)
+                                        @if($data->id_biaya == $data_detail_biaya->id_biaya)
+                                            <option value="{{$data->id_biaya}}" selected >{{$data->nm_biaya}}</option>
+                                        @else
+                                            <option value="{{$data->id_biaya}}">{{$data->nm_biaya}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Nama Biaya Internal
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_kelompok_biaya_internal">
+                                    <option value="" >-- Pilih Nama Biaya Internal --</option>
+                                    @foreach($data_biaya_internal as $data)
+                                        @if($data->id_kelompok_biaya_internal == $data_detail_biaya->id_kelompok_biaya_internal)
+                                            <option value="{{$data->id_kelompok_biaya_internal}}" selected >{{$data->nm_kelompok_biaya_internal}} ({{$data->nm_biaya}})</option>
+                                        @else
+                                            <option value="{{$data->id_kelompok_biaya_internal}}">{{$data->nm_kelompok_biaya_internal}} ({{$data->nm_biaya}})</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Validasi
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="validasi_biaya">
+                                    @if($data_detail_biaya->validasi_biaya == 0)
+                                        <option value="0" selected >Belum</option>
+                                        <option value="1">Sudah</option>
+                                    @else
+                                        <option value="0">Belum</option>
+                                        <option value="1" selected >Sudah</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Besar Biaya
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="besar_biaya" required="" aria-required="true" aria-invalid="true" value="{{$data_detail_biaya->besar_biaya}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Keterangan
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="keterangan_biaya" required="" aria-required="true" aria-invalid="true" value="{{$data_detail_biaya->keterangan_biaya}}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Jenis Biaya
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_jenis_detail_biaya" onchange="changeJenis(this)">
+                                    <option value="" disabled selected >-- Pilih Jenis Biaya --</option>
+                                    @foreach($data_jenis_detail_biaya as $data)
+                                        @if($data->id_jenis_detail_biaya == $data_detail_biaya->id_jenis_detail_biaya)
+                                            <option value="{{$data->id_jenis_detail_biaya}}" selected >{{$data->nm_jenis_detail_biaya}} </option>
+                                        @else
+                                            <option value="{{$data->id_jenis_detail_biaya}}">{{$data->nm_jenis_detail_biaya}} </option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Bulan <small>* Khusus Jenis Biaya Pembayaran Per Bulan</small>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_bulan">
+                                    <option value="" >-- Pilih Bulan --</option>
+                                    @if($data_detail_biaya->id_jenis_detail_biaya == 4)
+                                        @foreach($data_bulan as $data)
+                                            @if($data->id_bulan == $data_detail_biaya->id_bulan)
+                                                <option value="{{$data->id_bulan}}" selected >{{$data->nm_bulan}} </option>
+                                            @else
+                                                <option value="{{$data->id_bulan}}">{{$data->nm_bulan}} </option>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@include('scriptjs')
+<script>
+function changeJenis(el){
+    $.ajax({
+        url: '{{url(Request::segment(1).'/'.Request::segment(2).'/bulan-byjenisbiaya')}}',
+        type: 'POST',
+        data: {
+            id_jenis_detail_biaya: $('select[name=id_jenis_detail_biaya]').val()
+        },
+        success: function(result) {
+            $('select[name=id_bulan]').html('');
+            var html = '<option value="">-- Pilih Bulan --</option>';
+            $.each(result, function( key, item ) {
+                html += '<option value="'+item.id_bulan+'">'+item.nm_bulan+'</option>'
+            });
+            $('select[name=id_bulan]').html(html);
+        }
+    });
+}
+</script>

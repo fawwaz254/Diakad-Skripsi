@@ -1,0 +1,38 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class ChangeTransactionNominalInRealisasiWarehouse1 extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('realisasi_warehouses', function (Blueprint $table) {
+            $table->dropColumn('transaction_nominal');
+        });
+
+        Schema::table('realisasi_warehouses', function (Blueprint $table) {
+            $table->float('transaction_nominal', 10, 0)->after('transaction_date')->nullable();
+        });
+
+        Schema::table('realisasi_warehouse_categories', function (Blueprint $table) {
+            $table->string('id_ket_subkategori_rapb', 40)->after('id_subkategori_rapb')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
+    }
+}
