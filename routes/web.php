@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthGlobalController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SignInController;
 use Carbon\Carbon;
 use App\Models\Sekolah;
@@ -47,7 +48,7 @@ Route::post('upload', function (Request $request) {
 // END CONTOH UPLOAD DO
 
 // DO NOT CHANGE
-Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge');
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
@@ -109,26 +110,26 @@ Route::get('cekHashPassword', function () {
 
 Route::view('success-page', 'form-pengisian-alumni.success-page');
 Route::view('error-page', 'form-pengisian-alumni.error-page');
-Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
-Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
+Route::get('pengisian-alumni', [PengisianAlumniController::class, 'viewPengisianAlumni']);
+Route::post('action-pengisian-alumni', [PengisianAlumniController::class, 'actionPengisianAlumni']);
 
-Route::get('forget-password', 'ForgetPasswordController@index');
-Route::post('send-link-reset-password', 'ForgetPasswordController@sendLinkResetPassword');
-Route::get('check-link-reset-password', 'ForgetPasswordController@checkLinkResetPassword');
-Route::get('reset-password', 'ForgetPasswordController@resetPassword');
-Route::post('reset-password-action', 'ForgetPasswordController@resetPasswordAction');
+Route::get('forget-password', [ForgetPasswordController::class, 'index']);
+Route::post('send-link-reset-password', [ForgetPasswordController::class, 'sendLinkResetPassword']);
+Route::get('check-link-reset-password', [ForgetPasswordController::class, 'checkLinkResetPassword']);
+Route::get('reset-password', [ForgetPasswordController::class, 'resetPassword']);
+Route::post('reset-password-action', [ForgetPasswordController::class, 'resetPasswordAction']);
 
-Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
-Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
-Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionCallback');
+Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
+Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
+Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'actionCallback']);
 
-Route::get('check/payment/expired', 'Keuangan\SIM\PembayaranOnlineController@actionCheckExp');
+Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionCheckExp']);
 
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
 
-Route::get('report-pimpinan', 'ReportController@viewAllDiakad');
-Route::get('report-pimpinan-print', 'ReportController@printAllDiakad');
+Route::get('report-pimpinan', [ReportController::class, 'viewAllDiakad']);
+Route::get('report-pimpinan-print', [ReportController::class, 'printAllDiakad']);
 
 Route::prefix('reporting-dashboard')->group(function () {
     Route::get('/', [SignInController::class, 'indexReportingDashboard']);
@@ -173,19 +174,10 @@ Route::middleware(['token_staff'])->group(function () {
     });
 });
 
-Route::group(array('middleware' => ['token_staff']), function () {
-    //
-    Route::group(array('prefix' => '{global}'), function () {
-        Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
-        Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
-        Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
 
-        Route::get('/', 'AuthGlobalController@indexDashboard');
-        Route::get('search', 'AuthGlobalController@indexSearch');
-        Route::get('profile', 'AuthGlobalController@indexProfile');
-        Route::post('profile', 'AuthGlobalController@actionSaveProfile');
-        Route::get('password', 'AuthGlobalController@indexPassword');
-        Route::post('password', 'AuthGlobalController@actionChangePassword');
-        Route::get('signout', 'AuthGlobalController@actionSignOut');
-    });
-});
+// Route::prefix('foo')->group(function () {
+
+// });
+
+// Route::middleware(['token_staff'])->group(function () {
+// });
