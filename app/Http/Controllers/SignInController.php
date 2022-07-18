@@ -16,8 +16,9 @@ use App\Models\Pengguna;
 use App\Models\Siswa;
 use Yajra\Datatables\Datatables;
 
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class SignInController extends BaseController
@@ -29,6 +30,7 @@ class SignInController extends BaseController
 
     public function indexSignin(Request $request)
     {
+        // return Auth::check();
         if (Auth::check()) {
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();

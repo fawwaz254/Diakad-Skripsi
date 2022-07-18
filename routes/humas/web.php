@@ -1,9 +1,11 @@
 <?php
 
 // ROLE ALUMNI
-Route::group(array('middleware' => ['token_staff']), function () {
 
-	Route::group(array('prefix' => 'humas'), function () {
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+
+Route::middleware(['token_staff'])->group(function () {
+	Route::prefix('humas')->group(function () {
 		Route::get('welcome', 'Humas\WelcomeController@indexWelcome');
 
 		/** ==== MODUL MANAJEMEN FILE ==== **/
@@ -11,8 +13,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
 		Route::group(array('prefix' => 'manajemen-file'), function () {
 			// MENU Data Kategori
 			Route::group(array('prefix' => 'data-kategori'), function () {
-				Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-				Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+				Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+				Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
 			});
 
 			// MENU Data Sub Kategori 
@@ -290,7 +292,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 		/** === MODUL MAGANG ALUMNI === **/
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function () {
-			
+
 			// Route::get('/tracer-alumni', 'AlumniController@index');
 			// Route::get('/tambah-alumni', 'AlumniController@create');
 			// Route::get('/edit/{alumni}', 'AlumniController@show');
@@ -307,17 +309,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('add', 'TracerAlumniController@addTracerAlumni');
 				Route::get('edit/{id}', 'TracerAlumniController@editTracerAlumni');
 				Route::post('action/{mode}/{id}', 'TracerAlumniController@actionTracerAlumni');
-				Route::get('cetak','TracerAlumniController@cetakTracerAlumni');
-				Route::get('cetak2','TracerAlumniController@cetakTracerAlumni2');
-				Route::post('cetak','TracerAlumniController@changeTracerAlumni');
-				Route::post('cetak2','TracerAlumniController@changeTracerAlumni2');
-				Route::get('cetak/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni');
-				Route::get('cetak2/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni2');
-				Route::get('cetak/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni');
+				Route::get('cetak', 'TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak2', 'TracerAlumniController@cetakTracerAlumni2');
+				Route::post('cetak', 'TracerAlumniController@changeTracerAlumni');
+				Route::post('cetak2', 'TracerAlumniController@changeTracerAlumni2');
+				Route::get('cetak/{id_kelas}/{tahun}', 'TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak2/{id_kelas}/{tahun}', 'TracerAlumniController@cetakTracerAlumni2');
+				Route::get('cetak/datatables/{id_kelas}/{tahun}', 'TracerAlumniController@datatablesCetakTracerAlumni');
 				// Route::get('cetak2/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni2');
-				Route::get('export-alumni/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni');
-				Route::get('export-alumni2/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni2');
-
+				Route::get('export-alumni/{id_kelas}/{tahun}', 'TracerAlumniController@exportAlumnni');
+				Route::get('export-alumni2/{id_kelas}/{tahun}', 'TracerAlumniController@exportAlumnni2');
 			});
 		});
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\SignInController;
 use Carbon\Carbon;
 use App\Models\Sekolah;
@@ -156,34 +157,35 @@ Route::prefix('reporting-dashboard')->group(function () {
     });
 });
 
-Route::middleware(['token_staff'])->group(function () { });
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('{global}')->group(function () {
+        Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
+        Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
+        Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
 
-Route::prefix('{global}')->group(function () {
-    Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
-    Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
-    Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
-
-    Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
-    Route::get('search', [AuthGlobalController::class, 'indexSearch']);
-    Route::get('profile', [AuthGlobalController::class, 'indexProfile']);
-    Route::post('profile', [AuthGlobalController::class, 'actionSaveProfile']);
-    Route::get('password', [AuthGlobalController::class, 'indexPassword']);
-    Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
-    Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
+        Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
+        Route::get('search', [AuthGlobalController::class, 'indexSearch']);
+        Route::get('profile', [AuthGlobalController::class, 'indexProfile']);
+        Route::post('profile', [AuthGlobalController::class, 'actionSaveProfile']);
+        Route::get('password', [AuthGlobalController::class, 'indexPassword']);
+        Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
+        Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
+    });
 });
-// Route::group(array('middleware' => ['token_staff']), function () {
-//     //
-//     Route::group(array('prefix' => '{global}'), function () {
-//         Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
-//         Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
-//         Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
 
-//         Route::get('/', 'AuthGlobalController@indexDashboard');
-//         Route::get('search', 'AuthGlobalController@indexSearch');
-//         Route::get('profile', 'AuthGlobalController@indexProfile');
-//         Route::post('profile', 'AuthGlobalController@actionSaveProfile');
-//         Route::get('password', 'AuthGlobalController@indexPassword');
-//         Route::post('password', 'AuthGlobalController@actionChangePassword');
-//         Route::get('signout', 'AuthGlobalController@actionSignOut');
-//     });
-// });
+Route::group(array('middleware' => ['token_staff']), function () {
+    //
+    Route::group(array('prefix' => '{global}'), function () {
+        Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
+        Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
+        Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
+
+        Route::get('/', 'AuthGlobalController@indexDashboard');
+        Route::get('search', 'AuthGlobalController@indexSearch');
+        Route::get('profile', 'AuthGlobalController@indexProfile');
+        Route::post('profile', 'AuthGlobalController@actionSaveProfile');
+        Route::get('password', 'AuthGlobalController@indexPassword');
+        Route::post('password', 'AuthGlobalController@actionChangePassword');
+        Route::get('signout', 'AuthGlobalController@actionSignOut');
+    });
+});
