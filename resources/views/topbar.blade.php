@@ -77,61 +77,6 @@ $theme_name = Request::segment(1);
 
     @default
 @endswitch
-{{-- @if ($theme_name == 'pendidikan')
-
-    <body class="theme-green">
-    @elseif($theme_name == 'guru')
-
-        <body class="theme-orange">
-        @elseif($theme_name == 'siswa')
-
-            <body class="theme-blue">
-            @elseif($theme_name == 'wali-murid')
-
-                <body class="theme-brown">
-                @elseif($theme_name == 'bimbingan-konseling')
-
-                    <body class="theme-deep-purple">
-                    @elseif($theme_name == 'kesiswaan')
-
-                        <body class="theme-indigo">
-                        @elseif($theme_name == 'akademik')
-
-                            <body class="theme-light-green">
-                            @elseif($theme_name == 'sumber-daya')
-
-                                <body class="theme-pink">
-                                @elseif($theme_name == 'keuangan')
-
-                                    <body class="theme-amber">
-                                    @elseif($theme_name == 'sarana-prasarana')
-
-                                        <body class="theme-purple">
-                                        @elseif($theme_name == 'ppdb')
-
-                                            <body class="theme-lime">
-                                            @elseif($theme_name == 'alumni')
-
-                                                <body class="theme-blue-grey">
-                                                @elseif($theme_name == 'pelatih-ekskul')
-
-                                                    <body class="theme-deep-orange">
-                                                    @elseif($theme_name == 'sekretariat')
-
-                                                        <body class="theme-black">
-                                                        @elseif($theme_name == 'tendik')
-
-                                                            <body class="theme-grey">
-                                                            @elseif($theme_name == 'administrator')
-
-                                                                <body class="theme-cyan">
-                                                                @elseif($theme_name == 'humas')
-
-                                                                    <body class="theme-teal">
-                                                                    @elseif($theme_name == 'rapor-buku-induk')
-
-                                                                        <body class="theme-red">
-@endif --}}
 <!-- Page Loader -->
 <div class="page-loader-wrapper">
     <div class="loader">

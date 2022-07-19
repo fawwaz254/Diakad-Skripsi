@@ -157,7 +157,7 @@ Route::middleware(['token_staff'])->group(function () {
 				Route::post('datatables', [InputKegiatanController::class, 'showDatatablesInputKegiatan']);
 				Route::post('action/{mode}', [InputKegiatanController::class, 'actionInputKegiatan']);
 
-				Route::prefix('kategori-pernyataan')->group(function () {
+				Route::prefix('kategori-pertanyaan')->group(function () {
 					Route::get('detail/{id1}', [InputKegiatanController::class, 'viewInputKategoriPertanyaan']);
 					Route::get('{id1}/add', [InputKegiatanController::class, 'viewAddEditInputKategoriPertanyaan']);
 					Route::get('{id1}/edit/{id2}', [InputKegiatanController::class, 'viewAddEditInputKategoriPertanyaan']);
@@ -166,7 +166,7 @@ Route::middleware(['token_staff'])->group(function () {
 					Route::post('{id1}/action/{mode}', [InputKegiatanController::class, 'actionInputKategoriPertanyaan']);
 				});
 			});
-			Route::prefix('input-pernyataan')->group(function () {
+			Route::prefix('input-pertanyaan')->group(function () {
 				Route::get('/', [InputPertanyaanController::class, 'viewInputPertanyaan']);
 				Route::get('add', [InputPertanyaanController::class, 'viewAddEditInputPertanyaan']);
 				Route::get('edit/{id}', [InputPertanyaanController::class, 'viewAddEditInputPertanyaan']);
@@ -183,16 +183,14 @@ Route::middleware(['token_staff'])->group(function () {
 					Route::post('{id1}/action/{mode}', [InputPertanyaanController::class, 'actionInputJawaban']);
 				});
 			});
-			Route::prefix('kegiatan-harian')->group(function () {
-				Route::get('rekap-kesehatan', [RekapKesehatanController::class, 'viewRekapFormKesehatan']);
-				Route::get('rekap-kesehatan/{bulan}/{tahun}', [RekapKesehatanController::class, 'viewRekapFormKesehatan']);
-				Route::get('rekap-kesehatan/{bulan}/{tahun}/download', [RekapKesehatanController::class, 'downloadRekapFormKesehatan']);
-				Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
-				Route::get('rekap-kesehatan/user/{id}/{date}', [RekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
+			Route::get('rekap-kesehatan', [RekapKesehatanController::class, 'viewRekapFormKesehatan']);
+			Route::get('rekap-kesehatan/{bulan}/{tahun}', [RekapKesehatanController::class, 'viewRekapFormKesehatan']);
+			Route::get('rekap-kesehatan/{bulan}/{tahun}/download', [RekapKesehatanController::class, 'downloadRekapFormKesehatan']);
+			Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
+			Route::get('rekap-kesehatan/user/{id}/{date}', [WaliKelasRekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
 
-				Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
-				Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
-			});
+			Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+			Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
 		});
 
 		Route::prefix('monitoring-kesehatan')->group(function () {
