@@ -27,7 +27,7 @@ use App\Models\JenisLayakPip;
 use App\Models\JenisPendidikan;
 use App\Models\JenisPekerjaan;
 use App\Models\JenisPenghasilan;
-use App\Imports\Hash;
+use Illuminate\Support\Facades\Hash;
 
 use App\Libraries\LibGlobal;
 
