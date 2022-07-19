@@ -29,6 +29,7 @@ class ShiftPenggunaController extends Controller
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();
+        $hasil = [];
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
