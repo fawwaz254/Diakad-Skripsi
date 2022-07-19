@@ -18,7 +18,7 @@
                                 <label>Nama pengguna</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text" class="form-control" name="name" required="" {{$auth_data->pengguna->status_join_table == 3? 'disabled'}} aria-required="true" aria-invalid="true" value="{{$auth_data->pengguna->nm_pengguna}}">
+                                        <input type="text" class="form-control" name="name" required="" {{$auth_data->pengguna->status_join_table == 3? 'disabled' : ''}} aria-required="true" aria-invalid="true" value="{{$auth_data->pengguna->nm_pengguna}}">
                                     </div>
                                 </div>
                                 <label>Aktif role</label>
