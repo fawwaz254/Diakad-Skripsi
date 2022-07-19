@@ -39,7 +39,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ($auth_data->pengguna->status_join_table == 3)
+                            @if ($auth_data->pengguna->status_join_table != 3)
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <button class="btn btn-block bg-btn-submit waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
                             </div>
