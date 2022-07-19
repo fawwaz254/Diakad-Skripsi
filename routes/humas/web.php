@@ -320,9 +320,9 @@ Route::middleware(['token_staff'])->group(function () {
 			});
 		});
 
-		Route::group(array('prefix' => 'laporan'), function () {
+		Route::prefix('laporan')->group(function () {
 
-			Route::group(array('prefix' => 'wali-kelas'), function () {
+			Route::prefix('wali-kelas')->group(function () {
 				Route::get('/', [WaliKelasController::class, 'viewWaliKelas']);
 				Route::get('datatables', [WaliKelasController::class, 'datatablesWaliKelas']);
 				Route::get('add', [WaliKelasController::class, 'addWaliKelas']);
@@ -345,7 +345,7 @@ Route::middleware(['token_staff'])->group(function () {
 			Route::post('/delete/{kerjasama}', [KerjasamaController::class, 'destroy']);
 			Route::post('/datatables', [KerjasamaController::class, 'renderDatatables']);
 
-			Route::group(array('prefix' => 'instansi'), function () {
+			Route::prefix('instansi')->group(function () {
 				Route::get('/', [InstansiController::class, 'index']);
 				Route::get('/add', [InstansiController::class, 'create']);
 				Route::get('/edit/{instansi}', [InstansiController::class, 'edit']);
@@ -355,7 +355,7 @@ Route::middleware(['token_staff'])->group(function () {
 				Route::post('/datatables', [InstansiController::class, 'renderDatatables']);
 			});
 
-			Route::group(array('prefix' => 'jenis'), function () {
+			Route::prefix('jenis')->group(function () {
 				Route::get('/', [JenisKerjaSamaController::class, 'index']);
 				Route::get('/add', [JenisKerjaSamaController::class, 'create']);
 				Route::get('/edit/{jenisKerjasama}', [JenisKerjaSamaController::class, 'edit']);
@@ -364,8 +364,7 @@ Route::middleware(['token_staff'])->group(function () {
 				Route::post('/delete/{jenisKerjasama}', [JenisKerjaSamaController::class, 'destroy']);
 				Route::post('/datatables', [JenisKerjaSamaController::class, 'renderDatatables']);
 			});
-
-			Route::group(array('prefix' => 'berkas'), function () {
+			Route::prefix('berkas')->group(function () {
 				Route::get('/', [BerkasKerjasamaController::class, 'index']);
 				Route::get('/add/{kerjasama}', [BerkasKerjasamaController::class, 'create']);
 				Route::post('/store', [BerkasKerjasamaController::class, 'store']);
