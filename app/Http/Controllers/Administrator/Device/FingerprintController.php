@@ -129,19 +129,26 @@ class FingerprintController extends BaseController
                         $presensi->date = $item->tanggal;
                     }
 
-                    if($item->status == 0){
-                        $presensi->check_in = $item->fp_date;
-                        $presensi->status = null;
-                        $presensi->notes = null;
-                        $presensi->save();
+                    if($item->status == 255){
+                        if(!empty($presensi->check_in)){
+                            $presensi->check_in = $item->fp_date;
+                        }else{
+                            if(Carbon::parse($presensi->check_in)->diffInMinutes($item->fp_date) > 100){
+                                $presensi->check_out = $item->fp_date;
+                            }
+                        }
+                    }else{
+                        if($item->status == 0){
+                            $presensi->check_in = $item->fp_date;
+                        }
+                        
+                        if($item->status == 1){
+                            $presensi->check_out = $item->fp_date;
+                        }
                     }
-
-                    if($item->status == 1){
-                        $presensi->check_out = $item->fp_date;
-                        $presensi->status = null;
-                        $presensi->notes = null;
-                        $presensi->save();
-                    }
+                    $presensi->status = null;
+                    $presensi->notes = null;
+                    $presensi->save();
                 }
             }
             return 'OK';
