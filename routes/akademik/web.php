@@ -1,358 +1,370 @@
 <?php
 // ROLE AKADEMIK
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'akademik'), function () {
-        Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
 
-        //modul MGMP
-        Route::group(array('prefix' => 'mpmp'), function () {
-            Route::group(array('prefix' => 'jenis-mgmp'), function () {
-                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
-                Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
-                Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
-                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
+use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\InputNilaiController;
+use App\Http\Controllers\Akademik\AktivitasSemester\MonitoringKelasController;
+use App\Http\Controllers\Akademik\AktivitasSemester\PlottingMapelSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
+use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
+use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
+use App\Http\Controllers\Akademik\DataAkademik\KurikulumController;
+use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
+use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
+use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
+use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
+use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
+use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
+use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
+use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
+use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\Ujian\TryOutController;
+use App\Http\Controllers\Akademik\Ujian\UjianUASController;
+use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
+use App\Http\Controllers\Akademik\WelcomeController;
+use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
+use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
+use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+
+Route::middleware(['token_staff'])->group(function () {
+
+    Route::prefix('akademik')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::prefix('mgmp')->group(function () {
+            Route::prefix('jenis-mgmp')->group(function () {
+                Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
+                Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
+                Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
+                Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
             });
-
-            Route::group(array('prefix' => 'data-kategori-mapel'), function () {
-                Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewDataKategori');
-                Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesCategoryfile');
-                Route::get('/add', 'Akademik\MGMP\DataKategoriMGMPController@addDataKategori');
-                Route::get('/edit/{category_file_id}', 'Akademik\MGMP\DataKategoriMGMPController@editDataKategori');
-                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\DataKategoriMGMPController@actionDataKategori');
+            Route::prefix('data-kategori-mapel')->group(function () {
+                Route::get('/', [DataKategoriMGMPController::class, 'viewDataKategori']);
+                Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesCategoryfile']);
+                Route::get('/add', [DataKategoriMGMPController::class, 'addDataKategori']);
+                Route::get('/edit/{category_file_id}', [DataKategoriMGMPController::class, 'editDataKategori']);
+                Route::post('action-data-kategori/{mode}/{id}', [DataKategoriMGMPController::class, 'actionDataKategori']);
             });
-
-            Route::group(array('prefix' => 'laporan-mgmp'), function () {
-                Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
-                Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
+            Route::prefix('laporan-mgmp')->group(function () {
+                Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
+                Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesKerjaHarianAllMGMP']);
             });
-
         });
 
-
-        /** ==== MODUL MANAJEMEN FILE ==== **/
-        // url: /akademik/manajemen-file
-        Route::group(array('prefix' => 'manajemen-file'), function () {
-            // MENU Data Kategori
-            Route::group(array('prefix' => 'data-kategori'), function () {
-                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+        Route::prefix('manajemen-file')->group(function () {
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
             });
-
-            // MENU Data Sub Kategori 
-            Route::group(array('prefix' => 'data-sub-kategori'), function () {
-                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
-                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
                 //action input sub data kategori
-                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
             });
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-            // MENU Data File 
-            Route::group(array('prefix' => 'data-file'), function () {
-
-                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
-                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
-                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
-                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
-
-                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
-                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
         });
 
-        /** ==== MODUL DATA AKADEMIK ==== **/
-        Route::group(array('prefix' => 'data-akademik'), function () {
+        Route::prefix('data-akademik')->group(function () {
             // MENU Kurikulum
-            Route::get('kurikulum', 'Akademik\DataAkademik\KurikulumController@viewKurikulum');
-            Route::get('kurikulum/datatables', 'Akademik\DataAkademik\KurikulumController@datatablesKurikulum');
-            Route::get('kurikulum/add', 'Akademik\DataAkademik\KurikulumController@addKurikulum');
-            Route::get('kurikulum/edit/{id}', 'Akademik\DataAkademik\KurikulumController@editKurikulum');
+            Route::get('kurikulum', [KurikulumController::class, 'viewKurikulum']);
+            Route::get('kurikulum/datatables', [KurikulumController::class, 'datatablesKurikulum']);
+            Route::get('kurikulum/add', [KurikulumController::class, 'addKurikulum']);
+            Route::get('kurikulum/edit/{id}', [KurikulumController::class, 'editKurikulum']);
 
-            Route::post('action-kurikulum/{mode}/{id}', 'Akademik\DataAkademik\KurikulumController@actionKurikulum');
+            Route::post('action-kurikulum/{mode}/{id}', [KurikulumController::class, 'actionKurikulum']);
 
 
             // MENU Aktivasi Kurikulum
-            Route::get('aktivasi-kurikulum', 'Akademik\DataAkademik\AktivasiKurikulumController@viewAktivasiKurikulum');
-            Route::get('aktivasi-kurikulum/datatables', 'Akademik\DataAkademik\AktivasiKurikulumController@datatablesAktivasiKurikulum');
-            Route::get('aktivasi-kurikulum/aktivasi/{id}', 'Akademik\DataAkademik\AktivasiKurikulumController@aktivasiKurikulum');
+            Route::get('aktivasi-kurikulum', [AktivasiKurikulumController::class, 'viewAktivasiKurikulum']);
+            Route::get('aktivasi-kurikulum/datatables', [AktivasiKurikulumController::class, 'datatablesAktivasiKurikulum']);
+            Route::get('aktivasi-kurikulum/aktivasi/{id}', [AktivasiKurikulumController::class, 'aktivasiKurikulum']);
 
-            Route::post('action-aktivasi-kurikulum/{mode}/{id}', 'Akademik\DataAkademik\AktivasiKurikulumController@actionAktivasiKurikulum');
+            Route::post('action-aktivasi-kurikulum/{mode}/{id}', [AktivasiKurikulumController::class, 'actionAktivasiKurikulum']);
 
             // MENU Data Mata Pelajaran
-            Route::get('mata-pelajaran', 'Akademik\DataAkademik\MataPelajaranController@viewMataPelajaran');
-            Route::get('mata-pelajaran/datatables', 'Akademik\DataAkademik\MataPelajaranController@datatablesMataPelajaran');
-            Route::get('mata-pelajaran/add', 'Akademik\DataAkademik\MataPelajaranController@addMataPelajaran');
-            Route::get('mata-pelajaran/edit/{id}', 'Akademik\DataAkademik\MataPelajaranController@editMataPelajaran');
+            Route::get('mata-pelajaran', [MataPelajaranController::class, 'viewMataPelajaran']);
+            Route::get('mata-pelajaran/datatables', [MataPelajaranController::class, 'datatablesMataPelajaran']);
+            Route::get('mata-pelajaran/add', [MataPelajaranController::class, 'addMataPelajaran']);
+            Route::get('mata-pelajaran/edit/{id}', [MataPelajaranController::class, 'editMataPelajaran']);
 
-            Route::post('action-mata-pelajaran/{mode}/{id}', 'Akademik\DataAkademik\MataPelajaranController@actionMataPelajaran');
+            Route::post('action-mata-pelajaran/{mode}/{id}', [MataPelajaranController::class, 'actionMataPelajaran']);
 
 
             //MENU Data Jenis Mata Pelajaran
-            Route::get('jenis-mata-pelajaran', 'Akademik\DataAkademik\DataJenisMataPelajaranController@viewDataJenisMataPelajaran');
-            Route::get('jenis-mata-pelajaran/datatables', 'Akademik\DataAkademik\DataJenisMataPelajaranController@datatablesJenisMataPelajaran');
-            Route::get('jenis-mata-pelajaran/add', 'Akademik\DataAkademik\DataJenisMataPelajaranController@addJenisMataPelajaran');
-            Route::get('jenis-mata-pelajaran/edit/{id}', 'Akademik\DataAkademik\DataJenisMataPelajaranController@editJenisMataPelajaran');
+            Route::get('jenis-mata-pelajaran', [DataJenisMataPelajaranController::class, 'viewDataJenisMataPelajaran']);
+            Route::get('jenis-mata-pelajaran/datatables', [DataJenisMataPelajaranController::class, 'datatablesJenisMataPelajaran']);
+            Route::get('jenis-mata-pelajaran/add', [DataJenisMataPelajaranController::class, 'addJenisMataPelajaran']);
+            Route::get('jenis-mata-pelajaran/edit/{id}', [DataJenisMataPelajaranController::class, 'editJenisMataPelajaran']);
 
-            Route::post('action-jenis-mata-pelajaran/{mode}/{id}', 'Akademik\DataAkademik\DataJenisMataPelajaranController@actionJenisMataPelajaran');
+            Route::post('action-jenis-mata-pelajaran/{mode}/{id}', [DataJenisMataPelajaranController::class, 'actionJenisMataPelajaran']);
 
             //MENU Setup Mapel Kurikulum
-            Route::get('setup-mp-kurikulum', 'Akademik\DataAkademik\SetupMapelKurikulumController@viewSetupMapelKurikulum');
-            Route::post('post-cari-kurikulum', 'Akademik\DataAkademik\SetupMapelKurikulumController@actionCariKurikulum');
-            Route::get('setup-mp-kurikulum/view-mapel-kurikulum/{id}', 'Akademik\DataAkademik\SetupMapelKurikulumController@viewKurikulumMataPelajaran');
-            Route::get('setup-mp-kurikulum/datatables/{id}', 'Akademik\DataAkademik\SetupMapelKurikulumController@datatablesSetupMapelKurikulum');
-            Route::get('setup-mp-kurikulum/add/{id}', 'Akademik\DataAkademik\SetupMapelKurikulumController@addMapelKurikulum');
-            Route::get('setup-mp-kurikulum/datatables-mapel/{id}', 'Akademik\DataAkademik\SetupMapelKurikulumController@datatablesaddMapelKurikulum');
+            Route::get('setup-mp-kurikulum', [SetupMapelKurikulumController::class, 'viewSetupMapelKurikulum']);
+            Route::post('post-cari-kurikulum', [SetupMapelKurikulumController::class, 'actionCariKurikulum']);
+            Route::get('setup-mp-kurikulum/view-mapel-kurikulum/{id}', [SetupMapelKurikulumController::class, 'viewKurikulumMataPelajaran']);
+            Route::get('setup-mp-kurikulum/datatables/{id}', [SetupMapelKurikulumController::class, 'datatablesSetupMapelKurikulum']);
+            Route::get('setup-mp-kurikulum/add/{id}', [SetupMapelKurikulumController::class, 'addMapelKurikulum']);
+            Route::get('setup-mp-kurikulum/datatables-mapel/{id}', [SetupMapelKurikulumController::class, 'datatablesaddMapelKurikulum']);
 
-            Route::post('action-setup-mp-kurikulum/{mode}/{id}', 'Akademik\DataAkademik\SetupMapelKurikulumController@actionJenisMataPelajaran');
+            Route::post('action-setup-mp-kurikulum/{mode}/{id}', [SetupMapelKurikulumController::class, 'actionJenisMataPelajaran']);
         });
 
-        Route::group(array('prefix' => 'kegiatan-harian'), function () {
+        Route::prefix('kegiatan-harian')->group(function () {
 
-            Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
+            Route::prefix('mengisi-form-kesehatan')->group(function () {
                 // MENU Mengisi form kesehatan
-                Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
-                Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
-                Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                Route::get('/', [FormKesehatanController::class, 'viewFormKesehatan']);
+                Route::get('add', [FormKesehatanController::class, 'viewAddFormKesehatan']);
+                Route::get('detail/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
-                Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
-                Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+                Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+                Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
             });
         });
 
-        // MODUL AKTIVITAS SEMESTER
-        Route::group(array('prefix' => 'aktivitas-semester'), function () {
+        Route::prefix('aktivitas-semester')->group(function () {
             // MENU Usulan Mata Ajar
-            Route::get('usulan-mata-ajar', 'Akademik\AktivitasSemester\UsulanMataAjarController@viewUsulanMataAjar');
-            Route::post('post-usulan-mata-ajar', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionViewUsulanMataAjar');
-            Route::get('usulan-mata-ajar/view-semester-usulan-mata-ajar/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@viewSemesterUsulanMataAjar');
-            Route::get('usulan-mata-ajar/tambah-mata-ajar/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@viewTambahMataAjar');
-            Route::get('usulan-mata-ajar/datatables/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@datatablesUsulanMataAjar');
-            Route::get('usulan-mata-ajar/datatablesMapel/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@datatablesMataPelajaran');
-            Route::get('usulan-mata-ajar/add/{id_semester}/{id_mata_pelajaran}', 'Akademik\AktivitasSemester\UsulanMataAjarController@addUsulanMataAjar');
-            Route::get('usulan-mata-ajar/edit/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@editUsulanMataAjar');
-            Route::get('usulan-mata-ajar/copy/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyUsulanMataAjar');
-            Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', 'Akademik\AktivitasSemester\UsulanMataAjarController@copyJadwalSemesterLain');
+            Route::get('usulan-mata-ajar', [UsulanMataAjarController::class, 'viewUsulanMataAjar']);
+            Route::post('post-usulan-mata-ajar', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
+            Route::get('usulan-mata-ajar/view-semester-usulan-mata-ajar/{id}', [UsulanMataAjarController::class, 'viewSemesterUsulanMataAjar']);
+            Route::get('usulan-mata-ajar/tambah-mata-ajar/{id}', [UsulanMataAjarController::class, 'viewTambahMataAjar']);
+            Route::get('usulan-mata-ajar/datatables/{id}', [UsulanMataAjarController::class, 'datatablesUsulanMataAjar']);
+            Route::get('usulan-mata-ajar/datatablesMapel/{id}', [UsulanMataAjarController::class, 'datatablesMataPelajaran']);
+            Route::get('usulan-mata-ajar/add/{id_semester}/{id_mata_pelajaran}', [UsulanMataAjarController::class, 'addUsulanMataAjar']);
+            Route::get('usulan-mata-ajar/edit/{id}', [UsulanMataAjarController::class, 'editUsulanMataAjar']);
+            Route::get('usulan-mata-ajar/copy/{id}', [UsulanMataAjarController::class, 'copyUsulanMataAjar']);
+            Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', [UsulanMataAjarController::class, 'copyJadwalSemesterLain']);
 
-            Route::post('usulan-mata-ajar/hapus-jadwal/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@hapusJadwal');
+            Route::post('usulan-mata-ajar/hapus-jadwal/{id}', [UsulanMataAjarController::class, 'hapusJadwal']);
 
-            Route::post('usulan-mata-ajar/cek-jadwal-crash/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@cekJadwalCrash');
-            Route::post('action-usulan-mata-ajar/{mode}/{id}', 'Akademik\AktivitasSemester\UsulanMataAjarController@actionUsulanMataAjar');
+            Route::post('usulan-mata-ajar/cek-jadwal-crash/{id}', [UsulanMataAjarController::class, 'cekJadwalCrash']);
+            Route::post('action-usulan-mata-ajar/{mode}/{id}', [UsulanMataAjarController::class, 'actionUsulanMataAjar']);
 
             // MENU Monitoring Kelas
-            Route::get('monitoring-kelas', 'Akademik\AktivitasSemester\MonitoringKelasController@viewMonitoringKelas');
-            Route::post('post-monitoring-kelas', 'Akademik\AktivitasSemester\MonitoringKelasController@actionViewMonitoringKelas');
-            Route::get('monitoring-kelas/view-semester-monitoring-kelas/{id}', 'Akademik\AktivitasSemester\MonitoringKelasController@viewSemesterMonitoringKelas');
-            Route::get('monitoring-kelas/datatables/{id}', 'Akademik\AktivitasSemester\MonitoringKelasController@datatablesMonitoringKelas');
-            Route::get('monitoring-kelas/view-daftar-siswa/{id}', 'Akademik\AktivitasSemester\MonitoringKelasController@viewDaftarSiswa');
-            Route::get('monitoring-kelas/datatables-daftar-siswa/{id}', 'Akademik\AktivitasSemester\MonitoringKelasController@datatablesDaftarSiswa');
+            Route::get('monitoring-kelas', [MonitoringKelasController::class, 'viewMonitoringKelas']);
+            Route::post('post-monitoring-kelas', [MonitoringKelasController::class, 'actionViewMonitoringKelas']);
+            Route::get('monitoring-kelas/view-semester-monitoring-kelas/{id}', [MonitoringKelasController::class, 'viewSemesterMonitoringKelas']);
+            Route::get('monitoring-kelas/datatables/{id}', [MonitoringKelasController::class, 'datatablesMonitoringKelas']);
+            Route::get('monitoring-kelas/view-daftar-siswa/{id}', [MonitoringKelasController::class, 'viewDaftarSiswa']);
+            Route::get('monitoring-kelas/datatables-daftar-siswa/{id}', [MonitoringKelasController::class, 'datatablesDaftarSiswa']);
 
             //MENU Plotting Mapel Siswa
-            Route::get('plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewPlottingMapelSiswa');
-            Route::post('post-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/view-kelas-plotting/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewKelasPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/datatables/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewMapelPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesMataPelajaran');
-            Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesSiswa');
-            Route::post('post-daftar-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewDaftarPlottingMapelSiswa');
-            Route::get('plotting-mapel-siswa/view-daftar-kelas-plotting/{id_semester}/{angkatan}/{id_kelas}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewDaftarKelasPlottingMapelSiswa');
+            Route::get('plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'viewPlottingMapelSiswa']);
+            Route::post('post-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionViewPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/view-kelas-plotting/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'viewKelasPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/datatables/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'datatablesPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewMapelPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', [PlottingMapelSiswaController::class, 'datatablesMataPelajaran']);
+            Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'datatablesSiswa']);
+            Route::post('post-daftar-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionViewDaftarPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/view-daftar-kelas-plotting/{id_semester}/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'viewDaftarKelasPlottingMapelSiswa']);
 
-            Route::post('action-plotting-mapel-siswa/{mode}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionPlottingMapelSiswa');
+            Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
 
             //MENU Hapus Plotting Mapel Siswa
-            Route::get('hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewHapusPlottingMapelSiswa');
-            Route::post('post-hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionViewHapusPlottingMapelSiswa');
-            Route::get('hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa/{id}', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewSemesterHapusPlottingMapelSiswa');
-            Route::get('hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/{id}', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewDetailHapusPlottingMapelSiswa');
-            Route::get('hapus-plotting-mapel-siswa/datatables/{id}', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@datatablesHapusPlottingMapelSiswa');
+            Route::get('hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'viewHapusPlottingMapelSiswa']);
+            Route::post('post-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionViewHapusPlottingMapelSiswa']);
+            Route::get('hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa/{id}', [HapusPlottingMapelSiswaController::class, 'viewSemesterHapusPlottingMapelSiswa']);
+            Route::get('hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/{id}', [HapusPlottingMapelSiswaController::class, 'viewDetailHapusPlottingMapelSiswa']);
+            Route::get('hapus-plotting-mapel-siswa/datatables/{id}', [HapusPlottingMapelSiswaController::class, 'datatablesHapusPlottingMapelSiswa']);
 
-            Route::post('action-hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusPlottingMapelSiswa');
+            Route::post('action-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusPlottingMapelSiswa']);
 
             //MENU CARI SISWA
-            Route::get('cari-siswa', 'Akademik\AktivitasSemester\CariSiswaController@viewCariSiswa');
-            Route::post('post-view-cari-siswa', 'Akademik\AktivitasSemester\CariSiswaController@actionViewCariSiswa');
-            Route::get('cari-siswa/view-detail/{nis_nama_siswa}', 'Akademik\AktivitasSemester\CariSiswaController@viewDetailCariSiswa');
-            Route::get('cari-siswa/datatables/{nis_nama_siswa}', 'Akademik\AktivitasSemester\CariSiswaController@datatablesCariSiswa');
-            Route::get('cari-siswa/view-detail-siswa/{nis_siswa}/{nis_nama_siswa_asli}', 'Akademik\AktivitasSemester\CariSiswaController@viewDetailSiswaCariSiswa');
+            Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
+            Route::post('post-view-cari-siswa', [CariSiswaController::class, 'actionViewCariSiswa']);
+            Route::get('cari-siswa/view-detail/{nis_nama_siswa}', [CariSiswaController::class, 'viewDetailCariSiswa']);
+            Route::get('cari-siswa/datatables/{nis_nama_siswa}', [CariSiswaController::class, 'datatablesCariSiswa']);
+            Route::get('cari-siswa/view-detail-siswa/{nis_siswa}/{nis_nama_siswa_asli}', [CariSiswaController::class, 'viewDetailSiswaCariSiswa']);
 
             //MENU Input Nilai
-            Route::get('input-nilai', 'Akademik\AktivitasSemester\InputNilaiController@viewInputNilai');
-            Route::post('post-view-input-nilai', 'Akademik\AktivitasSemester\InputNilaiController@actionInputNilai');
-            Route::get('input-nilai/view-guru-input-nilai/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewGuruInputNilai');
-            Route::post('post-view-komponen-nilai', 'Akademik\AktivitasSemester\InputNilaiController@actionViewKelasKomponenNilai');
+            Route::get('input-nilai', [InputNilaiController::class, 'viewInputNilai']);
+            Route::post('post-view-input-nilai', [InputNilaiController::class, 'actionInputNilai']);
+            Route::get('input-nilai/view-guru-input-nilai/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'viewGuruInputNilai']);
+            Route::post('post-view-komponen-nilai', [InputNilaiController::class, 'actionViewKelasKomponenNilai']);
             // view komponen
-            Route::get('input-nilai/view-kelas/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewKelasKomponenNilai');
-            Route::get('input-nilai/datatables/{id_kelas_mp}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesKomponenNilai');
+            Route::get('input-nilai/view-kelas/{id_kelas_mp}/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'viewKelasKomponenNilai']);
+            Route::get('input-nilai/datatables/{id_kelas_mp}', [InputNilaiController::class, 'datatablesKomponenNilai']);
             // view add komponen
-            Route::get('input-nilai/add/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@addKomponenNilai');
+            Route::get('input-nilai/add/{id_kelas_mp}/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'addKomponenNilai']);
             // view edit komponen
-            Route::get('input-nilai/edit/{id_kelas_mp}/{id_pengguna}/{id_semester}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@editKomponenNilai');
-            Route::get('input-nilai/datatables-mapel/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesMataPelajaran');
+            Route::get('input-nilai/edit/{id_kelas_mp}/{id_pengguna}/{id_semester}/{id}', [InputNilaiController::class, 'editKomponenNilai']);
+            Route::get('input-nilai/datatables-mapel/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'datatablesMataPelajaran']);
             // input nilai mapel
-            Route::get('input-nilai/nilai-mapel/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewSiswaPerMapel');
+            Route::get('input-nilai/nilai-mapel/{id_kelas_mp}/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'viewSiswaPerMapel']);
 
             // view subkomponen
-            Route::get('input-nilai/view-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@viewKelasSubKomponenNilai');
-            Route::get('input-nilai/datatables-subkomponen/{id_komponen_mp}', 'Akademik\AktivitasSemester\InputNilaiController@datatablesSubKomponenNilai');
+            Route::get('input-nilai/view-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'viewKelasSubKomponenNilai']);
+            Route::get('input-nilai/datatables-subkomponen/{id_komponen_mp}', [InputNilaiController::class, 'datatablesSubKomponenNilai']);
             // view add subkomponen
-            Route::get('input-nilai/add-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}', 'Akademik\AktivitasSemester\InputNilaiController@addSubKomponenNilai');
+            Route::get('input-nilai/add-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}', [InputNilaiController::class, 'addSubKomponenNilai']);
             // view edit subkomponen
-            Route::get('input-nilai/edit-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@editSubKomponenNilai');
+            Route::get('input-nilai/edit-sub-komponen/{id_komponen_mp}/{id_kelas_mp}/{id_pengguna}/{id_semester}/{id}', [InputNilaiController::class, 'editSubKomponenNilai']);
 
-            Route::post('action-komponen-nilai/{mode}/{id}', 'Akademik\AktivitasSemester\InputNilaiController@actionKomponenNilai');
-            Route::post('action-subkomponen-nilai/{mode}/{id?}', 'Akademik\AktivitasSemester\InputNilaiController@actionSubKomponenNilai');
+            Route::post('action-komponen-nilai/{mode}/{id}', [InputNilaiController::class, 'actionKomponenNilai']);
+            Route::post('action-subkomponen-nilai/{mode}/{id?}', [InputNilaiController::class, 'actionSubKomponenNilai']);
         });
 
-        Route::group(array('prefix' => 'ujian'), function () {
+        Route::prefix('ujian')->group(function () {
             //UTS
-            Route::get('ujian-uts-reguler-online', 'Akademik\Ujian\UjianUTSController@viewUjianUts');
-            Route::get('ujian-uts-reguler-online/datatables/{online}', 'Akademik\Ujian\UjianUTSController@datatablesUjianUts');
-            Route::get('ujian-uts-reguler-online/datatablesMapel/{online}', 'Akademik\Ujian\UjianUTSController@datatablesDaftarMataPelajaran');
-            Route::get('ujian-uts-reguler-online/datatablesSiswa/{id}', 'Akademik\Ujian\UjianUTSController@datatablesDaftarSiswa');
-            Route::get('ujian-uts-reguler-online/add/{id}', 'Akademik\Ujian\UjianUTSController@addUjianUts');
-            Route::get('ujian-uts-reguler-online/addUjian/{online}/{id_kelas_mp}', 'Akademik\Ujian\UjianUTSController@addDataUjianUts');
-            Route::get('ujian-uts-reguler-online/edit/{id_ujian_mp}', 'Akademik\Ujian\UjianUTSController@editDataUjianUts');
-            Route::get('ujian-uts-reguler-online/assign/{id}', 'Akademik\Ujian\UjianUTSController@assignUjianUts');
+            Route::get('ujian-uts-reguler-online', [UjianUTSController::class, 'viewUjianUts']);
+            Route::get('ujian-uts-reguler-online/datatables/{online}', [UjianUTSController::class, 'datatablesUjianUts']);
+            Route::get('ujian-uts-reguler-online/datatablesMapel/{online}', [UjianUTSController::class, 'datatablesDaftarMataPelajaran']);
+            Route::get('ujian-uts-reguler-online/datatablesSiswa/{id}', [UjianUTSController::class, 'datatablesDaftarSiswa']);
+            Route::get('ujian-uts-reguler-online/add/{id}', [UjianUTSController::class, 'addUjianUts']);
+            Route::get('ujian-uts-reguler-online/addUjian/{online}/{id_kelas_mp}', [UjianUTSController::class, 'addDataUjianUts']);
+            Route::get('ujian-uts-reguler-online/edit/{id_ujian_mp}', [UjianUTSController::class, 'editDataUjianUts']);
+            Route::get('ujian-uts-reguler-online/assign/{id}', [UjianUTSController::class, 'assignUjianUts']);
 
-            Route::post('action-ujian-uts/{mode}/{id}', 'Akademik\Ujian\UjianUTSController@actionUjianUts');
+            Route::post('action-ujian-uts/{mode}/{id}', [UjianUTSController::class, 'actionUjianUts']);
 
             //UAS
-            Route::get('ujian-uas-reguler-online', 'Akademik\Ujian\UjianUASController@viewUjianUas');
-            Route::get('ujian-uas-reguler-online/datatables/{online}', 'Akademik\Ujian\UjianUASController@datatablesUjianUas');
-            Route::get('ujian-uas-reguler-online/datatablesMapel/{online}', 'Akademik\Ujian\UjianUASController@datatablesDaftarMataPelajaran');
-            Route::get('ujian-uas-reguler-online/datatablesSiswa/{id}', 'Akademik\Ujian\UjianUASController@datatablesDaftarSiswa');
-            Route::get('ujian-uas-reguler-online/add/{id}', 'Akademik\Ujian\UjianUASController@addUjianUas');
+            Route::get('ujian-uas-reguler-online', [UjianUASController::class, 'viewUjianUas']);
+            Route::get('ujian-uas-reguler-online/datatables/{online}', [UjianUASController::class, 'datatablesUjianUas']);
+            Route::get('ujian-uas-reguler-online/datatablesMapel/{online}', [UjianUASController::class, 'datatablesDaftarMataPelajaran']);
+            Route::get('ujian-uas-reguler-online/datatablesSiswa/{id}', [UjianUASController::class, 'datatablesDaftarSiswa']);
+            Route::get('ujian-uas-reguler-online/add/{id}', [UjianUASController::class, 'addUjianUas']);
             // ini yg salah
-            Route::get('ujian-uas-reguler-online/addUjian/{online}/{id_kelas_mp}', 'Akademik\Ujian\UjianUASController@addDataUjianUas');
-            Route::get('ujian-uas-reguler-online/edit/{id_ujian_mp}', 'Akademik\Ujian\UjianUASController@editDataUjianUas');
-            Route::get('ujian-uas-reguler-online/assign/{id}', 'Akademik\Ujian\UjianUASController@assignUjianUas');
+            Route::get('ujian-uas-reguler-online/addUjian/{online}/{id_kelas_mp}', [UjianUASController::class, 'addDataUjianUas']);
+            Route::get('ujian-uas-reguler-online/edit/{id_ujian_mp}', [UjianUASController::class, 'editDataUjianUas']);
+            Route::get('ujian-uas-reguler-online/assign/{id}', [UjianUASController::class, 'assignUjianUas']);
 
-            Route::post('action-ujian-uas/{mode}/{id}', 'Akademik\Ujian\UjianUASController@actionUjianUas');
+            Route::post('action-ujian-uas/{mode}/{id}', [UjianUASController::class, 'actionUjianUas']);
 
             //TRY OUT
-            Route::get('try-out-reguler-online', 'Akademik\Ujian\TryOutController@viewTryOut');
-            Route::get('try-out-reguler-online/datatables/{online}', 'Akademik\Ujian\TryOutController@datatablesTryOut');
-            Route::get('try-out-reguler-online/datatablesMapel/{online}', 'Akademik\Ujian\TryOutController@datatablesDaftarMataPelajaran');
-            Route::get('try-out-reguler-online/datatablesSiswa/{id}', 'Akademik\Ujian\TryOutController@datatablesDaftarSiswa');
-            Route::get('try-out-reguler-online/add/{id}', 'Akademik\Ujian\TryOutController@addTryOut');
-            Route::get('try-out-reguler-online/addUjian/{online}/{id_kelas_mp}', 'Akademik\Ujian\TryOutController@addDataTryOut');
-            Route::get('try-out-reguler-online/edit/{id_ujian_mp}', 'Akademik\Ujian\TryOutController@editDataTryOut');
-            Route::get('try-out-reguler-online/assign/{id}', 'Akademik\Ujian\TryOutController@assignTryOut');
+            Route::get('try-out-reguler-online', [TryOutController::class, 'viewTryOut']);
+            Route::get('try-out-reguler-online/datatables/{online}', [TryOutController::class, 'datatablesTryOut']);
+            Route::get('try-out-reguler-online/datatablesMapel/{online}', [TryOutController::class, 'datatablesDaftarMataPelajaran']);
+            Route::get('try-out-reguler-online/datatablesSiswa/{id}', [TryOutController::class, 'datatablesDaftarSiswa']);
+            Route::get('try-out-reguler-online/add/{id}', [TryOutController::class, 'addTryOut']);
+            Route::get('try-out-reguler-online/addUjian/{online}/{id_kelas_mp}', [TryOutController::class, 'addDataTryOut']);
+            Route::get('try-out-reguler-online/edit/{id_ujian_mp}', [TryOutController::class, 'editDataTryOut']);
+            Route::get('try-out-reguler-online/assign/{id}', [TryOutController::class, 'assignTryOut']);
 
-            Route::post('action-try-out/{mode}/{id}', 'Akademik\Ujian\TryOutController@actionTryOut');
+            Route::post('action-try-out/{mode}/{id}', [TryOutController::class, 'actionTryOut']);
         });
 
-        // MODUL PRESENSI
-        Route::group(array('prefix' => 'presensi'), function () {
+        Route::prefix('presensi')->group(function () {
             // MENU Cetak Presensi KBM
-            Route::get('cetak-presensi-kbm', 'Akademik\Presensi\CetakPresensiKBMController@viewCetakPresensiKBM');
-            Route::post('post-cetak-presensi-kbm', 'Akademik\Presensi\CetakPresensiKBMController@actionviewCetakPresensiKBM');
-            Route::get('cetak-presensi-kbm/view-semester-cetak-presensi-kbm/{id}', 'Akademik\Presensi\CetakPresensiKBMController@viewSemesterCetakPresensiKBM');
-            Route::get('cetak-presensi-kbm/datatables/{id}', 'Akademik\Presensi\CetakPresensiKBMController@datatablesCetakPresensiKBM');
-            Route::get('cetak-presensi-kbm/print/{id}', 'Akademik\Presensi\CetakPresensiKBMController@printCetakPresensiKBM');
+            Route::get('cetak-presensi-kbm', [CetakPresensiKBMController::class, 'viewCetakPresensiKBM']);
+            Route::post('post-cetak-presensi-kbm', [CetakPresensiKBMController::class, 'actionviewCetakPresensiKBM']);
+            Route::get('cetak-presensi-kbm/view-semester-cetak-presensi-kbm/{id}', [CetakPresensiKBMController::class, 'viewSemesterCetakPresensiKBM']);
+            Route::get('cetak-presensi-kbm/datatables/{id}', [CetakPresensiKBMController::class, 'datatablesCetakPresensiKBM']);
+            Route::get('cetak-presensi-kbm/print/{id}', [CetakPresensiKBMController::class, 'printCetakPresensiKBM']);
 
             // MENU Cetak Presensi UTS
-            Route::get('cetak-presensi-uts', 'Akademik\Presensi\CetakPresensiUTSController@viewCetakPresensiUTS');
-            Route::post('post-cetak-presensi-uts', 'Akademik\Presensi\CetakPresensiUTSController@actionviewCetakPresensiUTS');
-            Route::get('cetak-presensi-uts/view-semester-cetak-presensi-uts/{id}', 'Akademik\Presensi\CetakPresensiUTSController@viewSemesterCetakPresensiUTS');
-            Route::get('cetak-presensi-uts/datatables/{id}', 'Akademik\Presensi\CetakPresensiUTSController@datatablesCetakPresensiUTS');
-            Route::get('cetak-presensi-uts/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUTSController@printCetakPresensiUTS');
+            Route::get('cetak-presensi-uts', [CetakPresensiUTSController::class, 'viewCetakPresensiUTS']);
+            Route::post('post-cetak-presensi-uts', [CetakPresensiUTSController::class, 'actionviewCetakPresensiUTS']);
+            Route::get('cetak-presensi-uts/view-semester-cetak-presensi-uts/{id}', [CetakPresensiUTSController::class, 'viewSemesterCetakPresensiUTS']);
+            Route::get('cetak-presensi-uts/datatables/{id}', [CetakPresensiUTSController::class, 'datatablesCetakPresensiUTS']);
+            Route::get('cetak-presensi-uts/print/{id}/{pengampu}', [CetakPresensiUTSController::class, 'printCetakPresensiUTS']);
 
             // MENU Cetak Presensi UAS
-            Route::get('cetak-presensi-uas', 'Akademik\Presensi\CetakPresensiUASController@viewCetakPresensiUAS');
-            Route::post('post-cetak-presensi-uas', 'Akademik\Presensi\CetakPresensiUASController@actionviewCetakPresensiUAS');
-            Route::get('cetak-presensi-uas/view-semester-cetak-presensi-uas/{id}', 'Akademik\Presensi\CetakPresensiUASController@viewSemesterCetakPresensiUAS');
-            Route::get('cetak-presensi-uas/datatables/{id}', 'Akademik\Presensi\CetakPresensiUASController@datatablesCetakPresensiUAS');
-            Route::get('cetak-presensi-uas/print/{id}/{pengampu}', 'Akademik\Presensi\CetakPresensiUASController@printCetakPresensiUAS');
+            Route::get('cetak-presensi-uas', [CetakPresensiUASController::class, 'viewCetakPresensiUAS']);
+            Route::post('post-cetak-presensi-uas', [CetakPresensiUASController::class, 'actionviewCetakPresensiUAS']);
+            Route::get('cetak-presensi-uas/view-semester-cetak-presensi-uas/{id}', [CetakPresensiUASController::class, 'viewSemesterCetakPresensiUAS']);
+            Route::get('cetak-presensi-uas/datatables/{id}', [CetakPresensiUASController::class, 'datatablesCetakPresensiUAS']);
+            Route::get('cetak-presensi-uas/print/{id}/{pengampu}', [CetakPresensiUASController::class, 'printCetakPresensiUAS']);
         });
 
-        // MODUL MONITORING
+        Route::prefix('guru-piket')->group(function () {
+            Route::get('absensi-harian-siswa', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
+            Route::get('absensi-harian-siswa/{id_semester}/{id_kelas}', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
+            Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}', [AbsensiHarianSiswaController::class, 'viewManageAbsensiHarianSiswa']);
+            Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}/{id_presensi_harian}', [AbsensiHarianSiswaController::class, 'viewManageAbsensiHarianSiswa']);
+            Route::get('absensi-harian-siswa/detail/{id_semester}/{id_kelas}/{tahun}/{id_bulan}', [AbsensiHarianSiswaController::class, 'viewDetailAbsensiHarianSiswa']);
 
-        Route::group(array('prefix' => 'guru-piket'), function () {
-            Route::get('absensi-harian-siswa', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
-            Route::get('absensi-harian-siswa/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
-            Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
-            Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewManageAbsensiHarianSiswa');
-            Route::get('absensi-harian-siswa/detail/{id_semester}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewDetailAbsensiHarianSiswa');
+            Route::post('absensi-harian-siswa/datatables/{id_semester}/{id_kelas}', [AbsensiHarianSiswaController::class, 'datatablesAbsensiHarianSiswa']);
+            Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', [AbsensiHarianSiswaController::class, 'datatablesKelasAbsensiHariSiswa']);
+            Route::post('absensi-harian-siswa/action/{mode}', [AbsensiHarianSiswaController::class, 'actionAbsensiHarianSiswa']);
+            Route::post('absensi-harian-siswa/action/{mode}/{id}', [AbsensiHarianSiswaController::class, 'actionAbsensiHarianSiswa']);
 
-            Route::post('absensi-harian-siswa/datatables/{id_semester}/{id_kelas}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesAbsensiHarianSiswa');
-            Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', 'Guru\GuruPiket\AbsensiHarianSiswaController@datatablesKelasAbsensiHariSiswa');
-            Route::post('absensi-harian-siswa/action/{mode}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
-            Route::post('absensi-harian-siswa/action/{mode}/{id}', 'Guru\GuruPiket\AbsensiHarianSiswaController@actionAbsensiHarianSiswa');
-
-            Route::get('monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesMonitoringKelasKosong');
-            Route::get('rekap-monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesRekapMonitoringKelasKosong');
+            Route::get('monitoring-kelas-kosong/datatables', [MonitoringKelasKosongController::class, 'datatablesMonitoringKelasKosong']);
+            Route::get('rekap-monitoring-kelas-kosong/datatables', [MonitoringKelasKosongController::class, 'datatablesRekapMonitoringKelasKosong']);
         });
 
-        Route::group(array('prefix' => 'monitoring'), function () {
+        Route::prefix('monitoring')->group(function () {
+            Route::get('monitoring-presensi', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
 
-            Route::get('monitoring-presensi', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
-
-            Route::get('monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewMonitoringKelasKosong');
-            Route::get('rekap-monitoring-kelas-kosong', 'Guru\GuruPiket\MonitoringKelasKosongController@viewRekapMonitoringKelasKosong');
+            Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
+            Route::get('rekap-monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewRekapMonitoringKelasKosong']);
         });
 
-        // MODUL KELAS DARING
-        Route::group(array('prefix' => 'kelas-daring'), function () {
+        Route::prefix('kelas-daring')->group(function () {
             // MENU Setting Toleransi Keterlambatan
-            Route::get('setting-toleransi', 'Akademik\KelasDaring\SettingToleransiController@viewSettingToleransi');
-            Route::post('post-setting-toleransi', 'Akademik\KelasDaring\SettingToleransiController@actionSettingToleransi');
+            Route::get('setting-toleransi', [SettingToleransiController::class, 'viewSettingToleransi']);
+            Route::post('post-setting-toleransi', [SettingToleransiController::class, 'actionSettingToleransi']);
 
             // MENU Setting Pengampu
-            Route::get('setting-pengampu', 'Akademik\KelasDaring\SettingPengampuController@viewSettingPengampu');
-            Route::post('setting-pengampu/datatables', 'Akademik\KelasDaring\SettingPengampuController@datatablesSettingPengampu');
+            Route::get('setting-pengampu', [SettingPengampuController::class, 'viewSettingPengampu']);
+            Route::post('setting-pengampu/datatables', [SettingPengampuController::class, 'datatablesSettingPengampu']);
 
-            Route::get('setting-pengampu/guru/{id_guru}', 'Akademik\KelasDaring\SettingPengampuController@viewGuruSettingPengampu');
-            Route::post('setting-pengampu/guru/datatables', 'Akademik\KelasDaring\SettingPengampuController@datatablesGuruSettingPengampu');
+            Route::get('setting-pengampu/guru/{id_guru}', [SettingPengampuController::class, 'viewGuruSettingPengampu']);
+            Route::post('setting-pengampu/guru/datatables', [SettingPengampuController::class, 'datatablesGuruSettingPengampu']);
 
-            Route::post('setting-pengampu/guru/action/{mode}', 'Akademik\KelasDaring\SettingPengampuController@actionSettingPengampu');
+            Route::post('setting-pengampu/guru/action/{mode}', [SettingPengampuController::class, 'actionSettingPengampu']);
 
-            Route::group(array('prefix' => 'jadwal-kelas'), function () {
-                Route::get('/', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasDaring');
-                Route::get('add', 'Guru\KelasDaring\SettingKelasDaringController@viewAddKelasDaring');
-                Route::get('edit/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditKelasDaring');
+            Route::prefix('jadwal-kelas')->group(function () {
+                Route::get('/', [SettingKelasDaringController::class, 'viewKelasDaring']);
+                Route::get('add', [SettingKelasDaringController::class, 'viewAddKelasDaring']);
+                Route::get('edit/{id}', [SettingKelasDaringController::class, 'viewEditKelasDaring']);
 
-                Route::get('materi/edit/{id_kelas_mp_grup}/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditMateriKelasDaring');
-                Route::post('materi/action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionEditMateriKelasDaring');
+                Route::get('materi/edit/{id_kelas_mp_grup}/{id}', [SettingKelasDaringController::class, 'viewEditMateriKelasDaring']);
+                Route::post('materi/action/{mode}', [SettingKelasDaringController::class, 'actionEditMateriKelasDaring']);
 
-                Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesKelasDaring');
-                Route::post('save', 'Guru\KelasDaring\SettingKelasDaringController@actionAddKelasDaring');
+                Route::post('datatables', [SettingKelasDaringController::class, 'datatablesKelasDaring']);
+                Route::post('save', [SettingKelasDaringController::class, 'actionAddKelasDaring']);
 
-                Route::group(array('prefix' => 'data-kelas'), function () {
-                    Route::get('/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewKelasMpKelasDaring');
+                Route::prefix('data-kelas')->group(function () {
+                    Route::get('/{id}', [SettingKelasDaringController::class, 'viewKelasMpKelasDaring']);
 
-                    Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesKelasMpKelasDaring');
-                    Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionKelasMpKelasDaring');
+                    Route::post('datatables', [SettingKelasDaringController::class, 'datatablesKelasMpKelasDaring']);
+                    Route::post('action/{mode}', [SettingKelasDaringController::class, 'actionKelasMpKelasDaring']);
                 });
+                Route::prefix('data-jadwal')->group(function () {
+                    Route::get('/{id}', [SettingKelasDaringController::class, 'viewPresensiMpKelasDaring']);
+                    Route::get('add/{id_kelas_mp_grup}', [SettingKelasDaringController::class, 'viewAddPresensiMpKelasDaring']);
+                    Route::get('edit/{id_kelas_mp_grup}/{id}', [SettingKelasDaringController::class, 'viewEditPresensiMpKelasDaring']);
 
-                Route::group(array('prefix' => 'data-jadwal'), function () {
-                    Route::get('/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewPresensiMpKelasDaring');
-                    Route::get('add/{id_kelas_mp_grup}', 'Guru\KelasDaring\SettingKelasDaringController@viewAddPresensiMpKelasDaring');
-                    Route::get('edit/{id_kelas_mp_grup}/{id}', 'Guru\KelasDaring\SettingKelasDaringController@viewEditPresensiMpKelasDaring');
+                    Route::post('datatables', [SettingKelasDaringController::class, 'datatablesPresensiMpKelasDaring']);
+                    Route::post('action/{mode}', [SettingKelasDaringController::class, 'actionPresensiMpKelasDaring']);
 
-                    Route::post('datatables', 'Guru\KelasDaring\SettingKelasDaringController@datatablesPresensiMpKelasDaring');
-                    Route::post('action/{mode}', 'Guru\KelasDaring\SettingKelasDaringController@actionPresensiMpKelasDaring');
-
-                    Route::post('action-delete/{id}', 'Guru\KelasDaring\SettingKelasDaringController@actionDeletePresensiMpKelasDaring');
+                    Route::post('action-delete/{id}', [SettingKelasDaringController::class, 'actionDeletePresensiMpKelasDaring']);
                 });
             });
         });
 
-        Route::group(array('prefix' => 'laporan'), function () {
+        Route::prefix('laporan')->group(function () {
 
-            Route::group(array('prefix' => 'wali-kelas'), function () {
-                Route::get('/', 'Kesiswaan\Laporan\WaliKelasController@viewWaliKelas');
-                Route::get('datatables', 'Kesiswaan\Laporan\WaliKelasController@datatablesWaliKelas');
-                Route::get('add', 'Kesiswaan\Laporan\WaliKelasController@addWaliKelas');
-                Route::get('edit/{id}', 'Kesiswaan\Laporan\WaliKelasController@editWaliKelas');
-                Route::get('detail/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailWaliKelas');
-                Route::get('detail-ajax/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailAjaxWaliKelas');
-                Route::get('detail-datatable/{id}', 'Kesiswaan\Laporan\WaliKelasController@detailDataTable');
-                Route::post('action-detail-wali-kelas', 'Kesiswaan\Laporan\WaliKelasController@actionDetailWaliKelas');
-                Route::post('action-wali-kelas/{mode}/{id}', 'Kesiswaan\Laporan\WaliKelasController@actionWaliKelas');
+            Route::prefix('wali-kelas')->group(function () {
+                Route::get('/', [WaliKelasController::class, 'viewWaliKelas']);
+                Route::get('datatables', [WaliKelasController::class, 'datatablesWaliKelas']);
+                Route::get('add', [WaliKelasController::class, 'addWaliKelas']);
+                Route::get('edit/{id}', [WaliKelasController::class, 'editWaliKelas']);
+                Route::get('detail/{id}', [WaliKelasController::class, 'detailWaliKelas']);
+                Route::get('detail-ajax/{id}', [WaliKelasController::class, 'detailAjaxWaliKelas']);
+                Route::get('detail-datatable/{id}', [WaliKelasController::class, 'detailDataTable']);
+                Route::post('action-detail-wali-kelas', [WaliKelasController::class, 'actionDetailWaliKelas']);
+                Route::post('action-wali-kelas/{mode}/{id}', [WaliKelasController::class, 'actionWaliKelas']);
             });
         });
     });
