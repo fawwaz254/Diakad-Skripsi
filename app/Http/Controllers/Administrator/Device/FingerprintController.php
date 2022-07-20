@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 use App\Models\FPDevice;
 use App\Models\FPAttendance;
+use App\Models\PresensiPengguna;
 use App\Models\Pengguna;
 
 use Carbon\Carbon;
