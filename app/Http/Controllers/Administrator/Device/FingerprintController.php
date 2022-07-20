@@ -8,6 +8,7 @@ use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 use App\Models\FPDevice;
 use App\Models\FPAttendance;
+use App\Models\Pengguna;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -110,6 +111,32 @@ class FingerprintController extends BaseController
                     $item->tanggal = $data['tanggal'];
                     $item->fp_date = $data['tanggal'];
                     $item->save();
+                }
+
+                if($pengguna = Pengguna::where('username', $item->username)->first()){
+                    if($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $item->tanggal)->first()){
+
+                    }else{
+                        $presensi = new PresensiPengguna;
+                        $presensi->id_presensi_pengguna = $prefix . strtotime($now) . uniqid();
+                        $presensi->id_pengguna = $pengguna->id_pengguna;
+                        $presensi->status_join_table = $pengguna->status_join_table;
+                        $presensi->date = $item->tanggal;
+                    }
+
+                    if($item->status == 0){
+                        $presensi->check_in = $item->fp_date;
+                        $presensi->status = null;
+                        $presensi->notes = null;
+                        $presensi->save();
+                    }
+
+                    if($item->status == 1){
+                        $presensi->check_out = $item->fp_date;
+                        $presensi->status = null;
+                        $presensi->notes = null;
+                        $presensi->save();
+                    }
                 }
             }
             return 'OK';

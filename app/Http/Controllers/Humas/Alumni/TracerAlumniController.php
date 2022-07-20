@@ -31,6 +31,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\AlumniSmp;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TracerAlumniImport;
 use Illuminate\Routing\Controller as BaseController;
 
 class TracerAlumniController extends BaseController
@@ -54,6 +55,49 @@ class TracerAlumniController extends BaseController
             return view('humas.alumni.tracer-alumni.view-tracer-alumni');
         }
     }
+
+    public function excelTracerAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
+        //     return view('humas.alumni.tracer-alumni.view-tracer-alumni-smp');
+        // } else {
+            return view('humas.alumni.tracer-alumni.add-excel-tracer-alumni');
+        // }
+    }
+
+    public function uploadFileExcel(Request $request)
+	{
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
+		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		if ($request->hasFile('file-excel')) {
+			// $path = $request->file('file-excel')->getRealPath();
+			// $data = Excel::load($path)->get();
+			Excel::import(new TracerAlumniImport($auth_data, $now), $request->file('file-excel'));
+			return [
+				'status' 	=> 200, // FAILED
+				'message' 	=> "Upload Sukses"
+			];;
+		} else {
+			return [
+				'status' 	=> 300, // FAILED
+				'message' 	=> "File Excel tidak ditemukan"
+			];
+		}
+	}
+
+	public function downloadFileExcel()
+	{
+		$file = public_path() . "/excel/ContohFileExelUploadTracerAlumniSmp.xlsx";
+		$headers = [
+			'Content-Type' => 'application/xlsx',
+		];
+
+		return response()->download($file, 'ContohFileExelUploadTracerAlumniSmp.xlsx', $headers);
+	}
+
 
     public function datatablesTracerAlumni(Request $request)
     {

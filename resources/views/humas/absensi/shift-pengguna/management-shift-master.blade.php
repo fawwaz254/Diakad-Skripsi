@@ -1,116 +1,83 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="container-fluid">
-
-
-
-
     <div class="row clearfix">
         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-            <button class="btn btn-block bg-red waves-effect" onclick=back()><i class="material-icons">arrow_back</i><span>Kembali</span></button>
+            <button class="btn btn-block bg-red waves-effect" onclick=back()><i
+                    class="material-icons">arrow_back</i><span>Kembali</span></button>
         </div>
     </div>
+    <br>
 
-    
     <div class="card">
-    <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-          
-        
-         
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="header">
                     <h2>Management Shift Master</h2>
-              
+
                 </div>
-
-
                 <div class="body">
-
                     <div class="col-sm-6">
-                      
+                        <h4>Tambah Shift Baru</h4>
+                        <form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/addShiftMaster">
+                            {{ csrf_field() }}
 
-<h4>Tambah Shift Baru</h4>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <h2 class="card-inside-title">Nama Shift</h2>
+                                <input type="text" name="name" class="form-control">
+                            </div>
 
-<form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/addShiftMaster">
-    {{csrf_field()}}
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <h2 class="card-inside-title">Jam masuk</h2>
+                                <input type="time" name="check_in" class="form-control">
+                            </div>
 
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <h2 class="card-inside-title">Jam keluar</h2>
+                                <input type="time" name="check_out" class="form-control">
+                            </div>
 
+                            <button id="btn-submit" class="btn btn-block bg-red waves-effect" style="display: inline;">
+                                <i class="material-icons">save</i>
+                                <span>Save</span>
+                            </button>
 
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <h2 class="card-inside-title">Nama Shift</h2>
-        <input type="text" name="name" class="form-control"
-        >
-    </div>
+                        </form>
 
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <h2 class="card-inside-title">Jam masuk</h2>
-        <input type="time" name="check_in" class="form-control"
-            >
-    </div>
-
-
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-        <h2 class="card-inside-title">Jam keluar</h2>
-        <input type="time" name="check_out" class="form-control"
-          >
-    </div>
-
-<button id="btn-submit" class="btn btn-block bg-red waves-effect" style="display: inline;">
-    <i class="material-icons">save</i>
-    <span>Save</span>
-</button>
-
-</form>
-
-
-<br>
-                            <table class="table table-bordered" >
-
-                               
-                                <tr>
-                                    <h4>List Shift :</h4>
-                                </tr>
-                                <tr>
+                        <br>
+                        <table class="table table-bordered">
+                            <tr>
+                                <h4>List Shift :</h4>
+                            </tr>
+                            <tr>
                                 <td style="text-align: center;">No</td>
                                 <td>Nama</td>
                                 <td>Jam Masuk</td>
                                 <td>Jam Keluar</td>
                                 <td>Aksi</td>
+                            </tr>
 
-                                </tr>
-
-                                @foreach($shifts as $key => $shift)
+                            @foreach ($shifts as $key => $shift)
                                 <tr>
-                                
-                                <td style="text-align: center;">{{ $key+1 }}</td>
-                                <td>{{$shift['code']}}</td>
-                                <td>{{$shift['start_time']}}</td>
-                                <td>{{$shift['end_time']}}</td>
-                                <td>
-                                    <button id="button" data-id={{$shift['id_shift_master']}} style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
-                                        <i class="material-icons">delete</i>
-                                    </button>
 
-
-
-                                </td>
-                                
-
+                                    <td style="text-align: center;">{{ $key + 1 }}</td>
+                                    <td>{{ $shift['code'] }}</td>
+                                    <td>{{ $shift['start_time'] }}</td>
+                                    <td>{{ $shift['end_time'] }}</td>
+                                    <td>
+                                        <button id="button" data-id={{ $shift['id_shift_master'] }}
+                                            style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+                                    </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
+                        </table>
 
-
-            
-                           </table>       
-              
-                                    
-
-
-                                    {{-- <button class="btn btn-block bg-green waves-effect" id="btn-submit"><i class="material-icons">save</i><span>Save</span></button>
+                        {{-- <button class="btn btn-block bg-green waves-effect" id="btn-submit"><i class="material-icons">save</i><span>Save</span></button>
                                         </div>
                          </form> --}}
-                </div>
+                    </div>
 
                 </div>
 
@@ -124,14 +91,14 @@
 
 @include('scriptjs')
 <script>
-// $( "#add-form" ).submit(function() {
-//     $('#btn-submit').attr("disabled", true);
-//     $('#btn-submit i').text('autorenew')
-//     $('#btn-submit span').text('Loading')
-// });
+    // $( "#add-form" ).submit(function() {
+    //     $('#btn-submit').attr("disabled", true);
+    //     $('#btn-submit i').text('autorenew')
+    //     $('#btn-submit span').text('Loading')
+    // });
 
-function back(){
-        window.location='/humas#absensi/shift_pengguna'
+    function back() {
+        window.location = '/humas#absensi/shift_pengguna'
     }
 
 
@@ -158,7 +125,7 @@ function back(){
     //                         text: "data berhasil dihapus",
     //                         icon: "success",
     //                     });
-    //                     loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}');
+    //                     loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}');
     //                 },
     //             });
     //         }
@@ -166,36 +133,37 @@ function back(){
     //     }
     // );
 
-    $(".delete-record").click(function () {
+    $(".delete-record").click(function() {
         const token = $("meta[name='csrf-token']").attr("content");
-        const id= $(this).data("id");
-        swal(
-        { title: "Are you sure?", showCancelButton: true},
-        function (isConfirm) {
-            if (isConfirm) {
-                $('.delete-record').attr("disabled", true);
-                //swall
-                $.ajax({
-                    url: ` /humas/absensi/shift_pengguna/managementShift/${id}/delete`,
-                    type: "post",
+        const id = $(this).data("id");
+        swal({
+                title: "Are you sure?",
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('.delete-record').attr("disabled", true);
+                    //swall
+                    $.ajax({
+                        url: ` /humas/absensi/shift_pengguna/managementShift/${id}/delete`,
+                        type: "post",
 
-                    data: {
-                        _token: token,
-                    },
+                        data: {
+                            _token: token,
+                        },
 
-                    success: function () {
-                        swal({
-                            title: "Delete Success",
-                            text: "data berhasil dihapus",
-                            icon: "success",
-                        });
-                        loadURI('absensi/shift_pengguna/managementShift');
-                    },
-                });
+                        success: function() {
+                            swal({
+                                title: "Delete Success",
+                                text: "data berhasil dihapus",
+                                icon: "success",
+                            });
+                            loadURI('absensi/shift_pengguna/managementShift');
+                        },
+                    });
+                }
+                return;
             }
-            return;
-        }
-    );});
-
-
+        );
+    });
 </script>
