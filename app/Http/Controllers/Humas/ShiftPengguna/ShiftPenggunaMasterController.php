@@ -14,8 +14,6 @@ class ShiftPenggunaMasterController extends Controller
     public function storeShiftMaster(Request $request)
     {
 
-
-
         $input = (object) $request->input();
         $validasiNama = ShiftMaster::where('code', $input->name)->first();
         if ($validasiNama) {
