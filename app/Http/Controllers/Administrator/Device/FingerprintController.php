@@ -114,6 +114,8 @@ class FingerprintController extends BaseController
                     $item->save();
                 }
 
+                $prefix = Sekolah::first()->prefix;
+                $now = Carbon::now('Asia/Jakarta');
                 if($pengguna = Pengguna::where('username', $item->username)->first()){
                     if($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $item->tanggal)->first()){
 
