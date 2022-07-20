@@ -39,11 +39,6 @@ Route::middleware(['token_staff'])->group(function () {
 
 	Route::prefix('humas')->group(function () {
 		Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-		Route::get('foo', function () {
-			return "ok";
-		});
-		/** ==== MODUL MANAJEMEN FILE ==== **/
-		// url: /humas/manajemen-file
 
 		Route::prefix('manajemen-file')->group(function () {
 			// MENU Data Kategori

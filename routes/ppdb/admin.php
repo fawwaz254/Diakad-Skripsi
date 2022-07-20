@@ -8,160 +8,162 @@
 |
 */
 
-Route::group(array('middleware' => ['token_staff']), function () {
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\PPDB\Pendaftaran\DataInformasiController;
+use App\Http\Controllers\PPDB\Pendaftaran\PembukaanVoucherController;
+use App\Http\Controllers\PPDB\Pendaftaran\PenawaranJurusanController;
+use App\Http\Controllers\PPDB\Pendaftaran\PenerimaanController;
+use App\Http\Controllers\PPDB\Pendaftaran\PetugasPenerimaanController;
+use App\Http\Controllers\PPDB\Pendaftaran\SyaratPenerimaanController;
+use App\Http\Controllers\PPDB\Penetapan\PenetapanController;
+use App\Http\Controllers\PPDB\Penetapan\PersidanganController;
+use App\Http\Controllers\PPDB\Peserta\PembayaranFormulirController;
+use App\Http\Controllers\PPDB\Peserta\PindahPenerimaanController;
+use App\Http\Controllers\PPDB\Peserta\ProsesPenetapanController;
+use App\Http\Controllers\PPDB\Report\ReportPendaftaranController;
+use App\Http\Controllers\PPDB\WelcomeController;
 
-	Route::group(array('prefix' => 'ppdb'), function () {
-		Route::get('welcome', 'PPDB\WelcomeController@indexWelcome');
+Route::middleware(['token_staff'])->group(function () {
+	Route::prefix('ppdb')->group(function () {
+		Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
 
-		/** ==== MODUL MANAJEMEN FILE ==== **/
-		// url: /ppdb/manajemen-file
-		Route::group(array('prefix' => 'manajemen-file'), function () {
-			// MENU Data Kategori
-			Route::group(array('prefix' => 'data-kategori'), function () {
-				Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-				Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+		Route::prefix('manajemen-file')->group(function () {
+
+			Route::prefix('data-kategori')->group(function () {
+				Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+				Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
 			});
-
-			// MENU Data Sub Kategori 
-			Route::group(array('prefix' => 'data-sub-kategori'), function () {
-				Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-				Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
-				Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-				Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+			Route::prefix('data-sub-kategori')->group(function () {
+				Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+				Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+				Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+				Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
 				//action input sub data kategori
-				Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+				Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
 			});
+			Route::prefix('data-file')->group(function () {
+				Route::get('/', [DataFileController::class, 'viewDataFile']);
+				Route::get('add', [DataFileController::class, 'addDataFile']);
+				Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+				Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+				Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-			// MENU Data File 
-			Route::group(array('prefix' => 'data-file'), function () {
-
-				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
-				Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
-				Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-				Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
-				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
-
-				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
-				Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
+				Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+				Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
 			});
 		});
 
 		/** ==== MODUL PENDAFTARAN ==== **/
-		Route::group(array('prefix' => 'pendaftaran'), function () {
-
+		Route::prefix('pendaftaran')->group(function () {
 			// MENU Data Penerimaan
-			Route::get('penerimaan', 'PPDB\Pendaftaran\PenerimaanController@viewPenerimaan');
-			Route::get('penerimaan/datatables', 'PPDB\Pendaftaran\PenerimaanController@datatablesPenerimaan');
-			Route::get('penerimaan/add', 'PPDB\Pendaftaran\PenerimaanController@addPenerimaan');
-			Route::get('penerimaan/edit/{id}', 'PPDB\Pendaftaran\PenerimaanController@editPenerimaan');
-			Route::post('action-penerimaan/{mode}/{id}', 'PPDB\Pendaftaran\PenerimaanController@actionPenerimaan');
+			Route::get('penerimaan', [PenerimaanController::class, 'viewPenerimaan']);
+			Route::get('penerimaan/datatables', [PenerimaanController::class, 'datatablesPenerimaan']);
+			Route::get('penerimaan/add', [PenerimaanController::class, 'addPenerimaan']);
+			Route::get('penerimaan/edit/{id}', [PenerimaanController::class, 'editPenerimaan']);
+			Route::post('action-penerimaan/{mode}/{id}', [PenerimaanController::class, 'actionPenerimaan']);
 
 			// MENU Data Penawaran Jurusan			
-			Route::get('penawaran-jurusan', 'PPDB\Pendaftaran\PenawaranJurusanController@viewPenawaranJurusan');
-			Route::post('penawaran-jurusan/post-view-penawaran-jurusan', 'PPDB\Pendaftaran\PenawaranJurusanController@actionViewPenawaranJurusan');
-			Route::get('penawaran-jurusan/edit-penawaran-jurusan/{id}', 'PPDB\Pendaftaran\PenawaranJurusanController@editPenawaranJurusan');
-			Route::get('penawaran-jurusan/edit-penawaran-jurusan/{id}/add', 'PPDB\Pendaftaran\PenawaranJurusanController@addPenawaranJurusan');
-			Route::post('penawaran-jurusan/edit-penawaran-jurusan/{id}/add', 'PPDB\Pendaftaran\PenawaranJurusanController@actionAddPenawaranJurusan');
-			Route::post('penawaran-jurusan/edit-penawaran-jurusan/delete/{id_penerimaan_jurusan}', 'PPDB\Pendaftaran\PenawaranJurusanController@actionDeletePenawaranJurusan');
-			Route::post('penawaran-jurusan/edit-penawaran-jurusan/activate/{id_penerimaan_jurusan}', 'PPDB\Pendaftaran\PenawaranJurusanController@actionActivatePenawaranJurusan');
+			Route::get('penawaran-jurusan', [PenawaranJurusanController::class, 'viewPenawaranJurusan']);
+			Route::post('penawaran-jurusan/post-view-penawaran-jurusan', [PenawaranJurusanController::class, 'actionViewPenawaranJurusan']);
+			Route::get('penawaran-jurusan/edit-penawaran-jurusan/{id}', [PenawaranJurusanController::class, 'editPenawaranJurusan']);
+			Route::get('penawaran-jurusan/edit-penawaran-jurusan/{id}/add', [PenawaranJurusanController::class, 'addPenawaranJurusan']);
+			Route::post('penawaran-jurusan/edit-penawaran-jurusan/{id}/add', [PenawaranJurusanController::class, 'actionAddPenawaranJurusan']);
+			Route::post('penawaran-jurusan/edit-penawaran-jurusan/delete/{id_penerimaan_jurusan}', [PenawaranJurusanController::class, 'actionDeletePenawaranJurusan']);
+			Route::post('penawaran-jurusan/edit-penawaran-jurusan/activate/{id_penerimaan_jurusan}', [PenawaranJurusanController::class, 'actionActivatePenawaranJurusan']);
 
 			// MENU syarat penerimaan
-			Route::get('syarat-penerimaan', 'PPDB\Pendaftaran\SyaratPenerimaanController@viewSyaratPenerimaan');
-			Route::post('syarat-penerimaan/post-view-syarat-penerimaan', 'PPDB\Pendaftaran\SyaratPenerimaanController@actionViewSyaratPenerimaan');
-			Route::get('syarat-penerimaan/{id}', 'PPDB\Pendaftaran\SyaratPenerimaanController@syaratPenerimaan');
-			Route::get('syarat-penerimaan/{id}/add', 'PPDB\Pendaftaran\SyaratPenerimaanController@addSyaratPenerimaan');
-			Route::post('syarat-penerimaan/{id}/add', 'PPDB\Pendaftaran\SyaratPenerimaanController@actionAddSyaratPenerimaan');
-			Route::get('syarat-penerimaan/{id_penerimaan}/edit/{id_syarat_penerimaan}', 'PPDB\Pendaftaran\SyaratPenerimaanController@editSyaratPenerimaan');
-			Route::post('syarat-penerimaan/{id_penerimaan}/edit/{id_syarat_penerimaan}', 'PPDB\Pendaftaran\SyaratPenerimaanController@actionEditSyaratPenerimaan');
-			Route::post('syarat-penerimaan/{id_penerimaan}/delete/{id_syarat_penerimaan}', 'PPDB\Pendaftaran\SyaratPenerimaanController@actionDeleteSyaratPenerimaan');
+			Route::get('syarat-penerimaan', [SyaratPenerimaanController::class, 'viewSyaratPenerimaan']);
+			Route::post('syarat-penerimaan/post-view-syarat-penerimaan', [SyaratPenerimaanController::class, 'actionViewSyaratPenerimaan']);
+			Route::get('syarat-penerimaan/{id}', [SyaratPenerimaanController::class, 'syaratPenerimaan']);
+			Route::get('syarat-penerimaan/{id}/add', [SyaratPenerimaanController::class, 'addSyaratPenerimaan']);
+			Route::post('syarat-penerimaan/{id}/add', [SyaratPenerimaanController::class, 'actionAddSyaratPenerimaan']);
+			Route::get('syarat-penerimaan/{id_penerimaan}/edit/{id_syarat_penerimaan}', [SyaratPenerimaanController::class, 'editSyaratPenerimaan']);
+			Route::post('syarat-penerimaan/{id_penerimaan}/edit/{id_syarat_penerimaan}', [SyaratPenerimaanController::class, 'actionEditSyaratPenerimaan']);
+			Route::post('syarat-penerimaan/{id_penerimaan}/delete/{id_syarat_penerimaan}', [SyaratPenerimaanController::class, 'actionDeleteSyaratPenerimaan']);
 
 			// MENU Pembukaan voucher
-			Route::get('pembukaan-voucher', 'PPDB\Pendaftaran\PembukaanVoucherController@viewPembukaanVoucher');
-			Route::post('pembukaan-voucher/post-view-pembukaan-voucher', 'PPDB\Pendaftaran\PembukaanVoucherController@actionViewPembuatanVoucher');
-			Route::get('pembukaan-voucher/{id_penerimaan}', 'PPDB\Pendaftaran\PembukaanVoucherController@pembukaanVoucher');
-			Route::get('pembukaan-voucher/{id_penerimaan}/add', 'PPDB\Pendaftaran\PembukaanVoucherController@addPembukaanVoucher');
-			Route::post('pembukaan-voucher/{id_penerimaan}/add', 'PPDB\Pendaftaran\PembukaanVoucherController@actionAddPembukaanVoucher');
-			Route::post('pembukaan-voucher/{id_penerimaan}/delete/{id_voucher_tarif}', 'PPDB\Pendaftaran\PembukaanVoucherController@actionDeleteVoucherTarif');
+			Route::get('pembukaan-voucher', [PembukaanVoucherController::class, 'viewPembukaanVoucher']);
+			Route::post('pembukaan-voucher/post-view-pembukaan-voucher', [PembukaanVoucherController::class, 'actionViewPembuatanVoucher']);
+			Route::get('pembukaan-voucher/{id_penerimaan}', [PembukaanVoucherController::class, 'pembukaanVoucher']);
+			Route::get('pembukaan-voucher/{id_penerimaan}/add', [PembukaanVoucherController::class, 'addPembukaanVoucher']);
+			Route::post('pembukaan-voucher/{id_penerimaan}/add', [PembukaanVoucherController::class, 'actionAddPembukaanVoucher']);
+			Route::post('pembukaan-voucher/{id_penerimaan}/delete/{id_voucher_tarif}', [PembukaanVoucherController::class, 'actionDeleteVoucherTarif']);
 
 			// MENU Pembukaan voucher generate voucher
-			Route::get('pembukaan-voucher/{id_penerimaan}/generate-voucher', 'PPDB\Pendaftaran\PembukaanVoucherController@generateVoucher');
-			Route::post('pembukaan-voucher/{id_penerimaan}/generate-voucher', 'PPDB\Pendaftaran\PembukaanVoucherController@actionGenerateVoucher');
-			Route::post('pembukaan-voucher/{id_penerimaan}/delete-voucher/{id_voucher}', 'PPDB\Pendaftaran\PembukaanVoucherController@actionDeleteVoucher');
+			Route::get('pembukaan-voucher/{id_penerimaan}/generate-voucher', [PembukaanVoucherController::class, 'generateVoucher']);
+			Route::post('pembukaan-voucher/{id_penerimaan}/generate-voucher', [PembukaanVoucherController::class, 'actionGenerateVoucher']);
+			Route::post('pembukaan-voucher/{id_penerimaan}/delete-voucher/{id_voucher}', [PembukaanVoucherController::class, 'actionDeleteVoucher']);
 
 			// MENU petugas penerimaan
-			Route::get('petugas-penerimaan', 'PPDB\Pendaftaran\PetugasPenerimaanController@viewPetugasPenerimaan');
-			Route::post('petugas-penerimaan/post-view-petugas-penerimaan', 'PPDB\Pendaftaran\PetugasPenerimaanController@actionViewPetugasPenerimaan');
-			Route::get('petugas-penerimaan/{id_penerimaan}', 'PPDB\Pendaftaran\PetugasPenerimaanController@petugasPenerimaan');
-			Route::get('petugas-penerimaan/{id_penerimaan}/add', 'PPDB\Pendaftaran\PetugasPenerimaanController@addPetugasPenerimaan');
-			Route::post('petugas-penerimaan/{id_penerimaan}/add', 'PPDB\Pendaftaran\PetugasPenerimaanController@actionAddPetugasPenerimaan');
-			Route::post('petugas-penerimaan/{id_penerimaan}/delete/{id_penerimaan_petugas}', 'PPDB\Pendaftaran\PetugasPenerimaanController@actionDeletePetugasPenerimaan');
+			Route::get('petugas-penerimaan', [PetugasPenerimaanController::class, 'viewPetugasPenerimaan']);
+			Route::post('petugas-penerimaan/post-view-petugas-penerimaan', [PetugasPenerimaanController::class, 'actionViewPetugasPenerimaan']);
+			Route::get('petugas-penerimaan/{id_penerimaan}', [PetugasPenerimaanController::class, 'petugasPenerimaan']);
+			Route::get('petugas-penerimaan/{id_penerimaan}/add', [PetugasPenerimaanController::class, 'addPetugasPenerimaan']);
+			Route::post('petugas-penerimaan/{id_penerimaan}/add', [PetugasPenerimaanController::class, 'actionAddPetugasPenerimaan']);
+			Route::post('petugas-penerimaan/{id_penerimaan}/delete/{id_penerimaan_petugas}', [PetugasPenerimaanController::class, 'actionDeletePetugasPenerimaan']);
 
 			// MENU data informasi
-			Route::get('data-informasi', 'PPDB\Pendaftaran\DataInformasiController@dataInformasi');
-			Route::post('data-informasi', 'PPDB\Pendaftaran\DataInformasiController@actionPostDataInformasi');
+			Route::get('data-informasi', [DataInformasiController::class, 'dataInformasi']);
+			Route::post('data-informasi', [DataInformasiController::class, 'actionPostDataInformasi']);
 		});
 
-		/** ==== MODUL PESERTA ==== **/
-		Route::group(array('prefix' => 'peserta'), function () {
-
+		Route::prefix('peserta')->group(function () {
 			// MENU Pembayaran Formulir
-			Route::get('pembayaran-formulir', 'PPDB\Peserta\PembayaranFormulirController@viewPembayaranFormulir');
-			Route::post('pembayaran-formulir', 'PPDB\Peserta\PembayaranFormulirController@findVoucher');
-			Route::post('pembayaran-formulir/reset-voucher/{kode_voucher}', 'PPDB\Peserta\PembayaranFormulirController@deletePembayaranFormulir');
-			Route::get('pembayaran-formulir/{id_voucher}', 'PPDB\Peserta\PembayaranFormulirController@showVoucher');
-			Route::post('pembayaran-formulir/{id_voucher}/bayar-voucher', 'PPDB\Peserta\PembayaranFormulirController@bayarVoucher');
+			Route::get('pembayaran-formulir', [PembayaranFormulirController::class, 'viewPembayaranFormulir']);
+			Route::post('pembayaran-formulir', [PembayaranFormulirController::class, 'findVoucher']);
+			Route::post('pembayaran-formulir/reset-voucher/{kode_voucher}', [PembayaranFormulirController::class, 'deletePembayaranFormulir']);
+			Route::get('pembayaran-formulir/{id_voucher}', [PembayaranFormulirController::class, 'showVoucher']);
+			Route::post('pembayaran-formulir/{id_voucher}/bayar-voucher', [PembayaranFormulirController::class, 'bayarVoucher']);
 
 			// MENU proses penetapan
-			Route::get('proses-penetapan', 'PPDB\Peserta\ProsesPenetapanController@viewProsesPenetapan');
-			Route::post('proses-penetapan/post-view-proses-penetapan', 'PPDB\Peserta\ProsesPenetapanController@actionViewProsesPenetapan');
-			Route::get('proses-penetapan/{id_penerimaan}', 'PPDB\Peserta\ProsesPenetapanController@showPeserta');
-			Route::get('proses-penetapan/datatables/{id_penerimaan}', 'PPDB\Peserta\ProsesPenetapanController@datatablesProsesPenetapan');
-			Route::post('proses-penetapan/penetapan', 'PPDB\Peserta\ProsesPenetapanController@actionPenetapan');
+			Route::get('proses-penetapan', [ProsesPenetapanController::class, 'viewProsesPenetapan']);
+			Route::post('proses-penetapan/post-view-proses-penetapan', [ProsesPenetapanController::class, 'actionViewProsesPenetapan']);
+			Route::get('proses-penetapan/{id_penerimaan}', [ProsesPenetapanController::class, 'showPeserta']);
+			Route::get('proses-penetapan/datatables/{id_penerimaan}', [ProsesPenetapanController::class, 'datatablesProsesPenetapan']);
+			Route::post('proses-penetapan/penetapan', [ProsesPenetapanController::class, 'actionPenetapan']);
 
 			// MENU pindah penerimaan
-			Route::get('pindah-penerimaan', 'PPDB\Peserta\PindahPenerimaanController@viewPindahPenerimaan');
-			Route::post('pindah-penerimaan', 'PPDB\Peserta\PindahPenerimaanController@findVoucher');
-			Route::get('pindah-penerimaan/{id_voucher}', 'PPDB\Peserta\PindahPenerimaanController@showVoucher');
-			Route::post('pindah-penerimaan/{id_voucher}/pindah', 'PPDB\Peserta\PindahPenerimaanController@actionPindahVoucher');
+			Route::get('pindah-penerimaan', [PindahPenerimaanController::class, 'viewPindahPenerimaan']);
+			Route::post('pindah-penerimaan', [PindahPenerimaanController::class, 'findVoucher']);
+			Route::get('pindah-penerimaan/{id_voucher}', [PindahPenerimaanController::class, 'showVoucher']);
+			Route::post('pindah-penerimaan/{id_voucher}/pindah', [PindahPenerimaanController::class, 'actionPindahVoucher']);
 		});
 
-		/** ==== MODUL REPORT ==== **/
-		Route::group(array('prefix' => 'report'), function () {
-
+		Route::prefix('report')->group(function () {
 			// MENU Report pendaftaran
-			Route::get('report-pendaftaran', 'PPDB\Report\ReportPendaftaranController@viewReportPendaftaran');
-			Route::get('report-pendaftaran/datatables', 'PPDB\Report\ReportPendaftaranController@datatablesReportPendaftaran');
+			Route::get('report-pendaftaran', [ReportPendaftaranController::class, 'viewReportPendaftaran']);
+			Route::get('report-pendaftaran/datatables', [ReportPendaftaranController::class, 'datatablesReportPendaftaran']);
 
-			Route::get('report-pendaftaran/rekap/{id}', 'PPDB\Report\ReportPendaftaranController@rekapReportPendaftaran');
+			Route::get('report-pendaftaran/rekap/{id}', [ReportPendaftaranController::class, 'rekapReportPendaftaran']);
 
-			Route::get('report-pendaftaran/detail/{id}', 'PPDB\Report\ReportPendaftaranController@detailReportPendaftaran');
-			Route::get('report-pendaftaran/detail/datatables/{id_penerimaan}/{id_jurusan}', 'PPDB\Report\ReportPendaftaranController@datatablesDetailReportPendaftaran');
+			Route::get('report-pendaftaran/detail/{id}', [ReportPendaftaranController::class, 'detailReportPendaftaran']);
+			Route::get('report-pendaftaran/detail/datatables/{id_penerimaan}/{id_jurusan}', [ReportPendaftaranController::class, 'datatablesDetailReportPendaftaran']);
 		});
 
-		/** ==== MODUL PENETAPAN ==== **/
-		Route::group(array('prefix' => 'penetapan'), function () {
-
+		Route::prefix('penetapan')->group(function () {
 			// MENU penetapan
-			Route::get('data-penetapan', 'PPDB\Penetapan\PenetapanController@viewPenetapan');
-			Route::get('data-penetapan/datatables', 'PPDB\Penetapan\PenetapanController@datatablesPenetapan');
-			Route::get('data-penetapan/add', 'PPDB\Penetapan\PenetapanController@addPenetapan');
-			Route::get('data-penetapan/edit/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapan');
-			Route::post('action-penetapan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapan');
-			Route::get('data-penetapan/view-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@viewPenetapanPenerimaan');
-			Route::get('data-penetapan/datatables-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@datatablesPenetapanPenerimaan');
-			Route::get('data-penetapan/add-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@addPenetapanPenerimaan');
-			Route::get('data-penetapan/edit-penetapan-penerimaan/{id}', 'PPDB\Penetapan\PenetapanController@editPenetapanPenerimaan');
-			Route::post('action-penetapan-penerimaan/{mode}/{id}', 'PPDB\Penetapan\PenetapanController@actionPenetapanPenerimaan');
+			Route::get('data-penetapan', [PenetapanController::class, 'viewPenetapan']);
+			Route::get('data-penetapan/datatables', [PenetapanController::class, 'datatablesPenetapan']);
+			Route::get('data-penetapan/add', [PenetapanController::class, 'addPenetapan']);
+			Route::get('data-penetapan/edit/{id}', [PenetapanController::class, 'editPenetapan']);
+			Route::post('action-penetapan/{mode}/{id}', [PenetapanController::class, 'actionPenetapan']);
+			Route::get('data-penetapan/view-penetapan-penerimaan/{id}', [PenetapanController::class, 'viewPenetapanPenerimaan']);
+			Route::get('data-penetapan/datatables-penetapan-penerimaan/{id}', [PenetapanController::class, 'datatablesPenetapanPenerimaan']);
+			Route::get('data-penetapan/add-penetapan-penerimaan/{id}', [PenetapanController::class, 'addPenetapanPenerimaan']);
+			Route::get('data-penetapan/edit-penetapan-penerimaan/{id}', [PenetapanController::class, 'editPenetapanPenerimaan']);
+			Route::post('action-penetapan-penerimaan/{mode}/{id}', [PenetapanController::class, 'actionPenetapanPenerimaan']);
 
 			// MENU PERSIDANGAN
-			Route::get('persidangan', 'PPDB\Penetapan\PersidanganController@viewPersidangan');
-			Route::post('persidangan/post-view-persidangan', 'PPDB\Penetapan\PersidanganController@actionViewPersidangan');
-			Route::get('persidangan/tahun/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan2');
-			Route::get('persidangan/datatables/{tahun}', 'PPDB\Penetapan\PersidanganController@datatablesPersidangan');
-			Route::get('persidangan/edit/{id}', 'PPDB\Penetapan\PersidanganController@editPersidangan');
-			Route::get('persidangan/view-persidangan-gelombang/{id}', 'PPDB\Penetapan\PersidanganController@viewPersidanganGelombang');
-			Route::get('persidangan/datatablesviewgelombang/{id}', 'PPDB\Penetapan\PersidanganController@datatablesPersidanganViewGelombang');
+			Route::get('persidangan', [PersidanganController::class, 'viewPersidangan']);
+			Route::post('persidangan/post-view-persidangan', [PersidanganController::class, 'actionViewPersidangan']);
+			Route::get('persidangan/tahun/{id}', [PersidanganController::class, 'editPersidangan2']);
+			Route::get('persidangan/datatables/{tahun}', [PersidanganController::class, 'datatablesPersidangan']);
+			Route::get('persidangan/edit/{id}', [PersidanganController::class, 'editPersidangan']);
+			Route::get('persidangan/view-persidangan-gelombang/{id}', [PersidanganController::class, 'viewPersidanganGelombang']);
+			Route::get('persidangan/datatablesviewgelombang/{id}', [PersidanganController::class, 'datatablesPersidanganViewGelombang']);
 		});
 	});
 });

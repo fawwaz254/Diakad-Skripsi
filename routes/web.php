@@ -186,9 +186,9 @@ Route::middleware(['token_staff'])->group(function () {
 });
 
 
+
+// Route::middleware(['token_staff'])->group(function () {
 // Route::prefix('foo')->group(function () {
 
 // });
-
-// Route::middleware(['token_staff'])->group(function () {
 // });

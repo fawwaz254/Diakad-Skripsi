@@ -1,155 +1,158 @@
 <?php
-// ROLE BIMBINGAN KONSELING
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'bimbingan-konseling'), function () {
-        Route::get('welcome', 'BK\WelcomeController@indexWelcome');
 
-        /** ==== MODUL MANAJEMEN FILE ==== **/
-        // url: /bimbingan-konseling/manajemen-file
-        Route::group(array('prefix' => 'manajemen-file'), function () {
-            // MENU Data Kategori
-            Route::group(array('prefix' => 'data-kategori'), function () {
-                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+use App\Http\Controllers\BK\DataPelanggaran\KategoriPelanggaranController;
+use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
+use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
+use App\Http\Controllers\BK\PenangananSiswa\InputPelanggaranController;
+use App\Http\Controllers\BK\PenangananSiswa\JenisTindakanController;
+use App\Http\Controllers\BK\PenangananSiswa\JurnalTindakanController;
+use App\Http\Controllers\BK\PenangananSiswa\TindakanPelanggaranController;
+use App\Http\Controllers\BK\WelcomeController;
+use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
+use App\Http\Controllers\Keuangan\LaporanKeuangan\TagihanSiswaController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('bimbingan-konseling')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::prefix('manajemen-file')->group(function () {
+
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
             });
-
-            // MENU Data Sub Kategori 
-            Route::group(array('prefix' => 'data-sub-kategori'), function () {
-                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
-                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
                 //action input sub data kategori
-                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
             });
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-            // MENU Data File 
-            Route::group(array('prefix' => 'data-file'), function () {
-
-                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
-                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
-                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
-                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
-
-                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
-                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
         });
 
-        /** ==== MODUL MONITORING KESEHATAN ==== **/
-        Route::group(array('prefix' => 'monitoring-kesehatan'), function () {
-
+        Route::prefix('monitoring-kesehatan')->group(function () {
             // MENU Rekap Kesehatan Siswa
-            Route::get('rekap-kesehatan', 'Guru\GuruPiket\RekapKesehatanController@viewRekapKesehatan');
-            Route::get('rekap-kesehatan/user/{id}/{date}', 'Guru\WaliKelas\RekapKesehatanController@viewRekapKesehatanSiswa');
-            Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+            Route::get('rekap-kesehatan', [RekapKesehatanController::class, 'viewRekapKesehatan']);
+            Route::get('rekap-kesehatan/user/{id}/{date}', [RekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
+            Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
-            Route::get('rekap-kesehatan/{id}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
-            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', 'Guru\GuruPiket\RekapKesehatanController@viewDetailRekapKesehatan');
-            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', 'Guru\GuruPiket\RekapKesehatanController@downloadDetailRekapKesehatan');
+            Route::get('rekap-kesehatan/{id}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
+            Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', [RekapKesehatanController::class, 'downloadDetailRekapKesehatan']);
 
 
-            Route::post('rekap-kesehatan/action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
-            Route::post('rekap-kesehatan/datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+            Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+            Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
         });
 
-        Route::group(array('prefix' => 'laporan'), function () {
+        Route::prefix('laporan')->group(function () {
 
-            Route::group(array('prefix' => 'tagihan-siswa'), function () {
-                Route::get('/', 'Keuangan\LaporanKeuangan\TagihanSiswaController@viewTagihanSiswa');
+            Route::prefix('tagihan-siswa')->group(function () {
+                Route::get('/', [TagihanSiswaController::class, 'viewTagihanSiswa']);
             });
         });
 
-        Route::group(array('prefix' => 'kegiatan-harian'), function () {
+        Route::prefix('kegiatan-harian')->group(function () {
 
-            Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
+            Route::prefix('mengisi-form-kesehatan')->group(function () {
                 // MENU Mengisi form kesehatan
-                Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
-                Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
-                Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                Route::get('/', [FormKesehatanController::class, 'viewFormKesehatan']);
+                Route::get('add', [FormKesehatanController::class, 'viewAddFormKesehatan']);
+                Route::get('detail/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
-                Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
-                Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+                Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+                Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
             });
         });
 
-        Route::post('laporan-keuangan/tagihan-siswa/datatables', 'Keuangan\LaporanKeuangan\TagihanSiswaController@datatablesTagihanSiswa');
-        Route::get('laporan-keuangan/tagihan-siswa/print/{tahun}/{id_kelas}/{jenis_tagihan}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@printTagihanSiswa');
-        Route::get('laporan-keuangan/tagihan-siswa/show-list-tagihan/{tahun}/{id_kelas}', 'Keuangan\LaporanKeuangan\TagihanSiswaController@showListTagihan');
+        Route::post('laporan-keuangan/tagihan-siswa/datatables', [TagihanSiswaController::class, 'datatablesTagihanSiswa']);
+        Route::get('laporan-keuangan/tagihan-siswa/print/{tahun}/{id_kelas}/{jenis_tagihan}', [TagihanSiswaController::class, 'printTagihanSiswa']);
+        Route::get('laporan-keuangan/tagihan-siswa/show-list-tagihan/{tahun}/{id_kelas}', [TagihanSiswaController::class, 'showListTagihan']);
 
-        /** ==== MODUL DATA PELANGGARAN ==== **/
-        Route::group(array('prefix' => 'data-pelanggaran'), function () {
+        Route::prefix('data-pelanggaran')->group(function () {
             // MENU Kategori Pelanggaran
             // url: /bimbingan-konseling/data-pelanggaran/kategori-pelanggaran
-            Route::get('kategori-pelanggaran', 'BK\DataPelanggaran\KategoriPelanggaranController@viewKategoriPelanggaran');
-            Route::get('kategori-pelanggaran/datatables', 'BK\DataPelanggaran\KategoriPelanggaranController@datatablesKategoriPelanggaran');
-            Route::get('kategori-pelanggaran/add', 'BK\DataPelanggaran\KategoriPelanggaranController@addKategoriPelanggaran');
-            Route::get('kategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\KategoriPelanggaranController@editKategoriPelanggaran');
+            Route::get('kategori-pelanggaran', [KategoriPelanggaranController::class, 'viewKategoriPelanggaran']);
+            Route::get('kategori-pelanggaran/datatables', [KategoriPelanggaranController::class, 'datatablesKategoriPelanggaran']);
+            Route::get('kategori-pelanggaran/add', [KategoriPelanggaranController::class, 'addKategoriPelanggaran']);
+            Route::get('kategori-pelanggaran/edit/{id}', [KategoriPelanggaranController::class, 'editKategoriPelanggaran']);
 
-            Route::post('action-kategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KategoriPelanggaranController@actionKategoriPelanggaran');
+            Route::post('action-kategori-pelanggaran/{mode}/{id}', [KategoriPelanggaranController::class, 'actionKategoriPelanggaran']);
 
             // MENU Sub-Kategori Pelanggaran
             // url: /bimbingan-konseling/data-pelanggaran/subkategori-pelanggaran
-            Route::get('subkategori-pelanggaran', 'BK\DataPelanggaran\SubkategoriPelanggaranController@viewSubkategoriPelanggaran');
-            Route::get('subkategori-pelanggaran/datatables', 'BK\DataPelanggaran\SubkategoriPelanggaranController@datatablesSubkategoriPelanggaran');
-            Route::get('subkategori-pelanggaran/add', 'BK\DataPelanggaran\SubkategoriPelanggaranController@addSubkategoriPelanggaran');
-            Route::get('subkategori-pelanggaran/edit/{id}', 'BK\DataPelanggaran\SubkategoriPelanggaranController@editSubkategoriPelanggaran');
+            Route::get('subkategori-pelanggaran', [SubkategoriPelanggaranController::class, 'viewSubkategoriPelanggaran']);
+            Route::get('subkategori-pelanggaran/datatables', [SubkategoriPelanggaranController::class, 'datatablesSubkategoriPelanggaran']);
+            Route::get('subkategori-pelanggaran/add', [SubkategoriPelanggaranController::class, 'addSubkategoriPelanggaran']);
+            Route::get('subkategori-pelanggaran/edit/{id}', [SubkategoriPelanggaranController::class, 'editSubkategoriPelanggaran']);
 
-            Route::post('action-subkategori-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\SubkategoriPelanggaranController@actionSubkategoriPelanggaran');
+            Route::post('action-subkategori-pelanggaran/{mode}/{id}', [SubkategoriPelanggaranController::class, 'actionSubkategoriPelanggaran']);
 
             // MENU Kesimpulan Pelanggaran
             // url: /bimbingan-konseling/data-pelanggaran/kesimpulan-pelanggaran
-            Route::get('kesimpulan-pelanggaran', 'BK\DataPelanggaran\KesimpulanPelanggaranController@viewKesimpulanPelanggaran');
-            Route::get('kesimpulan-pelanggaran/datatables', 'BK\DataPelanggaran\KesimpulanPelanggaranController@datatablesKesimpulanPelanggaran');
-            Route::get('kesimpulan-pelanggaran/add', 'BK\DataPelanggaran\KesimpulanPelanggaranController@addKesimpulanPelanggaran');
-            Route::get('kesimpulan-pelanggaran/edit/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@editKesimpulanPelanggaran');
+            Route::get('kesimpulan-pelanggaran', [KesimpulanPelanggaranController::class, 'viewKesimpulanPelanggaran']);
+            Route::get('kesimpulan-pelanggaran/datatables', [KesimpulanPelanggaranController::class, 'datatablesKesimpulanPelanggaran']);
+            Route::get('kesimpulan-pelanggaran/add', [KesimpulanPelanggaranController::class, 'addKesimpulanPelanggaran']);
+            Route::get('kesimpulan-pelanggaran/edit/{id}', [KesimpulanPelanggaranController::class, 'editKesimpulanPelanggaran']);
 
-            Route::post('action-kesimpulan-pelanggaran/{mode}/{id}', 'BK\DataPelanggaran\KesimpulanPelanggaranController@actionKesimpulanPelanggaran');
+            Route::post('action-kesimpulan-pelanggaran/{mode}/{id}', [KesimpulanPelanggaranController::class, 'actionKesimpulanPelanggaran']);
 
             // MENU Data Jenis Tindakan
-            Route::get('jenis-tindakan', 'BK\PenangananSiswa\JenisTindakanController@viewJenisTindakan');
-            Route::get('jenis-tindakan/datatables', 'BK\PenangananSiswa\JenisTindakanController@datatablesJenisTindakan');
-            Route::get('jenis-tindakan/add', 'BK\PenangananSiswa\JenisTindakanController@addJenisTindakan');
-            Route::get('jenis-tindakan/edit/{id}', 'BK\PenangananSiswa\JenisTindakanController@editJenisTindakan');
+            Route::get('jenis-tindakan', [JenisTindakanController::class, 'viewJenisTindakan']);
+            Route::get('jenis-tindakan/datatables', [JenisTindakanController::class, 'datatablesJenisTindakan']);
+            Route::get('jenis-tindakan/add', [JenisTindakanController::class, 'addJenisTindakan']);
+            Route::get('jenis-tindakan/edit/{id}', [JenisTindakanController::class, 'editJenisTindakan']);
 
-            Route::post('action-jenis-tindakan/{mode}/{id}', 'BK\PenangananSiswa\JenisTindakanController@actionJenisTindakan');
+            Route::post('action-jenis-tindakan/{mode}/{id}', [JenisTindakanController::class, 'actionJenisTindakan']);
         });
 
-        /** ==== MODUL PENANGANAN SISWA ==== **/
-        Route::group(array('prefix' => 'penanganan-siswa'), function () {
-
+        Route::prefix('penanganan-siswa')->group(function () {
             // MENU Data Jurnal Tindakan
-            Route::get('jurnal-tindakan', 'BK\PenangananSiswa\JurnalTindakanController@viewJurnalTindakan');
-            Route::get('jurnal-tindakan/print/{id_semester}/{id_kelas}/{id_siswa}', 'BK\PenangananSiswa\JurnalTindakanController@printJurnalTindakan');
+            Route::get('jurnal-tindakan', [JurnalTindakanController::class, 'viewJurnalTindakan']);
+            Route::get('jurnal-tindakan/print/{id_semester}/{id_kelas}/{id_siswa}', [JurnalTindakanController::class, 'printJurnalTindakan']);
 
             // MENU Input Pelanggaran Siswa
-            Route::get('input-pelanggaran', 'BK\PenangananSiswa\InputPelanggaranController@viewInputPelanggaran');
-            Route::get('input-pelanggaran/datatables', 'BK\PenangananSiswa\InputPelanggaranController@datatablesInputPelanggaran');
-            Route::get('input-pelanggaran/add', 'BK\PenangananSiswa\InputPelanggaranController@addInputPelanggaran');
-            Route::get('input-pelanggaran/edit/{id}', 'BK\PenangananSiswa\InputPelanggaranController@editInputPelanggaran');
+            Route::get('input-pelanggaran', [InputPelanggaranController::class, 'viewInputPelanggaran']);
+            Route::get('input-pelanggaran/datatables', [InputPelanggaranController::class, 'datatablesInputPelanggaran']);
+            Route::get('input-pelanggaran/add', [InputPelanggaranController::class, 'addInputPelanggaran']);
+            Route::get('input-pelanggaran/edit/{id}', [InputPelanggaranController::class, 'editInputPelanggaran']);
 
             Route::post('action-input-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\InputPelanggaranController@actionInputPelanggaran');
 
             // MENU Tindakan Pelanggaran
-            Route::get('tindakan-pelanggaran', 'BK\PenangananSiswa\TindakanPelanggaranController@viewTindakanPelanggaran');
-            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm', 'BK\PenangananSiswa\TindakanPelanggaranController@datatablesBelumTindakanNonKBM');
-            Route::get('tindakan-pelanggaran/datatables-belum-kbm', 'BK\PenangananSiswa\TindakanPelanggaranController@datatablesBelumTindakanKBM');
-            Route::get('tindakan-pelanggaran/datatables-sudah', 'BK\PenangananSiswa\TindakanPelanggaranController@datatablesSudahTindakan');
-            Route::get('tindakan-pelanggaran/add-nonkbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@addTindakanPelanggaranNonKBM');
-            Route::get('tindakan-pelanggaran/add-kbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@addTindakanPelanggaranKBM');
-            Route::get('tindakan-pelanggaran/edit/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@editTindakanPelanggaran');
+            Route::get('tindakan-pelanggaran', [TindakanPelanggaranController::class, 'viewTindakanPelanggaran']);
+            Route::get('tindakan-pelanggaran/datatables-belum-nonkbm', [TindakanPelanggaranController::class, 'datatablesBelumTindakanNonKBM']);
+            Route::get('tindakan-pelanggaran/datatables-belum-kbm', [TindakanPelanggaranController::class, 'datatablesBelumTindakanKBM']);
+            Route::get('tindakan-pelanggaran/datatables-sudah', [TindakanPelanggaranController::class, 'datatablesSudahTindakan']);
+            Route::get('tindakan-pelanggaran/add-nonkbm/{id}', [TindakanPelanggaranController::class, 'addTindakanPelanggaranNonKBM']);
+            Route::get('tindakan-pelanggaran/add-kbm/{id}', [TindakanPelanggaranController::class, 'addTindakanPelanggaranKBM']);
+            Route::get('tindakan-pelanggaran/edit/{id}', [TindakanPelanggaranController::class, 'editTindakanPelanggaran']);
 
-            Route::post('action-tindakan-pelanggaran/{mode}/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@actionTindakanPelanggaran');
+            Route::post('action-tindakan-pelanggaran/{mode}/{id}', [TindakanPelanggaranController::class, 'actionTindakanPelanggaran']);
 
-            Route::post('action-tindakan-pelanggaran-nonkbm/{id}', 'BK\PenangananSiswa\TindakanPelanggaranController@deleteDatatablesBelumTindakanNonKBM');
+            Route::post('action-tindakan-pelanggaran-nonkbm/{id}', [TindakanPelanggaranController::class, 'deleteDatatablesBelumTindakanNonKBM']);
             // AJAX GET SISWA BY KELAS
-            Route::post('siswa-bykelas', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSiswaByKelas');
+            Route::post('siswa-bykelas', [InputPelanggaranController::class, 'ajaxGetSiswaByKelas']);
 
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
-            Route::post('subkategori-bykategori', 'BK\PenangananSiswa\InputPelanggaranController@ajaxGetSubkategoriByKategori');
+            Route::post('subkategori-bykategori', [InputPelanggaranController::class, 'ajaxGetSubkategoriByKategori']);
         });
     });
 });
