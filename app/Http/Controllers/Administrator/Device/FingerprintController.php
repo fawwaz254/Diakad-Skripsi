@@ -108,6 +108,7 @@ class FingerprintController extends BaseController
 
                 }else{
                     $item = new FPAttendance;
+                    $item->id_fp_device = $device->id_fp_device;
                     $item->username = $data['username'];
                     $item->status = $data['status'];
                     $item->tanggal = $data['tanggal'];
