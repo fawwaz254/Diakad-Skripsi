@@ -139,7 +139,7 @@
                                 @if($r['shift'])
                                 <td style="text-align: center;">{{$loop->iteration}}</td>
                                 <td style="text-align: center;">{{$r['nm_pengguna']}}</td>
-                                <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+                                <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : $r['status_join_table'] == 2 ? 'Guru' : 'Siswa' }}</td>
                                 <td>{{$r['check_in']}}</td>
                                 <td>{{$r['check_out']}}</td>
                                 <td>{{$r['status']}}</td>
