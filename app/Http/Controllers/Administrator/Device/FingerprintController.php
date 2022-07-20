@@ -10,6 +10,7 @@ use App\Models\FPDevice;
 use App\Models\FPAttendance;
 use App\Models\PresensiPengguna;
 use App\Models\Pengguna;
+use App\Models\Sekolah;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
