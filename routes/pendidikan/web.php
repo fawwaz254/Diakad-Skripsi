@@ -350,27 +350,25 @@ Route::middleware(['token_staff'])->group(function () {
 		});
 
 		/** ==== MODUL LAPORAN AKADEMIK ==== **/
-		Route::group(array('prefix' => 'laporan-akademik'), function () {
+		Route::prefix('laporan-akademik')->group(function () {
 
-			Route::group(array('prefix' => 'jurnal-guru'), function () {
+			Route::prefix('jurnal-guru')->group(function () {
 				Route::get('/', [JurnalGuruController::class, 'viewJurnalGuru']);
 				Route::get('/{id_guru}/{id_semester}', [JurnalGuruController::class, 'viewJurnalGuru']);
 				Route::get('datatables/{id_guru}/{id_semester}', [JurnalGuruController::class, 'datatablesJurnalGuru']);
 			});
+			Route::prefix('jurnal-kelas')->group(function () {
 
-			Route::group(array('prefix' => 'jurnal-kelas'), function () {
 				Route::get('/', [JurnalKelasController::class, 'viewJurnalKelas']);
 				Route::get('/{id_kelas}/{id_semester}', [JurnalKelasController::class, 'viewJurnalKelas']);
 				Route::get('datatables/{id_kelas}/{id_semester}', [JurnalKelasController::class, 'datatablesJurnalKelas']);
 			});
-
 			Route::get('absensi-siswa', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
 
 			//MENU ABSENSI SISWA
 			// Route::get('absensi-siswa', 'Pendidikan\LaporanAkademik\AbsensiSiswaController@viewAbsensiSiswa');
 			// Route::post('post-view-absensi-siswa', 'Pendidikan\LaporanAkademik\AbsensiSiswaController@actionViewAbsensiSiswa');
 			// Route::get('absensi-siswa/absensi-kelas/{id_semester}/{id_jurusan}/{id_kelas}/{tgl_mulai}/{tgl_selesai}', 'Pendidikan\LaporanAkademik\AbsensiSiswaController@viewAbsensiSiswa');
-
 		});
 	});
 });
