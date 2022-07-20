@@ -290,7 +290,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 		/** === MODUL MAGANG ALUMNI === **/
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function () {
-			
+
 			// Route::get('/tracer-alumni', 'AlumniController@index');
 			// Route::get('/tambah-alumni', 'AlumniController@create');
 			// Route::get('/edit/{alumni}', 'AlumniController@show');
@@ -300,7 +300,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			// Route::post('/datatables', 'AlumniController@renderDatatables');
 
 			Route::group(array('prefix' => 'tracer-alumni'), function () {
-
 				Route::get('/', 'TracerAlumniController@viewTracerAlumni');
 				Route::get('datatables', 'TracerAlumniController@datatablesTracerAlumni');
 				// Route::get('datatables2', 'TracerAlumniController@datatablesTracerAlumni');
@@ -317,7 +316,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				// Route::get('cetak2/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni2');
 				Route::get('export-alumni/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni');
 				Route::get('export-alumni2/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni2');
-
+				// Route untuk import Excel
+				Route::get('excel', 'TracerAlumniController@excelTracerAlumni');
+				Route::post('post-file-excel','TracerAlumniController@uploadFileExcel');
+				Route::get('download-file-excel','TracerAlumniController@downloadFileExcel')->name('tracer-alumni-smp/download-file-excel');
 			});
 		});
 
