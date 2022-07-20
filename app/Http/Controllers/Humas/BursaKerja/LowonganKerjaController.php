@@ -16,81 +16,85 @@ use DB;
 use Session;
 use Validator;
 
-class LowonganKerjaController extends BaseController{
+class LowonganKerjaController extends BaseController
+{
 
-    public function viewLowonganKerja(Request $request){
+    public function viewLowonganKerja(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('humas/bursa-kerja/lowongan-kerja/view-lowongan-kerja',compact('auth_data'));
+        return view('humas/bursa-kerja/lowongan-kerja/view-lowongan-kerja', compact('auth_data'));
     }
 
-    public function viewAddEditLowonganKerja(Request $request, $id = null){
+    public function viewAddEditLowonganKerja(Request $request, $id = null)
+    {
 
-    	$input = (object) $request->input();
+        $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        if(!empty($id)){
+        if (!empty($id)) {
             $item = LowonganKerja::find($id);
-        }else{
+        } else {
             $item = null;
         }
 
-        return view('humas/bursa-kerja/lowongan-kerja/view-add-edit-lowongan-kerja',compact('auth_data','item'));
-
+        return view('humas/bursa-kerja/lowongan-kerja/view-add-edit-lowongan-kerja', compact('auth_data', 'item'));
     }
 
-    public function actionLowonganKerja(Request $request, $mode){
+    public function actionLowonganKerja(Request $request, $mode)
+    {
 
         $input = (object) $request->input();
 
-        switch($mode){
+        switch ($mode) {
             case 'add':
                 $syarat = [
                     'judul_lowongan_kerja'      => 'required',
                     'deskripsi_lowongan_kerja'  => 'required',
-                ]; break;
+                ];
+                break;
             case 'edit':
                 $syarat = [
                     'id_lowongan_kerja'         => 'required',
                     'judul_lowongan_kerja'      => 'required',
                     'deskripsi_lowongan_kerja'  => 'required',
-                ]; break;
+                ];
+                break;
             case 'delete':
                 $syarat = [
                     'id_lowongan_kerja'        => 'required',
-                ]; break;
+                ];
+                break;
             default:
-                return ;
+                return;
         }
 
         $validator = Validator::make($request->all(), $syarat);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-
-        else{
+        } else {
 
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($mode == 'add') {
+            if ($mode == 'add') {
 
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                 $lowongan_kerja                             = new LowonganKerja;
                 $lowongan_kerja->id_lowongan_kerja          = $id;
                 $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja;
                 $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja;
 
-                if(!empty(request()->file)){
+                if (!empty(request()->file)) {
                     $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/humas/'.$id, request()->file, 'public');
+                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $id, request()->file, 'public');
                     $lowongan_kerja->poster_lowongan_kerja   = $file;
                 }
 
@@ -102,18 +106,15 @@ class LowonganKerjaController extends BaseController{
                     'path' => 'bursa-kerja/lowongan-kerja',
                     'message' => 'Save successfully'
                 ];
-
-            }
-
-            elseif ($mode == 'edit') {
+            } elseif ($mode == 'edit') {
 
                 $lowongan_kerja                             = LowonganKerja::find($input->id_lowongan_kerja);
                 $lowongan_kerja->judul_lowongan_kerja       = $input->judul_lowongan_kerja;
                 $lowongan_kerja->deskripsi_lowongan_kerja   = $input->deskripsi_lowongan_kerja;
 
-                if(!empty(request()->file)){
+                if (!empty(request()->file)) {
                     $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                    $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/humas/'.$input->id_lowongan_kerja, request()->file, 'public');
+                    $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/humas/' . $input->id_lowongan_kerja, request()->file, 'public');
                     $lowongan_kerja->poster_lowongan_kerja   = $file;
                 }
 
@@ -125,14 +126,12 @@ class LowonganKerjaController extends BaseController{
                     'path' => 'bursa-kerja/lowongan-kerja',
                     'message' => 'Save successfully'
                 ];
-                
             }
-
         }
-
     }
 
-    public function actionDeleteLowonganKerja(Request $request, $id){
+    public function actionDeleteLowonganKerja(Request $request, $id)
+    {
 
         $input = (object) $request->input();
 
@@ -146,41 +145,37 @@ class LowonganKerjaController extends BaseController{
             'status' => 203, // SUCCESS AND LOAD TABLE
             'message' => 'Delete Lowongan Kerja successfully'
         ];
-
     }
 
-    public function showDatatablesLowonganKerja(Request $request){
+    public function showDatatablesLowonganKerja(Request $request)
+    {
 
-    	$input = (object) $request->input();
+        $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LowonganKerja::all();
+        $list_data = LowonganKerja::all();
 
-    	return Datatables::of($list_data)
-                           ->addColumn('action', function($item){
-                                if($item->poster_lowongan_kerja){
-                                    $poster =  Storage::disk('spaces')->url($item->poster_lowongan_kerja);
-                                    $ext = pathinfo($item->poster_lowongan_kerja, PATHINFO_EXTENSION);
-                                    if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
-                                        $note = 'file';
-                                    }
-                                    else{
-                                        $note= 'image';
-                                    }
-                                }
-                                else{
-                                    $poster = null;
-                                    $note = null;
-                                }
+        return Datatables::of($list_data)
+            ->addColumn('action', function ($item) {
+                if ($item->poster_lowongan_kerja) {
+                    $poster =  Storage::disk('spaces')->url($item->poster_lowongan_kerja);
+                    $ext = pathinfo($item->poster_lowongan_kerja, PATHINFO_EXTENSION);
+                    if ($ext == 'pdf' || $ext == 'doc' || $ext == 'docx') {
+                        $note = 'file';
+                    } else {
+                        $note = 'image';
+                    }
+                } else {
+                    $poster = null;
+                    $note = null;
+                }
 
-                                $data = array(
-                                    'id' => $item->id_lowongan_kerja,
-                                    'poster' => $poster,
-                                    'note' => $note
-                                );
-                                return $data;
-                            })
-                            ->make(true);
-
+                $data = array(
+                    'id' => $item->id_lowongan_kerja,
+                    'poster' => $poster,
+                    'note' => $note
+                );
+                return $data;
+            })
+            ->make(true);
     }
-
 }
