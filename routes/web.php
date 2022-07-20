@@ -1,11 +1,22 @@
 <?php
 
+use App\Http\Controllers\Administrator\Device\FingerprintController;
 use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SignInController;
 use Carbon\Carbon;
 use App\Models\Sekolah;
 use Illuminate\Support\Facades\Hash;
+use UniSharp\LaravelFilemanager\Controllers\CropController;
+use UniSharp\LaravelFilemanager\Controllers\DeleteController;
+use UniSharp\LaravelFilemanager\Controllers\DemoController;
+use UniSharp\LaravelFilemanager\Controllers\DownloadController;
+use UniSharp\LaravelFilemanager\Controllers\FolderController;
+use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use UniSharp\LaravelFilemanager\Controllers\LfmController;
+use UniSharp\LaravelFilemanager\Controllers\RenameController;
+use UniSharp\LaravelFilemanager\Controllers\ResizeController;
+use UniSharp\LaravelFilemanager\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,42 +61,42 @@ Route::post('upload', function (Request $request) {
 // DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
-Route::group(['prefix' => 'laravel-filemanager'], function () {
-    Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
+Route::prefix('laravel-filemanager')->group(function () {
+    Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
     // display integration error messages
-    Route::get('/errors', '\UniSharp\LaravelFilemanager\Controllers\LfmController@getErrors')->name('unisharp.lfm.getErrors');
+    Route::get('/errors', [LfmController::class, 'getErrors'])->name('unisharp.lfm.getErrors');
     // upload
-    Route::any('/upload', '\UniSharp\LaravelFilemanager\Controllers\UploadController@upload')->name('unisharp.lfm.upload');
+    Route::any('/upload', [UploadController::class, 'upload'])->name('unisharp.lfm.upload');
     // list images & files
-    Route::get('/jsonitems', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@getItems')->name('unisharp.lfm.getItems');
-    Route::get('/move', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@move')->name('unisharp.lfm.move');
-    Route::get('/domove', '\UniSharp\LaravelFilemanager\Controllers\ItemsController@domove')->name('unisharp.lfm.domov');
+    Route::get('/jsonitems', [ItemsController::class, 'getItems'])->name('unisharp.lfm.getItems');
+    Route::get('/move', [ItemsController::class, 'move'])->name('unisharp.lfm.move');
+    Route::get('/domove', [ItemsController::class, 'domove'])->name('unisharp.lfm.domov');
     // folders
-    Route::get('/newfolder', '\UniSharp\LaravelFilemanager\Controllers\FolderController@getAddfolder')->name('unisharp.lfm.getAddfolder');
+    Route::get('/newfolder', [FolderController::class, 'getAddfolder'])->name('unisharp.lfm.getAddfolder');
     // list folders
-    Route::get('/folders', '\UniSharp\LaravelFilemanager\Controllers\FolderController@getFolders')->name('unisharp.lfm.getFolders');
+    Route::get('/folders', [FolderController::class, 'getFolders'])->name('unisharp.lfm.getFolders');
     // crop
-    Route::get('/crop', '\UniSharp\LaravelFilemanager\Controllers\CropController@getCrop')->name('unisharp.lfm.getCrop');
+    Route::get('/crop', [CropController::class, 'getCrop'])->name('unisharp.lfm.getCrop');
     // rename
-    Route::get('/rename', '\UniSharp\LaravelFilemanager\Controllers\RenameController@getRename')->name('unisharp.lfm.getRename');
+    Route::get('/rename', [RenameController::class, 'getRename'])->name('unisharp.lfm.getRename');
     // scale/resize
-    Route::get('/resize', '\UniSharp\LaravelFilemanager\Controllers\ResizeController@getResize')->name('unisharp.lfm.getResize');
+    Route::get('/resize', [ResizeController::class, 'getResize'])->name('unisharp.lfm.getResize');
     // download
-    Route::get('/download', '\UniSharp\LaravelFilemanager\Controllers\DownloadController@getDownload')->name('unisharp.lfm.getDownload');
+    Route::get('/download', [DownloadController::class, 'getDownload'])->name('unisharp.lfm.getDownload');
     // delete
-    Route::get('/delete', '\UniSharp\LaravelFilemanager\Controllers\DeleteController@getDelete')->name('unisharp.lfm.getDelete');
-    Route::get('/demo', '\UniSharp\LaravelFilemanager\Controllers\DemoController@index');
+    Route::get('/delete', [DeleteController::class, 'getDelete'])->name('unisharp.lfm.getDelete');
+    Route::get('/demo', [DemoController::class, 'index']);
 });
 
 // START USING FOR FINGERPRINT
 // url: /iclock
 
-Route::group(array('prefix' => 'iclock'), function () {
-    Route::get('getrequest', 'Administrator\Device\FingerprintController@actionCheck');
+Route::prefix('iclock')->group(function () {
+    Route::get('getrequest', [FingerprintController::class, 'actionCheck']);
     Route::get('cdata', function () {
         return 'OK';
     });
-    Route::post('cdata', 'Administrator\Device\FingerprintController@actionGetFinger');
+    Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
 });
 // END USING FOR FINGERPRINT
 
