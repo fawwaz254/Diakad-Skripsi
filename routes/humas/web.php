@@ -7,6 +7,7 @@ use App\Http\Controllers\Guru\Biodata\DataPrestasiController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRekapKesehatanController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as WaliKelasRekapKesehatanController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
 use App\Http\Controllers\Humas\BursaKerja\LowonganKerjaController;
 use App\Http\Controllers\Humas\KegiatanHarian\InputKegiatanController;
 use App\Http\Controllers\Humas\KegiatanHarian\InputPertanyaanController;
