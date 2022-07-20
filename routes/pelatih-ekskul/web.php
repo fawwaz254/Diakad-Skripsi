@@ -1,70 +1,70 @@
 <?php
-// ROLE PELATIH EKSKUL
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'pelatih-ekskul'), function () {
-        Route::get('welcome', 'PelatihEkskul\WelcomeController@indexWelcome');
 
-        /** ==== MODUL MANAJEMEN FILE ==== **/
-        // url: /pelatih-ekskul/manajemen-file
-        Route::group(array('prefix' => 'manajemen-file'), function () {
-            // MENU Data Kategori
-            Route::group(array('prefix' => 'data-kategori'), function () {
-                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController;
+use App\Http\Controllers\PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController;
+use App\Http\Controllers\PelatihEkskul\WelcomeController;
+
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('pelatih-ekskul')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::prefix('manajemen-file')->group(function () {
+
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
             });
-
-            // MENU Data Sub Kategori 
-            Route::group(array('prefix' => 'data-sub-kategori'), function () {
-                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
-                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
                 //action input sub data kategori
-                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
             });
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-            // MENU Data File 
-            Route::group(array('prefix' => 'data-file'), function () {
-
-                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
-                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
-                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
-                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
-
-                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
-                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
         });
 
-        /** ==== MODUL ABSENSI EKSKUL ==== **/
-        Route::group(array('prefix' => 'absensi-ekskul'), function () {
+        Route::prefix('absensi-ekskul')->group(function () {
             // MENU Input Absensi Ekskul
-            Route::get('input-absensi-ekskul', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@viewDetailInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewManageInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', [InputAbsensiEkskulController::class, 'viewManageInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', [InputAbsensiEkskulController::class, 'viewDetailInputAbsensiEkskul']);
 
-            Route::post('input-absensi-ekskul/datatables/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@datatablesInputAbsensiEkskul');
-            Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@datatablesSiswaInputAbsensiEkskul');
-            Route::post('input-absensi-ekskul/action/{mode}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
-            Route::post('input-absensi-ekskul/action/{mode}/{id}', 'PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/datatables/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'datatablesInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', [InputAbsensiEkskulController::class, 'datatablesSiswaInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/action/{mode}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/action/{mode}/{id}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
 
             // MENU Rekap Absensi Ekskul
-            Route::get('rekap-absensi-ekskul', 'PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController@viewRekapAbsensiEkskul');
-            Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController@viewDetailRekapAbsensiEkskul');
-            Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', 'PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController@printRekapAbsensiEkskul');
+            Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
+            Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);
+            Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiEkskul']);
         });
 
-        Route::group(array('prefix' => 'kesekretariatan'), function () {
+        Route::prefix('kesekretariatan')->group(function () {
 
-            Route::group(array('prefix' => 'dokumen'), function () {
-                Route::get('/', 'Guru\Kesekretariatan\DokumenController@viewDokumen');
-                Route::get('detail/{id}', 'Guru\Kesekretariatan\DokumenController@viewDetailDokumen');
+            Route::prefix('dokumen')->group(function () {
 
-                Route::post('datatables', 'Guru\Kesekretariatan\DokumenController@datatablesDokumen');
+                Route::get('/', [DokumenController::class, 'viewDokumen']);
+                Route::get('detail/{id}', [DokumenController::class, 'viewDetailDokumen']);
+
+                Route::post('datatables', [DokumenController::class, 'datatablesDokumen']);
             });
         });
     });

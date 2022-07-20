@@ -1,124 +1,128 @@
 <?php
-// ROLE SEKRETARIAT
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'sekretariat'), function () {
 
-        Route::get('welcome', 'Sekretariat\WelcomeController@indexWelcome');
+use App\Http\Controllers\Sekretariat\DataDokumen\DokumenDibagikanController;
+use App\Http\Controllers\Sekretariat\DataDokumen\InputDokumenController;
+use App\Http\Controllers\Sekretariat\DataSekretariat\DataKategoriController;
+use App\Http\Controllers\Sekretariat\DataSekretariat\DataLokerAlmariController;
+use App\Http\Controllers\Sekretariat\DataSekretariat\DataPemilikController;
+use App\Http\Controllers\Sekretariat\DataSekretariat\DataSubKategoriController;
+use App\Http\Controllers\Sekretariat\Laporan\WaliKelasController;
+use App\Http\Controllers\Sekretariat\ManajemenFile\DataFileController;
+use App\Http\Controllers\Sekretariat\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Sekretariat\WelcomeController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 
-        Route::group(array('prefix' => 'data-sekretariat'), function () {
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('sekretariat')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
 
+        Route::prefix('data-sekretariat')->group(function () {
             // MENU Data Loker Almari
-            Route::get('data-loker-almari', 'Sekretariat\DataSekretariat\DataLokerAlmariController@viewDataLokerAlmari');
-            Route::get('data-loker-almari/add', 'Sekretariat\DataSekretariat\DataLokerAlmariController@addDataLokerAlmari');
-            Route::get('data-loker-almari/edit/{id}', 'Sekretariat\DataSekretariat\DataLokerAlmariController@editDataLokerAlmari');
-            Route::get('data-loker-almari/datatables', 'Sekretariat\DataSekretariat\DataLokerAlmariController@datatablesDataLokerAlmari');
+            Route::get('data-loker-almari', [DataLokerAlmariController::class, 'viewDataLokerAlmari']);
+            Route::get('data-loker-almari/add', [DataLokerAlmariController::class, 'addDataLokerAlmari']);
+            Route::get('data-loker-almari/edit/{id}', [DataLokerAlmariController::class, 'editDataLokerAlmari']);
+            Route::get('data-loker-almari/datatables', [DataLokerAlmariController::class, 'datatablesDataLokerAlmari']);
 
             //action data loker almari
-            Route::post('action-data-loker-almari/{mode}/{id}', 'Sekretariat\DataSekretariat\DataLokerAlmariController@actionDataLokerAlmari');
+            Route::post('action-data-loker-almari/{mode}/{id}', [DataLokerAlmariController::class, 'actionDataLokerAlmari']);
 
             //MENU Data Pemilik
-            Route::get('data-pemilik', 'Sekretariat\DataSekretariat\DataPemilikController@viewDataPemilik');
-            Route::get('data-pemilik/add', 'Sekretariat\DataSekretariat\DataPemilikController@addDataPemilik');
-            Route::get('data-pemilik/edit/{id}', 'Sekretariat\DataSekretariat\DataPemilikController@editDataPemilik');
-            Route::get('data-pemilik/datatables', 'Sekretariat\DataSekretariat\DataPemilikController@datatablesDataPemilik');
+            Route::get('data-pemilik', [DataPemilikController::class, 'viewDataPemilik']);
+            Route::get('data-pemilik/add', [DataPemilikController::class, 'addDataPemilik']);
+            Route::get('data-pemilik/edit/{id}', [DataPemilikController::class, 'editDataPemilik']);
+            Route::get('data-pemilik/datatables', [DataPemilikController::class, 'datatablesDataPemilik']);
 
             //action data pemilik
-            Route::post('action-data-pemilik/{mode}/{id}', 'Sekretariat\DataSekretariat\DataPemilikController@actionDataPemilik');
+            Route::post('action-data-pemilik/{mode}/{id}', [DataPemilikController::class, 'actionDataPemilik']);
 
             //Menu Data Kategori
-            Route::get('data-kategori', 'Sekretariat\DataSekretariat\DataKategoriController@viewDataKategori');
-            Route::get('data-kategori/add', 'Sekretariat\DataSekretariat\DataKategoriController@addDataKategori');
-            Route::get('data-kategori/edit/{id}', 'Sekretariat\DataSekretariat\DataKategoriController@editDataKategori');
-            Route::get('data-kategori/datatables', 'Sekretariat\DataSekretariat\DataKategoriController@datatablesDataKategori');
+            Route::get('data-kategori', [DataKategoriController::class, 'viewDataKategori']);
+            Route::get('data-kategori/add', [DataKategoriController::class, 'addDataKategori']);
+            Route::get('data-kategori/edit/{id}', [DataKategoriController::class, 'editDataKategori']);
+            Route::get('data-kategori/datatables', [DataKategoriController::class, 'datatablesDataKategori']);
 
             //action data kategori
-            Route::post('action-data-kategori/{mode}/{id}', 'Sekretariat\DataSekretariat\DataKategoriController@actionDataKategori');
+            Route::post('action-data-kategori/{mode}/{id}', [DataKategoriController::class, 'actionDataKategori']);
 
             //Menu Data Sub-Kategori
-            Route::get('data-sub-kategori', 'Sekretariat\DataSekretariat\DataSubKategoriController@viewDataSubKategori');
-            Route::get('data-sub-kategori/add', 'Sekretariat\DataSekretariat\DataSubKategoriController@addDataSubKategori');
-            Route::get('data-sub-kategori/edit/{id}', 'Sekretariat\DataSekretariat\DataSubKategoriController@editDataSubKategori');
-            Route::get('data-sub-kategori/datatables', 'Sekretariat\DataSekretariat\DataSubKategoriController@datatablesDataSubKategori');
+            Route::get('data-sub-kategori', [DataSubKategoriController::class, 'viewDataSubKategori']);
+            Route::get('data-sub-kategori/add', [DataSubKategoriController::class, 'addDataSubKategori']);
+            Route::get('data-sub-kategori/edit/{id}', [DataSubKategoriController::class, 'editDataSubKategori']);
+            Route::get('data-sub-kategori/datatables', [DataSubKategoriController::class, 'datatablesDataSubKategori']);
 
             //action data sub-kategori
-            Route::post('action-data-sub-kategori/{mode}/{id}', 'Sekretariat\DataSekretariat\DataSubKategoriController@actionDataSubKategori');
+            Route::post('action-data-sub-kategori/{mode}/{id}', [DataSubKategoriController::class, 'actionDataSubKategori']);
         });
 
-        Route::group(array('prefix' => 'data-dokumen'), function () {
+        Route::prefix('data-dokumen')->group(function () {
             // MENU Input Dokumen
-            Route::get('input-dokumen', 'Sekretariat\DataDokumen\InputDokumenController@viewInputDokumen');
-            Route::get('input-dokumen/add', 'Sekretariat\DataDokumen\InputDokumenController@manageInputDokumen');
-            Route::get('input-dokumen/edit/{id}', 'Sekretariat\DataDokumen\InputDokumenController@manageInputDokumen');
-            Route::get('input-dokumen/upload/{id}', 'Sekretariat\DataDokumen\InputDokumenController@uploadInputDokumen');
-            Route::get('input-dokumen/datatables', 'Sekretariat\DataDokumen\InputDokumenController@datatablesInputDokumen');
+            Route::get('input-dokumen', [InputDokumenController::class, 'viewInputDokumen']);
+            Route::get('input-dokumen/add', [InputDokumenController::class, 'manageInputDokumen']);
+            Route::get('input-dokumen/edit/{id}', [InputDokumenController::class, 'manageInputDokumen']);
+            Route::get('input-dokumen/upload/{id}', [InputDokumenController::class, 'uploadInputDokumen']);
+            Route::get('input-dokumen/datatables', [InputDokumenController::class, 'datatablesInputDokumen']);
 
             //action input dokumen
-            Route::post('action-input-dokumen/{mode}/{id}', 'Sekretariat\DataDokumen\InputDokumenController@actionInputDokumen');
+            Route::post('action-input-dokumen/{mode}/{id}', [InputDokumenController::class, 'actionInputDokumen']);
 
             //ajax subkategori
-            Route::post('sub-kategori', 'Sekretariat\DataDokumen\InputDokumenController@ajaxGetSubkategori');
+            Route::post('sub-kategori', [InputDokumenController::class, 'ajaxGetSubkategori']);
 
-            Route::group(array('prefix' => 'dokumen-dibagikan'), function () {
-                Route::get('/', 'Sekretariat\DataDokumen\DokumenDibagikanController@viewDokumenDibagikan');
+            Route::prefix('dokumen-dibagikan')->group(function () {
+                Route::get('/', [DokumenDibagikanController::class, 'viewDokumenDibagikan']);
             });
         });
 
-        Route::group(array('prefix' => 'kegiatan-harian'), function () {
+        Route::prefix('kegiatan-harian')->group(function () {
 
-            Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
+            Route::prefix('mengisi-form-kesehatan')->group(function () {
                 // MENU Mengisi form kesehatan
-                Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
-                Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
-                Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                Route::get('/', [FormKesehatanController::class, 'viewFormKesehatan']);
+                Route::get('add', [FormKesehatanController::class, 'viewAddFormKesehatan']);
+                Route::get('detail/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
-                Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
-                Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+                Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+                Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
             });
         });
 
+        Route::prefix('manajemen-file')->group(function () {
 
-        Route::group(array('prefix' => 'manajemen-file'), function () {
-
-            Route::group(array('prefix' => 'data-kategori'), function () {
-                Route::get('/', 'Sekretariat\ManajemenFile\DataKategoriController@viewDataKategori');
-                Route::get('/add', 'Sekretariat\ManajemenFile\DataKategoriController@addDataKategori');
-                Route::get('/datatables', 'Sekretariat\ManajemenFile\DataKategoriController@datatablesCategoryfile');
-                Route::get('/edit/{id}', 'Sekretariat\ManajemenFile\DataKategoriController@editDataKategori');
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+                Route::get('/add', [DataKategoriController::class, 'addDataKategori']);
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
+                Route::get('/edit/{id}', [DataKategoriController::class, 'editDataKategori']);
 
                 //action input data kategori
-                Route::post('action-data-kategori/{mode}/{id}', 'Sekretariat\ManajemenFile\DataKategoriController@actionDataKategori');
+                Route::post('action-data-kategori/{mode}/{id}', [DataKategoriController::class, 'actionDataKategori']);
             });
-
-            Route::group(array('prefix' => 'data-sub-kategori'), function () {
-                Route::get('/', 'Sekretariat\ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-                Route::get('/add', 'Sekretariat\ManajemenFile\SubDataKategoriController@addSubDataKategori');
-                Route::get('/datatables', 'Sekretariat\ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-                Route::get('/edit/{id}', 'Sekretariat\ManajemenFile\SubDataKategoriController@editSubDataKategori');
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
                 //action input sub data kategori
-                Route::post('action-data-sub-kategori/{mode}/{id}', 'Sekretariat\ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
             });
-
-            Route::group(array('prefix' => 'data-file'), function () {
-
-                Route::get('/', 'Sekretariat\ManajemenFile\DataFileController@viewDataFile');
-                Route::get('add', 'Sekretariat\ManajemenFile\DataFileController@addDataFile');
-                Route::get('category/{category_file_id}', 'Sekretariat\ManajemenFile\DataFileController@viewDataFileCategory');
-                Route::get('sub-category/{sub_category_file_id}', 'Sekretariat\ManajemenFile\DataFileController@viewDataFileSubCategory');
-                Route::get('dropdown-category', 'Sekretariat\ManajemenFile\DataFileController@dropdownCategory');
-                Route::post('action-data-file/{mode}/{id}', 'Sekretariat\ManajemenFile\DataFileController@actionDataFile');
-                Route::get('download/{id}', 'Sekretariat\ManajemenFile\DataFileController@downloadDataFile');
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
         });
 
-        Route::group(array('prefix' => 'laporan'), function () {
-
-            Route::group(array('prefix' => 'wali-kelas'), function () {
-
-                Route::get('/', 'Sekretariat\Laporan\WaliKelasController@viewWaliKelas');
-                Route::get('datatables', 'Sekretariat\Laporan\WaliKelasController@datatablesWaliKelas');
-                Route::get('detail/{id}', 'Sekretariat\Laporan\WaliKelasController@detailWaliKelas');
-                Route::get('detail-datatable/{id}', 'Sekretariat\Laporan\WaliKelasController@detailDataTable');
+        Route::prefix('laporan')->group(function () {
+            Route::prefix('wali-kelas')->group(function () {
+                Route::get('/', [WaliKelasController::class, 'viewWaliKelas']);
+                Route::get('datatables', [WaliKelasController::class, 'datatablesWaliKelas']);
+                Route::get('detail/{id}', [WaliKelasController::class, 'detailWaliKelas']);
+                Route::get('detail-datatable/{id}', [WaliKelasController::class, 'detailDataTable']);
             });
         });
     });
