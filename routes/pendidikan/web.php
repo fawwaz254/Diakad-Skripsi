@@ -5,6 +5,7 @@ use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Pendidikan\DataAkademik\JalurController;
 use App\Http\Controllers\Pendidikan\DataAkademik\JamKBMController;
 use App\Http\Controllers\Pendidikan\DataAkademik\JurusanController;
 use App\Http\Controllers\Pendidikan\DataAkademik\KalenderAkademikController;
@@ -102,12 +103,12 @@ Route::middleware(['token_staff'])->group(function () {
 			Route::post('action-nama-semester/{mode}/{id}', [NamaSemesterController::class, 'actionNamaSemester']);
 
 			// MENU Data Jalur
-			Route::get('jalur', [JalurControllerNamaSemesterController::class, 'viewJalur']);
-			Route::get('jalur/datatables', [JalurControllerNamaSemesterController::class, 'datatablesJalur']);
-			Route::get('jalur/add', [JalurControllerNamaSemesterController::class, 'addJalur']);
-			Route::get('jalur/edit/{id}', [JalurControllerNamaSemesterController::class, 'editJalur']);
+			Route::get('jalur', [JalurController::class, 'viewJalur']);
+			Route::get('jalur/datatables', [JalurController::class, 'datatablesJalur']);
+			Route::get('jalur/add', [JalurController::class, 'addJalur']);
+			Route::get('jalur/edit/{id}', [JalurController::class, 'editJalur']);
 
-			Route::post('action-jalur/{mode}/{id}', [JalurControllerNamaSemesterController::class, 'actionJalur']);
+			Route::post('action-jalur/{mode}/{id}', [JalurController::class, 'actionJalur']);
 
 			// MENU Data Kegiatan
 			Route::get('kegiatan', [KegiatanController::class, 'viewKegiatan']);

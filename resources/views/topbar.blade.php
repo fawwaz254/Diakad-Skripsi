@@ -3,7 +3,7 @@ $theme_name = Request::segment(1);
 // dd(Auth::user()->sekolah_data);
 @endphp
 @switch($theme_name)
-    @case('pendidkan')
+    @case('pendidikan')
         {!! '<body class="theme-green">' !!}
     @break
 
