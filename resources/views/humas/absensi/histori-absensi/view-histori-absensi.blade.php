@@ -115,7 +115,6 @@
 
                 <div class="body">
                     <div class="table-responsive ">
-<<<<<<< HEAD
                         <table class="table table-bordered" width="600px">
                             <thead style="background:#9C27B0;color:white">
                                 <tr>
@@ -134,50 +133,6 @@
                                         <tr style="background: #DDA0DD">
                                         @else
                                         <tr>
-=======
-                    <table class="table table-bordered" width="600px">
-                        <thead style="background:#9C27B0;color:white">
-                            <tr>
-                                <th style="text-align: center;">#</th>
-                                <th style="text-align: center;">Nama</th>
-                                <th>Role</th>
-                                <th>Check In</th>
-                                <th>Check Out</th>
-                                <th>Status</th>
-                                <th style="text-align: center;">Action</th>
-                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($hasil as $key => $r)
-                            @if($key%2==1)
-                            <tr style="background: #DDA0DD">
-                                @else
-                            <tr>
-                                @endif
-
-                                @if($r['shift'])
-                                <td style="text-align: center;">{{$loop->iteration}}</td>
-                                <td style="text-align: center;">{{$r['nm_pengguna']}}</td>
-                                <td>{{$r['status_join_table'] == 1 ? 'Pegawai' : $r['status_join_table'] == 2 ? 'Guru' : 'Siswa' }}</td>
-                                <td>{{$r['check_in']}}</td>
-                                <td>{{$r['check_out']}}</td>
-                                <td>{{$r['status']}}</td>
-                          
-                                <td style="text-align: center;display:flex;justify-content:center">
-                                    @if ($r['id_presensi_pengguna'] =='')
-                                    <button type="button" class="btn bg-teal waves-effect" onclick="addAbsensi('{{$r['id_pengguna']}}')">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                    @else
-                                    <button type="button" class="btn bg-teal waves-effect" onclick="editAbsensi('{{$r['id_presensi_pengguna']}}')">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                        <button data-id="{{  $r['id_presensi_pengguna'] }}" style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
-                                            <i class="material-icons">delete</i>
-                                        </button>
-
->>>>>>> 2a2d8b0e855c790d4e68a0f510ab4495cc2e8c23
                                     @endif
                                     @if ($r['shift'])
                                         <td style="text-align: center;">{{ $loop->iteration }}</td>

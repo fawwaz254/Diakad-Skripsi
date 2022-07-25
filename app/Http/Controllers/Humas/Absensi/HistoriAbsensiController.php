@@ -330,6 +330,7 @@ class HistoriAbsensiController extends BaseController
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
+        // dd($hasil);
 
         return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'date', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur'));
     }
