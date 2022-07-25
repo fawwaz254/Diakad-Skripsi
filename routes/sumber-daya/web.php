@@ -8,6 +8,7 @@ use App\Http\Controllers\SumberDaya\DataSumberDaya\StatusAktifTendikController;
 use App\Http\Controllers\SumberDaya\DataSumberDaya\UnitKerjaController;
 use App\Http\Controllers\SumberDaya\Guru\InputGuruController;
 use App\Http\Controllers\SumberDaya\Guru\SettingGuruPiketController;
+use App\Http\Controllers\SumberDaya\Guru\UploadDataGuruController;
 use App\Http\Controllers\SumberDaya\Tendik\InputTendikController;
 use App\Http\Controllers\SumberDaya\Tendik\UploadDataTendikController;
 use App\Http\Controllers\SumberDaya\WelcomeController;

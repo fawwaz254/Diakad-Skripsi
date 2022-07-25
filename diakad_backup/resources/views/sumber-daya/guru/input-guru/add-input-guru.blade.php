@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#guru/input-guru')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{ url(Request::segment(1) . '#guru/input-guru') }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -11,17 +12,19 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-input-guru/add/'.$id_guru)}}">
-                        {{csrf_field()}}
-                         <div class="demo-color-box bg-success">
-                                Identitas Pendidik dan Tenaga Pendidik
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-input-guru/add/' . $id_guru) }}">
+                        {{ csrf_field() }}
+                        <div class="demo-color-box bg-success">
+                            Identitas Pendidik dan Tenaga Pendidik
                         </div>
                         <h2 class="card-inside-title">
                             Nama Guru <span style="color:red;">*</span>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_pengguna" required="" aria-invalid="true">
+                                <input type="text" class="form-control" name="nm_pengguna" required=""
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -33,7 +36,8 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Gelar Belakang <small><strong>Gelar belakang dari guru, misal: S.Pd., S.Si., S.T., dll</strong></small>
+                            Gelar Belakang <small><strong>Gelar belakang dari guru, misal: S.Pd., S.Si., S.T.,
+                                    dll</strong></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -65,10 +69,10 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_kota_lahir">
+                                <select class="form-control show-tick" name="id_kota_lahir">
                                     <option value="">-- Pilih Kota Lahir --</option>
-                                    @foreach($kota as $data)
-                                    <option value="{{$data->id_kota}}">{{$data->nm_kota}}</option>
+                                    @foreach ($kota as $data)
+                                        <option value="{{ $data->id_kota }}">{{ $data->nm_kota }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -79,7 +83,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tgl_lahir"
-                                        aria-invalid="true">
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -91,7 +95,7 @@
                             </div>
                         </div>
                         <div class="demo-color-box bg-success">
-                                Data Pribadi
+                            Data Pribadi
                         </div>
                         <h2 class="card-inside-title">
                             Alamat Jalan
@@ -130,7 +134,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="alamat_kelurahan" aria-invalid="true">
+                                <input type="text" class="form-control" name="alamat_kelurahan"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -138,7 +143,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="alamat_kecamatan" aria-invalid="true">
+                                <input type="text" class="form-control" name="alamat_kecamatan"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -146,7 +152,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="alamat_kodepos" aria-invalid="true">
+                                <input type="number" class="form-control" name="alamat_kodepos"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -154,13 +161,13 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="alamat_provinsi" id="alamat_provinsi">
+                                <select class="form-control show-tick" name="alamat_provinsi" id="alamat_provinsi">
                                     <option value="">-- Pilih Alamat Provinsi --</option>
-                                    @foreach($provinsi as $data)
-                                    <option value="{{$data->id_provinsi}}">{{$data->nm_provinsi}}</option>
+                                    @foreach ($provinsi as $data)
+                                        <option value="{{ $data->id_provinsi }}">{{ $data->nm_provinsi }}</option>
                                     @endforeach
                                 </select>
-                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -168,7 +175,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="alamat_kota" id="alamat_kota">
+                                <select class="form-control show-tick" name="alamat_kota" id="alamat_kota">
                                     <option value="">-- Pilih Alamat Kota --</option>
                                 </select>
                             </div>
@@ -178,7 +185,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="alamat_latitude" aria-invalid="true">
+                                <input type="text" class="form-control" name="alamat_latitude"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -186,7 +194,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="alamat_longitude" aria-invalid="true">
+                                <input type="text" class="form-control" name="alamat_longitude"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -194,10 +203,10 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_agama">
+                                <select class="form-control show-tick" name="id_agama">
                                     <option value="">-- Pilih Agama dan Kepercayaan --</option>
-                                    @foreach($agama as $data)
-                                    <option value="{{$data->id_agama}}">{{$data->nm_agama}}</option>
+                                    @foreach ($agama as $data)
+                                        <option value="{{ $data->id_agama }}">{{ $data->nm_agama }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -215,7 +224,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_wajib_pajak_ptk" aria-invalid="true">
+                                <input type="text" class="form-control" name="nm_wajib_pajak_ptk"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -248,7 +258,8 @@
                         </h2>
                         <div class="row clearfix" id="pasangan" style="display: none">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nm_pasangan_ptk" aria-invalid="true">
+                                <input type="text" class="form-control" name="nm_pasangan_ptk"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title" id="title-pekerjaan-pasangan" style="display: none">
@@ -256,10 +267,11 @@
                         </h2>
                         <div class="row clearfix" id="pekerjaan-pasangan" style="display: none">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_jenis_pekerjaan_pasangan_ptk">
-                                    <option value="">-- Pilih Jenis Pekerjaan  --</option>
-                                    @foreach($pekerjaan as $data)
-                                    <option value="{{$data->id_jenis_pekerjaan}}">{{$data->nm_jenis_pekerjaan}}</option>
+                                <select class="form-control show-tick" name="id_jenis_pekerjaan_pasangan_ptk">
+                                    <option value="">-- Pilih Jenis Pekerjaan --</option>
+                                    @foreach ($pekerjaan as $data)
+                                        <option value="{{ $data->id_jenis_pekerjaan }}">
+                                            {{ $data->nm_jenis_pekerjaan }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -269,7 +281,8 @@
                         </h2>
                         <div class="row clearfix" id="nip_pasangan" style="display: none">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nip_pasangan_ptk" aria-invalid="true">
+                                <input type="text" class="form-control" name="nip_pasangan_ptk"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -279,8 +292,9 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_unit_kerja" required="">
                                     <option value="">-- Pilih Unit Kerja --</option>
-                                    @foreach($data_unit_kerja as $data)
-                                    <option value="{{$data->id_unit_kerja}}">{{$data->nm_unit_kerja}}</option>
+                                    @foreach ($data_unit_kerja as $data)
+                                        <option value="{{ $data->id_unit_kerja }}">{{ $data->nm_unit_kerja }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -290,8 +304,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="jenis_jabatan" >
-                                    <option value="" selected >-- Pilih Jenis Jabatan  --</option>
+                                <select class="form-control show-tick" name="jenis_jabatan">
+                                    <option value="" selected>-- Pilih Jenis Jabatan --</option>
                                     <option value="1">Kepala Unit Sarana & Prasarana</option>
                                     <option value="2">Kepala Unit Keuangan</option>
                                     <option value="3">Staf Unit Sarana & Prasarana</option>
@@ -303,17 +317,18 @@
                             </div>
                         </div>
                         <div class="demo-color-box bg-success">
-                                Kepegawaian
+                            Kepegawaian
                         </div>
                         <h2 class="card-inside-title">
                             Jenis Kepegawaian
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_jenis_kepegawaian">
-                                    <option value="">-- Pilih Jenis Kepegawaian  --</option>
-                                    @foreach($pegawai as $data)
-                                    <option value="{{$data->id_jenis_kepegawaian}}">{{$data->nm_jenis_kepegawaian}}</option>
+                                <select class="form-control show-tick" name="id_jenis_kepegawaian">
+                                    <option value="">-- Pilih Jenis Kepegawaian --</option>
+                                    @foreach ($pegawai as $data)
+                                        <option value="{{ $data->id_jenis_kepegawaian }}">
+                                            {{ $data->nm_jenis_kepegawaian }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -323,7 +338,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nip_guru" required="" aria-invalid="true">
+                                <input type="text" class="form-control" name="nip_guru" required=""
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -347,10 +363,10 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                               <select class="form-control show-tick" name="id_jenis_ptk">
-                                    <option value="">-- Pilih Jenis PTK  --</option>
-                                    @foreach($ptk as $data)
-                                    <option value="{{$data->id_jenis_ptk}}">{{$data->nm_jenis_ptk}}</option>
+                                <select class="form-control show-tick" name="id_jenis_ptk">
+                                    <option value="">-- Pilih Jenis PTK --</option>
+                                    @foreach ($ptk as $data)
+                                        <option value="{{ $data->id_jenis_ptk }}">{{ $data->nm_jenis_ptk }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -360,7 +376,8 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nomor_sk_pengangkatan" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_sk_pengangkatan"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -369,18 +386,19 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tgl_sk_pengangkatan"
-                                        aria-invalid="true">
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Lembaga Pengangkat
+                            Lembaga Pengangkat
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_jenis_lembaga_pengangkat">
-                                    <option value="">-- Pilih Jenis Lembaga Pengakat  --</option>
-                                    @foreach($pengangkat as $data)
-                                    <option value="{{$data->id_jenis_lembaga_pengangkat}}">{{$data->nm_jenis_lembaga_pengangkat}}</option>
+                                    <option value="">-- Pilih Jenis Lembaga Pengakat --</option>
+                                    @foreach ($pengangkat as $data)
+                                        <option value="{{ $data->id_jenis_lembaga_pengangkat }}">
+                                            {{ $data->nm_jenis_lembaga_pengangkat }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -399,11 +417,12 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tgl_mulai_pns"
-                                        aria-invalid="true">
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Pangkat/Golongan <small><strong>Diisi dengan pangkat dan golongan yang terbaru</strong></small>
+                            Pangkat/Golongan <small><strong>Diisi dengan pangkat dan golongan yang
+                                    terbaru</strong></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -411,14 +430,15 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Sumber Gaji
+                            Sumber Gaji
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_jenis_sumber_gaji">
-                                    <option value="">-- Pilih Jenis Sumber Gaji  --</option>
-                                    @foreach($gaji as $data)
-                                    <option value="{{$data->id_jenis_sumber_gaji}}">{{$data->nm_jenis_sumber_gaji}}</option>
+                                    <option value="">-- Pilih Jenis Sumber Gaji --</option>
+                                    @foreach ($gaji as $data)
+                                        <option value="{{ $data->id_jenis_sumber_gaji }}">
+                                            {{ $data->nm_jenis_sumber_gaji }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -428,22 +448,24 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nomor_kartu_pegawai" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_kartu_pegawai"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                            Kartu Istri (KARIS) atau Kartu Suami (KARSU) 
+                            Kartu Istri (KARIS) atau Kartu Suami (KARSU)
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nomor_kartu_pasangan" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_kartu_pasangan"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <div class="demo-color-box bg-success">
-                                Kompetensi Khusus
+                            Kompetensi Khusus
                         </div>
                         <h2 class="card-inside-title">
-                           Punya Lisensi Kepala Sekolah
+                            Punya Lisensi Kepala Sekolah
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -454,20 +476,22 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Keahlian Laboratorium <small><strong>Spesifikasi keahlian laboratorium yang dimiliki oleh PTK, dibuktikan dengan adanya sertifikat sebagai laboran</strong></small>
+                            Keahlian Laboratorium <small><strong>Spesifikasi keahlian laboratorium yang dimiliki oleh
+                                    PTK, dibuktikan dengan adanya sertifikat sebagai laboran</strong></small>
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_jenis_keahlian_lab">
-                                    <option value="">-- Pilih Jenis Keahlian Lab  --</option>
-                                    @foreach($lab as $data)
-                                    <option value="{{$data->id_jenis_keahlian_lab}}">{{$data->nm_jenis_keahlian_lab}}</option>
+                                    <option value="">-- Pilih Jenis Keahlian Lab --</option>
+                                    @foreach ($lab as $data)
+                                        <option value="{{ $data->id_jenis_keahlian_lab }}">
+                                            {{ $data->nm_jenis_keahlian_lab }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Keahlian Braile
+                            Keahlian Braile
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -478,7 +502,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Keahlian Bahasa Isyarat
+                            Keahlian Bahasa Isyarat
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -489,10 +513,10 @@
                             </div>
                         </div>
                         <div class="demo-color-box bg-success">
-                                Kontak
+                            Kontak
                         </div>
                         <h2 class="card-inside-title">
-                           Nomor Telepon
+                            Nomor Telepon
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -500,7 +524,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Nomor HP
+                            Nomor HP
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -508,7 +532,7 @@
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Email
+                            Email
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -516,14 +540,15 @@
                             </div>
                         </div>
                         <div class="demo-color-box bg-success">
-                                Penugasan
+                            Penugasan
                         </div>
                         <h2 class="card-inside-title">
-                           Nomor SK Penugasan
+                            Nomor SK Penugasan
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="nomor_sk_penugasan" aria-invalid="true">
+                                <input type="text" class="form-control" name="nomor_sk_penugasan"
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -532,11 +557,11 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tgl_sk_penugasan"
-                                        aria-invalid="true">
+                                    aria-invalid="true">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
-                           Apakah Sekolah Induk
+                            Apakah Sekolah Induk
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -553,9 +578,15 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="id_status_pengguna" required="">
                                     <option value="">-- Pilih Status Aktif --</option>
-                                    @foreach($data_status_aktif_guru as $data)
-                                    <option value="{{$data->id_status_pengguna}}">{{$data->nm_status_pengguna}} -
-                                        @if($data->aktif_status_pengguna == 0) Keluar/Non-Aktif @else Aktif @endif</option>
+                                    @foreach ($data_status_aktif_guru as $data)
+                                        <option value="{{ $data->id_status_pengguna }}">
+                                            {{ $data->nm_status_pengguna }} -
+                                            @if ($data->aktif_status_pengguna == 0)
+                                                Keluar/Non-Aktif
+                                            @else
+                                                Aktif
+                                            @endif
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -566,7 +597,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
@@ -577,7 +609,7 @@
 </div>
 @include('scriptjs')
 <script>
-    $(function(){    
+    $(function() {
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'DD MMMM YYYY',
             //lang : 'id',
@@ -586,50 +618,48 @@
             time: false
         });
     });
-    </script>
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('select').select();
     });
 
-    var modul_url       = 'guru';
+    var modul_url = 'guru';
 
-    $('#alamat_provinsi').on('change', function(e){
-    console.log(e);
-    var id_provinsi = e.target.value;
-        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'input-guru/get-kota/' + id_provinsi,function(data) {
-            console.log(data);
-            $('#alamat_kota').empty();
+    $('#alamat_provinsi').on('change', function(e) {
+        var id_provinsi = e.target.value;
+        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'input-guru/get-kota/' + id_provinsi,
+            function(data) {
+                $('#alamat_kota').empty();
 
 
-            $('#alamat_kota').append($("<option>")
-                .attr("value", 0)
-                .text("-- Semua --")
-            );
-            $.each(data, function(index, kotaObj){
                 $('#alamat_kota').append($("<option>")
-                    .attr("value", kotaObj.id_kota)
-                    .text(kotaObj.nm_kota)
+                    .attr("value", 0)
+                    .text("-- Semua --")
                 );
-            })
+                $.each(data, function(index, kotaObj) {
+                    $('#alamat_kota').append($("<option>")
+                        .attr("value", kotaObj.id_kota)
+                        .text(kotaObj.nm_kota)
+                    );
+                })
 
-            $('select').select();
-        });
+                $('select').select();
+            });
     });
 </script>
-<script>  
-$(document).ready(function(){
-    $('#status_kawin').on('change', function() {
-      if ( this.value == '1')
-      {
-        $("#title-pasangan").show();
-        $("#title_nip_pasangan").show();
-        $("#title-pekerjaan-pasangan").show();
-        $("#pasangan").show();
-        $("#nip_pasangan").show();
-        $("#pekerjaan-pasangan").show();
+<script>
+    $(document).ready(function() {
+        $('#status_kawin').on('change', function() {
+            if (this.value == '1') {
+                $("#title-pasangan").show();
+                $("#title_nip_pasangan").show();
+                $("#title-pekerjaan-pasangan").show();
+                $("#pasangan").show();
+                $("#nip_pasangan").show();
+                $("#pekerjaan-pasangan").show();
 
-      }
+            }
+        });
     });
-});
 </script>

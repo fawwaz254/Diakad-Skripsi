@@ -11,6 +11,7 @@ use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Tendik\Biodata\DataPribadiController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Tendik\WelcomeController;
 
