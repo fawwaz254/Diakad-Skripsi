@@ -143,20 +143,24 @@ class HistoriAbsensiController extends BaseController
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
                 }
+                if (isset($shiftMaster['start_time'])) {
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
-                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
-
-                    $hasil[$key]['notes'] = "Telat";
+                        $hasil[$key]['notes'] = "Telat";
+                    }
                 }
+
 
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 
                     $hasil[$key]['notes'] = "Pulang lebih awal";
                 }
-
-                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                    $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
+                if (isset($shiftMaster['start_time'])) {
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                        $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
+                    }
                 }
+
                 if ($attendance->check_out) {
                     $hasil[$key]['check_out'] = $attendance->check_out;
                 }
@@ -166,10 +170,11 @@ class HistoriAbsensiController extends BaseController
                 if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
                     $hasil[$key]['notes'] = 'Tidak Checkout';
                 }
+                if (isset($shiftMaster['start_time'])) {
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
-
-                    $hasil[$key]['notes'] = "Telat & Tidak Checkout";
+                        $hasil[$key]['notes'] = "Telat & Tidak Checkout";
+                    }
                 }
 
                 if ($attendance->notes) {
@@ -211,7 +216,6 @@ class HistoriAbsensiController extends BaseController
             $date = Carbon::now()->format('Y-m-d');
         }
 
-
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
             ->with('status_pengguna')
             ->whereHas('status_pengguna', function ($query) {
@@ -244,8 +248,11 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['id_presensi_pengguna'] = "";
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
-
+            if (isset($shiftPengguna['start_time'])) {
+                $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+            } else {
+                $shiftMaster = NULL;
+            }
             $hasil[$key]['shift'] = false;
             if ($shiftPengguna) {
                 $hasil[$key]['shift'] = true;
@@ -274,10 +281,6 @@ class HistoriAbsensiController extends BaseController
                     $jumlah_telat++;
                     $hasil[$key]['status'] = "Masuk | Telat";
                 }
-
-
-
-
 
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
                     $jumlah_pulangcepat++;

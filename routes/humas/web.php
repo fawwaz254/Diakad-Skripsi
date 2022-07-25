@@ -96,7 +96,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 			});
 
-
 			Route::group(array('prefix' => 'histori-absensi'), function () {
 				Route::get('export-laravel-mount/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
 				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
@@ -118,6 +117,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
 				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
 				Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
+			});
+
+			Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
+
+				Route::get('/', 'Humas\Absensi\HistoriAbsensiSiswaController@viewHistoriAbsensiSiswa');
+				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
+				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
+				Route::get('/detail/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+
+
 			});
 		});
 
