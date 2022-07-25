@@ -10,6 +10,7 @@ use App\Models\FPDevice;
 use App\Models\FPAttendance;
 use App\Models\PresensiPengguna;
 use App\Models\Pengguna;
+use App\Models\Sekolah;
 
 use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
@@ -107,6 +108,7 @@ class FingerprintController extends BaseController
 
                 }else{
                     $item = new FPAttendance;
+                    $item->id_fp_device = $device->id_fp_device;
                     $item->username = $data['username'];
                     $item->status = $data['status'];
                     $item->tanggal = $data['tanggal'];
@@ -127,19 +129,26 @@ class FingerprintController extends BaseController
                         $presensi->date = $item->tanggal;
                     }
 
-                    if($item->status == 0){
-                        $presensi->check_in = $item->fp_date;
-                        $presensi->status = null;
-                        $presensi->notes = null;
-                        $presensi->save();
+                    if($item->status == 255){
+                        if(!empty($presensi->check_in)){
+                            $presensi->check_in = $item->fp_date;
+                        }else{
+                            if(Carbon::parse($presensi->check_in)->diffInMinutes($item->fp_date) > 100){
+                                $presensi->check_out = $item->fp_date;
+                            }
+                        }
+                    }else{
+                        if($item->status == 0){
+                            $presensi->check_in = $item->fp_date;
+                        }
+                        
+                        if($item->status == 1){
+                            $presensi->check_out = $item->fp_date;
+                        }
                     }
-
-                    if($item->status == 1){
-                        $presensi->check_out = $item->fp_date;
-                        $presensi->status = null;
-                        $presensi->notes = null;
-                        $presensi->save();
-                    }
+                    $presensi->status = null;
+                    $presensi->notes = null;
+                    $presensi->save();
                 }
             }
             return 'OK';

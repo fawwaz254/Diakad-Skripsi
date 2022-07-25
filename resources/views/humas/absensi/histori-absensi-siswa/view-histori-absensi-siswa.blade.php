@@ -1,0 +1,129 @@
+<div class="container-fluid">
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <button type="button" onclick="viewGuru()" class="btn btn-default">
+                Data Histori Absensi Guru dan Pegawai
+            </button>
+            <button type="button" class="btn btn-primary">
+                Data Histori Absensi Siswa
+            </button>
+
+            <div class="card" style="margin-top: 10px">
+                <div class="header">
+                    <h2>
+                        DATA SISWA
+                    </h2>
+                </div>
+                <div class="body">
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
+                        {{ csrf_field() }}
+                        {{-- {{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-data-siswa') }} --}}
+                        <div class="row clearfix">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Kelas
+                                </h2>
+                                <select class="form-control show-tick" name="kelas">
+                                    <option value="0">-- Pilih Kelas --</option>
+                                    @foreach ($kelas as $k)
+                                        <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <h2 class="card-inside-title">
+                                        Tanggal
+                                    </h2>
+                                    <input type="date" class="form-control" value="{{ $date }}"
+                                        name="date" aria-required="true" aria-invalid="true">
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                            class="material-icons">save</i><span>Tampilkan</span></button>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="body" >
+                <div class="font-bold ">Laporan Harian</div>
+                <br>
+                <table id="example" class="table table-striped table-bordered" style="width:100%; 
+                padding: 10px; " >
+                    <thead>
+                    <tr>
+                      <th>Hadir</th>
+                      <th>Hadir Terlambat</th>
+                      <th>Belum Hadir</th>
+                      <th>Izin</th>
+                      <th>Sakit</th>
+                      <th>Alpha</th>
+                    </tr>
+                    </thead>
+                    <tr>
+                      <td>{{ $jumlah_hadir }}</td>
+                      <td>{{ $jumlah_telat }}</td>
+                   <td>0</td>
+                   <td>{{ $jumlah_izin }}</td>
+                   <td>{{ $jumlah_sakit }}</td>
+                   <td>{{ $jumlah_alpha }}</td>
+                    </tr>
+                  </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@include('scriptjs')
+<script type="text/javascript">
+function viewGuru(){
+        window.location='/humas#absensi/histori-absensi'
+    }
+
+
+</script>
+{{-- <script type="text/javascript">
+    $(document).ready(function() {
+        $('select').select();
+    });
+
+    var modul_url = 'absensi';
+
+    $('#jurusan').on('change', function(e) {
+        console.log(e);
+ 
+        var id_jurusan = e.target.value;
+        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'histori-absensi-siswa/get-kelas/' + id_jurusan,
+            function(data) {
+                console.log(data);
+                $('#kelas').empty();
+
+
+                $('#kelas').append($("<option>")
+                    .attr("value", 0)
+                    .text("-- Semua --")
+                );
+                $.each(data, function(index, kelasObj) {
+                    $('#kelas').append($("<option>")
+                        .attr("value", kelasObj.id_kelas)
+                        .text(kelasObj.nm_kelas)
+                    );
+                })
+
+                $('select').select();
+            });
+    });
+</script> --}}
