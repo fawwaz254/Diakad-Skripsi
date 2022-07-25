@@ -97,7 +97,7 @@
                             <tr>
                                 <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">Nama</th>
-                                <th>Role</th>
+                        
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Status</th>
@@ -111,10 +111,10 @@
                                     @else
                                     <tr>
                                 @endif
-                                @if ($r['shift'])
+                                {{-- @if ($r['shift']) --}}
                                     <td style="text-align: center;">{{ $loop->iteration }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                                    <td>{{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+                  
                                     <td>{{ $r['check_in'] }}</td>
                                     <td>{{ $r['check_out'] }}</td>
                                     <td>{{ $r['status'] }}</td>
@@ -138,8 +138,8 @@
                                         @endif
                                     </td>
                                     </tr>
-                                @else
-                                @endif
+                                {{-- @else --}}
+                                {{-- @endif --}}
                             @endforeach
                         </tbody>
                     </table>

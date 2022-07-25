@@ -83,7 +83,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
-            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['nm_pengguna'] = $value->pengguna->nm_pengguna;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
@@ -124,16 +124,12 @@ class HistoriAbsensiSiswaController extends Controller
                     $hasil[$key]['status'] = "Masuk | Telat";
                 }
 
-               
-
                 if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL) {
                     $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 }
                 if ($attendance->check_out) {
                     $hasil[$key]['check_out'] = $attendance->check_out;
                 }
-
-            
 
                 if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
@@ -166,8 +162,6 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-
-
 
         return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa',compact('auth_data','kelas','date','jumlah_hadir','jumlah_sakit','jumlah_izin','jumlah_telat','jumlah_alpha','pengguna','hasil'));
 
