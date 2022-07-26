@@ -10,10 +10,12 @@ use App\Models\Kelas;
 use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
 use App\Models\PresensiPengguna;
+use App\Models\Sekolah;
 use App\Models\ShiftMaster;
 use App\Models\ShiftPengguna;
 use App\Models\Siswa;
 use App\Models\StatusPengguna;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 
 class HistoriAbsensiSiswaController extends Controller
@@ -52,6 +54,77 @@ class HistoriAbsensiSiswaController extends Controller
         }
         
     }
+
+    public function storeShiftPengguna(Request $request, $date1 , $date2)
+    {
+        set_time_limit(9800);
+        // $input = (object) $request->input();
+
+
+        //validasi cekin
+
+       
+
+        $startDate = new Carbon('first day of' .  $date1 . '2022');
+    
+        $endDate =  new Carbon('last day of' . $date2 . '2022');
+        // $nameDay =  ;
+
+        $prefix = Sekolah::first()->prefix;
+
+        if ($startDate > $endDate) {
+            return [
+                'status' => 300, // fail
+                'message' => 'Bulan awal harus lebih kecil dari bulan akhir'
+            ];
+        }
+
+        $pengguna = Siswa::with('pengguna','pengguna.status_pengguna')
+        ->whereHas('pengguna.status_pengguna', function ($query)  {
+           $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->get();
+
+        // foreach( $pengguna as $p ){
+        //     dd($p->pengguna->id_pengguna);
+        // }
+
+
+        // $pengguna = $sis;
+        $dates = CarbonPeriod::create($startDate, $endDate);
+       
+        foreach ($pengguna as $user) {
+            foreach ($dates as $value) {
+                $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user->pengguna->id_pengguna)
+                    ->where('date', $value->format('Y-m-d'))
+                    ->first();
+                //validasi apakah sudah ada apa belum datanya
+                if ($shiftPenggunaId) {
+                    $dataUpdate['id_shift_master'] = 'Siswa';
+                    $shiftPenggunaId->update($dataUpdate);
+                } else {
+                    $now = Carbon::now(env('APP_TIMEZONE', ''));
+                    $html = '';
+                    $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
+                    $list_data['id_pengguna'] = $user->pengguna->id_pengguna;
+                    $list_data['date'] =  $value->format('Y-m-d');
+                    $list_data['id_shift_master'] = 'Siswa';
+
+                    ShiftPengguna::create($list_data);
+                }
+            }
+        }
+
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'link' => '/humas#',
+            'message' => 'Tambah data Shift berhasil '
+
+        ];
+
+        // return redirect("/humas#absensi/shift_pengguna");
+    }
+
+
 
     public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date){
     
