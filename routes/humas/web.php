@@ -84,10 +84,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
 				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');
 				Route::post('/managementShift/{id}/delete', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@destroyShiftMaster');
-
 				Route::get('/', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
 				Route::get('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
-
 				Route::post('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftPengguna');
 				Route::get('/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
 				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
@@ -125,6 +123,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
 				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
 				Route::get('/detail/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+				//buat generate shift siswa
+				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
+
 
 
 			});
