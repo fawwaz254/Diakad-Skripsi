@@ -72,7 +72,7 @@ class UploadDataGuruController extends BaseController
                     $unit = UnitKerja::select('id_unit_kerja')->where('nm_unit_kerja', '=', $value['unit_kerja'])->first();
 
                     if ($unit == null || $jenis_kelamin == null || $status == null) {
-                        $arr[] = [];
+                        // $arr[] = [];
                     } else {
                         //generate id
                         $id_guru = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -154,7 +154,7 @@ class UploadDataGuruController extends BaseController
                     DB::rollback();
                     // something went wrong
                     return [
-                        'status' => 203, // GAGAL
+                        'status' => 300, // GAGAL
                         'message' => 'Upload Data Guru Gagal',
                     ];
                 }
