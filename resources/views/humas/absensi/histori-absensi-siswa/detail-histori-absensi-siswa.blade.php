@@ -15,14 +15,14 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-data-siswa') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
                         {{ csrf_field() }}
                         <div class="row clearfix">
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Kelas
                                 </h2>
-                                <select class="form-control show-tick" name="id_jurusan" id="jurusan">
+                                <select class="form-control show-tick" name="kelas">
                                     <option value="0">-- Semua --</option>
                                     @foreach ($kelas as $k)
                                         <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
