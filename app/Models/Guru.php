@@ -90,4 +90,8 @@ class Guru extends Model
         return $this->hasMany(PengampuMapel::class, 'id_guru');
     }
 
+    public function unit_kerja(){
+        return $this->belongsTo(UnitKerja::class, 'id_unit_kerja');
+    }
+
 }
