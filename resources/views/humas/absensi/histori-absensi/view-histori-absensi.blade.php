@@ -24,27 +24,34 @@
 
                     <div class="row clearfix">
 
-                        <div class="col-md-5">
-                            <label>Date</label>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Unit Kerja
+                            </h2>
+                            <select class="form-control show-tick" name="unit_kerja">
+                                <option value="0">-- Semua --</option>
+                                <option value="1">Pegawai</option>
+                                @foreach ($unit_kerja as $uk)
+                                    <option value="{{ $uk->id_unit_kerja }}">{{ $uk->nm_unit_kerja }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                            Date
+                            </h2>
                             <input type="date" class="form-control" value="{{ $date }}" name="date"
                                 aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-md-2" style="display: flex; margin-top:27px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div>
-                                <button type="button" class="btn bg-purple waves-effect"
-                                    onclick="filterAction()">Change Date</button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"   onclick="filterAction()"><i
+                                    class="material-icons">save</i><span>Tampilkan</span></button>
+                                {{-- <button type="button" class="btn bg-purple waves-effect"
+                                    onclick="filterAction()">Change Date</button> --}}
                             </div>
-                            <div style="margin-left:10px; ">
-                                <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}"
-                                    target="_blank" class="btn bg-purple waves-effect">
-                                    <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
-                            </div>
-                            <div style="margin-left:10px; ">
-                                <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}"
-                                    target="_blank" class="btn bg-purple waves-effect">
-                                    <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
-                            </div>
+                            
                         </div>
 
                     </div>
@@ -56,7 +63,48 @@
     </div>
 
     <br>
-
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+              
+                    <div class="header"><h2>Laporan Harian</h2>
+                    </div>
+                    <br>
+                    <div class="body" >
+                    <div class="table-responsive ">
+                        <table class="table table-bordered" width="600px">
+                            <thead style="background:#9C27B0;color:white">
+                    {{-- <table id="example" class="table table-striped table-bordered" style="width:100%; 
+                    padding: 10px; " > --}}
+                       
+                        <tr>
+                          <th style="text-align: center;">Hadir</th>
+                          <th style="text-align: center;">Hadir Terlambat</th>
+                          <th style="text-align: center;">Belum Hadir</th>
+                          <th style="text-align: center;">Izin</th>
+                          <th style="text-align: center;">Sakit</th>
+                          <th style="text-align: center;">Alpha</th>
+                          <th style="text-align: center;">Tidak Checkout</th>
+                          <th style="text-align: center;">Hadir Pulang Lebih Awal</th>
+                        </tr>
+                        </thead>
+                        <tr>
+                          <td style="text-align: center;">{{ $jumlah_hadir }}</td>
+                          <td style="text-align: center;">{{ $jumlah_telat }}</td>
+                       <td style="text-align: center;">0</td>
+                       <td style="text-align: center;">{{ $jumlah_izin }}</td>
+                       <td style="text-align: center;">{{ $jumlah_sakit }}</td>
+                       <td style="text-align: center;">{{ $jumlah_alpha }}</td>
+                       <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
+                       <td style="text-align: center;">{{ $tidak_checkout }}</td>
+                        </tr>
+                      </table>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    {{-- </div>
     <div class="row">
         <div class="col-md-8">
             <div class="card">
@@ -103,10 +151,17 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <br>
-    <div class="row clearfix">
+        <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}"
+            target="_blank" class="btn bg-purple waves-effect">
+            <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+        <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}"
+            target="_blank" class="btn bg-purple waves-effect">
+            <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
+    <br>
+    <div class="row clearfix" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
@@ -120,7 +175,7 @@
                                 <tr>
                                     <th style="text-align: center;">#</th>
                                     <th style="text-align: center;">Nama</th>
-                                    <th>Role</th>
+                                    <th>Unit Kerja</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
                                     <th>Status</th>
@@ -128,6 +183,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                             
                                 @foreach ($hasil as $key => $r)
                                     @if ($key % 2 == 1)
                                         <tr style="background: #DDA0DD">
@@ -137,7 +193,7 @@
                                     @if ($r['shift'])
                                         <td style="text-align: center;">{{ $loop->iteration }}</td>
                                         <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                                        <td>{{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+                                        <td>{{ $r['unit_kerja']}}</td>
                                         <td>{{ $r['check_in'] }}</td>
                                         <td>{{ $r['check_out'] }}</td>
                                         <td>{{ $r['status'] }}</td>
@@ -164,6 +220,7 @@
                                     @else
                                     @endif
                                 @endforeach
+                                
                             </tbody>
                         </table>
                     </div>
@@ -182,7 +239,7 @@ function viewSiswa(){
 
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val());
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $('select[name=unit_kerja]').val());
     }
 
     function addAbsensi(id_pengguna) {
