@@ -422,4 +422,47 @@ class HistoriAbsensiSiswaController extends Controller
         $products = $hasil;
         return Excel::download(new HistoriAbsensiDay($products), 'download_harian.xlsx');
     }
+
+    public function createHistoriAbsensi(Request $request, $id_pengguna = null, $kelas=null, $date = null)
+    {
+        return view('humas/absensi/histori-absensi-siswa/add-histori-absensi', compact('id_pengguna', 'date', 'kelas'));
+    }
+
+    public function storeHistoriAbsensi(Request $request, $id_pengguna = null,$kelas= null , $date = null)
+    {
+
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $prefix = Sekolah::first()->prefix;
+        $uuid = $prefix . strtotime($now) . uniqid();
+        $input = $request->input();
+        $status = $input['status'];
+        $notes = $input['notes'];
+        PresensiPengguna::create(['id_presensi_pengguna' => $uuid, 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
+        return redirect("/humas#absensi/histori-absensi-siswa/detail/". $kelas . "/"  . $date);
+    }
+
+    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
+    {
+        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
+        return $id_presensi_pengguna;
+    }
+
+    public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $id_kelas= null, $date = null)
+    {
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+        return view('humas/absensi/histori-absensi-siswa/edit-histori-absensi', compact('presences', 'date','id_kelas'));
+    }
+
+    public function updateHistoriAbsensi(Request $request, $id_presensi_pengguna = null,$id_kelas=null ,$date = null)
+    {
+        $input = $request->input();
+        $presences = PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->first();
+        $presences->update(['status' => $input['status'], 'notes' => $input['notes'], 'check_in' => $input['check_in'], 'check_out' => $input['check_out']]);
+        // return [
+        //     'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
+        //     'path' => 'absensi/histori-absensi/',
+        //     'message' => 'Data Absensi Berhasil Di Update'
+        // ];
+        return redirect("/humas#absensi/histori-absensi-siswa/detail/".$id_kelas . '/' . $date);
+    }
 }

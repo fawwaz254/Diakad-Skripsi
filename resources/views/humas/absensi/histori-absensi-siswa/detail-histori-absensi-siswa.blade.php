@@ -90,7 +90,7 @@
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
 <br>
-
+<input type="hidden" value="{{ $id_kelas }}" name="id_kelas">
 <div class="row clearfix" style="margin-top: 10px">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
@@ -163,9 +163,52 @@ function viewGuru(){
         window.location='/humas#absensi/histori-absensi'
     }
 
+    function addAbsensi(id_pengguna) {
+        window.location = '/humas#absensi/histori-absensi-siswa/' + id_pengguna + '/' +  $('input[name=id_kelas]').val() + '/' + $('input[name=date]').val() + '/add'
+    }
 
+    function editAbsensi(currUser) {
+        window.location = '/humas#absensi/histori-absensi-siswa/' + currUser + '/' +  $('input[name=id_kelas]').val() + '/' + $('input[name=date]').val() + '/edit'
+    }
+
+
+    $(".delete-record").click(function() {
+        var token = $("meta[name='csrf-token']").attr("content");
+        var id = $(this).data("id");
+        swal({
+                title: "Are you sure?",
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('.delete-record').attr("disabled", true);
+                    //swall
+                    $.ajax({
+                        url: ` /humas/absensi/histori-absensi-siswa/${id}/delete`,
+                        type: "post",
+
+                        data: {
+                            _token: token,
+                        },
+
+                        success: function() {
+                            swal({
+                                title: "Delete Success",
+                                text: "data berhasil dihapus",
+                                icon: "success",
+                            });
+                            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
+                            $('input[name=id_kelas]').val() + '/' +
+                                $('input[name=date]').val());
+                        },
+                    });
+                }
+                return;
+            }
+        );
+    });
 </script>
-{{-- <script type="text/javascript">
+{{-- {{-- <script type="text/javascript">
     $(document).ready(function() {
         $('select').select();
     });
