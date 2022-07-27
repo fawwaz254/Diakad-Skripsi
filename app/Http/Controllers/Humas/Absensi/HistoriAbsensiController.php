@@ -246,18 +246,6 @@ class HistoriAbsensiController extends BaseController
                 ->get();
         }
 
-        // if ($unit_kerja != null && $unit_kerja != 0  && $unit_kerja != 1) {
-
-
-        if ($unit_kerja == 1) {
-            //pegawai
-
-        } elseif ($unit_kerja == null) { } else {
-
-            // dd( $pengguna );
-        }
-
-
         //  $pengguna = Pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')->orderBy('status_join_table', 'desc')->get();
         // dd($pengguna);
         // $shiftPengguna = ShiftPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $date)->first();
@@ -294,7 +282,7 @@ class HistoriAbsensiController extends BaseController
             if (isset($shiftPengguna['start_time'])) {
                 $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
             } else {
-                $shiftMaster = NULL;
+                $shiftMaster = null;
             }
             $hasil[$key]['shift'] = false;
             if ($shiftPengguna) {
@@ -379,8 +367,8 @@ class HistoriAbsensiController extends BaseController
             }
         }
         // dd($hasil);
-        $unit_kerja = UnitKerja::all();
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'date', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja'));
+        $list_unit_kerja = UnitKerja::all();
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'list_unit_kerja','date', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)

@@ -29,10 +29,10 @@
                                 Unit Kerja
                             </h2>
                             <select class="form-control show-tick" name="unit_kerja">
-                                <option value="0">-- Semua --</option>
-                                <option value="1">Pegawai</option>
-                                @foreach ($unit_kerja as $uk)
-                                    <option value="{{ $uk->id_unit_kerja }}">{{ $uk->nm_unit_kerja }}</option>
+                                <option @if($unit_kerja == "0" || $unit_kerja == null)  selected  @endif  value="0">-- Semua --</option>
+                                <option @if($unit_kerja == "1" )  selected  @endif value="1">Pegawai</option>
+                                @foreach ($list_unit_kerja as $uk)
+                                    <option @if($unit_kerja == $uk->id_unit_kerja )  selected  @endif value="{{ $uk->id_unit_kerja }}">{{ $uk->nm_unit_kerja }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -95,8 +95,9 @@
                        <td style="text-align: center;">{{ $jumlah_izin }}</td>
                        <td style="text-align: center;">{{ $jumlah_sakit }}</td>
                        <td style="text-align: center;">{{ $jumlah_alpha }}</td>
-                       <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
                        <td style="text-align: center;">{{ $tidak_checkout }}</td>
+                       <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
+                      
                         </tr>
                       </table>
                 </div>

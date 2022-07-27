@@ -25,7 +25,7 @@
                                 <select class="form-control show-tick" name="kelas">
                                     <option value="0">-- Semua --</option>
                                     @foreach ($kelas as $k)
-                                        <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
+                                        <option @if($id_kelas == $k->id_kelas )  selected  @endif  value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                     @endforeach
                                 </select>
                             </div>
