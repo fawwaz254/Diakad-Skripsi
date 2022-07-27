@@ -218,47 +218,43 @@ class HistoriAbsensiController extends BaseController
             $date = Carbon::now()->format('Y-m-d');
         }
 
-if(isset($unit_kerja) && $unit_kerja != "0"){
-   if($unit_kerja == "1"){
-        $pengguna = pengguna::where('status_join_table', 1)->where('username', '!=', 'admin')
-        ->with('status_pengguna', 'guru.unit_kerja')
-        ->whereHas('status_pengguna', function ($query) {
-            $query->where('nm_status_pengguna', '=', 'AKTIF');
-        })
-        ->get();
-
-    }else{
-        $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna', 'guru.unit_kerja')
-        ->whereHas('status_pengguna', function ($query) {
-            $query->where('nm_status_pengguna', '=', 'AKTIF');
-        })
-        ->whereHas('guru.unit_kerja', function ($query) use ($unit_kerja) {
-            $query->where('id_unit_kerja', '=', $unit_kerja);
-        })
-        ->get();
-    }
-    
-}else{
-    $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-    ->with('status_pengguna', 'guru.unit_kerja')
-    ->whereHas('status_pengguna', function ($query) {
-        $query->where('nm_status_pengguna', '=', 'AKTIF');
-    })
-    ->get();   
-}
+        if (isset($unit_kerja) && $unit_kerja != "0") {
+            if ($unit_kerja == "1") {
+                $pengguna = pengguna::where('status_join_table', 1)->where('username', '!=', 'admin')
+                    ->with('status_pengguna', 'guru.unit_kerja')
+                    ->whereHas('status_pengguna', function ($query) {
+                        $query->where('nm_status_pengguna', '=', 'AKTIF');
+                    })
+                    ->get();
+            } else {
+                $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
+                    ->with('status_pengguna', 'guru.unit_kerja')
+                    ->whereHas('status_pengguna', function ($query) {
+                        $query->where('nm_status_pengguna', '=', 'AKTIF');
+                    })
+                    ->whereHas('guru.unit_kerja', function ($query) use ($unit_kerja) {
+                        $query->where('id_unit_kerja', '=', $unit_kerja);
+                    })
+                    ->get();
+            }
+        } else {
+            $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
+                ->with('status_pengguna', 'guru.unit_kerja')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })
+                ->get();
+        }
 
         // if ($unit_kerja != null && $unit_kerja != 0  && $unit_kerja != 1) {
-          
+
 
         if ($unit_kerja == 1) {
             //pegawai
-           
-        }elseif($unit_kerja == null ){
 
-        } else {
-                   
-                // dd( $pengguna );
+        } elseif ($unit_kerja == null) { } else {
+
+            // dd( $pengguna );
         }
 
 

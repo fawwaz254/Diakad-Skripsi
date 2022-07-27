@@ -126,6 +126,11 @@ class Pengguna extends Authenticatable
         return $this->belongsTo('App\Models\StatusPengguna', 'id_status_pengguna');
     }
 
+    public function siswa()
+    {
+        return $this->belongsTo('App\Models\Siswa', 'id_pengguna','id_pengguna');
+    }
+
     public function pengisian_kegiatan_harian()
     {
         return $this->hasMany(PengisianKegiatanHarian::class, 'id_pengguna');

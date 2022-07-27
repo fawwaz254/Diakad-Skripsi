@@ -14,7 +14,7 @@
         <tr>
             <th style="text-align: center; background-color: #d8d8d8">No</th>
             <th style="background-color: #d8d8d8">Nama</th>
-            <th style="background-color: #d8d8d8">Role</th>
+            {{-- <th style="background-color: #d8d8d8">Role</th> --}}
             <th style="background-color: #d8d8d8">Check In</th>
             <th style="background-color: #d8d8d8">Check Out</th>
             <th style="background-color: #d8d8d8">Status</th>
@@ -30,7 +30,7 @@
             @endif
             <td style="text-align: center;">{{ $loop->iteration }}</td>
             <td>{{ $r['nm_pengguna'] }}</td>
-            <td>{{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+            {{-- <td>{{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td> --}}
             <td>{{ $r['check_in'] }}</td>
             <td>{{ $r['check_out'] }}</td>
             @if ($r['status'] == 'sakit' || $r['status'] == 'izin')

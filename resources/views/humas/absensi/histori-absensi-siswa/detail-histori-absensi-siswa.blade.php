@@ -83,7 +83,15 @@
     </div>
 </div>
 <br>
-<div class="row clearfix">
+<a href="humas/absensi/histori-absensi-siswa/export-laravel/{{ $id_kelas }}/{{ $date }}"
+    target="_blank" class="btn bg-purple waves-effect">
+    <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+<a href="humas/absensi/histori-absensi-siswa/export-laravel-mount/{{ $id_kelas }}/{{ $date }}"
+    target="_blank" class="btn bg-purple waves-effect">
+    <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
+<br>
+
+<div class="row clearfix" style="margin-top: 10px">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="card">
             <div class="header">
