@@ -125,6 +125,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/detail/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
 				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
 				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
+				//buat izin / sakit
+				Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
+				Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
+				Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
 
 				//buat generate shift siswa
 				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
