@@ -177,10 +177,6 @@ class AuthGlobalController extends BaseController
     public function actionSaveProfile(Request $request)
     {
         $input = (object) $request->input();
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'role' => 'required',
-        ]);
 
         $pengguna = $input->auth_data->pengguna;
         $pengguna->nm_pengguna = $input->name;
