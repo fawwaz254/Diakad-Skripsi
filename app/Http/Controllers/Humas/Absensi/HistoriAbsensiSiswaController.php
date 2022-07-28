@@ -134,28 +134,32 @@ class HistoriAbsensiSiswaController extends Controller
         $jumlah_telat = 0;
         $jumlah_alpha = 0;
         // dd($id_kelas );
-        $pengguna = Siswa::where('id_kelas', $id_kelas)->with('pengguna')->with('pengguna.status_pengguna')
-            ->whereHas('pengguna.status_pengguna', function ($query) {
+        $pengguna = Pengguna::with('status_pengguna','siswa')
+            ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })
+            ->whereHas('siswa', function ($query) use($id_kelas){
+                $query->where('id_kelas', '=', $id_kelas);
             })->get();
-
+    
 
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
-            $hasil[$key]['nm_pengguna'] = $value->pengguna->nm_pengguna;
+            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
             $hasil[$key]['id_presensi_pengguna'] = "";
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            if (isset($shiftPengguna['start_time'])) {
+            // dd( $shiftPengguna['id_shift_master']);
+            // if (isset($shiftPengguna['start_time'])) {
                 $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
-            } else {
-                $shiftMaster = NULL;
-            }
+            // } else {
+            //     $shiftMaster = NULL;
+            // }
             $hasil[$key]['shift'] = false;
             if ($shiftPengguna) {
                 $hasil[$key]['shift'] = true;
@@ -179,6 +183,7 @@ class HistoriAbsensiSiswaController extends Controller
                     $hasil[$key]['check_in'] = $attendance->check_in;
                     $jumlah_hadir++;
                 }
+                // dd($shiftMaster['start_time']);
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                         $jumlah_telat++;
@@ -227,7 +232,6 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-
         return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas'));
     }
 

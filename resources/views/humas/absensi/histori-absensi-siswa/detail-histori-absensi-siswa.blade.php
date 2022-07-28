@@ -119,7 +119,7 @@
                                     @else
                                     <tr>
                                 @endif
-                                {{-- @if ($r['shift']) --}}
+                                @if ($r['shift'])
                                     <td style="text-align: center;">{{ $loop->iteration }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
                   
@@ -146,8 +146,8 @@
                                         @endif
                                     </td>
                                     </tr>
-                                {{-- @else --}}
-                                {{-- @endif --}}
+                                @else
+                                @endif
                             @endforeach
                         </tbody>
                     </table>

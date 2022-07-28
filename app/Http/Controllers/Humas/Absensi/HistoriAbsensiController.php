@@ -279,11 +279,11 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['id_presensi_pengguna'] = "";
             $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            if (isset($shiftPengguna['start_time'])) {
+            // if (isset($shiftPengguna['start_time'])) {
                 $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
-            } else {
-                $shiftMaster = null;
-            }
+            // } else {
+            //     $shiftMaster = null;
+            // }
             $hasil[$key]['shift'] = false;
             if ($shiftPengguna) {
                 $hasil[$key]['shift'] = true;
