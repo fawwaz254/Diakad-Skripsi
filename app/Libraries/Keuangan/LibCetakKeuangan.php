@@ -1130,7 +1130,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya','tagihan_biaya.detail_biaya.bulan' ,'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -1173,6 +1173,7 @@ class LibCetakKeuangan{
                     'nis_siswa' => $item->tagihan_biaya->siswa->nis_siswa,
                     'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
                     'kelas_siswa' => $nm_kelas,
+                    'detail_biaya' => $rwytBayar,
                     'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
                     'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
                     'frekuensi_pembayaran' => $rwytBayar->count(),
