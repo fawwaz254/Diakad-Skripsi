@@ -91,7 +91,7 @@
                         <tr>
                           <td style="text-align: center;">{{ $jumlah_hadir }}</td>
                           <td style="text-align: center;">{{ $jumlah_telat }}</td>
-                       <td style="text-align: center;">0</td>
+                       <td style="text-align: center;">{{ $belum_absent }}</td>
                        <td style="text-align: center;">{{ $jumlah_izin }}</td>
                        <td style="text-align: center;">{{ $jumlah_sakit }}</td>
                        <td style="text-align: center;">{{ $jumlah_alpha }}</td>

@@ -133,6 +133,7 @@ class HistoriAbsensiSiswaController extends Controller
         $jumlah_izin = 0;
         $jumlah_telat = 0;
         $jumlah_alpha = 0;
+        $belum_absent = 0;
         // dd($id_kelas );
         $pengguna = Pengguna::with('status_pengguna','siswa')
             ->whereHas('status_pengguna', function ($query) {
@@ -218,6 +219,7 @@ class HistoriAbsensiSiswaController extends Controller
                         $jumlah_alpha++;
                     } else if ($date == Carbon::now()->format('Y-m-d')) {
                         $hasil[$key]['status'] = 'Belum Absent';
+                        $belum_absent++;
                     } else {
                         $hasil[$key]['status'] = '';
                     }
@@ -232,7 +234,7 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas'));
+        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas'));
     }
 
 
