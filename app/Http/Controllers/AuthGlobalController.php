@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use App\Models\RolePengguna;
+use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\Process\Process;
-
-use Carbon\Carbon;
-
-use App\Libraries\WinpayPHP\Winpay;
-use App\Models\Role;
-use App\Models\RolePengguna;
-use Yajra\Datatables\Datatables;
-
-use Auth;
-use DB;
 use Session;
+use Symfony\Component\Process\Process;
 use Validator;
 
 class AuthGlobalController extends BaseController
@@ -65,13 +59,13 @@ class AuthGlobalController extends BaseController
         $validator = Validator::make($request->all(), [
             'is_agree' => 'required|in:1',
         ], [
-            'is_agree.required' => 'Silahkan klik centang pernyataan potensi menggunakan PASSWORD DEFAULT'
+            'is_agree.required' => 'Silahkan klik centang pernyataan potensi menggunakan PASSWORD DEFAULT',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // Failed
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         }
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -80,13 +74,13 @@ class AuthGlobalController extends BaseController
         $pengguna = $input->auth_data->pengguna;
 
         $pengguna->must_change_password = 0;
-        $pengguna->last_time_password   = $now;
+        $pengguna->last_time_password = $now;
         $pengguna->save();
-        
+
         return [
             'status' => 201, // SUCCESS AND REDIRECT
             'link' => url('/'),
-            'message' => 'Use default password successfully'
+            'message' => 'Use default password successfully',
         ];
     }
 
@@ -95,13 +89,13 @@ class AuthGlobalController extends BaseController
         $validator = Validator::make($request->all(), [
             'old_password' => 'required',
             'new_password' => 'required',
-            'new_confirm_password' => 'required'
+            'new_confirm_password' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // Failed
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         }
         // mengambil waktu sekarang
@@ -111,28 +105,28 @@ class AuthGlobalController extends BaseController
         $pengguna = $input->auth_data->pengguna;
         if ($input->new_password == $input->new_confirm_password) {
             if (Auth::once(['username' => $pengguna->username, 'password' => $input->old_password])) {
-                $pengguna->password             = Hash::make($input->new_password);
-                $pengguna->last_time_password   = $now;
+                $pengguna->password = Hash::make($input->new_password);
+                $pengguna->last_time_password = $now;
                 $pengguna->is_online = 0;
                 $pengguna->save();
-                
+
                 Session::flush();
                 Auth::logout();
                 return [
                     'status' => 201, // SUCCESS AND REDIRECT
                     'link' => url('/'),
-                    'message' => 'Change password successfully'
+                    'message' => 'Change password successfully',
                 ];
             } else {
                 return [
                     'status' => 300, // FAILED
-                    'message' => 'Your old password is incorrect'
+                    'message' => 'Your old password is incorrect',
                 ];
             }
         } else {
             return [
                 'status' => 300, // FAILED
-                'message' => 'Re-type your new password again'
+                'message' => 'Re-type your new password again',
             ];
         }
     }
@@ -141,13 +135,13 @@ class AuthGlobalController extends BaseController
     {
         $validator = Validator::make($request->all(), [
             'new_password' => 'required',
-            'new_confirm_password' => 'required'
+            'new_confirm_password' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // Failed
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         }
         // mengambil waktu sekarang
@@ -159,23 +153,23 @@ class AuthGlobalController extends BaseController
             if ($input->new_password == $pengguna->username) {
                 return [
                     'status' => 300, // FAILED
-                    'message' => 'Mohon tidak menggunakan password lama Anda'
+                    'message' => 'Mohon tidak menggunakan password lama Anda',
                 ];
             }
-            $pengguna->password             = Hash::make($input->new_password);
-            $pengguna->last_time_password   = $now;
-            $pengguna->must_change_password   = 0;
+            $pengguna->password = Hash::make($input->new_password);
+            $pengguna->last_time_password = $now;
+            $pengguna->must_change_password = 0;
             $pengguna->save();
-            
+
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
                 'link' => url('/'),
-                'message' => 'Sukses mengubah password'
+                'message' => 'Sukses mengubah password',
             ];
         } else {
             return [
                 'status' => 300, // FAILED
-                'message' => 'Ketik kembali password baru Anda'
+                'message' => 'Ketik kembali password baru Anda',
             ];
         }
     }
@@ -183,10 +177,6 @@ class AuthGlobalController extends BaseController
     public function actionSaveProfile(Request $request)
     {
         $input = (object) $request->input();
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'role' => 'required'
-        ]);
 
         $pengguna = $input->auth_data->pengguna;
         $pengguna->nm_pengguna = $input->name;
@@ -202,7 +192,7 @@ class AuthGlobalController extends BaseController
                     $role_pengguna->save();
                 }
             }
-            
+
             $pengguna = $input->auth_data->pengguna;
             $pengguna->is_online = 0;
             $pengguna->save();
@@ -212,12 +202,12 @@ class AuthGlobalController extends BaseController
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
                 'link' => url('/'),
-                'message' => 'Save Profile successfully'
+                'message' => 'Save Profile successfully',
             ];
         } else {
             return [
                 'status' => 300, // FAILED
-                'message' => 'Your data is incorrect'
+                'message' => 'Your data is incorrect',
             ];
         }
     }
@@ -235,15 +225,16 @@ class AuthGlobalController extends BaseController
         return redirect('/');
     }
 
-    public function actionMerge(Request $request){
+    public function actionMerge(Request $request)
+    {
         $input = (object) $request->input();
 
-        if(!empty($input->b)){
+        if (!empty($input->b)) {
             $name_branch = $input->b;
 
             $cmd = [];
-            $cmd[] = 'sh /usr/local/bin/merge-diakad.sh "'. $name_branch .'"';
-            
+            $cmd[] = 'sh /usr/local/bin/merge-diakad.sh "' . $name_branch . '"';
+
             $process = new Process(implode(' && ', $cmd));
             $process->setTimeout(360);
             $process->run();
@@ -251,7 +242,7 @@ class AuthGlobalController extends BaseController
                 throw new \RuntimeException($process->getErrorOutput());
             }
 
-            return 'true';
+            return $process->getOutput();
         }
 
         return 'false';
