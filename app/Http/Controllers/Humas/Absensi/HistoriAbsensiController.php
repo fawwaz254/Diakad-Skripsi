@@ -258,16 +258,11 @@ class HistoriAbsensiController extends BaseController
         $jumlah_pulangcepat = 0;
         $jumlah_alpha = 0;
         $tidak_checkout = 0;
+        $belum_absent = 0;
 
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
 
         foreach ($pengguna as $key => $value) {
-            // if( $value->guru == null){
-
-            // }else{
-            //     dd($value->guru->unit_kerja->nm_unit_kerja);
-            // }
-
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
@@ -352,6 +347,7 @@ class HistoriAbsensiController extends BaseController
                         $jumlah_alpha++;
                     } else if ($date == Carbon::now()->format('Y-m-d')) {
                         $hasil[$key]['status'] = 'Belum Absent';
+                        $belum_absent++;
                     } else {
                         $hasil[$key]['status'] = '';
                     }
@@ -368,7 +364,7 @@ class HistoriAbsensiController extends BaseController
         }
         // dd($hasil);
         $list_unit_kerja = UnitKerja::all();
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'list_unit_kerja','date', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'list_unit_kerja','date', 'hasil', 'jumlah_hadir','belum_absent', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)

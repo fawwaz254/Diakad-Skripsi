@@ -72,7 +72,7 @@
                     <tr>
                       <td>{{ $jumlah_hadir }}</td>
                       <td>{{ $jumlah_telat }}</td>
-                   <td>0</td>
+                   <td>{{ $belum_absent }}</td>
                    <td>{{ $jumlah_izin }}</td>
                    <td>{{ $jumlah_sakit }}</td>
                    <td>{{ $jumlah_alpha }}</td>
