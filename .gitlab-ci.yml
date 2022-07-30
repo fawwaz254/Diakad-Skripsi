@@ -11,7 +11,7 @@ before_script:
   - echo "$SMK_PEMUDA_KRIAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMK_YPM_3_TAMAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMA_WIDYA_DARMA_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
-  - echo "$MANBAUL_HIKAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
+  - echo "$MANBAUL_HIKAM_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - ssh-keyscan $DEMO_SERVER >> ~/.ssh/known_hosts
