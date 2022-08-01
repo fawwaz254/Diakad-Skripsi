@@ -136,6 +136,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
 
 			});
+			// http://127.0.0.1:8000/humas/absensi/device/datatables
+			Route::group(array('prefix' => 'device'), function () {
+				// MENU Data Fingerprint
+				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
+				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
+			
+			});
 		});
 
 		/** ==== MODUL BURSA KERJA ==== **/

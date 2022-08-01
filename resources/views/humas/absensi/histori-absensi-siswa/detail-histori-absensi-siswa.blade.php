@@ -1,90 +1,105 @@
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <button type="button" onclick="viewGuru()" class="btn btn-default">
+            Data Histori Absensi Guru dan Pegawai
+        </button>
+        <button type="button" class="btn btn-primary">
+            Data Histori Absensi Siswa
+        </button>
+        <div class="card" style="margin-top: 10px">
+            <div class="header">
+                <h2>
+                    DATA SISWA
+                </h2>
+            </div>
+            <div class="body">
+                <form id="form-validation" method="POST"
+                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
+                    {{ csrf_field() }}
+                    <div class="row clearfix">
+                        <div class="col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Kelas
+                            </h2>
+                            <select class="form-control show-tick" name="kelas">
+                                <option value="0">-- Semua --</option>
+                                @foreach ($kelas as $k)
+                                    <option @if ($id_kelas == $k->id_kelas) selected @endif
+                                        value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-    <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <button type="button" onclick="viewGuru()" class="btn btn-default">
-                Data Histori Absensi Guru dan Pegawai
-            </button>
-            <button type="button" class="btn btn-primary">
-                Data Histori Absensi Siswa
-            </button>
-            <div class="card" style="margin-top: 10px">
-                <div class="header">
-                    <h2>
-                        DATA SISWA
-                    </h2>
-                </div>
-                <div class="body">
-                    <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
-                        {{ csrf_field() }}
-                        <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title">
-                                    Kelas
-                                </h2>
-                                <select class="form-control show-tick" name="kelas">
-                                    <option value="0">-- Semua --</option>
-                                    @foreach ($kelas as $k)
-                                        <option @if($id_kelas == $k->id_kelas )  selected  @endif  value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="row clearfix">
-                                <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <h2 class="card-inside-title">
-                                        Tanggal
-                                    </h2>
-                                    <input type="date" class="form-control" value="{{ $date }}"
-                                        name="date" aria-required="true" aria-invalid="true">
-                                </div>
-                            </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                            class="material-icons">save</i><span>Tampilkan</span></button>
-                                </div>
-                            </div>
-                    </form>
-                </div>
+                        {{-- <div class="col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Status
+                            </h2>
+                            <select class="form-control show-tick" name="kelas">
+                                <option value="0">-- Semua --</option>
+                                <option value="Masuk">Masuk</option>
+                                <option value="izin">Izin</option>
+                                <option value="sakit">Sakit</option>
+                                <option value="Masuk | Telat">Masuk | Telat</option>
+                                <option value="Alpha">Alpha</option>
+                                <option value="Belum Absent">Belum Absent</option>
+                            </select>
+                        </div> --}}
+
+                        <div class="col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Tanggal
+                            </h2>
+                            <input type="date" class="form-control" value="{{ $date }}" name="date"
+                                aria-required="true" aria-invalid="true">
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                    class="material-icons">save</i><span>Tampilkan</span></button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
 </div>
 <br>
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="card">
-            <div class="body" >
+            <div class="body">
                 <div class="font-bold ">Laporan Harian</div>
                 <br>
-                <table id="example" class="table table-striped table-bordered" style="width:100%; 
-                padding: 10px; " >
+                <table id="example" class="table table-striped table-bordered"
+                    style="width:100%; 
+                padding: 10px; ">
                     <thead>
-                    <tr>
-                      <th>Hadir</th>
-                      <th>Hadir Terlambat</th>
-                      <th>Belum Hadir</th>
-                      <th>Izin</th>
-                      <th>Sakit</th>
-                      <th>Alpha</th>
-                    </tr>
+                        <tr>
+                            <th>Hadir</th>
+                            <th>Hadir Terlambat</th>
+                            <th>Belum Hadir</th>
+                            <th>Izin</th>
+                            <th>Sakit</th>
+                            <th>Alpha</th>
+                        </tr>
                     </thead>
                     <tr>
-                      <td>{{ $jumlah_hadir }}</td>
-                      <td>{{ $jumlah_telat }}</td>
-                   <td>{{ $belum_absent }}</td>
-                   <td>{{ $jumlah_izin }}</td>
-                   <td>{{ $jumlah_sakit }}</td>
-                   <td>{{ $jumlah_alpha }}</td>
+                        <td>{{ $jumlah_hadir }}</td>
+                        <td>{{ $jumlah_telat }}</td>
+                        <td>{{ $belum_absent }}</td>
+                        <td>{{ $jumlah_izin }}</td>
+                        <td>{{ $jumlah_sakit }}</td>
+                        <td>{{ $jumlah_alpha }}</td>
                     </tr>
-                  </table>
+                </table>
             </div>
         </div>
     </div>
 </div>
 <br>
-<a href="humas/absensi/histori-absensi-siswa/export-laravel/{{ $id_kelas }}/{{ $date }}"
-    target="_blank" class="btn bg-purple waves-effect">
+<a href="humas/absensi/histori-absensi-siswa/export-laravel/{{ $id_kelas }}/{{ $date }}" target="_blank"
+    class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
 <a href="humas/absensi/histori-absensi-siswa/export-laravel-mount/{{ $id_kelas }}/{{ $date }}"
     target="_blank" class="btn bg-purple waves-effect">
@@ -105,7 +120,7 @@
                             <tr>
                                 <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">Nama</th>
-                        
+
                                 <th>Check In</th>
                                 {{-- <th>Check Out</th> --}}
                                 <th>Status</th>
@@ -122,10 +137,12 @@
                                 @if ($r['shift'])
                                     <td style="text-align: center;">{{ $loop->iteration }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                  
+
                                     <td>{{ $r['check_in'] }}</td>
                                     {{-- <td>{{ $r['check_out'] }}</td> --}}
-                                    <td @if( $r['status'] == "Masuk" ) style="background: #b5ffe0" @elseif( $r['status'] == "Alpha") style="background: #ff9494" @else style="background: #fffdb5" @endif>{{ $r['status'] }}</td>
+                                    <td
+                                        @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
+                                        {{ $r['status'] }}</td>
 
                                     <td style="text-align: center;display:flex;justify-content:center">
                                         @if ($r['id_presensi_pengguna'] == '')
@@ -138,8 +155,7 @@
                                                 onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
                                                 <i class="material-icons">edit</i>
                                             </button>
-                                            <button data-id="{{ $r['id_presensi_pengguna'] }}"
-                                                style="margin-left:3px;"
+                                            <button data-id="{{ $r['id_presensi_pengguna'] }}" style="margin-left:3px;"
                                                 class="btn bg-red waves-effect delete-record">
                                                 <i class="material-icons">delete</i>
                                             </button>
@@ -158,17 +174,19 @@
 </div>
 
 @include('scriptjs')
-<script  type="text/javascript">
-function viewGuru(){
-        window.location='/humas#absensi/histori-absensi'
+<script type="text/javascript">
+    function viewGuru() {
+        window.location = '/humas#absensi/histori-absensi'
     }
 
     function addAbsensi(id_pengguna) {
-        window.location = '/humas#absensi/histori-absensi-siswa/' + id_pengguna + '/' +  $('input[name=id_kelas]').val() + '/' + $('input[name=date]').val() + '/add'
+        window.location = '/humas#absensi/histori-absensi-siswa/' + id_pengguna + '/' + $('input[name=id_kelas]')
+        .val() + '/' + $('input[name=date]').val() + '/add'
     }
 
     function editAbsensi(currUser) {
-        window.location = '/humas#absensi/histori-absensi-siswa/' + currUser + '/' +  $('input[name=id_kelas]').val() + '/' + $('input[name=date]').val() + '/edit'
+        window.location = '/humas#absensi/histori-absensi-siswa/' + currUser + '/' + $('input[name=id_kelas]').val() +
+            '/' + $('input[name=date]').val() + '/edit'
     }
 
 
@@ -198,7 +216,7 @@ function viewGuru(){
                                 icon: "success",
                             });
                             loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
-                            $('input[name=id_kelas]').val() + '/' +
+                                $('input[name=id_kelas]').val() + '/' +
                                 $('input[name=date]').val());
                         },
                     });
@@ -239,4 +257,4 @@ function viewGuru(){
                 $('select').select();
             });
     });
-</script> --}} 
+</script> --}}
