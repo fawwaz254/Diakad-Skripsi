@@ -232,7 +232,7 @@
                                             @php
                                                 $tagihan = $data_tagihan_non_bulanan
                                                     ->where('id_siswa', $siswa->id_siswa)
-                                                    ->where('id_detail_biaya', $ket->id_detail_biaya)
+                                                    ->where('title_biaya', $ket->title_biaya)
                                                     ->first();
                                             @endphp
                                             @if (!empty($tagihan) > 0)
