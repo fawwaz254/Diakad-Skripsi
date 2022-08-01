@@ -107,7 +107,7 @@
                                 <th style="text-align: center;">Nama</th>
                         
                                 <th>Check In</th>
-                                <th>Check Out</th>
+                                {{-- <th>Check Out</th> --}}
                                 <th>Status</th>
                                 <th style="text-align: center;">Action</th>
                             </tr>
@@ -124,7 +124,7 @@
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
                   
                                     <td>{{ $r['check_in'] }}</td>
-                                    <td>{{ $r['check_out'] }}</td>
+                                    {{-- <td>{{ $r['check_out'] }}</td> --}}
                                     <td>{{ $r['status'] }}</td>
 
                                     <td style="text-align: center;display:flex;justify-content:center">

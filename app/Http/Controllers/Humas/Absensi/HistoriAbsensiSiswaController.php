@@ -150,7 +150,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
-            $hasil[$key]['check_out'] = '-';
+            // $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
             $hasil[$key]['id_presensi_pengguna'] = "";
@@ -196,20 +196,20 @@ class HistoriAbsensiSiswaController extends Controller
                     }
                 }
 
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL) {
-                        $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
-                    }
-                }
-                if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
-                }
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL) {
+                //         $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
+                //     }
+                // }
+                // if ($attendance->check_out) {
+                //     $hasil[$key]['check_out'] = $attendance->check_out;
+                // }
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
-                    }
-                }
+                //         $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
+                //     }
+                // }
 
                 // if ($attendance->notes) {
                 //     $hasil[$key]['notes'] = $attendance->notes;
@@ -307,13 +307,13 @@ class HistoriAbsensiSiswaController extends Controller
                         $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
                     }
 
-                    if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                        $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
-                    }
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                    // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                    //     $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
+                    // }
+                    // if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
-                    }
+                    //     $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                    // }
                 } else {
 
                     if ($shiftMaster) {
@@ -388,31 +388,31 @@ class HistoriAbsensiSiswaController extends Controller
                 }
 
 
-                if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                // if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 
-                    $hasil[$key]['notes'] = "Pulang lebih awal";
-                }
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                        $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
-                    }
-                }
+                //     $hasil[$key]['notes'] = "Pulang lebih awal";
+                // }
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                //         $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
+                //     }
+                // }
 
-                if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
-                }
+                // if ($attendance->check_out) {
+                //     $hasil[$key]['check_out'] = $attendance->check_out;
+                // }
                 if ($attendance->status) {
                     $hasil[$key]['status'] = $attendance->status;
                 }
-                if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                    $hasil[$key]['notes'] = 'Tidak Checkout';
-                }
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                //     $hasil[$key]['notes'] = 'Tidak Checkout';
+                // }
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key]['notes'] = "Telat & Tidak Checkout";
-                    }
-                }
+                //         $hasil[$key]['notes'] = "Telat & Tidak Checkout";
+                //     }
+                // }
 
                 if ($attendance->notes) {
                     $hasil[$key]['notes'] = $attendance->notes;
