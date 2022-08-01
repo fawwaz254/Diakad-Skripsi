@@ -192,13 +192,19 @@
                                         </select>
                                     </td>
                                 </tr>
-                                <tr hidden>
+                                <tr>
                                     <td>
-                                        <label for="dayName[Sunday]" hidden>Minggu</label>
+                                        <label for="dayName[Sunday]" >Minggu</label>
                                     </td>
                                     <td>
                                         <select name="dayName[Sunday]" class="form-control form-control-lg">
                                             <option value="" selected>Libur</option>
+                                            @foreach ($shifts as $shift)
+                                                <option value="{{ $shift['code'] }}">
+                                                    ({{ minimalisTime($shift['start_time']) }} -
+                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ $shift['code'] }}</option>
+                                            @endforeach
                                         </select>
                                     </td>
                                 </tr>
