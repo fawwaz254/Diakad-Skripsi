@@ -143,21 +143,25 @@ class HistoriAbsensiSiswaController extends Controller
                 $query->where('id_kelas', '=', $id_kelas);
             })->get();
     
-
+            $allShiftPengguna = ShiftPengguna::where('date',$date)->with('shift_master')->get();
+            $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
-            $hasil[$key]['check_out'] = '-';
+            // $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
+            // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             // dd( $shiftPengguna['id_shift_master']);
             // if (isset($shiftPengguna['start_time'])) {
-                $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+                // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
             // } else {
             //     $shiftMaster = NULL;
             // }
@@ -182,6 +186,7 @@ class HistoriAbsensiSiswaController extends Controller
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['status'] = "Masuk";
                     $jumlah_hadir++;
                 }
                 // dd($shiftMaster['start_time']);
@@ -192,20 +197,20 @@ class HistoriAbsensiSiswaController extends Controller
                     }
                 }
 
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL) {
-                        $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
-                    }
-                }
-                if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
-                }
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in >= $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out != NULL) {
+                //         $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
+                //     }
+                // }
+                // if ($attendance->check_out) {
+                //     $hasil[$key]['check_out'] = $attendance->check_out;
+                // }
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
-                    }
-                }
+                //         $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
+                //     }
+                // }
 
                 // if ($attendance->notes) {
                 //     $hasil[$key]['notes'] = $attendance->notes;
@@ -265,19 +270,23 @@ class HistoriAbsensiSiswaController extends Controller
 
 
         $dates = CarbonPeriod::create($start_date, $end_date);
-
+        $libur = ManajemenHariLibur::get();
+        $allShiftPengguna = ShiftPengguna::with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::get();
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
-
             foreach ($dates as $key2 => $date) {
-                $cek_libur = ManajemenHariLibur::where('date', $date->format('Y-m-d'))->first();
+                $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
 
                 $hasil[$key1][$key2]['status'] = '';
-                $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+                $shiftPengguna = $allShiftPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                $attendance =  $allPresensiPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();;
+                $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
+                // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
                 if ($attendance) {
 
@@ -299,13 +308,13 @@ class HistoriAbsensiSiswaController extends Controller
                         $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
                     }
 
-                    if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                        $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
-                    }
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                    // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                    //     $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
+                    // }
+                    // if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
-                    }
+                    //     $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                    // }
                 } else {
 
                     if ($shiftMaster) {
@@ -345,6 +354,8 @@ class HistoriAbsensiSiswaController extends Controller
         }
 
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -354,9 +365,12 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['status'] = '';
             $hasil[$key]['notes'] = '';
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+            // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+            $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
 
             if ($attendance) {
 
@@ -366,6 +380,7 @@ class HistoriAbsensiSiswaController extends Controller
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                 
                 }
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
@@ -375,31 +390,31 @@ class HistoriAbsensiSiswaController extends Controller
                 }
 
 
-                if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                // if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 
-                    $hasil[$key]['notes'] = "Pulang lebih awal";
-                }
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                        $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
-                    }
-                }
+                //     $hasil[$key]['notes'] = "Pulang lebih awal";
+                // }
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                //         $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
+                //     }
+                // }
 
-                if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
-                }
+                // if ($attendance->check_out) {
+                //     $hasil[$key]['check_out'] = $attendance->check_out;
+                // }
                 if ($attendance->status) {
                     $hasil[$key]['status'] = $attendance->status;
                 }
-                if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                    $hasil[$key]['notes'] = 'Tidak Checkout';
-                }
-                if (isset($shiftMaster['start_time'])) {
-                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                //     $hasil[$key]['notes'] = 'Tidak Checkout';
+                // }
+                // if (isset($shiftMaster['start_time'])) {
+                //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key]['notes'] = "Telat & Tidak Checkout";
-                    }
-                }
+                //         $hasil[$key]['notes'] = "Telat & Tidak Checkout";
+                //     }
+                // }
 
                 if ($attendance->notes) {
                     $hasil[$key]['notes'] = $attendance->notes;

@@ -90,12 +90,13 @@
                 <th>Kelas</th>
                 @if (isset($data_laporan['kategori_biaya']))
                     @foreach ($data_laporan['kategori_biaya'] as $biaya)
-                        <th  @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma') style="width: 15%;" @else style="width: 10%;" @endif  >{{ strtoupper($biaya) }}</th>
+                        <th @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma') style="width: 15%;" @else style="width: 10%;" @endif>
+                            {{ strtoupper($biaya) }}</th>
                     @endforeach
                 @endif
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma')
                 @else
-                <th>Potongan</th>
+                    <th>Potongan</th>
                 @endif
                 <th>Jumlah</th>
             </tr>
@@ -120,19 +121,20 @@
                                 @endphp
                                 <td>
                                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma')
-                                    @if (isset($payment['detail_biaya']))
-                                    @foreach ($payment['detail_biaya'] as $i)
-                                        {{ isset($i->besar_pembayaran) ? 'Rp ' .  $i->besar_pembayaran : '-' }}
-                                        @if ($i->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4)
-                                            ({{ isset($i->tagihan_biaya->detail_biaya->bulan) ? $i->tagihan_biaya->detail_biaya->bulan->nm_bulan : '-' }})
+                                        @if (isset($payment['detail_biaya']))
+                                            @foreach ($payment['detail_biaya'] as $i)
+                                                {{ isset($i->besar_pembayaran) ? 'Rp ' . number_format($i->besar_pembayaran) : '-' }}
+                                                @if ($i->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4)
+                                                    ({{ isset($i->tagihan_biaya->detail_biaya->bulan) ? $i->tagihan_biaya->detail_biaya->bulan->nm_bulan : '-' }}
+                                                    {{ $i->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran }})
+                                                @else
+                                                    ({{ isset($i->tagihan_biaya->keterangan) ? $i->tagihan_biaya->keterangan : '-' }})
+                                                @endif
+                                                <br>
+                                            @endforeach
                                         @else
-                                            ({{ isset($i->tagihan_biaya->keterangan) ? $i->tagihan_biaya->keterangan : '-' }})
+                                            -
                                         @endif
-                                        <br>
-                                    @endforeach
-                                @else
-                                -
-                                @endif
                                     @else
                                         {{ $payment ? 'Rp ' . number_format($payment['total_nominal_pembayaran']) : '-' }}
                                         @if ($discount)
@@ -147,7 +149,7 @@
                             @endforeach
                         @endif
                         @if (!$auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma')
-                        <td>{{ 'Rp ' . number_format($siswa['potongan_biaya']) }}</td>
+                            <td>{{ 'Rp ' . number_format($siswa['potongan_biaya']) }}</td>
                         @endif
                         <td><b>{{ 'Rp ' . number_format(collect($siswa['summary'])->sum('total_nominal_pembayaran')) }}</b>
                         </td>
@@ -160,27 +162,42 @@
                 <tr>
                     <th colspan="3">Ringkasan</th>
                 </tr>
-                @foreach ($data_laporan['summary'] as $summ)
+
+                @if (isset($data_laporan['jumlah']))
+                    @foreach ($data_laporan['jumlah'] as $item)
+                        @if ($item['nama'] != 'SPP')
+                            <tr>
+                                <th style="text-align: left;">{{ $item['nama'] }}</th>
+                                <td>{{ $item['total'] . ' x' }}</td>
+                                <th style="text-align: right;">{{ 'Rp' . number_format($item['nominal']) }}</th>
+                            </tr>
+                        @endif
+                    @endforeach
+                    @endif
+                    @foreach ($data_laporan['summary'] as $summ)
+                    @if(strtoupper($summ['nm_biaya']) != "LAIN-LAIN")
                     <tr>
                         <th style="text-align: left;">{{ strtoupper($summ['nm_biaya']) }}</th>
                         <td>{{ $summ['frekuensi'] . ' x' }}</td>
                         <th style="text-align: right;">{{ 'Rp ' . number_format($summ['total_pembayaran']) }}</th>
                     </tr>
+                    @endif
                 @endforeach
+            <tr>
                 @if (!$auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma')
-                <tr>
-                    <th colspan="2">TOTAL POTONGAN</th>
-                    <th style="text-align: right;">
-                        {{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_potongan_biaya')) }}
-                    </th>
-                </tr>
-                @endif
-                <tr>
-                    <th colspan="2">TOTAL PEMBAYARAN</th>
-                    <th style="text-align: right;">
-                        {{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_pembayaran')) }}</th>
-                </tr>
-            </table>
+            <tr>
+                <th colspan="2">TOTAL POTONGAN</th>
+                <th style="text-align: right;">
+                    {{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_potongan_biaya')) }}
+                </th>
+            </tr>
+        @endif
+        <tr>
+            <th colspan="2">TOTAL PEMBAYARAN</th>
+            <th style="text-align: right;">
+                {{ 'Rp ' . number_format(collect($data_laporan['summary'])->sum('total_pembayaran')) }}</th>
+        </tr>
+        </table>
         @endif
         <div class="avoid-break mt-4 mb-4">
             <table cellspacing="0" style="width: 80%; margin:auto; text-align:center">
