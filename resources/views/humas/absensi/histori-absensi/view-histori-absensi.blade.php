@@ -15,6 +15,9 @@
             <button type="button" onclick="viewSiswa()" class="btn btn-default">
                 Data Histori Absensi Siswa
             </button>
+            <button type="button" onclick="statusMesin()" class="btn btn-default">
+                Data Status Mesin
+            </button>
             <div class="card" style="margin-top: 10px">
                 <div class="header">
                     <h2>Filter Data</h2>
@@ -249,6 +252,10 @@ function viewSiswa(){
     function editAbsensi(currUser) {
         window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
     }
+    function statusMesin(){
+        window.location='/humas#absensi/device'
+    }
+    
 
 
     $(".delete-record").click(function() {

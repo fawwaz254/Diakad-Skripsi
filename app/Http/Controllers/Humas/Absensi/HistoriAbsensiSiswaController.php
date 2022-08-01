@@ -45,17 +45,17 @@ class HistoriAbsensiSiswaController extends Controller
     public function actionDetailHistoriAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        if ($input->kelas == '0') {
-            return [
-                'status' => 300, // FAILED
-                'message' => 'Pilih Kelas Dahulu'
-            ];
-        } else {
+        // if ($input->kelas == '0') {
+        //     return [
+        //         'status' => 300, // FAILED
+        //         'message' => 'Pilih Kelas Dahulu'
+        //     ];
+        // } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
                 'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date
             ];
-        }
+        // }
     }
 
     public function storeShiftPengguna(Request $request, $date1, $date2)
@@ -135,14 +135,21 @@ class HistoriAbsensiSiswaController extends Controller
         $jumlah_alpha = 0;
         $belum_absent = 0;
         // dd($id_kelas );
-        $pengguna = Pengguna::with('status_pengguna','siswa')
+        if($id_kelas == "0"){
+            $pengguna = Pengguna::with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
+        }else{
+            $pengguna = Pengguna::with('status_pengguna','siswa')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })
             ->whereHas('siswa', function ($query) use($id_kelas){
                 $query->where('id_kelas', '=', $id_kelas);
             })->get();
-    
+        }
+
             $allShiftPengguna = ShiftPengguna::where('date',$date)->with('shift_master')->get();
             $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
         foreach ($pengguna as $key => $value) {
