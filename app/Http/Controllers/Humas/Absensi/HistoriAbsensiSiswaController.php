@@ -186,6 +186,7 @@ class HistoriAbsensiSiswaController extends Controller
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['status'] = "Masuk";
                     $jumlah_hadir++;
                 }
                 // dd($shiftMaster['start_time']);
@@ -379,6 +380,7 @@ class HistoriAbsensiSiswaController extends Controller
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                 
                 }
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {

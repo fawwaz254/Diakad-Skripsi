@@ -326,6 +326,7 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['status'] = "Masuk";
                     $jumlah_hadir++;
                 }
                 if (isset($shiftMaster['start_time'])) {
