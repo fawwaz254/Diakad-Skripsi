@@ -1180,7 +1180,9 @@ class LibCetakKeuangan{
                     'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
                     'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
-                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran
+                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
+'test' =>  $ketTagihan,
+
                 ];
             }
 
@@ -1210,14 +1212,42 @@ class LibCetakKeuangan{
                 'frekuensi' => $biaya->count(),
                 'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
                 'total_pembayaran' => $biaya->sum('besar_pembayaran'),
-                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan')
+                // 'test'=> $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->first(),
+                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
             ];
+           
+            // $test = $pembayaran->get()->groupBy('tagihan_biaya.keterangan')->map(function ($item) {
+            //     return $item->count();
+            // });;
+            
+         
+
         }
+
+
+        // $test = $pembayaran->get()->groupBy('tagihan_biaya.keterangan');
+        // $test1 = $pembayaran->get()->groupBy('tagihan_biaya.keterangan')->map(function ($item){
+        //     return $item->count();
+        // });
+        $total = [];
+        foreach($pembayaran->get()->groupBy('tagihan_biaya.keterangan') as $idBiaya => $biaya){
+          
+            $total[] = [
+                'nama' =>   $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya != 4 ? $biaya->first()->tagihan_biaya->keterangan : "SPP",
+                'total' => $biaya->count(),
+                'nominal' => $biaya->where('tagihan_biaya.keterangan', $idBiaya)->sum('tagihan_biaya.besar_biaya'),
+                // 'nominal' => $biaya->first()->tagihan_biaya->besar_biaya,
+            ];
+
+        }
+
 
         $result = [
             'data' => $listData,
             'summary' => $summaryData,
-            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya')
+            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya'),
+            'jumlah' => $total,
+            // 'frekuensi' => collect($summaryData)->pluck('total'),
         ];
 
         return $result;
