@@ -16,7 +16,9 @@
             <th style="background-color: #d8d8d8">Nama</th>
             {{-- <th style="background-color: #d8d8d8">Role</th> --}}
             <th style="background-color: #d8d8d8">Check In</th>
-            <th style="background-color: #d8d8d8">Check Out</th>
+            @if(!$products[0]['check_out'] == "-")
+                <th style="background-color: #d8d8d8">Check Out</th>
+            @endif
             <th style="background-color: #d8d8d8">Status</th>
             <th style="background-color: #d8d8d8">Notes</th>
         </tr>
@@ -32,7 +34,9 @@
             <td>{{ $r['nm_pengguna'] }}</td>
             {{-- <td>{{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td> --}}
             <td>{{ $r['check_in'] }}</td>
+            @if(!$r['check_out'] == "-")
             <td>{{ $r['check_out'] }}</td>
+            @endif
             @if ($r['status'] == 'sakit' || $r['status'] == 'izin')
                 <td style="background-color: #fffc5e">{{ $r['status'] }}</td>
             @elseif($r['status'] == 'Alpha')

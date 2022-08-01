@@ -23,6 +23,10 @@ class PresensiPengguna extends Model
     protected $guarded = [];
 
 
+    // public function shift_master()
+    // {
+    //     return $this->belongsTo(ShiftMaster::class, 'code', 'id_shift_master' );
+    // }
 
 
 
