@@ -42,7 +42,8 @@ class HistoriAbsensiController extends BaseController
         $end_date =  new Carbon('last day of' . $mount . $year);
 
 
-        $allShiftPengguna = ShiftPengguna::with('presensi_pengguna','shift_master')->get();
+        $allShiftPengguna = ShiftPengguna::with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::get();
 
@@ -59,7 +60,7 @@ class HistoriAbsensiController extends BaseController
                 // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
                 // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
                 $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
-                $attendance = isset($shiftPengguna->presensi_pengguna) ? $shiftPengguna->presensi_pengguna : null ;
+                $attendance =  $allPresensiPengguna>where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna);
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
 
                 if ($attendance) {
@@ -127,7 +128,8 @@ class HistoriAbsensiController extends BaseController
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('presensi_pengguna','shift_master')->get();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
@@ -139,7 +141,7 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['notes'] = '';
             $hasil[$key]['id_presensi_pengguna'] = "";
             $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
-            $attendance = isset($shiftPengguna->presensi_pengguna) ? $shiftPengguna->presensi_pengguna : null ;
+            $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
             // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
@@ -276,9 +278,8 @@ class HistoriAbsensiController extends BaseController
         $belum_absent = 0;
 
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('presensi_pengguna','shift_master')->get();
-
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
 
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
@@ -301,7 +302,7 @@ class HistoriAbsensiController extends BaseController
 
             // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->with('presensi_pengguna','shift_master')->first();
             $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
-            $attendance = isset($shiftPengguna->presensi_pengguna) ? $shiftPengguna->presensi_pengguna : null ;
+            $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
             // dd($attendance);
             $hasil[$key]['shift'] = false;
