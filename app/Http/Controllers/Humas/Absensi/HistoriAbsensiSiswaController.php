@@ -143,7 +143,7 @@ class HistoriAbsensiSiswaController extends Controller
                 $query->where('id_kelas', '=', $id_kelas);
             })->get();
     
-
+            $allShiftPengguna = ShiftPengguna::where('date',$date)->with('presensi_pengguna','shift_master')->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -153,11 +153,14 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['status'] = '';
 
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $attendance = isset($shiftPengguna->presensi_pengguna) ? $shiftPengguna->presensi_pengguna : null ;
+            $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
+            // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
             // dd( $shiftPengguna['id_shift_master']);
             // if (isset($shiftPengguna['start_time'])) {
-                $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+                // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
             // } else {
             //     $shiftMaster = NULL;
             // }
@@ -265,19 +268,22 @@ class HistoriAbsensiSiswaController extends Controller
 
 
         $dates = CarbonPeriod::create($start_date, $end_date);
-
+        $libur = ManajemenHariLibur::get();
+        $allShiftPengguna = ShiftPengguna::with('presensi_pengguna','shift_master')->get();
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
-
             foreach ($dates as $key2 => $date) {
-                $cek_libur = ManajemenHariLibur::where('date', $date->format('Y-m-d'))->first();
+                $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
 
                 $hasil[$key1][$key2]['status'] = '';
-                $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+                $shiftPengguna = $allShiftPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                $attendance = isset($shiftPengguna->presensi_pengguna) ? $shiftPengguna->presensi_pengguna : null ;
+                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
+                // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
 
                 if ($attendance) {
 
@@ -345,6 +351,7 @@ class HistoriAbsensiSiswaController extends Controller
         }
 
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('presensi_pengguna','shift_master')->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -354,9 +361,12 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['status'] = '';
             $hasil[$key]['notes'] = '';
             $hasil[$key]['id_presensi_pengguna'] = "";
-            $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
-            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+            // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            // $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+            $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $attendance = isset($shiftPengguna->presensi_pengguna) ? $shiftPengguna->presensi_pengguna : null ;
+            $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
 
             if ($attendance) {
 
