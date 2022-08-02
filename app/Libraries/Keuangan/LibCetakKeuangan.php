@@ -1181,7 +1181,7 @@ class LibCetakKeuangan{
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
                     'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
                     'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
-'test' =>  $ketTagihan,
+                'test' =>  $ketTagihan,
 
                 ];
             }
@@ -1235,7 +1235,7 @@ class LibCetakKeuangan{
             $total[] = [
                 'nama' =>   $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya != 4 ? $biaya->first()->tagihan_biaya->keterangan : "SPP",
                 'total' => $biaya->count(),
-                'nominal' => $biaya->where('tagihan_biaya.keterangan', $idBiaya)->sum('tagihan_biaya.besar_biaya'),
+                'nominal' => $biaya->where('tagihan_biaya.keterangan', $idBiaya)->sum('besar_pembayaran'),
                 // 'nominal' => $biaya->first()->tagihan_biaya->besar_biaya,
             ];
 
