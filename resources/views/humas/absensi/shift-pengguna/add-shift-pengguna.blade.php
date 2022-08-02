@@ -194,7 +194,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label for="dayName[Sunday]" >Minggu</label>
+                                        <label for="dayName[Sunday]" >Ahad</label>
                                     </td>
                                     <td>
                                         <select name="dayName[Sunday]" class="form-control form-control-lg">
