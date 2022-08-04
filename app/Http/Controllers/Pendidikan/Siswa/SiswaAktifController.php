@@ -21,14 +21,15 @@ use Validator;
 
 class SiswaAktifController extends BaseController
 {
-    public function viewSiswaAktif(Request $request){
-	    # code..
+	public function viewSiswaAktif(Request $request)
+	{
+		# code..
 		$input = (object) $request->input();
 		$auth_data = $input->auth_data;
 
 		$data_tingkat = Kelas::select('tingkat')->distinct()->orderBy('tingkat', 'asc')->get();
-		$data_jurusan = Jurusan::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
-		
-		return view('pendidikan/siswa/siswa-aktif/view-siswa-aktif',compact('auth_data','data_jurusan', 'data_tingkat'));
+		$data_jurusan = Jurusan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+		// dd($data_tingkat);
+		return view('pendidikan/siswa/siswa-aktif/view-siswa-aktif', compact('auth_data', 'data_jurusan', 'data_tingkat'));
 	}
 }
