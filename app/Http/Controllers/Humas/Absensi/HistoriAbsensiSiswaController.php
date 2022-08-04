@@ -30,25 +30,81 @@ class HistoriAbsensiSiswaController extends Controller
         $auth_data = $input->auth_data;
 
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
-        if (empty($date)) {
-            $date = Carbon::now()->format('Y-m-d');
-        }
 
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;
         $jumlah_izin = 0;
         $jumlah_telat = 0;
         $jumlah_alpha = 0;
-        return view('humas/absensi/histori-absensi-siswa/view-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'jumlah_alpha'));
+        $belum_absent = 0;
+        $date = Carbon::now()->format('Y-m-d');
+        $cek_libur = ManajemenHariLibur::where('date', $date)->first();
+
+        $pengguna = Pengguna::with('status_pengguna')
+        ->whereHas('status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->orderBy('nm_pengguna', 'asc')->get();
+
+        $allShiftPengguna = ShiftPengguna::where('date',$date)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
+        foreach ($pengguna as $key => $value) {
+
+        $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+        $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+        $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
+
+        if ($attendance) {
+            if ($attendance->status) {
+                if ($attendance->status == 'sakit') {
+                    $jumlah_sakit++;
+                } elseif ($attendance->status == 'izin') {
+                    $jumlah_izin++;
+                }
+            }
+
+
+            if ($attendance->check_in) {
+                $jumlah_hadir++;
+            }
+            if (isset($shiftMaster['start_time'])) {
+                if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
+                    $jumlah_telat++;
+                }
+            }
+
+        } else {
+
+            if ($shiftMaster) {
+
+                if ($date < Carbon::now()->format('Y-m-d')) {
+                    $jumlah_alpha++;
+                } else if ($date == Carbon::now()->format('Y-m-d')) {
+                    $belum_absent++;
+                } else {
+
+                }
+
+                if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                    $jumlah_alpha--;
+                }
+            }
+        }
+        if ($cek_libur) {
+            $hasil[$key]['status'] = 'Libur';
+            // $hasil[$key]['notes'] = $cek_libur->explanation;
+        }
+    }
+
+        return view('humas/absensi/histori-absensi-siswa/view-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'jumlah_alpha','belum_absent'));
     }
 
     public function actionDetailHistoriAbsensiSiswa(Request $request)
     {
         $input = (object) $request->input();
-        // if ($input->kelas == '0') {
+        // if ($input->kelas == '0' || $input->kelas == '1' || $input->kelas == '2') {
         //     return [
-        //         'status' => 300, // FAILED
-        //         'message' => 'Pilih Kelas Dahulu'
+        //         'status' => 204, // SUCCESS AND LOAD CONTENT
+        //         'path' => 'absensi/histori-absensi-siswa/details/' . $input->kelas . '/' . $input->date
         //     ];
         // } else {
             return [
@@ -134,12 +190,27 @@ class HistoriAbsensiSiswaController extends Controller
         $jumlah_telat = 0;
         $jumlah_alpha = 0;
         $belum_absent = 0;
-        // dd($id_kelas );
-        if($id_kelas == "0"){
+        
+
+        if($id_kelas == "1"){
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [7,8,9]);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }elseif($id_kelas == "2"){
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [10,11,12]);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }elseif($id_kelas == "0"){
             $pengguna = Pengguna::with('status_pengguna')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
+            })->orderBy('nm_pengguna', 'asc')->get();
         }else{
             $pengguna = Pengguna::with('status_pengguna','siswa')
             ->whereHas('status_pengguna', function ($query) {
@@ -147,12 +218,12 @@ class HistoriAbsensiSiswaController extends Controller
             })
             ->whereHas('siswa', function ($query) use($id_kelas){
                 $query->where('id_kelas', '=', $id_kelas);
-            })->get();
+            })->orderBy('nm_pengguna', 'asc')->get();
         }
 
             $allShiftPengguna = ShiftPengguna::where('date',$date)->with('shift_master')->get();
             $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
-        foreach ($pengguna as $key => $value) {
+            foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
@@ -248,6 +319,7 @@ class HistoriAbsensiSiswaController extends Controller
         }
         return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas'));
     }
+
 
 
 

@@ -123,6 +123,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
 				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
 				Route::get('/detail/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+				// Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
 				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
 				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
 				//buat izin / sakit
