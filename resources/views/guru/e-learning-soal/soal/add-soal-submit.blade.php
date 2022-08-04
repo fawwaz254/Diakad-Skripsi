@@ -11,7 +11,7 @@
         <div class="card">
             <div class="header bg-pink">
                 <h2>
-                    TAMBAH SOAL ESSAY
+                    TAMBAH JAWABAN FILE
                 </h2>
             </div>
             <div class="body">

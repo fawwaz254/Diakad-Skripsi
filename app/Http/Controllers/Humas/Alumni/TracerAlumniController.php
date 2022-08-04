@@ -31,6 +31,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\AlumniSmp;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TracerAlumniImport;
 use Illuminate\Routing\Controller as BaseController;
 
 class TracerAlumniController extends BaseController
@@ -54,6 +55,49 @@ class TracerAlumniController extends BaseController
             return view('humas.alumni.tracer-alumni.view-tracer-alumni');
         }
     }
+
+    public function excelTracerAlumni(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
+        //     return view('humas.alumni.tracer-alumni.view-tracer-alumni-smp');
+        // } else {
+            return view('humas.alumni.tracer-alumni.add-excel-tracer-alumni');
+        // }
+    }
+
+    public function uploadFileExcel(Request $request)
+	{
+		$input = (object) $request->input();
+		$auth_data = $input->auth_data;
+		$now = Carbon::now(env('APP_TIMEZONE', ''));
+		if ($request->hasFile('file-excel')) {
+			// $path = $request->file('file-excel')->getRealPath();
+			// $data = Excel::load($path)->get();
+			Excel::import(new TracerAlumniImport($auth_data, $now), $request->file('file-excel'));
+			return [
+				'status' 	=> 200, // FAILED
+				'message' 	=> "Upload Sukses"
+			];;
+		} else {
+			return [
+				'status' 	=> 300, // FAILED
+				'message' 	=> "File Excel tidak ditemukan"
+			];
+		}
+	}
+
+	public function downloadFileExcel()
+	{
+		$file = public_path() . "/excel/ContohFileExelUploadTracerAlumniSmp.xlsx";
+		$headers = [
+			'Content-Type' => 'application/xlsx',
+		];
+
+		return response()->download($file, 'ContohFileExelUploadTracerAlumniSmp.xlsx', $headers);
+	}
+
 
     public function datatablesTracerAlumni(Request $request)
     {
@@ -175,6 +219,7 @@ class TracerAlumniController extends BaseController
                 $data4['id_kelas']      = $request->id_kelas;
                 $data4['email']         = $request->email;
                 $data4['tahun_lulus']   = $request->tahun_lulus;
+                $data4['url_medsos']    = $request->url_medsos;
                 $data4['status']        = $request->status;
                 $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $data['id_c_siswa'];
@@ -247,6 +292,7 @@ class TracerAlumniController extends BaseController
                 $data4['email']         = $request->email;
                 $data4['tahun_lulus']   = $request->tahun_lulus;
                 $data4['status']        = $request->status;
+                $data4['url_medsos']    = $request->url_medsos;
                 $data4['id_alumni']     = $auth_data->sekolah_data->prefix . strtotime(Carbon::now()) . uniqid();
                 $data4['id_c_siswa']    = $request->id_c_siswa;
                 $data4['created_by']    = $auth_data->pengguna->id_pengguna;
@@ -322,6 +368,7 @@ class TracerAlumniController extends BaseController
                 $alumni->id_kelas  = $request->id_kelas;
                 $alumni->email  = $request->email;
                 $alumni->tahun_lulus  = $request->tahun_lulus;
+                $alumni->url_medsos = $request->url_medsos;
                 $alumni->status  = $request->status;
                 $alumni->updated_by = $auth_data->pengguna->id_pengguna;
                 $alumni->save();

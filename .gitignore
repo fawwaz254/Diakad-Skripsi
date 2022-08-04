@@ -3,6 +3,7 @@
 /public/storage
 /storage/*.key
 /storage/debugbar
+/storage/framework/laravel-excel/*
 /vendor
 /.idea
 /.vscode

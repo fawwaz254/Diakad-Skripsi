@@ -1,7 +1,7 @@
 before_script:
   - apt-get update -qq
   - apt-get install -qq git
-  - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+  - "which ssh-agent || ( apt-get install -qq openssh-client )"
   - eval $(ssh-agent -s)
   - echo "$DEMO_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMP_YPM_1_SEPANJANG_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
@@ -11,6 +11,7 @@ before_script:
   - echo "$SMK_PEMUDA_KRIAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMK_YPM_3_TAMAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMA_WIDYA_DARMA_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
+  - echo "$MANBAUL_HIKAM_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - ssh-keyscan $DEMO_SERVER >> ~/.ssh/known_hosts
@@ -21,6 +22,7 @@ before_script:
   - ssh-keyscan $SMK_PEMUDA_KRIAN_SERVER >> ~/.ssh/known_hosts
   - ssh-keyscan $SMK_YPM_3_TAMAN_SERVER >> ~/.ssh/known_hosts
   - ssh-keyscan $SMA_WIDYA_DARMA_SERVER >> ~/.ssh/known_hosts
+  - ssh-keyscan $MANBAUL_HIKAM_SERVER >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
 
 deploy_to_demo:
@@ -94,3 +96,12 @@ deploy_to_smawidyadarma:
   script:
     - ssh -t root@$SMA_WIDYA_DARMA_SERVER "cd /var/www/diakademik && git pull origin latest-release"
     - ssh -t root@$SMA_WIDYA_DARMA_SERVER "cd /var/www/diakademik && php artisan migrate --force"
+
+deploy_to_manbaul_hikam:
+  stage: deploy
+  only:
+    - latest-release
+  environment: production
+  script:
+    - ssh -t root@$MANBAUL_HIKAM_SERVER "cd /var/www/diakademik && git pull origin latest-release"
+    - ssh -t root@$MANBAUL_HIKAM_SERVER "cd /var/www/diakademik && php artisan migrate --force"

@@ -29,8 +29,17 @@ class ShiftPengguna extends Model
     ];
 
     protected $guarded = [];
-    public function shift_master()
+    // public function shift_master()
+    // {
+    //     return $this->belongsTo(ShiftMaster::class);
+    // }
+     public function shift_master()
     {
-        return $this->belongsTo(ShiftMaster::class);
+        return $this->belongsTo(ShiftMaster::class,  'id_shift_master' ,'code');
+    }
+
+
+    public function presensi_pengguna(){
+        return $this->belongsTo(PresensiPengguna::class, 'id_pengguna','id_pengguna');
     }
 }

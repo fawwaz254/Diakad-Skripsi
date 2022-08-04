@@ -30,7 +30,7 @@
                                     <th>Nilai Soal Pilihan Ganda</th>
                                     <th>Jumlah Soal</th>
                                     <th>Total Nilai Pilihan Ganda</th>
-                                    <th>Total Nilai Essay / Jawaban Submit</th>
+                                    <th>Total Nilai Jawaban Essay / Jawaban File</th>
                                     <th>Total Nilai</th>
                                 </tr>
                             </thead>

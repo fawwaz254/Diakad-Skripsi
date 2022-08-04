@@ -19,7 +19,7 @@ class NilaiUjianController extends Controller
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna', 'paket_soal', 'detail_paket_soal')->with(['paket_soal.kategori_soal'])->get();
+        $test = Test::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('status', 1)->with('pengguna', 'paket_soal', 'detail_paket_soal')->with(['paket_soal.kategori_soal'])->get();
 
         return Datatables::of($test)
             ->editColumn('detail_paket_soal', function ($item) {
@@ -47,7 +47,7 @@ class NilaiUjianController extends Controller
         
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('soal')->get();
+        $questions = JawabanTest::where('id_test', $id_test)->where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereIn('nomer',[2,3])->with('soal')->get();
         return view('siswa/e-learning-soal/nilai-ujian/view-penilaian-ujian', compact('questions'));
     }
 }

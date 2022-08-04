@@ -5,7 +5,10 @@
                 <i class="material-icons">note_add</i><span>Tambah Alumni</span></a>
                 <a class="btn bg-green waves-effect target-link"
                 href="{{url(Request::segment(1).'#'.Request::segment(2).'/tracer-alumni/cetak')}}">
-                    <i class="material-icons">local_printshop</i><span>Cetak Data Alumni</span></a></h2>
+                    <i class="material-icons">local_printshop</i><span>Cetak Data Alumni</span></a>
+                    <a class="btn bg-green waves-effect target-link"
+                    href="{{url(Request::segment(1).'#'.Request::segment(2).'/tracer-alumni/excel')}}">
+                        <i class="material-icons">note_add</i><span>Import Alumni Excel</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

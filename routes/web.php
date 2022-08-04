@@ -1,8 +1,7 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Sekolah;
-use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,39 +12,10 @@ use Illuminate\Support\Facades\Hash;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
-
-// CONTOH UPLOAD DO
-/*use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Jobs\ContohLaravelJob;
-
-Route::get('upload', function () {
-    $files = Storage::disk('spaces')->files('demo/global');
-
-    return view('contoh-upload', compact('files'));
-});
-Route::get('delete', function () {
-    $file = request()->input('id');
-
-    $files = Storage::disk('spaces')->delete($file);
-
-    return redirect()->back();
-});
-Route::post('upload', function (Request $request) {
-    $validator = Validator::make($request->all(), [
-        'file' => 'file|required|max:2048|mimes:jpeg,bmp,png'
-    ]);
-
-    $file = Storage::disk('spaces')->putFile('demo/global', request()->file, 'public');
-    ContohLaravelJob::dispatch($file)->delay(now()->addMinutes(2));
-
-    return redirect()->back();
-});*/
-// END CONTOH UPLOAD DO
+ */
 
 // DO NOT CHANGE
-Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge'); 
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge');
 
 Route::group(['prefix' => 'laravel-filemanager'], function () {
     Route::get('/', '\UniSharp\LaravelFilemanager\Controllers\LfmController@show')->name('unisharp.lfm.show');
@@ -100,11 +70,6 @@ Route::get('guid', function () {
     return $html;
 });
 
-Route::get('cekHashPassword', function () {
-    $password =  Hash::make($_GET['c']);
-    return  $password;
-});
-
 Route::view('success-page', 'form-pengisian-alumni.success-page');
 Route::view('error-page', 'form-pengisian-alumni.error-page');
 Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
@@ -127,7 +92,6 @@ Route::post('signin', 'SignInController@actionSignIn');
 
 Route::get('report-pimpinan', 'ReportController@viewAllDiakad');
 Route::get('report-pimpinan-print', 'ReportController@printAllDiakad');
-
 
 Route::group(array('prefix' => 'reporting-dashboard'), function () {
     Route::get('/', 'SignInController@indexReportingDashboard');
@@ -155,7 +119,6 @@ Route::group(array('prefix' => 'reporting-dashboard'), function () {
         return view('reporting-dashboard/sumber-daya');
     });
 });
-
 
 Route::group(array('middleware' => ['token_staff']), function () {
     //

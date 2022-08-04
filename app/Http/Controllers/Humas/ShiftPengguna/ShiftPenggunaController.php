@@ -29,6 +29,9 @@ class ShiftPenggunaController extends Controller
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();
+        $hasil = [];
+        $allShiftMater = ShiftMaster::get();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
@@ -37,12 +40,12 @@ class ShiftPenggunaController extends Controller
             $hasil[$key]['time'] = "-";
             $hasil[$key]['id_shift_pengguna'] = "-";
 
-            $attendance = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            $attendance = $allShiftPengguna->firstWhere('id_pengguna', $value->id_pengguna);
             if ($attendance) {
 
                 if ($attendance->id_shift_master) {
                     $hasil[$key]['id_shift_master'] = $attendance->id_shift_master;
-                    $shiftM = ShiftMaster::where('code', $attendance->id_shift_master)->first();
+                    $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
                     $hasil[$key]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
                 } else {
                     $hasil[$key]['id_shift_master'] = "-";

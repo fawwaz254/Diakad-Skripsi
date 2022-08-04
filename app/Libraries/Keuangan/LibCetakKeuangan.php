@@ -1130,7 +1130,7 @@ class LibCetakKeuangan{
             $print_setting = session('setting_print_keuangan');
         }
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
+        $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya','tagihan_biaya.detail_biaya.bulan' ,'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date.' 00:00:00', $end_date.' 23:59:59']);
         }
@@ -1173,13 +1173,16 @@ class LibCetakKeuangan{
                     'nis_siswa' => $item->tagihan_biaya->siswa->nis_siswa,
                     'nm_siswa' => $item->tagihan_biaya->siswa->pengguna->nm_pengguna,
                     'kelas_siswa' => $nm_kelas,
+                    'detail_biaya' => $rwytBayar,
                     'total_nominal_pembayaran' => $rwytBayar->sum('besar_pembayaran'),
                     'total_potongan_biaya' => $siswa->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
                     'frekuensi_pembayaran' => $rwytBayar->count(),
                     'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
                     'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
-                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran
+                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
+                'test' =>  $ketTagihan,
+
                 ];
             }
 
@@ -1209,14 +1212,42 @@ class LibCetakKeuangan{
                 'frekuensi' => $biaya->count(),
                 'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
                 'total_pembayaran' => $biaya->sum('besar_pembayaran'),
-                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan')
+                // 'test'=> $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->first(),
+                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
             ];
+           
+            // $test = $pembayaran->get()->groupBy('tagihan_biaya.keterangan')->map(function ($item) {
+            //     return $item->count();
+            // });;
+            
+         
+
         }
+
+
+        // $test = $pembayaran->get()->groupBy('tagihan_biaya.keterangan');
+        // $test1 = $pembayaran->get()->groupBy('tagihan_biaya.keterangan')->map(function ($item){
+        //     return $item->count();
+        // });
+        $total = [];
+        foreach($pembayaran->get()->groupBy('tagihan_biaya.keterangan') as $idBiaya => $biaya){
+          
+            $total[] = [
+                'nama' =>   $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya != 4 ? $biaya->first()->tagihan_biaya->keterangan : "SPP",
+                'total' => $biaya->count(),
+                'nominal' => $biaya->where('tagihan_biaya.keterangan', $idBiaya)->sum('besar_pembayaran'),
+                // 'nominal' => $biaya->first()->tagihan_biaya->besar_biaya,
+            ];
+
+        }
+
 
         $result = [
             'data' => $listData,
             'summary' => $summaryData,
-            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya')
+            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya'),
+            'jumlah' => $total,
+            // 'frekuensi' => collect($summaryData)->pluck('total'),
         ];
 
         return $result;

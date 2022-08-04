@@ -93,6 +93,11 @@
                             <textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
                                 aria-invalid="true"> {{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
                         </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
+                            <input type="text"  class="form-control" name="url_medsos" required="" aria-required="true"
+                                aria-invalid="true" value="{{ !empty($alumni) ?  $alumni->url_medsos : ''  }}">  
+                        </div>
 
                         @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian');
                         <input type="hidden"name="status" value="smp">

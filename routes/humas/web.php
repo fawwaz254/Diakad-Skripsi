@@ -84,10 +84,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
 				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');
 				Route::post('/managementShift/{id}/delete', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@destroyShiftMaster');
-
 				Route::get('/', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
 				Route::get('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
-
 				Route::post('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftPengguna');
 				Route::get('/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
 				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
@@ -96,13 +94,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 			});
 
-
 			Route::group(array('prefix' => 'histori-absensi'), function () {
 				Route::get('export-laravel-mount/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
 				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
 				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-				Route::get('/{date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{date}/{unit_kerja}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
 				Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
 				Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
 				Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
@@ -118,6 +115,34 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
 				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
 				Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
+			});
+
+			Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
+
+				Route::get('/', 'Humas\Absensi\HistoriAbsensiSiswaController@viewHistoriAbsensiSiswa');
+				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
+				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
+				Route::get('/detail/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+				// Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
+				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
+				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
+				//buat izin / sakit
+				Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
+				Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
+				Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
+
+				//buat generate shift siswa
+				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
+
+			});
+			// http://127.0.0.1:8000/humas/absensi/device/datatables
+			Route::group(array('prefix' => 'device'), function () {
+				// MENU Data Fingerprint
+				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
+				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
+			
 			});
 		});
 
@@ -290,7 +315,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 		/** === MODUL MAGANG ALUMNI === **/
 		Route::namespace('Humas\Alumni')->prefix('alumni')->group(function () {
-			
+
 			// Route::get('/tracer-alumni', 'AlumniController@index');
 			// Route::get('/tambah-alumni', 'AlumniController@create');
 			// Route::get('/edit/{alumni}', 'AlumniController@show');
@@ -300,7 +325,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			// Route::post('/datatables', 'AlumniController@renderDatatables');
 
 			Route::group(array('prefix' => 'tracer-alumni'), function () {
-
 				Route::get('/', 'TracerAlumniController@viewTracerAlumni');
 				Route::get('datatables', 'TracerAlumniController@datatablesTracerAlumni');
 				// Route::get('datatables2', 'TracerAlumniController@datatablesTracerAlumni');
@@ -317,7 +341,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				// Route::get('cetak2/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni2');
 				Route::get('export-alumni/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni');
 				Route::get('export-alumni2/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni2');
-
+				// Route untuk import Excel
+				Route::get('excel', 'TracerAlumniController@excelTracerAlumni');
+				Route::post('post-file-excel','TracerAlumniController@uploadFileExcel');
+				Route::get('download-file-excel','TracerAlumniController@downloadFileExcel')->name('tracer-alumni-smp/download-file-excel');
 			});
 		});
 
