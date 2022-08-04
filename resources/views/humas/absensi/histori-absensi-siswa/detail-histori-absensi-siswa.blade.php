@@ -22,7 +22,9 @@
                                 Kelas
                             </h2>
                             <select class="form-control show-tick" name="kelas">
-                                <option value="0">-- Semua --</option>
+                                <option @if ($id_kelas == "0") selected @endif value="0">-- Semua --</option>
+                                <option @if ($id_kelas == "1") selected @endif value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                <option @if ($id_kelas == "2") selected @endif value="2">-- Madrasah Aliyah (MA) --</option>
                                 @foreach ($kelas as $k)
                                     <option @if ($id_kelas == $k->id_kelas) selected @endif
                                         value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
