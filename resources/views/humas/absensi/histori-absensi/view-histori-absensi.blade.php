@@ -1,3 +1,31 @@
+<style>
+    input {
+        position: relative;
+        width: 150px; height: 20px;
+        color: white;
+    }
+
+    input:before {
+        position: absolute;
+        top: 3px; left: 3px;
+        content: attr(data-date);
+        display: inline-block;
+        color: black;
+    }
+
+    input::-webkit-datetime-edit, input::-webkit-inner-spin-button, input::-webkit-clear-button {
+        display: none;
+    }
+
+    input::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: 3px;
+        right: 0;
+        color: black;
+        opacity: 1;
+    }
+</style>
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid">
 
@@ -14,9 +42,6 @@
             </button>
             <button type="button" onclick="viewSiswa()" class="btn btn-default">
                 Data Histori Absensi Siswa
-            </button>
-            <button type="button" onclick="statusMesin()" class="btn btn-default">
-                Data Status Mesin
             </button>
             <div class="card" style="margin-top: 10px">
                 <div class="header">
@@ -43,7 +68,7 @@
                             <h2 class="card-inside-title">
                             Date
                             </h2>
-                            <input type="date" class="form-control" value="{{ $date }}" name="date"
+                            <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY" value="{{ $date }}" name="date"
                                 aria-required="true" aria-invalid="true">
                         </div>
 
@@ -232,9 +257,16 @@
         </div>
     </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 <script type="text/javascript">
-
+$("input").on("change", function() {
+        this.setAttribute(
+            "data-date",
+            moment(this.value, "YYYY-MM-DD")
+            .format( this.getAttribute("data-date-format") )
+        )
+    }).trigger("change")
 
 function viewSiswa(){
         window.location='/humas#absensi/histori-absensi-siswa'

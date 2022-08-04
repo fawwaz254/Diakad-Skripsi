@@ -26,7 +26,9 @@
                                     Kelas
                                 </h2>
                                 <select class="form-control show-tick" name="kelas">
-                                    <option value="0">-- Pilih Kelas --</option>
+                                    <option value="0">-- Semua --</option>
+                                    <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                    <option value="2">-- Madrasah Aliyah (MA) --</option>
                                     @foreach ($kelas as $k)
                                         <option  value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                     @endforeach
@@ -75,7 +77,7 @@
                     <tr>
                       <td>{{ $jumlah_hadir }}</td>
                       <td>{{ $jumlah_telat }}</td>
-                   <td>0</td>
+                   <td>{{ $belum_absent }}</td>
                    <td>{{ $jumlah_izin }}</td>
                    <td>{{ $jumlah_sakit }}</td>
                    <td>{{ $jumlah_alpha }}</td>
