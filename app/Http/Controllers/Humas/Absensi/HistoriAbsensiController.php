@@ -26,7 +26,7 @@ class HistoriAbsensiController extends BaseController
         set_time_limit(1800);
         if($unit_kerja == "0" ){
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-            ->with('status_pengguna')
+            ->with('status_pengguna', 'guru.unit_kerja')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->get();
@@ -60,6 +60,7 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
@@ -115,10 +116,7 @@ class HistoriAbsensiController extends BaseController
             }
         }
 
-        // dd($hasil);
         $products = $hasil;
-        // dd($products);
-        // dd($products);
         return Excel::download(new HistoriAbsensiMount($products), 'download_bulanan.xlsx');
     }
 
@@ -126,7 +124,7 @@ class HistoriAbsensiController extends BaseController
     {
         if($unit_kerja == null ||$unit_kerja == "0" ){
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-            ->with('status_pengguna')
+            ->with('status_pengguna', 'guru.unit_kerja')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->get();
@@ -156,6 +154,7 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
             $hasil[$key]['notes'] = '';
+            $hasil[$key]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
             $hasil[$key]['id_presensi_pengguna'] = "";
             $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
@@ -225,7 +224,7 @@ class HistoriAbsensiController extends BaseController
             }
             $hasil[$key]['date'] = $date;
         }
-
+// dd($hasil);
         $products = $hasil;
         return Excel::download(new HistoriAbsensiDay($products), 'download_harian.xlsx');
     }
