@@ -61,7 +61,7 @@
                                 Unit Kerja
                             </h2>
                             <select class="form-control show-tick" name="unit_kerja">
-                                <option @if ($unit_kerja == '0' || $unit_kerja == null) selected @endif value="0">-- Semua --
+                                <option @if ($unit_kerja == '0') selected @endif value="0">-- Semua --
                                 </option>
                                 <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
                                 </option>

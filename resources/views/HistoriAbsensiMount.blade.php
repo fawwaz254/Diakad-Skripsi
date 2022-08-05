@@ -49,7 +49,7 @@
                     @elseif($produk[$i]['status'] == 'Telat & Tidak Checkout')
                         <td style="background-color: #ff8e1d">{{ $produk[$i]['status'] }}</td>
                     @else
-                        <td>{{ $produk[$i]['status'] }}</td>
+                        <td>{{ isset($produk[$i]['status']) ? $produk[$i]['status'] : '' }}</td>
                     @endif
                 @endfor
 
