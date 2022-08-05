@@ -10,7 +10,7 @@
         <tr>
             <td style="text-align: center; background-color: #d8d8d8">No</td>
             <td style="background-color: #d8d8d8">Nama</td>
-            {{-- <td style="background-color: #d8d8d8">Role</td> --}}
+            <td style="background-color: #d8d8d8">Unit Kerja</td>
             @for ($i = 0; $i < ($total = count($products[0]) - 3); $i++)
                 <td>{{ $products[0][$i]['date'] }}</td>
             @endfor
@@ -25,7 +25,7 @@
             <tr>
                 <td style="text-align: center;">{{ $loop->iteration }}</td>
                 <td>{{ $produk['nm_pengguna'] }}</td>
-                {{-- <td>{{ $produk['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td> --}}
+                <td>{{ $produk['unit_kerja']  }}</td>
                 {{-- <td>{{$r['check_in']}}</td>
             <td>{{$r['check_out']}}</td> --}}
 
