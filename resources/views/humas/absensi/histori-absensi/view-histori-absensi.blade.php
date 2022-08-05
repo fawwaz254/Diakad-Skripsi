@@ -61,7 +61,7 @@
                                 Unit Kerja
                             </h2>
                             <select class="form-control show-tick" name="unit_kerja">
-                                <option @if ($unit_kerja == '0' || $unit_kerja == null) selected @endif value="0">-- Semua --
+                                <option @if ($unit_kerja == '0') selected @endif value="0">-- Semua --
                                 </option>
                                 <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
                                 </option>
@@ -142,60 +142,12 @@
             </div>
         </div>
     </div>
-    {{-- </div>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="body bg-teal">
-                    <div class="font-bold m-b--35">SUMMARY</div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <ul class="dashboard-stat-list">
-                                <li>
-                                    Hadir
-                                    <span class="pull-right"><b>{{ $jumlah_hadir }}</b></span>
-                                </li>
-                                <li>
-                                    Hadir Terlambat
-                                    <span class="pull-right"><b>{{ $jumlah_telat }}</b></span>
-                                </li>
-                                <li>
-                                    Hadir Pulang Lebih Awal
-                                    <span class="pull-right"><b>{{ $jumlah_pulangcepat }}</b></span>
-                                </li>
-                                <li>
-                                    Tidak Checkout
-                                    <span class="pull-right"><b>{{ $tidak_checkout }}</b></span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="col-md-6">
-                            <ul class="dashboard-stat-list">
-                                <li>
-                                    Izin
-                                    <span class="pull-right"><b>{{ $jumlah_izin }}</b></span>
-                                </li>
-                                <li>
-                                    Sakit
-                                    <span class="pull-right"><b>{{ $jumlah_sakit }}</b></span>
-                                </li>
-                                <li>
-                                    Alpha
-                                    <span class="pull-right"><b>{{ $jumlah_alpha }}</b></span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <br>
-    <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}" target="_blank"
+    <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}/{{ $unit_kerja }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
-    <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}" target="_blank"
+    <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}/{{ $unit_kerja }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
     <br>
@@ -270,7 +222,6 @@
 </div>
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
-
 <script type="text/javascript">
     $("input").on("change", function() {
         this.setAttribute(
@@ -298,9 +249,6 @@
         window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
     }
 
-    function statusMesin() {
-        window.location = '/humas#absensi/device'
-    }
 
 
 
