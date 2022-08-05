@@ -190,7 +190,6 @@ class HistoriAbsensiSiswaController extends Controller
         $jumlah_telat = 0;
         $jumlah_alpha = 0;
         $belum_absent = 0;
-        
 
         if($id_kelas == "1"){
             $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
@@ -327,17 +326,45 @@ class HistoriAbsensiSiswaController extends Controller
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)
     {
         set_time_limit(1800);
-        $pengguna = pengguna::with('status_pengguna', 'siswa')
-            ->whereHas('siswa', function ($query) use ($id_kelas) {
-                $query->where('id_kelas', '=', $id_kelas);
-            })
+        // $pengguna = pengguna::with('status_pengguna', 'siswa')
+        //     ->whereHas('siswa', function ($query) use ($id_kelas) {
+        //         $query->where('id_kelas', '=', $id_kelas);
+        //     })
+        //     ->whereHas('status_pengguna', function ($query) {
+        //         $query->where('nm_status_pengguna', '=', 'AKTIF');
+        //     })->get();
+        // // if (empty($date) || empty($end_date)) {
+        // //     $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
+        // //     $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
+        // // }
+        if($id_kelas == "1"){
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
-        // if (empty($date) || empty($end_date)) {
-        //     $start_date = Carbon::now()->firstOfMonth()->format('Y-m-d');
-        //     $end_date = Carbon::now()->endOfMonth()->format('Y-m-d');
-        // }
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [7,8,9]);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }elseif($id_kelas == "2"){
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [10,11,12]);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }elseif($id_kelas == "0"){
+            $pengguna = Pengguna::with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }else{
+            $pengguna = Pengguna::with('status_pengguna','siswa')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })
+            ->whereHas('siswa', function ($query) use($id_kelas){
+                $query->where('id_kelas', '=', $id_kelas);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }
 
         $year = Carbon::parse($date)->format('Y');
         $mount = Carbon::parse($date)->format('M');
@@ -420,14 +447,41 @@ class HistoriAbsensiSiswaController extends Controller
 
     public function export_excel_day(Request $request, $id_kelas = null, $date = null)
     {
-        $pengguna = pengguna::with('status_pengguna', 'siswa')
-            ->whereHas('siswa', function ($query) use ($id_kelas) {
-                $query->where('id_kelas', '=', $id_kelas);
-            })
+        // $pengguna = pengguna::with('status_pengguna', 'siswa')
+        //     ->whereHas('siswa', function ($query) use ($id_kelas) {
+        //         $query->where('id_kelas', '=', $id_kelas);
+        //     })
+        //     ->whereHas('status_pengguna', function ($query) {
+        //         $query->where('nm_status_pengguna', '=', 'AKTIF');
+        //     })->get();
+        if($id_kelas == "1"){
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
-
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [7,8,9]);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }elseif($id_kelas == "2"){
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [10,11,12]);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }elseif($id_kelas == "0"){
+            $pengguna = Pengguna::with('status_pengguna')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }else{
+            $pengguna = Pengguna::with('status_pengguna','siswa')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })
+            ->whereHas('siswa', function ($query) use($id_kelas){
+                $query->where('id_kelas', '=', $id_kelas);
+            })->orderBy('nm_pengguna', 'asc')->get();
+        }
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
