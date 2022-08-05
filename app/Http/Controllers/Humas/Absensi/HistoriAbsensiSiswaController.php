@@ -315,7 +315,7 @@ class HistoriAbsensiSiswaController extends Controller
 
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)
     {
-        set_time_limit(1800);
+        set_time_limit(9800);
         if($id_kelas == "1"){
             $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {

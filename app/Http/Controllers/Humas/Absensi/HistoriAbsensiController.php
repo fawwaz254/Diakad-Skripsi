@@ -23,7 +23,7 @@ class HistoriAbsensiController extends BaseController
 
     public function export_excel_mount(Request $request, $date = null, $unit_kerja = null)
     {
-        set_time_limit(1800);
+        set_time_limit(9800);
         if($unit_kerja == "0" ){
             $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
             ->with('status_pengguna', 'guru.unit_kerja')
