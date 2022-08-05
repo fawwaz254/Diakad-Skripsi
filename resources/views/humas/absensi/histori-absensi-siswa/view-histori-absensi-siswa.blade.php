@@ -1,3 +1,34 @@
+<style>
+    input {
+        position: relative;
+        width: 150px;
+        height: 20px;
+        color: white;
+    }
+
+    input:before {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        content: attr(data-date);
+        display: inline-block;
+        color: black;
+    }
+
+    input::-webkit-datetime-edit,
+    input::-webkit-inner-spin-button,
+    input::-webkit-clear-button {
+        display: none;
+    }
+
+    input::-webkit-calendar-picker-indicator {
+        position: absolute;
+        top: 3px;
+        right: 0;
+        color: black;
+        opacity: 1;
+    }
+</style>
 <div class="container-fluid">
 
     <div class="row clearfix">
@@ -30,7 +61,7 @@
                                     <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
                                     <option value="2">-- Madrasah Aliyah (MA) --</option>
                                     @foreach ($kelas as $k)
-                                        <option  value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
+                                        <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -39,8 +70,9 @@
                                     <h2 class="card-inside-title">
                                         Tanggal
                                     </h2>
-                                    <input type="date" class="form-control" value="{{ $date }}"
-                                        name="date" aria-required="true" aria-invalid="true">
+                                    <input type="date" class="form-control" data-date=""
+                                        data-date-format="DD/MM/YYYY" value="{{ $date }}" name="date"
+                                        aria-required="true" aria-invalid="true">
                                 </div>
                             </div>
                             <div class="row clearfix">
@@ -59,30 +91,31 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="card">
-            <div class="body" >
+            <div class="body">
                 <div class="font-bold ">Laporan Harian</div>
                 <br>
-                <table id="example" class="table table-striped table-bordered" style="width:100%; 
-                padding: 10px; " >
+                <table id="example" class="table table-striped table-bordered"
+                    style="width:100%; 
+                padding: 10px; ">
                     <thead>
-                    <tr>
-                      <th>Hadir</th>
-                      <th>Hadir Terlambat</th>
-                      <th>Belum Hadir</th>
-                      <th>Izin</th>
-                      <th>Sakit</th>
-                      <th>Alpha</th>
-                    </tr>
+                        <tr>
+                            <th>Hadir</th>
+                            <th>Hadir Terlambat</th>
+                            <th>Belum Hadir</th>
+                            <th>Izin</th>
+                            <th>Sakit</th>
+                            <th>Alpha</th>
+                        </tr>
                     </thead>
                     <tr>
-                      <td>{{ $jumlah_hadir }}</td>
-                      <td>{{ $jumlah_telat }}</td>
-                   <td>{{ $belum_absent }}</td>
-                   <td>{{ $jumlah_izin }}</td>
-                   <td>{{ $jumlah_sakit }}</td>
-                   <td>{{ $jumlah_alpha }}</td>
+                        <td>{{ $jumlah_hadir }}</td>
+                        <td>{{ $jumlah_telat }}</td>
+                        <td>{{ $belum_absent }}</td>
+                        <td>{{ $jumlah_izin }}</td>
+                        <td>{{ $jumlah_sakit }}</td>
+                        <td>{{ $jumlah_alpha }}</td>
                     </tr>
-                  </table>
+                </table>
             </div>
         </div>
     </div>
@@ -91,11 +124,17 @@
 
 @include('scriptjs')
 <script type="text/javascript">
-function viewGuru(){
-        window.location='/humas#absensi/histori-absensi'
+    $("input").on("change", function() {
+        this.setAttribute(
+            "data-date",
+            moment(this.value, "YYYY-MM-DD")
+            .format(this.getAttribute("data-date-format"))
+        )
+    }).trigger("change")
+
+    function viewGuru() {
+        window.location = '/humas#absensi/histori-absensi'
     }
-
-
 </script>
 {{-- <script type="text/javascript">
     $(document).ready(function() {

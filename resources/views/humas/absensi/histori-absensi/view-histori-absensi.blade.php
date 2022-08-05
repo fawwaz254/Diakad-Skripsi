@@ -61,9 +61,9 @@
                                 Unit Kerja
                             </h2>
                             <select class="form-control show-tick" name="unit_kerja">
-                                <option @if ($unit_kerja == "0") selected @endif value="0">-- Semua --
+                                <option @if ($unit_kerja == '0' || $unit_kerja == null) selected @endif value="0">-- Semua --
                                 </option>
-                                <option @if ($unit_kerja == "1") selected @endif value="1">Pegawai
+                                <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
                                 </option>
                                 @foreach ($list_unit_kerja as $uk)
                                     <option @if ($unit_kerja == $uk->id_unit_kerja) selected @endif
@@ -84,6 +84,8 @@
                                 <button class="btn btn-block bg-red waves-effect" type="submit"
                                     onclick="filterAction()"><i
                                         class="material-icons">save</i><span>Tampilkan</span></button>
+                                {{-- <button type="button" class="btn bg-purple waves-effect"
+                                    onclick="filterAction()">Change Date</button> --}}
                             </div>
 
                         </div>
@@ -218,8 +220,8 @@
         </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
 <script type="text/javascript">
     $("input").on("change", function() {
         this.setAttribute(
@@ -246,6 +248,9 @@
     function editAbsensi(currUser) {
         window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
     }
+
+
+
 
     $(".delete-record").click(function() {
         var token = $("meta[name='csrf-token']").attr("content");
