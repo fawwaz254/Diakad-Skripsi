@@ -11,12 +11,13 @@
             <th style="text-align: center; background-color: #d8d8d8">No</th>
             <th style="background-color: #d8d8d8">Nama</th>
             <th style="background-color: #d8d8d8">
-                @if (!$products[0]['check_out'] == '-')
+                @if (isset($products[0]['unit_kerja']))
                     Unit kerja
                 @else
                     Kelas
                 @endif
-                @if (!$products[0]['check_out'] == '-')
+                <th style="background-color: #d8d8d8">Check In</th>
+                @if (isset($products[0]['unit_kerja']))
             <th style="background-color: #d8d8d8">Check Out</th>
             @endif
             <th style="background-color: #d8d8d8">Status</th>
@@ -34,7 +35,7 @@
             <td>{{ $r['nm_pengguna'] }}</td>
             <td>{{ isset($r['unit_kerja']) ? $r['unit_kerja'] : $r['kelas'] }}</td>
             <td>{{ $r['check_in'] }}</td>
-            @if (!$r['check_out'] == '-')
+            @if (isset($r['unit_kerja']))
                 <td>{{ $r['check_out'] }}</td>
             @endif
             @if ($r['status'] == 'sakit' || $r['status'] == 'izin')
