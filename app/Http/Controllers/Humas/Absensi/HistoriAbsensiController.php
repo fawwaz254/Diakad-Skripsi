@@ -50,15 +50,15 @@ class HistoriAbsensiController extends BaseController
         $start_date = new Carbon('first day of' . $mount . $year);
         $end_date =  new Carbon('last day of' . $mount . $year);
 
-
+       
         // $allShiftPengguna = ShiftPengguna::with('shift_master')->get();
         // $allPresensiPengguna = PresensiPengguna::get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::get();
-
+        
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
-            $hasil[$key1]['status_join_table'] = $value->status_join_table;
+            // $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
             $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
@@ -119,7 +119,7 @@ class HistoriAbsensiController extends BaseController
                 $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
             }
         }
-
+    
         $products = $hasil;
         return Excel::download(new HistoriAbsensiMount($products), 'download_bulanan.xlsx');
     }
@@ -228,7 +228,6 @@ class HistoriAbsensiController extends BaseController
             }
             $hasil[$key]['date'] = $date;
         }
-// dd($hasil);
         $products = $hasil;
         return Excel::download(new HistoriAbsensiDay($products), 'download_harian.xlsx');
     }

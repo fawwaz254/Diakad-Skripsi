@@ -31,7 +31,6 @@
                                     @endif
                                 </tr>
                                 <tr>
-                                  
                                     @foreach ($penggunas as $key => $pengguna)
                                         <td style="text-align: center;">{{ $key + 1 }}</td>
                                         <td>{{ isset($pengguna->guru->unit_kerja)  ?  $pengguna->guru->unit_kerja->nm_unit_kerja : 'Pegawai'}}</td>
