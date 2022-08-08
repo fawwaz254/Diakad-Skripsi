@@ -16,8 +16,9 @@
             @endfor --}}
             @foreach ($products as $item1)
                 @foreach ($item1 as $item2)
-                    <td>{{ isset($item2['date']) ? $item2['date'] : '' }}</td>
-                    {{-- <td>{{ isseet($products[0][$i]['date']) ? $products[0][$i]['date'] : "" }}</td> --}}
+                    @if (isset($item2['date']))
+                        <td> {{ $item2['date'] }} </td>
+                    @endif
                 @endforeach
             @break
         @endforeach
@@ -32,31 +33,31 @@
             <td>{{ $produk['nm_pengguna'] }}</td>
             <td>{{ isset($produk['unit_kerja']) ? $produk['unit_kerja'] : $produk['kelas'] }}</td>
             @foreach ($produk as $item2)
-            @if(isset($item2['status']))
-            @if ($item2['status'] == 'sakit' || $item2['status'] == 'izin')
-                <td style="background-color: #fffc5e">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Alpha')
-                <td style="background-color: #ff5e79">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'masuk')
-                <td style="background-color: #6cff5e">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Masuk')
-                <td style="background-color: #6cff5e">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Telat')
-                <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Pulang lebih awal')
-                <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Telat dan Pulang lebih awal')
-                <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Tidak Checkout')
-                <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
-            @elseif($item2['status'] == 'Telat & Tidak Checkout')
-                <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
-            @else
-                <td>{{ $item2['status'] }}</td>
-            @endif
-            @endif
-           <td>{{ isset($item2['status']) ?  $item2['status'] : ''}}</td>
-     
+                @if (isset($item2['status']))
+                    @if ($item2['status'] == 'sakit' || $item2['status'] == 'izin')
+                        <td style="background-color: #fffc5e">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Alpha')
+                        <td style="background-color: #ff5e79">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'masuk')
+                        <td style="background-color: #6cff5e">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Masuk')
+                        <td style="background-color: #6cff5e">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Telat')
+                        <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Pulang lebih awal')
+                        <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Telat dan Pulang lebih awal')
+                        <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Tidak Checkout')
+                        <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
+                    @elseif($item2['status'] == 'Telat & Tidak Checkout')
+                        <td style="background-color: #ff8e1d">{{ $item2['status'] }}</td>
+                    @else
+                        <td>{{ $item2['status'] }}</td>
+                    @endif
+                @endif
+                {{-- <td>{{ isset($item2['status']) ?  $item2['status'] : ''}}</td> --}}
+
                 {{-- @if ($item2['status'] == 'sakit' || $item2['status'] == 'izin')
                 <td style="background-color: #fffc5e">{{ $item2['status'] }}</td>
             @elseif($item2['status'] == 'Alpha')
@@ -78,9 +79,9 @@
             @else
                 <td>{{ $item2['status'] }}</td>
             @endif --}}
-            {{-- @endforeach
+                {{-- @endforeach
               @break --}}
-             @endforeach
+            @endforeach
 
 
 
@@ -106,8 +107,7 @@
                 @else
                     <td>{{ $produk[$i]['status'] }}</td>
                 @endif
-            @endfor
- --}}
+            @endfor --}}
 
 
             {{-- <td>{{$r['notes']}}</td> --}}
