@@ -25,7 +25,7 @@ class ShiftPenggunaController extends Controller
         }
 
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
+        ->with('status_pengguna','guru.unit_kerja')
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();
@@ -39,6 +39,7 @@ class ShiftPenggunaController extends Controller
             $hasil[$key]['id_shift_master'] = "-";
             $hasil[$key]['time'] = "-";
             $hasil[$key]['id_shift_pengguna'] = "-";
+            $hasil[$key]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
             $attendance = $allShiftPengguna->firstWhere('id_pengguna', $value->id_pengguna);
             if ($attendance) {
@@ -63,7 +64,7 @@ class ShiftPenggunaController extends Controller
 
         $shifts = ShiftMaster::all();
         $penggunas = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
+        ->with('status_pengguna','guru.unit_kerja')
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();

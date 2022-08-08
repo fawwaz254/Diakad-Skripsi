@@ -58,8 +58,10 @@
                                 </h2>
                                 <select class="form-control show-tick" name="kelas">
                                     <option value="0">-- Semua --</option>
+                                    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
                                     <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
                                     <option value="2">-- Madrasah Aliyah (MA) --</option>
+                                    @endif
                                     @foreach ($kelas as $k)
                                         <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
                                     @endforeach
@@ -88,7 +90,7 @@
     </div>
 </div>
 <br>
-<div class="row">
+{{-- <div class="row">
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="card">
             <div class="body">
@@ -119,7 +121,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 
 @include('scriptjs')

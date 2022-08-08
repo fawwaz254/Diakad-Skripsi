@@ -24,16 +24,17 @@
                                 </tr>
                                 <tr>
                                     <td style="text-align: center;">No</td>
-                                    <td>Role</td>
-                                    <td>name</td>
+                                    <td>Unit kerja</td>
+                                    <td>Name</td>
                                     @if ($shiftsPengguna)
-                                        <td>shift hari ini</td>
+                                        <td>Shift hari ini</td>
                                     @endif
                                 </tr>
                                 <tr>
+                                  
                                     @foreach ($penggunas as $key => $pengguna)
                                         <td style="text-align: center;">{{ $key + 1 }}</td>
-                                        <td>{{ $pengguna['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+                                        <td>{{ isset($pengguna->guru->unit_kerja)  ?  $pengguna->guru->unit_kerja->nm_unit_kerja : 'Pegawai'}}</td>
                                         <td><input type="checkbox" name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
                                                 value="{{ $pengguna['id_pengguna'] }}"
                                                 id="{{ $pengguna['id_pengguna'] }}"> <label
