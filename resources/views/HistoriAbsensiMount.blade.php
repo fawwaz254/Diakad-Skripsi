@@ -11,7 +11,7 @@
             <td style="text-align: center; background-color: #d8d8d8">No</td>
             <td style="background-color: #d8d8d8">Nama</td>
             <td style="background-color: #d8d8d8">{{ isset($products[0]['unit_kerja']) ? 'Unit Kerja' : 'Kelas' }}</td>
-            @for ($i = 0; $i < ($total = count($products[0]) - 3); $i++)
+            @for ($i = 0; $i < ($total = count($products[0])); $i++)
                 <td>{{ $products[0][$i]['date'] }}</td>
             @endfor
 
@@ -26,8 +26,8 @@
                 <td style="text-align: center;">{{ $loop->iteration }}</td>
                 <td>{{ $produk['nm_pengguna'] }}</td>
                 <td>{{ isset($produk['unit_kerja']) ? $produk['unit_kerja'] : $produk['kelas'] }}</td>
-            
-                @for ($i = 0; $i < ($total = count($produk) - 3); $i++)
+           
+                @for ($i = 0; $i < ($total = count($produk)); $i++)
                     @if ($produk[$i]['status'] == 'sakit' || $produk[$i]['status'] == 'izin')
                         <td style="background-color: #fffc5e">{{ $produk[$i]['status'] }}</td>
                     @elseif($produk[$i]['status'] == 'Alpha')
@@ -47,9 +47,9 @@
                     @elseif($produk[$i]['status'] == 'Telat & Tidak Checkout')
                         <td style="background-color: #ff8e1d">{{ $produk[$i]['status'] }}</td>
                     @else
-                        <td>{{ isset($produk[$i]['status']) ? $produk[$i]['status'] : '' }}</td>
+                        <td>{{  $produk[$i]['status']  }}</td>
                     @endif
-                @endfor
+                @endfor 
 
 
 
