@@ -109,7 +109,7 @@ class HistoriAbsensiSiswaController extends Controller
         // } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date
+                'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date . '/' . $input->status
             ];
         // }
     }
@@ -171,9 +171,8 @@ class HistoriAbsensiSiswaController extends Controller
     }
 
 
-    public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date)
+    public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date, $status)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
@@ -306,7 +305,7 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas'));
+        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas','status'));
     }
 
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)
