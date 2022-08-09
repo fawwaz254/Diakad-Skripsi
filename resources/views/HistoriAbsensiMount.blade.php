@@ -17,6 +17,7 @@
                     @endif
                 @endforeach
             @break
+
         @endforeach
     </tr>
 </thead>
@@ -50,7 +51,7 @@
                         <td>{{ $item2['status'] }}</td>
                     @endif
                 @endif
-            @foreach
+                @endforeach
         </tr>
     @endforeach
 </tbody>
