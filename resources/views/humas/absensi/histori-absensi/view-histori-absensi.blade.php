@@ -56,7 +56,7 @@
 
                     <div class="row clearfix">
 
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Unit Kerja
                             </h2>
@@ -71,7 +71,36 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-4 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">
+                                Status
+                            </h2>
+                            <select class="form-control show-tick" name="status">
+                                <option @if ($status == '0') selected @endif value="0">-- Semua --
+                                </option>
+                                <option @if ($status == 'Masuk') selected @endif value="Masuk">Masuk</option>
+                                <option @if ($status == 'izin') selected @endif value="izin">Izin</option>
+                                <option @if ($status == 'sakit') selected @endif value="sakit">Sakit</option>
+                                <option @if ($status == 'Masuk | Telat') selected @endif value="Masuk | Telat">Masuk |
+                                    Telat</option>
+                                <option @if ($status == 'Alpha') selected @endif value="Alpha">Alpha</option>
+                                <option @if ($status == 'Masuk | Telat  | Tidak Checkout') selected @endif
+                                    value="Masuk | Telat  | Tidak Checkout">Masuk | Telat | Tidak Checkout</option>
+                                <option @if ($status == 'Masuk | Tidak Checkout') selected @endif
+                                    value="Masuk | Tidak Checkout">Masuk | Tidak Checkout</option>
+                                <option @if ($status == 'Masuk | Telat dan Pulang lebih awal') selected @endif
+                                    value="Masuk | Telat dan Pulang lebih awal">Masuk | Telat dan Pulang lebih awal</option>
+                                <option @if ($status == 'Masuk | Pulang lebih awal') selected @endif
+                                    value="Masuk | Pulang lebih awal">Masuk | Pulang lebih awal</option>
+
+
+
+
+                                <option @if ($status == 'Belum Absent') selected @endif value="Belum Absent">Belum
+                                    Absent</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Date
                             </h2>
@@ -147,8 +176,8 @@
     <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}/{{ $unit_kerja }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
-    <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}/{{ $unit_kerja }}" target="_blank"
-        class="btn bg-purple waves-effect">
+    <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}/{{ $unit_kerja }}"
+        target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
     <br>
     <div class="row clearfix" style="margin-top: 10px">
@@ -181,33 +210,36 @@
                                         <tr>
                                     @endif
                                     @if ($r['shift'])
-                                        <td style="text-align: center;">{{ $loop->iteration }}</td>
-                                        <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                                        <td>{{ $r['unit_kerja'] }}</td>
-                                        <td>{{ $r['check_in'] }}</td>
-                                        <td>{{ $r['check_out'] }}</td>
-                                        <td
-                                            @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
-                                            {{ $r['status'] }}</td>
-                                        <td style="text-align: center;display:flex;justify-content:center">
-                                            @if ($r['id_presensi_pengguna'] == '')
-                                                <button type="button" class="btn bg-teal waves-effect"
-                                                    onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                            @else
-                                                <button type="button" class="btn bg-teal waves-effect"
-                                                    onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
-                                                    <i class="material-icons">edit</i>
-                                                </button>
-                                                <button data-id="{{ $r['id_presensi_pengguna'] }}"
-                                                    style="margin-left:3px;"
-                                                    class="btn bg-red waves-effect delete-record">
-                                                    <i class="material-icons">delete</i>
-                                                </button>
-                                            @endif
-                                        </td>
-                                        </tr>
+                                        @if ($r['status'] == $status || $status == '0')
+                                            <td style="text-align: center;">{{ $loop->iteration }}</td>
+                                            <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
+                                            <td>{{ $r['unit_kerja'] }}</td>
+                                            <td>{{ $r['check_in'] }}</td>
+                                            <td>{{ $r['check_out'] }}</td>
+                                            <td
+                                                @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
+                                                {{ $r['status'] }}</td>
+                                            <td style="text-align: center;display:flex;justify-content:center">
+                                                @if ($r['id_presensi_pengguna'] == '')
+                                                    <button type="button" class="btn bg-teal waves-effect"
+                                                        onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn bg-teal waves-effect"
+                                                        onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                    <button data-id="{{ $r['id_presensi_pengguna'] }}"
+                                                        style="margin-left:3px;"
+                                                        class="btn bg-red waves-effect delete-record">
+                                                        <i class="material-icons">delete</i>
+                                                    </button>
+                                                @endif
+
+                                            </td>
+                                            </tr>
+                                        @endif
                                     @else
                                     @endif
                                 @endforeach
@@ -238,7 +270,7 @@
 
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
-            'select[name=unit_kerja]').val());
+            'select[name=unit_kerja]').val() + '/' +  $('select[name=status]').val());
     }
 
     function addAbsensi(id_pengguna) {
