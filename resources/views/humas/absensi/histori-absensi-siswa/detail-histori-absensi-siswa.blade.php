@@ -34,20 +34,21 @@
                             </select>
                         </div>
 
-                        {{-- <div class="col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
                                 Status
                             </h2>
-                            <select class="form-control show-tick" name="kelas">
-                                <option value="0">-- Semua --</option>
-                                <option value="Masuk">Masuk</option>
-                                <option value="izin">Izin</option>
-                                <option value="sakit">Sakit</option>
-                                <option value="Masuk | Telat">Masuk | Telat</option>
-                                <option value="Alpha">Alpha</option>
-                                <option value="Belum Absent">Belum Absent</option>
+                            <select class="form-control show-tick" name="status"> 
+                                
+                                <option @if ($status == "0") selected @endif value="0">-- Semua --</option>
+                                <option @if ($status == "Masuk") selected @endif value="Masuk">Masuk</option>
+                                <option @if ($status == "izin") selected @endif  value="izin">Izin</option>
+                                <option @if ($status == "sakit") selected @endif  value="sakit">Sakit</option>
+                                <option @if ($status == "Masuk | Telat") selected @endif  value="Masuk | Telat">Masuk | Telat</option>
+                                <option @if ($status == "Alpha") selected @endif  value="Alpha">Alpha</option>
+                                <option @if ($status == "Belum Absent") selected @endif  value="Belum Absent">Belum Absent</option>
                             </select>
-                        </div> --}}
+                        </div>
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
@@ -139,6 +140,7 @@
                                     <tr>
                                 @endif
                                 @if ($r['shift'])
+                                @if($r['status'] == $status || $status == '0')
                                     <td style="text-align: center;">{{ $loop->iteration }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
 
@@ -166,6 +168,7 @@
                                         @endif
                                     </td>
                                     </tr>
+                                    @endif
                                 @else
                                 @endif
                             @endforeach

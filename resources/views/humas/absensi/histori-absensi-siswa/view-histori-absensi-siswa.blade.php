@@ -52,7 +52,7 @@
                         {{ csrf_field() }}
                         {{-- {{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-data-siswa') }} --}}
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-md-4 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Kelas
                                 </h2>
@@ -67,8 +67,22 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Status
+                                </h2>
+                                <select class="form-control show-tick" name="status">
+                                    <option value="0">-- Semua --</option>
+                                    <option value="Masuk">Masuk</option>
+                                    <option value="izin">Izin</option>
+                                    <option value="sakit">Sakit</option>
+                                    <option value="Masuk | Telat">Masuk | Telat</option>
+                                    <option value="Alpha">Alpha</option>
+                                    <option value="Belum Absent">Belum Absent</option>
+                                </select>
+                            </div>
                             <div class="row clearfix">
-                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                <div class="col-md-4 col-sm-12 col-xs-12">
                                     <h2 class="card-inside-title">
                                         Tanggal
                                     </h2>
