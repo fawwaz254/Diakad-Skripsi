@@ -109,7 +109,7 @@ class HistoriAbsensiSiswaController extends Controller
         // } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date
+                'path' => 'absensi/histori-absensi-siswa/detail/' . $input->kelas . '/' . $input->date . '/' . $input->status
             ];
         // }
     }
@@ -171,9 +171,8 @@ class HistoriAbsensiSiswaController extends Controller
     }
 
 
-    public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date)
+    public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date, $status)
     {
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
@@ -306,28 +305,28 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas'));
+        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas','status'));
     }
 
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)
     {
         set_time_limit(9800);
         if($id_kelas == "1"){
-            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            $pengguna = Pengguna::with('status_pengguna','siswa','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [7,8,9]);
             })->orderBy('nm_pengguna', 'asc')->get();
         }elseif($id_kelas == "2"){
-            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            $pengguna = Pengguna::with('status_pengguna','siswa','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [10,11,12]);
             })->orderBy('nm_pengguna', 'asc')->get();
         }elseif($id_kelas == "0"){
-            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
+            $pengguna = Pengguna::with('status_pengguna','siswa','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->orderBy('nm_pengguna', 'asc')->get();
