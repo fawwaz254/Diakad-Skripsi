@@ -1,5 +1,6 @@
 @php
 $today = Carbon\Carbon::today('Asia/Jakarta');
+// dd($$count_siswa);
 @endphp
 <div class="container-fluid">
     <div class="card">
