@@ -127,7 +127,7 @@ class LaporanKerjaHarianController extends Controller
                 if($request->hasFile('file')){ 
 
                     $validator = Validator::make($request->all(),[
-                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                        'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
                     ]);
                     if($validator->fails()) {
                         return [
