@@ -233,7 +233,7 @@ class HistoriAbsensiController extends BaseController
     }
 
 
-    public function viewHistoriAbsensi(Request $request, $date = null, $unit_kerja = null)
+    public function viewHistoriAbsensi(Request $request, $date = null, $unit_kerja = null, $status = null)
     {
         set_time_limit(1800);
         # code...
@@ -246,6 +246,10 @@ class HistoriAbsensiController extends BaseController
 
         if (!isset($unit_kerja)) {
             $unit_kerja = "0";
+        }
+
+        if (!isset($status)) {
+            $status = "0";
         }
 
         if ($unit_kerja != "0") {
@@ -356,7 +360,7 @@ class HistoriAbsensiController extends BaseController
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                        $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout ";
+                        $hasil[$key]['status'] = "Masuk | Telat  | Tidak Checkout";
                     }
                 }
 
@@ -381,7 +385,7 @@ class HistoriAbsensiController extends BaseController
             }
         }
         $list_unit_kerja = UnitKerja::all();
-        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'list_unit_kerja','date', 'hasil', 'jumlah_hadir','belum_absent', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja'));
+        return view('humas/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'list_unit_kerja','date', 'hasil', 'jumlah_hadir','belum_absent', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur', 'unit_kerja','status'));
     }
 
     public function createHistoriAbsensi(Request $request, $id_pengguna = null, $date = null)
