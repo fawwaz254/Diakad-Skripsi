@@ -50,6 +50,7 @@
                         <td>{{ $item2['status'] }}</td>
                     @endif
                 @endif
+            @foreach
         </tr>
     @endforeach
 </tbody>
