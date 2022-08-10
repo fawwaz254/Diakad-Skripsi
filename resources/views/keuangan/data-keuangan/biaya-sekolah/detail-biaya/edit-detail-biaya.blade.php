@@ -13,7 +13,7 @@
                 <div class="body">
                     <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/biaya-sekolah/detail-biaya/action-detail-biaya/edit/'.$data_detail_biaya->id_detail_biaya)}}">
                         {{csrf_field()}}
-                       
+                       <input type="hidden" name="id_biaya_sekolah" value="{{ $data_detail_biaya->id_biaya_sekolah }}"> 
                         <h2 class="card-inside-title">
                             Nama Biaya
                         </h2>
@@ -31,7 +31,7 @@
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">
+                        {{-- <h2 class="card-inside-title">
                             Nama Biaya Internal
                         </h2>
                         <div class="row clearfix">
@@ -47,7 +47,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                         <h2 class="card-inside-title">
                             Validasi
                         </h2>
