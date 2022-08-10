@@ -21,6 +21,7 @@ use App\Models\DetailBiayaInternal;
 use App\Models\DetailPotonganBiaya;
 use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
+use App\Models\Pengguna;
 use App\Models\PotonganBiaya;
 use App\Models\WaliMurid;
 use App\Models\Semester;
@@ -243,8 +244,12 @@ class PembayaranSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-        $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
+        $cek_status = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna')->first();
+        if($cek_status->status_pengguna->nm_status_pengguna == "LULUS"){
+            $siswa = LibSiswa::fetchDataSiswaByPenggunaTanpaKelas($auth_data, $id_pengguna);
+        }else{
+            $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
+        }
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $semester_mulai = Semester::where('kode_semester', $input->tahun_tagihan . '1')->first()->id_semester;
