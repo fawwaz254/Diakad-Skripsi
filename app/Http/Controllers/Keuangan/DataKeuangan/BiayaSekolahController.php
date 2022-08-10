@@ -306,7 +306,7 @@ class BiayaSekolahController extends BaseController
                 if ($detailBiaya = DetailBiaya::where('id_biaya_sekolah', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Biaya Sekolah'
+                        'message' => 'Failed To Delete Biaya Sekolah (Hapus dahulu detail biaya)'
                     ];
                 } else {
                     // make object to find id
