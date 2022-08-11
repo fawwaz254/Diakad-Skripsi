@@ -107,7 +107,6 @@
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
-                                    <td>Rp 0</td>
                                 </tr>
                                 @endforeach
                             </tbody>
