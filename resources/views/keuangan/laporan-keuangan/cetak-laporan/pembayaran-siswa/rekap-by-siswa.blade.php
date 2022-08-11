@@ -85,12 +85,12 @@
         <br>
         <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:small" class="mb-2">
             <tr>
-                <th style="width: 10px;">No.</th>
-                <th>Nama</th>
-                <th>Kelas</th>
+                <th style="width: 3%;">No.</th>
+                <th style="width: 27%;">Nama</th>
+                <th style="width: 10%;">Kelas</th>
                 @if (isset($data_laporan['kategori_biaya']))
                     @foreach ($data_laporan['kategori_biaya'] as $biaya)
-                        <th @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma') style="width: 15%;" @else style="width: 10%;" @endif>
+                        <th @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawidyadarma') style="width: 25%;" @else style="width: 10%;" @endif>
                             {{ strtoupper($biaya) }}</th>
                     @endforeach
                 @endif
@@ -106,7 +106,7 @@
             @if (isset($data_laporan['data']))
                 @foreach ($data_laporan['data'] as $siswa)
                     <tr>
-                        <td>{{ $no++ }}</td>
+                        <td style="text-align: center">{{ $no++ }}</td>
                         <td>{{ $siswa['nis_siswa'] . ' - ' . $siswa['nm_siswa'] }}</td>
                         <td>{{ $siswa['kelas_siswa'] }}</td>
                         @if (isset($data_laporan['kategori_biaya']))
