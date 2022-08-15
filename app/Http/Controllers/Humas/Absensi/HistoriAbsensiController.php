@@ -402,7 +402,7 @@ class HistoriAbsensiController extends BaseController
         $status = $input['status'];
         $notes = $input['notes'];
         PresensiPengguna::create(['id_presensi_pengguna' => $uuid, 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
-        return redirect("/humas#absensi/histori-absensi/" . $date);
+        return redirect("/humas#absensi/histori-absensi/" . $date . "/0" . "/0");
     }
 
     public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $date = null)
@@ -421,7 +421,7 @@ class HistoriAbsensiController extends BaseController
         //     'path' => 'absensi/histori-absensi/',
         //     'message' => 'Data Absensi Berhasil Di Update'
         // ];
-        return redirect("/humas#absensi/histori-absensi/" . $date);
+        return redirect("/humas#absensi/histori-absensi/" . $date . "/0" . "/0");
     }
 
     public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
