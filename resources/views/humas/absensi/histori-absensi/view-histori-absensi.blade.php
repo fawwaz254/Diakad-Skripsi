@@ -310,7 +310,7 @@
                                 icon: "success",
                             });
                             loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' +
-                                $('input[name=date]').val());
+                                $('input[name=date]').val() + '/0/0');
                         },
                     });
                 }
