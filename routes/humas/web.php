@@ -99,12 +99,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('export-laravel/{date}/{unit_kerja}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
 				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-				Route::get('/{date}/{unit_kerja}/{status}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+			
 				Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
 				Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
 				Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
 				Route::post('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
 				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
+				Route::get('/{date}/{unit_kerja}/{status}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
 			});
 
 			Route::group(array('prefix' => 'manajemen-hari-libur'), function () {
