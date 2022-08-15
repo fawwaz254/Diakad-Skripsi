@@ -331,6 +331,7 @@ class InputGuruController extends BaseController
                 $pengguna->id_status_pengguna       = $input->id_status_pengguna;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
 
+
                 // apabila ada pergantian nip guru
                 if ($pengguna->username != $input->nip_guru) {
                     $pengguna->username                 = $input->nip_guru;
@@ -406,12 +407,16 @@ class InputGuruController extends BaseController
                 $guru->nomor_hp                 = $input->nomor_hp;
                 $guru->email                    = $input->email;
 
+                //keluar
+                $guru->tgl_keluar               =  date_format(date_create($input->tgl_keluar), "Y-m-d");;
+                $guru->alasan_keluar            = $input->alasan_keluar;
 
                 //section penugasan
                 $guru->is_sekolah_induk         = $input->is_sekolah_induk;
                 $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $guru->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $guru->save();
+
 
                 LibGlobal::insertUpdateUserInCenter([
                     [
