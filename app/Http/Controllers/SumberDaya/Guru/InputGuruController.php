@@ -175,7 +175,6 @@ class InputGuruController extends BaseController
                 }else{
                     return $item->nm_status_pengguna;
                 }
-                
             })->rawColumns(['nm_status_pengguna'])
             ->addColumn('jml_mengajar_semester_aktif', function ($item) {
                 if (!empty($item->jml_mengajar_semester_aktif)) {
