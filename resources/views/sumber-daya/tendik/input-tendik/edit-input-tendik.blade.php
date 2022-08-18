@@ -615,6 +615,24 @@
                                 </select>
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Tanggal Keluar/Non-Aktif
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="datepicker form-control" name="tgl_keluar"
+                                    aria-invalid="true" value="{{ $tendik->tgl_keluar }}">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Alasan Keluar/Non-Aktif
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="alasan_keluar" aria-invalid="true"
+                                    value="{{ $tendik->alasan_keluar }}">
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
@@ -683,3 +701,14 @@
     </div>
 </div>
 @include('scriptjs')
+<script>
+    $(function() {
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'DD MMMM YYYY',
+            //lang : 'id',
+            clearButton: true,
+            weekStart: 1,
+            time: false
+        });
+    });
+</script>

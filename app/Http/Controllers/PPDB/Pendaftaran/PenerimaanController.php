@@ -165,7 +165,7 @@ class PenerimaanController extends BaseController {
             'is_verifikasi'             => 'required',
             'is_bayar_voucher'          => 'required',
             'nomor_rekening_transfer'   => 'required',
-            'biaya_daftar_ulang'          => 'required',
+            // 'biaya_daftar_ulang'          => 'required',
             'jenis_penerimaan'          => 'required',
             'is_aktif'                  => 'required'
         ]);
@@ -225,7 +225,7 @@ class PenerimaanController extends BaseController {
                 $penerimaan->is_bayar_voucher           = $input->is_bayar_voucher;
                 $penerimaan->nomor_rekening_transfer    = $input->nomor_rekening_transfer;
                 $penerimaan->jenis_penerimaan           = $input->jenis_penerimaan;
-                $penerimaan->biaya_daftar_ulang         = $input->biaya_daftar_ulang;
+                // $penerimaan->biaya_daftar_ulang         = $input->biaya_daftar_ulang;
                 $penerimaan->is_aktif                   = $input->is_aktif;
                 $penerimaan->id_sekolah                 = $input->auth_data->pengguna->id_sekolah;
                 $penerimaan->created_by                 = $input->auth_data->pengguna->id_pengguna;
