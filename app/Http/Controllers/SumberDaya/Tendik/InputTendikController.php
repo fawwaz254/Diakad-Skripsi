@@ -116,7 +116,7 @@ class InputTendikController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
+        $list_data = $tendik = Staff::select('staff.id_staff', 'staff.id_pengguna','staff.tgl_keluar','staff.alasan_keluar', 'pengguna.id_status_pengguna', 'staff.jenis_jabatan', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'staff.nip_staff', 'unit_kerja.nm_unit_kerja', 'status_pengguna.nm_status_pengguna')
                     ->join('pengguna','pengguna.id_pengguna','=','staff.id_pengguna')
                     ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
                     ->join('unit_kerja','unit_kerja.id_unit_kerja','=','staff.id_unit_kerja')
@@ -141,7 +141,13 @@ class InputTendikController extends BaseController{
                     else {
                         return $item->nm_pengguna; 
                     }
-                })
+                })->editColumn('nm_status_pengguna', function($item) {
+                    if(isset($item->tgl_keluar)){
+                        return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar '. '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
+                    }else{
+                        return $item->nm_status_pengguna;
+                    }
+                })->rawColumns(['nm_status_pengguna'])
                 ->addColumn('action', function($item){
                     $data = array(
                         'id' => $item->id_staff
@@ -372,6 +378,9 @@ class InputTendikController extends BaseController{
                 $staff->nomor_hp                 = $input->nomor_hp;
                 $staff->email                    = $input->email;
 
+                //keluar
+                $staff->tgl_keluar              =  date_format(date_create($input->tgl_keluar), "Y-m-d");;
+                $staff->alasan_keluar           = $input->alasan_keluar;
 
                 //section penugasan
                 $staff->is_sekolah_induk         = $input->is_sekolah_induk;
