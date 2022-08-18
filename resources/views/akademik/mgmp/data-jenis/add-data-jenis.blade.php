@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH JENIS MGMP
+                        TAMBAH JENIS JURNAL HARIAN
                     </h2>
                 </div>
                 <div class="body">
@@ -17,7 +17,7 @@
                         action="{{url(Request::segment(1).'/'.Request::segment(2).'/jenis-mgmp/action-data-kategori/add/0')}}">
                         {{csrf_field()}}
                         <h2 class="card-inside-title">
-                            Jenis MGMP
+                            Jenis Jurnal Harian
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
