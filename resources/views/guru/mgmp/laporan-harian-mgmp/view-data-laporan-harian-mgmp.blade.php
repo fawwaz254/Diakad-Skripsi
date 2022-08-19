@@ -2,7 +2,7 @@
     <div class="block-header">
         <h2>
             <a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-harian-mgmp/add')}}"><i class="material-icons">add</i><span>Tambah Laporan Kerja Harian</span></a>
-            <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
+            {{-- <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button> --}}
         </h2>
     </div>
     <div class="row clearfix">
@@ -70,9 +70,7 @@
         </button>
       </div>
       <div class="modal-body">
-                
             <div class="row">
-
                 <div class="col-md-6">
                     <label>
                         Tanggal Awal
@@ -120,18 +118,21 @@
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-harian-mgmp/datatables';
     var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-harian-mgmp/edit';
     var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-harian-mgmp/action-kerja-harian/delete';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-harian-mgmp/preview-file';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false },
             { data: 'tanggal', name: 'tanggal' },
             {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
             {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
@@ -139,10 +140,10 @@
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 1){
-                        return '<i class="material-icons" style="color:green">done</i>';
+                        return 'belum selesai';
                     }
                     else{
-                        return '<i class="material-icons" style="color:red">clear</i>';
+                        return 'selesai';
                     }
                 }
             },
@@ -176,6 +177,7 @@
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
@@ -184,7 +186,7 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
+            <a href="`+preview_file_url+`/`+id+`/1`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
             <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);

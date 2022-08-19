@@ -1,10 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
-       
             <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-kelompok-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
-
-     
-            <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
+            {{-- <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button> --}}
         </h2>
     </div>
     <div class="row clearfix">
@@ -83,10 +80,7 @@
                     </label>
                     <input type="date" class="datepicker form-control" id="end_date" name="end_date" required="" aria-required="true" aria-invalid="true">
                 </div>
-
             </div>
-
-
       </div>
       <div class="modal-footer">
         <button type="button" id="print_laporan" class="btn btn-primary">Submit</button>
@@ -115,19 +109,22 @@
     var id_mapel = "{{ $id }}";
     var modul_url        = 'mgmp';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/detail/datatables/' + id_mapel;
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-kelompok-mgmp/preview-file';
 
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false },
             { data: 'tanggal', name: 'tanggal' },
             {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
             {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
@@ -135,10 +132,10 @@
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 1){
-                        return '<i class="material-icons" style="color:green">done</i>';
+                        return 'selesai';
                     }
                     else{
-                        return '<i class="material-icons" style="color:red">clear</i>';
+                        return 'belum selesai';
                     }
                 }
             },
@@ -162,6 +159,7 @@
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
@@ -170,7 +168,7 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
+            <a href="`+preview_file_url+`/`+id+`/2`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
             <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
