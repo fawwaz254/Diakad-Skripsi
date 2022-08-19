@@ -109,6 +109,7 @@
     var modul_url        = 'mpmp';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-mgmp/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-mgmp/download-file';
 
 
     var primary_table = $('#primary_table').DataTable({
@@ -168,7 +169,7 @@
         $('#place').empty();
         $('#place').append(`
             <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
-            <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
+            <a href="`+download_file_url+`/`+id+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
         $('#modal-opsi').modal('show');

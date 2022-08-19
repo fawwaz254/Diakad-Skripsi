@@ -25,6 +25,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
                 Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
                 Route::get('preview-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@previewFile');
+                Route::get('download-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@downloadFile');
             });
 
         });
