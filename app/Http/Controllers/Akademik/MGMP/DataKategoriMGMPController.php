@@ -251,6 +251,16 @@ class DataKategoriMGMPController extends BaseController
 
     }
 
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+        $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
+    }
+
     public function datatablesKerjaHarianAllMGMP(Request $request){
 
         $input = (object) $request->input();

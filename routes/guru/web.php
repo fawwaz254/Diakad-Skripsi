@@ -13,6 +13,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
                 Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
                 Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
+                Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
             });
 
             Route::group(array('prefix' => 'laporan-kelompok-mgmp'), function () {
@@ -21,6 +22,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/detail/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@detailLaporanKelompokMGMP');
                 Route::get('/detail/datatables/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesDetailKerjaHarianKelompokMGMP');
                 Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
+                Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
             });
         });
 
