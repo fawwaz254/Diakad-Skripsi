@@ -24,6 +24,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::group(array('prefix' => 'laporan-mgmp'), function () {
                 Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
                 Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
+                Route::get('preview-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@previewFile');
             });
 
         });
