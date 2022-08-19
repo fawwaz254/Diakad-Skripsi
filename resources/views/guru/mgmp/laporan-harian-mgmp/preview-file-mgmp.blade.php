@@ -1,7 +1,12 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mpmp/laporan-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
+      <div class="block-header">
+        @if($no == 1)
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-harian-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
         </h2>
+        @else
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-kelompok-mgmp/detail/' . $no )}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
+        </h2>
+        @endif
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
