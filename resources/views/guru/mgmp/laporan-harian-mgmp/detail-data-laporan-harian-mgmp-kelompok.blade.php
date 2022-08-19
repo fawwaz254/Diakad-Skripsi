@@ -1,7 +1,6 @@
 <div class="container-fluid">
     <div class="block-header">
             <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-kelompok-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
-            {{-- <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button> --}}
         </h2>
     </div>
     <div class="row clearfix">
@@ -18,7 +17,7 @@
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
                                         <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Uraian Kegiatan</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama</th>
                                     </tr>
@@ -168,7 +167,7 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`/2`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
+            <a href="`+preview_file_url+`/`+id+`/`+id_mapel+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
             <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);

@@ -19,7 +19,7 @@
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
                                         <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Uraian Kegiatan</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Tuntas</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Action</th>
@@ -186,7 +186,7 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`/1`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
+            <a href="`+preview_file_url+`/`+id+`/1`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
             <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);

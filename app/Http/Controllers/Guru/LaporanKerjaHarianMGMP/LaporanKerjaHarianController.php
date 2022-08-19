@@ -48,7 +48,7 @@ class LaporanKerjaHarianController extends Controller
         $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
         $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
-        return view('akademik/mgmp/data-kategori/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext','no'));
+        return view('guru/mgmp/laporan-harian-mgmp/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext','id','no'));
 
     }
 
