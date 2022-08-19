@@ -1,9 +1,9 @@
 <div class="container-fluid">
-    <div class="block-header">
+    {{-- <div class="block-header">
         <h2>
             <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
         </h2>
-    </div>
+    </div> --}}
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -120,12 +120,15 @@
         processing: true,
         serverSide: true,
         responsive: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_column', defaultContent: '', searchable: false, orderable: false  },
             { data: 'tanggal', name: 'tanggal' },
             {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
             {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
@@ -136,7 +139,7 @@
                         return '<i class="material-icons" style="color:green">done</i>';
                     }
                     else{
-                        return '<i class="material-icons" style="color:red">clear</i>';
+                        return '';
                     }
                 }
             },
@@ -160,6 +163,7 @@
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+              primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
