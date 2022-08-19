@@ -113,7 +113,7 @@
 
     var modul_url        = 'mpmp';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-mgmp/preview-file';
 
 
     var primary_table = $('#primary_table').DataTable({
@@ -128,7 +128,7 @@
             type: 'GET'
         },
         columns: [
-            { data: 'index_column', defaultContent: '', searchable: false, orderable: false  },
+            { data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false  },
             { data: 'tanggal', name: 'tanggal' },
             {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
             {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
@@ -136,10 +136,10 @@
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 1){
-                        return '<i class="material-icons" style="color:green">done</i>';
+                        return 'tuntas';
                     }
                     else{
-                        return '';
+                        return 'belum tuntas';
                     }
                 }
             },
