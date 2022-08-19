@@ -239,6 +239,18 @@ class DataKategoriMGMPController extends BaseController
 
     }
 
+    public function previewFile($id,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+        return view('akademik/mgmp/data-kategori/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext'));
+
+    }
+
     public function datatablesKerjaHarianAllMGMP(Request $request){
 
         $input = (object) $request->input();
