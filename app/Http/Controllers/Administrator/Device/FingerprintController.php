@@ -74,9 +74,9 @@ class FingerprintController extends BaseController
         }
 
         if ($device = FPDevice::where('sn', $serial_number)->first()) {
-            $device->ip_address_wan = $request->ip();
-            $device->updated_at = Carbon::now('Asia/Jakarta');
-            $device->save();
+            // $device->ip_address_wan = $request->ip();
+            // $device->updated_at = Carbon::now('Asia/Jakarta');
+            // $device->save();
         } else {
             return 'FAILED';
         }
