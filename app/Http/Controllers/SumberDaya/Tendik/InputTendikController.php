@@ -142,7 +142,7 @@ class InputTendikController extends BaseController{
                         return $item->nm_pengguna; 
                     }
                 })->editColumn('nm_status_pengguna', function($item) {
-                    if(isset($item->tgl_keluar)){
+                    if(isset($item->alasan_keluar)){
                         return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar '. '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
                     }else{
                         return $item->nm_status_pengguna;
