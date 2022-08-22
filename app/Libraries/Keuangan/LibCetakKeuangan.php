@@ -847,36 +847,73 @@ class LibCetakKeuangan{
                     // Get Biaya Internal (kelompok_biaya_internal)
                     $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
                     // === var for $tempDataLaporan
-                    $date           = new DateTime($data->tgl_pembayaran);
-                    $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
-                    $count          = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
-                                        ->filter(function($q) use ($date){
-                                            $qDate = new DateTime($q->tgl_pembayaran);
-                                            return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
-                                        })->count();
-                    $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
-                    $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+                    if($data->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == "4"){
+                        $date           = new DateTime($data->tgl_pembayaran);
+                        // $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
+                        // $id_jenis_detail_biaya      = $data->tagihan_biaya->detail_biaya->id_jenis_detail_biaya;
+                        $count          = $val->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)
+                                            ->filter(function($q) use ($date){
+                                                $qDate = new DateTime($q->tgl_pembayaran);
+                                                return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                                            })->count();
+                        // $bulan = Bulan::where('id_bulan', $id_bulan)->first();
+                        $keyTempData    = $kategori->nm_biaya . '-' . $ta;
+                        $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+
+                        $nominal = $val->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)->filter(function($q) use ($date){
+                            $qDate = new DateTime($q->tgl_pembayaran);
+                            return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                        });
+    
+                        $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
+                            'tanggal' => $date->format('Y-m-d'),
+                            'nominal' => $nominal->sum('besar_pembayaran'),
+                            'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
+                                            ->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)
+                                            ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
+                                            ->sum('tagihan_biaya.potongan.total_potongan'),
+                            'frekuensi' => $count,
+                            'tipe' => 1,
+                            'nm_tipe' => 'debit',
+                            'kategori' => $stringNmBiaya,
+                            'keterangan' => $keyTempData . ' ' . $count . 'x (' . $tahun_ajaran . ')',
+                            'tahun_ajaran' => $tahun_ajaran
+                        ];
+                    }else{
+                        $date           = new DateTime($data->tgl_pembayaran);
+                        $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
+                        $count          = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                            ->filter(function($q) use ($date){
+                                                $qDate = new DateTime($q->tgl_pembayaran);
+                                                return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                                            })->count();
+                        $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
+                        $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+
+                        $nominal = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)->filter(function($q) use ($date){
+                            $qDate = new DateTime($q->tgl_pembayaran);
+                            return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
+                        });
+    
+                        $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
+                            'tanggal' => $date->format('Y-m-d'),
+                            'nominal' => $nominal->sum('besar_pembayaran'),
+                            'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
+                                            ->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                                            ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
+                                            ->sum('tagihan_biaya.potongan.total_potongan'),
+                            'frekuensi' => $count,
+                            'tipe' => 1,
+                            'nm_tipe' => 'debit',
+                            'kategori' => $stringNmBiaya,
+                            'keterangan' => $keyTempData . ' ' . $count . 'x (' . $tahun_ajaran . ')',
+                            'tahun_ajaran' => $tahun_ajaran
+                        ];
+                    }
+                   
                     // ===
 
-                    $nominal = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)->filter(function($q) use ($date){
-                        $qDate = new DateTime($q->tgl_pembayaran);
-                        return $qDate->format('Y-m-d') == $date->format('Y-m-d'); 
-                    });
-
-                    $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
-                        'tanggal' => $date->format('Y-m-d'),
-                        'nominal' => $nominal->sum('besar_pembayaran'),
-                        'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
-                                        ->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
-                                        ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
-                                        ->sum('tagihan_biaya.potongan.total_potongan'),
-                        'frekuensi' => $count,
-                        'tipe' => 1,
-                        'nm_tipe' => 'debit',
-                        'kategori' => $stringNmBiaya,
-                        'keterangan' => $keyTempData . ' ' . $count . 'x (' . $tahun_ajaran . ')',
-                        'tahun_ajaran' => $tahun_ajaran
-                    ];
+                 
                 }
             }
         }
