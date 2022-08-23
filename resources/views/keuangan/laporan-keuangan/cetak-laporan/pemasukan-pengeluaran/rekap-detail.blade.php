@@ -142,7 +142,7 @@
                     {{ indonesiaDate(\Carbon\Carbon::parse($end_date)->format('Y-m-d')) }}
                     {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }} --}}
                     <br>Keuangan<br><br><br><br>
-                    <b><u>{{ $auth_data->pengguna->nm_pengguna }},S.E  </u></b>
+                    <b><u>{{ $auth_data->pengguna->nm_pengguna }}, SE  </u></b>
                 </p>
             </div>
         </div>
