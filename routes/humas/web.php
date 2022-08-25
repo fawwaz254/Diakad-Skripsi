@@ -55,10 +55,10 @@ Route::group(array('prefix' => 'jurnal-harian'), function () {
 	});
 
 	Route::group(array('prefix' => 'jenis-jurnal-harian'), function () {
-		// Route::get('/', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@viewDataJenis');
-		// Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
-		// Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
-		// Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
+		Route::get('/', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@viewDataJenis');
+		Route::get('/datatables', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@datatablesjenis');
+		Route::get('/add', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@addDataJenis');
+		Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@actionDataJenis');
 	});
 
 	Route::group(array('prefix' => 'laporan-mgmp'), function () {
