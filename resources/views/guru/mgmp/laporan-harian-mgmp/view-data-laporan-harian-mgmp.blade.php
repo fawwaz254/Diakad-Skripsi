@@ -141,10 +141,10 @@
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 1){
-                        return 'belum selesai';
+                        return 'selesai';
                     }
                     else{
-                        return 'selesai';
+                        return 'belum selesai';
                     }
                 }
             },
