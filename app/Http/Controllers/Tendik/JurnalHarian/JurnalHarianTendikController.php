@@ -136,65 +136,65 @@ class JurnalHarianTendikController extends Controller
 
             }
 
-            // elseif($mode == 'edit'){
-            //     $data                        = LaporanKerjaHarianMGMP::find($id);
-            //     $data->id_role               = $input->auth_data->role_aktif->id_role;
-            //     $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
-            //     $data->jenis                        = $input->jenis;
-            //     $data->mapel                        = $input->mata_pelajaran;
-            //     $data->keterangan_progres           = $input->keterangan;
-            //     $data->status                       = $input->status;
-            //     $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+            elseif($mode == 'edit'){
+                $data                        = LaporanKerjaHarianMGMP::find($id);
+                $data->id_role               = $input->auth_data->role_aktif->id_role;
+                $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
+                $data->jenis                        = $input->jenis;
+                $data->mapel                        = $input->mata_pelajaran;
+                $data->keterangan_progres           = $input->keterangan;
+                $data->status                       = $input->status;
+                $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
-            //     if($request->hasFile('file')){ 
+                if($request->hasFile('file')){ 
 
-            //         $validator = Validator::make($request->all(),[
-            //             'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
-            //         ]);
-            //         if($validator->fails()) {
-            //             return [
-            //                 'status' => 300, // FAILED
-            //                 'message' => $validator->errors()->first()
-            //             ];
-            //         }
+                    $validator = Validator::make($request->all(),[
+                        'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                    ]);
+                    if($validator->fails()) {
+                        return [
+                            'status' => 300, // FAILED
+                            'message' => $validator->errors()->first()
+                        ];
+                    }
 
-            //         else{
+                    else{
 
-            //             $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-            //             $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$id, request()->file, 'public');
-            //             $data->path_file = $file;
+                        $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$id, request()->file, 'public');
+                        $data->path_file = $file;
 
-            //             $upload = $request->file('file');
-            //             $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
-            //             $data->nm_file = $filename;
+                        $upload = $request->file('file');
+                        $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
+                        $data->nm_file = $filename;
 
-            //         }
+                    }
 
-            //     }
+                }
 
-            //     $data->save();
+                $data->save();
 
-            //     return [
-            //         'status' => 202, // SUCCESS AND LOAD CONTENT
-            //         'path' => 'mgmp/laporan-harian-mgmp/',
-            //         'message' => 'Update Laporan Laporan Kerja Harian  successfully'
-            //     ];
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'mgmp/laporan-harian-mgmp/',
+                    'message' => 'Update Laporan Laporan Kerja Harian  successfully'
+                ];
 
-            // }
+            }
 
-            // elseif($mode == 'delete'){
+            elseif($mode == 'delete'){
 
-            //     $data               = LaporanKerjaHarianMGMP::find($id);
-            //     $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
-            //     $data->save();
-            //     $data->delete();
+                $data               = LaporanKerjaHarianMGMP::find($id);
+                $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $data->save();
+                $data->delete();
 
-            //     return [
-            //         'status' => 203, // SUCCESS AND LOAD TABLE
-            //         'message' => 'Delete Laporan Kerja Harian successfully'
-            //     ];
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Laporan Kerja Harian successfully'
+                ];
 
-            // }
+            }
 
         }
     }
