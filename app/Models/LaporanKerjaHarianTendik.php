@@ -23,7 +23,7 @@ class LaporanKerjaHarianTendik extends Model
     // {
     //     return $this->belongsTo(Role::class, 'id_role');
     // }
-    public function unit_kerja()
+    public function category_jurnal_harian_tendik()
     {
         return  $this->belongsTo(CategoryJurnalHarianTendik::class,'id_category_jh_tendik');
     }

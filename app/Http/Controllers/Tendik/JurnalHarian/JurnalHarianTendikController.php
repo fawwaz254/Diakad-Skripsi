@@ -199,46 +199,46 @@ class JurnalHarianTendikController extends Controller
         }
     }
 
-//     public function datatablesKerjaHarianMGMP(Request $request){
+    public function datatablesKerjaHarianTendik(Request $request){
 
-//         $input = (object) $request->input();
-//         $auth_data = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-//         $list_data = LaporanKerjaHarianMGMP::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)
-//                                     ->where('id_role',$input->auth_data->role_aktif->id_role)->with('mapel')
-//                                     ->get();
+        $list_data = LaporanKerjaHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)
+                                    ->with('category_jurnal_harian_tendik.unit_kerja')
+                                    ->get();
 
-//         return Datatables::of($list_data)
-//                 ->editColumn('tanggal',function($item){
-//                     return Carbon::parse($item->tanggal)->format('d M Y');
-//                 })
-//                 ->addColumn('action', function($item){
-//                     if($item->path_file){
-//                         $file =  Storage::disk('spaces')->url($item->path_file);
-//                         $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
-//                         if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
-//                             $note = 'file';
-//                         }
-//                         else{
-//                             $note= 'image';
-//                         }
-//                     }
-//                     else{
-//                         $file = null;
-//                         $note = null;
-//                     }
+        return Datatables::of($list_data)
+                ->editColumn('tanggal',function($item){
+                    return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->addColumn('action', function($item){
+                    if($item->path_file){
+                        $file =  Storage::disk('spaces')->url($item->path_file);
+                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                            $note = 'file';
+                        }
+                        else{
+                            $note= 'image';
+                        }
+                    }
+                    else{
+                        $file = null;
+                        $note = null;
+                    }
 
-//                     $data = array(
-//                         'id'        => $item->id_laporan_kerja_harian_mgmp,
-//                         'jenis'    =>$item->jenis,
-//                         'status'    => $item->status,
-//                         'file'      =>$file,
-//                         'note'      => $item->mapel,
-//                     );
-//                     return $data;
-//                 })
-//                 ->make(true);
-//     }
+                    $data = array(
+                        'id'        => $item->id_lap_kerha_t,
+                        'jenis'    =>$item->jenis,
+                        'status'    => $item->status,
+                        'file'      =>$file,
+                        'note'      => $item->catatan,
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
 
 
 // public function editKerjaHarian(Request $request, $id = null){

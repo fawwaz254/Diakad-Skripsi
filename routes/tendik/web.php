@@ -51,7 +51,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/', 'Tendik\JurnalHarian\JurnalHarianTendikController@viewLaporanJurnalHarian');
                 Route::get('add', 'Tendik\JurnalHarian\JurnalHarianTendikController@addLaporanHarianJurnalHarian');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@actionLaporanHarianTendik');
-                // Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
+                Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianTendik');
                 // Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
                 // Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
                 // Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
