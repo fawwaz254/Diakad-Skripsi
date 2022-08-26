@@ -15,6 +15,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
 			});
 
+
+			
+
 			// MENU Data Sub Kategori 
 			Route::group(array('prefix' => 'data-sub-kategori'), function () {
 				Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
@@ -39,6 +42,32 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
 			});
 		});
+
+
+//modul jurnal harian
+Route::group(array('prefix' => 'jurnal-harian'), function () {
+	Route::group(array('prefix' => 'kelompok-jurnal-harian-tendik'), function () {
+		Route::get('/', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@viewDataKategori');
+		Route::get('/datatables', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@datatablesCategoryfile');
+		Route::get('/add', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@addDataKategori');
+		Route::get('/edit/{id_category_jh_tendik}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@editDataKategori');
+		Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@actionDataKategori');
+	});
+
+	Route::group(array('prefix' => 'jenis-jurnal-harian'), function () {
+		Route::get('/', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@viewDataJenis');
+		Route::get('/datatables', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@datatablesjenis');
+		Route::get('/add', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@addDataJenis');
+		Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@actionDataJenis');
+	});
+
+	Route::group(array('prefix' => 'laporan-mgmp'), function () {
+		// Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
+		// Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
+		// Route::get('preview-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@previewFile');
+		// Route::get('download-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@downloadFile');
+	});
+});
 
 		Route::group(array('prefix' => 'data-guru'), function () {
 
@@ -99,7 +128,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('export-laravel/{date}/{unit_kerja}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
 				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
-			
+
 				Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
 				Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
 				Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
@@ -136,14 +165,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 				//buat generate shift siswa
 				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
-
 			});
 			// http://127.0.0.1:8000/humas/absensi/device/datatables
 			Route::group(array('prefix' => 'device'), function () {
 				// MENU Data Fingerprint
 				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
 				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
-			
 			});
 		});
 
@@ -332,20 +359,20 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('add', 'TracerAlumniController@addTracerAlumni');
 				Route::get('edit/{id}', 'TracerAlumniController@editTracerAlumni');
 				Route::post('action/{mode}/{id}', 'TracerAlumniController@actionTracerAlumni');
-				Route::get('cetak','TracerAlumniController@cetakTracerAlumni');
-				Route::get('cetak2','TracerAlumniController@cetakTracerAlumni2');
-				Route::post('cetak','TracerAlumniController@changeTracerAlumni');
-				Route::post('cetak2','TracerAlumniController@changeTracerAlumni2');
-				Route::get('cetak/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni');
-				Route::get('cetak2/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni2');
-				Route::get('cetak/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni');
+				Route::get('cetak', 'TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak2', 'TracerAlumniController@cetakTracerAlumni2');
+				Route::post('cetak', 'TracerAlumniController@changeTracerAlumni');
+				Route::post('cetak2', 'TracerAlumniController@changeTracerAlumni2');
+				Route::get('cetak/{id_kelas}/{tahun}', 'TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak2/{id_kelas}/{tahun}', 'TracerAlumniController@cetakTracerAlumni2');
+				Route::get('cetak/datatables/{id_kelas}/{tahun}', 'TracerAlumniController@datatablesCetakTracerAlumni');
 				// Route::get('cetak2/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni2');
-				Route::get('export-alumni/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni');
-				Route::get('export-alumni2/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni2');
+				Route::get('export-alumni/{id_kelas}/{tahun}', 'TracerAlumniController@exportAlumnni');
+				Route::get('export-alumni2/{id_kelas}/{tahun}', 'TracerAlumniController@exportAlumnni2');
 				// Route untuk import Excel
 				Route::get('excel', 'TracerAlumniController@excelTracerAlumni');
-				Route::post('post-file-excel','TracerAlumniController@uploadFileExcel');
-				Route::get('download-file-excel','TracerAlumniController@downloadFileExcel')->name('tracer-alumni-smp/download-file-excel');
+				Route::post('post-file-excel', 'TracerAlumniController@uploadFileExcel');
+				Route::get('download-file-excel', 'TracerAlumniController@downloadFileExcel')->name('tracer-alumni-smp/download-file-excel');
 			});
 		});
 

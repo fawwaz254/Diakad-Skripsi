@@ -152,21 +152,21 @@ class DataKategoriMGMPController extends BaseController
                         $datakategori_guru->save();
                     }
 
-                    $uuid1 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $subkategori = new SubCategoryFileMGMP(); 
-                    $subkategori->sub_category_file_id = $uuid1;
-                    $subkategori->sub_category_file_name = 'Folder Akademik';
-                    $subkategori->sub_category_file_explanation = 'untuk mengupload file original';
-                    $subkategori->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
-                    $subkategori->save();
+                    // $uuid1 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $subkategori = new SubCategoryFileMGMP(); 
+                    // $subkategori->sub_category_file_id = $uuid1;
+                    // $subkategori->sub_category_file_name = 'Folder Akademik';
+                    // $subkategori->sub_category_file_explanation = 'untuk mengupload file original';
+                    // $subkategori->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
+                    // $subkategori->save();
 
-                    $uuid2 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $subkategori2 = new SubCategoryFileMGMP(); 
-                    $subkategori2->sub_category_file_id = $uuid2;
-                    $subkategori2->sub_category_file_name = 'Folder Guru';
-                    $subkategori2->sub_category_file_explanation = 'untuk mengupload file guru';
-                    $subkategori2->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
-                    $subkategori2->save();
+                    // $uuid2 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $subkategori2 = new SubCategoryFileMGMP(); 
+                    // $subkategori2->sub_category_file_id = $uuid2;
+                    // $subkategori2->sub_category_file_name = 'Folder Guru';
+                    // $subkategori2->sub_category_file_explanation = 'untuk mengupload file guru';
+                    // $subkategori2->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
+                    // $subkategori2->save();
 
 
                     return [
