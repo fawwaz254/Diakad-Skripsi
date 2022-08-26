@@ -116,8 +116,8 @@
 
     var modul_url        = 'jurnal-harian';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-harian-mgmp/edit';
-    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-harian-mgmp/action-kerja-harian/delete';
+    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/edit';
+    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/action-kerja-harian/delete';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-harian-mgmp/preview-file';
     var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-harian-mgmp/download-file';
 

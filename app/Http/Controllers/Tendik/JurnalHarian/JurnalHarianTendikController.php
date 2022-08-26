@@ -123,31 +123,26 @@ class JurnalHarianTendikController extends Controller
                         $data->nm_file = $filename;
 
                     }
-
                 }
-
                 $data->save();
-
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'jurnal-harian/laporan-individu-jurnal-harian',
                     'message' => 'Save Laporan Laporan Kerja Harian successfully'
                 ];
-
             }
 
             elseif($mode == 'edit'){
-                $data                        = LaporanKerjaHarianMGMP::find($id);
-                $data->id_role               = $input->auth_data->role_aktif->id_role;
-                $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
+                $data                               = LaporanKerjaHarianTendik::find($id);
+                // $data->id_role                   = $input->auth_data->role_aktif->id_role;
+                $data->tanggal                      = date_format(date_create($input->tanggal),"Y-m-d");
                 $data->jenis                        = $input->jenis;
-                $data->mapel                        = $input->mata_pelajaran;
+                $data->id_category_jh_tendik        = $input->unit_kerja;
                 $data->keterangan_progres           = $input->keterangan;
-                $data->status                       = $input->status;
+                $data->catatan                      = $input->status;
                 $data->updated_by                   = $input->auth_data->pengguna->id_pengguna;
 
-                if($request->hasFile('file')){ 
-
+                if($request->hasFile('file')){
                     $validator = Validator::make($request->all(),[
                         'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
                     ]);
@@ -159,24 +154,20 @@ class JurnalHarianTendikController extends Controller
                     }
 
                     else{
-
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
-                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/guru/'.$id, request()->file, 'public');
+                        $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/tendik/'.$id, request()->file, 'public');
                         $data->path_file = $file;
-
                         $upload = $request->file('file');
                         $filename = pathinfo($upload->getClientOriginalName(), PATHINFO_FILENAME);
                         $data->nm_file = $filename;
-
                     }
-
                 }
 
                 $data->save();
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'mgmp/laporan-harian-mgmp/',
+                    'path' => 'jurnal-harian/laporan-individu-jurnal-harian/',
                     'message' => 'Update Laporan Laporan Kerja Harian  successfully'
                 ];
 
@@ -184,7 +175,7 @@ class JurnalHarianTendikController extends Controller
 
             elseif($mode == 'delete'){
 
-                $data               = LaporanKerjaHarianMGMP::find($id);
+                $data               = LaporanKerjaHarianTendik::find($id);
                 $data->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                 $data->save();
                 $data->delete();
@@ -241,17 +232,14 @@ class JurnalHarianTendikController extends Controller
     }
 
 
-// public function editKerjaHarian(Request $request, $id = null){
-//     $input = (object) $request->input();
-//     $auth_data = $input->auth_data;
-//     $laporan_kerja_harian_mgmp = LaporanKerjaHarianMGMP::findOrFail($id);
-//     // $tanggal = $laporan_kerja_harian_mgmp->tanggal;
-//     $mapel = CategoriFileGuru::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('categori_file_mgmp')->get();
-//     // $waktu = Carbon::today()->toDateString();
-//     // dd($laporan_kerja_harian_mgmp);
-//     $jenis = JenisMGMP::all();
-//     return view('guru/mgmp/laporan-harian-mgmp/edit-data-laporan-harian-mgmp',compact('auth_data','mapel','laporan_kerja_harian_mgmp','jenis'));
-// }
+public function editKerjaHarian(Request $request, $id = null){
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+    $laporan_kerja_harian_tendik = LaporanKerjaHarianTendik::findOrFail($id);
+    $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik.unit_kerja')->get();
+    $jenis = JenisJurnalHarianTendik::all();
+    return view('tendik/jurnal-harian/laporan-jurnal-harian/edit-data-laporan-jurnal-harian-t',compact('auth_data','unit_kerja','laporan_kerja_harian_tendik','jenis'));
+}
 
 
 
