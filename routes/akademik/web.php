@@ -6,12 +6,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
         //modul MGMP
         Route::group(array('prefix' => 'mpmp'), function () {
-            Route::group(array('prefix' => 'jenis-mgmp'), function () {
-                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
-                Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
-                Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
-                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
-            });
 
             Route::group(array('prefix' => 'data-kategori-mapel'), function () {
                 Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewDataKategori');
@@ -19,6 +13,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/add', 'Akademik\MGMP\DataKategoriMGMPController@addDataKategori');
                 Route::get('/edit/{category_file_id}', 'Akademik\MGMP\DataKategoriMGMPController@editDataKategori');
                 Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\DataKategoriMGMPController@actionDataKategori');
+            });
+
+            Route::group(array('prefix' => 'jenis-mgmp'), function () {
+                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
+                Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
+                Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
+                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
             });
 
             Route::group(array('prefix' => 'laporan-mgmp'), function () {
