@@ -25,7 +25,7 @@ class CategoryKelompokJurnalHarianTendik extends Model
       return $this->belongsTo(CategoryJurnalHarianTendik::class, 'id_category_jh_tendik');
   }
 
-  // public function laporan_kerja_harian_mgmp(){
-  //     return $this->hasMany(LaporanKerjaHarianMGMP::class, 'mapel','category_file_mgmp_id');
-  // }
+  public function laporan_kerja_harian_tendik(){
+      return $this->hasMany(LaporanKerjaHarianTendik::class, 'id_category_jh_tendik','id_category_jh_tendik');
+  }
 }

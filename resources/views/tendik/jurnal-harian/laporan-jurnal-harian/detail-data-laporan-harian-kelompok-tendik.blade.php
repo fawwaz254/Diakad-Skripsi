@@ -106,8 +106,8 @@
         window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
     });
     var id_mapel = "{{ $id }}";
-    var modul_url        = 'mgmp';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/detail/datatables/' + id_mapel;
+    var modul_url        = 'jurnal-harian';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/detail/datatables/' + id_mapel;
     var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-kelompok-mgmp/preview-file';
     var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/download-file';
 
@@ -128,7 +128,7 @@
             { data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false },
             { data: 'tanggal', name: 'tanggal' },
             {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
-            {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
+            {data:'category_jurnal_harian_tendik.unit_kerja.nm_unit_kerja',class:'text-center', name: 'action', searchable: false, orderable: false},
             // { data: 'keterangan_progres', name: 'keterangan_progres' },
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
