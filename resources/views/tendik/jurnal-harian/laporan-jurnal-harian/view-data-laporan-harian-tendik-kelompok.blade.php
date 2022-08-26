@@ -104,9 +104,9 @@
         window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
     })
 
-    var modul_url        = 'mgmp';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/datatables';
-    var detail_url         = role_url + '#' + modul_url + '/' + 'laporan-kelompok-mgmp/detail';
+    var modul_url        = 'jurnal-harian';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/datatables';
+    var detail_url         = role_url + '#' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/detail';
     var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
 
     var primary_table = $('#primary_table').DataTable({
@@ -122,7 +122,7 @@
         },
         columns: [
             {data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false},
-            { data: 'categori_file_mgmp.category_file_name', name: 'category_file_mgmp.category_file_name' },
+            { data: 'category_jurnal_harian_tendik.unit_kerja.nm_unit_kerja', name: 'category_jurnal_harian_tendik.unit_kerja.nm_unit_kerja' },
             {
                 data: 'selesai',
                 name: 'selesai',
@@ -135,7 +135,7 @@
                     return `<ul>${role_text}</ul>`
                 }
         },
-            { data: 'categori_file_mgmp.category_file_explanation', name: 'category_file_mgmp.category_file_explanation' },
+            { data: 'category_jurnal_harian_tendik.description', name: 'category_jurnal_harian_tendik.description' },
             {   data: 'action',
                 name: 'action',
                 searchable: false,

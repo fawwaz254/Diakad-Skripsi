@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 use App\Models\CategoriFileMGMP;
+use App\Models\CategoryJurnalHarianTendik;
 use App\Models\CategoryKelompokJurnalHarianTendik;
 use App\Models\JenisJurnalHarianTendik;
 use App\Models\JenisMGMP;
@@ -36,7 +37,7 @@ class JurnalHarianTendikController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $waktu = Carbon::today()->toDateString();
-        $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik.unit_kerja')->get();
+        $unit_kerja = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)->with('category_jurnal_harian_tendik','category_jurnal_harian_tendik.unit_kerja')->get();
         $jenis = JenisJurnalHarianTendik::all();
         return view('tendik/jurnal-harian/laporan-jurnal-harian/add-data-laporan-jurnal-harian-t',compact('auth_data','unit_kerja','waktu','jenis'));
 
@@ -243,95 +244,96 @@ public function editKerjaHarian(Request $request, $id = null){
 
 
 
-//     public function viewLaporanKelompokMGMP(Request $request){
-//         # code...
-//         $input = (object) $request->input();
-//         $auth_data = $input->auth_data;
+    public function viewLaporanKelompokKerjaHarian(Request $request){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-//         return view('guru/mgmp/laporan-harian-mgmp/view-data-laporan-harian-mgmp-kelompok',compact('auth_data'));
+        return view('tendik/jurnal-harian/laporan-jurnal-harian/view-data-laporan-harian-tendik-kelompok',compact('auth_data'));
 
-//     }
+    }
 
-//     public function datatablesKerjaHarianKelompokMGMP(Request $request){
+    public function datatablesKerjaHarianKelompokTendik(Request $request){
 
-//         $input = (object) $request->input();
-//         $auth_data = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-//         $list_data = CategoriFileGuru::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)
-//                                     ->with('categori_file_mgmp','laporan_kerja_harian_mgmp.pengguna')
-//                                     ->get();
-
-//         return Datatables::of($list_data)
-//         ->addColumn('action', function ($item) {
-//             $data = array(
-//                 'id' => $item->categori_file_mgmp->category_file_mgmp_id
-//             );
-//             return $data;
-//         })
-//         ->addColumn('selesai', function ($item) {
-//             $data = [];
-//             if ($item->laporan_kerja_harian_mgmp ?? false) {
-//                 foreach ($item->laporan_kerja_harian_mgmp as $key => $value) {
-//                     $data[$key]['jenis'] = $item->laporan_kerja_harian_mgmp[$key]->jenis;
-//                     $data[$key]['pengguna'] = $item->laporan_kerja_harian_mgmp[$key]->pengguna->nm_pengguna;
-//                     $data[$key]['status'] = $item->laporan_kerja_harian_mgmp[$key]->status;
-//                 }
-//             }
-//             return $data;
-//         })->make(true);
-//     }
-
-
-//     public function detailLaporanKelompokMGMP(Request $request, $id  = null){
-//         $input = (object) $request->input();
-//         $auth_data = $input->auth_data;
-//         $data = CategoriFileGuru::where('category_file_mgmp_id', $id)->with('pengguna')->get();
-//         return view('guru/mgmp/laporan-harian-mgmp/detail-data-laporan-harian-mgmp-kelompok',compact('auth_data','data','id'));
-//     }
+        $list_data = CategoryKelompokJurnalHarianTendik::where('id_pengguna',$input->auth_data->pengguna->id_pengguna)
+                                    ->with('category_jurnal_harian_tendik','laporan_kerja_harian_tendik.pengguna','category_jurnal_harian_tendik.unit_kerja')
+                                    ->get();
+// dd($list_data);
+        return Datatables::of($list_data)
+        ->addColumn('action', function ($item) {
+            $data = array(
+                'id' => $item->category_jurnal_harian_tendik->id_category_jh_tendik
+            );
+            return $data;
+        })
+        ->addColumn('selesai', function ($item) {
+            $data = [];
+            if ($item->laporan_kerja_harian_tendik ?? false) {
+                foreach ($item->laporan_kerja_harian_tendik as $key => $value) {
+                    $data[$key]['jenis'] = $item->laporan_kerja_harian_tendik[$key]->jenis;
+                    $data[$key]['pengguna'] = $item->laporan_kerja_harian_tendik[$key]->pengguna->nm_pengguna;
+                    $data[$key]['status'] = $item->laporan_kerja_harian_tendik[$key]->status;
+                }
+            }
+            return $data;
+        })->make(true);
+    }
 
 
+    public function detailLaporanKelompokTendik(Request $request, $id  = null){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data = CategoryKelompokJurnalHarianTendik::where('id_c_k_jh_tendik', $id)->with('pengguna')->get();
+        return view('tendik/jurnal-harian/laporan-jurnal-harian/detail-data-laporan-harian-kelompok-tendik',compact('auth_data','data','id'));
+    }
 
-//     public function datatablesDetailKerjaHarianKelompokMGMP(Request $request, $id  = null){
-//         $input = (object) $request->input();
-//         $auth_data = $input->auth_data;
 
-//         $list_data = LaporanKerjaHarianMGMP::
-//                                     where('id_role',$input->auth_data->role_aktif->id_role)
-//                                     ->where('mapel',$id)
-//                                     ->with('mapel','pengguna')
-//                                     ->get();
 
-//         return Datatables::of($list_data)
-//                 ->editColumn('tanggal',function($item){
-//                     return Carbon::parse($item->tanggal)->format('d M Y');
-//                 })
-//                 ->addColumn('action', function($item){
-//                     if($item->path_file){
-//                         $file =  Storage::disk('spaces')->url($item->path_file);
-//                         $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
-//                         if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
-//                             $note = 'file';
-//                         }
-//                         else{
-//                             $note= 'image';
-//                         }
-//                     }
-//                     else{
-//                         $file = null;
-//                         $note = null;
-//                     }
+    public function datatablesDetailKerjaHarianKelompokTendik(Request $request, $id  = null){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-//                     $data = array(
-//                         'id'        => $item->id_laporan_kerja_harian_mgmp,
-//                         'jenis'    =>$item->jenis,
-//                         'status'    => $item->status,
-//                         'file'      =>$file,
-//                         'note'      => $item->mapel,
-//                     );
-//                     return $data;
-//                 })
-//                 ->make(true);
+        $list_data = LaporanKerjaHarianTendik::
+                                    // where('id_role',$input->auth_data->role_aktif->id_role)
+                                    where('id_category_jh_tendik',$id)
+                                    ->where('status',1)
+                                    ->with('category_jurnal_harian_tendik.unit_kerja','pengguna')
+                                    ->get();
 
-//     }
+        return Datatables::of($list_data)
+                ->editColumn('tanggal',function($item){
+                    return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->addColumn('action', function($item){
+                    if($item->path_file){
+                        $file =  Storage::disk('spaces')->url($item->path_file);
+                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                            $note = 'file';
+                        }
+                        else{
+                            $note= 'image';
+                        }
+                    }
+                    else{
+                        $file = null;
+                        $note = null;
+                    }
+
+                    $data = array(
+                        'id'        => $item->id_lap_kerha_t,
+                        'jenis'    =>$item->jenis,
+                        'status'    => $item->status,
+                        'file'      =>$file,
+                        'note'      => $item->keterangan,
+                    );
+                    return $data;
+                })
+                ->make(true);
+
+    }
 
 }
