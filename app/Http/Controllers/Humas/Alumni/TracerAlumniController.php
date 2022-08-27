@@ -159,7 +159,7 @@ class TracerAlumniController extends BaseController
         }
 
 
-        return view('siswa.alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
+        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
     public function actionTracerAlumni(Request $request, $mode, $id = null)
