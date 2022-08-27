@@ -1,9 +1,4 @@
 <div class="container-fluid">
-    {{-- <div class="block-header">
-        <h2>
-            <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
-        </h2>
-    </div> --}}
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -15,11 +10,17 @@
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                  <thead>
                                     <tr>
-                                        <th style="vertical-align : middle;text-align:center;">No</th>
-                                        <th style="vertical-align : middle;text-align:center;">Nama Unit Kerja</th>
-                                        <th style="vertical-align : middle;text-align:center;">Tendik yang sudah selesai</th>
-                                        <th style="vertical-align : middle;text-align:center;">Keterangan</th>
-                                        <th style="vertical-align : middle;text-align:center;">Action</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
+                                        <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Uraian Kegiatan</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Tuntas</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="vertical-align : middle;text-align:center;">Jenis</th>
+                                        <th style="vertical-align : middle;text-align:center;">Unit Kerja</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -59,6 +60,7 @@
         </button>
       </div>
       <div class="modal-body">
+                
             <div class="row">
 
                 <div class="col-md-6">
@@ -105,9 +107,10 @@
     })
 
     var modul_url        = 'jurnal-harian';
-    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/datatables';
-    var detail_url         = role_url + '#' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/detail';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/preview-file';
+    var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-jurnal-harian/datatables';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-jurnal-harian/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-jurnal-harian/download-file';
+
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -121,32 +124,34 @@
             type: 'GET'
         },
         columns: [
-            {data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false},
-            { data: 'category_jurnal_harian_tendik.unit_kerja.nm_unit_kerja', name: 'category_jurnal_harian_tendik.unit_kerja.nm_unit_kerja' },
-            {
-                data: 'selesai',
-                name: 'selesai',
-                render: function(data) {
-                    var role_text = '';
-                    data.forEach((d, i) => {
-                        if(d.status == 1){
-                            role_text += `<li>${d.pengguna} (${d.jenis}) </li>`
-                        }});
-                    return `<ul>${role_text}</ul>`
+            { data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false  },
+            { data: 'tanggal', name: 'tanggal' },
+            {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
+            {data:'category_jurnal_harian_tendik.unit_kerja.nm_unit_kerja',class:'text-center', name: 'action', searchable: false, orderable: false},
+            { data: 'keterangan_progres', name: 'keterangan_progres' },
+            { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
+                render : function(data){
+                    if(data.status == 1){
+                        return 'selesai';
+                    }
+                    else{
+                        return 'belum selesai';
+                    }
                 }
-        },
-            { data: 'category_jurnal_harian_tendik.description', name: 'category_jurnal_harian_tendik.description' },
-            {   data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                    detail_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">pageview</i>' +
-                        '</a> ';
-                } },
-
+            },
+            { data: 'action', name: 'file',class: 'text-center', searchable: false, orderable: false,
+                render:function(data){
+                    if(data.file){
+                        return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" data-link="'+data.file+'" onclick="open_modal(\''+data.id+'\' , this)">'+
+                        '    <i class="material-icons">insert_drive_file</i>'+
+                        '</a> '
+                    }
+                    else{
+                        return `-`;
+                    }
+                }
+            },
+            { data: 'pengguna.nm_pengguna', name: 'action', searchable: false, orderable: false}
         ]
     });
 
@@ -154,7 +159,7 @@
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-            primary_table.cell(cell).invalidate('dom');
+              primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
@@ -163,8 +168,8 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
-            <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
+            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
+            <a href="`+download_file_url+`/`+id+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
         $('#modal-opsi').modal('show');

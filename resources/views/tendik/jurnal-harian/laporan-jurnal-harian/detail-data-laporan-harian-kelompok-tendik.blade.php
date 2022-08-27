@@ -108,8 +108,8 @@
     var id_mapel = "{{ $id }}";
     var modul_url        = 'jurnal-harian';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/detail/datatables/' + id_mapel;
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-kelompok-mgmp/preview-file';
-    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-kelompok-mgmp/download-file';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-kelompok-jurnal-harian/download-file';
 
 
 
