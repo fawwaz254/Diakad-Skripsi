@@ -189,7 +189,7 @@ class ShiftPenggunaController extends Controller
         $dates = CarbonPeriod::create($start_date, $end_date);
         // dd($dates);
         // $libur = ManajemenHariLibur::get();
-
+        $allShiftMater = ShiftMaster::get();
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             // $hasil[$key1]['status_join_table'] = $value->status_join_table;
@@ -197,27 +197,19 @@ class ShiftPenggunaController extends Controller
             $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
             foreach ($dates as $key2 => $date) {
-
-                $allShiftMater = ShiftMaster::get();
                 $allShiftPengguna = ShiftPengguna::where('date', $date)->get();
                 $attendance = $allShiftPengguna->firstWhere('id_pengguna', $value->id_pengguna);
+                $hasil[$key1][$key2]['time'] = "-";
+                $hasil[$key1][$key2]['id_shift_pengguna'] = "-";
+                $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
                 if ($attendance) {
-                    $hasil[$key1][$key2]['time'] = "-";
-                    $hasil[$key1][$key2]['id_shift_pengguna'] = "-";
                     if ($attendance->id_shift_master) {
                         $hasil[$key1][$key2]['id_shift_master'] = $attendance->id_shift_master;
                         $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
                         $hasil[$key1][$key2]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
-                    } else {
-                        $hasil[$key1][$key2]['id_shift_master'] = "-";
                     }
-                    if ($attendance->id_shift_pengguna) {
-                        $hasil[$key1][$key2]['id_shift_pengguna'] = $attendance->id_shift_pengguna;
-                    }
-                $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
             }
         }
-    
     }
     // dd($hasil);
     $products = $hasil;

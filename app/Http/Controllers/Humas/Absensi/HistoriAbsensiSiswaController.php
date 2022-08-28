@@ -203,12 +203,14 @@ class HistoriAbsensiSiswaController extends Controller
                 $query->whereIn('tingkat',  [10,11,12]);
             })->orderBy('nm_pengguna', 'asc')->get();
         }elseif($id_kelas == "0"){
-            $pengguna = Pengguna::with('status_pengguna')
+            $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->whereHas('siswa.kelas', function ($query) {
+                $query->whereIn('tingkat',  [7,8,9,10,11,12]);
             })->orderBy('nm_pengguna', 'asc')->get();
         }else{
-            $pengguna = Pengguna::with('status_pengguna','siswa')
+            $pengguna = Pengguna::with('status_pengguna','siswa','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })
@@ -224,6 +226,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
             // $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
@@ -305,6 +308,7 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
+        // dd($hasil);
         return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat','belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas','status'));
     }
 
