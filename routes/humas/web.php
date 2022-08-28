@@ -120,6 +120,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
 				Route::post('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@updateShiftAbsensi');
 				// Route::get('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@addShiftMaster');
+				Route::get('exportShift/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@export_shift');
 
 			});
 
@@ -145,6 +146,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
 				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
 				Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
+			
 			});
 
 			Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
