@@ -124,6 +124,7 @@
                         <thead style="background:#9C27B0;color:white">
                             <tr>
                                 <th style="text-align: center;">#</th>
+                                <th style="text-align: center;">Kelas</th>
                                 <th style="text-align: center;">Nama</th>
 
                                 <th>Check In</th>
@@ -142,6 +143,7 @@
                                 @if ($r['shift'])
                                 @if($r['status'] == $status || $status == '0')
                                     <td style="text-align: center;">{{ $loop->iteration }}</td>
+                                    <td style="text-align: center;">{{ $r['kelas'] }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
 
                                     <td>{{ $r['check_in'] }}</td>
