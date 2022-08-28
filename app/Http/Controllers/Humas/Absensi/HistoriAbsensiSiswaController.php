@@ -194,21 +194,21 @@ class HistoriAbsensiSiswaController extends Controller
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [7,8,9]);
-            })->orderBy('nm_pengguna', 'asc')->get();
+            })->get()->sortBy('siswa.kelas.nm_kelas');
         }elseif($id_kelas == "2"){
             $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [10,11,12]);
-            })->orderBy('nm_pengguna', 'asc')->get();
+            })->get()->sortBy('siswa.kelas.nm_kelas');
         }elseif($id_kelas == "0"){
             $pengguna = Pengguna::with('status_pengguna','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->whereHas('siswa.kelas', function ($query) {
                 $query->whereIn('tingkat',  [7,8,9,10,11,12]);
-            })->orderBy('nm_pengguna', 'asc')->get();
+            })->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
         }else{
             $pengguna = Pengguna::with('status_pengguna','siswa','siswa.kelas')
             ->whereHas('status_pengguna', function ($query) {
