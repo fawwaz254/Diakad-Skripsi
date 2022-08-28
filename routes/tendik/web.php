@@ -46,15 +46,14 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
           /** ==== Jurnal Harian ==== **/
         Route::group(array('prefix' => 'jurnal-harian'), function () {
-
             Route::group(array('prefix' => 'laporan-individu-jurnal-harian'), function () {
                 Route::get('/', 'Tendik\JurnalHarian\JurnalHarianTendikController@viewLaporanJurnalHarian');
                 Route::get('add', 'Tendik\JurnalHarian\JurnalHarianTendikController@addLaporanHarianJurnalHarian');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@actionLaporanHarianTendik');
                 Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianTendik');
                 Route::get('edit/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@editKerjaHarian');
-                // Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
-                // Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
+                Route::get('preview-file/{id}/{no}', 'Tendik\JurnalHarian\JurnalHarianTendikController@previewFile');
+                Route::get('download-file/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@downloadFile');
             });
 
             Route::group(array('prefix' => 'laporan-kelompok-jurnal-harian'), function () {
@@ -62,12 +61,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianKelompokTendik');
                 Route::get('/detail/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@detailLaporanKelompokTendik');
                 Route::get('/detail/datatables/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesDetailKerjaHarianKelompokTendik');
-                // Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
-                // Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
+                Route::get('preview-file/{id}/{no}', 'Tendik\JurnalHarian\JurnalHarianTendikController@previewFile');
+                Route::get('download-file/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@downloadFile');
             });
         });
-
-
 
 
         /** ==== MODUL GURU PIKET ==== **/

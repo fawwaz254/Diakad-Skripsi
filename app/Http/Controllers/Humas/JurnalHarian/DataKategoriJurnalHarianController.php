@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryJurnalHarianTendik;
 use App\Models\CategoryKelompokJurnalHarianTendik;
+use App\Models\LaporanKerjaHarianTendik;
 use App\Models\MataPelajaran;
 use App\Models\Pengguna;
+use Illuminate\Support\Facades\Storage;
 use Yajra\Datatables\Datatables;
 use App\Models\UnitKerja;
 use Carbon\Carbon;
@@ -185,74 +187,73 @@ class DataKategoriJurnalHarianController extends Controller
             }
         }
     }
-    // public function viewLaporanAllMGMP(Request $request){
-    //     # code...
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
+    public function viewLaporanAllJurnalHarian(Request $request){
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    //     return view('akademik/mgmp/data-kategori/laporan-data-mgmp',compact('auth_data'));
+        return view('humas/jurnal-harian/data-kategori/laporan-data-jurnal-harian',compact('auth_data'));
 
-    // }
+    }
 
-    // public function previewFile($id,Request $request){
+    public function previewFile($id,Request $request){
 
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-    //     $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
-    //     $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
-    //     $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
-    //     return view('akademik/mgmp/data-kategori/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext'));
+        $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+        return view('humas/jurnal-harian/data-kategori/preview-file-jurnal-harian',compact('auth_data','laporan_kerja_harian','link','ext'));
 
-    // }
+    }
 
-    // public function downloadFile(Request $request, $id = null)
-    // {
-    //     $input = (object) $request->input();
-    //     // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
-    //     $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
-    //     $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
 
-    //     return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
-    // }
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
+    }
 
-    // public function datatablesKerjaHarianAllMGMP(Request $request){
+    public function datatablesKerjaHarianJurnalHarian(Request $request){
 
-    //     $input = (object) $request->input();
-    //     // $auth_data = $input->auth_data;
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
 
-    //     $list_data = LaporanKerjaHarianMGMP::with('mapel','pengguna')->get();
+        $list_data = LaporanKerjaHarianTendik::with('category_jurnal_harian_tendik.unit_kerja','pengguna')->get();
 
-    //     return Datatables::of($list_data)
-    //             ->editColumn('tanggal',function($item){
-    //                 return Carbon::parse($item->tanggal)->format('d M Y');
-    //             })
-    //             ->addColumn('action', function($item){
-    //                 if($item->path_file){
-    //                     $file =  Storage::disk('spaces')->url($item->path_file);
-    //                     $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
-    //                     if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
-    //                         $note = 'file';
-    //                     }
-    //                     else{
-    //                         $note= 'image';
-    //                     }
-    //                 }
-    //                 else{
-    //                     $file = null;
-    //                     $note = null;
-    //                 }
+        return Datatables::of($list_data)
+                ->editColumn('tanggal',function($item){
+                    return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->addColumn('action', function($item){
+                    if($item->path_file){
+                        $file =  Storage::disk('spaces')->url($item->path_file);
+                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                            $note = 'file';
+                        }
+                        else{
+                            $note= 'image';
+                        }
+                    }
+                    else{
+                        $file = null;
+                        $note = null;
+                    }
 
-    //                 $data = array(
-    //                     'id'        => $item->id_laporan_kerja_harian_mgmp,
-    //                     'jenis'    =>$item->jenis,
-    //                     'status'    => $item->status,
-    //                     'file'      =>$file,
-    //                     'note'      => $item->mapel,
-    //                 );
-    //                 return $data;
-    //             })
-    //             ->make(true);
-    // }
+                    $data = array(
+                        'id'        => $item->id_lap_kerha_t,
+                        'jenis'    =>$item->jenis,
+                        'status'    => $item->status,
+                        'file'      =>$file,
+                        'note'      => $item->catatan,
+                    );
+                    return $data;
+                })
+                ->make(true);
+    }
 
 }

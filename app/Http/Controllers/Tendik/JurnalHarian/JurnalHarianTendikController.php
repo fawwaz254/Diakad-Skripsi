@@ -42,27 +42,27 @@ class JurnalHarianTendikController extends Controller
         return view('tendik/jurnal-harian/laporan-jurnal-harian/add-data-laporan-jurnal-harian-t',compact('auth_data','unit_kerja','waktu','jenis'));
 
     }
-//     public function previewFile($id,$no,Request $request){
+    public function previewFile($id,$no,Request $request){
 
-//         $input = (object) $request->input();
-//         $auth_data = $input->auth_data;
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-//         $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
-//         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
-//         $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
-//         return view('guru/mgmp/laporan-harian-mgmp/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext','id','no'));
+        $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+        return view('tendik/jurnal-harian/laporan-jurnal-harian/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext','id','no'));
 
-//     }
+    }
 
-//     public function downloadFile(Request $request, $id = null)
-//     {
-//         $input = (object) $request->input();
-//         // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
-//         $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
-//         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+        $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
 
-//         return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
-//     }
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
+    }
 
     public function actionLaporanHarianTendik(Request $request, $mode = 0,$id=0){
         $input = (object) $request->input();
@@ -289,8 +289,6 @@ public function editKerjaHarian(Request $request, $id = null){
         $data = CategoryKelompokJurnalHarianTendik::where('id_c_k_jh_tendik', $id)->with('pengguna')->get();
         return view('tendik/jurnal-harian/laporan-jurnal-harian/detail-data-laporan-harian-kelompok-tendik',compact('auth_data','data','id'));
     }
-
-
 
     public function datatablesDetailKerjaHarianKelompokTendik(Request $request, $id  = null){
         $input = (object) $request->input();
