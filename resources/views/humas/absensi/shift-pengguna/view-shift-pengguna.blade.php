@@ -66,6 +66,10 @@
             <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i
                     class="material-icons">settings</i><span>Management Shift</span></button>
         </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+            <button class="btn btn-block bg-green waves-effect" onclick=downloadShift()><i
+                    class="material-icons">file_download</i><span>Download Shift bulan ini</span></button>
+        </div>
     </div>
     <br>
     <div class="row clearfix">
@@ -147,4 +151,11 @@
     function addAbsensi() {
         window.location = '/humas#absensi/shift_pengguna/add'
     }
+  
+    function downloadShift()  {
+        var $time = "{{ $date }}";
+        window.open('/humas/absensi/shift_pengguna/exportShift/' + $time);
+        // window.open = '/humas#absensi/shift_pengguna/add'
+    }
+
 </script>
