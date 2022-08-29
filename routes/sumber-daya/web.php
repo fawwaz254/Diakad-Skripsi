@@ -56,12 +56,12 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Data Jabatan Pegawai
             // TABEL DIHAPUS
-            /*Route::get('jabatan-pegawai', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@viewJabatanPegawai');
-            Route::get('jabatan-pegawai/datatables', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@datatablesJabatanPegawai');
-            Route::get('jabatan-pegawai/add', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@addJabatanPegawai');
-            Route::get('jabatan-pegawai/edit/{id}', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@editJabatanPegawai');
+            /*Route::get('jabatan-pegawai', [JabatanPegawaiController::class, 'viewJabatanPegawai']);
+            Route::get('jabatan-pegawai/datatables', [JabatanPegawaiController::class, 'datatablesJabatanPegawai']);
+            Route::get('jabatan-pegawai/add', [JabatanPegawaiController::class, 'addJabatanPegawai']);
+            Route::get('jabatan-pegawai/edit/{id}', [JabatanPegawaiController::class, 'editJabatanPegawai']);
 
-            Route::post('action-jabatan-pegawai/{mode}/{id}', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@actionJabatanPegawai');*/
+            Route::post('action-jabatan-pegawai/{mode}/{id}', [JabatanPegawaiController::class, 'actionJabatanPegawai']);*/
 
             // MENU Data Status Aktif Guru
             Route::get('status-aktif-guru', [StatusAktifGuruController::class, 'viewStatusAktifGuru']);

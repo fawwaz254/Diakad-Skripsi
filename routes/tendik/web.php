@@ -1,19 +1,20 @@
 <?php
 
+use App\Http\Controllers\Tendik\WelcomeController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\Tendik\Biodata\DataPribadiController;
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
-use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
+use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
+use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController;
+use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController;
-use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
-use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
-use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
-use App\Http\Controllers\ManajemenFile\DataFileController;
-use App\Http\Controllers\ManajemenFile\DataKategoriController;
-use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
-use App\Http\Controllers\Tendik\Biodata\DataPribadiController;
-use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
-use App\Http\Controllers\Tendik\WelcomeController;
+use App\Http\Controllers\Tendik\JurnalHarian\JurnalHarianTendikController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('tendik')->group(function () {
@@ -46,34 +47,32 @@ Route::middleware(['token_staff'])->group(function () {
             });
         });
 
-
         Route::prefix('biodata')->group(function () {
             Route::get('data-pribadi', [DataPribadiController::class, 'viewDataPribadi']);
             Route::post('action-input-tendik/{mode}/{id}', [DataPribadiController::class, 'actionInputTendik']);
         });
 
-          /** ==== Jurnal Harian ==== **/
+        /** ==== Jurnal Harian ==== **/
         Route::group(array('prefix' => 'jurnal-harian'), function () {
             Route::group(array('prefix' => 'laporan-individu-jurnal-harian'), function () {
-                Route::get('/', 'Tendik\JurnalHarian\JurnalHarianTendikController@viewLaporanJurnalHarian');
-                Route::get('add', 'Tendik\JurnalHarian\JurnalHarianTendikController@addLaporanHarianJurnalHarian');
-                Route::post('action-kerja-harian/{mode}/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@actionLaporanHarianTendik');
-                Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianTendik');
-                Route::get('edit/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@editKerjaHarian');
-                Route::get('preview-file/{id}/{no}', 'Tendik\JurnalHarian\JurnalHarianTendikController@previewFile');
-                Route::get('download-file/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@downloadFile');
+                Route::get('/', [JurnalHarianTendikController::class, 'viewLaporanJurnalHarian']);
+                Route::get('add', [JurnalHarianTendikController::class, 'addLaporanHarianJurnalHarian']);
+                Route::post('action-kerja-harian/{mode}/{id}', [JurnalHarianTendikController::class, 'actionLaporanHarianTendik']);
+                Route::get('datatables', [JurnalHarianTendikController::class, 'datatablesKerjaHarianTendik']);
+                Route::get('edit/{id}', [JurnalHarianTendikController::class, 'editKerjaHarian']);
+                Route::get('preview-file/{id}/{no}', [JurnalHarianTendikController::class, 'previewFile']);
+                Route::get('download-file/{id}', [JurnalHarianTendikController::class, 'downloadFile']);
             });
 
             Route::group(array('prefix' => 'laporan-kelompok-jurnal-harian'), function () {
-                Route::get('/', 'Tendik\JurnalHarian\JurnalHarianTendikController@viewLaporanKelompokKerjaHarian');
-                Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianKelompokTendik');
-                Route::get('/detail/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@detailLaporanKelompokTendik');
-                Route::get('/detail/datatables/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesDetailKerjaHarianKelompokTendik');
-                Route::get('preview-file/{id}/{no}', 'Tendik\JurnalHarian\JurnalHarianTendikController@previewFile');
-                Route::get('download-file/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@downloadFile');
+                Route::get('/', [JurnalHarianTendikController::class, 'viewLaporanKelompokKerjaHarian']);
+                Route::get('datatables', [JurnalHarianTendikController::class, 'datatablesKerjaHarianKelompokTendik']);
+                Route::get('/detail/{id}', [JurnalHarianTendikController::class, 'detailLaporanKelompokTendik']);
+                Route::get('/detail/datatables/{id}', [JurnalHarianTendikController::class, 'datatablesDetailKerjaHarianKelompokTendik']);
+                Route::get('preview-file/{id}/{no}', [JurnalHarianTendikController::class, 'previewFile']);
+                Route::get('download-file/{id}', [JurnalHarianTendikController::class, 'downloadFile']);
             });
         });
-
 
         Route::prefix('guru-piket')->group(function () {
             // MENU Monitoring kelas kosong
@@ -115,7 +114,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-kesehatan/{id}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', [RekapKesehatanController::class, 'downloadDetailRekapKesehatan']);
-
 
             Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
             Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);

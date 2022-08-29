@@ -1,41 +1,40 @@
 <?php
 
-use App\Http\Controllers\Keuangan\DataKeuangan\BiayaInternalController;
-use App\Http\Controllers\Keuangan\DataKeuangan\BiayaSekolahController;
-use App\Http\Controllers\Keuangan\DataKeuangan\DetailBiayaController;
-use App\Http\Controllers\Keuangan\DataKeuangan\DetailBiayaInternalController;
-use App\Http\Controllers\Keuangan\DataKeuangan\KelompokBiayaController;
-use App\Http\Controllers\Keuangan\DataKeuangan\NamaBiayaController;
-use App\Http\Controllers\Keuangan\LaporanKeuangan\CetakLaporanController;
-use App\Http\Controllers\Keuangan\LaporanKeuangan\PembayaranSiswaBulananController;
-use App\Http\Controllers\Keuangan\LaporanKeuangan\PembayaranSiswaController as LaporanKeuanganPembayaranSiswaController;
-use App\Http\Controllers\Keuangan\LaporanKeuangan\PembayaranSiswaTahunanController;
-use App\Http\Controllers\Keuangan\LaporanKeuangan\TagihanSiswaController as LaporanKeuanganTagihanSiswaController;
-use App\Http\Controllers\Keuangan\PemasukanSekolah\InputPemasukanController;
-use App\Http\Controllers\Keuangan\PemasukanSekolah\KategoriPemasukanController;
-use App\Http\Controllers\Keuangan\PemasukanSekolah\SubkategoriPemasukanController;
-use App\Http\Controllers\Keuangan\PengeluaranSekolah\InputPengeluaranController;
-use App\Http\Controllers\Keuangan\PengeluaranSekolah\KategoriPengeluaranController;
-use App\Http\Controllers\Keuangan\PengeluaranSekolah\SubkategoriPengeluaranController;
-use App\Http\Controllers\Keuangan\Rapb\InputRapbController;
-use App\Http\Controllers\Keuangan\Rapb\KategoriPenerimaanController;
-use App\Http\Controllers\Keuangan\Rapb\KategoriPengeluaranController as RapbKategoriPengeluaranController;
-use App\Http\Controllers\Keuangan\Rapb\RealisasiRapbController;
-use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
-use App\Http\Controllers\Keuangan\SIM\PengeluaranController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Keuangan\SIM\SppController;
-use App\Http\Controllers\Keuangan\Utility\BiayaSiswaController;
-use App\Http\Controllers\Keuangan\Utility\InputTagihanSiswaController;
-use App\Http\Controllers\Keuangan\Utility\PembayaranByKelasController;
-use App\Http\Controllers\Keuangan\Utility\PembayaranSiswaController;
-use App\Http\Controllers\Keuangan\Utility\TagihanSiswaController;
 use App\Http\Controllers\Keuangan\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\Keuangan\Rapb\InputRapbController;
+use App\Http\Controllers\Keuangan\SIM\PengeluaranController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\Keuangan\Rapb\RealisasiRapbController;
+use App\Http\Controllers\Keuangan\Utility\BiayaSiswaController;
+use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
+use App\Http\Controllers\Keuangan\Utility\TagihanSiswaController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Keuangan\DataKeuangan\NamaBiayaController;
+use App\Http\Controllers\Keuangan\Rapb\KategoriPenerimaanController;
+use App\Http\Controllers\Keuangan\Utility\PembayaranSiswaController;
+use App\Http\Controllers\Keuangan\DataKeuangan\DetailBiayaController;
+use App\Http\Controllers\Keuangan\DataKeuangan\BiayaSekolahController;
+use App\Http\Controllers\Keuangan\Utility\InputTagihanSiswaController;
+use App\Http\Controllers\Keuangan\Utility\PembayaranByKelasController;
+use App\Http\Controllers\Keuangan\DataKeuangan\BiayaInternalController;
+use App\Http\Controllers\Keuangan\DataKeuangan\KelompokBiayaController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
-use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Keuangan\LaporanKeuangan\CetakLaporanController;
+use App\Http\Controllers\Keuangan\PemasukanSekolah\InputPemasukanController;
+use App\Http\Controllers\Keuangan\DataKeuangan\DetailBiayaInternalController;
+use App\Http\Controllers\Keuangan\PemasukanSekolah\KategoriPemasukanController;
+use App\Http\Controllers\Keuangan\PengeluaranSekolah\InputPengeluaranController;
+use App\Http\Controllers\Keuangan\PemasukanSekolah\SubkategoriPemasukanController;
+use App\Http\Controllers\Keuangan\LaporanKeuangan\PembayaranSiswaBulananController;
+use App\Http\Controllers\Keuangan\LaporanKeuangan\PembayaranSiswaTahunanController;
+use App\Http\Controllers\Keuangan\PengeluaranSekolah\KategoriPengeluaranController;
+use App\Http\Controllers\Keuangan\PengeluaranSekolah\SubkategoriPengeluaranController;
+use App\Http\Controllers\Keuangan\Rapb\KategoriPengeluaranController as RapbKategoriPengeluaranController;
+use App\Http\Controllers\Keuangan\LaporanKeuangan\TagihanSiswaController as LaporanKeuanganTagihanSiswaController;
+use App\Http\Controllers\Keuangan\LaporanKeuangan\PembayaranSiswaController as LaporanKeuanganPembayaranSiswaController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('keuangan')->group(function () {
@@ -291,7 +290,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-realisasi-rapb/{mode}/{id}', [RealisasiRapbController::class, 'actionRealisasi']);
 
             // belum
-            /*Route::get('realisasi-rapb/edit/{semester_mulai}/{semester_selesai}/{id_rapb}/{id}', 'Keuangan\Rapb\RealisasiRapbController@editRealisasi');*/
+            /*Route::get('realisasi-rapb/edit/{semester_mulai}/{semester_selesai}/{id_rapb}/{id}', [RealisasiRapbController::class, 'editRealisasi']);*/
         });
 
         Route::prefix('pemasukan-sekolah')->group(function () {

@@ -1,19 +1,21 @@
 <?php
 
-use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\SignInController;
-use App\Models\Sekolah;
 use Carbon\Carbon;
-use UniSharp\LaravelFilemanager\Controllers\CropController;
-use UniSharp\LaravelFilemanager\Controllers\DeleteController;
-use UniSharp\LaravelFilemanager\Controllers\DemoController;
-use UniSharp\LaravelFilemanager\Controllers\DownloadController;
-use UniSharp\LaravelFilemanager\Controllers\FolderController;
-use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use App\Models\Sekolah;
+use App\Http\Controllers\SignInController;
+use App\Http\Controllers\AuthGlobalController;
 use UniSharp\LaravelFilemanager\Controllers\LfmController;
+use UniSharp\LaravelFilemanager\Controllers\CropController;
+use UniSharp\LaravelFilemanager\Controllers\DemoController;
+use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use UniSharp\LaravelFilemanager\Controllers\DeleteController;
+use UniSharp\LaravelFilemanager\Controllers\FolderController;
 use UniSharp\LaravelFilemanager\Controllers\RenameController;
 use UniSharp\LaravelFilemanager\Controllers\ResizeController;
 use UniSharp\LaravelFilemanager\Controllers\UploadController;
+use UniSharp\LaravelFilemanager\Controllers\DownloadController;
+use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
+use App\Http\Controllers\Administrator\Device\FingerprintController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,8 +84,12 @@ Route::get('guid', function () {
     return $html;
 });
 
-Route::view('success-page', 'form-pengisian-alumni.success-page');
-Route::view('error-page', 'form-pengisian-alumni.error-page');
+Route::get('success-page', function () {
+    return view('form-pengisian-alumni.success-page');
+});
+Route::get('error-page', function () {
+    return view('form-pengisian-alumni.error-page');
+});
 Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
 Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
 

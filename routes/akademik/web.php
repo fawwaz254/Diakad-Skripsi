@@ -1,14 +1,4 @@
 <?php
-// ROLE AKADEMIK
-<<<<<<< HEAD
-=======
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'akademik'), function () {
-        Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
-
-        //modul MGMP
-        Route::group(array('prefix' => 'mpmp'), function () {
->>>>>>> master
 
 use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
 use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
@@ -41,6 +31,7 @@ use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 
+// ROLE AKADEMIK
 Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('akademik')->group(function () {
@@ -53,7 +44,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
             });
-<<<<<<< HEAD
             Route::prefix('data-kategori-mapel')->group(function () {
                 Route::get('/', [DataKategoriMGMPController::class, 'viewDataKategori']);
                 Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesCategoryfile']);
@@ -61,24 +51,19 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/edit/{category_file_id}', [DataKategoriMGMPController::class, 'editDataKategori']);
                 Route::post('action-data-kategori/{mode}/{id}', [DataKategoriMGMPController::class, 'actionDataKategori']);
             });
-            Route::prefix('laporan-mgmp')->group(function () {
-                Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
-                Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesKerjaHarianAllMGMP']);
-=======
 
             Route::group(array('prefix' => 'jenis-mgmp'), function () {
-                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
-                Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
-                Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
-                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
+                Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
+                Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
+                Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
+                Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
             });
 
             Route::group(array('prefix' => 'laporan-mgmp'), function () {
-                Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
-                Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
-                Route::get('preview-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@previewFile');
-                Route::get('download-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@downloadFile');
->>>>>>> master
+                Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
+                Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesKerjaHarianAllMGMP']);
+                Route::get('preview-file/{id}', [DataKategoriMGMPController::class, 'previewFile']);
+                Route::get('download-file/{id}', [DataKategoriMGMPController::class, 'downloadFile']);
             });
         });
 
@@ -117,7 +102,6 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('action-kurikulum/{mode}/{id}', [KurikulumController::class, 'actionKurikulum']);
 
-
             // MENU Aktivasi Kurikulum
             Route::get('aktivasi-kurikulum', [AktivasiKurikulumController::class, 'viewAktivasiKurikulum']);
             Route::get('aktivasi-kurikulum/datatables', [AktivasiKurikulumController::class, 'datatablesAktivasiKurikulum']);
@@ -132,7 +116,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('mata-pelajaran/edit/{id}', [MataPelajaranController::class, 'editMataPelajaran']);
 
             Route::post('action-mata-pelajaran/{mode}/{id}', [MataPelajaranController::class, 'actionMataPelajaran']);
-
 
             //MENU Data Jenis Mata Pelajaran
             Route::get('jenis-mata-pelajaran', [DataJenisMataPelajaranController::class, 'viewDataJenisMataPelajaran']);

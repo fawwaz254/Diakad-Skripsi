@@ -1,51 +1,51 @@
 <?php
 
+use App\Http\Controllers\Kesiswaan\WelcomeController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\Pendidikan\Wisuda\WisudaController;
+use App\Http\Controllers\Kesiswaan\Siswa\HomeVisitController;
+use App\Http\Controllers\Kesiswaan\Siswa\PembayaranController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
+use App\Http\Controllers\Pendidikan\Siswa\DataSiswaController;
+use App\Http\Controllers\Pendidikan\Wisuda\SetLulusController;
+use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
+use App\Http\Controllers\Pendidikan\Siswa\SiswaAktifController;
+use App\Http\Controllers\Pendidikan\Siswa\UpdateFotoController;
+use App\Http\Controllers\PPDB\Pendaftaran\PenerimaanController;
+use App\Http\Controllers\Pendidikan\Siswa\AdmisiSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
-use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as WaliKelasRekapKesehatanController;
-use App\Http\Controllers\Humas\KegiatanHarian\RekapKesehatanController as HumasRekapKesehatanController;
+use App\Http\Controllers\Kesiswaan\Siswa\BeasiswaSiswaController;
+use App\Http\Controllers\Kesiswaan\Siswa\EvaluasiSiswaController;
+use App\Http\Controllers\Kesiswaan\Siswa\KegiatanSiswaController;
+use App\Http\Controllers\Kesiswaan\Siswa\PrestasiSiswaController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Pendidikan\Wisuda\EntriWisudaController;
+use App\Http\Controllers\Pendidikan\Wisuda\LaporanWisudaController;
+use App\Http\Controllers\Pendidikan\Wisuda\PeriodeWisudaController;
+use App\Http\Controllers\Pendidikan\Siswa\UploadDataSiswaController;
+use App\Http\Controllers\Pendidikan\Siswa\SettingWaliMuridController;
+use App\Http\Controllers\Pendidikan\Wisuda\PengajuanWisudaController;
+use App\Http\Controllers\Kesiswaan\Ijazah\PengambilanIjazahController;
+use App\Http\Controllers\Pendidikan\Siswa\InsertUpdateSiswaController;
+use App\Http\Controllers\Pendidikan\Siswa\SettingKelasSiswaController;
+use App\Http\Controllers\Kesiswaan\SKPI\ApprovePrestasiSiswaController;
+use App\Http\Controllers\Pendidikan\DataAkademik\StatusSiswaController;
+use App\Http\Controllers\Pendidikan\Siswa\HistoryAdmisiSiswaController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\DataEkskulController;
+use App\Http\Controllers\Kesiswaan\Siswa\TingkatPrestasiSiswaController;
 use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\EkskulWajibController;
-use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\MonitoringAbsensiEkskulController;
-use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\MonitoringNilaiEkskulController;
+use App\Http\Controllers\Kesiswaan\PenangananSiswa\JenisTindakanController;
+use App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController;
+use App\Http\Controllers\Kesiswaan\PenangananSiswa\TindakanPelanggaranController;
 use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\SettingPelatihEkskulController;
 use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\SettingPembinaEkskulController;
 use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\SettingPesertaEkskulController;
-use App\Http\Controllers\Kesiswaan\Ijazah\PengambilanIjazahController;
-use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
-use App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController;
-use App\Http\Controllers\Kesiswaan\PenangananSiswa\JenisTindakanController;
-use App\Http\Controllers\Kesiswaan\PenangananSiswa\TindakanPelanggaranController;
-use App\Http\Controllers\Kesiswaan\Siswa\BeasiswaSiswaController;
-use App\Http\Controllers\Kesiswaan\Siswa\EvaluasiSiswaController;
-use App\Http\Controllers\Kesiswaan\Siswa\HomeVisitController;
-use App\Http\Controllers\Kesiswaan\Siswa\KegiatanSiswaController;
-use App\Http\Controllers\Kesiswaan\Siswa\PembayaranController;
-use App\Http\Controllers\Kesiswaan\Siswa\PrestasiSiswaController;
-use App\Http\Controllers\Kesiswaan\Siswa\TingkatPrestasiSiswaController;
-use App\Http\Controllers\Kesiswaan\SKPI\ApprovePrestasiSiswaController;
-use App\Http\Controllers\Kesiswaan\WelcomeController;
-use App\Http\Controllers\ManajemenFile\DataFileController;
-use App\Http\Controllers\ManajemenFile\DataKategoriController;
-use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
-use App\Http\Controllers\Pendidikan\DataAkademik\StatusSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\AdmisiSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\DataSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\HistoryAdmisiSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\InsertUpdateSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\SettingKelasSiswaController;
-use App\Http\Controllers\Pendidikan\Siswa\SettingWaliMuridController;
-use App\Http\Controllers\Pendidikan\Siswa\SiswaAktifController;
-use App\Http\Controllers\Pendidikan\Siswa\UpdateFotoController;
-use App\Http\Controllers\Pendidikan\Siswa\UploadDataSiswaController;
-use App\Http\Controllers\Pendidikan\Wisuda\EntriWisudaController;
-use App\Http\Controllers\Pendidikan\Wisuda\LaporanWisudaController;
-use App\Http\Controllers\Pendidikan\Wisuda\PengajuanWisudaController;
-use App\Http\Controllers\Pendidikan\Wisuda\PeriodeWisudaController;
-use App\Http\Controllers\Pendidikan\Wisuda\SetLulusController;
-use App\Http\Controllers\Pendidikan\Wisuda\WisudaController;
-use App\Http\Controllers\PPDB\Pendaftaran\PenerimaanController;
-use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\MonitoringNilaiEkskulController;
+use App\Http\Controllers\Kesiswaan\Ekstrakurikuler\MonitoringAbsensiEkskulController;
+use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as WaliKelasRekapKesehatanController;
+use App\Http\Controllers\Humas\KegiatanHarian\RekapKesehatanController as HumasRekapKesehatanController;
 
 Route::middleware(['token_staff'])->group(function () {
 
@@ -82,7 +82,7 @@ Route::middleware(['token_staff'])->group(function () {
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', [RekapKesehatanController::class, 'viewRekapKesehatan']);
             Route::get('rekap-kesehatan/user/{id}/{date}', [RekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
-            Route::get('rekap-kesehatan/detail/form/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+            Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
             Route::get('rekap-kesehatan/{id}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
@@ -119,7 +119,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('approve-prestasi-siswa/datatables', [ApprovePrestasiSiswaController::class, 'datatablesApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/{id}/{param}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
             Route::get('approve-prestasi-siswa/print/skpi/{id}', [ApprovePrestasiSiswaController::class, 'PrintSkpi']);
-
 
             Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesKegiatanApprovePrestasiSiswa']);
@@ -182,7 +181,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('setting-peserta-ekskul/view-kelas/{id_ekskul}/{id_kelas}', [SettingPesertaEkskulController::class, 'viewKelasSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/edit/{id}', [SettingPesertaEkskulController::class, 'editSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/setting/{id_ekskul}', [SettingPesertaEkskulController::class, 'setSettingPesertaEkskul']);
-
 
             Route::post('action-setting-peserta-ekskul/{mode}/{id}', [SettingPesertaEkskulController::class, 'actionSettingPesertaEkskul']);
 
@@ -336,7 +334,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-setting-kelas-siswa/{mode}/{id}', [SettingKelasSiswaController::class, 'actionSettingKelasSiswa']);
         });
 
-
         Route::prefix('data-kesiswaan')->group(function () {
             //MENU ADMISI SISWA
             Route::get('admisi-siswa', [AdmisiSiswaController::class, 'viewAdmisiSiswa']);
@@ -349,7 +346,6 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('post-view-laporan-admisi-siswa', [AdmisiSiswaController::class, 'actionViewLaporanAdmisiSiswa']);
             Route::get('admisi-siswa/view-laporan/{id_semester}/{id_kelas}', [AdmisiSiswaController::class, 'viewLaporanAdmisiSiswa']);
             Route::get('admisi-siswa/datatables/{id_semester}/{id_kelas}', [AdmisiSiswaController::class, 'datatablesAdmisiSiswa']);
-
 
             //MENU HISTORY ADMISI SISWA
             Route::get('histori-admisi-siswa', [HistoryAdmisiSiswaController::class, 'viewHistoryAdmisiSiswa']);
