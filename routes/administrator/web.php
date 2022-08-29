@@ -12,84 +12,84 @@ use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 
 Route::middleware(['token_staff'])->group(function () {
-	Route::prefix('administrator')->group(function () {
-		Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+    Route::prefix('administrator')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
 
-		Route::prefix('device')->group(function () {
-			Route::prefix('fingerprint')->group(function () {
-				Route::get('/', [FingerprintController::class, 'indexList']);
-				Route::get('/datatables', [FingerprintController::class, 'commonList']);
-			});
-		});
+        Route::prefix('device')->group(function () {
+            Route::prefix('fingerprint')->group(function () {
+                Route::get('/', [FingerprintController::class, 'indexList']);
+                Route::get('/datatables', [FingerprintController::class, 'commonList']);
+            });
+        });
 
-		Route::prefix('manajemen-file')->group(function () {
-			Route::prefix('data-kategori')->group(function () {
-				Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
-				Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
-			});
-			Route::prefix('data-sub-kategori')->group(function () {
-				Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
-				Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
-				Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
-				Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
+        Route::prefix('manajemen-file')->group(function () {
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
+            });
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
-				//action input sub data kategori
-				Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
-			});
-			Route::prefix('data-file')->group(function () {
-				Route::get('/', [DataFileController::class, 'viewDataFile']);
-				Route::get('add', [DataFileController::class, 'addDataFile']);
-				Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
-				Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
-				Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
+                //action input sub data kategori
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
+            });
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-				Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
-				Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
-			});
-		});
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
+            });
+        });
 
-		Route::prefix('pengelolaan-akun')->group(function () {
-			Route::get('pencarian', [PencarianController::class, 'viewPencarian']);
-			Route::post('post-view-pencarian', [PencarianController::class, 'actionViewPencarian']);
-			Route::get('pencarian/view-detail/{username_nama_cari}', [PencarianController::class, 'viewDetailPencarian']);
-			Route::get('pencarian/datatables/{username_nama_cari}', [PencarianController::class, 'datatablesPencarian']);
-			Route::get('pencarian/view-detail-pengguna/{id_pengguna}/{username_nama_cari}', [PencarianController::class, 'viewDetailPenggunaPencarian']);
-			Route::get('pencarian/datatables-role/{id_pengguna}', [PencarianController::class, 'datatablesRolePencarian']);
-			Route::get('pencarian/add-role-pengguna/{id_pengguna}/{username_nama_cari}', [PencarianController::class, 'addRolePenggunaPencarian']);
+        Route::prefix('pengelolaan-akun')->group(function () {
+            Route::get('pencarian', [PencarianController::class, 'viewPencarian']);
+            Route::post('post-view-pencarian', [PencarianController::class, 'actionViewPencarian']);
+            Route::get('pencarian/view-detail/{username_nama_cari}', [PencarianController::class, 'viewDetailPencarian']);
+            Route::get('pencarian/datatables/{username_nama_cari}', [PencarianController::class, 'datatablesPencarian']);
+            Route::get('pencarian/view-detail-pengguna/{id_pengguna}/{username_nama_cari}', [PencarianController::class, 'viewDetailPenggunaPencarian']);
+            Route::get('pencarian/datatables-role/{id_pengguna}', [PencarianController::class, 'datatablesRolePencarian']);
+            Route::get('pencarian/add-role-pengguna/{id_pengguna}/{username_nama_cari}', [PencarianController::class, 'addRolePenggunaPencarian']);
 
-			Route::post('action-pencarian/{mode}/{id}', [PencarianController::class, 'actionPencarian']);
+            Route::post('action-pencarian/{mode}/{id}', [PencarianController::class, 'actionPencarian']);
 
-			Route::post('reset-some-password', [PencarianController::class, 'resetPasswordCollection']);
+            Route::post('reset-some-password', [PencarianController::class, 'resetPasswordCollection']);
 
-			// MENU Tenaga Pendidik
-			// url: /administrator/pengelolaan-akun/tendik
-			Route::get('tendik', [TendikController::class, 'viewTendik']);
-			Route::post('post-view-tendik', [TendikController::class, 'actionViewTendik']);
-			Route::get('tendik/view-detail/{id_role}', [TendikController::class, 'viewDetailTendik']);
-			Route::get('tendik/datatables/{id_role}', [TendikController::class, 'datatablesTendik']);
+            // MENU Tenaga Pendidik
+            // url: /administrator/pengelolaan-akun/tendik
+            Route::get('tendik', [TendikController::class, 'viewTendik']);
+            Route::post('post-view-tendik', [TendikController::class, 'actionViewTendik']);
+            Route::get('tendik/view-detail/{id_role}', [TendikController::class, 'viewDetailTendik']);
+            Route::get('tendik/datatables/{id_role}', [TendikController::class, 'datatablesTendik']);
 
-			// MENU Guru
-			// url: /administrator/pengelolaan-akun/guru
-			Route::get('guru', [GuruController::class, 'viewGuru']);
-			Route::post('post-view-guru', [GuruController::class, 'actionViewGuru']);
-			Route::get('guru/view-detail/{id_role}', [GuruController::class, 'viewDetailGuru']);
-			Route::get('guru/datatables/{id_role}', [GuruController::class, 'datatablesGuru']);
+            // MENU Guru
+            // url: /administrator/pengelolaan-akun/guru
+            Route::get('guru', [GuruController::class, 'viewGuru']);
+            Route::post('post-view-guru', [GuruController::class, 'actionViewGuru']);
+            Route::get('guru/view-detail/{id_role}', [GuruController::class, 'viewDetailGuru']);
+            Route::get('guru/datatables/{id_role}', [GuruController::class, 'datatablesGuru']);
 
-			// MENU Siswa
-			// url: /administrator/pengelolaan-akun/siswa
-			Route::get('siswa', [SiswaController::class, 'viewSiswa']);
-			Route::post('post-view-siswa', [SiswaController::class, 'actionViewSiswa']);
-			Route::get('siswa/view-detail/{id_kelas}', [SiswaController::class, 'viewDetailSiswa']);
-			Route::get('siswa/datatables/{id_kelas}', [SiswaController::class, 'datatablesSiswa']);
-		});
+            // MENU Siswa
+            // url: /administrator/pengelolaan-akun/siswa
+            Route::get('siswa', [SiswaController::class, 'viewSiswa']);
+            Route::post('post-view-siswa', [SiswaController::class, 'actionViewSiswa']);
+            Route::get('siswa/view-detail/{id_kelas}', [SiswaController::class, 'viewDetailSiswa']);
+            Route::get('siswa/datatables/{id_kelas}', [SiswaController::class, 'datatablesSiswa']);
+        });
 
-		Route::prefix('manajemen-menu')->group(function () {
-			// MENU Setting Dashboard
-			// url: /administrator/manajemen-menu/setting-dashboard
-			Route::get('setting-dashboard', [SettingDashboardController::class, 'viewSettingDashboard']);
-			Route::post('post-view-setting-dashboard', [SettingDashboardController::class, 'actionViewSettingDashboard']);
-			Route::get('setting-dashboard/view-detail/{id_role}', [SettingDashboardController::class, 'viewDetailSettingDashboard']);
-			Route::post('setting-dashboard', [SettingDashboardController::class, 'actionSettingDashboard']);
-		});
-	});
+        Route::prefix('manajemen-menu')->group(function () {
+            // MENU Setting Dashboard
+            // url: /administrator/manajemen-menu/setting-dashboard
+            Route::get('setting-dashboard', [SettingDashboardController::class, 'viewSettingDashboard']);
+            Route::post('post-view-setting-dashboard', [SettingDashboardController::class, 'actionViewSettingDashboard']);
+            Route::get('setting-dashboard/view-detail/{id_role}', [SettingDashboardController::class, 'viewDetailSettingDashboard']);
+            Route::post('setting-dashboard', [SettingDashboardController::class, 'actionSettingDashboard']);
+        });
+    });
 });

@@ -1,14 +1,13 @@
 <?php
-<<<<<<< HEAD
 
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
 use App\Http\Controllers\Guru\Biodata\DataKegiatanController;
 use App\Http\Controllers\Guru\Biodata\DataPrestasiController;
 use App\Http\Controllers\Guru\Biodata\DataPribadiController;
-use App\Http\Controllers\Guru\ELearning\ManajemenMateriAjarController;
 use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
 use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
 use App\Http\Controllers\Guru\ELearningSoal\SoalController;
+use App\Http\Controllers\Guru\ELearning\ManajemenMateriAjarController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
@@ -23,7 +22,6 @@ use App\Http\Controllers\Guru\KelasDaring\MengajarDaringController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
 use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
 use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
-use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
 use App\Http\Controllers\Guru\PelanggaranSiswa\InputPelanggaranController;
 use App\Http\Controllers\Guru\PembinaEkskul\InputNilaiEkskulController;
 use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
@@ -48,33 +46,11 @@ use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKeuanganKelasController;
 use App\Http\Controllers\Guru\WaliKelas\RekapPelanggaranKelasController;
 use App\Http\Controllers\Guru\WaliKelas\TracerAlumniWaliKelasController;
-use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Kesiswaan\SKPI\ApprovePrestasiSiswaController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 
-Route::middleware(['token_staff'])->group(function () {
-
-    Route::prefix('guru')->group(function () {
-        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-
-        Route::prefix('mgmp')->group(function () {
-            Route::prefix('laporan-harian-mgmp')->group(function () {
-                Route::get('/', [LaporanKerjaHarianController::class, 'viewLaporanHarianMGMP']);
-                Route::get('add', [LaporanKerjaHarianController::class, 'addLaporanHarianMGMP']);
-                Route::post('action-kerja-harian/{mode}/{id}', [LaporanKerjaHarianController::class, 'actionLaporanHarianMGMP']);
-                Route::get('datatables', [LaporanKerjaHarianController::class, 'datatablesKerjaHarianMGMP']);
-                Route::get('edit/{id}', [LaporanKerjaHarianController::class, 'editKerjaHarian']);
-                // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
-            });
-            Route::prefix('laporan-kelompok-mgmp')->group(function () {
-                Route::get('/', [LaporanKerjaHarianController::class, 'viewLaporanKelompokMGMP']);
-                Route::get('datatables', [LaporanKerjaHarianController::class, 'datatablesKerjaHarianKelompokMGMP']);
-                Route::get('/detail/{id}', [LaporanKerjaHarianController::class, 'detailLaporanKelompokMGMP']);
-                Route::get('/detail/datatables/{id}', [LaporanKerjaHarianController::class, 'datatablesDetailKerjaHarianKelompokMGMP']);
-                // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
-=======
 // ROLE GURU
 Route::group(array('middleware' => ['token_staff']), function () {
     Route::group(array('prefix' => 'guru'), function () {
@@ -99,7 +75,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/detail/datatables/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesDetailKerjaHarianKelompokMGMP');
                 Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
                 Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
->>>>>>> master
             });
         });
 
@@ -117,8 +92,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
         });
 
         Route::prefix('biodata')->group(function () {
-            Route::get('data-pribadi', [DataPribadiController::Class, 'viewDataPribadi']);
-            Route::post('action-data-pribadi', [DataPribadiController::Class, 'actionSaveDataPribadi']);
+            Route::get('data-pribadi', [DataPribadiController::class, 'viewDataPribadi']);
+            Route::post('action-data-pribadi', [DataPribadiController::class, 'actionSaveDataPribadi']);
 
             Route::prefix('data-kegiatan')->group(function () {
                 Route::get('/', [DataKegiatanController::class, 'viewDataKegiatan']);
@@ -139,18 +114,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
         });
 
-<<<<<<< HEAD
-        Route::prefix('e-learning')->group(function () {
-            Route::prefix('manajemen-materi-ajar')->group(function () {
-                Route::get('/', [ManajemenMateriAjarController::class, 'viewManajemenMateriAjar']);
-                Route::get('datatables', [ManajemenMateriAjarController::class, 'datatablesManajemenMateriAjar']);
-                Route::get('add', [ManajemenMateriAjarController::class, 'addManajemenMateriAjar']);
-                Route::get('edit/{id}', [ManajemenMateriAjarController::class, 'editManajemenMateriAjar']);
-                Route::get('get-kelas/{id_jurusan}', [ManajemenMateriAjarController::class, 'getKelas']);
-                Route::get('view/{id}', [ManajemenMateriAjarController::class, 'listViewManajemenMateriAjar']);
-                Route::get('view/datatables/{id}', [ManajemenMateriAjarController::class, 'datatablesViewManajemenMateriAjar']);
-                Route::post('deleteItem/{id_materi_ajar_file}', [ManajemenMateriAjarController::class, 'deleteItem']);
-=======
         /** ==== MODUL E-Learning ==== **/
         Route::group(array('prefix' => 'e-learning'), function () {
 
@@ -163,7 +126,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('view/{id}', 'Guru\ELearning\ManajemenMateriAjarController@listViewManajemenMateriAjar');
                 Route::get('view/datatables/{id}', 'Guru\ELearning\ManajemenMateriAjarController@datatablesViewManajemenMateriAjar');
                 Route::post('deleteItem/{id_materi_ajar_file}', 'Guru\ELearning\ManajemenMateriAjarController@deleteItem');
->>>>>>> master
             });
             Route::post('action-manajemen-materi-ajar/{mode}/{id}', [ManajemenMateriAjarController::class, 'actionManajemenMateriAjar']);
         });
@@ -219,18 +181,18 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
                 Route::get('/', 'Humas\Absensi\HistoriAbsensiSiswaController@viewHistoriAbsensiSiswa');
-				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
-				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
-				Route::get('/detail/{kelas}/{date}/{status}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
-				// Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
-				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
-				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
-				//buat izin / sakit
-				Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
-				Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
-				Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
-				Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
-				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
+                // Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
+                Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
+                Route::get('/detail/{kelas}/{date}/{status}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+                // Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
+                Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
+                Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
+                //buat izin / sakit
+                Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
+                Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
+                Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
+                Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
+                Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
 
             });
         });
@@ -340,7 +302,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::post('post-view-input-tryout', 'Guru\Penilaian\InputNilaiController@actionViewKelasInputTryOut');
             Route::get('input-tryout/view-kelas/{id_kelas_mp}', 'Guru\Penilaian\InputNilaiController@viewKelasInputTryOut');
             Route::get('input-tryout/datatables/{id_kelas_mp}', 'Guru\Penilaian\InputNilaiController@datatablesInputTryOut');
-            */
+             */
 
             Route::post('action-input-nilai/{mode}/{id}', [InputNilaiController::class, 'actionInputNilai']);
 
@@ -449,15 +411,14 @@ Route::group(array('middleware' => ['token_staff']), function () {
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', [GuruPiketRekapKesehatanController::class, 'viewRekapKesehatan']);
             Route::get('rekap-kesehatan/user/{id}/{date}', [RekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
-            Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::Class, 'viewDetailFormKesehatan']);
+            Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
             Route::get('rekap-kesehatan/{id}', [GuruPiketRekapKesehatanController::class, 'viewDetailRekapKesehatan']);
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}', [GuruPiketRekapKesehatanController::class, 'viewDetailRekapKesehatan']);
             Route::get('rekap-kesehatan/{id}/{bulan}/{tahun}/download', [GuruPiketRekapKesehatanController::class, 'downloadDetailRekapKesehatan']);
 
-
-            Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::Class, 'actionFormKesehatan']);
-            Route::post('rekap-kesehatan/datatables', [FormKesehatanController::Class, 'showDatatablesFormKesehatan']);
+            Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+            Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
 
             // MENU Rekap Absen Tanpa Jadwal
             Route::get('rekap-absen-tanpa-jadwal', [GuruPiketRekapAbsenTanpaJadwalController::class, 'viewRekapAbsenTanpaJadwal']);
@@ -468,7 +429,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::get('rekap-absen-tanpa-jadwal/print/{id_kelas_mp}', [GuruPiketRekapAbsenTanpaJadwalController::class, 'printKBMRekapAbsenTanpaJadwal']);
         });
-
 
         Route::prefix('wali-kelas')->group(function () {
             // MENU Data Inventaris Kelas/Sarana
