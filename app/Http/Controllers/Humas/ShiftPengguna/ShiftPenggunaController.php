@@ -180,6 +180,15 @@ class ShiftPenggunaController extends Controller
             $query->where('nm_status_pengguna', '=', 'AKTIF');
         })->get();
 
+        //  $pengguna = pengguna::where('status_join_table', 2)->where('username', '!=', 'admin')
+        // ->with('status_pengguna', 'guru.unit_kerja')
+        // ->whereHas('guru.unit_kerja', function ($query) {
+        //     $query->where('id_unit_kerja', '=', 'Gz5B415566032945cc7e19ed69d3');
+        // })
+        // ->whereHas('status_pengguna', function ($query) {
+        //     $query->where('nm_status_pengguna', '=', 'AKTIF');
+        // })->get();
+
         $year = Carbon::parse($date)->format('Y');
         $mount = Carbon::parse($date)->format('M');
 
@@ -200,7 +209,7 @@ class ShiftPenggunaController extends Controller
                 $allShiftPengguna = ShiftPengguna::where('date', $date)->get();
                 $attendance = $allShiftPengguna->firstWhere('id_pengguna', $value->id_pengguna);
                 $hasil[$key1][$key2]['time'] = "-";
-                $hasil[$key1][$key2]['id_shift_pengguna'] = "-";
+                $hasil[$key1][$key2]['id_shift_master'] = "-";
                 $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
                 if ($attendance) {
                     if ($attendance->id_shift_master) {
