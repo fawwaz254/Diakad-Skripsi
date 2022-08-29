@@ -2,126 +2,87 @@
 $theme_name = Request::segment(1);
 // dd(Auth::user()->sekolah_data);
 @endphp
-@switch($theme_name)
-    @case('pendidikan')
-        {!! '<body class="theme-green">' !!}
-    @break
 
-    @case('guru')
-        {!! '<body class="theme-orange">' !!}
-    @break
-
-    @case('siswa')
-        {!! '<body class="theme-blue">' !!}
-    @break
-
-    @case('wali-murid')
-        {!! '<body class="theme-brown">' !!}
-    @break
-
-    @case('bimbingan-konseling')
-        {!! '<body class="theme-deep-purple">' !!}
-    @break
-
-    @case('kesiswaan')
-        {!! '<body class="theme-indigo">' !!}
-    @break
-
-    @case('akademik')
-        {!! '<body class="theme-light-green">' !!}
-    @break
-
-    @case('sumber-daya')
-        {!! '<body class="theme-pink">' !!}
-    @break
-
-    @case('keuangan')
-        {!! '<body class="theme-amber">' !!}
-    @break
-
-    @case('sarana-prasarana')
-        {!! '<body class="theme-purple">' !!}
-    @break
-
-    @case('ppdb')
-        {!! '<body class="theme-lime">' !!}
-    @break
-
-    @case('alumni')
-        {!! '<body class="theme-blue-grey">' !!}
-    @break
-
-    @case('pelatih-ekskul')
-        {!! '<body class="theme-deep-orange">' !!}
-    @break
-
-    @case('sekretariat')
-        {!! '<body class="theme-black">' !!}
-    @break
-
-    @case('tendik')
-        {!! '<body class="theme-grey">' !!}
-    @break
-
-    @case('administrator')
-        {!! '<body class="theme-cyan">' !!}
-    @break
-
-    @case('humas')
-        {!! '<body class="theme-teal">' !!}
-    @break
-
-    @case('rapor-buku-induk')
-        {!! '<body class="theme-red">' !!}
-    @break
-
-    @default
-@endswitch
-<!-- Page Loader -->
-<div class="page-loader-wrapper">
-    <div class="loader">
-        <div class="preloader">
-            <div class="spinner-layer pl-green">
-                <div class="circle-clipper left">
-                    <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                    <div class="circle"></div>
+@if($theme_name == 'pendidikan')
+<body class="theme-green">
+@elseif($theme_name == 'guru')
+<body class="theme-orange">
+@elseif($theme_name == 'siswa')
+<body class="theme-blue">
+@elseif($theme_name == 'wali-murid')
+<body class="theme-brown">
+@elseif($theme_name == 'bimbingan-konseling')
+<body class="theme-deep-purple">
+@elseif($theme_name == 'kesiswaan')
+<body class="theme-indigo">
+@elseif($theme_name == 'akademik')
+<body class="theme-light-green">
+@elseif($theme_name == 'sumber-daya')
+<body class="theme-pink">
+@elseif($theme_name == 'keuangan')
+<body class="theme-amber">
+@elseif($theme_name == 'sarana-prasarana')
+<body class="theme-purple">
+@elseif($theme_name == 'ppdb')
+<body class="theme-lime">
+@elseif($theme_name == 'alumni')
+<body class="theme-blue-grey">
+@elseif($theme_name == 'pelatih-ekskul')
+<body class="theme-deep-orange">
+@elseif($theme_name == 'sekretariat')
+<body class="theme-black">
+@elseif($theme_name == 'tendik')
+<body class="theme-grey">
+@elseif($theme_name == 'administrator')
+<body class="theme-cyan">
+@elseif($theme_name == 'humas')
+<body class="theme-teal">
+@elseif($theme_name == 'rapor-buku-induk')
+<body class="theme-red">
+@endif
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
                 </div>
             </div>
+            <p>Please wait...</p>
         </div>
-        <p>Please wait...</p>
     </div>
-</div>
-<!-- #END# Page Loader -->
-<div class="overlay"></div>
-<!-- Search Bar -->
-<div class="search-bar">
-    <div class="search-icon">
-        <i class="material-icons">search</i>
+    <!-- #END# Page Loader -->
+    <div class="overlay"></div>
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <div class="search-icon">
+            <i class="material-icons">search</i>
+        </div>
+        <form id="form-search">
+            <input type="text" name="q" placeholder="Ketikkan nama menu di sini...">
+        </form>
+        <div class="close-search">
+            <i class="material-icons">close</i>
+        </div>
     </div>
-    <form id="form-search">
-        <input type="text" name="q" placeholder="Ketikkan nama menu di sini...">
-    </form>
-    <div class="close-search">
-        <i class="material-icons">close</i>
-    </div>
-</div>
-<!-- #END# Search Bar -->
-@php
-$sekolah = \App\Models\Sekolah::orderBy('id_sekolah')->first();
-@endphp
-<nav class="navbar">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
-                data-target="#navbar-collapse" aria-expanded="false"></a>
-            <a href="javascript:void(0);" class="bars" style="display: none;"></a>
-            <a class="navbar-brand"><?= str_replace('-', ' ', strtoupper($theme_name)) ?>
-                <?= strtoupper(auth_data()->sekolah_data->nm_sekolah) ?> -
-                @if ($sekolah->nm_singkat_sekolah == 'smawidyadarma')
-                    {{ strtoupper(env('APP_NAME', 'EDUSCHOOL')) }}
-                @else
+    <!-- #END# Search Bar -->
+    @php
+    $sekolah = \App\Models\Sekolah::orderBy('id_sekolah')->first();
+    @endphp
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars" style="display: none;"></a>
+                <a class="navbar-brand"><?=str_replace('-', ' ', strtoupper($theme_name))?> <?=strtoupper(auth_data()->sekolah_data->nm_sekolah)?> -
+                    @if($sekolah->nm_singkat_sekolah == 'smawidyadarma')
+                    {{strtoupper(env('APP_NAME', 'EDUSCHOOL'))}}
+                    @else
                     DIAKAD
                 @endif
             </a>

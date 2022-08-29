@@ -3,20 +3,23 @@
 
         <tr>
             <th>Tanggal: {{ $products[0]['date'] }}</th>
-
         </tr>
         <tr>
-
-
-
         </tr>
 
         <tr>
             <th style="text-align: center; background-color: #d8d8d8">No</th>
             <th style="background-color: #d8d8d8">Nama</th>
-            <th style="background-color: #d8d8d8">Role</th>
-            <th style="background-color: #d8d8d8">Check In</th>
+            <th style="background-color: #d8d8d8">
+                @if (isset($products[0]['unit_kerja']))
+                    Unit kerja
+                @else
+                    Kelas
+                @endif
+                <th style="background-color: #d8d8d8">Check In</th>
+                @if (isset($products[0]['unit_kerja']))
             <th style="background-color: #d8d8d8">Check Out</th>
+            @endif
             <th style="background-color: #d8d8d8">Status</th>
             <th style="background-color: #d8d8d8">Notes</th>
         </tr>
@@ -30,9 +33,11 @@
             @endif
             <td style="text-align: center;">{{ $loop->iteration }}</td>
             <td>{{ $r['nm_pengguna'] }}</td>
-            <td>{{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td>
+            <td>{{ isset($r['unit_kerja']) ? $r['unit_kerja'] : $r['kelas'] }}</td>
             <td>{{ $r['check_in'] }}</td>
-            <td>{{ $r['check_out'] }}</td>
+            @if (isset($r['unit_kerja']))
+                <td>{{ $r['check_out'] }}</td>
+            @endif
             @if ($r['status'] == 'sakit' || $r['status'] == 'izin')
                 <td style="background-color: #fffc5e">{{ $r['status'] }}</td>
             @elseif($r['status'] == 'Alpha')

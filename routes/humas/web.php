@@ -46,11 +46,13 @@ Route::middleware(['token_staff'])->group(function () {
 				Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
 				Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
 			});
-			Route::prefix('data-sub-kategori')->group(function () {
-				Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
-				Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
-				Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
-				Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
+
+			// MENU Data Sub Kategori 
+			Route::group(array('prefix' => 'data-sub-kategori'), function () {
+				Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
+				Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
+				Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
+				Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
 
 				//action input sub data kategori
 				Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
@@ -62,19 +64,30 @@ Route::middleware(['token_staff'])->group(function () {
 				Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
 				Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-				Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
-				Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
+			// MENU Data File 
+			Route::group(array('prefix' => 'data-file'), function () {
+
+				Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
+				Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
+				Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
+				Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
+				Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
+
+				Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
+				Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
 			});
 		});
 
-		Route::prefix('data-guru')->group(function () {
-			Route::prefix('data-kegiatan')->group(function () {
-				Route::get('/', [DataKegiatanController::class, 'viewDataKegiatan']);
-				Route::get('add', [DataKegiatanController::class, 'viewAddDataKegiatan']);
-				Route::get('edit/{id}', [DataKegiatanController::class, 'viewEditDataKegiatan']);
-				Route::post('action/{mode}/{id}', [DataKegiatanController::class, 'actionDataKegiatan']);
+		Route::group(array('prefix' => 'data-guru'), function () {
 
-				Route::get('datatables', [DataKegiatanController::class, 'datatablesDataKegiatan']);
+			Route::group(array('prefix' => 'data-kegiatan'), function () {
+
+				Route::get('/', 'Guru\Biodata\DataKegiatanController@viewDataKegiatan');
+				Route::get('add', 'Guru\Biodata\DataKegiatanController@viewAddDataKegiatan');
+				Route::get('edit/{id}', 'Guru\Biodata\DataKegiatanController@viewEditDataKegiatan');
+				Route::post('action/{mode}/{id}', 'Guru\Biodata\DataKegiatanController@actionDataKegiatan');
+
+				Route::get('datatables', 'Guru\Biodata\DataKegiatanController@datatablesDataKegiatan');
 			});
 
 			Route::prefix('data-prestasi')->group(function () {
@@ -103,44 +116,62 @@ Route::middleware(['token_staff'])->group(function () {
 				Route::post('/addShiftMaster', [ShiftPenggunaMasterController::class, 'storeShiftMaster']);
 				Route::post('/managementShift/{id}/delete', [ShiftPenggunaMasterController::class, 'destroyShiftMaster']);
 
-				Route::get('/', [ShiftPenggunaController::class, 'viewShiftPengguna']);
-				Route::get('/add', [ShiftPenggunaController::class, 'addShiftPengguna']);
+		Route::group(array('prefix' => 'absensi'), function () {
 
-				Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
-				Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
-				Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
-				Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
+			Route::group(array('prefix' => 'shift_pengguna'), function () {
+
+				Route::get('/managementShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@viewShiftPenggunaManagement');
+				Route::post('/addShiftMaster', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@storeShiftMaster');
+				Route::post('/managementShift/{id}/delete', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@destroyShiftMaster');
+
+				Route::get('/', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
+				Route::get('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@addShiftPengguna');
+
+				Route::post('/add', 'Humas\ShiftPengguna\ShiftPenggunaController@storeShiftPengguna');
+				Route::get('/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@viewShiftPengguna');
+				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
+				Route::post('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@updateShiftAbsensi');
+				// Route::get('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@addShiftMaster');
+
 			});
-			Route::prefix('histori-absensi')->group(function () {
-				Route::get('export-laravel-mount/{date}', [HistoriAbsensiController::class, 'export_excel_mount']);
-				Route::get('export-laravel/{date}', [HistoriAbsensiController::class, 'export_excel_day']);
-				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', [HistoriAbsensiController::class,'export_excel']);
-				Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
-				Route::get('/{date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
-				Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
-				Route::post('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'storeHistoriAbsensi']);
-				Route::get('/{id_presensi_pengguna}/{date}/edit', [HistoriAbsensiController::class, 'editHistoriAbsensi']);
-				Route::post('/{id_presensi_pengguna}/{date}/edit', [HistoriAbsensiController::class, 'updateHistoriAbsensi']);
-				Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiController::class, 'destroyHistoriAbsensi']);
+
+
+			Route::group(array('prefix' => 'histori-absensi'), function () {
+				Route::get('export-laravel-mount/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
+				Route::get('export-laravel/{date}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
+				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
+				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{date}', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
+				Route::get('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@createHistoriAbsensi');
+				Route::post('/{id_pengguna}/{date}/add', 'Humas\Absensi\HistoriAbsensiController@storeHistoriAbsensi');
+				Route::get('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@editHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/{date}/edit', 'Humas\Absensi\HistoriAbsensiController@updateHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiController@destroyHistoriAbsensi');
 			});
-			Route::prefix('manajemen-hari-libur')->group(function () {
-				Route::get('/', [ManajemenHariLiburController::class, 'viewManajemenHariLibur']);
-				Route::get('/{id}/edit', [ManajemenHariLiburController::class, 'editManajemenHariLibur']);
-				Route::post('/{id}/edit', [ManajemenHariLiburController::class, 'updateManajemenHariLibur']);
-				Route::get('/add', [ManajemenHariLiburController::class, 'createManajemenHariLibur']);
-				Route::post('/add', [ManajemenHariLiburController::class, 'storeManajemenHariLibur']);
-				Route::post('/{id}/delete', [ManajemenHariLiburController::class, 'destroyManajemenHariLibur']);
+
+			Route::group(array('prefix' => 'manajemen-hari-libur'), function () {
+
+				Route::get('/', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@viewManajemenHariLibur');
+				Route::get('/{id}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@editManajemenHariLibur');
+				Route::post('/{id}/edit', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@updateManajemenHariLibur');
+				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
+				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
+				Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
 			});
 		});
 
-		Route::prefix('bursa-kerja')->group(function () {
-			Route::prefix('lowongan-kerja')->group(function () {
-				Route::get('/', [LowonganKerjaController::class, 'viewLowonganKerja']);
-				Route::get('add', [LowonganKerjaController::class, 'viewAddEditLowonganKerja']);
-				Route::get('edit/{id}', [LowonganKerjaController::class, 'viewAddEditLowonganKerja']);
-				Route::get('datatables', [LowonganKerjaController::class, 'showDatatablesLowonganKerja']);
-				Route::post('action/{mode}', [LowonganKerjaController::class, 'actionLowonganKerja']);
-				Route::post('action/delete/{id}', [LowonganKerjaController::class, 'actionDeleteLowonganKerja']);
+		/** ==== MODUL BURSA KERJA ==== **/
+
+		Route::group(array('prefix' => 'bursa-kerja'), function () {
+
+			Route::group(array('prefix' => 'lowongan-kerja'), function () {
+
+				Route::get('/', 'Humas\BursaKerja\LowonganKerjaController@viewLowonganKerja');
+				Route::get('add', 'Humas\BursaKerja\LowonganKerjaController@viewAddEditLowonganKerja');
+				Route::get('edit/{id}', 'Humas\BursaKerja\LowonganKerjaController@viewAddEditLowonganKerja');
+				Route::get('datatables', 'Humas\BursaKerja\LowonganKerjaController@showDatatablesLowonganKerja');
+				Route::post('action/{mode}', 'Humas\BursaKerja\LowonganKerjaController@actionLowonganKerja');
+				Route::post('action/delete/{id}', 'Humas\BursaKerja\LowonganKerjaController@actionDeleteLowonganKerja');
 			});
 		});
 
@@ -296,23 +327,26 @@ Route::middleware(['token_staff'])->group(function () {
 			// Route::post('/update/{alumni}', 'AlumniController@update');
 			// Route::post('/delete/{alumni}', 'AlumniController@destroy');
 			// Route::post('/datatables', 'AlumniController@renderDatatables');
-			Route::prefix('tracer-alumni')->group(function () {
-				Route::get('/', [TracerAlumniController::class, 'viewTracerAlumni']);
-				Route::get('datatables', [TracerAlumniController::class, 'datatablesTracerAlumni']);
-				// Route::get('datatables2', [TracerAlumniController::class,'datatablesTracerAlumni']);
-				Route::get('add', [TracerAlumniController::class, 'addTracerAlumni']);
-				Route::get('edit/{id}', [TracerAlumniController::class, 'editTracerAlumni']);
-				Route::post('action/{mode}/{id}', [TracerAlumniController::class, 'actionTracerAlumni']);
-				Route::get('cetak', [TracerAlumniController::class, 'cetakTracerAlumni']);
-				Route::get('cetak2', [TracerAlumniController::class, 'cetakTracerAlumni2']);
-				Route::post('cetak', [TracerAlumniController::class, 'changeTracerAlumni']);
-				Route::post('cetak2', [TracerAlumniController::class, 'changeTracerAlumni2']);
-				Route::get('cetak/{id_kelas}/{tahun}', [TracerAlumniController::class, 'cetakTracerAlumni']);
-				Route::get('cetak2/{id_kelas}/{tahun}', [TracerAlumniController::class, 'cetakTracerAlumni2']);
-				Route::get('cetak/datatables/{id_kelas}/{tahun}', [TracerAlumniController::class, 'datatablesCetakTracerAlumni']);
-				// Route::get('cetak2/datatables/{id_kelas}/{tahun}',[TracerAlumniController::class,'datatablesCetakTracerAlumni2']);
-				Route::get('export-alumni/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnni']);
-				Route::get('export-alumni2/{id_kelas}/{tahun}', [TracerAlumniController::class, 'exportAlumnni2']);
+
+			Route::group(array('prefix' => 'tracer-alumni'), function () {
+
+				Route::get('/', 'TracerAlumniController@viewTracerAlumni');
+				Route::get('datatables', 'TracerAlumniController@datatablesTracerAlumni');
+				// Route::get('datatables2', 'TracerAlumniController@datatablesTracerAlumni');
+				Route::get('add', 'TracerAlumniController@addTracerAlumni');
+				Route::get('edit/{id}', 'TracerAlumniController@editTracerAlumni');
+				Route::post('action/{mode}/{id}', 'TracerAlumniController@actionTracerAlumni');
+				Route::get('cetak','TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak2','TracerAlumniController@cetakTracerAlumni2');
+				Route::post('cetak','TracerAlumniController@changeTracerAlumni');
+				Route::post('cetak2','TracerAlumniController@changeTracerAlumni2');
+				Route::get('cetak/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni');
+				Route::get('cetak2/{id_kelas}/{tahun}','TracerAlumniController@cetakTracerAlumni2');
+				Route::get('cetak/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni');
+				// Route::get('cetak2/datatables/{id_kelas}/{tahun}','TracerAlumniController@datatablesCetakTracerAlumni2');
+				Route::get('export-alumni/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni');
+				Route::get('export-alumni2/{id_kelas}/{tahun}','TracerAlumniController@exportAlumnni2');
+
 			});
 		});
 

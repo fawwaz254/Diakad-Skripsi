@@ -1,5 +1,14 @@
 <?php
 // ROLE AKADEMIK
+<<<<<<< HEAD
+=======
+Route::group(array('middleware' => ['token_staff']), function () {
+    Route::group(array('prefix' => 'akademik'), function () {
+        Route::get('welcome', 'Akademik\WelcomeController@indexWelcome');
+
+        //modul MGMP
+        Route::group(array('prefix' => 'mpmp'), function () {
+>>>>>>> master
 
 use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
 use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
@@ -44,6 +53,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
             });
+<<<<<<< HEAD
             Route::prefix('data-kategori-mapel')->group(function () {
                 Route::get('/', [DataKategoriMGMPController::class, 'viewDataKategori']);
                 Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesCategoryfile']);
@@ -54,6 +64,21 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('laporan-mgmp')->group(function () {
                 Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
                 Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesKerjaHarianAllMGMP']);
+=======
+
+            Route::group(array('prefix' => 'jenis-mgmp'), function () {
+                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
+                Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
+                Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
+                Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
+            });
+
+            Route::group(array('prefix' => 'laporan-mgmp'), function () {
+                Route::get('/', 'Akademik\MGMP\DataKategoriMGMPController@viewLaporanAllMGMP');
+                Route::get('/datatables', 'Akademik\MGMP\DataKategoriMGMPController@datatablesKerjaHarianAllMGMP');
+                Route::get('preview-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@previewFile');
+                Route::get('download-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@downloadFile');
+>>>>>>> master
             });
         });
 

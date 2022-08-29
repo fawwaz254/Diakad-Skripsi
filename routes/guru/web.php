@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
 use App\Http\Controllers\Guru\Biodata\DataKegiatanController;
@@ -73,6 +74,32 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{id}', [LaporanKerjaHarianController::class, 'detailLaporanKelompokMGMP']);
                 Route::get('/detail/datatables/{id}', [LaporanKerjaHarianController::class, 'datatablesDetailKerjaHarianKelompokMGMP']);
                 // Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
+=======
+// ROLE GURU
+Route::group(array('middleware' => ['token_staff']), function () {
+    Route::group(array('prefix' => 'guru'), function () {
+        Route::get('welcome', 'Guru\WelcomeController@indexWelcome');
+
+        Route::group(array('prefix' => 'mgmp'), function () {
+
+            Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {
+                Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanHarianMGMP');
+                Route::get('add', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@addLaporanHarianMGMP');
+                Route::post('action-kerja-harian/{mode}/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@actionLaporanHarianMGMP');
+                Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianMGMP');
+                Route::get('edit/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@editKerjaHarian');
+                Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
+                Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
+            });
+
+            Route::group(array('prefix' => 'laporan-kelompok-mgmp'), function () {
+                Route::get('/', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@viewLaporanKelompokMGMP');
+                Route::get('datatables', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesKerjaHarianKelompokMGMP');
+                Route::get('/detail/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@detailLaporanKelompokMGMP');
+                Route::get('/detail/datatables/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@datatablesDetailKerjaHarianKelompokMGMP');
+                Route::get('preview-file/{id}/{no}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@previewFile');
+                Route::get('download-file/{id}', 'Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController@downloadFile');
+>>>>>>> master
             });
         });
 
@@ -112,6 +139,7 @@ Route::middleware(['token_staff'])->group(function () {
             });
         });
 
+<<<<<<< HEAD
         Route::prefix('e-learning')->group(function () {
             Route::prefix('manajemen-materi-ajar')->group(function () {
                 Route::get('/', [ManajemenMateriAjarController::class, 'viewManajemenMateriAjar']);
@@ -122,6 +150,20 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('view/{id}', [ManajemenMateriAjarController::class, 'listViewManajemenMateriAjar']);
                 Route::get('view/datatables/{id}', [ManajemenMateriAjarController::class, 'datatablesViewManajemenMateriAjar']);
                 Route::post('deleteItem/{id_materi_ajar_file}', [ManajemenMateriAjarController::class, 'deleteItem']);
+=======
+        /** ==== MODUL E-Learning ==== **/
+        Route::group(array('prefix' => 'e-learning'), function () {
+
+            Route::group(array('prefix' => 'manajemen-materi-ajar'), function () {
+                Route::get('/', 'Guru\ELearning\ManajemenMateriAjarController@viewManajemenMateriAjar');
+                Route::get('datatables', 'Guru\ELearning\ManajemenMateriAjarController@datatablesManajemenMateriAjar');
+                Route::get('add', 'Guru\ELearning\ManajemenMateriAjarController@addManajemenMateriAjar');
+                Route::get('edit/{id}', 'Guru\ELearning\ManajemenMateriAjarController@editManajemenMateriAjar');
+                Route::get('get-kelas/{id_jurusan}', 'Guru\ELearning\ManajemenMateriAjarController@getKelas');
+                Route::get('view/{id}', 'Guru\ELearning\ManajemenMateriAjarController@listViewManajemenMateriAjar');
+                Route::get('view/datatables/{id}', 'Guru\ELearning\ManajemenMateriAjarController@datatablesViewManajemenMateriAjar');
+                Route::post('deleteItem/{id_materi_ajar_file}', 'Guru\ELearning\ManajemenMateriAjarController@deleteItem');
+>>>>>>> master
             });
             Route::post('action-manajemen-materi-ajar/{mode}/{id}', [ManajemenMateriAjarController::class, 'actionManajemenMateriAjar']);
         });
@@ -173,6 +215,23 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('histori-absensi')->group(function () {
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{start_date}/{end_date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
+            });
+
+            Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
+                Route::get('/', 'Humas\Absensi\HistoriAbsensiSiswaController@viewHistoriAbsensiSiswa');
+				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
+				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
+				Route::get('/detail/{kelas}/{date}/{status}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+				// Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
+				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
+				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
+				//buat izin / sakit
+				Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
+				Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
+				Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
+				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
+
             });
         });
 

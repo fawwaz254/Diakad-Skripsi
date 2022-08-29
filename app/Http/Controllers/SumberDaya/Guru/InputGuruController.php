@@ -136,6 +136,8 @@ class InputGuruController extends BaseController
             'pengguna.gelar_depan',
             'pengguna.gelar_belakang',
             'guru.nip_guru',
+            'guru.tgl_keluar',
+            'guru.alasan_keluar',
             'unit_kerja.nm_unit_kerja',
             'status_pengguna.nm_status_pengguna',
             DB::raw("(SELECT COUNT(*) FROM pengampu_mp 
@@ -167,7 +169,13 @@ class InputGuruController extends BaseController
                 } else {
                     return $item->nm_pengguna;
                 }
-            })
+            })->editColumn('nm_status_pengguna', function($item) {
+                if(isset($item->alasan_keluar)){
+                    return $item->nm_status_pengguna . '<br>' . 'Tanggal Keluar '. '( ' . $item->tgl_keluar . ' )' . '<br>' . ' Alasan Keluar ( ' . $item->alasan_keluar . ' )';
+                }else{
+                    return $item->nm_status_pengguna;
+                }
+            })->rawColumns(['nm_status_pengguna'])
             ->addColumn('jml_mengajar_semester_aktif', function ($item) {
                 if (!empty($item->jml_mengajar_semester_aktif)) {
                     return $item->jml_mengajar_semester_aktif;
@@ -331,6 +339,7 @@ class InputGuruController extends BaseController
                 $pengguna->id_status_pengguna       = $input->id_status_pengguna;
                 $pengguna->nm_pengguna              = $input->nm_pengguna;
 
+
                 // apabila ada pergantian nip guru
                 if ($pengguna->username != $input->nip_guru) {
                     $pengguna->username                 = $input->nip_guru;
@@ -406,12 +415,16 @@ class InputGuruController extends BaseController
                 $guru->nomor_hp                 = $input->nomor_hp;
                 $guru->email                    = $input->email;
 
+                //keluar
+                $guru->tgl_keluar               =  date_format(date_create($input->tgl_keluar), "Y-m-d");;
+                $guru->alasan_keluar            = $input->alasan_keluar;
 
                 //section penugasan
                 $guru->is_sekolah_induk         = $input->is_sekolah_induk;
                 $guru->tgl_sk_penugasan         = date_format(date_create($input->tgl_sk_penugasan), "Y-m-d");;
                 $guru->nomor_sk_penugasan       = $input->nomor_sk_penugasan;
                 $guru->save();
+
 
                 LibGlobal::insertUpdateUserInCenter([
                     [

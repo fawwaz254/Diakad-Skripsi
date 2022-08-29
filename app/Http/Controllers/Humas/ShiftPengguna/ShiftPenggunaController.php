@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Humas\ShiftPengguna;
 
+use AddingMenuAbsensiTanpaJadwal;
 use Illuminate\Http\Request;
 // use Illuminate\Validation\Validator;
+use App\Exports\ShiftMount;
 use \Validator;
 use App\Http\Controllers\Controller;
 use App\Models\ShiftMaster;
@@ -12,6 +14,7 @@ use App\Models\Pengguna;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Sekolah;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class ShiftPenggunaController extends Controller
@@ -25,10 +28,13 @@ class ShiftPenggunaController extends Controller
         }
 
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
+        ->with('status_pengguna','guru.unit_kerja')
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();
+        $hasil = [];
+        $allShiftMater = ShiftMaster::get();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
@@ -36,13 +42,14 @@ class ShiftPenggunaController extends Controller
             $hasil[$key]['id_shift_master'] = "-";
             $hasil[$key]['time'] = "-";
             $hasil[$key]['id_shift_pengguna'] = "-";
+            $hasil[$key]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
-            $attendance = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date)->first();
+            $attendance = $allShiftPengguna->firstWhere('id_pengguna', $value->id_pengguna);
             if ($attendance) {
 
                 if ($attendance->id_shift_master) {
                     $hasil[$key]['id_shift_master'] = $attendance->id_shift_master;
-                    $shiftM = ShiftMaster::where('code', $attendance->id_shift_master)->first();
+                    $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
                     $hasil[$key]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
                 } else {
                     $hasil[$key]['id_shift_master'] = "-";
@@ -60,7 +67,7 @@ class ShiftPenggunaController extends Controller
 
         $shifts = ShiftMaster::all();
         $penggunas = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna')
+        ->with('status_pengguna','guru.unit_kerja')
         ->whereHas('status_pengguna', function($query) {
         $query->where('nm_status_pengguna','=','AKTIF');
         })->get();
@@ -163,4 +170,50 @@ class ShiftPenggunaController extends Controller
 
         return redirect("/humas#absensi/shift_pengguna/" . $date);
     }
+
+    public function export_shift(Request $request,$date = null){
+        // dd($date);
+        set_time_limit(9800);
+        $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
+        ->with('status_pengguna', 'guru.unit_kerja')
+        ->whereHas('status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->get();
+
+        $year = Carbon::parse($date)->format('Y');
+        $mount = Carbon::parse($date)->format('M');
+
+        $start_date = new Carbon('first day of' . $mount . $year);
+        $end_date =  new Carbon('last day of' . $mount . $year);
+
+        $dates = CarbonPeriod::create($start_date, $end_date);
+        // dd($dates);
+        // $libur = ManajemenHariLibur::get();
+        $allShiftMater = ShiftMaster::get();
+        foreach ($pengguna as $key1 => $value) {
+            $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
+            // $hasil[$key1]['status_join_table'] = $value->status_join_table;
+            $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
+
+            foreach ($dates as $key2 => $date) {
+                $allShiftPengguna = ShiftPengguna::where('date', $date)->get();
+                $attendance = $allShiftPengguna->firstWhere('id_pengguna', $value->id_pengguna);
+                $hasil[$key1][$key2]['time'] = "-";
+                $hasil[$key1][$key2]['id_shift_pengguna'] = "-";
+                $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
+                if ($attendance) {
+                    if ($attendance->id_shift_master) {
+                        $hasil[$key1][$key2]['id_shift_master'] = $attendance->id_shift_master;
+                        $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
+                        $hasil[$key1][$key2]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
+                    }
+            }
+        }
+    }
+    // dd($hasil);
+    $products = $hasil;
+    return Excel::download(new ShiftMount($products), 'shift_bulanan.xlsx');
+
+}
 }

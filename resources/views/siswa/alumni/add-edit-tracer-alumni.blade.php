@@ -10,7 +10,11 @@
 
 <div class="container-fluid">
     <div class="block-header">
+        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2' )
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1). '#' . Request::segment(2) . '/tracer-alumni')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        @else
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1). '#' . Request::segment(2))}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        @endif
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -112,7 +116,11 @@
                             <input type="text"  class="form-control" name="alamat_siswa" required="" aria-required="true"
                                 aria-invalid="true" value="{{ $alumni->calon_siswa->alamat_jalan  }}">  
                         </div>
-
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
+                            <input type="text"  class="form-control" name="url_medsos" required="" aria-required="true"
+                                aria-invalid="true" value="{{ $alumni->url_medsos  }}">  
+                        </div>
 
                         @else
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
@@ -130,6 +138,11 @@
                             <h2 class="card-inside-title"> Alamat </h2>
                             <input type="text"  class="form-control" name="alamat_siswa" required="" aria-required="true"
                                 aria-invalid="true" @if(!empty($siswa->calon_siswa->alamat_kecamatan && $siswa->calon_siswa->alamat_kelurahan &&  $siswa->calon_siswa->alamat_dusun && $siswa->calon_siswa->alamat_rt && $siswa->calon_siswa->alamat_rw)) value="{{ $siswa->calon_siswa->alamat_kecamatan}},{{ $siswa->calon_siswa->alamat_kelurahan }},{{ $siswa->calon_siswa->alamat_dusun }},{{ $siswa->calon_siswa->alamat_rt }},{{ $siswa->calon_siswa->alamat_rw }}" @endif>  
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
+                            <input type="text"  class="form-control" name="url_medsos" required="" aria-required="true"
+                                aria-invalid="true">  
                         </div>
                         @endif
 

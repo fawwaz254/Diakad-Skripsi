@@ -40,6 +40,28 @@ class LaporanKerjaHarianController extends Controller
         return view('guru/mgmp/laporan-harian-mgmp/add-data-laporan-harian-mgmp',compact('auth_data','mapel','waktu','jenis'));
 
     }
+    public function previewFile($id,$no,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+        return view('guru/mgmp/laporan-harian-mgmp/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext','id','no'));
+
+    }
+
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+        $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
+    }
+
     public function actionLaporanHarianMGMP(Request $request, $mode = 0,$id=0){
         $input = (object) $request->input();
 
@@ -81,7 +103,7 @@ class LaporanKerjaHarianController extends Controller
                 if($request->hasFile('file')){
 
                     $validator = Validator::make($request->all(),[
-                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                        'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
                     ]);
 
                     if($validator->fails()) {
@@ -127,7 +149,7 @@ class LaporanKerjaHarianController extends Controller
                 if($request->hasFile('file')){ 
 
                     $validator = Validator::make($request->all(),[
-                        'file' => 'mimes:pptx,docx,xlsx,jpeg,jpg,png,pdf|required|max:5120'
+                        'file' => 'mimes:pptx,docx,doc,xlsx,jpeg,jpg,png,pdf|required|max:5120'
                     ]);
                     if($validator->fails()) {
                         return [

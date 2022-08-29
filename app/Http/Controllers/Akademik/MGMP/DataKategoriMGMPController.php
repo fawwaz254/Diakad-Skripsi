@@ -152,21 +152,21 @@ class DataKategoriMGMPController extends BaseController
                         $datakategori_guru->save();
                     }
 
-                    $uuid1 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $subkategori = new SubCategoryFileMGMP(); 
-                    $subkategori->sub_category_file_id = $uuid1;
-                    $subkategori->sub_category_file_name = 'Folder Akademik';
-                    $subkategori->sub_category_file_explanation = 'untuk mengupload file original';
-                    $subkategori->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
-                    $subkategori->save();
+                    // $uuid1 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $subkategori = new SubCategoryFileMGMP(); 
+                    // $subkategori->sub_category_file_id = $uuid1;
+                    // $subkategori->sub_category_file_name = 'Folder Akademik';
+                    // $subkategori->sub_category_file_explanation = 'untuk mengupload file original';
+                    // $subkategori->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
+                    // $subkategori->save();
 
-                    $uuid2 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $subkategori2 = new SubCategoryFileMGMP(); 
-                    $subkategori2->sub_category_file_id = $uuid2;
-                    $subkategori2->sub_category_file_name = 'Folder Guru';
-                    $subkategori2->sub_category_file_explanation = 'untuk mengupload file guru';
-                    $subkategori2->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
-                    $subkategori2->save();
+                    // $uuid2 = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    // $subkategori2 = new SubCategoryFileMGMP(); 
+                    // $subkategori2->sub_category_file_id = $uuid2;
+                    // $subkategori2->sub_category_file_name = 'Folder Guru';
+                    // $subkategori2->sub_category_file_explanation = 'untuk mengupload file guru';
+                    // $subkategori2->category_file_mgmp_id = $datakategori->category_file_mgmp_id ;
+                    // $subkategori2->save();
 
 
                     return [
@@ -237,6 +237,28 @@ class DataKategoriMGMPController extends BaseController
 
         return view('akademik/mgmp/data-kategori/laporan-data-mgmp',compact('auth_data'));
 
+    }
+
+    public function previewFile($id,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+        return view('akademik/mgmp/data-kategori/preview-file-mgmp',compact('auth_data','laporan_kerja_harian','link','ext'));
+
+    }
+
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        // $file_pengguna = FilePengguna::where('file_pengguna_id', $id)->first();
+        $laporan_kerja_harian = LaporanKerjaHarianMGMP::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
     }
 
     public function datatablesKerjaHarianAllMGMP(Request $request){

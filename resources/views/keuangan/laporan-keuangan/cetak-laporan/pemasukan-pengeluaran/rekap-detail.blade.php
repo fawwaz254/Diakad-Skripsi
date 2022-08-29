@@ -132,7 +132,7 @@
             </div>
             @if ($sekolah == 'SMK PEMUDA KRIAN')
                 <div class="col-md-4">
-                    <p>Bendahara PCM<br><br><br><br>
+                    <p>Bendahara PCM<br><br><br><br><br>
                         <b><u>Drs.ec.H.Nanang Abdul Hakim,ST</u></b>
                     </p>
                 </div>
@@ -142,7 +142,7 @@
                     {{ indonesiaDate(\Carbon\Carbon::parse($end_date)->format('Y-m-d')) }}
                     {{-- {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d'))  }} --}}
                     <br>Keuangan<br><br><br><br>
-                    <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
+                    <b><u>{{ $auth_data->pengguna->nm_pengguna }}, SE  </u></b>
                 </p>
             </div>
         </div>

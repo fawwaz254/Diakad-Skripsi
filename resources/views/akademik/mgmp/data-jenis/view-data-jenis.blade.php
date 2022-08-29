@@ -3,7 +3,7 @@
         <h2>
             <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#mpmp/jenis-mgmp/add') }}"><i
-                    class="material-icons">note_add</i><span>Tambah Data Jenis MGMP</span></a>
+                    class="material-icons">note_add</i><span>Tambah Data Jenis Jurnal Harian</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -11,7 +11,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Data Jenis MGMP</h2>
+                    <h2>Data Jenis Jurnal Harian</h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -21,7 +21,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Jenis MGMP</th>
+                                    <th>Nama Jenis Jurnal Harian</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>

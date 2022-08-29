@@ -1,9 +1,4 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2>
-            <button class="btn btn-success" id="print"><i class="material-icons">print</i> Print Laporan Kerja Harian</button>
-        </h2>
-    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -18,7 +13,7 @@
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">No</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Tanggal</th>
                                         <th colspan="2" style="vertical-align : middle;text-align:center;">Kategori</th>
-                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Uraian Kegiatan</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Tuntas</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Nama</th>
@@ -113,19 +108,23 @@
 
     var modul_url        = 'mpmp';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-mgmp/datatables';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'kerja-harian/preview-file';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-mgmp/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-mgmp/download-file';
 
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
+        dom: 'Bfrtip',
+        lengthMenu: dtLengButton,
+        buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [
-            { data: null, searchable: false, orderable: false },
+            { data: 'index_column', class:'text-center', defaultContent: '', searchable: false, orderable: false  },
             { data: 'tanggal', name: 'tanggal' },
             {data: 'jenis', class:'text-center', name: 'action', searchable: false, orderable: false},
             {data:'mapel.category_file_name',class:'text-center', name: 'action', searchable: false, orderable: false},
@@ -133,10 +132,10 @@
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 1){
-                        return '<i class="material-icons" style="color:green">done</i>';
+                        return 'selesai';
                     }
                     else{
-                        return '<i class="material-icons" style="color:red">clear</i>';
+                        return 'belum selesai';
                     }
                 }
             },
@@ -160,6 +159,7 @@
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
+              primary_table.cell(cell).invalidate('dom');
         } );
     } ).draw();
 
@@ -168,8 +168,8 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preveiw File</span></button></a>
-            <a href="`+item.attr('data-link')+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
+            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
+            <a href="`+download_file_url+`/`+id+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
         $('#modal-opsi').modal('show');

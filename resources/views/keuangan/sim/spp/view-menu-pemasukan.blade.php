@@ -73,32 +73,32 @@
                                 <tr>
                                     <td>{{$date->format('Y-m-d')}}</td>
                                     <td>Rp {{
-                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '=', $id_bulan)->filter(function ($item) use ($date) {
+                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [1, 7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $id_bulan)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
                                     <td>Rp {{
-                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '=', $id_bulan)->filter(function ($item) use ($date) {
+                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [2, 8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $id_bulan)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
                                     <td>Rp {{
-                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '=', $id_bulan)->filter(function ($item) use ($date) {
+                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [3, 9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $id_bulan)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
                                     <td>Rp {{
-                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '<>', $id_bulan)->filter(function ($item) use ($date) {
+                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [1, 7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
                                     <td>Rp {{
-                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '<>', $id_bulan)->filter(function ($item) use ($date) {
+                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [2, 8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
                                     <td>Rp {{
-                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '<>', $id_bulan)->filter(function ($item) use ($date) {
+                                        number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [3, 9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
@@ -107,9 +107,41 @@
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran'))
                                         }}</td>
-                                    <td>Rp 0</td>
                                 </tr>
+                                <tr>
                                 @endforeach
+                                <td>TOTAL</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [1, 7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $id_bulan)->sum('besar_pembayaran'))
+                                    }}</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [2, 8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $id_bulan)->sum('besar_pembayaran'))
+                                    }}</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [3, 9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $id_bulan)->sum('besar_pembayaran'))
+                                    }}</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [1, 7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->sum('besar_pembayaran'))
+                                    }}</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [2, 8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->sum('besar_pembayaran'))
+                                    }}</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [3, 9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->sum('besar_pembayaran'))
+                                    }}</td>
+                                <td>Rp {{
+                                    number_format($data_pemasukan_bulan_ini->sum('besar_pembayaran'))
+                                    }}</td>
+                                    
+                                {{-- @foreach($data_laporan['tingkat'] as $tingkat)
+                                <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $date->format('n'))->sum('besar_pembayaran')) }}</td>
+                                @endforeach
+                                @foreach($data_laporan['tingkat'] as $tingkat)
+                                <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.id_bulan', '<', $date->format('n'))->sum('besar_pembayaran')) }}</td>
+                                @endforeach
+                                <td>Rp {{ number_format($data_laporan['data']->sum('besar_pembayaran')) }}</td>
+                                <td>Rp {{ number_format($data_laporan['data_tunggakan']->sum('besar_pembayaran')) }}</td> --}}
+                            </tr>
                             </tbody>
                         </table>
                         <!-- <div class="row clearfix">

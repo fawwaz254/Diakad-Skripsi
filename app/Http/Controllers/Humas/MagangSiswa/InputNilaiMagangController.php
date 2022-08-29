@@ -159,7 +159,7 @@ class InputNilaiMagangController extends BaseController
     }
 
     public function actionInputNilaiMagang(Request $request, $mode, $id = null){
-
+        set_time_limit(1800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -200,15 +200,26 @@ class InputNilaiMagangController extends BaseController
             		$namePengambilan = 'id_pengambilan_magang_'.$siswa->id_siswa;
             		$idSiswa = substr($namePengambilan, 22);
 					if($idSiswa == $siswa->id_siswa){
-
-						$pengajuanMagang = PengajuanSiswaMagang::where('id_periode_magang','=',$input->id_periode_magang)
+                    
+                        if(!isset($input_array[$namePengambilan])){
+                            $pengajuanMagang = PengajuanSiswaMagang::where('id_periode_magang','=',$input->id_periode_magang)
+		                	->where('id_siswa','=',$idSiswa)
+		                	->first();
+                            $input_array[$namePengambilan] = $pengajuanMagang->id_pengambilan_magang;
+                        }else{
+                            $pengajuanMagang = PengajuanSiswaMagang::where('id_periode_magang','=',$input->id_periode_magang)
 		                	->where('id_siswa','=',$idSiswa)
 		                	->where('id_pengambilan_magang','=',$input_array[$namePengambilan])
 		                	->first();
+                        }
 		                if($pengajuanMagang){
 		                	//input nilai per-komponen
-                            if($pengajuanMagang->nilai_angka == NULL){
+                            if($pengajuanMagang->nilai_angka == NULL && isset($input->$nameInput)){
                                 foreach ($nilai_akhir_final['nilai_angka'.$idSiswa] as $key => $value) {
+                                    // dd($key);
+                                    // if(!isset($input->$nameInput)){
+                                    //     $input->$nameInput = NULL;
+                                    // }
                                     $id_nilai_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                                     $nameInput = 'nilai'.$key.'-'.$idSiswa;                    
                                     $nilaiMagang                            = new NilaiMagang;
@@ -221,11 +232,16 @@ class InputNilaiMagangController extends BaseController
                                 }
                             }else{
                                 foreach ($nilai_akhir_final['nilai_angka'.$idSiswa] as $key => $value){
-                                    $nameInput = 'nilai'.$key.'-'.$idSiswa;                    
-                                    $nilaiMagang                      = NilaiMagang::where('id_pengambilan_magang','=',$pengajuanMagang->id_pengambilan_magang)->where('id_komponen_magang','=',$key)->first();
-                                    $nilaiMagang->besar_nilai_magang   = $input->$nameInput;
-                                    $nilaiMagang->updated_by           = $input->auth_data->pengguna->id_pengguna;
-                                    $nilaiMagang->save();
+                                    // dd(!is_null($input->$nameInput) ? $input->$nameInput);
+                                    if(isset($input->$nameInput) && !is_null($input->$nameInput)){
+                                        // dd($input->$nameInput);
+                                        $nameInput = 'nilai'.$key.'-'.$idSiswa;                    
+                                        $nilaiMagang                      = NilaiMagang::where('id_pengambilan_magang','=',$pengajuanMagang->id_pengambilan_magang)->where('id_komponen_magang','=',$key)->first();
+                                        $nilaiMagang->besar_nilai_magang   = $input->$nameInput ? $input->$nameInput : NULL ;
+                                        $nilaiMagang->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                                        $nilaiMagang->save();
+                                    }
+                                   
                                 }
                             }		                	
 		                	//Input Nilai Magang

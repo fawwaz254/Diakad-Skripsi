@@ -52,6 +52,28 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-input-tendik/{mode}/{id}', [DataPribadiController::class, 'actionInputTendik']);
         });
 
+          /** ==== Jurnal Harian ==== **/
+        Route::group(array('prefix' => 'jurnal-harian'), function () {
+            Route::group(array('prefix' => 'laporan-individu-jurnal-harian'), function () {
+                Route::get('/', 'Tendik\JurnalHarian\JurnalHarianTendikController@viewLaporanJurnalHarian');
+                Route::get('add', 'Tendik\JurnalHarian\JurnalHarianTendikController@addLaporanHarianJurnalHarian');
+                Route::post('action-kerja-harian/{mode}/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@actionLaporanHarianTendik');
+                Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianTendik');
+                Route::get('edit/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@editKerjaHarian');
+                Route::get('preview-file/{id}/{no}', 'Tendik\JurnalHarian\JurnalHarianTendikController@previewFile');
+                Route::get('download-file/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@downloadFile');
+            });
+
+            Route::group(array('prefix' => 'laporan-kelompok-jurnal-harian'), function () {
+                Route::get('/', 'Tendik\JurnalHarian\JurnalHarianTendikController@viewLaporanKelompokKerjaHarian');
+                Route::get('datatables', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesKerjaHarianKelompokTendik');
+                Route::get('/detail/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@detailLaporanKelompokTendik');
+                Route::get('/detail/datatables/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@datatablesDetailKerjaHarianKelompokTendik');
+                Route::get('preview-file/{id}/{no}', 'Tendik\JurnalHarian\JurnalHarianTendikController@previewFile');
+                Route::get('download-file/{id}', 'Tendik\JurnalHarian\JurnalHarianTendikController@downloadFile');
+            });
+        });
+
 
         Route::prefix('guru-piket')->group(function () {
             // MENU Monitoring kelas kosong

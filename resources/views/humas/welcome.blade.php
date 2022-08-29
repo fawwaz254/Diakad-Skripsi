@@ -19,6 +19,20 @@
                 </div>
             </a>
         </div>
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="{{ url(Request::segment(0) . Request::segment(1) .'#absensi/device') }}">
+                <div class="card">
+                    <div class="body bg-green" style="text-align: -webkit-center;">
+                        <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}" width="64"
+                            height="64">
+                        <h5>
+                           FingerPrint
+                        </h5>
+                        <small>Informasi alat Fingerprint</small>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
     <br>
     <div class="row clearfix">

@@ -65,6 +65,7 @@ class Pengguna extends Authenticatable
 
 
 
+
     public function getIsPegawaiAttribute()
     {
         return $this->status_join_table === self::PEGAWAI;
@@ -113,9 +114,19 @@ class Pengguna extends Authenticatable
         return $this->belongsTo('App\Models\Sekolah', 'id_sekolah');
     }
 
+    public function guru()
+    {
+        return $this->belongsTo('App\Models\Guru', 'id_pengguna','id_pengguna');
+    }
+
     public function status_pengguna()
     {
         return $this->belongsTo('App\Models\StatusPengguna', 'id_status_pengguna');
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo('App\Models\Siswa', 'id_pengguna','id_pengguna');
     }
 
     public function pengisian_kegiatan_harian()

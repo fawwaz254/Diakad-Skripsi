@@ -1,22 +1,7 @@
 <?php
 
-use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\AuthGlobalController;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SignInController;
-use Carbon\Carbon;
 use App\Models\Sekolah;
-use Illuminate\Support\Facades\Hash;
-use UniSharp\LaravelFilemanager\Controllers\CropController;
-use UniSharp\LaravelFilemanager\Controllers\DeleteController;
-use UniSharp\LaravelFilemanager\Controllers\DemoController;
-use UniSharp\LaravelFilemanager\Controllers\DownloadController;
-use UniSharp\LaravelFilemanager\Controllers\FolderController;
-use UniSharp\LaravelFilemanager\Controllers\ItemsController;
-use UniSharp\LaravelFilemanager\Controllers\LfmController;
-use UniSharp\LaravelFilemanager\Controllers\RenameController;
-use UniSharp\LaravelFilemanager\Controllers\ResizeController;
-use UniSharp\LaravelFilemanager\Controllers\UploadController;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,39 +12,10 @@ use UniSharp\LaravelFilemanager\Controllers\UploadController;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
-
-// CONTOH UPLOAD DO
-/*use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Jobs\ContohLaravelJob;
-
-Route::get('upload', function () {
-    $files = Storage::disk('spaces')->files('demo/global');
-
-    return view('contoh-upload', compact('files'));
-});
-Route::get('delete', function () {
-    $file = request()->input('id');
-
-    $files = Storage::disk('spaces')->delete($file);
-
-    return redirect()->back();
-});
-Route::post('upload', function (Request $request) {
-    $validator = Validator::make($request->all(), [
-        'file' => 'file|required|max:2048|mimes:jpeg,bmp,png'
-    ]);
-
-    $file = Storage::disk('spaces')->putFile('demo/global', request()->file, 'public');
-    ContohLaravelJob::dispatch($file)->delay(now()->addMinutes(2));
-
-    return redirect()->back();
-});*/
-// END CONTOH UPLOAD DO
+ */
 
 // DO NOT CHANGE
-Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge');
 
 Route::prefix('laravel-filemanager')->group(function () {
     Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
@@ -114,21 +70,20 @@ Route::get('guid', function () {
     return $html;
 });
 
-Route::get('cekHashPassword', function () {
-    $password =  Hash::make($_GET['c']);
-    return  $password;
-});
-
 Route::view('success-page', 'form-pengisian-alumni.success-page');
 Route::view('error-page', 'form-pengisian-alumni.error-page');
-Route::get('pengisian-alumni', [PengisianAlumniController::class, 'viewPengisianAlumni']);
-Route::post('action-pengisian-alumni', [PengisianAlumniController::class, 'actionPengisianAlumni']);
+Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
+Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
 
-Route::get('forget-password', [ForgetPasswordController::class, 'index']);
-Route::post('send-link-reset-password', [ForgetPasswordController::class, 'sendLinkResetPassword']);
-Route::get('check-link-reset-password', [ForgetPasswordController::class, 'checkLinkResetPassword']);
-Route::get('reset-password', [ForgetPasswordController::class, 'resetPassword']);
-Route::post('reset-password-action', [ForgetPasswordController::class, 'resetPasswordAction']);
+Route::get('forget-password', 'ForgetPasswordController@index');
+Route::post('send-link-reset-password', 'ForgetPasswordController@sendLinkResetPassword');
+Route::get('check-link-reset-password', 'ForgetPasswordController@checkLinkResetPassword');
+Route::get('reset-password', 'ForgetPasswordController@resetPassword');
+Route::post('reset-password-action', 'ForgetPasswordController@resetPasswordAction');
+
+Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
+Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
+Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionCallback');
 
 Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
 Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
@@ -139,12 +94,9 @@ Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionC
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
 
-Route::get('report-pimpinan', [ReportController::class, 'viewAllDiakad']);
-Route::get('report-pimpinan-print', [ReportController::class, 'printAllDiakad']);
-
-Route::prefix('reporting-dashboard')->group(function () {
-    Route::get('/', [SignInController::class, 'indexReportingDashboard']);
-    Route::get('all-diakad/{id}', [ReportController::class, 'checkProgress']);
+Route::group(array('prefix' => 'reporting-dashboard'), function () {
+    Route::get('/', 'SignInController@indexReportingDashboard');
+    Route::get('all-diakad/{id}', 'ReportController@checkProgress');
     Route::get('akademik', function () {
         return view('reporting-dashboard/akademik');
     });
@@ -169,23 +121,22 @@ Route::prefix('reporting-dashboard')->group(function () {
     });
 });
 
-Route::middleware(['token_staff'])->group(function () {
-    Route::prefix('{global}')->group(function () {
-        Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
-        Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
-        Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
+Route::group(array('middleware' => ['token_staff']), function () {
+    //
+    Route::group(array('prefix' => '{global}'), function () {
+        Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
+        Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
+        Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
 
-        Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
-        Route::get('search', [AuthGlobalController::class, 'indexSearch']);
-        Route::get('profile', [AuthGlobalController::class, 'indexProfile']);
-        Route::post('profile', [AuthGlobalController::class, 'actionSaveProfile']);
-        Route::get('password', [AuthGlobalController::class, 'indexPassword']);
-        Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
-        Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
+        Route::get('/', 'AuthGlobalController@indexDashboard');
+        Route::get('search', 'AuthGlobalController@indexSearch');
+        Route::get('profile', 'AuthGlobalController@indexProfile');
+        Route::post('profile', 'AuthGlobalController@actionSaveProfile');
+        Route::get('password', 'AuthGlobalController@indexPassword');
+        Route::post('password', 'AuthGlobalController@actionChangePassword');
+        Route::get('signout', 'AuthGlobalController@actionSignOut');
     });
 });
-
-
 
 // Route::middleware(['token_staff'])->group(function () {
 // Route::prefix('foo')->group(function () {
