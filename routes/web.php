@@ -27,7 +27,7 @@ use UniSharp\LaravelFilemanager\Controllers\UploadController;
  */
 
 // DO NOT CHANGE
-Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', 'AuthGlobalController@actionMerge');
+Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
 Route::prefix('laravel-filemanager')->group(function () {
     Route::get('/', [LfmController::class, 'show'])->name('unisharp.lfm.show');
@@ -136,17 +136,17 @@ Route::group(array('prefix' => 'reporting-dashboard'), function () {
 Route::group(array('middleware' => ['token_staff']), function () {
     //
     Route::group(array('prefix' => '{global}'), function () {
-        Route::get('must-change-password', 'AuthGlobalController@indexMustChangePassword');
-        Route::post('must-change-password', 'AuthGlobalController@actionMustChangePassword');
-        Route::post('by-pass-change-password', 'AuthGlobalController@actionByPassChangePassword');
+        Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
+        Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
+        Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
 
-        Route::get('/', 'AuthGlobalController@indexDashboard');
-        Route::get('search', 'AuthGlobalController@indexSearch');
-        Route::get('profile', 'AuthGlobalController@indexProfile');
-        Route::post('profile', 'AuthGlobalController@actionSaveProfile');
-        Route::get('password', 'AuthGlobalController@indexPassword');
-        Route::post('password', 'AuthGlobalController@actionChangePassword');
-        Route::get('signout', 'AuthGlobalController@actionSignOut');
+        Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
+        Route::get('search', [AuthGlobalController::class, 'indexSearch']);
+        Route::get('profile', [AuthGlobalController::class, 'indexProfile']);
+        Route::post('profile', [AuthGlobalController::class, 'actionSaveProfile']);
+        Route::get('password', [AuthGlobalController::class, 'indexPassword']);
+        Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
+        Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
     });
 });
 
