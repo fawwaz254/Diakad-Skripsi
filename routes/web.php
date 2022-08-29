@@ -1,7 +1,19 @@
 <?php
 
+use App\Http\Controllers\Administrator\Device\FingerprintController;
+use App\Http\Controllers\SignInController;
 use App\Models\Sekolah;
 use Carbon\Carbon;
+use UniSharp\LaravelFilemanager\Controllers\CropController;
+use UniSharp\LaravelFilemanager\Controllers\DeleteController;
+use UniSharp\LaravelFilemanager\Controllers\DemoController;
+use UniSharp\LaravelFilemanager\Controllers\DownloadController;
+use UniSharp\LaravelFilemanager\Controllers\FolderController;
+use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use UniSharp\LaravelFilemanager\Controllers\LfmController;
+use UniSharp\LaravelFilemanager\Controllers\RenameController;
+use UniSharp\LaravelFilemanager\Controllers\ResizeController;
+use UniSharp\LaravelFilemanager\Controllers\UploadController;
 
 /*
 |--------------------------------------------------------------------------
