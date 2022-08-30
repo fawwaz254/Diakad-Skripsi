@@ -120,7 +120,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@editShiftAbsensi');
 				Route::post('/{id_shift_pengguna}/{date}/edit', 'Humas\ShiftPengguna\ShiftPenggunaController@updateShiftAbsensi');
 				// Route::get('/addShift', 'Humas\ShiftPengguna\ShiftPenggunaMasterController@addShiftMaster');
-				Route::get('exportShift/{date}', 'Humas\ShiftPengguna\ShiftPenggunaController@export_shift');
+				Route::get('exportShift/{date}/{val}', 'Humas\ShiftPengguna\ShiftPenggunaController@export_shift');
 
 			});
 
