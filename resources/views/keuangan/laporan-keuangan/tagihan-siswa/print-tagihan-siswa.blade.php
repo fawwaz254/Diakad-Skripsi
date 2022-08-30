@@ -10,12 +10,12 @@
         .page {
             width: 900px;
         }
-        
+
         .ttd {
             margin-top: 30px;
             text-align: right;
         }
-        
+
         .clear {
             clear: both;
         }
@@ -33,7 +33,7 @@
 
 <body>
     <div class="page">
-        
+
         <table cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
@@ -47,7 +47,7 @@
         @endif
         <table border="1" cellspacing="0" cellpadding="2" style="width: 100%;font-size: 14px;">
             <tr>
-                <th colspan="3"> {{ $siswa->pengguna->nm_pengguna }} / {{ $siswa->kelas->nm_kelas }} / {{ $siswa->nis_siswa }}</th>
+                <th colspan="3"> {{ $siswa->pengguna->nm_pengguna }} / {{ ($status == 1)? $siswa->kelas->nm_kelas : $siswa->last_kelas_siswa->kelas->nm_kelas . ' (Alumni)' }} / {{ $siswa->nis_siswa }}</th>
             </tr>
             <tr>
                 <th style="width: 10px;">No.</th>
@@ -66,7 +66,7 @@
             @endforeach
             <tr>
                 <td colspan="2" align="center"><b>TOTAL</b></td>
-                <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_biaya->sum('besar_biaya') - collect($siswa->tagihan)->sum('sudah_bayar') - collect($siswa->tagihan)->sum('total_potongan') )}}</b></td>
+                <td align="center"><b>{{"Rp " . number_format($siswa->tagihan_tertagih->sum('besar_biaya') - collect($siswa->tagihan)->sum('sudah_bayar') - collect($siswa->tagihan)->sum('total_potongan') )}}</b></td>
             </tr>
         </table>
         @endforeach
