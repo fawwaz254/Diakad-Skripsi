@@ -28,8 +28,10 @@
             <td>{{ $produk['nm_pengguna'] }}</td>
             <td>{{ $produk['unit_kerja'] }}</td>
             @foreach ($produk as $item2)
-                @if (isset($item2['time']))
-                        <td style="background-color: #fffc5e">{{ $item2['id_shift_master'] }} ({{ $item2['status'] }})</td>
+                @if ($item2['time'] == '-' && $item2['id_shift_master'] == '-')
+                <td style="background-color: #ffffff"> </td>
+                @else
+                <td style="background-color: #ffffff">{{ $item2['id_shift_master'] }} ({{ $item2['time'] }})</td>
                 @endif
                 @endforeach
         </tr>

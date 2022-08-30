@@ -134,9 +134,6 @@ class TagihanSiswaController extends BaseController
                         }else{
                             $tagihan_bulan['judul'] = $tagihan_bulan['judul']. ' '.$x->keterangan_biaya;
                         }
-                    } else {
-                        $tagihan_bulan['judul'] = $tagihan_bulan['judul'] . ' ' . $x->keterangan_biaya;
-                    }
                     $array_tagihan_bulan[] = $tagihan_bulan;
                 }
 
