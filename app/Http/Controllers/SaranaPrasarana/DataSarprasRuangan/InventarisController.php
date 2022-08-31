@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SaranaPrasarana\DataSarprasRuangan;
 
+use App\Imports\DataImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -19,34 +20,36 @@ use Session;
 use Validator;
 use Excel;
 
-class InventarisController extends BaseController{
+class InventarisController extends BaseController
+{
 
-    public function viewInventaris(Request $request){
+    public function viewInventaris(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sarana-prasarana/data-sarpras-ruangan/inventaris/view-inventaris',compact('auth_data'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/view-inventaris', compact('auth_data'));
     }
 
-    public function addInventaris(Request $request){
+    public function addInventaris(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data);
 
-        $id_inventaris_ruangan = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_inventaris_ruangan = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/add-inventaris',compact('auth_data','data_ruangan','id_inventaris_ruangan'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/add-inventaris', compact('auth_data', 'data_ruangan', 'id_inventaris_ruangan'));
     }
 
-    public function editInventaris($id, Request $request){
+    public function editInventaris($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -56,37 +59,37 @@ class InventarisController extends BaseController{
         $data_inventaris_ruangan = LibDataSarpras::fetchDataInventarisRuangan($auth_data, null, $id);
 
         // convert format date
-        $tgl_pembelian = strftime( "%A, %d %B %Y", strtotime($data_inventaris_ruangan->tgl_pembelian));
+        $tgl_pembelian = strftime("%A, %d %B %Y", strtotime($data_inventaris_ruangan->tgl_pembelian));
 
-        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/edit-inventaris',compact('auth_data','data_ruangan','data_inventaris_ruangan', 'tgl_pembelian'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/edit-inventaris', compact('auth_data', 'data_ruangan', 'data_inventaris_ruangan', 'tgl_pembelian'));
     }
 
-    public function datatablesInventaris(Request $request){
+    public function datatablesInventaris(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataSarpras::fetchDataInventarisRuangan($auth_data);
+        $list_data = LibDataSarpras::fetchDataInventarisRuangan($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_ruangan', function($item){
-                    if($item->is_aktif == 1) {
-                        return $item->nm_ruangan." - ".$item->nm_gedung." (Aktif)";
-                    }
-                    else {
-                        return $item->nm_ruangan." - ".$item->nm_gedung." (Non-Aktif)";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_inventaris_ruangan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_ruangan', function ($item) {
+                if ($item->is_aktif == 1) {
+                    return $item->nm_ruangan . " - " . $item->nm_gedung . " (Aktif)";
+                } else {
+                    return $item->nm_ruangan . " - " . $item->nm_gedung . " (Non-Aktif)";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_inventaris_ruangan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionInventaris(Request $request, $mode, $id = null){
+    public function actionInventaris(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -101,19 +104,18 @@ class InventarisController extends BaseController{
             'spesifikasi_inventaris_ruangan'    => 'required',
             'keterangan_inventaris_ruangan'     => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($mode == 'add') {
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $inventarisRuangan                                  = new InventarisRuangan;
                 $inventarisRuangan->id_inventaris_ruangan           = $id;
@@ -121,7 +123,7 @@ class InventarisController extends BaseController{
                 $inventarisRuangan->nm_inventaris_ruangan           = $input->nm_inventaris_ruangan;
                 $inventarisRuangan->kode_inventaris_ruangan         = $input->kode_inventaris_ruangan;
                 // convert format date
-                $inventarisRuangan->tgl_pembelian                   = date_format(date_create($input->tgl_pembelian),"Y-m-d H:i:s");
+                $inventarisRuangan->tgl_pembelian                   = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
                 $inventarisRuangan->jumlah_inventaris_ruangan       = $input->jumlah_inventaris_ruangan;
                 $inventarisRuangan->jumlah_kondisi_baik             = $input->jumlah_kondisi_baik;
                 $inventarisRuangan->jumlah_kondisi_rusak            = $input->jumlah_kondisi_rusak;
@@ -135,15 +137,14 @@ class InventarisController extends BaseController{
                     'path' => 'data-sarpras-ruangan/inventaris',
                     'message' => 'Save Inventaris successfully'
                 ];
-            }
-            elseif($mode == 'edit'){
+            } elseif ($mode == 'edit') {
                 // make object to find id
                 $inventarisRuangan                                  = InventarisRuangan::find($id);
                 $inventarisRuangan->id_ruangan                      = $input->id_ruangan;
                 $inventarisRuangan->nm_inventaris_ruangan           = $input->nm_inventaris_ruangan;
                 $inventarisRuangan->kode_inventaris_ruangan         = $input->kode_inventaris_ruangan;
                 // convert format date
-                $inventarisRuangan->tgl_pembelian                   = date_format(date_create($input->tgl_pembelian),"Y-m-d H:i:s");
+                $inventarisRuangan->tgl_pembelian                   = date_format(date_create($input->tgl_pembelian), "Y-m-d H:i:s");
                 $inventarisRuangan->jumlah_inventaris_ruangan       = $input->jumlah_inventaris_ruangan;
                 $inventarisRuangan->jumlah_kondisi_baik             = $input->jumlah_kondisi_baik;
                 $inventarisRuangan->jumlah_kondisi_rusak            = $input->jumlah_kondisi_rusak;
@@ -158,8 +159,7 @@ class InventarisController extends BaseController{
                     'path' => 'data-sarpras-ruangan/inventaris',
                     'message' => 'Update Inventaris successfully'
                 ];
-            }
-            elseif($mode == 'delete'){
+            } elseif ($mode == 'delete') {
                 // make object to find id
                 $inventarisRuangan               = InventarisRuangan::find($id);
                 $inventarisRuangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -175,48 +175,48 @@ class InventarisController extends BaseController{
         }
     }
 
-    public function importExcel(Request $request){
-      # code...
-      $input = (object) $request->input();
-      $auth_data = $input->auth_data;
+    public function importExcel(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-      return view('sarana-prasarana/data-sarpras-ruangan/inventaris/import-excel',compact('auth_data'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/inventaris/import-excel', compact('auth_data'));
     }
 
-    public function importExcelAction(Request $request){
+    public function importExcelAction(Request $request)
+    {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $validator = Validator::make($request->all(), [
-                'file-excel' => 'required',
+            'file-excel' => 'required',
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
+        } else {
 
-        else{
+            if ($request->hasFile('file-excel')) {
 
-            if($request->hasFile('file-excel')){
+                $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
 
-                $path = $request->file('file-excel')->getRealPath();
-                $data = Excel::load($path)->get();
-
-                if($data->count()){
+                if (count($data[0])) {
 
                     DB::beginTransaction();
-                    
+
                     try {
 
-                        foreach ($data as $key => $value) {
+                        foreach ($data[0] as $key => $value) {
 
-                            if(empty($value->nama_ruangan)){
+                            $value = (object) $value;
+
+                            if (empty($value->nama_ruangan)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama ruangan yang kosong'
@@ -224,64 +224,64 @@ class InventarisController extends BaseController{
                             }
 
                             $check_ruangan = Ruangan::where('nm_ruangan', $value->nama_ruangan)->first();
-                            
-                            if(!$check_ruangan){
+
+                            if (!$check_ruangan) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama ruangan yang tidak ditemukan dalam data master ruangan'
                                 ];
                             }
 
-                            if(empty($value->nama_inventaris)){
+                            if (empty($value->nama_inventaris)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama inventaris yang kosong'
                                 ];
                             }
 
-                            if(empty($value->kode_inventaris)){
+                            if (empty($value->kode_inventaris)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada kode inventaris yang kosong'
                                 ];
                             }
 
-                            if(empty($value->tanggal_pembelian)){
+                            if (empty($value->tanggal_pembelian)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada tanggal pembelian yang kosong'
                                 ];
                             }
 
-                            if(empty($value->jumlah_inventaris) && ($value->kondisi_baik!= 0)){
+                            if (empty($value->jumlah_inventaris) && ($value->kondisi_baik != 0)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada jumlah inventaris yang kosong'
                                 ];
                             }
 
-                            if(empty($value->kondisi_baik) && ($value->kondisi_baik!= 0)){
+                            if (empty($value->kondisi_baik) && ($value->kondisi_baik != 0)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada kondisi_baik yang kosong'
                                 ];
                             }
 
-                            if(empty($value->kondisi_rusak) && ($value->kondisi_rusak!= 0)){
+                            if (empty($value->kondisi_rusak) && ($value->kondisi_rusak != 0)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada kondisi rusak yang kosong'
                                 ];
                             }
 
-                            if(empty($value->spesifikasi)){
+                            if (empty($value->spesifikasi)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada spesifikasi yang kosong'
                                 ];
                             }
 
-                            if(empty($value->keterangan)){
+                            if (empty($value->keterangan)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada keterangan yang kosong'
@@ -289,11 +289,11 @@ class InventarisController extends BaseController{
                             }
 
                             $data                                 = new InventarisRuangan;
-                            $data->id_inventaris_ruangan          = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->id_inventaris_ruangan          = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data->id_ruangan                     = $check_ruangan->id_ruangan;
                             $data->nm_inventaris_ruangan          = $value->nama_inventaris;
                             $data->kode_inventaris_ruangan        = $value->kode_inventaris;
-                            $data->tgl_pembelian                  = date('Y-m-d',strtotime($value->tanggal_pembelian));
+                            $data->tgl_pembelian                  = date('Y-m-d', strtotime($value->tanggal_pembelian));
                             $data->jumlah_inventaris_ruangan      = $value->jumlah_inventaris;
                             $data->jumlah_kondisi_baik            = $value->kondisi_baik;
                             $data->jumlah_kondisi_rusak           = $value->kondisi_rusak;
@@ -301,7 +301,6 @@ class InventarisController extends BaseController{
                             $data->keterangan_inventaris_ruangan  = $value->keterangan;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
-
                         }
 
                         DB::commit();
@@ -311,41 +310,28 @@ class InventarisController extends BaseController{
                             'path' => 'data-sarpras-ruangan/inventaris',
                             'message' => 'Import Pemilik Sarpras Successfully'
                         ];
-
-                    }
-
-                    catch (\Exception $e) {
+                    } catch (\Exception $e) {
 
                         DB::rollback();
-                
+
                         return [
                             'status'    => 203, // GAGAL
-                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                            'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
                         ];
-                    } 
-
-                }
-
-                else{
+                    }
+                } else {
 
                     return [
                         'status'    => 300, // FAILED
                         'message'   => "File excel anda kosong"
                     ];
-
                 }
-
-            }
-
-            else{
+            } else {
                 return [
                     'status'    => 300, // FAILED
                     'message'   => "File Excel tidak ditemukan"
                 ];
             }
-
         }
-
     }
-
 }
