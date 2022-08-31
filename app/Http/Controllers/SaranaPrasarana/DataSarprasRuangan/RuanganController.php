@@ -17,7 +17,7 @@ use Yajra\Datatables\Datatables;
 use Illuminate\Support\Facades\App;
 
 use App\Libraries\SaranaPrasarana\LibDataSarpras;
-
+use App\Models\Kelas;
 use Auth;
 use DB;
 use Session;
@@ -47,13 +47,13 @@ class RuanganController extends BaseController
         $data_gedung = LibDataSarpras::fetchDataGedung($auth_data);
 
         $data_pemilik_sarpras = LibDataSarpras::fetchDataPemilikSarpras($auth_data);
-        
+        $kelas = Kelas::all();
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $id_ruangan = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
 
-        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/add-ruangan', compact('auth_data', 'data_jenis_ruangan', 'data_gedung', 'data_pemilik_sarpras', 'id_ruangan'));
+        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/add-ruangan', compact('auth_data', 'data_jenis_ruangan', 'data_gedung', 'data_pemilik_sarpras', 'id_ruangan','kelas'));
     }
 
     public function editRuangan($id, Request $request)
@@ -70,7 +70,9 @@ class RuanganController extends BaseController
 
         $data_ruangan = LibDataSarpras::fetchDataRuangan($auth_data, null, $id);
 
-        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/edit-ruangan', compact('auth_data', 'data_jenis_ruangan', 'data_gedung', 'data_pemilik_sarpras', 'data_ruangan'));
+        $kelas = Kelas::all();
+
+        return view('sarana-prasarana/data-sarpras-ruangan/ruangan/edit-ruangan', compact('auth_data', 'data_jenis_ruangan', 'data_gedung', 'data_pemilik_sarpras', 'data_ruangan','kelas'));
     }
 
     public function datatablesRuangan(Request $request)
@@ -78,7 +80,6 @@ class RuanganController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = LibDataSarpras::fetchDataRuangan($auth_data);
-
         return Datatables::of($list_data)
                 ->addColumn('status_aktif', function ($item) {
                     if ($item->is_aktif == 1) {
@@ -93,6 +94,17 @@ class RuanganController extends BaseController
                     );
                     return $data;
                 })
+                ->editColumn('nm_jenis_ruangan', function ($item){
+                    if(isset($item->nm_kelas))
+                    {
+                        return $item->nm_jenis_ruangan . '<br> (' . $item->nm_kelas.')' ;
+                    }
+                    else{
+                        return $item->nm_jenis_ruangan;
+                     
+                    }
+                   
+                })->rawColumns(['nm_jenis_ruangan'])
                 ->make(true);
     }
 
@@ -127,6 +139,7 @@ class RuanganController extends BaseController
                 $ruangan                        = new Ruangan;
                 $ruangan->id_ruangan            = $id;
                 $ruangan->id_jenis_ruangan      = $input->id_jenis_ruangan;
+                $ruangan->id_kelas              = $input->id_kelas;
                 $ruangan->id_gedung             = $input->id_gedung;
                 $ruangan->id_pemilik_sarpras    = $input->id_pemilik_sarpras;
                 $ruangan->nm_ruangan            = $input->nm_ruangan;
@@ -147,6 +160,7 @@ class RuanganController extends BaseController
                 $ruangan                        = Ruangan::find($id);
                 $ruangan->id_jenis_ruangan      = $input->id_jenis_ruangan;
                 $ruangan->id_gedung             = $input->id_gedung;
+                $ruangan->id_kelas              = $input->id_kelas;
                 $ruangan->id_pemilik_sarpras    = $input->id_pemilik_sarpras;
                 $ruangan->nm_ruangan            = $input->nm_ruangan;
                 $ruangan->kapasitas_ruangan     = $input->kapasitas_ruangan;
