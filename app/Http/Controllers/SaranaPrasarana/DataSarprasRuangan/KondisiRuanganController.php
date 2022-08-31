@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\SaranaPrasarana\DataSarprasRuangan;
 
+use App\Imports\DataImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -20,22 +21,24 @@ use Session;
 use Validator;
 use Excel;
 
-class KondisiRuanganController extends BaseController{
+class KondisiRuanganController extends BaseController
+{
 
-    public function viewKondisiRuangan(Request $request){
+    public function viewKondisiRuangan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-    	return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/view-kondisi-ruangan',compact('auth_data'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/view-kondisi-ruangan', compact('auth_data'));
     }
 
-    public function addKondisiRuangan(Request $request){
+    public function addKondisiRuangan(Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         // mengambil waktu sekarang
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
@@ -43,13 +46,13 @@ class KondisiRuanganController extends BaseController{
 
         $data_kerusakan_ruangan = LibDataSarpras::fetchDataKerusakanRuangan($auth_data);
 
-        $id_kondisi_ruangan = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+        $id_kondisi_ruangan = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-        return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/add-kondisi-ruangan',compact('auth_data','data_ruangan','data_kerusakan_ruangan','id_kondisi_ruangan'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/add-kondisi-ruangan', compact('auth_data', 'data_ruangan', 'data_kerusakan_ruangan', 'id_kondisi_ruangan'));
     }
 
-    public function editKondisiRuangan($id, Request $request){
+    public function editKondisiRuangan($id, Request $request)
+    {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -60,35 +63,35 @@ class KondisiRuanganController extends BaseController{
 
         $data_kondisi_ruangan = LibDataSarpras::fetchDataKondisiRuangan($auth_data, $id);
 
-        return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/edit-kondisi-ruangan',compact('auth_data','data_ruangan','data_kerusakan_ruangan','data_kondisi_ruangan'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/edit-kondisi-ruangan', compact('auth_data', 'data_ruangan', 'data_kerusakan_ruangan', 'data_kondisi_ruangan'));
     }
 
-    public function datatablesKondisiRuangan(Request $request){
+    public function datatablesKondisiRuangan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-    	$list_data = LibDataSarpras::fetchDataKondisiRuangan($auth_data);
+        $list_data = LibDataSarpras::fetchDataKondisiRuangan($auth_data);
 
         return Datatables::of($list_data)
-                ->addColumn('nm_ruangan', function($item){
-                    if($item->is_aktif == 1) {
-                        return $item->nm_ruangan." - ".$item->nm_gedung." (Aktif)";
-                    }
-                    else {
-                        return $item->nm_ruangan." - ".$item->nm_gedung." (Non-Aktif)";
-                    }
-                })
-                ->addColumn('action', function($item){
-                    $data = array(
-                        'id' => $item->id_kondisi_ruangan
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('nm_ruangan', function ($item) {
+                if ($item->is_aktif == 1) {
+                    return $item->nm_ruangan . " - " . $item->nm_gedung . " (Aktif)";
+                } else {
+                    return $item->nm_ruangan . " - " . $item->nm_gedung . " (Non-Aktif)";
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_kondisi_ruangan
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     // Action POST
-    public function actionKondisiRuangan(Request $request, $mode, $id = null){
+    public function actionKondisiRuangan(Request $request, $mode, $id = null)
+    {
 
         $input = (object) $request->input();
 
@@ -98,26 +101,24 @@ class KondisiRuanganController extends BaseController{
             'persentase_kerusakan_ruangan'  => 'required',
             'keterangan_kerusakan_ruangan'  => 'required'
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
-        else{
+        } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-            if($mode == 'add') {
-                if($kondisiRuangan = KondisiRuangan::where('id_ruangan',$input->id_ruangan)->where('id_kerusakan_ruangan',$input->id_kerusakan_ruangan)->first()){
+            if ($mode == 'add') {
+                if ($kondisiRuangan = KondisiRuangan::where('id_ruangan', $input->id_ruangan)->where('id_kerusakan_ruangan', $input->id_kerusakan_ruangan)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Kerusakan Ruangan Sudah Ada!'
-                    ]; 
-                }
-                else{
-                    $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    ];
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $kondisiRuangan                                 = new KondisiRuangan;
                     $kondisiRuangan->id_kondisi_ruangan             = $id;
@@ -134,16 +135,14 @@ class KondisiRuanganController extends BaseController{
                         'message' => 'Save Kondisi Ruangan successfully'
                     ];
                 }
-            }
-            elseif($mode == 'edit'){
-                if($kondisiRuangan = KondisiRuangan::where('id_ruangan',$input->id_ruangan)->where('id_kerusakan_ruangan',$input->id_kerusakan_ruangan)->first()) {
-                    if($kondisiRuangan->id_kondisi_ruangan != $id) {
+            } elseif ($mode == 'edit') {
+                if ($kondisiRuangan = KondisiRuangan::where('id_ruangan', $input->id_ruangan)->where('id_kerusakan_ruangan', $input->id_kerusakan_ruangan)->first()) {
+                    if ($kondisiRuangan->id_kondisi_ruangan != $id) {
                         return [
                             'status' => 300, // SUCCESS AND LOAD TABLE
                             'message' => 'Kerusakan Ruangan Sudah Ada!'
-                        ]; 
-                    }
-                    else {
+                        ];
+                    } else {
                         // make object to find id
                         $kondisiRuangan                                 = KondisiRuangan::find($id);
                         $kondisiRuangan->id_ruangan                     = $input->id_ruangan;
@@ -161,8 +160,7 @@ class KondisiRuanganController extends BaseController{
                         ];
                     }
                 }
-            }
-            elseif($mode == 'delete'){
+            } elseif ($mode == 'delete') {
                 // make object to find id
                 $kondisiRuangan               = KondisiRuangan::find($id);
                 $kondisiRuangan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
@@ -178,87 +176,87 @@ class KondisiRuanganController extends BaseController{
         }
     }
 
-    public function importExcel(Request $request){
-      # code...
-      $input = (object) $request->input();
-      $auth_data = $input->auth_data;
+    public function importExcel(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
 
-      return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/import-excel',compact('auth_data'));
-
+        return view('sarana-prasarana/data-sarpras-ruangan/kondisi-ruangan/import-excel', compact('auth_data'));
     }
 
-    public function importExcelAction(Request $request){
+    public function importExcelAction(Request $request)
+    {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $validator = Validator::make($request->all(), [
-                'file-excel' => 'required',
+            'file-excel' => 'required',
         ]);
-        
-        if($validator->fails() && $mode != 'delete') {
+
+        if ($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
-        }
+        } else {
 
-        else{
-
-            if($request->hasFile('file-excel')){
+            if ($request->hasFile('file-excel')) {
 
                 $path = $request->file('file-excel')->getRealPath();
-                $data = Excel::load($path)->get();
 
-                if($data->count()){
+                $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+
+                if (count($data)) {
 
                     DB::beginTransaction();
-                    
+
                     try {
 
-                        foreach ($data as $key => $value) {
-
-                            if(empty($value->nama_ruangan)){
+                        foreach ($data[0] as $key => $value) {
+                            $value = (object) $value;
+                            if (empty($value->nama_ruangan)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama ruangan yang kosong'
                                 ];
                             }
 
-                            $check_ruangan = Ruangan::where('nm_ruangan',ucwords($value->nama_ruangan))->first();
+                            $check_ruangan = Ruangan::where('nm_ruangan', ucwords($value->nama_ruangan))->first();
 
-                            if(!$check_ruangan){
+                            if (!$check_ruangan) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama ruangan yang tidak ditemukan dalam data master ruangan'
                                 ];
                             }
 
-                            if(empty($value->nama_kerusakan)){
+                            if (empty($value->nama_kerusakan)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama kerusakan yang kosong'
                                 ];
                             }
 
-                            $check_kerusakan = KerusakanRuangan::where('nm_kerusakan_ruangan',($value->nama_kerusakan))->first();
-                            
-                            if(!$check_kerusakan){
+                            $check_kerusakan = KerusakanRuangan::where('nm_kerusakan_ruangan', ($value->nama_kerusakan))->first();
+
+                            if (!$check_kerusakan) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada nama kerusakan ruangan yang tidak ditemukan dalam data master kerusakan ruangan'
                                 ];
                             }
 
-                            if(empty($value->presentase_kerusakan) && ($value->presentase_kerusakan== 0)){
+                            if (empty($value->presentase_kerusakan) && ($value->presentase_kerusakan == 0)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada presentase kerusakan yang kosong'
                                 ];
                             }
 
-                            if(empty($value->keterangan) && ($value->presentase_kerusakan== 0)){
+                            if (empty($value->keterangan) && ($value->presentase_kerusakan == 0)) {
                                 return [
                                     'status'    => 203, // GAGAL
                                     'message'   => 'Upload data inventaris gagal, ada keterangan yang kosong'
@@ -266,14 +264,13 @@ class KondisiRuanganController extends BaseController{
                             }
 
                             $data                                 = new KondisiRuangan;
-                            $data->id_kondisi_ruangan             = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->id_kondisi_ruangan             = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $data->id_ruangan                     = $check_ruangan->id_ruangan;
                             $data->id_kerusakan_ruangan           = $check_kerusakan->id_kerusakan_ruangan;
                             $data->persentase_kerusakan_ruangan   = $value->presentase_kerusakan;
                             $data->keterangan_kerusakan_ruangan   = $value->keterangan;
                             $data->created_by                     = $input->auth_data->pengguna->id_pengguna;
                             $data->save();
-
                         }
 
                         DB::commit();
@@ -283,41 +280,28 @@ class KondisiRuanganController extends BaseController{
                             'path' => 'data-sarpras-ruangan/kondisi-ruangan',
                             'message' => 'Import Pemilik Sarpras Successfully'
                         ];
-
-                    }
-
-                    catch (\Exception $e) {
+                    } catch (\Exception $e) {
 
                         DB::rollback();
-                
+
                         return [
                             'status'    => 203, // GAGAL
-                            'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
+                            'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
                         ];
-                    } 
-
-                }
-
-                else{
+                    }
+                } else {
 
                     return [
                         'status'    => 300, // FAILED
                         'message'   => "File excel anda kosong"
                     ];
-
                 }
-
-            }
-
-            else{
+            } else {
                 return [
                     'status'    => 300, // FAILED
                     'message'   => "File Excel tidak ditemukan"
                 ];
             }
-
         }
-
     }
-
 }
