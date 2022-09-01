@@ -8,7 +8,7 @@ before_script:
   - echo "$SMA_WH_2_TAMAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMK_YPM_1_TAMAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMP_MUH_6_KRIAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
-  - echo "$SMK_PEMUDA_KRIAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
+  # - echo "$SMK_PEMUDA_KRIAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMK_YPM_3_TAMAN_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$SMA_WIDYA_DARMA_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
   - echo "$MANBAUL_HIKAM_PVKEY" | tr -d '\r' | ssh-add - > /dev/null
@@ -70,14 +70,14 @@ deploy_to_smpmuh6krian:
     - ssh -t root@$SMP_MUH_6_KRIAN_SERVER "cd /var/www/diakademik && git pull origin latest-release"
     - ssh -t root@$SMP_MUH_6_KRIAN_SERVER "cd /var/www/diakademik && php artisan migrate --force"
 
-deploy_to_smkpemudakrian:
-  stage: deploy
-  only:
-    - latest-release
-  environment: production
-  script:
-    - ssh -t root@$SMK_PEMUDA_KRIAN_SERVER "cd /var/www/diakademik && git pull origin latest-release"
-    - ssh -t root@$SMK_PEMUDA_KRIAN_SERVER "cd /var/www/diakademik && php artisan migrate --force"
+# deploy_to_smkpemudakrian:
+#   stage: deploy
+#   only:
+#     - latest-release
+#   environment: production
+#   script:
+#     - ssh -t root@$SMK_PEMUDA_KRIAN_SERVER "cd /var/www/diakademik && git pull origin latest-release"
+#     - ssh -t root@$SMK_PEMUDA_KRIAN_SERVER "cd /var/www/diakademik && php artisan migrate --force"
 
 deploy_to_smkypm3taman:
   stage: deploy
