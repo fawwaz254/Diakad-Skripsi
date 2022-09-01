@@ -100,10 +100,11 @@ class LibDataSarpras
         if ($id == null) {
             // tipe ruangan kelas atau non-kelas
             if ( ! empty($tipe_ruangan)) {
-                $ruangan = Ruangan::select('ruangan.id_ruangan', 'ruangan.id_jenis_ruangan', 'ruangan.id_gedung', 'ruangan.id_pemilik_sarpras', 'jenis_ruangan.nm_jenis_ruangan', 'gedung.nm_gedung', 'pemilik_sarpras.nm_pemilik_sarpras', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ruangan', 'ruangan.kapasitas_ujian', 'ruangan.deskripsi_ruangan', 'ruangan.is_aktif')
+                $ruangan = Ruangan::select('ruangan.id_ruangan', 'ruangan.id_jenis_ruangan', 'ruangan.id_gedung', 'ruangan.id_pemilik_sarpras', 'ruangan.id_kelas', 'kelas.nm_kelas' ,'jenis_ruangan.nm_jenis_ruangan', 'gedung.nm_gedung', 'pemilik_sarpras.nm_pemilik_sarpras', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ruangan', 'ruangan.kapasitas_ujian', 'ruangan.deskripsi_ruangan', 'ruangan.is_aktif')
                         ->join('jenis_ruangan','jenis_ruangan.id_jenis_ruangan','=','ruangan.id_jenis_ruangan')
                         ->join('gedung','gedung.id_gedung','=','ruangan.id_gedung')
                         ->join('pemilik_sarpras','pemilik_sarpras.id_pemilik_sarpras','=','ruangan.id_pemilik_sarpras')
+                        ->LeftJoin('kelas', 'kelas.id_kelas','ruangan.id_kelas')
                         ->where('ruangan.is_aktif','=',1)
                         ->where('jenis_ruangan.tipe_ruangan','=',$tipe_ruangan)
                         ->where('gedung.id_sekolah','=',$auth_data->pengguna->id_sekolah)
@@ -111,10 +112,11 @@ class LibDataSarpras
             }
             // get all ruangan tanpa filter tipe ruangan
             else {
-                $ruangan = Ruangan::select('ruangan.id_ruangan', 'ruangan.id_jenis_ruangan', 'ruangan.id_gedung', 'ruangan.id_pemilik_sarpras', 'jenis_ruangan.nm_jenis_ruangan', 'gedung.nm_gedung', 'pemilik_sarpras.nm_pemilik_sarpras', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ruangan', 'ruangan.kapasitas_ujian', 'ruangan.deskripsi_ruangan', 'ruangan.is_aktif')
+                $ruangan = Ruangan::select('ruangan.id_ruangan', 'ruangan.id_jenis_ruangan', 'ruangan.id_gedung', 'ruangan.id_pemilik_sarpras','ruangan.id_kelas', 'kelas.nm_kelas' , 'jenis_ruangan.nm_jenis_ruangan', 'gedung.nm_gedung', 'pemilik_sarpras.nm_pemilik_sarpras', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ruangan', 'ruangan.kapasitas_ujian', 'ruangan.deskripsi_ruangan', 'ruangan.is_aktif')
                         ->join('jenis_ruangan','jenis_ruangan.id_jenis_ruangan','=','ruangan.id_jenis_ruangan')
                         ->join('gedung','gedung.id_gedung','=','ruangan.id_gedung')
                         ->join('pemilik_sarpras','pemilik_sarpras.id_pemilik_sarpras','=','ruangan.id_pemilik_sarpras')
+                        ->LeftJoin('kelas', 'kelas.id_kelas','ruangan.id_kelas')
                         ->where('gedung.id_sekolah','=',$auth_data->pengguna->id_sekolah)
                         ->orderBy('ruangan.nm_ruangan', 'asc')->get();
             }
