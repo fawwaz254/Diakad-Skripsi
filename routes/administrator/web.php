@@ -10,6 +10,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::group(array('prefix' => 'fingerprint'), function () {
 				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
 				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
+				Route::get('/sync', 'Administrator\Device\FingerprintController@syncDataFinger');
 			});
 		});
 
@@ -86,6 +87,33 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::get('siswa/view-detail/{id_kelas}', 'Administrator\PengelolaanAkun\SiswaController@viewDetailSiswa');
 			Route::get('siswa/datatables/{id_kelas}', 'Administrator\PengelolaanAkun\SiswaController@datatablesSiswa');
 		});
+
+		//Jurnal pimpinan
+		Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
+			Route::group(array('prefix' => 'tambah-jurnal-pimpinan'), function () {
+				// Route::get('/', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@viewDataKategori');
+				// Route::get('/datatables', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@datatablesCategoryfile');
+				// Route::get('/add', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@addDataKategori');
+				// Route::get('/edit/{id_category_jh_tendik}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@editDataKategori');
+				// Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@actionDataKategori');
+			});
+
+			// Route::group(array('prefix' => 'jenis-jurnal-harian'), function () {
+			// 	Route::get('/', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@viewDataJenis');
+			// 	Route::get('/datatables', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@datatablesjenis');
+			// 	Route::get('/add', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@addDataJenis');
+			// 	Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@actionDataJenis');
+			// });
+
+			// Route::group(array('prefix' => 'laporan-jurnal-harian'), function () {
+			// 	Route::get('/', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@viewLaporanAllJurnalHarian');
+			// 	Route::get('/datatables', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@datatablesKerjaHarianJurnalHarian');
+			// 	Route::get('preview-file/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@previewFile');
+			// 	Route::get('download-file/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@downloadFile');
+			// });
+		});
+
+
 
 		/** ==== MODUL MANAJEMEN MENU ==== **/
 		// url: /administrator/manajemen-menu
