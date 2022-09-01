@@ -120,15 +120,15 @@
 
                                             <div class="col-md-6">
                                                 <label>Ruangan Kelas</label>
-                                                <select class="form-control show-tick select2" name="ruangan{{$k}}" required  style="width:100%;">
+                                                <select class="form-control show-tick select2" name="ruangan{{$k}}" required  style="width:100%;" >
                                                     <option value="">-- Pilih Ruangan Kelas --</option>
                                                     @foreach($ruangan as $data)
                                                         @if($jml_jadwal < $k)
-                                                            <option value="{{$data->id_ruangan}}">
-                                                                {{$data->nm_ruangan}}({{$data->nm_gedung}})
+                                                            <option value="{{$data->id_ruangan}}" @if(isset($data->id_kelas) && $data->id_kelas == $kelas_mp->id_kelas) selected @endif >
+                                                                {{$data->nm_ruangan}} ({{$data->nm_gedung}})
                                                             </option>
                                                         @else
-                                                            <option value="{{$data->id_ruangan}}" @if($jadwal[$k-1]->id_ruangan == $data->id_ruangan) selected @endif>
+                                                            <option value="{{$data->id_ruangan}}" @if($jadwal[$k-1]->id_ruangan == $data->id_ruangan) selected @endif  >
                                                                 {{$data->nm_ruangan}} ({{$data->nm_gedung}})
                                                             </option>
                                                         @endif
