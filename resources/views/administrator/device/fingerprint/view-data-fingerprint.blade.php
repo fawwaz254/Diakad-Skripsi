@@ -5,8 +5,10 @@
 </style>
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a>
+        <a class="btn bg-red waves-effect target-link" href=" {{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3)).'/sync' }}"><i class="material-icons">system_update_alt</i><span>Sync</span></a></h2>
     </div>
+   
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
