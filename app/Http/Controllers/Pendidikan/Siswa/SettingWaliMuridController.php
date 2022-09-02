@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Pendidikan\Siswa;
 
+use App\Imports\DataImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
@@ -293,13 +294,16 @@ class SettingWaliMuridController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         if ($request->hasFile('file-excel')) {
-            $path = $request->file('file-excel')->getRealPath();
-            $data = Excel::load($path)->get();
+
+            $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+            $data = $data[0]; // Sheet 1
 
             $batch_insert_data = [];
 
-            if ($data->count()) {
+            if (count($data)) {
                 foreach ($data as $key => $item) {
+                    $item = (object) $item;
+
                     if (empty($item->nis)) {
                         // return [
                         //     'status' 	=> 300, // GAGAL

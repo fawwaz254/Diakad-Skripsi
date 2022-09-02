@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Humas\MagangSiswa;
 
+use App\Imports\DataImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -27,18 +28,20 @@ use Validator;
 class PengajuanMagangController extends BaseController
 {
 
-  public function viewPengajuanMagang(Request $request){
-      # code...
-      $input = (object) $request->input();
-      $auth_data = $input->auth_data;
+  public function viewPengajuanMagang(Request $request)
+  {
+    # code...
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
 
-      $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
-      $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
+    $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
+    $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
-      return view('humas/magang-siswa/pengajuan-magang/view-pengajuan-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
+    return view('humas/magang-siswa/pengajuan-magang/view-pengajuan-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
   }
 
-  public function importExcel(Request $request){
+  public function importExcel(Request $request)
+  {
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
@@ -46,276 +49,246 @@ class PengajuanMagangController extends BaseController
     $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data);
     $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data);
 
-    return view('humas/magang-siswa/pengajuan-magang/import-excel',compact('auth_data','data_periode_magang','data_rekanan_magang'));
-
+    return view('humas/magang-siswa/pengajuan-magang/import-excel', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
   }
 
-  public function importExcelAction(Request $request){
+  public function importExcelAction(Request $request)
+  {
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
     $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-     $validator = Validator::make($request->all(), [
-            'id_rekanan_magang' => 'required',
-            'id_periode_magang' => 'required',
-            'file-excel' => 'required',
+    $validator = Validator::make($request->all(), [
+      'id_rekanan_magang' => 'required',
+      'id_periode_magang' => 'required',
+      'file-excel' => 'required',
     ]);
-    
-    if($validator->fails() && $mode != 'delete') {
-        return [
-            'status' => 300, // FAILED
-            'message' => $validator->errors()->first()
-        ];
-    }
 
-    else{
+    if ($validator->fails() && $mode != 'delete') {
+      return [
+        'status' => 300, // FAILED
+        'message' => $validator->errors()->first()
+      ];
+    } else {
 
-        if($request->hasFile('file-excel')){
+      if ($request->hasFile('file-excel')) {
 
-            $path = $request->file('file-excel')->getRealPath();
-            $data = Excel::load($path)->get();
+        $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+        $data = $data[0]; // Sheet 1
 
-            if($data->count()){
+        if (count($data)) {
 
-                DB::beginTransaction();
-                
-                try {
+          DB::beginTransaction();
 
-                    foreach ($data as $key => $value) {
+          try {
 
-                        $siswa = Siswa::where('nis_siswa',$value->nis)->first();
+            foreach ($data as $key => $value) {
+              $value = (object) $value;
 
-                        if($siswa){
+              $siswa = Siswa::where('nis_siswa', $value->nis)->first();
 
-                            if($value->status == 'Waiting Approval'){
-                                $status = 0;
-                            }
-                            elseif($value->status == 'Approve'){
-                                $status = 1;
-                            } 
-                            else{
-                                 return [
-                                    'status'    => 300, // FAILED
-                                    'message'   => "Mohon maaf status yang diizinkan hanya approve dan waiting approval"
-                                ];
-                            }
+              if ($siswa) {
 
-                            $data                        = new PengajuanSiswaMagang;
-                            $data->id_pengambilan_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                            $data->id_siswa              = $siswa->id_siswa;
-                            $data->id_kelas              = $siswa->id_kelas;
-                            $data->id_periode_magang     = $input->id_periode_magang;
-                            $data->id_rekanan_magang     = $input->id_rekanan_magang;
-                            $data->status_apv_pengambilan_magang         = $status;
-                            $data->status_magang         = 0;
-                            $data->created_by            = $input->auth_data->pengguna->id_pengguna;
-                            $data->save();
-
-                        }
-
-                        else{
-
-                            return [
-                                'status'    => 300, // FAILED
-                                'message'   => "Mohon maaf siswa dengan nis ".$value->nis." ini tidak ditemikan"
-                            ];
-
-                        }
-
-                    }
-
-                    DB::commit();
-
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'magang-siswa/pengajuan-magang',
-                        'message' => 'Import Magang Siswa successfully'
-                    ];
-
+                if ($value->status == 'Waiting Approval') {
+                  $status = 0;
+                } elseif ($value->status == 'Approve') {
+                  $status = 1;
+                } else {
+                  return [
+                    'status'    => 300, // FAILED
+                    'message'   => "Mohon maaf status yang diizinkan hanya approve dan waiting approval"
+                  ];
                 }
 
-                catch (\Exception $e) {
-
-                    DB::rollback();
-            
-                    return [
-                        'status'    => 203, // GAGAL
-                        'message'       => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error'
-                    ];
-                } 
-
-            }
-
-            else{
+                $data                        = new PengajuanSiswaMagang;
+                $data->id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $data->id_siswa              = $siswa->id_siswa;
+                $data->id_kelas              = $siswa->id_kelas;
+                $data->id_periode_magang     = $input->id_periode_magang;
+                $data->id_rekanan_magang     = $input->id_rekanan_magang;
+                $data->status_apv_pengambilan_magang         = $status;
+                $data->status_magang         = 0;
+                $data->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $data->save();
+              } else {
 
                 return [
-                    'status'    => 300, // FAILED
-                    'message'   => "File excel anda kosong"
+                  'status'    => 300, // FAILED
+                  'message'   => "Mohon maaf siswa dengan nis " . $value->nis . " ini tidak ditemikan"
                 ];
-
+              }
             }
 
-        }
+            DB::commit();
 
-        else{
             return [
-                'status'    => 300, // FAILED
-                'message'   => "File Excel tidak ditemukan"
+              'status' => 202, // SUCCESS AND LOAD CONTENT
+              'path' => 'magang-siswa/pengajuan-magang',
+              'message' => 'Import Magang Siswa successfully'
             ];
+          } catch (\Exception $e) {
+
+            DB::rollback();
+
+            return [
+              'status'    => 203, // GAGAL
+              'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
+            ];
+          }
+        } else {
+
+          return [
+            'status'    => 300, // FAILED
+            'message'   => "File excel anda kosong"
+          ];
         }
-
+      } else {
+        return [
+          'status'    => 300, // FAILED
+          'message'   => "File Excel tidak ditemukan"
+        ];
+      }
     }
-
   }
 
-  public function datatablesPengajuanMagang(Request $request){
+  public function datatablesPengajuanMagang(Request $request)
+  {
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
 
     $id_periode_magang = $input->id_periode_magang;
 
-    $data = PengajuanSiswaMagang::select('nm_periode_magang','nm_rekanan_magang','nis_siswa','pengguna.nm_pengguna', 'kelas.nm_kelas','semester.tahun_ajaran','semester.nm_semester','pengambilan_magang.status_apv_pengambilan_magang','status_magang','siswa.id_siswa','id_pengambilan_magang')
-                        ->join('siswa','siswa.id_siswa','=','pengambilan_magang.id_siswa')
-                        ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-                        ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-                        ->join('rekanan_magang','rekanan_magang.id_rekanan_magang','=','pengambilan_magang.id_rekanan_magang')
-                        ->join('periode_magang','periode_magang.id_periode_magang','=','pengambilan_magang.id_periode_magang')
-                        ->join('semester','semester.id_semester','=','periode_magang.id_semester')
-                        ->when($id_periode_magang,function($q) use($id_periode_magang){
-                            $q->where('pengambilan_magang.id_periode_magang',$id_periode_magang);
-                        })
-                        ->where('pengambilan_magang.id_rekanan_magang',$input->id_rekanan_magang)
-                        ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                        ->get();
+    $data = PengajuanSiswaMagang::select('nm_periode_magang', 'nm_rekanan_magang', 'nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'semester.tahun_ajaran', 'semester.nm_semester', 'pengambilan_magang.status_apv_pengambilan_magang', 'status_magang', 'siswa.id_siswa', 'id_pengambilan_magang')
+      ->join('siswa', 'siswa.id_siswa', '=', 'pengambilan_magang.id_siswa')
+      ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+      ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+      ->join('rekanan_magang', 'rekanan_magang.id_rekanan_magang', '=', 'pengambilan_magang.id_rekanan_magang')
+      ->join('periode_magang', 'periode_magang.id_periode_magang', '=', 'pengambilan_magang.id_periode_magang')
+      ->join('semester', 'semester.id_semester', '=', 'periode_magang.id_semester')
+      ->when($id_periode_magang, function ($q) use ($id_periode_magang) {
+        $q->where('pengambilan_magang.id_periode_magang', $id_periode_magang);
+      })
+      ->where('pengambilan_magang.id_rekanan_magang', $input->id_rekanan_magang)
+      ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+      ->get();
 
     return Datatables::of($data)
-                ->addColumn('semester', function($item){     
-                        return $item->tahun_ajaran." ".$item->nm_semester;
-                })
-                ->addColumn('status_apv_pengambilan_magang', function($item){
-                    if($item->status_apv_pengambilan_magang== 0) {
-                        return "Belum di Approve";
-                    }
-                    elseif($item->status_apv_pengambilan_magang==1) {
-                        return "Sudah di Approve";
-                    }
-                    elseif($item->status_apv_pengambilan_magang==2) {
-                        return "Waiting Approval";
-                    }
-                    elseif($item->status_apv_pengambilan_magang==3) {
-                        return "Tidak di Approve";
-                    }
-                })
-                ->addColumn('status_magang', function($item){
-                    if($item->status_magang == 0) {
-                        return "";
-                    }
-                    elseif($item->status_magang == 1) {
-                        return "Sudah Selesai Magang";
-                    }
-                    else{
-                      return "Pemagang Dibatalkan";
-                    }
-                })
-  
-                ->addColumn('action', function($item){
-                        $data = array(
-                            'id' => $item->id_pengambilan_magang,
-                            'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang,
-                            'id_siswa' => $item->id_siswa
-                        );
-                  
-                        return $data;
-                })
-                ->make(true);
+      ->addColumn('semester', function ($item) {
+        return $item->tahun_ajaran . " " . $item->nm_semester;
+      })
+      ->addColumn('status_apv_pengambilan_magang', function ($item) {
+        if ($item->status_apv_pengambilan_magang == 0) {
+          return "Belum di Approve";
+        } elseif ($item->status_apv_pengambilan_magang == 1) {
+          return "Sudah di Approve";
+        } elseif ($item->status_apv_pengambilan_magang == 2) {
+          return "Waiting Approval";
+        } elseif ($item->status_apv_pengambilan_magang == 3) {
+          return "Tidak di Approve";
+        }
+      })
+      ->addColumn('status_magang', function ($item) {
+        if ($item->status_magang == 0) {
+          return "";
+        } elseif ($item->status_magang == 1) {
+          return "Sudah Selesai Magang";
+        } else {
+          return "Pemagang Dibatalkan";
+        }
+      })
 
+      ->addColumn('action', function ($item) {
+        $data = array(
+          'id' => $item->id_pengambilan_magang,
+          'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang,
+          'id_siswa' => $item->id_siswa
+        );
+
+        return $data;
+      })
+      ->make(true);
   }
 
-  public function addPengajuanMagang(Request $request,$id_rekanan_magang,$id_periode_magang){
-
-      $input = (object) $request->input();
-      $auth_data = $input->auth_data;
-
-      $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data,$id_rekanan_magang);
-      $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data,$id_periode_magang);
-
-      return view('humas/magang-siswa/pengajuan-magang/add-pengajuan-magang',compact('auth_data','data_periode_magang','data_rekanan_magang'));
-
-  }
-
-  public function datatablesListSiswa(Request $request,$id_rekanan_magang,$id_periode_magang){
+  public function addPengajuanMagang(Request $request, $id_rekanan_magang, $id_periode_magang)
+  {
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
 
-    $data_siswa = Siswa::select('pengambilan_magang.id_pengambilan_magang','pengambilan_magang.id_rekanan_magang','pengambilan_magang.id_periode_magang','pengambilan_magang.status_apv_pengambilan_magang','pengambilan_magang.status_magang','siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas')
-                        ->leftJoin('pengambilan_magang', function ($join) use($id_rekanan_magang,$id_periode_magang) {
-                                $join->on('pengambilan_magang.id_siswa','=','siswa.id_siswa')
-                                     ->where('pengambilan_magang.status_magang', '<>', 10)
-                                     ->whereNull('pengambilan_magang.deleted_at')
-                                     ->where('pengambilan_magang.id_rekanan_magang','=',$id_rekanan_magang)
-                                     ->where('pengambilan_magang.id_periode_magang','=',$id_periode_magang);                     
-                            })
-                        ->join('pengguna','pengguna.id_pengguna','=','siswa.id_pengguna')
-                        ->join('status_pengguna','status_pengguna.id_status_pengguna','=','pengguna.id_status_pengguna')
-                        ->join('kelas','kelas.id_kelas','=','siswa.id_kelas')
-                        ->where('pengguna.id_sekolah','=',$auth_data->pengguna->id_sekolah)
-                        ->where('status_pengguna.aktif_status_pengguna','=',1)
-                        ->orderBy('kelas.tingkat', 'asc')
-                        ->orderBy('kelas.nm_kelas', 'asc')
-                        ->orderBy('siswa.nis_siswa', 'asc');
+    $data_rekanan_magang = LibMagangSiswa::fetchDataRekananMagang($auth_data, $id_rekanan_magang);
+    $data_periode_magang = LibMagangSiswa::fetchDataPeriodeMagang($auth_data, $id_periode_magang);
 
-    return Datatables::of($data_siswa)
-                      ->addColumn('status_apv_pengambilan_magang', function($item){
-                          if($item->status_apv_pengambilan_magang){
-                            if($item->status_apv_pengambilan_magang== 0) {
-                              return "Belum di Approve";
-                            }
-                            elseif($item->status_apv_pengambilan_magang==1) {
-                                return "Sudah di Approve";
-                            }
-                            elseif($item->status_apv_pengambilan_magang==2) {
-                                return "Waiting Approval";
-                            }
-                            elseif($item->status_apv_pengambilan_magang==3) {
-                                return "Tidak di Approve";
-                            }  
-                          }
-
-                          else{
-                            return '';
-                          }
-                          
-                      })    
-                      ->addColumn('action', function($item){
-                        $data = array(
-                            'id' => $item->id_siswa,
-                            'id_pengambilan_magang' => $item->id_pengambilan_magang,
-                            'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang
-                        );
-                  
-                        return $data;
-                      })
-                      ->make(true);
-
+    return view('humas/magang-siswa/pengajuan-magang/add-pengajuan-magang', compact('auth_data', 'data_periode_magang', 'data_rekanan_magang'));
   }
 
-  public function actionPengajuanMagang(Request $request){
+  public function datatablesListSiswa(Request $request, $id_rekanan_magang, $id_periode_magang)
+  {
+
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+
+    $data_siswa = Siswa::select('pengambilan_magang.id_pengambilan_magang', 'pengambilan_magang.id_rekanan_magang', 'pengambilan_magang.id_periode_magang', 'pengambilan_magang.status_apv_pengambilan_magang', 'pengambilan_magang.status_magang', 'siswa.id_siswa', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas')
+      ->leftJoin('pengambilan_magang', function ($join) use ($id_rekanan_magang, $id_periode_magang) {
+        $join->on('pengambilan_magang.id_siswa', '=', 'siswa.id_siswa')
+          ->where('pengambilan_magang.status_magang', '<>', 10)
+          ->whereNull('pengambilan_magang.deleted_at')
+          ->where('pengambilan_magang.id_rekanan_magang', '=', $id_rekanan_magang)
+          ->where('pengambilan_magang.id_periode_magang', '=', $id_periode_magang);
+      })
+      ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+      ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+      ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+      ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+      ->where('status_pengguna.aktif_status_pengguna', '=', 1)
+      ->orderBy('kelas.tingkat', 'asc')
+      ->orderBy('kelas.nm_kelas', 'asc')
+      ->orderBy('siswa.nis_siswa', 'asc');
+
+    return Datatables::of($data_siswa)
+      ->addColumn('status_apv_pengambilan_magang', function ($item) {
+        if ($item->status_apv_pengambilan_magang) {
+          if ($item->status_apv_pengambilan_magang == 0) {
+            return "Belum di Approve";
+          } elseif ($item->status_apv_pengambilan_magang == 1) {
+            return "Sudah di Approve";
+          } elseif ($item->status_apv_pengambilan_magang == 2) {
+            return "Waiting Approval";
+          } elseif ($item->status_apv_pengambilan_magang == 3) {
+            return "Tidak di Approve";
+          }
+        } else {
+          return '';
+        }
+      })
+      ->addColumn('action', function ($item) {
+        $data = array(
+          'id' => $item->id_siswa,
+          'id_pengambilan_magang' => $item->id_pengambilan_magang,
+          'status_apv_pengambilan_magang' => $item->status_apv_pengambilan_magang
+        );
+
+        return $data;
+      })
+      ->make(true);
+  }
+
+  public function actionPengajuanMagang(Request $request)
+  {
 
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
 
     $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-    $id_pengambilan_magang = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+    $id_pengambilan_magang = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-    if(!isset($input->id_pengambilan_magang)){
-       $siswa  = Siswa::find($input->id_siswa);
+    if (!isset($input->id_pengambilan_magang)) {
+      $siswa  = Siswa::find($input->id_siswa);
     }
 
-    if($input->mode == 'pengajuan'){
+    if ($input->mode == 'pengajuan') {
 
       $data                        = new PengajuanSiswaMagang;
       $data->id_pengambilan_magang = $id_pengambilan_magang;
@@ -329,35 +302,25 @@ class PengajuanMagangController extends BaseController
       $data->save();
 
       $message = 'Pengajuan Siswa Magang Successfully';
-    }
-
-    elseif($input->mode == 'pengubahan-status-magang'){
+    } elseif ($input->mode == 'pengubahan-status-magang') {
       $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
       $data->status_magang = $input->status_magang;
       $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
       $data->save();
 
       $message = 'Perngubahan Status Magang Successfully';
+    } elseif ($input->mode == 'tidak-diapprove') {
 
-
-    }
-
-    elseif($input->mode == 'tidak-diapprove'){
-
-      if(isset($input->id_pengambilan_magang)){
+      if (isset($input->id_pengambilan_magang)) {
 
         $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
-
-      }
-
-      else{
+      } else {
 
         $data = PengajuanSiswaMagang::where([
           'id_siswa' => $siswa->id_siswa,
           'id_rekanan_magang' => $input->id_rekanan_magang,
           'id_periode_magang' => $input->id_periode_magang
         ])->first();
-
       }
 
       $data->status_apv_pengambilan_magang = $input->status_apv_pengambilan_magang;
@@ -366,25 +329,18 @@ class PengajuanMagangController extends BaseController
       $data->save();
 
       $message = 'Perngubahan Status Tidak Diapprove Successfully';
+    } elseif ($input->mode == 'hapus-data') {
 
-    }
-
-    elseif($input->mode == 'hapus-data'){
-
-      if(isset($input->id_pengambilan_magang)){
+      if (isset($input->id_pengambilan_magang)) {
 
         $data = PengajuanSiswaMagang::find($input->id_pengambilan_magang);
-
-      }
-
-      else{
+      } else {
 
         $data = PengajuanSiswaMagang::where([
           'id_siswa' => $siswa->id_siswa,
           'id_rekanan_magang' => $input->id_rekanan_magang,
           'id_periode_magang' => $input->id_periode_magang
         ])->first();
-
       }
 
       $data->deleted_by            = $input->auth_data->pengguna->id_pengguna;
@@ -395,10 +351,8 @@ class PengajuanMagangController extends BaseController
     }
 
     return [
-        'status' => 205, // SUCCESS AND LOAD TABLE
-        'message' => $message
+      'status' => 205, // SUCCESS AND LOAD TABLE
+      'message' => $message
     ];
-
   }
-
 }
