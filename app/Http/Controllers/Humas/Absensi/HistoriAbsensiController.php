@@ -59,7 +59,7 @@ class HistoriAbsensiController extends BaseController
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             // $hasil[$key1]['status_join_table'] = $value->status_join_table;
-            $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key1]['nm_pengguna'] = $value->gelar_depan.' '.$value->nm_pengguna.' '.$value->gelar_belakang;
             $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
 
             foreach ($dates as $key2 => $date) {
@@ -83,7 +83,7 @@ class HistoriAbsensiController extends BaseController
 
                         $hasil[$key1][$key2]['status'] = "Telat";
                     }}
-                    if(isset($shiftMaster['end_time'])){
+                    if(isset($shiftMaster['end_time']) && isset($attendance->check_out)){
                     if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 
                         $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
@@ -154,7 +154,7 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
-            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['nm_pengguna'] = $value->gelar_depan.' '.$value->nm_pengguna.' '.$value->gelar_belakang;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
             $hasil[$key]['notes'] = '';
@@ -179,11 +179,11 @@ class HistoriAbsensiController extends BaseController
                     }
                 }
 
-
+                if (isset($shiftMaster['end_time'])) {
                 if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
 
                     $hasil[$key]['notes'] = "Pulang lebih awal";
-                }
+                } }
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                         $hasil[$key]['notes'] = "Telat dan Pulang lebih awal";
@@ -299,7 +299,7 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
-            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['nm_pengguna'] = $value->gelar_depan.' '.$value->nm_pengguna.' '.$value->gelar_belakang;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
@@ -338,7 +338,7 @@ class HistoriAbsensiController extends BaseController
                     }
                 }
 
-                if (isset($shiftMaster['end_time'])) {
+                if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
                     if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
                         $jumlah_pulangcepat++;
                         $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
