@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Keuangan\SIM;
 
+use App\Imports\DataImportExcel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -144,13 +145,16 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         if ($request->hasFile('file-excel')) {
-            $path = $request->file('file-excel')->getRealPath();
-            $data = Excel::load($path)->get();
 
-            if ($data->count()) {
+            $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+            $data = $data[0]; // Sheet 1
+
+            if (count($data)) {
                 DB::beginTransaction();
                 try {
                     foreach ($data as $key => $item) {
+                        $item = (object) $item;
+
                         if (!empty($item->nis)) {
                             $siswa = Siswa::where('nis_siswa', $item->nis)->first();
 

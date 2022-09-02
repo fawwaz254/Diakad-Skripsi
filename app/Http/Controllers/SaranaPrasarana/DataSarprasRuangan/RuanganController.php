@@ -226,133 +226,24 @@ class RuanganController extends BaseController
 
             if ($request->hasFile('file-excel')) {
 
-                if ($request->hasFile('file-excel')) {
+                $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+                $data = $data[0];
 
-                    $path = $request->file('file-excel')->getRealPath();
-                    $data = Excel::load($path)->get();
+                if (count($data)) {
 
-                    if ($data->count()) {
+                    DB::beginTransaction();
 
-                        DB::beginTransaction();
+                    try {
 
-                        try {
+                        foreach ($data as $key =>  $value) {
 
-                            foreach ($data as $key => $value) {
+                            $value = (object) $value;
 
-                                if (empty($value->jenis_ruangan)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada jenis ruangan yang kosong'
-                                    ];
-                                }
-
-                                $check_jenis_ruangan = JenisRuangan::where('nm_jenis_ruangan', ucwords($value->jenis_ruangan))->first();
-
-                                if (!$check_jenis_ruangan) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada jenis ruangan yang tidak ditemukan dalam data master jenis ruangan'
-                                    ];
-                                }
-
-                                if (empty($value->nama_gedung)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada nama gedung yang kosong'
-                                    ];
-                                }
-
-                                $check_nama_gedung = Gedung::where('nm_gedung', ucwords($value->nama_gedung))->first();
-
-                                if (!$check_nama_gedung) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada nama gedung yang tidak ditemukan dalam data master gedung'
-                                    ];
-                                }
-
-                                if (empty($value->nama_pemilik_sarpras)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada nama pemilik sarpras yang kosong'
-                                    ];
-                                }
-
-                                $check_nama_pemilik_sarpras = PemilikSarpras::where('nm_pemilik_sarpras', ucwords($value->nama_pemilik_sarpras))->first();
-
-                                if (!$check_nama_pemilik_sarpras) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada nama pemilik sarpras yang tidak ditemukan dalam data master nama pemilik sarpras'
-                                    ];
-                                }
-
-                                if (empty($value->nama_ruangan)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada nama ruangan yang kosong'
-                                    ];
-                                }
-
-                                if (empty($value->kapasitas_ruangan)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada kapasitas ruangan yang kosong'
-                                    ];
-                                }
-
-                                if (empty($value->kapasitas_ujian)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada kapasitas ujian yang kosong'
-                                    ];
-                                }
-
-                                if (empty($value->deskripsi_ruangan)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada deskripsi ruangan yang kosong'
-                                    ];
-                                }
-
-                                if (empty($value->status_aktif)) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, ada status aktif yang kosong'
-                                    ];
-                                }
-
-                                if (!(ucwords($value->status_aktif) == 'Aktif' || ucwords($value->status_aktif) == 'Non-Aktif')) {
-                                    return [
-                                        'status'    => 203, // GAGAL
-                                        'message'   => 'Upload data ruangan gagal, status aktif yang diizinkan hanya Aktif dan Non-Aktif'
-                                    ];
-                                }
-
-                                // $ruangan = ucwords($value->status_aktif);
-
-                                // if($ruangan!='Aktif'){
-                                //     $is_aktif = 1;
-                                // }
-                                // else{
-                                //     $is_aktif = 0;
-                                // }
-
-                                if (ucwords($value->status_aktif) == 'Aktif') $is_aktif = 1;
-                                else $is_aktif = 0;
-
-                                $data                                = new Ruangan;
-                                $data->id_ruangan                    = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                $data->id_jenis_ruangan              = $check_jenis_ruangan->id_jenis_ruangan;
-                                $data->id_pemilik_sarpras            = $check_nama_pemilik_sarpras->id_pemilik_sarpras;
-                                $data->id_gedung                     = $check_nama_gedung->id_gedung;
-                                $data->nm_ruangan                    = $value->nama_ruangan;
-                                $data->kapasitas_ruangan             = $value->kapasitas_ruangan;
-                                $data->kapasitas_ujian               = $value->kapasitas_ujian;
-                                $data->deskripsi_ruangan             = $value->deskripsi_ruangan;
-                                $data->is_aktif                      = $is_aktif;
-                                $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
-                                $data->save();
+                            if (empty($value->jenis_ruangan)) {
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada jenis ruangan yang kosong'
+                                ];
                             }
 
                             DB::commit();
@@ -362,28 +253,27 @@ class RuanganController extends BaseController
                                 'path' => 'data-sarpras-ruangan/ruangan',
                                 'message' => 'Import Ruangan Successfully'
                             ];
-                        } catch (\Exception $e) {
-
-                            DB::rollback();
-
-                            return [
-                                'status'    => 203, // GAGAL
-                                'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
-                            ];
                         }
-                    } else {
+                    } catch (\Exception $e) {
+
+                        DB::rollback();
 
                         return [
-                            'status'    => 300, // FAILED
-                            'message'   => "File excel anda kosong"
+                            'status'    => 203, // GAGAL
+                            'message'       => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error'
                         ];
                     }
                 } else {
                     return [
                         'status'    => 300, // FAILED
-                        'message'   => "File Excel tidak ditemukan"
+                        'message'   => "File Excel anda kosong"
                     ];
                 }
+            } else {
+                return [
+                    'status'    => 300, // FAILED
+                    'message'   => "File Excel tidak ditemukan"
+                ];
             }
         }
     }
