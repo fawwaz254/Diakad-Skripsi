@@ -10,7 +10,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::group(array('prefix' => 'fingerprint'), function () {
 				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
 				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
-				Route::get('/sync', 'Administrator\Device\FingerprintController@syncDataFinger');
+				// Route::get('/sync', 'Administrator\Device\FingerprintController@syncDataFinger');
 			});
 		});
 
