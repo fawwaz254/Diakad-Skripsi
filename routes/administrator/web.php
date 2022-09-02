@@ -100,12 +100,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::post('action-setting-jurnal-pimpinan/{mode}/{id}', 'Administrator\JurnalPimpinan\JurnalPimpinanController@actionSettingJurnalPimpinan');
 			});
 
-			// Route::group(array('prefix' => 'jenis-jurnal-harian'), function () {
-			// 	Route::get('/', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@viewDataJenis');
-			// 	Route::get('/datatables', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@datatablesjenis');
-			// 	Route::get('/add', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@addDataJenis');
-			// 	Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@actionDataJenis');
-			// });
+			Route::group(array('prefix' => 'jenis-jurnal-harian'), function () {
+				Route::get('/', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@viewDataJenis');
+				Route::get('/datatables', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@datatablesjenis');
+				Route::get('/add', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@addDataJenis');
+				Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@actionDataJenis');
+			});
 
 			// Route::group(array('prefix' => 'laporan-jurnal-harian'), function () {
 			// 	Route::get('/', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@viewLaporanAllJurnalHarian');
