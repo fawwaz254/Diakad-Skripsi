@@ -175,14 +175,14 @@ class PemilikSarprasController extends BaseController
             if ($request->hasFile('file-excel')) {
 
                 $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
-
-                if (count($data[0])) {
+                $data = $data[0];
+                if (count($data)) {
 
                     DB::beginTransaction();
 
                     try {
 
-                        foreach ($data[0] as $key => $value) {
+                        foreach ($data as $key => $value) {
                             $value = (object) $value;
 
                             if (empty($value->kode_pemilik_sarpras)) {
