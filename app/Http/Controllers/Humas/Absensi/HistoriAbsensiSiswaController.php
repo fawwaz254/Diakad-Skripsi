@@ -173,6 +173,7 @@ class HistoriAbsensiSiswaController extends Controller
 
     public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date, $status)
     {
+        set_time_limit(9800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
