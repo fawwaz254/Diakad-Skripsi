@@ -24,6 +24,19 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div> 
+                        <h2 class="card-inside-title">
+                            Nama Kelas <sup style="color: red">*Pilih Jika Ruang Kelas</sup>
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_kelas">
+                                    <option value="">Bukan Kelas</option>
+                                    @foreach($kelas as $k)
+                                    <option value="{{$k->id_kelas}}">{{$k->nm_kelas}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         <h2 class="card-inside-title">
                             Nama Gedung
