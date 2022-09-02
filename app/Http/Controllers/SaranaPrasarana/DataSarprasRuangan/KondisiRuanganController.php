@@ -208,6 +208,7 @@ class KondisiRuanganController extends BaseController
                 $path = $request->file('file-excel')->getRealPath();
 
                 $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+                $data = $data[0];
 
                 if (count($data)) {
 
@@ -215,7 +216,7 @@ class KondisiRuanganController extends BaseController
 
                     try {
 
-                        foreach ($data[0] as $key => $value) {
+                        foreach ($data as $key => $value) {
                             $value = (object) $value;
                             if (empty($value->nama_ruangan)) {
                                 return [
