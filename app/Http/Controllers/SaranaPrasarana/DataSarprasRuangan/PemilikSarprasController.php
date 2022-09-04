@@ -165,7 +165,7 @@ class PemilikSarprasController extends BaseController
             'file-excel' => 'required',
         ]);
 
-        if ($validator->fails() && $mode != 'delete') {
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -173,7 +173,6 @@ class PemilikSarprasController extends BaseController
         } else {
 
             if ($request->hasFile('file-excel')) {
-
                 $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
                 $data = $data[0];
                 if (count($data)) {

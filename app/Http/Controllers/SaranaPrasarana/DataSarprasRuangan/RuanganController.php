@@ -246,6 +246,129 @@ class RuanganController extends BaseController
                                 ];
                             }
 
+                            $check_jenis_ruangan = JenisRuangan::where('nm_jenis_ruangan',ucwords($value->jenis_ruangan))->first();
+
+                            if(!$check_jenis_ruangan){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada jenis ruangan yang tidak ditemukan dalam data master jenis ruangan'
+                                ];
+                            }
+
+                            if(empty($value->nama_gedung)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada nama gedung yang kosong'
+                                ];
+                            }
+
+                            $check_nama_gedung = Gedung::where('nm_gedung',ucwords($value->nama_gedung))->first();
+
+                            if(!$check_nama_gedung){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada nama gedung yang tidak ditemukan dalam data master gedung'
+                                ];
+                            }
+
+                            if(empty($value->nama_pemilik_sarpras)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada nama pemilik sarpras yang kosong'
+                                ];
+                            }
+
+                            $check_nama_pemilik_sarpras = PemilikSarpras::where('nm_pemilik_sarpras',ucwords($value->nama_pemilik_sarpras))->first();
+
+                            if(!$check_nama_pemilik_sarpras){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada nama pemilik sarpras yang tidak ditemukan dalam data master nama pemilik sarpras'
+                                ];
+                            }
+
+                            if(empty($value->nama_ruangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada nama ruangan yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kapasitas_ruangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada kapasitas ruangan yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->kapasitas_ujian)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada kapasitas ujian yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->deskripsi_ruangan)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada deskripsi ruangan yang kosong'
+                                ];
+                            }
+
+                            if(empty($value->status_aktif)){
+                                return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, ada status aktif yang kosong'
+                                ];
+                            }
+
+                            if(!(ucwords($value->status_aktif)=='Aktif' || ucwords($value->status_aktif)=='Non-Aktif')){
+                                 return [
+                                    'status'    => 203, // GAGAL
+                                    'message'   => 'Upload data ruangan gagal, status aktif yang diizinkan hanya Aktif dan Non-Aktif'
+                                ];
+                            }
+
+                            // $ruangan = ucwords($value->status_aktif);
+
+                            // if($ruangan!='Aktif'){
+                            //     $is_aktif = 1;
+                            // }
+                            // else{
+                            //     $is_aktif = 0;
+                            // }
+
+                            if(ucwords($value->status_aktif)=='Aktif') $is_aktif = 1;
+                            else $is_aktif = 0;
+
+                            $data                                = new Ruangan;
+                            $data->id_ruangan                    = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $data->id_jenis_ruangan              = $check_jenis_ruangan->id_jenis_ruangan;
+                            $data->id_pemilik_sarpras            = $check_nama_pemilik_sarpras->id_pemilik_sarpras;
+                            $data->id_gedung                     = $check_nama_gedung->id_gedung;
+                            $data->nm_ruangan                    = $value->nama_ruangan;
+                            $data->kapasitas_ruangan             = $value->kapasitas_ruangan;
+                            $data->kapasitas_ujian               = $value->kapasitas_ujian;
+                            $data->deskripsi_ruangan             = $value->deskripsi_ruangan;
+                            $data->is_aktif                      = $is_aktif;
+                            $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            $data->save();
+
+                        }
+
+
+                            // $data                                = new Ruangan;
+                            // $data->id_ruangan                   = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            // $data->id_jenis_ruangan          = $value->kode_pemilik_sarpras;
+                            // $data->id_pemilik_sarpras            = $value->nama_pemilik_sarpras;
+                            // $data->id_gedung            = $value->nama_pemilik_sarpras;
+                            // $data->kelas  
+                            // $data->nm_ruangan
+                            // $data->panjang_ruangan
+                            // $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
+                            // $data->created_by                    = $input->auth_data->pengguna->id_pengguna;
+                            // $data->save();
+
                             DB::commit();
 
                             return [
@@ -253,7 +376,7 @@ class RuanganController extends BaseController
                                 'path' => 'data-sarpras-ruangan/ruangan',
                                 'message' => 'Import Ruangan Successfully'
                             ];
-                        }
+                        
                     } catch (\Exception $e) {
 
                         DB::rollback();
