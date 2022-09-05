@@ -26,6 +26,18 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
         });
 
+        Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
+            Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
+                Route::get('/', 'Guru\JurnalPimpinan\JurnalPimpinanController@viewLaporanJurnalPimpinan');
+                Route::get('add', 'Guru\JurnalPimpinan\JurnalPimpinanController@addLaporanHarianJurnalPimpinan');
+                Route::post('action-kerja-harian/{mode}/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@actionLaporanJurnalPimpinan');
+                Route::get('datatables', 'Guru\JurnalPimpinan\JurnalPimpinanController@datatablesJurnalPimpinan');
+                // Route::get('edit/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@editKerjaHarian');
+                // Route::get('preview-file/{id}/{no}', 'Guru\JurnalPimpinan\JurnalPimpinanController@previewFile');
+                // Route::get('download-file/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@downloadFile');
+            });
+        });
+
         /** ==== MODUL MANAJEMEN FILE ==== **/
         // url: /guru/manajemen-file
         Route::group(array('prefix' => 'manajemen-file'), function () {
