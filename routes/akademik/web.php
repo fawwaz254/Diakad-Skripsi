@@ -1,35 +1,35 @@
 <?php
 
-use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
-use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
-use App\Http\Controllers\Akademik\AktivitasSemester\InputNilaiController;
-use App\Http\Controllers\Akademik\AktivitasSemester\MonitoringKelasController;
-use App\Http\Controllers\Akademik\AktivitasSemester\PlottingMapelSiswaController;
-use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
-use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
-use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
-use App\Http\Controllers\Akademik\DataAkademik\KurikulumController;
-use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
-use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
-use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
-use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
-use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
+use App\Http\Controllers\Akademik\WelcomeController;
+use App\Http\Controllers\Akademik\Ujian\TryOutController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
+use App\Http\Controllers\Akademik\Ujian\UjianUASController;
+use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
+use App\Http\Controllers\Akademik\DataAkademik\KurikulumController;
+use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
-use App\Http\Controllers\Akademik\Ujian\TryOutController;
-use App\Http\Controllers\Akademik\Ujian\UjianUASController;
-use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
-use App\Http\Controllers\Akademik\WelcomeController;
-use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
-use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
+use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
-use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
-use App\Http\Controllers\ManajemenFile\DataFileController;
-use App\Http\Controllers\ManajemenFile\DataKategoriController;
-use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
+use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
+use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
+use App\Http\Controllers\Akademik\AktivitasSemester\InputNilaiController;
+use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
+use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
+use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
+use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
+use App\Http\Controllers\Akademik\AktivitasSemester\MonitoringKelasController;
+use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
+use App\Http\Controllers\Akademik\AktivitasSemester\PlottingMapelSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
 
 // ROLE AKADEMIK
 Route::middleware(['token_staff'])->group(function () {
@@ -37,7 +37,7 @@ Route::middleware(['token_staff'])->group(function () {
     Route::prefix('akademik')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
 
-        Route::prefix('mgmp')->group(function () {
+        Route::prefix('mpmp')->group(function () {
             Route::prefix('jenis-mgmp')->group(function () {
                 Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
