@@ -53,6 +53,8 @@ Route::group(array('prefix' => 'iclock'), function () {
         return 'OK';
     });
     Route::post('cdata', 'Administrator\Device\FingerprintController@actionGetFinger');
+
+    Route::get('manual-get-data', 'Administrator\Device\FingerprintController@actionGetDataFinger');
 });
 // END USING FOR FINGERPRINT
 
