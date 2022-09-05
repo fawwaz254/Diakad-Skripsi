@@ -82,81 +82,81 @@ class FingerprintController extends BaseController
             return 'FAILED';
         }
 
-        $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
+        // $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
 
-        if (!empty($device->port)) {
-            $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
-        } else {
-            $fingerprint_url = $device->ip_address_wan . '/iWsService';
-        }
-        try {
-            $client = new \GuzzleHttp\Client();
-            $response = $client->post($fingerprint_url, [
-                'headers' => [
-                    'Content-Type' => 'text/xml',
-                    'Content-Length' => strlen($soap_request),
-                ],
-                'body' => $soap_request,
-            ]);
+        // if (!empty($device->port)) {
+        //     $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+        // } else {
+        //     $fingerprint_url = $device->ip_address_wan . '/iWsService';
+        // }
+        // try {
+        //     $client = new \GuzzleHttp\Client();
+        //     $response = $client->post($fingerprint_url, [
+        //         'headers' => [
+        //             'Content-Type' => 'text/xml',
+        //             'Content-Length' => strlen($soap_request),
+        //         ],
+        //         'body' => $soap_request,
+        //     ]);
 
-            $buffer = $response->getBody()->getContents();
+        //     $buffer = $response->getBody()->getContents();
 
-            $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
-            $buffer = explode("\r\n", $buffer);
-            $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+        //     $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+        //     $buffer = explode("\r\n", $buffer);
+        //     $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
    
-            foreach ($data_fp as $data) {
-                if ($item = FPAttendance::where('username', $data['username'])->where('fp_date',  $data['tanggal'])->first()) {
+        //     foreach ($data_fp as $data) {
+        //         if ($item = FPAttendance::where('username', $data['username'])->where('fp_date',  $data['tanggal'])->first()) {
 
-                } else {
-                    $item = new FPAttendance;
-                    $item->id_fp_device = $device->id_fp_device;
-                    $item->username = $data['username'];
-                    $item->status = $data['status'];
-                    $item->tanggal =  $data['tanggal'];
-                    $item->fp_date =  $data['tanggal'];
-                    $item->save();
-                }
+        //         } else {
+        //             $item = new FPAttendance;
+        //             $item->id_fp_device = $device->id_fp_device;
+        //             $item->username = $data['username'];
+        //             $item->status = $data['status'];
+        //             $item->tanggal =  $data['tanggal'];
+        //             $item->fp_date =  $data['tanggal'];
+        //             $item->save();
+        //         }
 
-                $prefix = Sekolah::first()->prefix;
-                $now = Carbon::now('Asia/Jakarta');
-                if ($pengguna = Pengguna::where('username', $item->username)->first()) {
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $data['tanggal'])->first()) {
+        //         $prefix = Sekolah::first()->prefix;
+        //         $now = Carbon::now('Asia/Jakarta');
+        //         if ($pengguna = Pengguna::where('username', $item->username)->first()) {
+        //             if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $data['tanggal'])->first()) {
 
-                    } else {
-                        $presensi = new PresensiPengguna;
-                        $presensi->id_presensi_pengguna = $prefix . strtotime($now) . uniqid();
-                        $presensi->id_pengguna = $pengguna->id_pengguna;
-                        $presensi->status_join_table = $pengguna->status_join_table;
-                        $presensi->date = $item->tanggal;
-                    }
+        //             } else {
+        //                 $presensi = new PresensiPengguna;
+        //                 $presensi->id_presensi_pengguna = $prefix . strtotime($now) . uniqid();
+        //                 $presensi->id_pengguna = $pengguna->id_pengguna;
+        //                 $presensi->status_join_table = $pengguna->status_join_table;
+        //                 $presensi->date = $item->tanggal;
+        //             }
 
-                    if ($item->status == 255) {
-                        if (empty($presensi->check_in)) {
-                            $presensi->check_in = $item->fp_date;
-                        } else {
-                            if (Carbon::parse($presensi->check_in)->diffInMinutes($item->fp_date) > 100) {
-                                $presensi->check_out = $item->fp_date;
-                            }
-                        }
-                    } else {
-                        if ($item->status == 0) {
-                            $presensi->check_in = $item->fp_date;
-                        }
+        //             if ($item->status == 255) {
+        //                 if (empty($presensi->check_in)) {
+        //                     $presensi->check_in = $item->fp_date;
+        //                 } else {
+        //                     if (Carbon::parse($presensi->check_in)->diffInMinutes($item->fp_date) > 100) {
+        //                         $presensi->check_out = $item->fp_date;
+        //                     }
+        //                 }
+        //             } else {
+        //                 if ($item->status == 0) {
+        //                     $presensi->check_in = $item->fp_date;
+        //                 }
 
-                        if ($item->status == 1) {
-                            $presensi->check_out = $item->fp_date;
-                        }
-                    }
-                    $presensi->status = null;
-                    $presensi->notes = null;
-                    $presensi->save();
-                }
-            }
+        //                 if ($item->status == 1) {
+        //                     $presensi->check_out = $item->fp_date;
+        //                 }
+        //             }
+        //             $presensi->status = null;
+        //             $presensi->notes = null;
+        //             $presensi->save();
+        //         }
+        //     }
             return 'OK';
-        } catch (Exception $e) {
-            return $e;
-        }
+        // } catch (Exception $e) {
+        //     return $e;
+        // }
     }
 
 //     public function syncDataFinger(Request $request){
