@@ -227,6 +227,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['nis'] = $value->username;
             $hasil[$key]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
             // $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
