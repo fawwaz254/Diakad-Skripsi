@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Administrator\JurnalPimpinan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\JurnalPimpinan;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+use App\Models\LaporanJurnalPimpinan;
 use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
 
@@ -214,5 +217,52 @@ class JurnalPimpinanController extends Controller
                 ];
             }
         }
+    }
+
+    public function viewLaporanAllJurnalPimpinan(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('administrator/jurnal-pimpinan/laporan/laporan-data-jurnal-pimpinan',compact('auth_data'));
+
+    }
+
+    public function datatablesLaporanJurnalPimpinan(Request $request){
+
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+
+        $list_data = LaporanJurnalPimpinan::with('pengguna')->get();
+
+        return Datatables::of($list_data)
+                ->editColumn('tanggal',function($item){
+                    return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->addColumn('action', function($item){
+                    if($item->path_file){
+                        $file =  Storage::disk('spaces')->url($item->path_file);
+                        $ext = pathinfo($item->path_file, PATHINFO_EXTENSION);
+                        if($ext=='pdf'||$ext=='doc'||$ext=='docx'){
+                            $note = 'file';
+                        }
+                        else{
+                            $note= 'image';
+                        }
+                    }
+                    else{
+                        $file = null;
+                        $note = null;
+                    }
+
+                    $data = array(
+                        'id'        => $item->id_laporan_jurpin,
+                        'jenis'    =>$item->jenis,
+                        'status'    => $item->status,
+                        'file'      =>$file,
+                        'note'      => $item->catatan,
+                    );
+                    return $data;
+                })
+                ->make(true);
     }
 }
