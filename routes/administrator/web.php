@@ -100,19 +100,19 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::post('action-setting-jurnal-pimpinan/{mode}/{id}', 'Administrator\JurnalPimpinan\JurnalPimpinanController@actionSettingJurnalPimpinan');
 			});
 
-			Route::group(array('prefix' => 'jenis-jurnal-harian'), function () {
-				Route::get('/', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@viewDataJenis');
-				Route::get('/datatables', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@datatablesjenis');
-				Route::get('/add', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@addDataJenis');
-				Route::post('action-data-kategori/{mode}/{id}', 'Humas\JurnalHarian\JenisKategoriJurnalHarianController@actionDataJenis');
+			Route::group(array('prefix' => 'jenis-jurnal-pimpinan'), function () {
+				Route::get('/', 'Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController@viewDataJenis');
+				Route::get('/datatables', 'Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController@datatablesjenis');
+				// Route::get('/add', 'Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController@addDataJenis');
+				Route::post('action-data-kategori/{mode}/{id}', 'Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController@actionDataJenis');
 			});
 
-			// Route::group(array('prefix' => 'laporan-jurnal-harian'), function () {
-			// 	Route::get('/', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@viewLaporanAllJurnalHarian');
-			// 	Route::get('/datatables', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@datatablesKerjaHarianJurnalHarian');
+			Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
+				Route::get('/', 'Administrator\JurnalPimpinan\JurnalPimpinanController@viewLaporanAllJurnalPimpinan');
+				Route::get('/datatables', 'Administrator\JurnalPimpinan\JurnalPimpinanController@datatablesLaporanJurnalPimpinan');
 			// 	Route::get('preview-file/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@previewFile');
 			// 	Route::get('download-file/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@downloadFile');
-			// });
+			});
 		});
 
 
