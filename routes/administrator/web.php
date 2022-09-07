@@ -106,13 +106,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::post('action-data-kategori/{mode}/{id}', 'Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController@actionDataJenis');
             });
 
-            Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
-                Route::get('/', 'Administrator\JurnalPimpinan\JurnalPimpinanController@viewLaporanAllJurnalPimpinan');
-                Route::get('/datatables', 'Administrator\JurnalPimpinan\JurnalPimpinanController@datatablesLaporanJurnalPimpinan');
-                //     Route::get('preview-file/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@previewFile');
-                //     Route::get('download-file/{id}', 'Humas\JurnalHarian\DataKategoriJurnalHarianController@downloadFile');
-            });
-        });
+			Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
+				Route::get('/', 'Administrator\JurnalPimpinan\JurnalPimpinanController@viewLaporanAllJurnalPimpinan');
+				Route::get('/datatables', 'Administrator\JurnalPimpinan\JurnalPimpinanController@datatablesLaporanJurnalPimpinan');
+				Route::get('preview-file/{id}', 'Administrator\JurnalPimpinan\JurnalPimpinanController@previewFile');
+				Route::get('download-file/{id}', 'Administrator\JurnalPimpinan\JurnalPimpinanController@downloadFile');
+			});
+		});
 
         /** ==== MODUL MANAJEMEN MENU ==== **/
         // url: /administrator/manajemen-menu

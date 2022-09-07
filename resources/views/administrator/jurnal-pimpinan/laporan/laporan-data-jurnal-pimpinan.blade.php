@@ -3,7 +3,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header">
-                        <h2>Data Laporan Kerja Harian</h2>
+                        <h2>Data Laporan Jurnal Pimpinan</h2>
                     </div>
                     <div class="body">
                        <div class="table-responsive">
@@ -105,10 +105,10 @@
 
     var modul_url        = 'jurnal-pimpinan';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/edit';
-    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/action-kerja-harian/delete';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/preview-file';
-    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/download-file';
+    // var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/edit';
+    // var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/action-kerja-harian/delete';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-jurnal-pimpinan/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/download-file';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
