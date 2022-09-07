@@ -231,10 +231,12 @@ class JurnalPimpinanController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
+        // dd($id);
         $laporan_kerja_harian = LaporanJurnalPimpinan::findOrFail($id);
+       
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
         $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+      
         return view('administrator/jurnal-pimpinan/laporan/preview-file-jurnal-pimpinan',compact('auth_data','laporan_kerja_harian','link','ext'));
 
     }

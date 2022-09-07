@@ -6,9 +6,8 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a>
-        {{-- <a class="btn bg-red waves-effect target-link" href=" {{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3)).'/sync' }}"><i class="material-icons">system_update_alt</i><span>Sync</span></a></h2> --}}
     </div>
-   
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -28,6 +27,7 @@
                                         <th>LAN</th>
                                         <th>PORT</th>
                                         <th>Last Updated</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                             </table>
@@ -83,6 +83,15 @@
                 data: 'updated_at',
                 searchable: false,
                 orderable: false
+            }, {
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data){
+                    return '<a class="btn btn-primary btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ base_url + '/manual-get-data?sn=' + data.sn +'">'+
+                    '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>'+
+                    '</a> ';
+                }
             },
         ]
     });
