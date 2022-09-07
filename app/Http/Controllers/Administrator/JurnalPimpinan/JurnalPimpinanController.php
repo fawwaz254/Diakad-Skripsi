@@ -227,6 +227,28 @@ class JurnalPimpinanController extends Controller
 
     }
 
+    public function previewFile($id,Request $request){
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $laporan_kerja_harian = LaporanJurnalPimpinan::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+        $link = Storage::disk('spaces')->url($laporan_kerja_harian->path_file);
+        return view('administrator/jurnal-pimpinan/laporan/preview-file-jurnal-pimpinan',compact('auth_data','laporan_kerja_harian','link','ext'));
+
+    }
+
+    
+    public function downloadFile(Request $request, $id = null)
+    {
+        $input = (object) $request->input();
+        $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
+        $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
+
+        return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);
+    }
+
     public function datatablesLaporanJurnalPimpinan(Request $request){
 
         $input = (object) $request->input();

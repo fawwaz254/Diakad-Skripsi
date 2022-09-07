@@ -105,10 +105,10 @@
 
     var modul_url        = 'jurnal-pimpinan';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/edit';
-    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/action-kerja-harian/delete';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/preview-file';
-    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/download-file';
+    // var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/edit';
+    // var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/action-kerja-harian/delete';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-jurnal-pimpinan/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/download-file';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,

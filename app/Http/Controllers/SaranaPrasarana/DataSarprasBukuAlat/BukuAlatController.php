@@ -285,12 +285,12 @@ class BukuAlatController extends BaseController
                                     'message'   => 'Upload data buku/alat gagal, ada mata pelajaran yang kosong'
                                 ];
                             }
-                            $check_mata_pelajaran = MataPelajaran::where('nm_mata_pelajaran', ucwords('nm_mata_pelajaran', $value->mata_pelajaran))->first();
+                            $check_mata_pelajaran = MataPelajaran::where('nm_mata_pelajaran', $value->mata_pelajaran)->first();
 
                             if (!$check_mata_pelajaran) {
                                 return [
                                     'status'    => 203, // GAGAL
-                                    'message'   => 'Upload data buku/alat gagal, ada jenis ruangan yang tidak ditemukan dalam data master mata pelajaran di role Akademik'
+                                    'message'   => 'Upload data buku/alat gagal, ada jenis mata pelajaran yang tidak ditemukan dalam data master mata pelajaran di role Akademik'
                                 ];
                             }
 
