@@ -51,17 +51,17 @@ class FingerprintController extends BaseController
     {
         $input = (object) $request->input();
 
-        // if (isset($input->SN)) {
-        //     if ($device = FPDevice::where('sn', $input->SN)->first()) {
-        //         if (isset($input->INFO)) {
-        //             $ip_address_lan = explode(',', $input->INFO)[4];
-        //             $device->ip_address_lan = $ip_address_lan;
-        //         }
-        //         $device->ip_address_wan = $request->ip();
-        //         $device->updated_at = Carbon::now('Asia/Jakarta');
-        //         $device->save();
-        //     }
-        // }
+        if (isset($input->SN)) {
+            if ($device = FPDevice::where('sn', $input->SN)->first()) {
+                // if (isset($input->INFO)) {
+                //     $ip_address_lan = explode(',', $input->INFO)[4];
+                //     $device->ip_address_lan = $ip_address_lan;
+                // }
+                // $device->ip_address_wan = $request->ip();
+                $device->updated_at = Carbon::now('Asia/Jakarta');
+                $device->save();
+            }
+        }
 
         return 'OK';
     }
@@ -79,8 +79,8 @@ class FingerprintController extends BaseController
 
         if ($device = FPDevice::where('sn', $serial_number)->first()) {
             // $device->ip_address_wan = $request->ip();
-            // $device->updated_at = Carbon::now('Asia/Jakarta');
-            // $device->save();
+            $device->updated_at = Carbon::now('Asia/Jakarta');
+            $device->save();
         } else {
             return 'FAILED';
         }
@@ -223,40 +223,40 @@ class FingerprintController extends BaseController
                 }
             }
 
-            $collection = collect($data_fp)->sortBy('tanggal')->groupBy('username')->all();
+            $collection = collect($data_fp)->groupBy('username')->all();
 
             foreach ($collection as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
-                    $data = $group_of_data[0];
+                    $first_time_finger = collect($group_of_data)->sortBy('tanggal')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', date_format(date_create($data['tanggal']), 'Y-m-d'))->first()) {
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', date_format(date_create($first_time_finger['tanggal']), 'Y-m-d'))->first()) {
 
                     } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
-                        $presensi->date = date_format(date_create($data['tanggal']), 'Y-m-d');
+                        $presensi->date = date_format(date_create($first_time_finger['tanggal']), 'Y-m-d');
                     }
 
-                    if ($data['status'] == 255) {
+                    if ($first_time_finger['status'] == 255) {
                         if (count($group_of_data) > 1) { // FINGER MORE THAN 1
-                            $presensi->check_in = date_format(date_create($data['tanggal']), 'H:i:s');
+                            $presensi->check_in = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
                             $last_time_finger = collect($group_of_data)->sortByDesc('tanggal')->values()[0];
                             if (Carbon::parse($presensi->check_in)->diffInMinutes($last_time_finger['tanggal']) > 100) {
                                 $presensi->check_out = date_format(date_create($last_time_finger['tanggal']), 'H:i:s');
                             }
                         } else { // ONLY CHECK-IN
                             // if (empty($presensi->check_in)) {
-                            $presensi->check_in = date_format(date_create($data['tanggal']), 'H:i:s');
+                            $presensi->check_in = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
                             // }
                         }
                     } else {
-                        if ($data['status'] == 0) {
-                            $presensi->check_in = date_format(date_create($data['tanggal']), 'H:i:s');
+                        if ($first_time_finger['status'] == 0) {
+                            $presensi->check_in = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
                         }
 
-                        if ($data['status'] == 1) {
-                            $presensi->check_out = date_format(date_create($data['tanggal']), 'H:i:s');
+                        if ($first_time_finger['status'] == 1) {
+                            $presensi->check_out = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
                         }
                     }
 
