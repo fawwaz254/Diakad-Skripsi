@@ -88,7 +88,7 @@
                 searchable: false,
                 orderable: false,
                 render: function(data){
-                    return '<a class="btn btn-primary btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ base_url + '/manual-get-data?sn=' + data.sn +'">'+
+                    return '<a class="btn btn-success" target="_blank" href="'+ base_url + '/iclock/manual-get-data?sn=' + data.sn +'">'+
                     '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>'+
                     '</a> ';
                 }
