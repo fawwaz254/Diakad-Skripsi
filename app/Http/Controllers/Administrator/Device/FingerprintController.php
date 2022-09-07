@@ -37,8 +37,12 @@ class FingerprintController extends BaseController
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->fp_device_id,
+                    'sn' => $item->sn,
                 );
                 return $data;
+            })
+            ->editColumn('updated_at', function ($item) use ($now) {
+                return Carbon::parse($item->updated_at)->diffForHumans($now);
             })
             ->make(true);
     }
@@ -152,7 +156,7 @@ class FingerprintController extends BaseController
         //             $presensi->save();
         //         }
         //     }
-        return 'OK';
+        return 'YES';
         // } catch (Exception $e) {
         //     return $e;
         // }
@@ -223,7 +227,7 @@ class FingerprintController extends BaseController
 
             foreach ($collection as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
-                    $group_of_data[0] = $data;
+                    $data = $group_of_data[0];
 
                     if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', date_format(date_create($data['tanggal']), 'Y-m-d'))->first()) {
 
@@ -242,9 +246,9 @@ class FingerprintController extends BaseController
                                 $presensi->check_out = date_format(date_create($last_time_finger['tanggal']), 'H:i:s');
                             }
                         } else { // ONLY CHECK-IN
-                            if (empty($presensi->check_in)) {
-                                $presensi->check_in = date_format(date_create($data['tanggal']), 'H:i:s');
-                            }
+                            // if (empty($presensi->check_in)) {
+                            $presensi->check_in = date_format(date_create($data['tanggal']), 'H:i:s');
+                            // }
                         }
                     } else {
                         if ($data['status'] == 0) {
