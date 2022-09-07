@@ -18,7 +18,7 @@
                                         <th>Tahun Ajaran</th>
                                         <th>Nama Semester</th>
                                         <th>Tahun Akademik</th>
-                                        <th>Kode Semeester</th>
+                                        <th>Kode Semester</th>
                                         <th>Status Aktif</th>
                                         <th>Action</th>
                                     </tr>
