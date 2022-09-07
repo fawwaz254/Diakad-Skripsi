@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH JENIS JURNAL HARIAN TENDIK
+                        TAMBAH JENIS JURNAL PIMPINAN
                     </h2>
                 </div>
                 <div class="body">
