@@ -32,9 +32,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('add', 'Guru\JurnalPimpinan\JurnalPimpinanController@addLaporanHarianJurnalPimpinan');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@actionLaporanJurnalPimpinan');
                 Route::get('datatables', 'Guru\JurnalPimpinan\JurnalPimpinanController@datatablesJurnalPimpinan');
-                // Route::get('edit/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@editKerjaHarian');
-                // Route::get('preview-file/{id}/{no}', 'Guru\JurnalPimpinan\JurnalPimpinanController@previewFile');
-                // Route::get('download-file/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@downloadFile');
+                Route::get('edit/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@editLaporanJurnalPimpinan');
+                Route::get('preview-file/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@previewFile');
+                Route::get('download-file/{id}', 'Guru\JurnalPimpinan\JurnalPimpinanController@downloadFile');
             });
         });
 

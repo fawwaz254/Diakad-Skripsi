@@ -178,7 +178,7 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`/1`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
+            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
             <a href="`+download_file_url+`/`+id+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
