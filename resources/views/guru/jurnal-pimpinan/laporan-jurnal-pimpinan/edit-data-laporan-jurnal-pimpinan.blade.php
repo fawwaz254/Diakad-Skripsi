@@ -1,17 +1,17 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#mgmp/laporan-harian-mgmp')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#jurnal-pimpinan/laporan-jurnal-pimpinan')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH LAPORAN KERJA HARIAN
+                        EDIT LAPORAN JURNAL PIMPINAN
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/edit/'. $laporan_kerja_harian_tendik->id_lap_kerha_t)}}">
+                    <form id="form-upload" method="POST"action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action-kerja-harian/edit/'. $laporan_kerja_harian->id_laporan_jurpin)}}">
                         {{csrf_field()}}
 
                         <h2 class="card-inside-title">
@@ -20,31 +20,19 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="datepicker form-control" name="tanggal" required="" aria-required="true"
-                                        aria-invalid="true" value="{{ $laporan_kerja_harian_tendik->tanggal }}">
+                                        aria-invalid="true" value="{{ $laporan_kerja_harian->tanggal }}">
                             </div>
                         </div>
 
-                        <h2 class="card-inside-title">
-                            Unit Kerja
-                         </h2>
-                         <select class="form-control show-tick" name="unit_kerja">
-                             <option value="">-- Pilih Unit Kerja--</option>
-                             @foreach($unit_kerja as $u)
-                             <option value="{{ $u->category_jurnal_harian_tendik->id_category_jh_tendik}}" @if($u->category_jurnal_harian_tendik->id_category_jh_tendik == $laporan_kerja_harian_tendik->id_category_jh_tendik)  selected  @endif>
-                                 {{ $u->category_jurnal_harian_tendik->unit_kerja->nm_unit_kerja }}
-                             </option>
-                             @endforeach
-                         </select>
-
 
                          <h2 class="card-inside-title">
-                            Jenis MGMP
+                            Jenis Jurnal Pimpinan
                          </h2>
                          <select class="form-control show-tick" name="jenis">
-                             <option  value="" selected>-- Pilih Jenis MGMP--</option>
+                             <option  value="" selected>-- Pilih Jenis Jurnal Pimpinan--</option>
                              @foreach($jenis as $nama_jenis)
-                             <option value="{{ $nama_jenis->jenis_jurhart}}"  @if($nama_jenis->jenis_jurhart == $laporan_kerja_harian_tendik->jenis)  selected  @endif>
-                                 {{ $nama_jenis->jenis_jurhart}}
+                             <option value="{{ $nama_jenis->jenis_jurpin}}"  @if($nama_jenis->jenis_jurpin == $laporan_kerja_harian->jenis)  selected  @endif>
+                                 {{ $nama_jenis->jenis_jurpin}}
                              </option>
                              @endforeach
                          </select>
@@ -67,9 +55,9 @@
                             Status
                         </h2>
                         <div class="demo-radio-button">
-                            <input name="status" type="radio" value="1" id="target_1"  @if($laporan_kerja_harian_tendik->status == "1") checked="checked"  @endif />
+                            <input name="status" type="radio" value="1" id="target_1"  @if($laporan_kerja_harian->status == "1") checked="checked"  @endif />
                             <label for="target_1">Selesai</label>
-                            <input name="status" type="radio" value="0" id="target_2" @if($laporan_kerja_harian_tendik->status == "0") checked="checked"  @endif/>
+                            <input name="status" type="radio" value="0" id="target_2" @if($laporan_kerja_harian->status == "0") checked="checked"  @endif/>
                             <label for="target_2">Belum Selesai</label>
                         </div>
 
@@ -90,7 +78,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <textarea rows="4" cols="50" class="form-control" name="keterangan" required="" aria-required="true"
-                                    aria-invalid="true" >{{ $laporan_kerja_harian_tendik->keterangan_progres }}</textarea >
+                                    aria-invalid="true" >{{ $laporan_kerja_harian->keterangan_progres }}</textarea >
                             </div>
                         </div>
 

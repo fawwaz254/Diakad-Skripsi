@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH LAPORAN KERJA HARIAN
+                        TAMBAH LAPORAN JURNAL PIMPINAN
                     </h2>
                 </div>
                 <div class="body">

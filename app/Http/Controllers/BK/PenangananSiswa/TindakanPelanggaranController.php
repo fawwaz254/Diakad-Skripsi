@@ -515,10 +515,10 @@ return [
                     'message' => 'Update Tindakan Pelanggaran Siswa successfully'
                 ];
             } elseif ($mode == 'delete') {
-                if ($tindakanPelanggaran = TindakanPelanggaran::where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
+                if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran',$id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Tindakan Pelanggaran Siswa'
+                        'message' => 'Failed To Delete Tindakan Pelanggaran Siswa, Yg boleh menghapus hanya penindak'
                     ];
                 } else {
                     // make object to find id
