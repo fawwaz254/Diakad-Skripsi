@@ -245,7 +245,7 @@ class JurnalPimpinanController extends Controller
     public function downloadFile(Request $request, $id = null)
     {
         $input = (object) $request->input();
-        $laporan_kerja_harian = LaporanKerjaHarianTendik::findOrFail($id);
+        $laporan_kerja_harian = LaporanJurnalPimpinan::findOrFail($id);
         $ext = pathinfo($laporan_kerja_harian->path_file, PATHINFO_EXTENSION);
 
         return Storage::disk('spaces')->download($laporan_kerja_harian->path_file, $laporan_kerja_harian->nm_file . "." . $ext);

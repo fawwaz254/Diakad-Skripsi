@@ -9,7 +9,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     <div class="header">
-                        <h2>Data Laporan Kerja Harian</h2>
+                        <h2>Data Laporan Jurnal Pimpinan</h2>
                     </div>
                     <div class="body">
                        <div class="table-responsive">
@@ -111,10 +111,10 @@
 
     var modul_url        = 'jurnal-pimpinan';
     var datatable_url    = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/datatables';
-    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/edit';
-    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/action-kerja-harian/delete';
-    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-individu-jurnal-harian/preview-file';
-    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-individu-jurnal-harian/download-file';
+    var edit_url         = role_url + '#' + modul_url + '/' + 'laporan-jurnal-pimpinan/edit';
+    var delete_url       = base_url + '/' + role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/action-kerja-harian/delete';
+    var preview_file_url = role_url + '#' + modul_url + '/' + 'laporan-jurnal-pimpinan/preview-file';
+    var download_file_url = role_url + '/' + modul_url + '/' + 'laporan-jurnal-pimpinan/download-file';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -183,7 +183,7 @@
         var item = $(element);
         $('#place').empty();
         $('#place').append(`
-            <a href="`+preview_file_url+`/`+id+`/1`+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
+            <a href="`+preview_file_url+`/`+id+`" target="_blank"><button type="button" data-color="pink" class="btn bg-pink waves-effect"> <i class="material-icons">visibility</i><span>Preview File</span></button></a>
             <a href="`+download_file_url+`/`+id+`" target="_blank"><button type="button" data-color="indigo" class="btn bg-indigo waves-effect"> <i class="material-icons">file_download</i>
             <span>Download File</span></button></a>
         `);
