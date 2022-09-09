@@ -169,10 +169,17 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
 			});
 			// http://127.0.0.1:8000/humas/absensi/device/datatables
-			Route::group(array('prefix' => 'device'), function () {
-				// MENU Data Fingerprint
-				Route::get('/', 'Administrator\Device\FingerprintController@indexList');
-				Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
+			// Route::group(array('prefix' => 'device'), function () {
+			// 	// MENU Data Fingerprint
+			// 	Route::get('/', 'Administrator\Device\FingerprintController@indexList');
+			// 	Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
+			// });
+			Route::group(array('prefix' => 'detail-absensi'), function () {
+				Route::get('/', 'Humas\Absensi\DetailAbsensiController@selectHistoriAbsensi');
+				Route::post('post-get-penguna', 'Humas\Absensi\DetailAbsensiController@actionGetPengguna');
+                Route::get('{id_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\DetailAbsensiController@viewHistoriAbsensi');
+
+
 			});
 		});
 

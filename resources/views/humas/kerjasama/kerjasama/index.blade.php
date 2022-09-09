@@ -86,18 +86,14 @@
             {
                 data: 'status_kadaluarsa',
                 render: function(data) {
-                    // console.log(data.status_kadaluarsa)
-                    if (data.status_kadaluarsa == 10) {
+                    if (data.status_kadaluarsa == 'Expired') {
                         return `<span id="expired">Sudah Expired</span>`
                     }
-                    if (data.status_kadaluarsa >= 1) {
+                    if (data.status_kadaluarsa == 'Akan Expired') {
+                        return `<span id="will-expired">Akan Expired</span>`
+                    }
+                    if (data.status_kadaluarsa == 'Belum Expired') {
                         return `<span id="not-expired">Belum Expired</span>`
-                    }
-                    if (data.status_kadaluarsa == 1) {
-                        return `<span id="will-expired">Akan Expired</span>`
-                    }
-                    if (data.status_kadaluarsa == 0) {
-                        return `<span id="will-expired">Akan Expired</span>`
                     }
                 }
             },

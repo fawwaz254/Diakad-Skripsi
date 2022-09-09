@@ -123,18 +123,21 @@ class KerjasamaController extends Controller
                 return $kerjasama->jenisKerjasama->nm_jenis_kerjasama;
             })
             ->addColumn('status_kadaluarsa', function ($kerjasama) {
-                // Expired : 10; Akan Expired : 0; Belum Expired : >1 ;
 
                 $tanggal_akhir_kerjasama = Carbon::parse($kerjasama->tanggal_akhir_kerjasama);
-                $status_kadaluarsa = $tanggal_akhir_kerjasama->diffInMonths();
+                $status_kadaluarsa = Carbon::parse(Carbon::now())->diffInDays($tanggal_akhir_kerjasama);
 
-                // if under one month
-                if ($status_kadaluarsa == 0) {
-                    $status_kadaluarsa = Carbon::parse($kerjasama->tanggal_akhir_kerjasama) <= Carbon::now() ? 10 : 0;
+                if (Carbon::now() >= $tanggal_akhir_kerjasama) {
+                    $status_kadaluarsa = "Expired";
+                } else {
+                    if ($status_kadaluarsa <= 90) {
+                        $status_kadaluarsa = "Akan Expired";
+                    } elseif ($status_kadaluarsa > 90) {
+                        $status_kadaluarsa = "Belum Expired";
+                    }
                 }
 
                 return [
-                    // compare two dates using carbon
                     'status_kadaluarsa' => $status_kadaluarsa,
                 ];
             })

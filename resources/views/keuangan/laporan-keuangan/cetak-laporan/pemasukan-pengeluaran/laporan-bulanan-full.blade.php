@@ -54,6 +54,13 @@
             padding-top: 0;
             padding-bottom: 0;
         }
+
+        .text-center{
+            text-align: center; 
+        }
+        .text-right{
+            text-align: right; 
+        }
     </style>
     <style type="text/css" media="print">
         @page {
@@ -89,21 +96,21 @@
         </tr>
     </table>
     <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0 style="background-color: #ffffff; word-wrap:break-word;">
-        <tr valign=top>
-            <td class="text-center text-bold" rowspan=2>Jml Siswa Perkelas</td>
+        <tr valign=top >
+            <td class="text-center text-bold" rowspan=2 >Jml Siswa Perkelas</td>
             <td class="text-center text-bold" colspan=3>Pembayaran uang sekolah dalam bulan ini</td>
             <td class="text-center text-bold" colspan=2>Tunggakan bulan lalu</td>
             <td class="text-center text-bold" rowspan=2>Jumlah belum masuk Keseluruhan</td>
             <td class="text-center text-bold" rowspan=2>Jumlah uang masuk Keseluruhan</td>
         </tr>
-        <tr valign=top>
+        <tr valign=top >
             <td class="text-center text-bold">Bila Masuk 100 %</td>
             <td class="text-center text-bold">Yang Masuk</td>
             <td class="text-center text-bold">Belum Masuk</td>
             <td class="text-center text-bold">Masuk Bulan Ini</td>
             <td class="text-center text-bold">Belum Masuk</td>
         </tr>
-        <tr valign=top>
+        <tr valign=top style="background-color: #000000; color:white">
             <td class="text-center text-bold">A</td>
             <td class="text-center text-bold">B</td>
             <td class="text-center text-bold">C</td>
@@ -196,12 +203,12 @@
     <br>
 
     <table class="is-bordered" width="100%" border=1 cellpadding=5 cellspacing=0 style="background-color: #ffffff; word-wrap:break-word;">
-        <tr valign=top>
-            <td colspan=3>PENGELUARAN</td>
-            <td>TARGET</td>
-            <td>REALISASI</td>
-            <td>PROSENTASE ( % )</td>
-            <td></td>
+        <tr valign=top style="background-color: #000000; color:white">
+            <td colspan=3 class="text-center">PENGELUARAN</td>
+            <td class="text-center">TARGET</td>
+            <td class="text-center">REALISASI</td>
+            <td class="text-center">PROSENTASE ( % )</td>
+            <td class="text-center"></td>
         </tr>
         @php
             $no = 1;
@@ -238,7 +245,7 @@
         @endif
         @endforeach
         <tr valign=top>
-            <td colspan=3>JUMLAH</td>
+            <td colspan=3 >JUMLAH</td>
             <td class="text-right">{{number_format($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb'))}}</td>
             <td class="text-right">{{number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran)}}</td>
             @if($data_realisasi_pengeluaran->sum('dana_perkiraan_rapb') == 0)
@@ -249,7 +256,7 @@
             <td class="text-right">{{number_format($tutup_buku_kas_bulan_ini->kas_rapb_pengeluaran)}}</td>
         </tr>
         <tr valign=top>
-            <td colspan=6>SALDO AKHIR BULAN</td>
+            <td colspan=6 >SALDO AKHIR BULAN</td>
             <td class="text-right">{{number_format( $tutup_buku_kas_bulan_ini->kas_akhir_bulan )}}</td>
         </tr>
     </table>
