@@ -47,7 +47,7 @@ class TokenStaffMiddleware
                 $id_pengguna = $pengguna->id_pengguna;
                 if ($role_aktif->id_role == 2) {
                     $guru = Guru::where('id_pengguna', $id_pengguna)->first();
-
+                    $jurpin = Modul::where('id_role',2)->where('nm_modul','Jurnal Pimpinan')->pluck('id_modul')->first();
                     if ($guru) {
                         if ($this->isGuruPiket($id_pengguna)) {
                             $tambahan_modul[] = 35;
@@ -62,7 +62,7 @@ class TokenStaffMiddleware
                         }
 
                         if ($this->isJurnalPimpinan($id_pengguna)) {
-                            $tambahan_modul[] = 126;
+                            $tambahan_modul[] = $jurpin;
                         }
                     }
                 }
