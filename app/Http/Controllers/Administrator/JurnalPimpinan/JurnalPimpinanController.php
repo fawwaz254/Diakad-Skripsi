@@ -106,13 +106,13 @@ class JurnalPimpinanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         
-        $list_data = Pengguna::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru, uks.nm_unit_kerja AS unit_kerja_staff')
-        ->addSelect('pengguna.nm_pengguna', 'guru.nip_guru', 'staff.nip_staff', 'pengguna.id_pengguna')
+        $list_data = Pengguna::selectRaw('ukg.nm_unit_kerja AS unit_kerja_guru')
+        ->addSelect('pengguna.nm_pengguna', 'guru.nip_guru', 'pengguna.id_pengguna')
         ->leftjoin('guru', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-        ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+        // ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
         ->leftjoin('unit_kerja AS ukg', 'ukg.id_unit_kerja', '=', 'guru.id_unit_kerja')
-        ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
-        ->whereIn('pengguna.status_join_table', [1, 2])
+        // ->leftjoin('unit_kerja AS uks', 'uks.id_unit_kerja', '=', 'staff.id_unit_kerja')
+        ->where('pengguna.status_join_table', 2)
         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
            ->whereNotExists(function ($query) {
                $query->select(DB::raw(1))
@@ -123,18 +123,14 @@ class JurnalPimpinanController extends Controller
 
         return Datatables::of($list_data)
                 ->addColumn('nip_pengguna', function ($item) {
-                    if (!empty($item->nip_guru)) {
+                 
                         return $item->nip_guru;
-                    } else {
-                        return $item->nip_staff;
-                    }
+                    
                 })
                 ->addColumn('nm_unit_kerja', function ($item) {
-                    if (!empty($item->unit_kerja_guru)) {
+                  
                         return $item->unit_kerja_guru;
-                    } else {
-                        return $item->unit_kerja_staff;
-                    }
+                  
                 })
                 ->addColumn('is_aktif', function ($item) {
                     if ($item->is_aktif == "1") {
