@@ -531,6 +531,7 @@ class LibCetakKeuangan
 
         foreach ($dates as $dddd) {
             $data = array();
+            $skip_this_date = true;
             $data['date_format'] = $dddd->format('Y-m-d');
             $data['day'] = $dddd->format('d');
 
@@ -543,6 +544,7 @@ class LibCetakKeuangan
 
                 $data_in[] = $data_temp;
                 $master_saldo_masuk += $data_temp['value'];
+                $skip_this_date = false;
             } else {
                 $data_temp['category'] = 'Lain-Lain';
                 $data_temp['text'] = 'Saldo';
@@ -567,6 +569,7 @@ class LibCetakKeuangan
 
                 $data_in[] = $data_temp;
                 $master_saldo_masuk += $data_temp['value'];
+                $skip_this_date = false;
             }
 
             // FOREACH FOR REALISASI INCOME NON-SPP
@@ -578,6 +581,7 @@ class LibCetakKeuangan
 
                 $data_in[] = $data_temp;
                 $master_saldo_masuk += $data_temp['value'];
+                $skip_this_date = false;
             }
 
             $data['in'] = $data_in;
@@ -591,12 +595,16 @@ class LibCetakKeuangan
                 $data_temp['value'] = $realisasi->dana_realisasi;
 
                 $data_out[] = $data_temp;
+                $skip_this_date = false;
             }
 
             $data['out'] = $data_out;
 
             $no++;
-            $data_laporan[] = $data;
+
+            if (!$skip_this_date) {
+                $data_laporan[] = $data;
+            }
         }
 
         $pembayaran_non_kbm = PembayaranBiaya::query()
