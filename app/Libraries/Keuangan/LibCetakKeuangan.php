@@ -557,6 +557,8 @@ class LibCetakKeuangan
                 $bayar_as_date_as_nominal = collect($bayar_as_date)->groupBy(function ($item, $key) {
                     return 'SPP ' . number_format($item->besar_pembayaran);
                 });
+            } else {
+                $bayar_as_date_as_nominal = array();
             }
             foreach ($bayar_as_date_as_nominal as $spp_category => $bayar_as_date) {
                 $data_temp['category'] = 'SPP';
