@@ -481,8 +481,6 @@ class LibCetakKeuangan
         }
 
         $semester_pair = getIdSemesterByTanggal($start_date, 'Y-m-d');
-
-        $id_bulan_lalu = Carbon::createFromFormat('Y-m-d', $start_date)->subMonth()->month;
         $id_bulan = $semester_pair->date_carbon->month;
         $tahun = $semester_pair->date_carbon->year;
 
@@ -496,9 +494,12 @@ class LibCetakKeuangan
             })
             ->first();
 
+        $old_semester_pair = getIdSemesterByTanggal(Carbon::createFromFormat('Y-m-d', $start_date)->subMonth()->format('Y-m-d'), 'Y-m-d');
+        $id_bulan_lalu = $old_semester_pair->date_carbon->month;
+
         $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::query()
-            ->where('id_semester_mulai', $semester_pair->ganjil->id_semester)
-            ->where('id_semester_selesai', $semester_pair->genap->id_semester)
+            ->where('id_semester_mulai', $old_semester_pair->ganjil->id_semester)
+            ->where('id_semester_selesai', $old_semester_pair->genap->id_semester)
             ->where('id_bulan', $id_bulan_lalu)
             ->when($print_setting == 'self', function ($q) use ($auth_data) {
                 $q->where('created_by', $auth_data->pengguna->id_pengguna);
