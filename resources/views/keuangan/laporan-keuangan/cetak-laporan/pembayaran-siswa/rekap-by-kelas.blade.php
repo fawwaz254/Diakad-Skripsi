@@ -54,20 +54,22 @@
     </style>
     <style type="text/css" media="print">
         @page {
-            size: landscape;
+            /* margin: 125mm 125mm 125mm 125mm;    */
+            size: portrait;
+           
         }
     </style>
 </head>
 
 <body>
     <div class="page">
-        <table cellspacing="0" cellpadding="10" style="width: 100%;">
+        <table cellspacing="0" cellpadding="10" style="width: 90%;   margin: 0 auto;">
             <tr>
                 <td colspan=1><img src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" alt="Logo Sekolah" style="height:90px;" /></td>
                 <td colspan=6><h1 align="center">LAPORAN PEMBAYARAN SISWA PER KELAS<br> {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1></td>
             </tr>
         </table>
-        <table>
+        <table style="margin-left: 56px"> 
             <tr>
             @if($start_date != $end_date)
                 <td colspan="3"><b>TANGGAL   {{ strtoupper(indonesiaDate($start_date)) }} - {{ strtoupper(indonesiaDate($end_date)) }}</b></td>
@@ -77,18 +79,18 @@
             </tr>
         </table>
         <br>
-        <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; font-size:small" class="mb-2">
+        <table border="1" cellspacing="0" cellpadding="5" style="width: 90%; font-size:small;   margin: 0 auto;" class="mb-2" >
             <tr>
-                <th style="width: 10px;">No.</th>
-                <th>Kelas</th>
+                <th style="width: 10px; background-color: rgb(210, 210, 210)">No.</th>
+                <th style="background-color: rgb(210, 210, 210)">Kelas</th>
                 @if(isset($data_laporan['jenis_bayar']))
                 @foreach($data_laporan['jenis_bayar'] as $jenis => $laporan_jenis_bayar)
-                <th>{{$jenis}}</th>
+                <th style="background-color: rgb(210, 210, 210)">{{$jenis}}</th>
                 @endforeach
                 @endif
-                <th>Total Frekuensi</th>
-                <th>Potongan (*Apabila ada)</th>
-                <th>Jumlah Pembayaran</th>
+                <th style="background-color: rgb(210, 210, 210)">Total Frekuensi</th>
+                <th style="background-color: rgb(210, 210, 210)">Potongan (*Apabila ada)</th>
+                <th style="background-color: rgb(210, 210, 210)">Jumlah Pembayaran</th>
             </tr>
         @php 
             $no = 1;
@@ -137,12 +139,12 @@
                 <tr style="vertical-align: top;">
                     <td>
                         Kepala Sekolah
-                        <br><br><br><br>
+                        <br><br><br><br><br><br>
                         <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
                     <td>
                         Keuangan
-                        <br><br><br><br> 
+                        <br><br><br><br> <br><br>
                         <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>

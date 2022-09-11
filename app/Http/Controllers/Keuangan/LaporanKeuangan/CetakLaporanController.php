@@ -83,6 +83,7 @@ class CetakLaporanController extends BaseController
 
     public function printCetakLaporanKas(Request $request, $jenis, $start_date, $end_date)
     {
+        set_time_limit(1800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $sekolah = $auth_data->sekolah_data->nm_sekolah;

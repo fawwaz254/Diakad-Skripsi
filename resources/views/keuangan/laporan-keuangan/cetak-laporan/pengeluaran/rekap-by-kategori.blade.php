@@ -88,8 +88,8 @@
             </tr>
             <tr>
                 <th style="width: 10px;">No.</th>
-                <th colspan="3">Keterangan</th>
                 <th>Tanggal Pengeluaran</th>
+                <th colspan="3">Keterangan</th>
                 <th>Nominal</th>
             </tr>
             @php
@@ -99,8 +99,8 @@
                 @foreach($kategori_laporan as $laporan)
                 <tr>
                     <td>{{ $no++ }}</td>
-                    <td colspan="3">{{ $laporan->nm_realisasi }}</td>
                     <td>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $laporan->tgl_realisasi)->format('d M Y') }}</td>
+                    <td colspan="3">{{ $laporan->nm_realisasi }}</td>
                     <td style="text-align: right;">{{ number_format($laporan->dana_realisasi) }}</td>
                 </tr>
                 @endforeach
