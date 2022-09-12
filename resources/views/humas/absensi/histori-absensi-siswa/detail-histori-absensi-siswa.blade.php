@@ -106,6 +106,11 @@
 <a href="humas/absensi/histori-absensi-siswa/export-laravel/{{ $id_kelas }}/{{ $date }}" target="_blank"
     class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+
+    <a href="humas/absensi/histori-absensi-siswa/export-laravel-week/{{ $id_kelas }}/{{ $date }}"
+    target="_blank" class="btn bg-purple waves-effect">
+    <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
+
 <a href="humas/absensi/histori-absensi-siswa/export-laravel-mount/{{ $id_kelas }}/{{ $date }}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
