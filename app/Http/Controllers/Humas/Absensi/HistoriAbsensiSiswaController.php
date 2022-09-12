@@ -478,7 +478,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
             $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
-            $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : null;
+            $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
 
@@ -583,7 +583,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key]['status_join_table'] = $value->status_join_table;
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
-            $hasil[$key]['kelas'] = $value->siswa->kelas->nm_kelas;
+            $hasil[$key]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-' ;
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
             $hasil[$key]['notes'] = '';
