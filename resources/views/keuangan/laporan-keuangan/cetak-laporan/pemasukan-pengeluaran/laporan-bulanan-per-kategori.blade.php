@@ -7,12 +7,12 @@
         .page {
             width: 1200px;
         }
-        
+
         .ttd {
             margin-top: 30px;
             text-align: right;
         }
-        
+
         .clear {
             clear: both;
         }
@@ -24,11 +24,11 @@
         .mb-0 {
             margin-bottom: 0px;
         }
-        
+
         .mb-05 {
             margin-bottom: 5px;
         }
-        
+
         .mb-1 {
             margin-bottom: 10px;
         }
@@ -40,7 +40,7 @@
         .mt-2 {
             margin-top: 20px;
         }
-        
+
         .mt-4 {
             margin-top: 40px;
         }
@@ -58,10 +58,10 @@
             font-weight: bold;
         }
         .text-center{
-            text-align: center; 
+            text-align: center;
         }
         .text-right{
-            text-align: right; 
+            text-align: right;
         }
         .bg-grey{
             background-color: #9e9e9e80;
@@ -124,6 +124,7 @@
                 $total_all['subtotal_in'] = 0;
                 $total_all['subtotal_out'] = 0;
                 $total_all['grand_total'] = 0;
+                $subsidi_bos = 0;
             @endphp
             <tr valign=middle >
                 @foreach ($subkategori_in as $data_subkategori)
@@ -157,6 +158,7 @@
                     $jumlah_out_per_date = 0;
                 @endphp
                 @foreach ($report['in'] as $report_in)
+                @if($report_in['category'] != 'Subsidi BOS')
                 <tr valign=middle>
                     <td class="text-center">{{$report['day']}}</td>
                     <td class="text-bold" style="white-space: nowrap;">{{ $report_in['text'] }}</td>
@@ -180,6 +182,11 @@
                     <td></td>
                     <td></td>
                 </tr>
+                @else
+                    @php
+                        $subsidi_bos += $report_in['value'];
+                    @endphp
+                @endif
                 @endforeach
 
                 @foreach ($report['out'] as $report_out)
@@ -245,9 +252,16 @@
                 <td></td>
                 <td class="text-bold">Subsidi BOS</td>
                 @foreach ($subkategori_in as $data_subkategori)
+                @if($data_subkategori->deskripsi_subkategori_rapb == 'Subsidi BOS')
+                <td class="text-bold text-right">{{ number_format($subsidi_bos) }}</td>
+                    @php
+                        $total_all[$data_subkategori->id_subkategori_rapb] += $subsidi_bos;
+                    @endphp
+                @else
                 <td></td>
+                @endif
                 @endforeach
-                <td class="text-bold text-right"></td>
+                <td class="text-bold text-right">{{ number_format($subsidi_bos) }}</td>
                 @foreach ($subkategori_out as $data_subkategori)
                 <td></td>
                 @endforeach
@@ -264,6 +278,9 @@
                 @foreach ($subkategori_out as $data_subkategori)
                 @if($data_subkategori->deskripsi_subkategori_rapb == 'Pembelajaran Non KBM')
                 <td class="text-bold text-right">{{ number_format($total_bayar_non_kbm) }}</td>
+                    @php
+                        $total_all[$data_subkategori->id_subkategori_rapb] += $total_bayar_non_kbm;
+                    @endphp
                 @else
                 <td></td>
                 @endif
@@ -287,7 +304,7 @@
             <tr>
                <td colspan="{{$length_column}}" style="height: 16px;">
 
-               </td> 
+               </td>
             </tr>
             <tr valign=middle>
                 <td class="bg-grey"></td>
@@ -328,7 +345,7 @@
                     </td>
                     <td>
                         Keuangan
-                        <br><br><br> 
+                        <br><br><br>
                         <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>
