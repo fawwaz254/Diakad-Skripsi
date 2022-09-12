@@ -65,7 +65,7 @@
             <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i
                     class="material-icons">settings</i><span>Management Shift</span></button>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
+        {{-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
             <button class="btn btn-block bg-green waves-effect" onclick="downloadShift('0')"><i
                     class="material-icons">file_download</i><span>Download Shift Pegawai</span></button>
         </div>
@@ -74,7 +74,7 @@
             <button class="btn btn-block bg-green waves-effect" onclick="downloadShift('{{ $u->id_unit_kerja }}');"><i
                     class="material-icons">file_download</i><span>Download Shift {{ $u->nm_unit_kerja }}</span></button>
         </div>
-        @endforeach
+        @endforeach --}}
     </div>
     <br>
     <div class="row clearfix">
