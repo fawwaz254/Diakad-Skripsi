@@ -525,6 +525,15 @@ class LibCetakKeuangan
             })
             ->get();
 
+        $pembayaran_tunggakan = PembayaranTunggakan::query()
+            ->whereMonth('tgl_pembayaran', $id_bulan)
+            ->whereYear('tgl_pembayaran', $tahun)
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->orderBy('tgl_pembayaran', 'asc')
+            ->get();
+
         $data_laporan = array();
         $no = 0;
         $master_saldo_masuk = 0;
@@ -571,6 +580,18 @@ class LibCetakKeuangan
                 $master_saldo_masuk += $data_temp['value'];
                 $skip_this_date = false;
             }
+
+            // FOR TUNGGAKAN TAHUN LALU
+            // $bayar_as_date = $pembayaran_tunggakan->where('tgl_pembayaran', $data['date_format'] . ' 00:00:00')->all();
+            // if (count($bayar_as_date) > 0) {
+            //     $data_temp['category'] = 'SPP';
+            //     $data_temp['text'] = 'Tunggakan SPP Tahun Lalu';
+            //     $data_temp['value'] = collect($bayar_as_date)->sum('besar_pembayaran');
+
+            //     $data_in[] = $data_temp;
+            //     $master_saldo_masuk += $data_temp['value'];
+            //     $skip_this_date = false;
+            // }
 
             // FOREACH FOR REALISASI INCOME NON-SPP
             $realisasi_as_date = $realisasi_all->where('tgl_realisasi', $data['date_format'])->where('rapb.subkategori.kategori.tipe_kategori_rapb', 1)->all();
