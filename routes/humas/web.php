@@ -126,6 +126,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
 			Route::group(array('prefix' => 'histori-absensi'), function () {
 				Route::get('export-laravel-mount/{date}/{unit_kerja}', 'Humas\Absensi\HistoriAbsensiController@export_excel_mount');
+				Route::get('export-laravel-week/{date}/{unit_kerja}', 'Humas\Absensi\HistoriAbsensiController@export_excel_week');
 				Route::get('export-laravel/{date}/{unit_kerja}', 'Humas\Absensi\HistoriAbsensiController@export_excel_day');
 				// Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', 'Humas\Absensi\HistoriAbsensiController@export_excel');
 				Route::get('/', 'Humas\Absensi\HistoriAbsensiController@viewHistoriAbsensi');
@@ -157,6 +158,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/detail/{kelas}/{date}/{status}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
 				// Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
 				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
+				Route::get('export-laravel-week/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_week');
 				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
 				//buat izin / sakit
 				Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');

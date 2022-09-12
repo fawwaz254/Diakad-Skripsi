@@ -176,6 +176,12 @@
     <a href="humas/absensi/histori-absensi/export-laravel/{{ $date }}/{{ $unit_kerja }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+
+        <a href="humas/absensi/histori-absensi/export-laravel-week/{{ $date }}/{{ $unit_kerja }}"
+        target="_blank" class="btn bg-purple waves-effect">
+        <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
+
+
     <a href="humas/absensi/histori-absensi/export-laravel-mount/{{ $date }}/{{ $unit_kerja }}"
         target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
