@@ -75,7 +75,7 @@ class ExportPresensi implements ShouldQueue
         $start_date = new Carbon('first day of' . $mount . $year);
         $end_date =  new Carbon('last day of' . $mount . $year);
 
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [ $start_date,$end_date ])->with('shift_master')->get();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [ $start_date,$end_date ])->where('id_shift_master', '!=', 'Siswa')->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [ $start_date,$end_date ])->whereIn('status_join_table',[1,2])->get();
         // dd( $allPresensiPengguna);
         $dates = CarbonPeriod::create($start_date, $end_date);
