@@ -3,25 +3,19 @@
 namespace App\Http\Controllers\Keuangan\SIM;
 
 use App\Libraries\Keuangan\LibDataKeuangan;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
+use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\Guru;
 use App\Models\Rapb;
 use App\Models\Realisasi;
 use App\Models\Semester;
 use App\Models\Staff;
 use App\Models\SubkategoriRapb;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-
-use Auth;
+use Carbon\Carbon;
 use DB;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 use Validator;
+use Yajra\Datatables\Datatables;
 
 class PengeluaranController extends BaseController
 {
@@ -29,7 +23,7 @@ class PengeluaranController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        
+
         return view('keuangan/sim/pengeluaran/view-menu-pengeluaran', compact('auth_data'));
     }
 
@@ -40,12 +34,12 @@ class PengeluaranController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
-        if(empty($tahun_akademik_semester)){
+        if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
 
-        $data_subkategori = SubkategoriRapb::whereHas('kategori', function($q){
+        $data_subkategori = SubkategoriRapb::whereHas('kategori', function ($q) {
             $q->where('tipe_kategori_rapb', 2);
         })->get();
 
@@ -59,7 +53,7 @@ class PengeluaranController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
-        if(empty($tahun_akademik_semester)){
+        if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
@@ -67,64 +61,66 @@ class PengeluaranController extends BaseController
         return view('keuangan/sim/pengeluaran/view-menu-target', compact('auth_data', 'data_semester', 'tahun_akademik_semester'));
     }
 
-    public function datatablesMenuTarget(Request $request){
+    public function datatablesMenuTarget(Request $request)
+    {
         $input = (object) $request->input();
 
         $tahun = $input->tahun;
-        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
-        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+        $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
 
-        $list_data = SubkategoriRapb::whereHas('kategori', function($q){
+        $list_data = SubkategoriRapb::whereHas('kategori', function ($q) {
             $q->where('tipe_kategori_rapb', 2);
         });
 
         $list_rapb = Rapb::selectRaw('
-                            nm_kategori_rapb, 
+                            nm_kategori_rapb,
                             kode_subkategori_rapb,
                             rapb.id_subkategori_rapb,
                             nm_subkategori_rapb,
                             tipe_kategori_rapb,
                             dana_perkiraan_rapb')
-                        ->join('subkategori_rapb', function($q){
-                            $q->on('subkategori_rapb.id_subkategori_rapb', '=' ,'rapb.id_subkategori_rapb')
-                                ->whereNull('subkategori_rapb.deleted_at');
-                        })
-                        ->join('kategori_rapb', function($q){
-                            $q->on('kategori_rapb.id_kategori_rapb', '=' ,'subkategori_rapb.id_kategori_rapb')
-                                ->whereNull('kategori_rapb.deleted_at');
-                        })
-                        ->where('id_semester_mulai', $semester_mulai->id_semester)
-                        ->where('id_semester_selesai', $semester_selesai->id_semester)
-                        ->isInputByPengguna($input->auth_data->pengguna->id_pengguna)
-                        ->get();
+            ->join('subkategori_rapb', function ($q) {
+                $q->on('subkategori_rapb.id_subkategori_rapb', '=', 'rapb.id_subkategori_rapb')
+                    ->whereNull('subkategori_rapb.deleted_at');
+            })
+            ->join('kategori_rapb', function ($q) {
+                $q->on('kategori_rapb.id_kategori_rapb', '=', 'subkategori_rapb.id_kategori_rapb')
+                    ->whereNull('kategori_rapb.deleted_at');
+            })
+            ->where('id_semester_mulai', $semester_mulai->id_semester)
+            ->where('id_semester_selesai', $semester_selesai->id_semester)
+            ->isInputByPengguna($input->auth_data->pengguna->id_pengguna)
+            ->get();
 
         return Datatables::of($list_data)
-                    ->addColumn('target_rapb', function ($item) use ($list_rapb) {
-                        if($rapb = $list_rapb->firstWhere('id_subkategori_rapb', $item->id_subkategori_rapb)){
-                            return 'Rp'.number_format($rapb->dana_perkiraan_rapb);
-                        }else{
-                            return 'Ro0';
-                        }
-                    })
-                    ->addColumn('action', function($item){
-                        $data = array(
-                            'id' => $item->id_subkategori_rapb
-                        );
-                        return $data;
-                    })
-                    ->make(true);
+            ->addColumn('target_rapb', function ($item) use ($list_rapb) {
+                if ($rapb = $list_rapb->firstWhere('id_subkategori_rapb', $item->id_subkategori_rapb)) {
+                    return 'Rp' . number_format($rapb->dana_perkiraan_rapb);
+                } else {
+                    return 'Rp0';
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_subkategori_rapb,
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function viewMenuEditTarget(Request $request, $tahun_akademik_semester, $id_subkategori_rapb){
+    public function viewMenuEditTarget(Request $request, $tahun_akademik_semester, $id_subkategori_rapb)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
-        $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+        $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester . '1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester . '2')->first();
 
-        if($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first()){
+        if ($item = Rapb::where(['id_subkategori_rapb' => $id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first()) {
 
-        }else{
+        } else {
             $item = null;
         }
 
@@ -133,65 +129,66 @@ class PengeluaranController extends BaseController
         return view('keuangan/sim/pengeluaran/view-menu-input-target', compact('auth_data', 'item', 'semester_mulai', 'tahun_akademik_semester', 'subkategori_rapb'));
     }
 
-    public function actionSaveEditTarget(Request $request){
+    public function actionSaveEditTarget(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'tahun' =>'required',
-            'subkategori' =>'required',
-            'dana_perkiraan_rapb' =>'required'
+            'tahun' => 'required',
+            'subkategori' => 'required',
+            'dana_perkiraan_rapb' => 'required',
         ]);
-  
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
-        }else{
+        } else {
             $now = Carbon::today();
 
             $tahun_akademik_semester = $input->tahun;
-            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
-            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester . '1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester . '2')->first();
             DB::beginTransaction();
             try {
-                
-                if(!empty($input->id)){
+
+                if (!empty($input->id)) {
                     $rapb = Rapb::find($id);
-                }else{
+                } else {
                     $rapb = Rapb::where(['id_subkategori_rapb' => $input->subkategori, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
 
-                if($rapb){
-                    $rapb->updated_by          = $input->auth_data->pengguna->id_pengguna;
-                }else{
+                if ($rapb) {
+                    $rapb->updated_by = $input->auth_data->pengguna->id_pengguna;
+                } else {
                     $rapb = new Rapb;
-                    $rapb->id_rapb = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                    $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $rapb->id_semester_mulai            = $semester_mulai->id_semester;
-                    $rapb->id_semester_selesai          = $semester_selesai->id_semester;
-                    $rapb->id_subkategori_rapb          = $input->subkategori;
-                    $rapb->tgl_rapb                     = $now->format('Y-m-d');
-                    $rapb->prioritas_rapb               = 3;
-                    $rapb->created_by          = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->id_semester_mulai = $semester_mulai->id_semester;
+                    $rapb->id_semester_selesai = $semester_selesai->id_semester;
+                    $rapb->id_subkategori_rapb = $input->subkategori;
+                    $rapb->tgl_rapb = $now->format('Y-m-d');
+                    $rapb->prioritas_rapb = 3;
+                    $rapb->created_by = $input->auth_data->pengguna->id_pengguna;
 
-                    if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
-                        $rapb->id_unit_kerja                = $actor->id_unit_kerja;
-                    }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
-                        $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                    if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                        $rapb->id_unit_kerja = $actor->id_unit_kerja;
+                    } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                        $rapb->id_unit_kerja = $actor->id_unit_kerja;
                     }
 
-                    if($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                            ->where('guru.jenis_jabatan', '=', 2)
-                            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                            ->first()){
-                        $rapb->id_pengguna_kepala_unit      = $kepala_unit_keuangan->id_pengguna;
-                    }else if($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                            ->where('staff.jenis_jabatan', '=', 2)
-                            ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                            ->first()){
-                        $rapb->id_pengguna_kepala_keuangan  = $kepala_unit_keuangan->id_pengguna;;
+                    if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                        ->where('guru.jenis_jabatan', '=', 2)
+                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->first()) {
+                        $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
+                    } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                        ->where('staff.jenis_jabatan', '=', 2)
+                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->first()) {
+                        $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
                     }
                 }
 
@@ -203,7 +200,7 @@ class PengeluaranController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/pengeluaran/target',
-                    'message' => 'Success'
+                    'message' => 'Success',
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -211,7 +208,7 @@ class PengeluaranController extends BaseController
                 return response()->json([
                     'status' => 300,
                     'status_text' => 'Failed',
-                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
                 ]);
             }
         }
@@ -224,150 +221,154 @@ class PengeluaranController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
-        if(empty($tahun_akademik_semester)){
+        if (empty($tahun_akademik_semester)) {
             $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
             $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
         }
-        
-        if(empty($tgl_awal)){
-            $tgl_awal = Carbon::now()->subDays(30)->format('Y-m-d');
-        }
-        
-        if(empty($tgl_akhir)){
-            $tgl_akhir = Carbon::now()->format('Y-m-d');
+
+        if (empty($tgl_awal)) {
+            $tgl_awal = Carbon::now()->firstOfMonth()->format('Y-m-d');
         }
 
-        return view('keuangan/sim/pengeluaran/view-menu-tampilkan', compact('auth_data', 'data_semester', 'tgl_awal', 'tgl_akhir','tahun_akademik_semester'));
+        if (empty($tgl_akhir)) {
+            $tgl_akhir = Carbon::now()->endOfMonth()->format('Y-m-d');
+        }
+
+        return view('keuangan/sim/pengeluaran/view-menu-tampilkan', compact('auth_data', 'data_semester', 'tgl_awal', 'tgl_akhir', 'tahun_akademik_semester'));
     }
 
-    public function datatablesMenuTampilkan(Request $request){
+    public function datatablesMenuTampilkan(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $tahun = $input->tahun;
         $tgl_awal = $input->tgl_awal;
         $tgl_akhir = $input->tgl_akhir;
-        $semester_mulai = Semester::where('kode_semester', $tahun.'1')->first();
-        $semester_selesai = Semester::where('kode_semester', $tahun.'2')->first();
+        $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
 
-        $list_data = Realisasi::with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function($q){
+        $list_data = Realisasi::with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function ($q) {
             $q->where('tipe_kategori_rapb', 2);
         })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
-        ->whereDate('tgl_realisasi', '>=', $tgl_awal)
-        ->whereDate('tgl_realisasi', '<=', $tgl_akhir)
-        ->isInputByPengguna($auth_data->pengguna->id_pengguna);
+            ->whereDate('tgl_realisasi', '>=', $tgl_awal)
+            ->whereDate('tgl_realisasi', '<=', $tgl_akhir)
+            ->isInputByPengguna($auth_data->pengguna->id_pengguna);
 
         return Datatables::of($list_data)
-                    ->editColumn('tgl_realisasi', function ($item) {
-                        return date_format(date_create($item->tgl_realisasi), "d M Y");
-                    })
-                    ->editColumn('dana_realisasi', function ($item){
-                        return 'Rp'.number_format($item->dana_realisasi);
-                    })
-                    ->addColumn('action', function($item) {
-                        $data = array(
-                            'id' => $item->id_realisasi,
-                        );
-                        return $data;
-                    })
-                    ->make(true);
+            ->editColumn('tgl_realisasi', function ($item) {
+                return date_format(date_create($item->tgl_realisasi), "d M Y");
+            })
+            ->editColumn('dana_realisasi', function ($item) {
+                return 'Rp' . number_format($item->dana_realisasi);
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_realisasi,
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
-    public function actionSaveInputPengeluaran(Request $request){
+    public function actionSaveInputPengeluaran(Request $request)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'tahun' =>'required',
-            'tgl_realisasi' =>'required',
-            'nm_realisasi' =>'required',
-            'id_subkategori_rapb' =>'required',
-            'dana_realisasi' =>'required',
+            'tahun' => 'required',
+            'tgl_realisasi' => 'required',
+            'nm_realisasi' => 'required',
+            'id_subkategori_rapb' => 'required',
+            'dana_realisasi' => 'required',
         ]);
-  
-        if($validator->fails()) {
+
+        if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
-        }else{
+        } else {
             $now = Carbon::today();
 
             $tahun_akademik_semester = $input->tahun;
-            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester.'1')->first();
-            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester.'2')->first();
+            $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester . '1')->first();
+            $semester_selesai = Semester::where('kode_semester', $tahun_akademik_semester . '2')->first();
 
-            $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester , 'created_by' => $auth_data->pengguna->id_pengguna])->first();
+            $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
 
-            if($rapb){
+            if ($rapb) {
 
-            }else{
+            } else {
                 $rapb = new Rapb;
-                $rapb->id_rapb = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $rapb->id_semester_mulai            = $semester_mulai->id_semester;
-                $rapb->id_semester_selesai          = $semester_selesai->id_semester;
-                $rapb->id_subkategori_rapb          = $input->id_subkategori_rapb;
-                $rapb->tgl_rapb                     = $now->format('Y-m-d');
-                $rapb->prioritas_rapb               = 3;
-                $rapb->dana_perkiraan_rapb          = 0;
-                $rapb->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $rapb->id_semester_mulai = $semester_mulai->id_semester;
+                $rapb->id_semester_selesai = $semester_selesai->id_semester;
+                $rapb->id_subkategori_rapb = $input->id_subkategori_rapb;
+                $rapb->tgl_rapb = $now->format('Y-m-d');
+                $rapb->prioritas_rapb = 3;
+                $rapb->dana_perkiraan_rapb = 0;
+                $rapb->created_by = $input->auth_data->pengguna->id_pengguna;
 
-                if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
-                    $rapb->id_unit_kerja                = $actor->id_unit_kerja;
-                }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
-                    $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    $rapb->id_unit_kerja = $actor->id_unit_kerja;
+                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    $rapb->id_unit_kerja = $actor->id_unit_kerja;
                 }
 
-                if($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                        ->where('guru.jenis_jabatan', '=', 2)
-                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                        ->first()){
-                    $rapb->id_pengguna_kepala_unit      = $kepala_unit_keuangan->id_pengguna;
-                }else if($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
-                        ->where('staff.jenis_jabatan', '=', 2)
-                        ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                        ->first()){
-                    $rapb->id_pengguna_kepala_keuangan  = $kepala_unit_keuangan->id_pengguna;;
+                if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                    ->where('guru.jenis_jabatan', '=', 2)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first()) {
+                    $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
+                } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+                    ->where('staff.jenis_jabatan', '=', 2)
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first()) {
+                    $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
                 }
                 $rapb->save();
             }
 
             $tgl_realisasi = Carbon::parse($input->tgl_realisasi);
             $id_bulan = $tgl_realisasi->month;
-            
-            if($id_bulan < 7){
+
+            if ($id_bulan < 7) {
                 $id_semester = $semester_selesai->id_semester;
-            }else{
+            } else {
                 $id_semester = $semester_mulai->id_semester;
             }
 
             DB::beginTransaction();
             try {
 
-                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                if($input->id_realisasi){
-                    $realisasi                           = Realisasi::find($input->id_realisasi);
+                if ($input->id_realisasi) {
+                    $realisasi = Realisasi::find($input->id_realisasi);
                 } else {
-                    $realisasi                               = new Realisasi;
-                    $realisasi->id_realisasi                 = $id;
+                    $realisasi = new Realisasi;
+                    $realisasi->id_realisasi = $id;
                 }
-                $realisasi->id_semester_realisasi        = $id_semester;
-                $realisasi->id_rapb                      = $rapb->id_rapb;
-                if($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
-                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
-                }else if($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()){
-                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
+                $realisasi->id_semester_realisasi = $id_semester;
+                $realisasi->id_rapb = $rapb->id_rapb;
+                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    $realisasi->id_unit_kerja = $actor->id_unit_kerja;
+                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    $realisasi->id_unit_kerja = $actor->id_unit_kerja;
                 }
-                $realisasi->nm_realisasi                 = $input->nm_realisasi;
-                $realisasi->termin_dana_realisasi        = 1;
-                $realisasi->is_hutang_realisasi          = 0;
-                $realisasi->dana_realisasi               = $input->dana_realisasi;
-                $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi),"Y-m-d");
-                $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
-                if($input->id_realisasi)
-                    $realisasi->updated_by               = $input->auth_data->pengguna->id_pengguna;
+                $realisasi->nm_realisasi = $input->nm_realisasi;
+                $realisasi->termin_dana_realisasi = 1;
+                $realisasi->is_hutang_realisasi = 0;
+                $realisasi->dana_realisasi = $input->dana_realisasi;
+                $realisasi->tgl_realisasi = date_format(date_create($input->tgl_realisasi), "Y-m-d");
+                $realisasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                if ($input->id_realisasi) {
+                    $realisasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+                }
+
                 $realisasi->save();
 
                 DB::commit();
@@ -376,7 +377,7 @@ class PengeluaranController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/pengeluaran/tampilkan',
-                    'message' => 'Success'
+                    'message' => 'Success',
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -384,13 +385,14 @@ class PengeluaranController extends BaseController
                 return response()->json([
                     'status' => 300,
                     'status_text' => 'Failed',
-                    'message' => (env('APP_DEBUG', 'true') == 'true')? $e->getMessage() : 'Operation error. Error '.$e->getLine()
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
                 ]);
             }
         }
     }
 
-    public function editPengeluaran(Request $request, $id){
+    public function editPengeluaran(Request $request, $id)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -400,14 +402,15 @@ class PengeluaranController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
-        $data_subkategori = SubkategoriRapb::whereHas('kategori', function($q){
+        $data_subkategori = SubkategoriRapb::whereHas('kategori', function ($q) {
             $q->where('tipe_kategori_rapb', 2);
         })->get();
 
         return view('keuangan/sim/pengeluaran/view-menu-input', compact('auth_data', 'pengeluaran', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'rapb'));
     }
-    
-    public function deletePengeluaran(Request $request, $id){
+
+    public function deletePengeluaran(Request $request, $id)
+    {
         $input = (object) $request->input();
 
         $pengeluaran = Realisasi::find($id);
@@ -418,18 +421,19 @@ class PengeluaranController extends BaseController
 
         return [
             'status' => 203,
-            'message' => "Berhasil dihapus"
+            'message' => "Berhasil dihapus",
         ];
     }
 
-    public function printKuitansiPengeluaran(Request $request, $id){
+    public function printKuitansiPengeluaran(Request $request, $id)
+    {
         $auth_data = $request->auth_data;
 
         $pengeluaran = Realisasi::find($id);
 
         $terbilang = LibDataKeuangan::getTerbilang($pengeluaran->dana_realisasi);
         // dd($terbilang);
-        
-        return view('keuangan/sim/pengeluaran/print-kuitansi-pengeluaran', compact('auth_data', 'pengeluaran', 'terbilang')); 
+
+        return view('keuangan/sim/pengeluaran/print-kuitansi-pengeluaran', compact('auth_data', 'pengeluaran', 'terbilang'));
     }
 }
