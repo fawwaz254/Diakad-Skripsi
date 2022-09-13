@@ -87,13 +87,13 @@
 @endphp
 
 <body>
-<img style="position: absolute;" src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" height="50">
+<img style="position: absolute;" src="https://diakad.sgp1.digitaloceanspaces.com/{{$auth_data->sekolah_data->nm_singkat_sekolah}}/global/logo-sekolah" height="65">
     <table width="100%">
         <tr valign=top>
-            <td><center><h3 style="margin: 0;">{{strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah)}}</h3></center></td>
+            <td><center><h1 style="margin: 0;">{{strtoupper($auth_data->sekolah_data->nm_yayasan_sekolah)}}</h1></center></td>
         </tr>
         <tr valign=top>
-            <td><center><h3 style="margin: 0;">{{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h3></center></td>
+            <td><center><h2 style="margin: 0;">{{strtoupper($auth_data->sekolah_data->nm_sekolah)}}</h2></center></td>
         </tr>
         <tr valign=top>
             <td><center><h3 style="margin: 0;">{{$auth_data->sekolah_data->alamat_jalan}} Telp. {{$auth_data->sekolah_data->nomor_telp_sekolah}}</h3></center></td>
@@ -112,12 +112,12 @@
         <thead>
             <tr valign=middle >
                 <td class="text-center text-bold" width="15" rowspan="2">TL</td>
-                <td class="text-center text-bold" width="150" rowspan="2">URAIAN</td>
-                <td class="text-center text-bold" colspan="{{$subkategori_in->count()}}">Penerimaan</td>
-                <td class="text-center text-bold" rowspan="2">Jumlah Penerimaan</td>
-                <td class="text-center text-bold" colspan="{{$subkategori_out->count()}}">Pengeluaran</td>
-                <td class="text-center text-bold" rowspan="2">Jumlah Pengeluaran</td>
-                <td class="text-center text-bold" rowspan="2">SALDO KAS</td>
+                <td class="text-center text-bold" width="200" rowspan="2">URAIAN</td>
+                <td class="text-center text-bold" width="220" colspan="{{$subkategori_in->count()}}">Penerimaan</td>
+                <td class="text-center text-bold" width="55" rowspan="2">Jumlah Penerimaan</td>
+                <td class="text-center text-bold" width="680" colspan="{{$subkategori_out->count()}}">Pengeluaran</td>
+                <td class="text-center text-bold" width="55" rowspan="2">Jumlah Pengeluaran</td>
+                <td class="text-center text-bold" width="55" rowspan="2">SALDO KAS</td>
             </tr>
             @php
                 $total_all = array();
@@ -161,7 +161,7 @@
                 @if($report_in['category'] != 'Subsidi BOS')
                 <tr valign=middle>
                     <td class="text-center">{{$report['day']}}</td>
-                    <td class="text-bold" style="white-space: nowrap;">{{ $report_in['text'] }}</td>
+                    <td class="text-bold">{{ $report_in['text'] }}</td>
                     @foreach ($subkategori_in as $data_subkategori)
                     <td class="text-right">{{ ($report_in['category'] == $data_subkategori->deskripsi_subkategori_rapb)? number_format($report_in['value']) : ''}}</td>
                         @php
@@ -192,7 +192,7 @@
                 @foreach ($report['out'] as $report_out)
                 <tr valign=middle>
                     <td class="text-center">{{$report['day']}}</td>
-                    <td class="text-bold" style="white-space: nowrap;">{{ $report_out['text'] }}</td>
+                    <td class="text-bold">{{ $report_out['text'] }}</td>
                     @foreach ($subkategori_in as $data_subkategori)
                     <td></td>
                     @endforeach
