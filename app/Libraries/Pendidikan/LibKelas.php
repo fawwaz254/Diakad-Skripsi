@@ -5,7 +5,7 @@ namespace App\Libraries\Pendidikan;
 use App\Models\Kelas as Kelas;
 use App\Models\RuanganKelas as RuanganKelas;
 use App\Models\Semester as Semester;
-
+use App\Models\Siswa;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
@@ -16,13 +16,20 @@ use DB;
 class LibKelas
 {
     /** KELAS **/
-	static function fetchDataKelas($auth_data, $id = null){
+	static function fetchDataKelas($auth_data, $id = null,$siswa_aktif=false){
 
         // get mode view
         if ($id == null){
             $semester_aktif = Semester::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->where('is_aktif_semester','=',1)->first();
 
-            $kelas = Kelas::select('p3.nm_pengguna as nama_guru_bk','kelas.id_kelas', 'jurusan.nm_jurusan', 'kelas.nm_kelas', 'kelas.tingkat', 'kelas.keterangan_kelas', 'p1.nm_pengguna as nm_sekretaris', 'ruangan.nm_ruangan', 'p2.nm_pengguna as nm_wali_kelas', 'p2.gelar_depan as gelar_depan_wali_kelas', 'p2.gelar_belakang as gelar_belakang_wali_kelas', DB::raw("(SELECT COUNT(*) FROM siswa WHERE siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa"))
+            $kelas = Kelas::select('p3.nm_pengguna as nama_guru_bk','kelas.id_kelas', 'jurusan.nm_jurusan', 'kelas.nm_kelas', 'kelas.tingkat', 'kelas.keterangan_kelas', 'p1.nm_pengguna as nm_sekretaris', 'ruangan.nm_ruangan', 'p2.nm_pengguna as nm_wali_kelas', 'p2.gelar_depan as gelar_depan_wali_kelas', 'p2.gelar_belakang as gelar_belakang_wali_kelas',
+            $siswa_aktif ? DB::raw("(SELECT COUNT(*) FROM siswa 
+            JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
+            JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna 
+            WHERE status_pengguna.nm_status_pengguna = 'AKTIF'
+            AND siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa") :
+            DB::raw("(SELECT COUNT(*) FROM siswa WHERE siswa.id_kelas = kelas.id_kelas AND siswa.deleted_at IS NULL) AS total_siswa")
+            )
                 ->join('jurusan','jurusan.id_jurusan','=','kelas.id_jurusan')
                 ->leftJoin('ruangan_kelas', function ($join) use ($semester_aktif) {
                     $join->on('ruangan_kelas.id_kelas', '=', 'kelas.id_kelas')
