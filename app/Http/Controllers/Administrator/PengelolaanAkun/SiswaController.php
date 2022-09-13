@@ -26,7 +26,7 @@ class SiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+        $data_kelas = LibKelas::fetchDataKelas($auth_data, NULL, true);
 
         return view('administrator/pengelolaan-akun/siswa/view-siswa', compact('auth_data', 'data_kelas', 'id_kelas'));
     }
