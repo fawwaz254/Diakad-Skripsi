@@ -227,9 +227,9 @@ class ReportController extends BaseController
 
             $pelatih_ekskul = PelatihEkskulSet::whereIn('id_ekskul', Ekskul::pluck('id_ekskul'))->where('is_aktif', 1)->count();
             $pembina_ekskul = PembinaEkskulSet::whereIn('id_ekskul', Ekskul::pluck('id_ekskul'))->where('is_aktif', 1)->count();
-            $peserta_ekskul = PesertaEkskulSet::whereIn('id_ekskul', Ekskul::pluck('id_ekskul'))->groupBy('id_ekskul')->count();
+            $peserta_ekskul = PesertaEkskulSet::whereIn('id_ekskul', Ekskul::pluck('id_ekskul'))->get();
 
-            if ($pelatih_ekskul == $data_ekskul && $pembina_ekskul == $data_ekskul && $peserta_ekskul >= $data_ekskul) {
+            if ($pelatih_ekskul == $data_ekskul && $pembina_ekskul == $data_ekskul && $peserta_ekskul->groupBy('id_ekskul')->count() >= $data_ekskul) {
                 $param[0]['status'] = 1;
             }
 

@@ -170,6 +170,13 @@ class DataKategoriJurnalHarianController extends Controller
                         'message' => 'Failed to Delete Data Kategori'
                     ];
                 } else {
+
+                    $datatendik = CategoryKelompokJurnalHarianTendik::where('id_category_jh_tendik', $id)->get();
+                    // dd($datatendik);
+                    foreach ($datatendik as $tendik) {
+                        $data =    CategoryKelompokJurnalHarianTendik::where('id_c_k_jh_tendik', $tendik->id_c_k_jh_tendik)->first();
+                        $data->delete();
+                    }
                     // make object to find id 
                     $datakategori                       = CategoryJurnalHarianTendik::where('id_category_jh_tendik', $id)->first();
                     $datakategori->deleted_by           = $input->auth_data->pengguna->id_pengguna;

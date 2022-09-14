@@ -37,10 +37,10 @@
                          </select>
 
                          <h2 class="card-inside-title">
-                            Jenis MGMP
+                            Jenis Jurnal Harian
                          </h2>
                          <select class="form-control show-tick" name="jenis">
-                             <option  value="" selected>-- Pilih Jenis MGMP--</option>
+                             <option  value="" selected>-- Pilih Jenis Jurnal Harian--</option>
                              @foreach($jenis as $nama_jenis)
                              <option value="{{ $nama_jenis->jenis_MGMP}}">
                                  {{ $nama_jenis->jenis_MGMP}}
