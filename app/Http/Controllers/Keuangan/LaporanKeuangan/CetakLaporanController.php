@@ -84,6 +84,7 @@ class CetakLaporanController extends BaseController
     public function printCetakLaporanKas(Request $request, $jenis, $start_date, $end_date)
     {
         set_time_limit(1800);
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $sekolah = $auth_data->sekolah_data->nm_sekolah;
@@ -139,6 +140,7 @@ class CetakLaporanController extends BaseController
         } else if ($jenis == 'detail-reguler') {
             $judul = 'LAPORAN ARUS KAS - REGULER';
             // fetch laporan keuangan
+
             $data_laporan = LibCetakKeuangan::fetchLaporanKasReguler($auth_data, $start_date, $end_date);
         }
 
