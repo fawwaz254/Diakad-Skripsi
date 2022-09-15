@@ -189,7 +189,7 @@ class MataPelajaranController extends BaseController{
                 if($kurikulumMp = KurikulumMp::where('id_mata_pelajaran',$id)->first() or $kelasMp = KelasMp::where('id_mata_pelajaran',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Mata Pelajaran'
+                        'message' => 'Failed To Delete Mata Pelajaran because already use in KurikulumMp and KelasMp'
                     ]; 
                 }
                 else{
