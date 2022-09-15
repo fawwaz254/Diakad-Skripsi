@@ -155,15 +155,24 @@ Route::group(array('middleware' => ['token_staff']), function () {
             //MENU Plotting Mapel Siswa
             Route::get('plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewPlottingMapelSiswa');
             Route::post('post-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewPlottingMapelSiswa');
+            //dari sini memilih jurusan, semester, angkatan
             Route::get('plotting-mapel-siswa/view-kelas-plotting/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewKelasPlottingMapelSiswa');
             Route::get('plotting-mapel-siswa/datatables/{id_semester}/{angkatan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesPlottingMapelSiswa');
+            //memilih mata pelajaran, otomatisnya dari sini
             Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewMapelPlottingMapelSiswa');
+            //memilih mapel
             Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesMataPelajaran');
+            //memilih siswa
             Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@datatablesSiswa');
+            //validasi
             Route::post('post-daftar-plotting-mapel-siswa', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionViewDaftarPlottingMapelSiswa');
+            //ada kendala leave page, dibiarkan aja gpp
             Route::get('plotting-mapel-siswa/view-daftar-kelas-plotting/{id_semester}/{angkatan}/{id_kelas}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@viewDaftarKelasPlottingMapelSiswa');
-
+            //action
             Route::post('action-plotting-mapel-siswa/{mode}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionPlottingMapelSiswa');
+
+            //test automatik ploting
+            Route::get('plotting-mapel-siswa/action-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionAutoPlottingMapelSiswa');
 
             //MENU Hapus Plotting Mapel Siswa
             Route::get('hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@viewHapusPlottingMapelSiswa');
