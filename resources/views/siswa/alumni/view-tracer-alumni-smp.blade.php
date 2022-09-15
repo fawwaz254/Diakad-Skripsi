@@ -2,7 +2,7 @@
     <div class="block-header">
         @if (empty($alumni))
         <h2><a class="btn bg-blue waves-effect target-link"
-            href="{{url(Request::segment(1).'#tracer-alumni/add')}}">
+            href="{{url(Request::segment(1).'#alumni/tracer-alumni/add')}}">
                 <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
                 @else
             <h2><a class="btn bg-grey  waves-effect target-link"
