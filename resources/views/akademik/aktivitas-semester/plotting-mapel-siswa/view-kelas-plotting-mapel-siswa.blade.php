@@ -84,6 +84,7 @@
     var modul_url       = 'aktivitas-semester';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'plotting-mapel-siswa/datatables/' + id_semester + '/' + angkatan;
     var detail_url        = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-mapel-plotting/'+ id_semester + '/' + angkatan;
+    var auto_ploting      = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/action-auto-plotting-mapel-siswa/'+ id_semester + '/' + angkatan;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -100,11 +101,10 @@
             { data: 'jml_siswa', name: 'jml_siswa' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-block bg-blue waves-effect" href="'+ detail_url +'/' + data.id + '">Manual Plotting</a>';
+                    return '<a class="target-link btn bg-blue waves-effect" href="'+ detail_url +'/' + data.id + '">Manual Plotting</a>'
+                    +'      <a class="target-link btn bg-red waves-effect" href="'+ auto_ploting +'/' + data.id + '">Auto Plotting</a>';
                 }
-            }           
-        ]
-    });
+            }]})
 
     primary_table.on( 'draw', function () {
         primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
