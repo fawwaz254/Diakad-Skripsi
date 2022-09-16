@@ -164,7 +164,7 @@ class PlottingMapelSiswaController extends BaseController
             JOIN kelas ON kelas.id_kelas = siswa.id_kelas
             JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
             JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna 
-            WHERE status_pengguna.nm_status_pengguna = 'AKTIF'
+            WHERE status_pengguna.aktif_status_pengguna = '1'
             AND kelas.id_jurusan = jurusan.id_jurusan 
             AND siswa.deleted_at IS NULL 
             ) AS jml_siswa")
