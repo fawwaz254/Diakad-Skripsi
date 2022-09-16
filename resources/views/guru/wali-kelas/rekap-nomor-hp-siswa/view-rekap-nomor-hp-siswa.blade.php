@@ -4,7 +4,7 @@
             <div class="card">
                     {{csrf_field()}}
                     <div class="header">
-                        <h2>DATA NOMOR HP SISWA KELAS : {{$wali_kelas->nm_kelas}}</h2>
+                        <h2>DATA NOMOR HP SISWA KELAS : {{ $wali_kelas->nm_kelas }}</h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
@@ -42,8 +42,20 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_pengguna', name: 'nm_pengguna' },
-            { data: 'siswa.wali_murid.nomor_hp_wali_murid', name: 'siswa.wali_murid.nomor_hp_wali_murid' },
-            { data: 'siswa.wali_murid.nm_wali_murid', name: 'siswa.wali_murid.nm_wali_murid' },
+            { data: 'siswa.wali_murid.nomor_hp_wali_murid', name: 'siswa.wali_murid.nomor_hp_wali_murid',
+            render: function(data){
+                    if(data) {
+                        return data;
+                    }else{
+                        return '-'
+                    } }},
+            { data: 'siswa.wali_murid.nm_wali_murid', name: 'siswa.wali_murid.nm_wali_murid',
+            render: function(data){
+                    if(data) {
+                        return data;
+                    }else{
+                        return '-'
+                    } }}
         ]
     });
 

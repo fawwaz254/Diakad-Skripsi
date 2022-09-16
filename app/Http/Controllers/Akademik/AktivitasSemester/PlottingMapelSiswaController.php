@@ -164,7 +164,7 @@ class PlottingMapelSiswaController extends BaseController
             JOIN kelas ON kelas.id_kelas = siswa.id_kelas
             JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
             JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna 
-            WHERE status_pengguna.nm_status_pengguna = 'AKTIF'
+            WHERE status_pengguna.aktif_status_pengguna = '1'
             AND kelas.id_jurusan = jurusan.id_jurusan 
             AND siswa.deleted_at IS NULL 
             ) AS jml_siswa")
@@ -182,6 +182,23 @@ class PlottingMapelSiswaController extends BaseController
                         'id' => $item->id_jurusan,
                     );
                     return $data;
+                })->addColumn('auto', function ($item) use($auth_data) {
+                    $semua_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $item->id_jurusan)->get();
+   
+                    // $data = array(
+                    //     'id' => $item->id_jurusan,
+                    // );
+                    // return $data;
+
+                    $data = [];
+                  
+                        foreach ($semua_kelas as $key => $value) {
+                            $data[$key]['id_kelas'] = $value->id_kelas;
+                            $data[$key]['nm_kelas'] = $value->nm_kelas;
+                            // $data[$key]['status'] = $item->laporan_kerja_harian_tendik[$key]->status;
+                        }
+                    return $data;
+
                 })
                 ->make(true);
     }

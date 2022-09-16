@@ -16,9 +16,12 @@
                             <div class="form-group">
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="id_kelas">
-                                            <option value="{{ $find_kelas->id_kelas }}"selected>
-                                                {{ $find_kelas->nm_kelas }}
-                                            </option>
+                                        @foreach ($data_kelas as $kelas)
+                                        <option value="{{ $kelas->id_kelas }}" @if($find_kelas->id_kelas ==  $kelas->id_kelas) selected @endif >
+                                            {{ $kelas->nm_kelas }}
+                                        </option>
+                                        @endforeach
+                                            
                                     </select>
                                 </div>
                             </div>
