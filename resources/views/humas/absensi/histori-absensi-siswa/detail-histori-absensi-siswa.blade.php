@@ -233,7 +233,7 @@
                             });
                             loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
                                 $('input[name=id_kelas]').val() + '/' +
-                                $('input[name=date]').val());
+                                $('input[name=date]').val() + '/0') ;
                         },
                     });
                 }

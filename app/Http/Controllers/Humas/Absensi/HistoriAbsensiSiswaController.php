@@ -676,12 +676,12 @@ class HistoriAbsensiSiswaController extends Controller
 
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $prefix = Sekolah::first()->prefix;
-        $uuid = $prefix . strtotime($now) . uniqid();
+        // $uuid = $prefix . strtotime($now) . uniqid();
         $input = $request->input();
         $status = $input['status'];
         $notes = $input['notes'];
-        PresensiPengguna::create(['id_presensi_pengguna' => $uuid, 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
-        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date);
+        PresensiPengguna::create([ 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
+        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date ."/0");
     }
 
     public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
@@ -706,6 +706,6 @@ class HistoriAbsensiSiswaController extends Controller
         //     'path' => 'absensi/histori-absensi/',
         //     'message' => 'Data Absensi Berhasil Di Update'
         // ];
-        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $id_kelas . '/' . $date);
+        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $id_kelas . '/' . $date . '/0');
     }
 }
