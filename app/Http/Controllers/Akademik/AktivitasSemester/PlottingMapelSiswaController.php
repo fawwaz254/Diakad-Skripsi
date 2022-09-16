@@ -182,6 +182,23 @@ class PlottingMapelSiswaController extends BaseController
                         'id' => $item->id_jurusan,
                     );
                     return $data;
+                })->addColumn('auto', function ($item) use($auth_data) {
+                    $semua_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $item->id_jurusan)->get();
+   
+                    // $data = array(
+                    //     'id' => $item->id_jurusan,
+                    // );
+                    // return $data;
+
+                    $data = [];
+                  
+                        foreach ($semua_kelas as $key => $value) {
+                            $data[$key]['id_kelas'] = $value->id_kelas;
+                            $data[$key]['nm_kelas'] = $value->nm_kelas;
+                            // $data[$key]['status'] = $item->laporan_kerja_harian_tendik[$key]->status;
+                        }
+                    return $data;
+
                 })
                 ->make(true);
     }
