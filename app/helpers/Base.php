@@ -93,7 +93,7 @@ if (!function_exists('get_keterangan_wali_kelas')) {
                 $query->where('id_pengguna', '=', $id_pengguna);
             })->first();
         if ($wali_kelas) {
-            $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat', 9)->get();
+            $data_kelas = Kelas::all();
             $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
             if ($find_kelas) {
                 $kelas = $find_kelas;
