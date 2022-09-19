@@ -60,16 +60,16 @@ class RekapAbsensiEkskulController extends BaseController
         $auth_data->menu_url = $this->menu_url;
 
         $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
-        
+
         $data_ekskul = Ekskul::find($id_ekskul);
-        
+
         $data_siswa = PengambilanEkskul::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna', 'kelas')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
 
         $data_presensi = PresensiEkskul::with('presensi_ekskul_peserta')
-                                    ->where('id_ekskul', $id_ekskul)
-                                    ->where('id_semester', $id_semester)
-                                    ->orderBy('pertemuan_ke', 'asc')
-                                    ->get();
+            ->where('id_ekskul', $id_ekskul)
+            ->where('id_semester', $id_semester)
+            ->orderBy('pertemuan_ke', 'asc')
+            ->get();
 
         return view(
             'pelatih-ekskul/absensi-ekskul/rekap-absensi-ekskul/view-detail-rekap-absensi-ekskul',
@@ -85,25 +85,24 @@ class RekapAbsensiEkskulController extends BaseController
         $auth_data->menu_url = $this->menu_url;
 
         $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
-        
+
         $data_ekskul = Ekskul::find($id_ekskul);
         $data_pelatih = PelatihEkskulSet::with('pelatih_ekskul.pengguna')
-                                        ->where('id_ekskul', $id_ekskul)
-                                        ->where('is_aktif', 1)
-                                        ->get()
-                                        ->map(function($m){
-                                            $pelatih = $m->pelatih_ekskul;
-                                            return $pelatih ? $pelatih->pengguna->nm_pengguna . 
-                                            (($pelatih->pengguna->gelar_belakang != null) ? ', ' . $pelatih->pengguna->gelar_belakang : null) : null;
-                                        })->toArray();
-        
+            ->where('id_ekskul', $id_ekskul)
+            ->where('is_aktif', 1)
+            ->get()
+            ->map(function ($m) {
+                $pelatih = $m->pelatih_ekskul;
+                return $pelatih ? $pelatih->pengguna->nm_pengguna . (($pelatih->pengguna->gelar_belakang != null) ? ', ' . $pelatih->pengguna->gelar_belakang : null) : null;
+            })->toArray();
+
         $data_siswa = PengambilanEkskul::with('siswa', 'siswa.pengguna', 'siswa.pengguna.status_pengguna', 'kelas')->where('id_semester', $id_semester)->where('id_ekskul', $id_ekskul)->get();
 
         $data_presensi = PresensiEkskul::with('presensi_ekskul_peserta')
-                                    ->where('id_ekskul', $id_ekskul)
-                                    ->where('id_semester', $id_semester)
-                                    ->orderBy('pertemuan_ke', 'asc')
-                                    ->get();
+            ->where('id_ekskul', $id_ekskul)
+            ->where('id_semester', $id_semester)
+            ->orderBy('pertemuan_ke', 'asc')
+            ->get();
 
         return view(
             'pelatih-ekskul/absensi-ekskul/rekap-absensi-ekskul/print-rekap-absensi-ekskul',
