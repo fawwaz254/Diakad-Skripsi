@@ -85,107 +85,6 @@ class FingerprintController extends BaseController
             return 'FAILED';
         }
 
-        // $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
-
-        // if (!empty($device->port)) {
-        //     $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
-        // } else {
-        //     $fingerprint_url = $device->ip_address_wan . '/iWsService';
-        // }
-        // try {
-        //     $client = new \GuzzleHttp\Client();
-        //     $response = $client->post($fingerprint_url, [
-        //         'headers' => [
-        //             'Content-Type' => 'text/xml',
-        //             'Content-Length' => strlen($soap_request),
-        //         ],
-        //         'body' => $soap_request,
-        //     ]);
-
-        //     $buffer = $response->getBody()->getContents();
-
-        //     $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
-        //     $buffer = explode("\r\n", $buffer);
-        //     $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
-
-        //     foreach ($data_fp as $data) {
-        //         if ($item = FPAttendance::where('username', $data['username'])->where('fp_date',  $data['tanggal'])->first()) {
-
-        //         } else {
-        //             $item = new FPAttendance;
-        //             $item->id_fp_device = $device->id_fp_device;
-        //             $item->username = $data['username'];
-        //             $item->status = $data['status'];
-        //             $item->tanggal =  $data['tanggal'];
-        //             $item->fp_date =  $data['tanggal'];
-        //             $item->save();
-        //         }
-
-        //         $prefix = Sekolah::first()->prefix;
-        //         $now = Carbon::now('Asia/Jakarta');
-        //         if ($pengguna = Pengguna::where('username', $item->username)->first()) {
-        //             if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $data['tanggal'])->first()) {
-
-        //             } else {
-        //                 $presensi = new PresensiPengguna;
-        //                 $presensi->id_presensi_pengguna = $prefix . strtotime($now) . uniqid();
-        //                 $presensi->id_pengguna = $pengguna->id_pengguna;
-        //                 $presensi->status_join_table = $pengguna->status_join_table;
-        //                 $presensi->date = $item->tanggal;
-        //             }
-
-        //             if ($item->status == 255) {
-        //                 if (empty($presensi->check_in)) {
-        //                     $presensi->check_in = $item->fp_date;
-        //                 } else {
-        //                     if (Carbon::parse($presensi->check_in)->diffInMinutes($item->fp_date) > 100) {
-        //                         $presensi->check_out = $item->fp_date;
-        //                     }
-        //                 }
-        //             } else {
-        //                 if ($item->status == 0) {
-        //                     $presensi->check_in = $item->fp_date;
-        //                 }
-
-        //                 if ($item->status == 1) {
-        //                     $presensi->check_out = $item->fp_date;
-        //                 }
-        //             }
-        //             $presensi->status = null;
-        //             $presensi->notes = null;
-        //             $presensi->save();
-        //         }
-        //     }
-        return 'YES';
-        // } catch (Exception $e) {
-        //     return $e;
-        // }
-    }
-
-    public function actionGetDataFinger(Request $request)
-    {
-        set_time_limit(9800);
-        $input = (object) $request->input();
-
-        $serial_number = '';
-        if (isset($input->sn)) {
-            $serial_number = $input->sn;
-        }
-
-        if (isset($input->dd)) {
-            $date_filter = Carbon::parse($input->dd);
-        } else {
-            $date_filter = Carbon::now('Asia/Jakarta');
-        }
-
-        if ($device = FPDevice::where('sn', $serial_number)->first()) {
-            // $device->ip_address_wan = $request->ip();
-            $device->updated_at = Carbon::now('Asia/Jakarta');
-            $device->save();
-        } else {
-            return 'FAILED';
-        }
-
         $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
 
         if (!empty($device->port)) {
@@ -207,7 +106,7 @@ class FingerprintController extends BaseController
 
             $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
             $buffer = explode("\r\n", $buffer);
-            $data_fp = $this->filterData($buffer, $date_filter->format('Y-m-d'));
+            $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
 
             foreach ($data_fp as $data) {
                 if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->first()) {
@@ -222,41 +121,59 @@ class FingerprintController extends BaseController
                     $item->save();
                 }
             }
+            return 'SUCCESS';
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
 
-            $collection = collect($data_fp)->groupBy('username')->all();
+    public function actionGetDataFinger(Request $request)
+    {
+        set_time_limit(9800);
+        $input = (object) $request->input();
+
+        if (isset($input->dd)) {
+            $date_filter = Carbon::parse($input->dd);
+        } else {
+            $date_filter = Carbon::now('Asia/Jakarta');
+        }
+
+        try {
+            $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->get();
+            $collection = $data_fingerprint->groupBy('username')->all();
 
             foreach ($collection as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
-                    $first_time_finger = collect($group_of_data)->sortBy('tanggal')->values()[0];
+                    $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', date_format(date_create($first_time_finger['tanggal']), 'Y-m-d'))->first()) {
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)->first()) {
 
                     } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
-                        $presensi->date = date_format(date_create($first_time_finger['tanggal']), 'Y-m-d');
+                        $presensi->date = $first_time_finger->tanggal;
                     }
 
-                    if ($first_time_finger['status'] == 255) {
+                    if ($first_time_finger->status == 255) {
                         if (count($group_of_data) > 1) { // FINGER MORE THAN 1
-                            $presensi->check_in = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
-                            $last_time_finger = collect($group_of_data)->sortByDesc('tanggal')->values()[0];
-                            if (Carbon::parse($presensi->check_in)->diffInMinutes($last_time_finger['tanggal']) > 100) {
-                                $presensi->check_out = date_format(date_create($last_time_finger['tanggal']), 'H:i:s');
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                            if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                                $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
                             }
                         } else { // ONLY CHECK-IN
                             // if (empty($presensi->check_in)) {
-                            $presensi->check_in = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
                             // }
                         }
                     } else {
-                        if ($first_time_finger['status'] == 0) {
-                            $presensi->check_in = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
+                        if ($first_time_finger->status == 0) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
                         }
 
-                        if ($first_time_finger['status'] == 1) {
-                            $presensi->check_out = date_format(date_create($first_time_finger['tanggal']), 'H:i:s');
+                        if ($first_time_finger->status == 1) {
+                            $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
                         }
                     }
 

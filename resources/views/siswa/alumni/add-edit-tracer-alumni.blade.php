@@ -28,7 +28,7 @@
                 <div class="body">
                     @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
                     <form id="form-validation" method="POST" class="row"
-                        action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add2/0' }}">
+                        action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'alumni/tracer-alumni/action/edit/' . $alumni->id_alumni : 'alumni/tracer-alumni/action/add2/0' }}">
                     @else
                     <form id="form-validation" method="POST" class="row"
                         action="{{ url(Request::segment(1)) }}/{{ !empty($alumni) ? 'alumni/tracer-alumni/action/edit/' . $alumni->id_alumni : 'alumni/tracer-alumni/action/add2/0' }}">

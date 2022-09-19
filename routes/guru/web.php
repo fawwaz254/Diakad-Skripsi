@@ -523,6 +523,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             // Route::post('approve-prestasi-siswa/{data}/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@actionApprovePrestasiSiswa');
             // Route::get('approve-prestasi-siswa/print-skpi/{id}', 'Guru\WaliKelas\ApprovePrestasiSiswaController@PrintSkpi');
+
+            //Menu Cek Nomor HP Siswa
+
+            Route::get('rekap-nomor-hp', 'Guru\WaliKelas\RekapNomorHpController@viewRekapNomorHp');
+            Route::get('rekap-nomor-hp/datatables', 'Guru\WaliKelas\RekapNomorHpController@datatablesRekapNomorHp');
+
         });
 
         // MODUL KELAS DARING

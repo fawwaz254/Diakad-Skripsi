@@ -510,11 +510,11 @@ class HistoriAbsensiController extends BaseController
     {
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $prefix = Sekolah::first()->prefix;
-        $uuid = $prefix . strtotime($now) . uniqid();
+        // $uuid = $prefix . strtotime($now) . uniqid();
         $input = $request->input();
         $status = $input['status'];
         $notes = $input['notes'];
-        PresensiPengguna::create(['id_presensi_pengguna' => $uuid, 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
+        PresensiPengguna::create([ 'id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
         return redirect("/humas#absensi/histori-absensi/" . $date . "/0" . "/0");
     }
 
