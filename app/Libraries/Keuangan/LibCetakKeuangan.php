@@ -66,7 +66,8 @@ class LibCetakKeuangan
             $where_personal = "";
         }
 
-        $list_data_jml_siswa = DB::select('SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
+        $list_data_jml_siswa = DB::select(
+            'SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
                             FROM siswa
                             JOIN kelas ON kelas.id_kelas = siswa.id_kelas
                                 AND kelas.deleted_at IS NULL
@@ -82,9 +83,11 @@ class LibCetakKeuangan
                             ' . $where_personal . '
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat',
-            [$id_semester]);
+            [$id_semester]
+        );
 
-        $list_data_tagihan = DB::select('SELECT kelas.tingkat, SUM(tagihan_biaya.besar_biaya) AS jml_tagihan_biaya
+        $list_data_tagihan = DB::select(
+            'SELECT kelas.tingkat, SUM(tagihan_biaya.besar_biaya) AS jml_tagihan_biaya
                             FROM tagihan_biaya
                             JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
                                 AND kelas.deleted_at IS NULL
@@ -99,7 +102,8 @@ class LibCetakKeuangan
                             ' . $where_personal . '
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat',
-            [$id_bulan, $id_semester]);
+            [$id_bulan, $id_semester]
+        );
 
         $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
 
@@ -120,7 +124,8 @@ class LibCetakKeuangan
             $where_bayar_bulan_lalu_dan_belakangnya = 'AND detail_biaya.id_bulan IN (' . $periode_bulan_sekolah->implode(',') . ')';
         }
 
-        $list_data_pembayaran = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya
+        $list_data_pembayaran = DB::select(
+            'SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya
                             FROM pembayaran_biaya
                             JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya
                                 AND tagihan_biaya.deleted_at IS NULL
@@ -139,9 +144,11 @@ class LibCetakKeuangan
                                 ' . $where_personal . '
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat',
-            [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
+            [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]
+        );
 
-        $list_data_pembayaran_old_month = DB::select('SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_bulan_lalu
+        $list_data_pembayaran_old_month = DB::select(
+            'SELECT kelas.tingkat, SUM(pembayaran_biaya.besar_pembayaran) AS jml_pembayaran_biaya_bulan_lalu
                             FROM pembayaran_biaya
                             JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya
                                 AND tagihan_biaya.deleted_at IS NULL
@@ -160,7 +167,8 @@ class LibCetakKeuangan
                                 ' . $where_personal . '
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat',
-            [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]);
+            [$id_semester_mulai, $id_semester_selesai, $tahun, $id_bulan]
+        );
 
         // List data tunggakan
         $pembayaran_tunggakan_bulan_ini = PembayaranTunggakan::where('id_semester_mulai', $semester_mulai->id_semester)
@@ -220,9 +228,7 @@ class LibCetakKeuangan
                     $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
 
-                if ($tutup_buku_bulanan_biaya) {
-
-                } else {
+                if ($tutup_buku_bulanan_biaya) { } else {
                     $id = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $tutup_buku_bulanan_biaya = new TutupBukuBulananBiaya;
@@ -253,7 +259,7 @@ class LibCetakKeuangan
 
                     if (!empty($tutup_buku_bulanan_biaya_old)) {
                         $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = $tutup_buku_bulanan_biaya_old->jml_tunggakan_biaya + $tutup_buku_bulanan_biaya_old->jml_tagihan_biaya
-                         - $tutup_buku_bulanan_biaya_old->jml_pembayaran_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
+                            - $tutup_buku_bulanan_biaya_old->jml_pembayaran_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
                     } else {
                         $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = 0;
                     }
@@ -402,7 +408,6 @@ class LibCetakKeuangan
             // END SHOW BEBAN NON-KBM
 
             DB::commit();
-
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -781,9 +786,9 @@ class LibCetakKeuangan
         }
 
         if ($print_setting == 'self') {
-            $allDataRealisasi = $dataRealisasi->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->sortBy('tgl_realisasi')->sortBy('rapb.subkategori.kode_subkategori_rapb');
+            $allDataRealisasi = $dataRealisasi->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->sortBy('rapb.subkategori.kode_subkategori_rapb');
         } else {
-            $allDataRealisasi = $dataRealisasi->get()->sortBy('tgl_realisasi')->sortBy('rapb.subkategori.kode_subkategori_rapb');
+            $allDataRealisasi = $dataRealisasi->get()->sortBy('rapb.subkategori.kode_subkategori_rapb');
         }
 
         $totalLaporan = $allDataRealisasi->sum('dana_realisasi');
@@ -926,8 +931,8 @@ class LibCetakKeuangan
                             $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
                                 'tanggal' => $date->format('Y-m-d'),
                                 'nominal' => ($sisa > ($x->besar_biaya - $potongan_biaya))
-                                ? ($x->besar_biaya - $potongan_biaya)
-                                : $x->besar_biaya + $sisa,
+                                    ? ($x->besar_biaya - $potongan_biaya)
+                                    : $x->besar_biaya + $sisa,
                                 'potongan' => $potongan_biaya,
                                 'frekuensi' => $count,
                                 'tipe' => 1,
@@ -1257,7 +1262,6 @@ class LibCetakKeuangan
                     'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
                     'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
                 ];
-
             }
 
             if ($tagihanBiayaSiswa->siswa->kelas) {
@@ -1274,7 +1278,6 @@ class LibCetakKeuangan
                 'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan.total_potongan'),
                 'summary' => $summ,
             ];
-
         }
 
         $allPembayaranBiaya = $pembayaran->get()->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya');
@@ -1297,7 +1300,6 @@ class LibCetakKeuangan
         ];
 
         return $result;
-
     }
 
     public static function fetchLaporanPembayaranPerKategori($auth_data, $start_date = null, $end_date = null)
@@ -1326,11 +1328,9 @@ class LibCetakKeuangan
 
             $listData[$key]['nama'] = $key;
             $listData[$key]['total'] = $value->sum('besar_pembayaran');
-
         }
 
         return $listData;
-
     }
 
     public static function fetchLaporanPembayaranPerSiswa($auth_data, $start_date = null, $end_date = null)
@@ -1444,7 +1444,6 @@ class LibCetakKeuangan
                 'nominal' => $biaya->where('tagihan_biaya.keterangan', $idBiaya)->sum('besar_pembayaran'),
                 // 'nominal' => $biaya->first()->tagihan_biaya->besar_biaya,
             ];
-
         }
 
         $result = [
