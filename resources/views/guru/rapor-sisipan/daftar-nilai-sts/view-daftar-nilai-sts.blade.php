@@ -20,7 +20,7 @@
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Nilai Siswa Terisi</th>
+                                    <th>Nilai Siswa Terisi Lengkap</th>
                                     <th>Semester</th>
                                     <th>Nilai</th>
                                     <th>Action</th>
@@ -39,7 +39,7 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-manajemen-materi-ajar/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -73,7 +73,7 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return `<p>` + data.terisi_siswa + '/' + data.jumlah_siswa + `</p>`  ;
+                    return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
                 }},
                 {
                 data: 'semester',

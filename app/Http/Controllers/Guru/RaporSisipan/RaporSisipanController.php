@@ -51,20 +51,24 @@ class RaporSisipanController extends Controller
         // dd($semester_aktif);
         if ($mode == 'delete') {
 
-            // $materi = MateriAjar::where('id_materi_ajar', $id)->first();
-            // $materi->delete();
+            $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
+            $raporSisipan->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+            $raporSisipan->save();
+            $raporSisipan->delete();
 
-            // $materiFile = MateriAjarFile::where('id_materi_ajar', $id)->get();
-            // foreach ($materiFile as $file) {
-            //     Storage::delete($file['link_file']);
-            //     $file->delete();
-            // }
+            $nilaiRaporSisipan = NilaiRaporSisipan::where('id_rapor_sisipan', $id)->get();
+            foreach ($nilaiRaporSisipan as $id) {
+                $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
+                $nilai->deleted_by = $input->auth_data->pengguna->id_pengguna;
+                $nilai->save();
+                $nilai->delete();
+            }
 
-            // return [
-            //     'status' => 202,
-            //     'path' => 'e-learning/manajemen-materi-ajar',
-            //     'message' => 'Delete Materi Ajar successfully'
-            // ];
+            return [
+                'status' => 202,
+                'path' => 'rapor-sisipan/daftar-nilai-sts',
+                'message' => 'Delete Rapor Sisipan successfully'
+            ];
         }
 
         if ($mode == 'add') {
@@ -143,10 +147,32 @@ class RaporSisipanController extends Controller
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
             ->addColumn('jumlah', function ($item) {
+                //semua siswa
+                $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
+
+                //cari siswa yang ada nilai 0 nya
+                $belumTerisi = NilaiRaporSisipan::where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                })->groupBy('id_siswa')
+                    ->selectRaw('count(*) as total, id_siswa')
+                    ->get()->toArray();
+
+                //hitung ada berapa nilai kosongnya
+                $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+
+                //loop dan cari nilai kosong yang diatas 5
+                $nilaiSiswaYangKosong = 0;
+                for ($i = 6; $i <= 10; $i++) {
+                    if (isset($arrayJumlahBelumTerisi[$i])) {
+                        $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                    }
+                }
+
                 $data = array(
-                    'jumlah_siswa' => Siswa::where('id_kelas', $item->kelas->id_kelas)->count(),
-                    'terisi_siswa' => '0',
+                    'jumlah_siswa' => $allSiswa,
+                    'terisi_siswa' => $allSiswa - $nilaiSiswaYangKosong,
                 );
+                // dd($data['terisi_siswa']);
                 return $data;
             })
             ->editColumn('semester', function ($item) {

@@ -1,3 +1,11 @@
+<style>
+    #sts,
+    #rt2smt,
+    textarea {
+        background-color: #d1d1d1;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
@@ -12,7 +20,8 @@
                 <div class="card">
                     {{ csrf_field() }}
                     <div class="header">
-                        <h2>INPUT NILAI RAPOR SISIPAN {{$rapor_sisipan->kelas->nm_kelas}} ({{ $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran }})</h2>
+                        <h2>INPUT NILAI RAPOR SISIPAN {{ $rapor_sisipan->kelas->nm_kelas }}
+                            ({{ $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran }})</h2>
 
                     </div>
                     <div class="body">
@@ -63,12 +72,12 @@
                                                 </td>
                                             @endforeach
                                             <td style="text-align: center;">
-                                                <input type="text"
+                                                <input type="text" id="sts"
                                                     value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}"
                                                     style="width: 80%; text-align:  center;" disabled>
                                             </td>
                                             <td style="text-align: center;">
-                                                <input type="text"
+                                                <input type="text" id="rt2smt"
                                                     value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}"
                                                     style="width: 80%; text-align:  center;" disabled>
                                             </td>
@@ -91,6 +100,8 @@
 @include('scriptjs')
 <script type="text/javascript">
     $(document).ready(function() {
-        var table = $('#primary_table').DataTable({ paging: false});
+        var table = $('#primary_table').DataTable({
+            paging: false
+        });
     });
 </script>
