@@ -40,6 +40,7 @@
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -100,7 +101,11 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                    return  '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                    print_url + '/' + data.id + '"  target="_blank">' +
+                        '    <i class="material-icons">print</i>' +
+                        '</a> '+
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
                         delete_url + '\', this)" data-id="' + data.id + '">' +
                         '    <i class="material-icons">delete_forever</i>' +
                         '</button>';
