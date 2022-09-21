@@ -158,19 +158,18 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
                 Route::get('/', 'Humas\Absensi\HistoriAbsensiSiswaController@viewHistoriAbsensiSiswa');
-				// Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
-				Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
-				Route::get('/detail/{kelas}/{date}/{status}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
-				// Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
-				Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
-				Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
-				//buat izin / sakit
-				Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
-				Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
-				Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
-				Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
-				Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
-
+                // Route::get('get-kelas/{id_jurusan}', 'Humas\Absensi\HistoriAbsensiSiswaController@getKelas');
+                Route::post('/', 'Humas\Absensi\HistoriAbsensiSiswaController@actionDetailHistoriAbsensiSiswa');
+                Route::get('/detail/{kelas}/{date}/{status}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailHistoriAbsensiSiswa');
+                // Route::get('/details/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@viewDetailsHistoriAbsensiSiswa');
+                Route::get('export-laravel-mount/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_mount');
+                Route::get('export-laravel/{kelas}/{date}', 'Humas\Absensi\HistoriAbsensiSiswaController@export_excel_day');
+                //buat izin / sakit
+                Route::get('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@createHistoriAbsensi');
+                Route::post('/{id_pengguna}/{kelas}/{date}/add', 'Humas\Absensi\HistoriAbsensiSiswaController@storeHistoriAbsensi');
+                Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@editHistoriAbsensi');
+                Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', 'Humas\Absensi\HistoriAbsensiSiswaController@updateHistoriAbsensi');
+                Route::post('/{id_presensi_pengguna}/delete', 'Humas\Absensi\HistoriAbsensiSiswaController@destroyHistoriAbsensi');
             });
         });
 
@@ -528,7 +527,26 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::get('rekap-nomor-hp', 'Guru\WaliKelas\RekapNomorHpController@viewRekapNomorHp');
             Route::get('rekap-nomor-hp/datatables', 'Guru\WaliKelas\RekapNomorHpController@datatablesRekapNomorHp');
+        });
 
+
+        // Modul Rapor Sisipan
+        Route::group(array('prefix' => 'rapor-sisipan'), function () {
+            Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
+             
+
+                Route::get('/', 'Guru\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
+                Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
+                Route::get('add', 'Guru\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
+                // Route::post('deleteItem/{id_materi_ajar_file}', 'Guru\ELearning\ManajemenMateriAjarController@deleteItem');
+                Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Guru\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
+
+
+                Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
+                // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
+              
+            });
         });
 
         // MODUL KELAS DARING
