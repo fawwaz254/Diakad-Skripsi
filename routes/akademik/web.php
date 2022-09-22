@@ -299,6 +299,26 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('rekap-monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesRekapMonitoringKelasKosong');
         });
 
+   // Modul Rapor Sisipan
+   Route::group(array('prefix' => 'rapor-sisipan'), function () {
+    Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
+     
+
+        Route::get('/', 'Akademik\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
+        Route::get('datatables', 'Akademik\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
+        // Route::get('add', 'Akademik\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
+        // Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Akademik\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
+        // Route::get('print/{id}', 'Akademik\RaporSisipan\RaporSisipanController@printDaftarNilaiSTS');
+        Route::get('pdf/{id}', 'Akademik\RaporSisipan\RaporSisipanController@pdfDaftarNilaiSTS');
+
+        // Route::get('nilai/{id}', 'Akademik\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
+        // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
+        // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
+    });
+});
+
+
+
         Route::group(array('prefix' => 'monitoring'), function () {
 
             Route::get('monitoring-presensi', 'Guru\GuruPiket\AbsensiHarianSiswaController@viewAbsensiHarianSiswa');
