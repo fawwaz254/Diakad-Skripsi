@@ -93,13 +93,13 @@
                             'id_siswa',
                             $siswa->id_siswa))
                             @if ($presensi_ekskul_peserta->kehadiran == 1)
-                                <td class="is-center"> &#10004; </td>
+                                <td class="is-center" style="background-color: greenyellow"> &#10004; </td>
                             @elseif($presensi_ekskul_peserta->kehadiran == 2)
-                                <td class="is-center">S</td>
+                                <td class="is-center" style="background-color: orange">S</td>
                             @elseif($presensi_ekskul_peserta->kehadiran == 3)
-                                <td class="is-center">I</td>
+                                <td class="is-center" style="background-color: lightblue">I</td>
                             @elseif($presensi_ekskul_peserta->kehadiran == 4)
-                                <td class="is-center">A</td>
+                                <td class="is-center" style="background-color: red">A</td>
                             @else
                                 <td></td>
                             @endif
