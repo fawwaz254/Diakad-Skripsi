@@ -181,7 +181,7 @@
         @foreach($data_realisasi_pemasukan as $realisasi)
         <tr valign=top>
             <td style="border: none;" colspan=5></td>
-            <td colspan=2>&nbsp;&nbsp;&nbsp;{{$realisasi->nm_subkategori_rapb}}</td>
+            <td colspan=2>{{$realisasi->nm_subkategori_rapb}}</td>
             <td class="text-right">{{number_format($realisasi->total_realisasi)}}</td>
         </tr>
         @endforeach
