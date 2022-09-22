@@ -187,7 +187,7 @@ class FingerprintController extends BaseController
                     $presensi->save();
                 }
             }
-            return 'SUCCESS Merge Data. >>> END';
+            echo 'SUCCESS Merge Data. >>> END';
         } catch (Exception $e) {
             return $e;
         }
@@ -396,9 +396,9 @@ class FingerprintController extends BaseController
                         continue;
                     }
                 } else {
-                    $tanggal = Carbon::create($tanggal);
+                    $tanggal = Carbon::createFromFormat('Y-m-d H:i:s', $tanggal);
 
-                    if ($tanggal->gt(Carbon::create($datetime_mulai))) {
+                    if ($tanggal->gt(Carbon::createFromFormat('Y-m-d H:i:s', $datetime_mulai))) {
                         $hasil[$counter]['username'] = $this->parseXMLData($value, "<PIN>", "</PIN>");
                         $hasil[$counter]['tanggal'] = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
                         $hasil[$counter]['status'] = $this->parseXMLData($value, "<Status>", "</Status>");
