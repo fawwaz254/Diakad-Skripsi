@@ -226,7 +226,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('edit/{id}', 'Humas\KegiatanHarian\InputPertanyaanController@viewAddEditInputPertanyaan');
 
 				Route::post('datatables', 'Humas\KegiatanHarian\InputPertanyaanController@showDatatablesInputPertanyaan');
-				Route::post('action/{mode}', 'Humas\KegiatanHarian\InputPertanyaanController@actionInputPertanyaan');
+				Route::post('action/{mode}/{id}', 'Humas\KegiatanHarian\InputPertanyaanController@actionInputPertanyaan');
 
 				Route::group(array('prefix' => 'jawaban'), function () {
 					Route::get('detail/{id1}', 'Humas\KegiatanHarian\InputPertanyaanController@viewInputJawaban');

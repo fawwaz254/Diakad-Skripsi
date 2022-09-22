@@ -39,7 +39,7 @@
     var edit_url        = role_url + '#' + modul_url + '/' + menu_url + '/edit';
     var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/jawaban/detail';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
-
+// alert(delete_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,

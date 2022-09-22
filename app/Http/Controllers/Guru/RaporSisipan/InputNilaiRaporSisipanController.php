@@ -68,70 +68,13 @@ class InputNilaiRaporSisipanController extends Controller
         return view('guru/rapor-sisipan/daftar-nilai-sts/input-nilai-sts', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa','nilai_komponen','rapor_sisipan'));
     }
 
-    // public function datatablesKomponenNilaiMagang(Request $request, $id_periode_magang)
-    // {
-    //     $input = (object) $request->input();
-    //     $auth_data = $input->auth_data;
-
-    //     $nilai_siswa = NilaiMagang::select(
-    //         'nilai_magang.id_nilai_magang',
-    //         'nilai_magang.id_komponen_magang',
-    //         'nilai_magang.besar_nilai_magang',
-    //         'komponen_magang.nm_komponen_magang',
-    //         'periode_magang.nm_periode_magang',
-    //         'siswa.nis_siswa',
-    //         'pengguna.nm_pengguna',
-    //         'semester.nm_semester',
-    //         'semester.tahun_ajaran'
-    //     )
-    //         ->join('komponen_magang', 'komponen_magang.id_komponen_magang', '=', 'nilai_magang.id_komponen_magang')
-    //         ->join('periode_magang', 'periode_magang.id_periode_magang', '=', 'komponen_magang.id_periode_magang')
-    //         ->join('pengambilan_magang', 'pengambilan_magang.id_periode_magang', '=', 'periode_magang.id_periode_magang')
-    //         ->join('siswa', 'siswa.id_siswa', '=', 'pengambilan_magang.id_siswa')
-    //         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-    //         ->join('semester', 'semester.id_semester', '=', 'periode_magang.id_semester')
-    //         ->where('pengambilan_magang.id_periode_magang', '=', $id_periode_magang)->get();
-
-    //     $list_siswa = LibMagangSiswa::fetchDataPengajuanSiswaMagangDetailPeriode($auth_data, $id_periode_magang);
-
-    //     return Datatables::of($list_siswa)
-    //         ->addColumn('siswa', function ($item) {
-    //             return $item->nis_siswa . ' - ' . $item->nm_pengguna;
-    //         })
-    //         ->addColumn('nm_rekanan_magang', function ($item) {
-    //             return $item->nm_rekanan_magang;
-    //         })
-    //         ->addColumn('semester', function ($item) {
-    //             return $item->nm_semester . ' - ' . $item->tahun_ajaran;
-    //         })
-    //         ->addColumn('nilai_magang_komponen', function ($item) {
-    //             return $item->nm_komponen_magang;
-    //         })
-    //         ->addColumn('action', function ($item) {
-    //             $data = array(
-    //                 'id' => $item->nis_siswa
-    //             );
-    //             return $data;
-    //         })
-    //         ->make(true);
-    // }
-
     public function actionInputNilai(Request $request, $mode, $id_rapor_sisipan = null)
     {
         set_time_limit(1800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // mengambil waktu sekarang
-        // $now = Carbon::now(env('APP_TIMEZONE', ''));
-        // dd($input->nilai);
-        // foreach($input->nilai as $n){
-        //     dd($n);
-
-        // }
-        // ACTION SAVE
         if ($mode == 'save') {
-            // $input_array = (array) $input;
 
             $input = (object) $request->input();
             $auth_data = $input->auth_data;

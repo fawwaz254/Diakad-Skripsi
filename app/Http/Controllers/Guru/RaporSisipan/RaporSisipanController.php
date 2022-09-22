@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Guru\RaporSisipan;
 
+use App\Exports\RaporSisipanSTS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\KomponenNilaiRaporSisipan;
 use App\Models\NilaiRaporSisipan;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
 use Auth;
 use DB;
@@ -72,10 +74,18 @@ class RaporSisipanController extends Controller
         }
 
         if ($mode == 'add') {
+            $cekDuplicate = RaporSisipan::where('id_kelas',$input->id_kelas)->where('id_mata_pelajaran',$input->id_mata_pelajaran)->where('id_semester',$semester_aktif->id_semester)->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
                 'id_kelas'              => 'required'
             ]);
+        }
+
+        if($cekDuplicate){
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Kelas dan Mapel Sudah ada Guru Lain yang Menggunakan'
+            ];
         }
 
         if ($validator->fails() && $mode != 'delete') {
@@ -185,5 +195,110 @@ class RaporSisipanController extends Controller
                 return $data;
             })
             ->make(true);
+    }
+
+
+    public function printDaftarNilaiSTS (Request $request, $id_rapor_sisipan){
+
+        set_time_limit(1800);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan',$id_rapor_sisipan)->with('mata_pelajaran','kelas')->first();
+    
+        $list_data = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 5, 6, 9])->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->get();
+
+        $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai')
+            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
+                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
+            })
+            ->whereHas('komponen_nilai', function ($query) {
+                $query->whereIn('urutan', [1, 2, 5, 6, 9]);
+            })->get();
+
+        $nilai_siswa = [];
+        $nilai_komponen = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                // dd($nilaiRapor);
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+
+                    $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
+                    $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
+                    $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
+                    if($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai){
+                        $nilai_komponen[$nilaiRapor['id_siswa'].'nilai_sumasi1'] =  $nilaiRapor['nilai'];
+                    }
+                    if($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai){
+                        $nilai_komponen[$nilaiRapor['id_siswa'].'nilai_sumasi2'] =  $nilaiRapor['nilai'];
+                    }
+                    if($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai){
+                        $nilai_komponen[$nilaiRapor['id_siswa'].'sts'] =  $nilaiRapor['nilai'];
+                    }
+
+                }
+            }
+        }
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['nilai_komponen'] = $nilai_komponen;
+        $data['rapor_sisipan'] = $rapor_sisipan;
+        $data['list_siswa']= $list_siswa;;
+        $data['list_data']= $list_data;
+        $data['id_rapor_sisipan'] = $id_rapor_sisipan;
+
+        return Excel::download(new RaporSisipanSTS($data), 'Rapor Sisipan STS.xlsx');
+    }
+
+    public function pdfDaftarNilaiSTS (Request $request, $id_rapor_sisipan){
+
+        set_time_limit(1800);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan',$id_rapor_sisipan)->with('mata_pelajaran','kelas')->first();
+    
+        $list_data = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 5, 6, 9])->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->get();
+
+        $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai')
+            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
+                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
+            })
+            ->whereHas('komponen_nilai', function ($query) {
+                $query->whereIn('urutan', [1, 2, 5, 6, 9]);
+            })->get();
+
+        $nilai_siswa = [];
+        $nilai_komponen = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                // dd($nilaiRapor);
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+
+                    $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
+                    $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
+                    $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
+                    if($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai){
+                        $nilai_komponen[$nilaiRapor['id_siswa'].'nilai_sumasi1'] =  $nilaiRapor['nilai'];
+                    }
+                    if($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai){
+                        $nilai_komponen[$nilaiRapor['id_siswa'].'nilai_sumasi2'] =  $nilaiRapor['nilai'];
+                    }
+                    if($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai){
+                        $nilai_komponen[$nilaiRapor['id_siswa'].'sts'] =  $nilaiRapor['nilai'];
+                    }
+
+                }
+            }
+        }
+      
+// dd($auth_data);
+        return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa','nilai_komponen','rapor_sisipan'));
     }
 }
