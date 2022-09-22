@@ -106,34 +106,28 @@ class InputPertanyaanController extends BaseController{
                 ->make(true);
     }
 
-    public function actionInputPertanyaan(Request $request, $mode){
+    public function actionInputPertanyaan(Request $request, $mode,$id){
         $input = (object) $request->input();
 
-        switch($mode){
-            case 'add':
-                $syarat = [
-                    'id_kegiatan_harian_kategori' => 'required',
-                    'show_order' => 'required',
-                    'isi_pertanyaan'           => 'required',
-                ]; break;
-            case 'edit':
-                $syarat = [
-                    'id_kegiatan_harian_pertanyaan' => 'required',
-                    'id_kegiatan_harian_kategori' => 'required',
-                    'show_order' => 'required',
-                    'isi_pertanyaan'           => 'required',
-                ]; break;
-            case 'delete':
-                $syarat = [
-                    'id_kegiatan_harian_pertanyaan' => 'required',
-                ]; break;
-            default:
-                return ;
-        }
 
-        $validator = Validator::make($request->all(), $syarat);
+
+        $validator = Validator::make($request->all(), [
+            'id_kegiatan_harian_kategori'           => 'required',
+            'show_order'              => 'required',
+            /*'id_jabatan_pegawai'    => 'required',*/
+            'isi_pertanyaan'         => 'required',
+            // 'jenis_jabatan'         => 'required',
+            // 'id_status_pengguna'    => 'required'
+        ]);
+
+        // if($validator->fails() && $mode != 'delete') {
+        //     return [
+        //         'status' => 300, // FAILED
+        //         'message' => $validator->errors()->first()
+        //     ];
+        // }
         
-        if($validator->fails()) {
+        if($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -175,7 +169,7 @@ class InputPertanyaanController extends BaseController{
                 ];
             }
             elseif($mode == 'delete'){
-                if($subkategoriPemasukan = PemasukanBiayaSubkategori::where('id_pemasukan_biaya_kategori',$id)->first()){
+                if($subkategoriPemasukan = KegiatanHarianJawaban::where('id_kegiatan_harian_pertanyaan',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Kategori Pemasukan'
@@ -183,7 +177,7 @@ class InputPertanyaanController extends BaseController{
                 }
                 else{
                     // make object to find id
-                    $kategoriPemasukan               = PemasukanBiayaKategori::find($id);
+                    $kategoriPemasukan               = KegiatanHarianPertanyaan::find($id);
                     $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kategoriPemasukan->save();
 
@@ -191,7 +185,7 @@ class InputPertanyaanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pemasukan successfully'
+                        'message' => 'Delete Pertanyaan successfully'
                     ];
                 }
             }
