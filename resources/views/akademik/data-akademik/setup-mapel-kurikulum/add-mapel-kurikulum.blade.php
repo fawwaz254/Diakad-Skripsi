@@ -62,7 +62,7 @@
             { data: 'mata_pelajaran', name: 'mata_pelajaran' },
             { data: 'checkbox', name: 'checkbox', searchable: false, orderable: false,
                 render: function (data, type, full, meta){
-                    return '<input type="checkbox" name="id_mata_pelajaran[]" checked style="opacity: 1; visibility: visible; position: absolute; left: 90%" value="' + data.id + '">';
+                    return '<input type="checkbox" name="id_mata_pelajaran[]" style="opacity: 1; visibility: visible; position: absolute; left: 90%" value="' + data.id + '">';
                 }
             }
         ]
