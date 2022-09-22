@@ -1552,8 +1552,8 @@ class LibCetakKeuangan
             $detail = [];
             foreach ($rwytBayar->groupBy('tagihan_biaya.detail_biaya.biaya.id_biaya') as $x) {
                 $detail[] = [
-                    'id_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->id_biaya,
-                    'nama_biaya' => collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
+                    'id_biaya' => isset(collect($x)->first()->tagihan_biaya->detail_biaya->biaya->id_biaya) ? collect($x)->first()->tagihan_biaya->detail_biaya->biaya->id_biaya : '' ,
+                    'nama_biaya' => isset(collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya) ? collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya : '',
                     'frekuensi' => collect($x)->count(),
                     'nominal_pembayaran' => collect($x)->sum('besar_pembayaran'),
                     'potongan_biaya' => collect($x)->sum('tagihan_biaya.potongan.total_potongan'),
