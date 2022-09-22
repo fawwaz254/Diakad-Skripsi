@@ -8,6 +8,11 @@
 
 
     <style>
+        * {
+            font-family: 'Tahoma';
+            letter-spacing: 1.5px;
+        }
+
         table,
         td,
         th {
@@ -34,6 +39,13 @@
             border: 5px double;
             border-top-style: none;
         }
+
+        .under-below {
+            text-decoration: underline;
+            -webkit-text-underline-position: under;
+            -ms-text-underline-position: below;
+            text-underline-position: under;
+        }
     </style>
 
     <style type="text/css" media="print">
@@ -49,15 +61,28 @@
 
 <body>
     <div class="page">
-
+        <table style="width: 40%; margin-left:5%;">
+            <tr>
+                <td colspan="4">
+                    <h2 align="center" style="margin-top: 1px; font-family: 'Calibri';">
+                        {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
+                        <br>
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
+                    </h2>
+                </td>
+            </tr>
+        </table>
+        <br>
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
-            <tr style="border-style : hidden;">
+
+            <tr>
                 <td colspan="10" style="border-style : hidden">
 
-                    <h2 align="center" style="font-family: Tahoma;  margin-top: 5px">
+                    <h2 align="center" style="margin-top: 3px">
                         DAFTAR NILAI RAPOR SISIPAN<br>
-                        {{ $auth_data->sekolah_data->nm_sekolah }}<br>
-                        {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
+                        TAHUN AJARAN {{ $rapor_sisipan->semester->tahun_ajaran }}
+
                     </h2>
                 </td>
             <tr>
@@ -78,7 +103,7 @@
                     <td colspan="2" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
                     <td colspan="2" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">RT2SMT</td>
+                    <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR<br>SISIPAN</td>
                 </tr>
                 <tr>
@@ -101,7 +126,7 @@
                     <tr>
                         <td style="text-align: center;">{{ ++$no }}</td>
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
-                        <td>{{ $siswa->pengguna->nm_pengguna }}</td>
+                        <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
                         @foreach ($list_data as $nilai)
                             <td style="text-align: center;">
 
@@ -124,6 +149,39 @@
             </tbody>
 
         </table>
+        <table style="width: 30%; margin-left:10%; margin-top:20px">
+            <tr>
+                <td colspan="4">
+                    <p align="center" style="display: inline">
+                        RAPOR =
+                    </p>
+                    <p align="center" style="display: inline" class="under-below">
+                        {(2 x RT2 SMT)+(STS)}
+                    </p>
+                </td>
+            </tr>
+        </table>
+
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
+            <tr>
+                <td style=" border-style : hidden; width:65%; vertical-align: text-top; padding:0">
+                   <p style="margin-left: 10%;">
+                        SMT = Sumatif
+                    <br>
+                        STS = Sumatif Tengah Semester
+                    </p>
+                </td>
+
+                <td style="width:25%">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    Guru Bidang Study 
+                    <br><br><br><br><br><br><br>
+                    {{ $auth_data->pengguna->gelar_depan }} {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}
+                </td>
+
+            </tr>
+
+        </table>
+
     </div>
 </body>
 <script>
