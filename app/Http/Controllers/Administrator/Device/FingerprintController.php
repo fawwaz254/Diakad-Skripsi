@@ -92,6 +92,8 @@ class FingerprintController extends BaseController
         } else {
             $fingerprint_url = $device->ip_address_wan . '/iWsService';
         }
+
+        $data_username_pengguna = array();
         try {
             $client = new \GuzzleHttp\Client();
             $response = $client->post($fingerprint_url, [
@@ -106,9 +108,16 @@ class FingerprintController extends BaseController
 
             $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
             $buffer = explode("\r\n", $buffer);
-            $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+
+            $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('fp_date', 'desc')->first();
+            if ($last_data) {
+                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->fp_date);
+            } else {
+                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+            }
 
             foreach ($data_fp as $data) {
+                $data_username_pengguna[] = $data['username'];
                 if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->first()) {
 
                 } else {
@@ -121,7 +130,64 @@ class FingerprintController extends BaseController
                     $item->save();
                 }
             }
-            return 'SUCCESS';
+            echo 'SUCCESS Tarik Data -> ';
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        try {
+            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereIn('username', $data_username_pengguna)->get();
+            $collection = $data_fingerprint->groupBy('username')->all();
+
+            foreach ($collection as $username => $group_of_data) {
+                if ($pengguna = Pengguna::where('username', $username)->first()) {
+                    $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
+
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)->first()) {
+
+                    } else {
+                        $presensi = new PresensiPengguna;
+                        $presensi->id_pengguna = $pengguna->id_pengguna;
+                        $presensi->status_join_table = $pengguna->status_join_table;
+                        $presensi->date = $first_time_finger->tanggal;
+                    }
+
+                    if ($first_time_finger->status == 255) {
+                        if (count($group_of_data) > 1) { // FINGER MORE THAN 1
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                            if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                                $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                            }
+                        } else { // ONLY CHECK-IN
+                            // if (empty($presensi->check_in)) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            // }
+                        }
+                    } else {
+                        if ($first_time_finger->status == 0) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        }
+
+                        if ($first_time_finger->status == 1) {
+                            $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        }
+                    }
+
+                    if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
+                        if ($presensi->check_out < $presensi->check_in) {
+                            $temp_clock = $presensi->check_in;
+
+                            $presensi->check_in = $presensi->check_out;
+                            $presensi->check_out = $temp_clock;
+                        }
+                    }
+                    $presensi->status = null;
+                    $presensi->notes = null;
+                    $presensi->save();
+                }
+            }
+            return 'SUCCESS Merge Data. >>> END';
         } catch (Exception $e) {
             return $e;
         }
@@ -129,7 +195,7 @@ class FingerprintController extends BaseController
 
     public function actionGetDataFinger(Request $request)
     {
-        set_time_limit(9800);
+        set_time_limit(-1);
         $input = (object) $request->input();
 
         if (isset($input->dd)) {
@@ -309,7 +375,7 @@ class FingerprintController extends BaseController
         return $hasil;
     }
 
-    public function filterData($array, $tanggal_input)
+    public function filterData($array, $tanggal_input, $datetime_mulai = null)
     {
         $hasil = array();
         $counter = 0;
@@ -317,15 +383,29 @@ class FingerprintController extends BaseController
         foreach (array_reverse($array, true) as $key => $value) {
             if ($value) {
                 $tanggal = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
-                $tanggal = date('Y-m-d', strtotime($tanggal));
 
-                if ($tanggal == $tanggal_input) {
-                    $hasil[$counter]['username'] = $this->parseXMLData($value, "<PIN>", "</PIN>");
-                    $hasil[$counter]['tanggal'] = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
-                    $hasil[$counter]['status'] = $this->parseXMLData($value, "<Status>", "</Status>");
-                    $counter++;
+                if (empty($datetime_mulai)) {
+                    $tanggal = date('Y-m-d', strtotime($tanggal));
+
+                    if ($tanggal == $tanggal_input) {
+                        $hasil[$counter]['username'] = $this->parseXMLData($value, "<PIN>", "</PIN>");
+                        $hasil[$counter]['tanggal'] = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
+                        $hasil[$counter]['status'] = $this->parseXMLData($value, "<Status>", "</Status>");
+                        $counter++;
+                    } else {
+                        continue;
+                    }
                 } else {
-                    continue;
+                    $tanggal = Carbon::create($tanggal);
+
+                    if ($tanggal->gt(Carbon::create($datetime_mulai))) {
+                        $hasil[$counter]['username'] = $this->parseXMLData($value, "<PIN>", "</PIN>");
+                        $hasil[$counter]['tanggal'] = $this->parseXMLData($value, "<DateTime>", "</DateTime>");
+                        $hasil[$counter]['status'] = $this->parseXMLData($value, "<Status>", "</Status>");
+                        $counter++;
+                    } else {
+                        continue;
+                    }
                 }
             }
         }
