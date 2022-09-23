@@ -147,7 +147,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@createManajemenHariLibur');
 				Route::post('/add', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@storeManajemenHariLibur');
 				Route::post('/{id}/delete', 'Humas\ManajemenHariLibur\ManajemenHariLiburController@destroyManajemenHariLibur');
-			
+
 			});
 
 			Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
@@ -180,12 +180,12 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/siswa/{id_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\DetailAbsensiController@viewHistoriAbsensiSiswa');
 			});
 
-			Route::group(array('prefix' => 'rekap-absensi'),  function (){
-				Route::get('/'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
-				Route::get('/detail/{unit_kerja}'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+			Route::group(array('prefix' => 'rekap-absensi'), function () {
+				Route::get('/', 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+				Route::get('/detail/{unit_kerja}/{start_date}/{end_date}', 'Humas\Absensi\RekapAbsensiController@viewRekapAbsensi');
 
-				Route::get('/siswa'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
-				Route::get('/siswa/{kelas}'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+				Route::get('/siswa', 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+				Route::get('/siswa/{kelas}', 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
 
 			});
 		});
