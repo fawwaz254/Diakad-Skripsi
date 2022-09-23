@@ -30,70 +30,8 @@ class HistoriAbsensiSiswaController extends Controller
         $auth_data = $input->auth_data;
 
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
-
-        // $jumlah_hadir = 0;
-        // $jumlah_sakit = 0;
-        // $jumlah_izin = 0;
-        // $jumlah_telat = 0;
-        // $jumlah_alpha = 0;
-        // $belum_absent = 0;
         $date = Carbon::now()->format('Y-m-d');
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-
-        //     // $pengguna = Pengguna::with('status_pengguna')
-        //     // ->whereHas('status_pengguna', function ($query) {
-        //     //     $query->where('nm_status_pengguna', '=', 'AKTIF');
-        //     // })->orderBy('nm_pengguna', 'asc')->get();
-
-        //     // $allShiftPengguna = ShiftPengguna::where('date',$date)->with('shift_master')->get();
-        //     // $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
-        //     // foreach ($pengguna as $key => $value) {
-
-        //     // $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
-        //     // $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
-        //     // $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master:null;
-
-        //     // if ($attendance) {
-        //     //     if ($attendance->status) {
-        //     //         if ($attendance->status == 'sakit') {
-        //     //             $jumlah_sakit++;
-        //     //         } elseif ($attendance->status == 'izin') {
-        //     //             $jumlah_izin++;
-        //     //         }
-        //     //     }
-
-
-        //     //     if ($attendance->check_in) {
-        //     //         $jumlah_hadir++;
-        //     //     }
-        //     //     if (isset($shiftMaster['start_time'])) {
-        //     //         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
-        //     //             $jumlah_telat++;
-        //     //         }
-        //     //     }
-
-        //     // } else {
-
-        //     //     if ($shiftMaster) {
-
-        //     //         if ($date < Carbon::now()->format('Y-m-d')) {
-        //     //             $jumlah_alpha++;
-        //     //         } else if ($date == Carbon::now()->format('Y-m-d')) {
-        //     //             $belum_absent++;
-        //     //         } else {
-
-        //     //         }
-
-        //             if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
-        //                 $jumlah_alpha--;
-        //             }
-        //         }
-        //     }
-        //     if ($cek_libur) {
-        //         $hasil[$key]['status'] = 'Libur';
-        //         // $hasil[$key]['notes'] = $cek_libur->explanation;
-        //     }
-        // }
 
         return view('humas/absensi/histori-absensi-siswa/view-histori-absensi-siswa', compact('auth_data', 'kelas', 'date'));
     }

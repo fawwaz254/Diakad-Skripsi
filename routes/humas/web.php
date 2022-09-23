@@ -170,17 +170,22 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				//buat generate shift siswa
 				Route::get('/addShift/{date1}/{date2}', 'Humas\Absensi\HistoriAbsensiSiswaController@storeShiftPengguna');
 			});
-			// http://127.0.0.1:8000/humas/absensi/device/datatables
-			// Route::group(array('prefix' => 'device'), function () {
-			// 	// MENU Data Fingerprint
-			// 	Route::get('/', 'Administrator\Device\FingerprintController@indexList');
-			// 	Route::get('/datatables', 'Administrator\Device\FingerprintController@commonList');
-			// });
 			Route::group(array('prefix' => 'detail-absensi'), function () {
 				Route::get('/', 'Humas\Absensi\DetailAbsensiController@selectHistoriAbsensi');
 				Route::post('post-get-penguna', 'Humas\Absensi\DetailAbsensiController@actionGetPengguna');
                 Route::get('{id_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\DetailAbsensiController@viewHistoriAbsensi');
+				////////////siswa
+				Route::get('/siswa', 'Humas\Absensi\DetailAbsensiController@selectHistoriAbsensiSiswa');
+				Route::post('/siswa/post-get-penguna', 'Humas\Absensi\DetailAbsensiController@actionGetSiswa');
+                Route::get('/siswa/{id_pengguna}/{start_date}/{end_date}', 'Humas\Absensi\DetailAbsensiController@viewHistoriAbsensiSiswa');
+			});
 
+			Route::group(array('prefix' => 'rekap-absensi'),  function (){
+				Route::get('/'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+				Route::get('/detail/{unit_kerja}'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+
+				Route::get('/siswa'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
+				Route::get('/siswa/{kelas}'. 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
 
 			});
 		});
