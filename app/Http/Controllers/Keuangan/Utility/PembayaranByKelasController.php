@@ -7,6 +7,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Models\Semester;
 use App\Models\Siswa as Siswa;
 use App\Models\TagihanBiaya as TagihanBiaya;
+use App\Models\WaliKelas;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
@@ -173,6 +174,7 @@ class PembayaranByKelasController extends BaseController
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
+        // $wali_kelas = WaliKelas::with('guru.pengguna')->where('id_kelas', $data_kelas->id_kelas)->first();
 
         if (!empty($id_kelas) && !empty($tahun_akademik_semester)) {
             $semester_mulai = Semester::where('kode_semester', $tahun_akademik_semester . '1')->first();
@@ -260,7 +262,5 @@ class PembayaranByKelasController extends BaseController
         }
 
         return view('keuangan/utility/pembayaran-by-kelas/print-pembayaran-by-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'tahun_akademik_semester', 'id_kelas', 'data_siswa', 'data_tagihan', 'data_bulan_tagihan', 'data_tagihan_non_bulanan', 'data_ket_tagihan'));
-
     }
-
 }
