@@ -134,7 +134,7 @@
                     @endphp
                 @endforeach
                 @foreach ($subkategori_out as $data_subkategori)
-                <td class="text-center text-bold">{{$data_subkategori->deskripsi_subkategori_rapb}}</td>
+                <td class="text-center text-bold" style="font-size: 6px;padding:3px">{{$data_subkategori->deskripsi_subkategori_rapb}}</td>
                     @php
                         $total_all[$data_subkategori->id_subkategori_rapb] = 0;
                     @endphp
