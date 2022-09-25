@@ -199,7 +199,8 @@
                                             {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
                                             <td style="text-align: center;">{{ $r['libur'] }}</td> --}}
                                       
-                                            <td><button type="button" class="btn bg-purple waves-effect" >Lihat </button>  </td>
+                                            {{-- <td><button type="button" class="btn bg-purple waves-effect" >Lihat </button>  </td> --}}
+                                            <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href=" {{url(Request::segment(1).'/'.Request::segment(2).'/rekap-absensi/cetak/'. $r['id_pengguna'].'/'.$start_date.'/'.$end_date)}} "  target="_blank"><i class="material-icons">picture_as_pdf</i></a> </td>
                                             </tr>
                                 @endforeach
 
@@ -211,8 +212,7 @@
         </div>
     </div>
 </div>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
+
 <script type="text/javascript">
     $("input").on("change", function() {
         this.setAttribute(
@@ -239,8 +239,6 @@
     function editAbsensi(currUser) {
         window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
     }
-
-
 
 
     $(".delete-record").click(function() {
