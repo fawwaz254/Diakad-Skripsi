@@ -1,260 +1,374 @@
-<style>
-    input {
-        position: relative;
-        width: 150px;
-        height: 20px;
-        color: white;
-    }
+<!DOCTYPE html>
+<html lang="eng">
 
-    input:before {
-        position: absolute;
-        top: 3px;
-        left: 3px;
-        content: attr(data-date);
-        display: inline-block;
-        color: black;
-    }
-
-    input::-webkit-datetime-edit,
-    input::-webkit-inner-spin-button,
-    input::-webkit-clear-button {
-        display: none;
-    }
-
-    input::-webkit-calendar-picker-indicator {
-        position: absolute;
-        top: 3px;
-        right: 0;
-        color: black;
-        opacity: 1;
-    }
-</style>
-
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="container-fluid">
-
-    <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cetak Rekap Absensi</title>
 
 
-            <button type="button" class="btn btn-primary">
-                Data Rekap Absensi Guru dan Pegawai
-            </button>
-            <button type="button" onclick="viewSiswa()" class="btn btn-default">
-                Data Rekap Absensi Siswa
-            </button>
-            <div class="card" style="margin-top: 10px">
-                <div class="header">
-                    <h2>Filter Data</h2>
-                </div>
+    <style>
+        * {
+            font-family: 'Tahoma';
+            letter-spacing: 1.5px;
+        }
 
-                <div class="body">
+        table,
+        td,
+        th {
+            border: 1px solid;
+            padding: 10px;
+        }
 
-                    <div class="row clearfix">
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            /* border: 5px double; */
+        }
 
-                        <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
-                                Uni
-                            </h2>
-                            <select class="form-control show-tick" name="unit_kerja">
-                                <option @if ($unit_kerja == '0') selected @endif value="0">-- Semua --
-                                </option>
-                                <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
-                                </option>
-                                @foreach ($list_unit_kerja as $uk)
-                                    <option @if ($unit_kerja == $uk->id_unit_kerja) selected @endif
-                                        value="{{ $uk->id_unit_kerja }}">{{ $uk->nm_unit_kerja }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Start Date</label>
-                            <input type="date" class="form-control" value="{{ $start_date }}" name="start_date"
-                                aria-required="true" aria-invalid="true">
-                        </div>
+        .head {
+            border: 5px double;
+        }
 
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>End Date</label>
-                            <input type="date" class="form-control" value="{{ $end_date }}" name="end_date"
-                                aria-required="true" aria-invalid="true">
-                        </div>
+        .page {
+            width: 1200px;
+        }
 
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div>
-                                <button class="btn btn-block bg-red waves-effect" type="submit"
-                                    onclick="filterAction()"><i
-                                        class="material-icons">save</i><span>Tampilkan</span></button>
-                                {{-- <button type="button" class="btn bg-purple waves-effect"
-                                    onclick="filterAction()">Change Date</button> --}}
-                            </div>
+        .body {
 
-                        </div>
+            border: 5px double;
+            border-top-style: none;
+        }
 
-                    </div>
+        .under-below {
+            text-decoration: underline;
+            -webkit-text-underline-position: under;
+            -ms-text-underline-position: below;
+            text-underline-position: under;
+        }
+    </style>
 
-                </div>
+    <style type="text/css" media="print">
+        @page {
+            /* margin: 125mm 125mm 125mm 125mm;    */
+            size: portrait;
+            size: auto;
+            margin: 0mm;
 
-            </div>
-        </div>
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page">
+        <table style="width: 40%; margin-left:5%;">
+            <tr>
+                <td colspan="4">
+                    <h2 align="center" style="margin-top: 1px; font-family: 'Calibri';">
+                        {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
+                        <br>
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
+                    </h2>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
+
+            <tr>
+                <td colspan="10" style="border-style : hidden">
+
+                    <h2 align="center" style="margin-top: 3px">
+                        REKAP ABSENSI <br>
+                        {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br> --}}
+                         {{  \Carbon\Carbon::parse($start_date)->format('d F Y')}} <span style="font-weight:normal">-</span> {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}
+
+                    </h2>
+                </td>
+            <tr>
+
+            <tr style="border-style : hidden">
+                <td style="border-style : hidden;width: 75%;font-weight: bold;">Nama :
+                    {{ $pengguna->gelar_depan }} {{ $pengguna->nm_pengguna }} {{ $pengguna->gelar_belakang }}
+                <td style="border-style : hidden;width: 25%;font-weight: bold;">Kelas :
+                    {{ $pengguna->siswa->kelas->nm_kelas  }}
+            </tr>
+        </table>
+
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
+            <thead class="head">
+                <tr>
+                    <td style="text-align: center;font-weight: bold;">Nomor</td>
+                    <td style="text-align: center;font-weight: bold;">Status<br></td>
+                    <td style="text-align: center;font-weight: bold;">Jumlah</td>
+                    <td style="text-align: center;font-weight: bold;">Hari, Tanggal</td>
+                    <td style="text-align: center;font-weight: bold;">Check-in</td>
+                    {{-- <td style="text-align: center;font-weight: bold;">Check-out</td> --}}
+                </tr>
+            </thead>
+            <tbody class="body">
+                @php
+                    $no = 0;
+                @endphp
+                {{-- Masuk --}}
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Tepat Waktu</td>
+                    <td style="text-align: center;"> {{ $data['masuk'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Masuk')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Masuk')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Masuk')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                </tr>
+{{-- Terlambat --}}
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Terlambat</td>
+                    <td style="text-align: center;"> {{ $data['telat'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                </tr>
+{{-- Izin --}}
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Izin</td>
+                    <td style="text-align: center;"> {{ $data['izin'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'izin')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                                Note : {{ isset($h['note']) ? isset($h['note']) : '-'   }} <br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'izin')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'izin')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                </tr>
+{{-- Sakit --}}
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Sakit</td>
+                    <td style="text-align: center;"> {{ $data['sakit'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'sakit')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                                Note : {{ isset($h['note']) ? isset($h['note']) : '-'   }} <br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'sakit')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'sakit')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                </tr>
+{{-- Alpha --}}
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Alpha</td>
+                    <td style="text-align: center;"> {{ $data['alpha'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Alpha')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Alpha')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Alpha')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                </tr>
+
+                {{-- Tidak Checkout --}}
+{{-- 
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Tidak Checkout</td>
+                    <td style="text-align: center;"> {{ $data['tidakCheckout'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Tidak Checkout')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Tidak Checkout')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Tidak Checkout')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                {{-- </tr> --}}
+
+                {{-- Terlambat tidak Checkout --}}
+{{-- 
+                <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Terlambat, Tidak Checkout</td>
+                    <td style="text-align: center;"> {{ $data['Telat & Tidak Checkout'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat & Tidak Checkout')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat & Tidak Checkout')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat & Tidak Checkout')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                {{-- </tr> --}}
+
+                {{-- Pulang lebih awal --}}
+                {{-- <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Pulang Lebih Awal</td>
+                    <td style="text-align: center;"> {{ $data['pulang'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Pulang lebih awal')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Pulang lebih awal')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                    {{-- <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Pulang lebih awal')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                {{-- </tr> --}}
+{{-- Terlambat dan Pulang Lebih Awal --}}
+                {{-- <tr>
+                    <td style="text-align: center;">{{ ++$no }}</td>
+                    <td style="text-align: center;">Terlambat, Pulang Lebih Awal</td>
+                    <td style="text-align: center;"> {{ $data['telatDanPulangLebihAwal'] }} x</td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat dan Pulang lebih awal')
+                                {{ $h['day'] }}, {{ $h['date'] }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat dan Pulang lebih awal')
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td>
+                    <td style="text-align: center;">
+                        @foreach ($hasil as $h)
+                            @if ($h['status'] == 'Telat dan Pulang lebih awal')
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
+                            @endif
+                        @endforeach
+                    </td> --}}
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
-
-    <br>
-    <div class="row">
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="card">
-
-                <div class="header">
-                    <h2>Rekap Absensi Guru dan Pegawai</h2>
-                </div>
-                <br>
-                <div class="body">
-                    <div class="table-responsive ">
-                        <table class="table table-bordered" width="600px">
-                            <thead style="background:#9C27B0;color:white">
-                                <tr>
-                                    <th style="text-align: center;">Hadir</th>
-                                    <th style="text-align: center;">Hadir Terlambat</th>
-                                    {{-- <th style="text-align: center;">Belum Hadir</th> --}}
-                                    <th style="text-align: center;">Izin</th>
-                                    <th style="text-align: center;">Sakit</th>
-                                    <th style="text-align: center;">Alpha</th>
-                                    <th style="text-align: center;">Tidak Checkout</th>
-                                    <th style="text-align: center;">Pulang Lebih Awal</th>
-                                    {{-- <th style="text-align: center;">Tidak Checkout</th>
-                                    <th style="text-align: center;">Telat, Pulang Lebih Awal</th>
-                                    <th style="text-align: center;">Kosong</th>
-                                    <th style="text-align: center;">Libur</th>
-                                    <th style="text-align: center;">Telat, Tidak Checkout</th> --}}
-                                    {{-- <th style="text-align: center;">Pulang Lebih Awal</th> --}}
-                                </tr>
-                            </thead>
-                            <tr>
-                                <td style="text-align: center;">{{ $jumlah_hadir }}</td>
-                                <td style="text-align: center;">{{ $jumlah_telat }}</td>
-                                {{-- <td style="text-align: center;">{{ $belum_absent }}</td> --}}
-                                <td style="text-align: center;">{{ $jumlah_izin }}</td>
-                                <td style="text-align: center;">{{ $jumlah_sakit }}</td>
-                                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
-                                <td style="text-align: center;">{{ $tidak_checkout }}</td>
-                                <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
-
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row clearfix" style="margin-top: 10px">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
-                <div class="header">
-                    <h2>Histori Absensi </h2>
-                </div>
-
-                <div class="body">
-                    <div class="table-responsive ">
-                        <table class="table table-bordered" width="600px">
-                            <thead style="background:#9C27B0;color:white">
-                                <tr>
-                                    <th style="text-align: center;vertical-align: middle;">#</th>
-                                    <th style="text-align: center;vertical-align: middle;">Nama</th>
-                                    <th style="text-align: center;vertical-align: middle;">Unit Kerja</th>
-                                    <th style="text-align: center;vertical-align: middle;">Tepat Waktu</th>
-                                    <th style="text-align: center;vertical-align: middle;">Terlambat</th>
-                                    {{-- <th style="text-align: center;vertical-align: middle;">Belum Hadir</th> --}}
-                                    <th style="text-align: center;vertical-align: middle;">Izin</th>
-                                    <th style="text-align: center;vertical-align: middle;">Sakit</th>
-                                    <th style="text-align: center;vertical-align: middle;">Alpha</th>
-                                    <th style="text-align: center;vertical-align: middle;">Tidak <br> Checkout</th>
-                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Tidak
-                                        Checkout</th>
-                                    <th style="text-align: center;vertical-align: middle;">Pulang <br> Lebih Awal</th>
-                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Pulang Lebih
-                                        Awal</th>
-                                    {{-- <th style="text-align: center;vertical-align: middle;">Kosong</th>
-                                    <th style="text-align: center;vertical-align: middle;">Libur</th> --}}
-                                    <th style="text-align: center;vertical-align: middle;">Detail</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach ($data as $key => $r)
-                                    @if ($key % 2 == 1)
-                                        <tr style="background: #DDA0DD">
-                                        @else
-                                        <tr>
-                                    @endif
-
-                                    <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}
-                                    </td>
-                                    <td style="text-align: center;" style="text-align: center;">{{ $r['nm_pengguna'] }}
-                                    </td>
-                                    <td style="text-align: center;">{{ $r['unit_kerja'] }}</td>
-                                    <td style="text-align: center;">{{ $r['masuk'] }}</td>
-                                    <td
-                                        @if ($r['telat'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['telat'] }}</td>
-                                    <td
-                                        @if ($r['izin'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['izin'] }}</td>
-                                    <td
-                                        @if ($r['sakit'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['sakit'] }}</td>
-                                    <td
-                                        @if ($r['alpha'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['alpha'] }}</td>
-                                    <td
-                                        @if ($r['tidakCheckout'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['tidakCheckout'] }}</td>
-                                    <td
-                                        @if ($r['Telat & Tidak Checkout'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['Telat & Tidak Checkout'] }}</td>
-                                    <td
-                                        @if ($r['pulang'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['pulang'] }}</td>
-                                    {{-- <td style="text-align: center;">{{ $r['tidakCheckout'] }}</td> --}}
-                                    <td
-                                        @if ($r['telatDanPulangLebihAwal'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
-                                        {{ $r['telatDanPulangLebihAwal'] }}</td>
-                                    {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
-                                            <td style="text-align: center;">{{ $r['libur'] }}</td> --}}
-
-                                    {{-- <td><button type="button" class="btn bg-purple waves-effect" >Lihat </button>  </td> --}}
-                                    <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
-                                            href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
-                                            target="_blank"><i class="material-icons">picture_as_pdf</i></a> </td>
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    $("input").on("change", function() {
-        this.setAttribute(
-            "data-date",
-            moment(this.value, "YYYY-MM-DD")
-            .format(this.getAttribute("data-date-format"))
-        )
-    }).trigger("change")
-
-    function viewSiswa() {
-        window.location = '/humas#absensi/rekap-absensi/siswa'
-    }
-
-
-    function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/' + $('select[name=unit_kerja]').val() +
-            '/' + $(
-                'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
-    }
-
+</body>
+<script>
+    window.print();
 </script>
+
+</html>

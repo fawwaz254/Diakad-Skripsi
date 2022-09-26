@@ -98,6 +98,8 @@ class KerjaHarianController extends BaseController{
                 $data->tanggal                 = date_format(date_create($input->tanggal),"Y-m-d");
                 $data->lokasi                  = $input->lokasi;
                 $data->uraian_kegiatan         = $input->uraian_kegiatan;
+                $data->hasil                   = $input->hasil;
+                $data->kesesuaian_program_98   = $input->kesesuaian_program_98;
                 $data->status                  = $input->status;
                 $data->created_by              = $input->auth_data->pengguna->id_pengguna;
 
@@ -143,9 +145,10 @@ class KerjaHarianController extends BaseController{
                 $data                        = LaporanKerjaHarian::find($id);
                 $data->id_role               = $input->auth_data->role_aktif->id_role;
                 $data->tanggal               = date_format(date_create($input->tanggal),"Y-m-d");
-                $data->lokasi                  = $input->lokasi;
+                $data->lokasi                = $input->lokasi;
                 $data->uraian_kegiatan       = $input->uraian_kegiatan;
-
+                $data->kesesuaian_program_98 = $input->kesesuaian_program_98;
+                $data->hasil                 = $input->hasil;
                 $data->status                = $input->status;
                 $data->updated_by            = $input->auth_data->pengguna->id_pengguna;
 
@@ -208,15 +211,16 @@ class KerjaHarianController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-//    dd($auth_data);
         $data['laporan'] = LaporanKerjaHarian::where('created_by',$auth_data->pengguna->id_pengguna)
                                     ->whereBetween('tanggal', [$start_date, $end_date])
                                     ->orderBy('tanggal','asc')->get();
-   
-         $data['biodata'] = $auth_data->pengguna->nm_pengguna;
+
+         $data['biodata'] = $auth_data->pengguna->gelar_depan.$auth_data->pengguna->nm_pengguna.$auth_data->pengguna->gelar_belakang;
         $data['tanggal'] = Carbon::today()->format('d-M-Y');
         $data['alamat'] =  $auth_data->sekolah_data->alamat_kecamatan;
         $data['kepala_sekolah'] =  $auth_data->sekolah_data->nm_kepala_sekolah;
+        $data['auth_data'] = $auth_data;
+        $data['bulan'] = Carbon::parse($end_date)->format('M Y');
         return view('guru/laporan/kerja-harian/print-kerja-harian',$data);
 
     }
@@ -233,6 +237,12 @@ class KerjaHarianController extends BaseController{
         return Datatables::of($list_data)
                 ->editColumn('tanggal',function($item){
                     return Carbon::parse($item->tanggal)->format('d M Y');
+                })
+                ->editColumn('uraian_kegiatan',function($item){
+                    if(strlen($item->uraian_kegiatan) > 50)
+                    return substr($item->uraian_kegiatan,0,50).'.....';
+                    else
+                    return $item->uraian_kegiatan;
                 })
                 ->addColumn('action', function($item){
                     if($item->path_file){

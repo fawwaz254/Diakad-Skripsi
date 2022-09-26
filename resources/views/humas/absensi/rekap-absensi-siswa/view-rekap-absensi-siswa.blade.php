@@ -37,7 +37,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
           
-            <button type="button" onclick="viewPegawai()" class="btn btn-default" >
+            <button type="button" onclick="viewGuru()" class="btn btn-default" >
                 Data Histori Absensi Guru dan Pegawai
             </button>
             <button type="button" class="btn btn-primary">
@@ -53,9 +53,9 @@
                     <div class="row clearfix">
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
+                            <label>
                                Kelas
-                            </h2>
+                            </label>
                             <select class="form-control show-tick" name="kelas">
                                 <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
                                 </option>
@@ -216,22 +216,23 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script> --}}
 <script type="text/javascript">
-    $("input").on("change", function() {
-        this.setAttribute(
-            "data-date",
-            moment(this.value, "YYYY-MM-DD")
-            .format(this.getAttribute("data-date-format"))
-        )
-    }).trigger("change")
+    // $("input").on("change", function() {
+    //     this.setAttribute(
+    //         "data-date",
+    //         moment(this.value, "YYYY-MM-DD")
+    //         .format(this.getAttribute("data-date-format"))
+    //     )
+    // }).trigger("change")
 
-    function viewSiswa() {
-        window.location = '/humas#absensi/histori-absensi-siswa'
+    function viewGuru() {
+        window.location = '/humas#absensi/rekap-absensi'
     }
 
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
-            'select[name=unit_kerja]').val() + '/' +  $('select[name=status]').val());
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() +
+            '/' + $(
+                'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
     }
 
 </script>
