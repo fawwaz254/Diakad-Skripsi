@@ -105,7 +105,7 @@ class RekapKeuanganKelasController extends BaseController
                 ->where('tagihan_biaya.id_kelas', $id_kelas)
                 ->get();
 
-            $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
+            $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())->orderBy('nis_siswa', 'ASC')
                 ->get();
 
             $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->values()->all();
@@ -209,7 +209,7 @@ class RekapKeuanganKelasController extends BaseController
                 ->get();
 
             $data_siswa = Siswa::with('pengguna', 'pengguna.status_pengguna')->whereIn('siswa.id_siswa', $data_tagihan->unique('id_siswa')->pluck('id_siswa')->values()->all())
-                ->orderBy('nis_siswa')->get();
+                ->orderBy('nis_siswa', 'ASC')->get();
 
             $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->values()->all();
         } else {
