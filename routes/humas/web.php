@@ -183,13 +183,13 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::group(array('prefix' => 'rekap-absensi'), function () {
 				Route::get('/', 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensi');
 				Route::get('/detail/{unit_kerja}/{start_date}/{end_date}', 'Humas\Absensi\RekapAbsensiController@viewRekapAbsensi');
-
+				Route::get('/cetak/{id_pengguna}/{start_date}/{end_date}','Humas\Absensi\RekapAbsensiController@cetakRekapAbsensi');
 
 				Route::get('/siswa', 'Humas\Absensi\RekapAbsensiController@selectRekapAbsensiSiswa');
 				Route::get('/detail/siswa/{kelas}/{start_date}/{end_date}', 'Humas\Absensi\RekapAbsensiController@viewRekapAbsensiSiswa');
+				Route::get('/cetak/siswa/{id_pengguna}/{start_date}/{end_date}','Humas\Absensi\RekapAbsensiController@cetakRekapAbsensiSiswa');
 
-
-				Route::get('/cetak/{id_pengguna}/{start_date}/{end_date}','Humas\Absensi\RekapAbsensiController@cetakRekapAbsensi');
+				
 
 			});
 		});

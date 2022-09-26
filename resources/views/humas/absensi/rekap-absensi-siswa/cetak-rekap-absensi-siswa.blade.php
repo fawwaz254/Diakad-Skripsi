@@ -54,7 +54,7 @@
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
-                                Unit Kerja
+                                Uni
                             </h2>
                             <select class="form-control show-tick" name="unit_kerja">
                                 <option @if ($unit_kerja == '0') selected @endif value="0">-- Semua --
