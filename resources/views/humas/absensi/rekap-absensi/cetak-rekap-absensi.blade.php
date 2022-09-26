@@ -81,7 +81,7 @@
                     <h2 align="center" style="margin-top: 3px">
                         REKAP ABSENSI <br>
                         {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br> --}}
-                         {{  \Carbon\Carbon::parse($start_date)->format('d F Y')}} <span style="font-weight:normal">/</span> {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}
+                         {{  \Carbon\Carbon::parse($start_date)->format('d F Y')}} <span style="font-weight:normal">-</span> {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}
 
                     </h2>
                 </td>
@@ -336,7 +336,7 @@
 {{-- Terlambat dan Pulang Lebih Awal --}}
                 <tr>
                     <td style="text-align: center;">{{ ++$no }}</td>
-                    <td style="text-align: center;">Terlambar, Pulang Lebih Awal</td>
+                    <td style="text-align: center;">Terlambat, Pulang Lebih Awal</td>
                     <td style="text-align: center;"> {{ $data['telatDanPulangLebihAwal'] }} x</td>
                     <td style="text-align: center;">
                         @foreach ($hasil as $h)

@@ -37,10 +37,10 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
           
-            <button type="button" class="btn btn-primary">
+            <button type="button" onclick="viewPegawai()" class="btn btn-default" >
                 Data Histori Absensi Guru dan Pegawai
             </button>
-            <button type="button" onclick="viewSiswa()" class="btn btn-default">
+            <button type="button" class="btn btn-primary">
                 Data Histori Absensi Siswa
             </button>
             <div class="card" style="margin-top: 10px">
@@ -54,16 +54,16 @@
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
-                                Unit Kerja
+                               Kelas
                             </h2>
                             <select class="form-control show-tick" name="kelas">
-                                {{-- <option @if ($unit_kerja == '0') selected @endif value="0">-- Semua --
-                                </option> --}}
+                                <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
+                                </option>
                                 {{-- <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
                                 </option> --}}
                                 @foreach ($list_kelas as $lk)
-                                    {{-- <option @if ($unit_kerja == $uk->id_unit_kerja) selected @endif
-                                        value="{{ $uk->id_unit_kerja }}">{{ $uk->nm_unit_kerja }}</option> --}}
+                                    <option @if ($id_kelas == $lk->id_kelas) selected @endif
+                                        value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -102,7 +102,7 @@
             <div class="card">
 
                 <div class="header">
-                    <h2>Rekap Absensi Unit kerja (Siswa)</h2>
+                    <h2>Rekap Absensi Siswa</h2>
                 </div>
                 <br>
                 <div class="body">
@@ -199,8 +199,10 @@
                                             {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
                                             <td style="text-align: center;">{{ $r['libur'] }}</td> --}}
                                       
-                                            <td><button type="button" class="btn bg-purple waves-effect" style="text-align: center;">Lihat </button>  </td>
-                                            </tr>
+                                            <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
+                                                href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/siswa/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
+                                                target="_blank"><i class="material-icons">picture_as_pdf</i></a> </td>
+                                        </tr>
                                 @endforeach
 
                             </tbody>
@@ -232,49 +234,4 @@
             'select[name=unit_kerja]').val() + '/' +  $('select[name=status]').val());
     }
 
-    function addAbsensi(id_pengguna) {
-        window.location = '/humas#absensi/histori-absensi/' + id_pengguna + '/' + $('input[name=date]').val() + '/add'
-    }
-
-    function editAbsensi(currUser) {
-        window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
-    }
-
-
-
-
-    $(".delete-record").click(function() {
-        var token = $("meta[name='csrf-token']").attr("content");
-        var id = $(this).data("id");
-        swal({
-                title: "Are you sure?",
-                showCancelButton: true
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    $('.delete-record').attr("disabled", true);
-                    //swall
-                    $.ajax({
-                        url: ` /humas/absensi/histori-absensi/${id}/delete`,
-                        type: "post",
-
-                        data: {
-                            _token: token,
-                        },
-
-                        success: function() {
-                            swal({
-                                title: "Delete Success",
-                                text: "data berhasil dihapus",
-                                icon: "success",
-                            });
-                            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' +
-                                $('input[name=date]').val() + '/0/0');
-                        },
-                    });
-                }
-                return;
-            }
-        );
-    });
 </script>
