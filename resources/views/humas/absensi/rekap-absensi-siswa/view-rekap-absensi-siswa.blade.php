@@ -53,9 +53,9 @@
                     <div class="row clearfix">
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
+                            <label>
                                Kelas
-                            </h2>
+                            </label>
                             <select class="form-control show-tick" name="kelas">
                                 <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
                                 </option>
