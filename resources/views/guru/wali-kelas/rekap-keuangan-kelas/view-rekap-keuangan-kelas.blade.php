@@ -50,7 +50,6 @@
     .tdbg-12 {
         background: #a0c1b8;
     }
-
 </style>
 <div class="container-fluid">
     <div class="row clearfix">
@@ -82,11 +81,12 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="form-group">
-                                    <input type="radio" name="action" id="lunas" class="filled-in with-gap" checked=""
-                                        value="1">
+                                    <input type="radio" name="action" id="lunas" class="filled-in with-gap"
+                                        checked="" value="1">
                                     <label for="lunas">Langsung Lunas</label>
 
-                                    <input type="radio" name="action" id="cicilan" class="filled-in with-gap" value="2">
+                                    <input type="radio" name="action" id="cicilan" class="filled-in with-gap"
+                                        value="2">
                                     <label for="cicilan" class="m-l-20">Cicilan</label>
                                 </div>
                             </div>
