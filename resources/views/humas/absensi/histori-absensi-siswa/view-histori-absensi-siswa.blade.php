@@ -50,7 +50,6 @@
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
                         {{ csrf_field() }}
-                        {{-- {{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-view-data-siswa') }} --}}
                         <div class="row clearfix">
                             <div class="col-md-4 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
@@ -59,8 +58,8 @@
                                 <select class="form-control show-tick" name="kelas">
                                     <option value="0">-- Semua --</option>
                                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-                                    <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
-                                    <option value="2">-- Madrasah Aliyah (MA) --</option>
+                                        <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                        <option value="2">-- Madrasah Aliyah (MA) --</option>
                                     @endif
                                     @foreach ($kelas as $k)
                                         <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
@@ -81,22 +80,21 @@
                                     <option value="Belum Absent">Belum Absent</option>
                                 </select>
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-md-4 col-sm-12 col-xs-12">
-                                    <h2 class="card-inside-title">
-                                        Tanggal
-                                    </h2>
-                                    <input type="date" class="form-control" data-date=""
-                                        data-date-format="DD/MM/YYYY" value="{{ $date }}" name="date"
-                                        aria-required="true" aria-invalid="true">
-                                </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Tanggal
+                                </h2>
+                                <input type="date" class="form-control" data-date="" data-date-format="DD/MM/YYYY"
+                                    value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
                             </div>
-                            <div class="row clearfix">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                            class="material-icons">save</i><span>Tampilkan</span></button>
-                                </div>
+
+
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Tampilkan</span></button>
                             </div>
+                        </div>
                     </form>
                 </div>
             </div>

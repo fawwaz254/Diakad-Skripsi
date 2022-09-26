@@ -2,38 +2,33 @@
 
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <button type="button" class="btn btn-primary">
+            <button type="button" onclick="viewGuru()" class="btn btn-default" >
                 Data Histori Absensi Guru dan Pegawai
             </button>
-            <button type="button" onclick="viewSiswa()" class="btn btn-default">
+            <button type="button"  class="btn btn-primary">
                 Data Histori Absensi Siswa
             </button>
-            <div class="card" style="margin-top: 10px">
-
+            <div class="card"  style="margin-top: 10px">
                 <div class="header">
                     <h2>Filter Data</h2>
                 </div>
-
                 <div class="body">
-
                     <div class="row clearfix">
-
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <label>
-                                Unit Kerja
+                                Kelas
                             </label>
-                            <select class="form-control show-tick" name="unit_kerja" onchange="changeUnitKerja()">
-                                <option>Pilih unit kerja</option>
-                                <option value="1">Pegawai</option>
-                                @foreach ($list_unit_kerja as $uk)
-                                    <option value="{{ $uk->id_unit_kerja }}">{{ $uk->nm_unit_kerja }}</option>
+                            <select class="form-control show-tick" name="kelas" onchange="changeKelas()">
+                                <option>Pilih Kelas</option>
+                                @foreach ($list_kelas as $lk)
+                                    <option value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <label>Nama Pengguna</label>
                             <select class="form-control show-tick" name="pengguna">
-                                <option>Pilih unit kerja dahulu</option>
+                                <option>Pilih Kelas Dahulu</option>
                             </select>
                         </div>
                         <div class="col-md-2 col-sm-12 col-xs-12">
@@ -119,7 +114,6 @@
                 </div>
 
                 <div class="body">
-                    
                     <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead style="background:#9C27B0;color:white">
@@ -163,12 +157,12 @@
 </div>
 
 <script type="text/javascript">
-        function changeUnitKerja(el){
+        function changeKelas(el){
         $.ajax({
-            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/post-get-penguna')}}',
+            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/siswa/post-get-penguna')}}',
             type: 'POST',
             data: {
-                unit_kerja: $('select[name=unit_kerja]').val()
+            kelas: $('select[name=kelas]').val()
             },
             success: function(result) {
                 $('select[name=pengguna]').html('');
@@ -181,11 +175,11 @@
         });
     }
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('select[name=pengguna]').val() + '/' + $(
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/siswa/' + $('select[name=pengguna]').val() + '/' + $(
             'input[name=start_date]').val() + '/' +  $('input[name=end_date]').val());
     }
-    function viewSiswa() {
-        window.location = '/humas#absensi/detail-absensi/siswa'
+    function viewGuru() {
+        window.location = '/humas#absensi/detail-absensi'
     }
 
 </script>
