@@ -36,12 +36,12 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-          
+
             <button type="button" class="btn btn-primary">
-                Data Histori Absensi Guru dan Pegawai
+                Data Rekap Absensi Guru dan Pegawai
             </button>
             <button type="button" onclick="viewSiswa()" class="btn btn-default">
-                Data Histori Absensi Siswa
+                Data Rekap Absensi Siswa
             </button>
             <div class="card" style="margin-top: 10px">
                 <div class="header">
@@ -69,12 +69,14 @@
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <label>Start Date</label>
-                            <input type="date" class="form-control" value="{{$start_date}}" name="start_date" aria-required="true" aria-invalid="true">
+                            <input type="date" class="form-control" value="{{ $start_date }}" name="start_date"
+                                aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <label>End Date</label>
-                            <input type="date" class="form-control" value="{{$end_date}}" name="end_date" aria-required="true" aria-invalid="true">
+                            <input type="date" class="form-control" value="{{ $end_date }}" name="end_date"
+                                aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -166,9 +168,11 @@
                                     <th style="text-align: center;vertical-align: middle;">Sakit</th>
                                     <th style="text-align: center;vertical-align: middle;">Alpha</th>
                                     <th style="text-align: center;vertical-align: middle;">Tidak <br> Checkout</th>
-                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Tidak Checkout</th>
+                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Tidak
+                                        Checkout</th>
                                     <th style="text-align: center;vertical-align: middle;">Pulang <br> Lebih Awal</th>
-                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Pulang Lebih Awal</th>
+                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Pulang Lebih
+                                        Awal</th>
                                     {{-- <th style="text-align: center;vertical-align: middle;">Kosong</th>
                                     <th style="text-align: center;vertical-align: middle;">Libur</th> --}}
                                     <th style="text-align: center;vertical-align: middle;">Detail</th>
@@ -182,26 +186,46 @@
                                         @else
                                         <tr>
                                     @endif
-                                   
-                                            <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}</td>
-                                            <td style="text-align: center;" style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                                            <td style="text-align: center;">{{ $r['unit_kerja'] }}</td>
-                                            <td style="text-align: center;">{{ $r['masuk'] }}</td>
-                                            <td @if($r['telat'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['telat'] }}</td>
-                                            <td @if($r['izin'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['izin'] }}</td>
-                                            <td @if($r['sakit'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['sakit'] }}</td>
-                                            <td @if($r['alpha'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['alpha'] }}</td>
-                                            <td @if($r['tidakCheckout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['tidakCheckout'] }}</td>
-                                            <td @if($r['Telat & Tidak Checkout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['Telat & Tidak Checkout'] }}</td>
-                                            <td @if($r['pulang'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['pulang'] }}</td>
-                                            {{-- <td style="text-align: center;">{{ $r['tidakCheckout'] }}</td> --}}
-                                            <td @if($r['telatDanPulangLebihAwal'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['telatDanPulangLebihAwal'] }}</td>
-                                            {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
+
+                                    <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}
+                                    </td>
+                                    <td style="text-align: center;" style="text-align: center;">{{ $r['nm_pengguna'] }}
+                                    </td>
+                                    <td style="text-align: center;">{{ $r['unit_kerja'] }}</td>
+                                    <td style="text-align: center;">{{ $r['masuk'] }}</td>
+                                    <td
+                                        @if ($r['telat'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['telat'] }}</td>
+                                    <td
+                                        @if ($r['izin'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['izin'] }}</td>
+                                    <td
+                                        @if ($r['sakit'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['sakit'] }}</td>
+                                    <td
+                                        @if ($r['alpha'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['alpha'] }}</td>
+                                    <td
+                                        @if ($r['tidakCheckout'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['tidakCheckout'] }}</td>
+                                    <td
+                                        @if ($r['Telat & Tidak Checkout'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['Telat & Tidak Checkout'] }}</td>
+                                    <td
+                                        @if ($r['pulang'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['pulang'] }}</td>
+                                    {{-- <td style="text-align: center;">{{ $r['tidakCheckout'] }}</td> --}}
+                                    <td
+                                        @if ($r['telatDanPulangLebihAwal'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['telatDanPulangLebihAwal'] }}</td>
+                                    {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
                                             <td style="text-align: center;">{{ $r['libur'] }}</td> --}}
-                                      
-                                            {{-- <td><button type="button" class="btn bg-purple waves-effect" >Lihat </button>  </td> --}}
-                                            <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href=" {{url(Request::segment(1).'/'.Request::segment(2).'/rekap-absensi/cetak/'. $r['id_pengguna'].'/'.$start_date.'/'.$end_date)}} "  target="_blank"><i class="material-icons">picture_as_pdf</i></a> </td>
-                                            </tr>
+
+                                    {{-- <td><button type="button" class="btn bg-purple waves-effect" >Lihat </button>  </td> --}}
+                                    <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
+                                            href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
+                                            target="_blank"><i class="material-icons">picture_as_pdf</i></a> </td>
+                                    </tr>
                                 @endforeach
 
                             </tbody>
@@ -228,51 +252,9 @@
 
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
-            'select[name=unit_kerja]').val() + '/' +  $('select[name=status]').val());
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/' + $('select[name=unit_kerja]').val() +
+            '/' + $(
+                'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
     }
 
-    function addAbsensi(id_pengguna) {
-        window.location = '/humas#absensi/histori-absensi/' + id_pengguna + '/' + $('input[name=date]').val() + '/add'
-    }
-
-    function editAbsensi(currUser) {
-        window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
-    }
-
-
-    $(".delete-record").click(function() {
-        var token = $("meta[name='csrf-token']").attr("content");
-        var id = $(this).data("id");
-        swal({
-                title: "Are you sure?",
-                showCancelButton: true
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    $('.delete-record').attr("disabled", true);
-                    //swall
-                    $.ajax({
-                        url: ` /humas/absensi/histori-absensi/${id}/delete`,
-                        type: "post",
-
-                        data: {
-                            _token: token,
-                        },
-
-                        success: function() {
-                            swal({
-                                title: "Delete Success",
-                                text: "data berhasil dihapus",
-                                icon: "success",
-                            });
-                            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' +
-                                $('input[name=date]').val() + '/0/0');
-                        },
-                    });
-                }
-                return;
-            }
-        );
-    });
 </script>
