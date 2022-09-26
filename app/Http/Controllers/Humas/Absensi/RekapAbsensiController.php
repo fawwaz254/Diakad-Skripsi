@@ -184,6 +184,10 @@ class RekapAbsensiController extends Controller
 
         }
 
+
+        $start_date = Carbon::parse($start_date)->format('Y-m-d');
+        $end_date = Carbon::parse($end_date)->format('Y-m-d');
+
         // dd($hasil);
         return view('humas/absensi/rekap-absensi/view-rekap-absensi', compact('auth_data', 'list_unit_kerja', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'unit_kerja', 'start_date', 'end_date'));
     }
@@ -348,6 +352,9 @@ class RekapAbsensiController extends Controller
             // $data[$key]['libur'] = isset(array_count_values(array_column($a, 'status'))['Libur']) ? array_count_values(array_column($a, 'status'))['Libur'] : '0';
     }
     
+    $start_date = Carbon::parse($start_date)->format('Y-m-d');
+    $end_date = Carbon::parse($end_date)->format('Y-m-d');
+
     return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date','id_kelas'));
 }
 

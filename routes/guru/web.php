@@ -639,6 +639,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
                 Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
+                Route::get('print-kerja-harian/{start_date}/{end_date}','Guru\Laporan\KerjaHarianController@printKerjaHarian');
             });
         });
 

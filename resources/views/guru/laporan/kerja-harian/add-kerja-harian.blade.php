@@ -44,7 +44,24 @@
                                 </label>
                             </div>
                         </div>
-
+                        <h2 class="card-inside-title">
+                            Hasil
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <textarea rows="4" cols="50" class="form-control" name="hasil" required="" aria-required="true"
+                                    aria-invalid="true"></textarea>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Kesesuaian Program 98
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="number" class="form-control" name="kesesuaian_program_98" required="" aria-required="true"
+                                    aria-invalid="true">
+                            </div>
+                        </div>
                         <h2 class="card-inside-title">
                             Target Pencapaian
                         </h2>
@@ -63,6 +80,8 @@
                             <input name="lokasi" type="radio" value="lapangan" id="radio_4" />
                             <label for="radio_4">Lapangan</label>
                         </div>
+                     
+ 
 
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

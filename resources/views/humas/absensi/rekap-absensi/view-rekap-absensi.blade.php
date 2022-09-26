@@ -53,9 +53,9 @@
                     <div class="row clearfix">
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title">
+                            <label>
                                 Unit Kerja
-                            </h2>
+                            </label>
                             <select class="form-control show-tick" name="unit_kerja">
                                 <option @if ($unit_kerja == '0') selected @endif value="0">-- Semua --
                                 </option>
@@ -238,13 +238,13 @@
 </div>
 
 <script type="text/javascript">
-    $("input").on("change", function() {
-        this.setAttribute(
-            "data-date",
-            moment(this.value, "YYYY-MM-DD")
-            .format(this.getAttribute("data-date-format"))
-        )
-    }).trigger("change")
+    // $("input").on("change", function() {
+    //     this.setAttribute(
+    //         "data-date",
+    //         moment(this.value, "YYYY-MM-DD")
+    //         .format(this.getAttribute("data-date-format"))
+    //     )
+    // }).trigger("change")
 
     function viewSiswa() {
         window.location = '/humas#absensi/rekap-absensi/siswa'
