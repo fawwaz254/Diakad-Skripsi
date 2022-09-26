@@ -22,6 +22,10 @@
             border-collapse: collapse;
             /* border: 5px double; */
         }
+        p{
+    width: 180px;
+    border-bottom: 1px solid black;
+} 
 
         .border > * {
         border: 1px solid;
@@ -120,51 +124,33 @@
       <tr>
       <td></td>
       <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
       <td>{{$alamat}}, {{$tanggal}}</td>
       </tr>
       <tr>
         <td>Mengetahui,</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      
+       
+        <td>Menyetujui,</td>
+      
         <td></td>
       </tr>
       <tr>
+        <td>{{ $auth_data->sekolah_data->nm_sekolah }}</td>
+      
+       
         <td>Kepala Sekolah,</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td> <td></td>
-        <td></td>
+      
         <td>Penyusun,</td>
       </tr>
      
      <tr style="height:70px">
      </tr>
       <tr>
+        <td><p></p></td>
+      
         <td><b>{{$kepala_sekolah}}</b></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+       
+      
         <td><b>{{$biodata}}</b></td>
       </tr>
     </table>
