@@ -3,27 +3,80 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{-- <meta name="viewport" content="width=device-width, initial-scale=1"> --}}
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"> --}}
 
     <title>Laporan Kerja Harian</title>
+    <style type="text/css" media="print">
+        /* table,
+        td,
+        th {
+          
+        } */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            /* border: 5px double; */
+        }
+
+        .border > * {
+        border: 1px solid;
+            padding: 10px;
+          /* border-style: none; */
+        }
+
+        @page {
+            /* margin: 125mm 125mm 125mm 125mm;    */
+            size: portrait;
+            size: auto;
+            margin: 0mm;
+
+        }
+    </style>
   </head>
   <body>
 
-    <div class="container">
-    <h5 style="margin-top: 40px;text-align: center;">KEGIATAN HARIAN (TIME SHEET)</h5>
+    <div class="page">
+      <table style="width: 40%; margin-left:5%; border-style: solid; margin-top:5px;  " >
+        <tr >
+            <td>
+              <h3 align="center">
+                <span align="center" style="margin-top: 1px; font-family: 'Brush Script MT';">
+                    {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
+                </span>
+                <br>
+                <span align="center" style="margin-top: 1px; font-family: 'Cooper Black';">
+                    {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
+                </span></h3>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <h2 style="margin-top: 40px;text-align: center;font-family: 'Cooper Black';">KEGIATAN HARIAN (TIME SHEET)</h2>
 
-    <table class="table table-bordered" style="margin-top:20px;border: 2px solid black;">
+    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" >
+      <tr >
+                     <td style="border-style : hidden;width: 75%;font-weight: bold;">
+                         {{-- {{ $pengguna->gelar_depan }} {{ $pengguna->nm_pengguna }} {{ $pengguna->gelar_belakang }} --}}
+                     <td style="border-style : hidden;width: 25%;font-weight: bold;">Bulan :
+                         {{ $bulan }}
+                 </tr>
+             </table>
+    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="margin-top:20px;" class="border">
     <thead>
-    <tr>
+    <tr  class="border">
     <th scope="col" rowspan="2" style="vertical-align:middle;text-align: center;">No</th>
     <th scope="col" rowspan="2" style="vertical-align:middle;text-align: center;">Tanggal</th>
     <th scope="col" colspan="2" style="vertical-align:middle;text-align: center;">Tempat</th>
      <th scope="col" rowspan="2" style="vertical-align:middle;text-align: center;">Uraian Kegiatan</th>
+     <th scope="col" rowspan="2" style="vertical-align:middle;text-align: center;">Hasil</th>
+     <th scope="col" rowspan="2" style="vertical-align:middle;text-align: center;">Kesesuaian<br>Program 98</th>
     </tr>
-    <tr>
+    <tr  class="border">
       <th style="vertical-align:middle;text-align: center;">Knt</th>
       <th style="vertical-align:middle;text-align: center;">Lap</th>
     </tr>
@@ -34,7 +87,7 @@
       $tanggal_awal = '-';
       @endphp
       @foreach($laporan as $key => $value)
-      <tr>
+      <tr  class="border">
         <td>
           @if($value->tanggal != $tanggal_awal)
           {{$counter}}
@@ -52,6 +105,8 @@
         <td style="vertical-align:middle;text-align: center;">{{$value->lokasi == "kantor" ? '√' : ''}}</td>
         <td style="vertical-align:middle;text-align: center;">{{$value->lokasi == "lapangan" ? '√' : ''}}</td>
         <td>{{$value->uraian_kegiatan}}</td>
+        <td>{{$value->hasil}}</td>
+        <td style="vertical-align:middle;text-align: center;">{{$value->kesesuaian_program_98}}</td>
       </tr>
       @php
       $tanggal_awal = $value->tanggal;
@@ -61,15 +116,27 @@
     </table>
     <br>
 
-    <table style="width:130%">
+    <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;border-style: none" style="margin-top:20px;" class="removeB">
       <tr>
       <td></td>
       <td></td>
       <td></td>
-      <td>{{$alamat}},{{$tanggal}}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>{{$alamat}}, {{$tanggal}}</td>
       </tr>
       <tr>
         <td>Mengetahui,</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -78,29 +145,29 @@
         <td>Kepala Sekolah,</td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td> <td></td>
+        <td></td>
         <td>Penyusun,</td>
       </tr>
      
      <tr style="height:70px">
      </tr>
-      
-      
-      
-      
-     
       <tr>
         <td><b>{{$kepala_sekolah}}</b></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td></td>
         <td></td>
         <td><b>{{$biodata}}</b></td>
       </tr>
     </table>
-
-    
-
-
-
-
     </div>
 
     <!-- Optional JavaScript; choose one of the two! -->
@@ -115,3 +182,8 @@
     -->
   </body>
 </html>
+
+
+<script>
+  window.print();
+</script>

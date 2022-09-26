@@ -21,6 +21,8 @@
                                         <th colspan="2" style="vertical-align : middle;text-align:center;">Lokasi</th>
                                       
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Urian Kegiatan</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Hasil</th>
+                                        <th rowspan="2" style="vertical-align : middle;text-align:center;">Kesesuaian<br> Program 98</th>
                                         <th colspan="2" style="vertical-align : middle;text-align:center;">Target Pencapaian</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">File</th>
                                         <th rowspan="2" style="vertical-align : middle;text-align:center;">Action</th>
@@ -116,7 +118,7 @@
             return;
         }
 
-        window.location.href = "/tendik/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
+        window.location.href = "/guru/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
     })
 
     var modul_url        = 'laporan';
@@ -154,6 +156,8 @@
                         return '';
                     }}},
             { data: 'uraian_kegiatan', name: 'uraian_kegiatan' },
+            { data: 'hasil', name: 'hasil' },
+            { data: 'kesesuaian_program_98', name: 'kesesuaian_program_98' ,class:'text-center'},
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 1){
@@ -163,7 +167,8 @@
                         return '';
                     }
                 }
-            },
+            },   
+            
             { data: 'action',class:'text-center', name: 'action', searchable: false, orderable: false,
                 render : function(data){
                     if(data.status == 0){
