@@ -396,13 +396,13 @@ public function cetakRekapAbsensi(Request $request, $id_pengguna, $start_date, $
                     }
                 }
                 if ($attendance->check_in) {
-                    $hasil[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['check_in'] = Carbon::parse($attendance->check_in)->format('H:i');
                     $hasil[$key]['status'] = "Masuk";
 
                     $jumlah_hadir++;
                 }
                 if ($attendance->check_out) {
-                    $hasil[$key]['check_out'] = $attendance->check_out;
+                    $hasil[$key]['check_out'] = Carbon::parse($attendance->check_out)->format('H:i');
                 }
                 if ($attendance->notes) {
                     $hasil[$key]['notes'] = $attendance->notes;

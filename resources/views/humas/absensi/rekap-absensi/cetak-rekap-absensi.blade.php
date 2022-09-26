@@ -125,14 +125,14 @@
                     <td style="text-align: center;">
                         @foreach ($hasil as $h)
                             @if ($h['status'] == 'Masuk')
-                                {{ isset($h['check_in']) ? \Carbon\Carbon::parse($h['check_in'])->format('H:i') : '-' }}<br>
+                                {{ isset($h['check_in']) ? $h['check_in'] : '-' }}<br>
                             @endif
                         @endforeach
                     </td>
                     <td style="text-align: center;">
                         @foreach ($hasil as $h)
                             @if ($h['status'] == 'Masuk')
-                                {{ isset($h['check_out']) ? \Carbon\Carbon::parse($h['check_out'])->format('H:i') : '-' }}<br>
+                                {{ isset($h['check_out']) ? $h['check_out'] : '-' }}<br>
                             @endif
                         @endforeach
                     </td>
