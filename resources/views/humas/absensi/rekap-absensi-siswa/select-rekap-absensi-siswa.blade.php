@@ -3,10 +3,10 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <button type="button" class="btn btn-default" onclick="viewGuru()">
-                Data Histori Absensi Guru dan Pegawai
+                Data Rekap Absensi Guru dan Pegawai
             </button>
             <button type="button" class="btn btn-primary">
-                Data Histori Absensi Siswa
+                Data Rekap Absensi Siswa
             </button>
             <div class="card" style="margin-top: 10px">
                 <div class="header">
