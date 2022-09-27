@@ -14,7 +14,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action')}}/{{!empty($item)? 'edit' : 'add'}}">
+                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action')}}/{{!empty($item)? 'edit/'.$item->id_kegiatan_harian : 'add/0'}}">
                         {{csrf_field()}}
                         @if(!empty($item))
                         <input type="hidden" name="id_kegiatan_harian" value="{{$item->id_kegiatan_harian}}">
