@@ -84,7 +84,7 @@ class InputPelanggaranController extends BaseController{
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, null, $data_pelanggaran_siswa->id_siswa);
 
         // ambil data siswa sekelas
-        $data_siswa_sekelas = LibSiswa::fetchDataSiswa($auth_data, $data_siswa->id_kelas);
+        $data_siswa_sekelas = LibSiswa::fetchDataSiswa($auth_data, isset($data_siswa->id_kelas) ? $data_siswa->id_kelas : null);
 
         // convert format date
         $tgl_pelanggaran = strftime( "%d %B %Y %H:%M:%S", strtotime($data_pelanggaran_siswa->tgl_pelanggaran));

@@ -210,7 +210,7 @@ class RaporSisipanController extends Controller
         $list_data = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 5, 6, 9])->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
 
-        $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai')
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
             ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
                 $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
             })
@@ -260,12 +260,12 @@ class RaporSisipanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester')->first();
+        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->first();
 
         $list_data = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 5, 6, 9])->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
 
-        $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai')
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
             ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
                 $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
             })
@@ -273,12 +273,12 @@ class RaporSisipanController extends Controller
                 $query->whereIn('urutan', [1, 2, 5, 6, 9]);
             })->get();
 
+
         $nilai_siswa = [];
         $nilai_komponen = [];
         if ($list_siswa) {
             $nilai = $list_nilai->toArray();
             foreach ($nilai as $nilaiRapor) {
-                // dd($nilaiRapor);
                 foreach ($nilaiRapor as $a) {
                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
 
@@ -297,7 +297,6 @@ class RaporSisipanController extends Controller
                 }
             }
         }
-
         return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'nilai_komponen', 'rapor_sisipan'));
     }
 }

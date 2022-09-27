@@ -30,6 +30,10 @@
             border: 5px double;
         }
 
+        td{
+            /* font-size: 10px; */
+            padding: 2px;
+        }
         .page {
             width: 1200px;
         }
@@ -100,8 +104,8 @@
                 <tr>
                     <td colspan="2" style="text-align: center;font-weight: bold;">NOMOR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
-                    <td colspan="2" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                    <td colspan="2" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
+                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
+                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR<br>SISIPAN</td>
@@ -111,8 +115,12 @@
                     <td style="text-align: center;font-weight: bold;">INDUK</td>
                     <td style="text-align: center;font-weight: bold;">1</td>
                     <td style="text-align: center;font-weight: bold;">2</td>
+                    <td style="text-align: center;font-weight: bold;">3</td>
+                    <td style="text-align: center;font-weight: bold;">4</td>
                     <td style="text-align: center;font-weight: bold;">1</td>
                     <td style="text-align: center;font-weight: bold;">2</td>
+                    <td style="text-align: center;font-weight: bold;">3</td>
+                    <td style="text-align: center;font-weight: bold;">4</td>
                 </tr>
             </thead>
             <tbody class="body">
@@ -128,13 +136,33 @@
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
                         @foreach ($list_data as $nilai)
+                        @if (in_array($nilai->urutan, [1, 2]))
                             <td style="text-align: center;">
-
-
+                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                 {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-
                             </td>
-                        @endforeach
+                        @endif
+                    @endforeach
+                    <td></td>
+                    <td></td>
+                    @foreach ($list_data as $nilai)
+                        @if (in_array($nilai->urutan, [5, 6]))
+                            <td style="text-align: center;">
+                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                            </td>
+                        @endif
+                    @endforeach
+                    <td></td>
+                    <td></td>
+                    @foreach ($list_data as $nilai)
+                        @if ($nilai->urutan == 9)
+                            <td style="text-align: center;">
+                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                            </td>
+                        @endif
+                    @endforeach
                         <td style="text-align: center;">
 
                             {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
@@ -173,9 +201,10 @@
                 </td>
 
                 <td style="width:25%">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                   <br>
                     Guru Bidang Study 
                     <br><br><br><br><br><br><br>
-                    {{ $auth_data->pengguna->gelar_depan }} {{ $auth_data->pengguna->nm_pengguna }} {{ $auth_data->pengguna->gelar_belakang }}
+                    {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }}
                 </td>
 
             </tr>
