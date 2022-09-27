@@ -73,8 +73,13 @@ class FingerprintController extends BaseController
         $now = Carbon::now('Asia/Jakarta');
 
         $serial_number = '';
+        $date_filter = null;
         if (isset($input->SN)) {
             $serial_number = $input->SN;
+        }
+
+        if (isset($input->dd)) {
+            $date_filter = $input->dd;
         }
 
         if ($device = FPDevice::where('sn', $serial_number)->first()) {
@@ -110,10 +115,14 @@ class FingerprintController extends BaseController
             $buffer = explode("\r\n", $buffer);
 
             $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('fp_date', 'desc')->first();
-            if ($last_data) {
-                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->fp_date);
+            if (!empty($date_filter)) {
+                $data_fp = $this->filterData($buffer, $date_filter);
             } else {
-                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+                if ($last_data) {
+                    $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->fp_date);
+                } else {
+                    $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+                }
             }
 
             foreach ($data_fp as $data) {
