@@ -83,6 +83,7 @@ class LibGuru
                     ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
                     ->where('pengampu_mp.id_guru', '=', $id_guru)
                     ->where('pengampu_mp.pjmp_pengampu_mp', '=', 1)
+                    ->whereNull('kelas_mp.deleted_at')
                     ->orderBy('kelas.nm_kelas', 'asc')
                     ->orderBy('kelas.tingkat', 'asc');
 

@@ -1,7 +1,7 @@
 <div class="container-fluid">
-    <div class="block-header">
+    {{-- <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#jadwal/input-jadwal')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
-    </div>
+    </div> --}}
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
