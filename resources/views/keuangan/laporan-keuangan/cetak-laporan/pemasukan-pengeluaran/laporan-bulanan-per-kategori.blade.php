@@ -163,7 +163,7 @@
                     <td class="text-center">{{$report['day']}}</td>
                     <td class="text-bold">{{ $report_in['text'] }}</td>
                     @foreach ($subkategori_in as $data_subkategori)
-                    <td class="text-right">{{ ($report_in['category'] == $data_subkategori->deskripsi_subkategori_rapb)? number_format($report_in['value']) : ''}}</td>
+                    <td class="text-right" style="font-size:9px">{{ ($report_in['category'] == $data_subkategori->deskripsi_subkategori_rapb)? number_format($report_in['value']) : ''}}</td>
                         @php
                             if($report_in['category'] == $data_subkategori->deskripsi_subkategori_rapb && $report_in['text'] != 'Saldo'){
                                 $total_all[$data_subkategori->id_subkategori_rapb] += $report_in['value'];
