@@ -113,7 +113,7 @@
             <tr valign=middle >
                 <td class="text-center text-bold" width="15" rowspan="2">TL</td>
                 <td class="text-center text-bold" width="200" rowspan="2">URAIAN</td>
-                <td class="text-center text-bold" width="220" colspan="{{$subkategori_in->count()}}">Penerimaan</td>
+                <td class="text-center text-bold" width="275" colspan="{{$subkategori_in->count()}}">Penerimaan</td>
                 <td class="text-center text-bold" width="55" rowspan="2">Jumlah Penerimaan</td>
                 <td class="text-center text-bold" width="680" colspan="{{$subkategori_out->count()}}">Pengeluaran</td>
                 <td class="text-center text-bold" width="55" rowspan="2">Jumlah Pengeluaran</td>
@@ -159,7 +159,7 @@
                 @endphp
                 @foreach ($report['in'] as $report_in)
                 @if($report_in['category'] != 'Subsidi BOS')
-                <tr valign=middle>
+                <tr valign=middle >
                     <td class="text-center">{{$report['day']}}</td>
                     <td class="text-bold">{{ $report_in['text'] }}</td>
                     @foreach ($subkategori_in as $data_subkategori)
@@ -173,7 +173,7 @@
                     @php
                         $jumlah_in_per_date += $report_in['value'];
                     @endphp
-                    <td class="text-right">
+                    <td class="text-right"  >
                         {{ number_format($report_in['value']) }}
                     </td>
                     @foreach ($subkategori_out as $data_subkategori)
@@ -190,15 +190,15 @@
                 @endforeach
 
                 @foreach ($report['out'] as $report_out)
-                <tr valign=middle>
-                    <td class="text-center">{{$report['day']}}</td>
+                <tr valign=middle >
+                    <td class="text-center" >{{$report['day']}}</td>
                     <td class="text-bold">{{ $report_out['text'] }}</td>
                     @foreach ($subkategori_in as $data_subkategori)
                     <td></td>
                     @endforeach
                     <td></td>
                     @foreach ($subkategori_out as $data_subkategori)
-                    <td class="text-right">{{ ($report_out['category'] == $data_subkategori->deskripsi_subkategori_rapb)? number_format($report_out['value']) : ''}}</td>
+                    <td class="text-right"  style="font-size:8px">{{ ($report_out['category'] == $data_subkategori->deskripsi_subkategori_rapb)? number_format($report_out['value']) : ''}}</td>
                         @php
                             if($report_out['category'] == $data_subkategori->deskripsi_subkategori_rapb){
                                 $total_all[$data_subkategori->id_subkategori_rapb] += $report_out['value'];
@@ -277,7 +277,7 @@
                 <td class="text-bold text-right"></td>
                 @foreach ($subkategori_out as $data_subkategori)
                 @if($data_subkategori->deskripsi_subkategori_rapb == 'Pembelajaran Non KBM')
-                <td class="text-bold text-right">{{ number_format($total_bayar_non_kbm) }}</td>
+                <td class="text-bold text-right"  style="font-size:9px">{{ number_format($total_bayar_non_kbm) }}</td>
                     @php
                         $total_all[$data_subkategori->id_subkategori_rapb] += $total_bayar_non_kbm;
                     @endphp
@@ -285,7 +285,7 @@
                 <td></td>
                 @endif
                 @endforeach
-                <td class="text-bold text-right">{{ number_format($total_bayar_non_kbm) }}</td>
+                <td class="text-bold text-right" >{{ number_format($total_bayar_non_kbm) }}</td>
                 <td class="text-bold text-right"></td>
             </tr>
             <tr valign=middle>
@@ -315,9 +315,9 @@
                         $total_all['subtotal_in'] += $total_all[$data_subkategori->id_subkategori_rapb];
                     @endphp
                 @endforeach
-                <td class="bg-grey text-bold text-right">{{ number_format($total_all['subtotal_in']) }}</td>
+                <td class="bg-grey text-bold text-right" >{{ number_format($total_all['subtotal_in']) }}</td>
                 @foreach ($subkategori_out as $data_subkategori)
-                <td class="bg-grey text-bold text-right">{{ number_format($total_all[$data_subkategori->id_subkategori_rapb]) }}</td>
+                <td class="bg-grey text-bold text-right" style="font-size:8px">{{ number_format($total_all[$data_subkategori->id_subkategori_rapb]) }}</td>
                 @php
                     $total_all['subtotal_out'] += $total_all[$data_subkategori->id_subkategori_rapb];
                 @endphp
