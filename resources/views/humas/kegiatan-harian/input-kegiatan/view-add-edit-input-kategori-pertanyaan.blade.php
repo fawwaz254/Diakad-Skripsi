@@ -14,8 +14,9 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.Request::segment(4).'/'.$id_kegiatan_harian.'/action')}}/{{!empty($item)? 'edit' : 'add'}}">
+                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.Request::segment(4).'/action')}}/{{!empty($item)? 'edit/'.$item->id_kegiatan_harian_kategori : 'add/0'}}">
                         {{csrf_field()}}
+                        {{-- {{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.Request::segment(4).'/action')}}/{{!empty($item)? 'edit/'.$item->id_kegiatan_harian_kategori.' : 'add/0'}} --}}
                         <input type="hidden" name="id_kegiatan_harian" value="{{$id_kegiatan_harian}}">
                         @if(!empty($item))
                         <input type="hidden" name="id_kegiatan_harian_kategori" value="{{$item->id_kegiatan_harian_kategori}}">

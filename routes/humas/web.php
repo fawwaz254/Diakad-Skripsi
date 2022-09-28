@@ -217,7 +217,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 				Route::get('add', 'Humas\KegiatanHarian\InputKegiatanController@viewAddEditInputKegiatan');
 				Route::get('edit/{id}', 'Humas\KegiatanHarian\InputKegiatanController@viewAddEditInputKegiatan');
 				Route::post('datatables', 'Humas\KegiatanHarian\InputKegiatanController@showDatatablesInputKegiatan');
-				Route::post('action/{mode}', 'Humas\KegiatanHarian\InputKegiatanController@actionInputKegiatan');
+				Route::post('action/{mode}/{id}', 'Humas\KegiatanHarian\InputKegiatanController@actionInputKegiatan');
 
 				Route::group(array('prefix' => 'kategori-pertanyaan'), function () {
 					Route::get('detail/{id1}', 'Humas\KegiatanHarian\InputKegiatanController@viewInputKategoriPertanyaan');
@@ -225,7 +225,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 					Route::get('{id1}/edit/{id2}', 'Humas\KegiatanHarian\InputKegiatanController@viewAddEditInputKategoriPertanyaan');
 
 					Route::post('{id1}/datatables', 'Humas\KegiatanHarian\InputKegiatanController@showDatatablesInputKategoriPertanyaan');
-					Route::post('{id1}/action/{mode}', 'Humas\KegiatanHarian\InputKegiatanController@actionInputKategoriPertanyaan');
+					Route::post('action/{mode}/{id}', 'Humas\KegiatanHarian\InputKegiatanController@actionInputKategoriPertanyaan');
 				});
 			});
 

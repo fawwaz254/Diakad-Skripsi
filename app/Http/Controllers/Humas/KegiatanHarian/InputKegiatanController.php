@@ -106,32 +106,15 @@ class InputKegiatanController extends BaseController{
                 ->make(true);
     }
 
-    public function actionInputKegiatan(Request $request, $mode){
+    public function actionInputKegiatan(Request $request, $mode, $id){
         $input = (object) $request->input();
 
-        switch($mode){
-            case 'add':
-                $syarat = [
-                    'nm_kegiatan_harian' => 'required',
-                    'is_aktif'           => 'required',
-                ]; break;
-            case 'edit':
-                $syarat = [
-                    'id_kegiatan_harian' => 'required',
-                    'nm_kegiatan_harian' => 'required',
-                    'is_aktif'           => 'required',
-                ]; break;
-            case 'delete':
-                $syarat = [
-                    'id_kegiatan_harian' => 'required',
-                ]; break;
-            default:
-                return ;
-        }
+        $validator = Validator::make($request->all(), [
+            'nm_kegiatan_harian'  => 'required',
+            'is_aktif'           => 'required',
+        ]);
 
-        $validator = Validator::make($request->all(), $syarat);
-        
-        if($validator->fails()) {
+        if($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -158,7 +141,7 @@ class InputKegiatanController extends BaseController{
                 ];
             }
             elseif($mode == 'edit'){
-                $kegiatan_harian                        = KegiatanHarian::find($input->id_kegiatan_harian);
+                $kegiatan_harian                        = KegiatanHarian::find($id);
                 $kegiatan_harian->nm_kegiatan_harian    = $input->nm_kegiatan_harian;
                 $kegiatan_harian->is_aktif              = $input->is_aktif;
                 $kegiatan_harian->updated_by            = $input->auth_data->pengguna->id_pengguna;
@@ -171,7 +154,7 @@ class InputKegiatanController extends BaseController{
                 ];
             }
             elseif($mode == 'delete'){
-                if($subkategoriPemasukan = PemasukanBiayaSubkategori::where('id_pemasukan_biaya_kategori',$id)->first()){
+                if($subkategoriPemasukan = KegiatanHarianKategori::where('id_kegiatan_harian',$id)->first()){
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
                         'message' => 'Failed To Delete Kategori Pemasukan'
@@ -179,7 +162,7 @@ class InputKegiatanController extends BaseController{
                 }
                 else{
                     // make object to find id
-                    $kategoriPemasukan               = PemasukanBiayaKategori::find($id);
+                    $kategoriPemasukan               = KegiatanHarian::find($id);
                     $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kategoriPemasukan->save();
 
@@ -195,30 +178,14 @@ class InputKegiatanController extends BaseController{
     }
 
 
-    public function actionInputKategoriPertanyaan(Request $request, $id_kegiatan_harian, $mode){
+    public function actionInputKategoriPertanyaan(Request $request, $mode,  $id){
         $input = (object) $request->input();
 
-        switch($mode){
-            case 'add':
-                $syarat = [
-                    'nm_kegiatan_harian_kategori' => 'required',
-                ]; break;
-            case 'edit':
-                $syarat = [
-                    'id_kegiatan_harian_kategori' => 'required',
-                    'nm_kegiatan_harian_kategori' => 'required',
-                ]; break;
-            case 'delete':
-                $syarat = [
-                    'id_kegiatan_harian_kategori' => 'required',
-                ]; break;
-            default:
-                return ;
-        }
+        $validator = Validator::make($request->all(), [
+            'nm_kegiatan_harian_kategori'  => 'required'
+        ]);
 
-        $validator = Validator::make($request->all(), $syarat);
-        
-        if($validator->fails()) {
+        if($validator->fails() && $mode != 'delete') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -233,7 +200,7 @@ class InputKegiatanController extends BaseController{
 
                 $kegiatan_harian                                 = new KegiatanHarianKategori;
                 $kegiatan_harian->id_kegiatan_harian_kategori    = $id;
-                $kegiatan_harian->id_kegiatan_harian             = $id_kegiatan_harian;
+                $kegiatan_harian->id_kegiatan_harian             = $input->id_kegiatan_harian;
                 $kegiatan_harian->nm_kegiatan_harian_kategori    = $input->nm_kegiatan_harian_kategori;
                 $kegiatan_harian->created_by                     = $input->auth_data->pengguna->id_pengguna;
                 $kegiatan_harian->save();
@@ -257,15 +224,15 @@ class InputKegiatanController extends BaseController{
                 ];
             }
             elseif($mode == 'delete'){
-                if($subkategoriPemasukan = PemasukanBiayaSubkategori::where('id_pemasukan_biaya_kategori',$id)->first()){
-                    return [
-                        'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Kategori Pemasukan'
-                    ]; 
-                }
-                else{
+                // if($subkategoriPemasukan = PemasukanBiayaSubkategori::where('id_pemasukan_biaya_kategori',$id)->first()){
+                //     return [
+                //         'status' => 300, // SUCCESS AND LOAD TABLE
+                //         'message' => 'Failed To Delete Kategori Pemasukan'
+                //     ]; 
+                // }
+                // else{
                     // make object to find id
-                    $kategoriPemasukan               = PemasukanBiayaKategori::find($id);
+                    $kategoriPemasukan               = KegiatanHarianKategori::find($id);
                     $kategoriPemasukan->deleted_by   = $input->auth_data->pengguna->id_pengguna;
                     $kategoriPemasukan->save();
 
@@ -273,10 +240,10 @@ class InputKegiatanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pemasukan successfully'
+                        'message' => 'Delete kegiatan harian successfully'
                     ];
                 }
-            }
+            // }
         }
     }
 
