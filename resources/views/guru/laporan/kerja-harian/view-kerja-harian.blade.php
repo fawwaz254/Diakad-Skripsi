@@ -117,7 +117,7 @@
             alert('Mohon diisi start date dan end date terlebih dahulu');
             return;
         }
-        // alert(link);
+
         window.open(link+"/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date, '_blank');
         // window.location.href = "/guru/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
     })
