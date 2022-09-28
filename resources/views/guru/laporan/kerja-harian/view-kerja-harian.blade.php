@@ -104,7 +104,7 @@
 </div>
 
 <script type="text/javascript">
-        
+    var link = '{{ url(Request::segment(1)) }}';
     $('#print').click(function(){
         $('#modal_print').modal('show');
     });
@@ -117,8 +117,9 @@
             alert('Mohon diisi start date dan end date terlebih dahulu');
             return;
         }
-
-        window.location.href = "/guru/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
+        // alert(link);
+        window.open(link+"/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date, '_blank');
+        // window.location.href = "/guru/laporan/kerja-harian/print-kerja-harian/"+start_date+"/"+end_date;
     })
 
     var modul_url        = 'laporan';
