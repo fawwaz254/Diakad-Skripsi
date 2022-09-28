@@ -375,7 +375,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
 			Route::group(array('prefix' => 'tracer-alumni'), function () {
 				Route::get('/', 'TracerAlumniController@viewTracerAlumni');
 				Route::get('datatables', 'TracerAlumniController@datatablesTracerAlumni');
-				// Route::get('datatables2', 'TracerAlumniController@datatablesTracerAlumni');
+				// Route::get('datatables2', 'TracerAlumniController@datatablesTracerAlumni2');
 				Route::get('add', 'TracerAlumniController@addTracerAlumni');
 				Route::get('edit/{id}', 'TracerAlumniController@editTracerAlumni');
 				Route::post('action/{mode}/{id}', 'TracerAlumniController@actionTracerAlumni');

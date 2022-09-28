@@ -127,20 +127,21 @@
       <td>{{$alamat}}, {{$tanggal}}</td>
       </tr>
       <tr>
-        <td>Mengetahui,</td>
+        <td style="padding-buttom: 0">Mengetahui,</td>
       
        
-        <td>Menyetujui,</td>
+        <td style="padding-buttom: 0">Menyetujui,</td>
       
-        <td></td>
+        <td style="padding-buttom: 0"></td>
       </tr>
       <tr>
-        <td>{{ $auth_data->sekolah_data->nm_sekolah }}</td>
+        {{-- <td>{{ $auth_data->sekolah_data->nm_sekolah }}</td> --}}
+        <td style="padding-top: 0">YPM Taman Sepanjang,</td>
       
        
-        <td>Kepala Sekolah,</td>
+        <td style="padding-top: 0">Kepala Sekolah,</td>
       
-        <td>Penyusun,</td>
+        <td style="padding-top: 0">Penyusun,</td>
       </tr>
      
      <tr style="height:70px">
