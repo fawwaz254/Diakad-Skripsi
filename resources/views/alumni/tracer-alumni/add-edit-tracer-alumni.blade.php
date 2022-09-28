@@ -126,7 +126,7 @@
                         @endif
 
 
-                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
+                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian'|| $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                         <input type="hidden"name="status" value="smp">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <hr>
@@ -206,7 +206,7 @@
                             @include('./humas.alumni.forms.idle_state')
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
+                            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                             <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
                                 <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
                                 </span>
