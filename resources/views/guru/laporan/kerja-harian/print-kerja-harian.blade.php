@@ -135,7 +135,8 @@
         <td></td>
       </tr>
       <tr>
-        <td>{{ $auth_data->sekolah_data->nm_sekolah }}</td>
+        {{-- <td>{{ $auth_data->sekolah_data->nm_sekolah }}</td> --}}
+        <td>YPM Taman Sepanjang,</td>
       
        
         <td>Kepala Sekolah,</td>
