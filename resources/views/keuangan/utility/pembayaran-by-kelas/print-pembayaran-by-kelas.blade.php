@@ -165,9 +165,9 @@
                     <td style="vertical-align:middle;text-align: center;width:10px">{{ $loop->iteration }}</td>
                     <td style="vertical-align:middle;text-align: center;width:10px">{{ $siswa->nis_siswa }}</td>
                     @if ($siswa->pengguna->status_pengguna->aktif_status_pengguna == 1)
-                        <td style="width: 100px">{{ $siswa->pengguna->nm_pengguna }}</td>
+                        <td style="width: 200px">{{ $siswa->pengguna->nm_pengguna }}</td>
                     @else
-                        <td style="width: 100px">{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)</td>
+                        <td style="width: 200px">{{ $siswa->pengguna->nm_pengguna }}<br>(Mutasi/Keluar)</td>
                     @endif
                     @foreach ($data_bulan_tagihan as $bulan)
                         @php
@@ -210,7 +210,7 @@
                                 <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
                                     <b
-                                        style="color: #4caf50;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
+                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
                                 </td>
                             @endif
                         @else
