@@ -46,6 +46,9 @@
     .tdbg-12 {
         background: #a0c1b8;
     }
+    .tdbg-13 {
+        background: #ffffff;
+    }
 
     table.is-fixed td {
         height: 75px;
@@ -157,6 +160,9 @@
                                             <th class="tdbg">{{ $bulan->nm_biaya }}</th>
                                         @endif
                                     @endforeach
+                                    @foreach ($data_ket_tagihan as $ket)
+                                    <td class="tdbg-13">{{ $ket->title_biaya  }}</td>
+                                @endforeach
                                 </tr>
                             </thead>
                             @php
@@ -222,6 +228,52 @@
                                             <td></td>
                                         @endif
                                     @endforeach
+                                    @foreach ($data_ket_tagihan as $ket)
+                                    @php
+                                        $tagihan = $data_tagihan_non_bulanan
+                                            ->where('id_siswa', $siswa->id_siswa)
+                                            ->where('id_bulan', $ket->id_bulan)
+                                            ->first();
+                                    @endphp
+                                    @if (!empty($tagihan) > 0)
+                                        @if ($tagihan->is_tagih == 1)
+                                            @php
+                                                $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                            @endphp
+                                            <td>
+                                                @if ($tagihan->is_request == 0)
+                                                    <button class="btn btn-block bg-black waves-effect"
+                                                        onclick="takeAction(this)"
+                                                        data-id="{{ $tagihan->id_tagihan_biaya }}"
+                                                        data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                @else
+                                                    Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                @endif
+                                            </td>
+                                        @elseif($tagihan->is_tagih == 0)
+                                            <td
+                                                class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}">
+                                                <a target="_blank"
+                                                    href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_pembayaran_biaya }}"><b
+                                                        style="color: #4caf50;">Print
+                                                        {{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b></a>
+                                                @if ($tagihan->is_request == 0)
+                                                    <br>
+                                                    <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
+                                                        onclick="deleteActionKhusus(this)"
+                                                        data-id="{{ $tagihan->id_pembayaran_biaya }}">
+                                                        Batal
+                                                    </a>
+                                                @endif
+                                                @if ($tagihan->is_request == 1)
+                                                    <br> <b>Online</b>
+                                                @endif
+                                            </td>
+                                        @endif
+                                    @else
+                                        <td></td>
+                                    @endif
+                                @endforeach
                                     </tr>
                                 @endforeach
                             </tbody>
