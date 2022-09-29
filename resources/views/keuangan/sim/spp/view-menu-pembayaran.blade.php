@@ -48,6 +48,7 @@
     }
     .tdbg-13 {
         background: #ffffff;
+        
     }
 
     table.is-fixed td {
@@ -161,7 +162,7 @@
                                         @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                    <td class="tdbg-13">{{ $ket->title_biaya  }}</td>
+                                    <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->title_biaya  }}</td>
                                 @endforeach
                                 </tr>
                             </thead>
