@@ -11,6 +11,8 @@
         td {
             border: 1px solid black;
             text-align: left;
+            font-size: 10px;
+           
         }
 
         th {
@@ -184,7 +186,7 @@
                                 <td class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}"
                                     style="vertical-align:middle;text-align: center;">
                                     <b
-                                        style="color: #4caf50;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
+                                        style="color: black;">{{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b>
                                 </td>
                             @endif
                         @else
