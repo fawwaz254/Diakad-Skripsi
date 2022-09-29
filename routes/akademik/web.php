@@ -302,8 +302,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
    // Modul Rapor Sisipan
    Route::group(array('prefix' => 'rapor-sisipan'), function () {
     Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
-     
-
         Route::get('/', 'Akademik\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
         Route::get('datatables', 'Akademik\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
         // Route::get('add', 'Akademik\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
@@ -315,6 +313,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
         // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
         // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
     });
+    
 });
 
 
