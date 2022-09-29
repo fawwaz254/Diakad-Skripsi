@@ -161,7 +161,7 @@ class RaporSisipanController extends Controller
                 $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
 
                 //cari siswa yang ada nilai 0 nya
-                $belumTerisi = NilaiRaporSisipan::where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+                $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
                     $query->where('id_kelas', '=', $item->kelas->id_kelas);
                 })->groupBy('id_siswa')
                     ->selectRaw('count(*) as total, id_siswa')

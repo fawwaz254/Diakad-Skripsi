@@ -533,19 +533,25 @@ Route::group(array('middleware' => ['token_staff']), function () {
         // Modul Rapor Sisipan
         Route::group(array('prefix' => 'rapor-sisipan'), function () {
             Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
-             
 
                 Route::get('/', 'Guru\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
                 Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
                 Route::get('add', 'Guru\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
                 Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Guru\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
-                Route::get('print/{id}', 'Guru\RaporSisipan\RaporSisipanController@printDaftarNilaiSTS');
+                // Route::get('print/{id}', 'Guru\RaporSisipan\RaporSisipanController@printDaftarNilaiSTS');
                 Route::get('pdf/{id}', 'Guru\RaporSisipan\RaporSisipanController@pdfDaftarNilaiSTS');
-
                 Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
                 // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
-              
+            });
+
+            Route::group(array('prefix' => 'daftar-nilai-sas'), function () {
+
+                Route::get('/', 'Guru\RaporSisipan\RaporSisipanAkhirController@viewDaftarNilaiSAS');
+                Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanAkhirController@datatablesDaftarNilaiSAS');
+                Route::get('pdf/{id}', 'Guru\RaporSisipan\RaporSisipanAkhirController@pdfDaftarNilaiSAS');
+                Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController@viewKomponenInputNilai');
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController@actionInputNilai');
             });
         });
 
