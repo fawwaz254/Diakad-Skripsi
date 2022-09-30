@@ -2,7 +2,10 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
-                    class="material-icons">add</i><span>Tambah Nilai</span></a></h2>
+                    class="material-icons">add</i><span>Tambah Nilai</span></a>
+                   <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
+                        href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel') }}"><i
+                            class="material-icons">cloud_upload</i><span>  Import Excel</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -22,7 +25,8 @@
                                     <th>Kelas</th>
                                     <th>Nilai Siswa Terisi Lengkap</th>
                                     <th>Semester</th>
-                                    <th>Nilai</th>
+                                    <th>Input Nilai</th>
+                                    <th>Template Excel</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -40,7 +44,7 @@
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
-    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
+    var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/excel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
 
     var primary_table = $('#primary_table').DataTable({
@@ -92,6 +96,19 @@
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                     nilai_url + '/' + data.id + '">' +
                         '    <i class="material-icons">visibility</i>' +
+                        '</a> ';
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                    excel_url + '/' + data.id + '" target="_blank">' +
+                        '    <i class="material-icons">backup</i>' +
                         '</a> ';
                 }
             },
