@@ -313,6 +313,10 @@ Route::group(array('middleware' => ['token_staff']), function () {
         // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
         // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
     });
+
+    // Route::group(array('prefix' => 'daftar-nilai-sas'), function(){
+        
+    // });
     
 });
 
