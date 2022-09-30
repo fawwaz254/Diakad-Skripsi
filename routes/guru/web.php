@@ -647,12 +647,24 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('edit/{id}', 'Guru\Laporan\KerjaHarianController@editKerjaHarian');
                 Route::get('preview-file/{id}', 'Guru\Laporan\KerjaHarianController@previewFile');
                 Route::post('action-kerja-harian/{mode}/{id}', 'Guru\Laporan\KerjaHarianController@actionKerjaHarian');
-                Route::get('print-kerja-harian/{start_date}/{end_date}','Guru\Laporan\KerjaHarianController@printKerjaHarian');
+                Route::get('print-kerja-harian/{start_date}/{end_date}', 'Guru\Laporan\KerjaHarianController@printKerjaHarian');
             });
         });
 
         // MODUL PEMBINA EKSKUL
         Route::group(['prefix' => 'pembina-ekskul'], function () {
+            // Menu Input Absensi Ekskul
+            Route::get('input-absensi-ekskul', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewDetailInputAbsensiEkskul');
+
+            Route::post('input-absensi-ekskul/datatables/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@datatablesInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@datatablesSiswaInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/action/{mode}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/action/{mode}/{id}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+
             // Menu Rekap Absensi Ekskul
             Route::get('rekap-absensi-ekskul', 'Guru\PembinaEkskul\RekapAbsensiEkskulController@viewRekapAbsensiEkskul');
             Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\RekapAbsensiEkskulController@viewDetailRekapAbsensiEkskul');
