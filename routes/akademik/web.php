@@ -16,7 +16,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
 
             Route::group(array('prefix' => 'jenis-mgmp'), function () {
-                Route::get('/','Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
+                Route::get('/', 'Akademik\MGMP\JenisMGMPcontroller@viewDataJenis');
                 Route::get('/datatables', 'Akademik\MGMP\JenisMGMPcontroller@datatablesjenis');
                 Route::get('/add', 'Akademik\MGMP\JenisMGMPcontroller@addDataJenis');
                 Route::post('action-data-kategori/{mode}/{id}', 'Akademik\MGMP\JenisMGMPcontroller@actionDataJenis');
@@ -28,7 +28,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('preview-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@previewFile');
                 Route::get('download-file/{id}', 'Akademik\MGMP\DataKategoriMGMPController@downloadFile');
             });
-
         });
 
 
@@ -183,6 +182,9 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             Route::post('action-hapus-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusPlottingMapelSiswa');
 
+            // hapus semua plotting
+            Route::post('action-hapus-semua-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusSemuaPlottingMapelSiswa');
+
             //MENU CARI SISWA
             Route::get('cari-siswa', 'Akademik\AktivitasSemester\CariSiswaController@viewCariSiswa');
             Route::post('post-view-cari-siswa', 'Akademik\AktivitasSemester\CariSiswaController@actionViewCariSiswa');
@@ -299,23 +301,26 @@ Route::group(array('middleware' => ['token_staff']), function () {
             Route::get('rekap-monitoring-kelas-kosong/datatables', 'Guru\GuruPiket\MonitoringKelasKosongController@datatablesRekapMonitoringKelasKosong');
         });
 
-   // Modul Rapor Sisipan
-   Route::group(array('prefix' => 'rapor-sisipan'), function () {
-    Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
-     
+        // Modul Rapor Sisipan
+        Route::group(array('prefix' => 'rapor-sisipan'), function () {
+            Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
+                Route::get('/', 'Akademik\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
+                Route::get('datatables', 'Akademik\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
+                // Route::get('add', 'Akademik\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
+                // Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Akademik\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
+                // Route::get('print/{id}', 'Akademik\RaporSisipan\RaporSisipanController@printDaftarNilaiSTS');
+                Route::get('pdf/{id}', 'Akademik\RaporSisipan\RaporSisipanController@pdfDaftarNilaiSTS');
 
-        Route::get('/', 'Akademik\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
-        Route::get('datatables', 'Akademik\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
-        // Route::get('add', 'Akademik\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
-        // Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Akademik\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
-        // Route::get('print/{id}', 'Akademik\RaporSisipan\RaporSisipanController@printDaftarNilaiSTS');
-        Route::get('pdf/{id}', 'Akademik\RaporSisipan\RaporSisipanController@pdfDaftarNilaiSTS');
+                // Route::get('nilai/{id}', 'Akademik\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
+                // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
+                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
+            });
 
-        // Route::get('nilai/{id}', 'Akademik\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
-        // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
-        // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
-    });
-});
+            // Route::group(array('prefix' => 'daftar-nilai-sas'), function(){
+
+            // });
+
+        });
 
 
 
