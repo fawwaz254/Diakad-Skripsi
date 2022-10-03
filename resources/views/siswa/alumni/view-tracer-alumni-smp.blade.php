@@ -2,7 +2,7 @@
     <div class="block-header">
         @if (empty($alumni))
         <h2><a class="btn bg-blue waves-effect target-link"
-            href="{{url(Request::segment(1).'#tracer-alumni/add')}}">
+            href="{{url(Request::segment(1).'#alumni/tracer-alumni/add')}}">
                 <i class="material-icons">note_add</i><span>Tambah Alumni</span></a></h2>
                 @else
             <h2><a class="btn bg-grey  waves-effect target-link"
@@ -43,10 +43,10 @@
     var modul_url       = '{{Request::segment(2)}}';
     var menu_url       = '{{Request::segment(3)}}';
 
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/datatables';
-    var edit_url        = role_url + '#' + modul_url + '/edit';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/datatables';
+    var edit_url        = role_url + '#' + modul_url + '/tracer-alumni/edit';
     var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/action/delete';
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/action/delete';
 // alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,

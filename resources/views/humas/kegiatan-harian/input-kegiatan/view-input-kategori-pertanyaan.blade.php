@@ -1,6 +1,10 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
+            href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3))}}">
+            <i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+            <br>
+        <h2><a class="btn bg-blue waves-effect target-link"
                 href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/'.Request::segment(4).'/'.$item->id_kegiatan_harian.'/add')}}">
                 <i class="material-icons">note_add</i><span>Tambah Kategori</span></a></h2>
     </div>

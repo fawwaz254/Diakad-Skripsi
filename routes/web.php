@@ -76,17 +76,6 @@ use UniSharp\LaravelFilemanager\Controllers\UploadController;
 //     return 'OK';
 // });
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
- */
-
 // DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
 
@@ -125,7 +114,9 @@ Route::prefix('iclock')->group(function () {
     Route::get('cdata', function () {
         return 'OK';
     });
-    Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
+    Route::post('cdata', 'Administrator\Device\FingerprintController@actionGetFinger');
+
+    Route::get('manual-get-data', 'Administrator\Device\FingerprintController@actionGetDataFinger');
 });
 // END USING FOR FINGERPRINT
 
@@ -143,12 +134,8 @@ Route::get('guid', function () {
     return $html;
 });
 
-Route::get('success-page', function () {
-    return view('form-pengisian-alumni.success-page');
-});
-Route::get('error-page', function () {
-    return view('form-pengisian-alumni.error-page');
-});
+Route::view('success-page', 'form-pengisian-alumni.success-page');
+Route::view('error-page', 'form-pengisian-alumni.error-page');
 Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
 Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
 

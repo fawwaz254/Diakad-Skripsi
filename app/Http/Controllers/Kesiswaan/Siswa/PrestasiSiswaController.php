@@ -214,7 +214,7 @@ class PrestasiSiswaController extends BaseController
                     $prestasi->id_semester                    = $input->id_semester;
                     $prestasi->id_tingkat_prestasi_siswa      = $input->id_tingkat_prestasi_siswa;
                     $prestasi->id_guru_pendamping             = $input->id_guru_pendamping;
-                    $prestasi->id_ekskul                      = $input->id_ekskul;
+                    // $prestasi->id_ekskul                      = $input->id_ekskul;
                     $prestasi->jenis_prestasi_siswa           = $input->jenis_prestasi_siswa;
                     $prestasi->jenis_lomba_siswa              = $input->jenis_lomba_siswa;
                     $prestasi->nm_prestasi_siswa              = $input->nm_prestasi_siswa;

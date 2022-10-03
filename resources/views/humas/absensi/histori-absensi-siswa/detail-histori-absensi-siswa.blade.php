@@ -106,6 +106,11 @@
 <a href="humas/absensi/histori-absensi-siswa/export-laravel/{{ $id_kelas }}/{{ $date }}" target="_blank"
     class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
+
+    <a href="humas/absensi/histori-absensi-siswa/export-laravel-week/{{ $id_kelas }}/{{ $date }}"
+    target="_blank" class="btn bg-purple waves-effect">
+    <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
+
 <a href="humas/absensi/histori-absensi-siswa/export-laravel-mount/{{ $id_kelas }}/{{ $date }}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
@@ -125,6 +130,7 @@
                             <tr>
                                 <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">Kelas</th>
+                                <th style="text-align: center;">NIS</th>
                                 <th style="text-align: center;">Nama</th>
 
                                 <th>Check In</th>
@@ -144,6 +150,7 @@
                                 @if($r['status'] == $status || $status == '0')
                                     <td style="text-align: center;">{{ $loop->iteration }}</td>
                                     <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                    <td style="text-align: center;">{{ $r['nis'] }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
 
                                     <td>{{ $r['check_in'] }}</td>
@@ -226,7 +233,7 @@
                             });
                             loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
                                 $('input[name=id_kelas]').val() + '/' +
-                                $('input[name=date]').val());
+                                $('input[name=date]').val() + '/0') ;
                         },
                     });
                 }

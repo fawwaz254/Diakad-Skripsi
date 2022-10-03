@@ -236,7 +236,6 @@ class DokumenController extends BaseController
     public function actionUploadDokumen(Request $request, $mode, $id = null)
     {
 
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
@@ -497,12 +496,12 @@ class DokumenController extends BaseController
                     'message' => 'Delete File Dokumen successfully'
                 ];
             } elseif ($mode == 'delete') {
-                if (ArsipDokumenFile::where('id_arsip_dokumen', '=', $id)->first()) {
-                    return [
-                        'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Dokumen gagal'
-                    ];
-                } else {
+                // if (ArsipDokumenFile::where('id_arsip_dokumen', '=', $id)->first()) {
+                //     return [
+                //         'status' => 300, // SUCCESS AND LOAD TABLE
+                //         'message' => 'Delete Dokumen gagal'
+                //     ];
+                // } else {
                     $arsip  = ArsipDokumen::find($id);
                     $arsip->deleted_by  = $input->auth_data->pengguna->id_pengguna;
                     $arsip->deleted_at  = $now;
@@ -514,7 +513,7 @@ class DokumenController extends BaseController
                         'status' => 203, // SUCCESS AND LOAD TABLE
                         'message' => 'Delete Data Dokumen successfully'
                     ];
-                }
+                // }
             }
         }
     }

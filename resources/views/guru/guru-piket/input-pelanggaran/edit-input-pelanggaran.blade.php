@@ -43,7 +43,7 @@
                                 <select class="form-control show-tick" name="kelas" onchange="changeKelas(this)" required="">
                                     <option value="">-- Pilih Kelas --</option>
                                     @foreach($data_kelas as $data)
-                                        @if($data_siswa->id_kelas == $data->id_kelas)
+                                        @if(isset($data_siswa->id_kelas)?$data_siswa->id_kelas:null == $data->id_kelas)
                                         <option value="{{$data->id_kelas}}" selected>{{$data->nm_kelas}}</option>
                                         @else
                                         <option value="{{$data->id_kelas}}">{{$data->nm_kelas}}</option>
@@ -57,7 +57,7 @@
                                 <select class="form-control show-tick" name="id_siswa" required="">
                                     <option value="">-- Pilih Siswa --</option>
                                     @foreach($data_siswa_sekelas as $data)
-                                        @if($data_siswa->id_siswa == $data->id_siswa)
+                                        @if(isset($data_siswa->id_siswa)?$data_siswa->id_siswa : null == $data->id_siswa)
                                         <option value="{{$data->id_siswa}}" selected>{{$data->nm_pengguna}} ({{$data->nis_siswa}})</option>
                                         @else
                                         <option value="{{$data->id_siswa}}">{{$data->nm_pengguna}} ({{$data->nis_siswa}})</option>

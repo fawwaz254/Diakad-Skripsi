@@ -2,9 +2,8 @@
 
 namespace App\Libraries\Keuangan;
 
-use App\Models\Bulan as Bulan;
-
 use App\Models\Biaya;
+use App\Models\Bulan as Bulan;
 use App\Models\Kelas;
 use App\Models\PembayaranBiaya;
 use App\Models\PembayaranTunggakan;
@@ -14,8 +13,6 @@ use App\Models\Semester;
 use App\Models\SubkategoriRapb;
 use App\Models\TutupBukuBulananBiaya;
 use App\Models\TutupBukuBulananKas;
-use App\Models\TutupBukuTahunanBiaya;
-
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use DateTime;
@@ -33,12 +30,12 @@ class LibCetakKeuangan
         }
 
         $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
-        $id_bulan       = $sc_bulan->month;
-        $id_bulan_lalu  = $sc_bulan->subMonth()->month;
+        $id_bulan = $sc_bulan->month;
+        $id_bulan_lalu = $sc_bulan->subMonth()->month;
 
-        $sc_tahun       = Carbon::createFromFormat('Y-m-d', $start_date);
-        $tahun          = $sc_tahun->year;
-        $tahun_lalu     = $sc_tahun->subYear()->year;
+        $sc_tahun = Carbon::createFromFormat('Y-m-d', $start_date);
+        $tahun = $sc_tahun->year;
+        $tahun_lalu = $sc_tahun->subYear()->year;
 
         if ($id_bulan < 7) {
             $tahun_semester = $tahun - 1;
@@ -143,7 +140,7 @@ class LibCetakKeuangan
                                 AND biaya_sekolah.deleted_at IS NULL
                             WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
-                                AND pembayaran_biaya.deleted_at IS NULL 
+                                AND pembayaran_biaya.deleted_at IS NULL
                                 ' . $where_personal . '
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat',
@@ -164,7 +161,7 @@ class LibCetakKeuangan
                             JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
                                 AND biaya_sekolah.id_semester IN (?, ?)
                                 AND biaya_sekolah.deleted_at IS NULL
-                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
+                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND pembayaran_biaya.deleted_at IS NULL
                                 ' . $where_personal . '
@@ -194,14 +191,13 @@ class LibCetakKeuangan
         //                     JOIN semester ON semester.id_semester = biaya_sekolah.id_semester
         //                         AND semester.kode_semester < ?
         //                         AND semester.deleted_at IS NULL
-        //                     WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
+        //                     WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
         //                         AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
         //                         AND pembayaran_biaya.deleted_at IS NULL
         //                         '.$where_personal.'
         //                     GROUP BY kelas.tingkat
-        //                     ORDER BY kelas.tingkat', 
+        //                     ORDER BY kelas.tingkat',
         //                 [$id_bulan_lalu, $kode_semester_mulai, $tahun, $id_bulan]);
-
 
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
@@ -221,7 +217,7 @@ class LibCetakKeuangan
                     'id_semester_selesai' => $id_semester_selesai,
                     'id_bulan' => $id_bulan,
                     'tingkat' => $data->tingkat,
-                    'created_by' => $auth_data->pengguna->id_pengguna
+                    'created_by' => $auth_data->pengguna->id_pengguna,
                 ])->first();
 
                 if ($id_bulan_lalu < 7) {
@@ -232,49 +228,49 @@ class LibCetakKeuangan
                     $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
 
-                if ($tutup_buku_bulanan_biaya) { } else {
+                if ($tutup_buku_bulanan_biaya) {} else {
                     $id = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $tutup_buku_bulanan_biaya                               = new TutupBukuBulananBiaya;
-                    $tutup_buku_bulanan_biaya->id_tutup_buku_bulanan_biaya  = $id;
-                    $tutup_buku_bulanan_biaya->id_semester_mulai            = $id_semester_mulai;
-                    $tutup_buku_bulanan_biaya->id_semester_selesai          = $id_semester_selesai;
-                    $tutup_buku_bulanan_biaya->id_bulan                     = $id_bulan;
-                    $tutup_buku_bulanan_biaya->tingkat                      = $data->tingkat;
-                    $tutup_buku_bulanan_biaya->created_by                   = $auth_data->pengguna->id_pengguna;
+                    $tutup_buku_bulanan_biaya = new TutupBukuBulananBiaya;
+                    $tutup_buku_bulanan_biaya->id_tutup_buku_bulanan_biaya = $id;
+                    $tutup_buku_bulanan_biaya->id_semester_mulai = $id_semester_mulai;
+                    $tutup_buku_bulanan_biaya->id_semester_selesai = $id_semester_selesai;
+                    $tutup_buku_bulanan_biaya->id_bulan = $id_bulan;
+                    $tutup_buku_bulanan_biaya->tingkat = $data->tingkat;
+                    $tutup_buku_bulanan_biaya->created_by = $auth_data->pengguna->id_pengguna;
                 }
 
-                $tutup_buku_bulanan_biaya->jml_siswa            = $data->jml_siswa;
+                $tutup_buku_bulanan_biaya->jml_siswa = $data->jml_siswa;
 
                 $tagihan = collect($list_data_tagihan)->firstWhere('tingkat', $data->tingkat);
-                $tutup_buku_bulanan_biaya->jml_tagihan_biaya    = (!empty($tagihan) ? $tagihan->jml_tagihan_biaya : 0);
+                $tutup_buku_bulanan_biaya->jml_tagihan_biaya = (!empty($tagihan) ? $tagihan->jml_tagihan_biaya : 0);
 
                 $pembayaran = collect($list_data_pembayaran)->firstWhere('tingkat', $data->tingkat);
-                $tutup_buku_bulanan_biaya->jml_pembayaran_biaya    = (!empty($pembayaran) ? $pembayaran->jml_pembayaran_biaya : 0);
+                $tutup_buku_bulanan_biaya->jml_pembayaran_biaya = (!empty($pembayaran) ? $pembayaran->jml_pembayaran_biaya : 0);
 
                 // $tutup_buku_bulanan_biaya->jml_tunggakan_biaya    = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
 
                 if ($id_bulan == 7) {
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = 0;
-                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya              = 0;
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu = 0;
+                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = 0;
                 } else {
                     $pembayaran_old_month = collect($list_data_pembayaran_old_month)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = (!empty($pembayaran_old_month) ? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu = (!empty($pembayaran_old_month) ? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
 
                     if (!empty($tutup_buku_bulanan_biaya_old)) {
-                        $tutup_buku_bulanan_biaya->jml_tunggakan_biaya               = $tutup_buku_bulanan_biaya_old->jml_tunggakan_biaya + $tutup_buku_bulanan_biaya_old->jml_tagihan_biaya
-                            - $tutup_buku_bulanan_biaya_old->jml_pembayaran_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
+                        $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = $tutup_buku_bulanan_biaya_old->jml_tunggakan_biaya + $tutup_buku_bulanan_biaya_old->jml_tagihan_biaya
+                         - $tutup_buku_bulanan_biaya_old->jml_pembayaran_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
                     } else {
-                        $tutup_buku_bulanan_biaya->jml_tunggakan_biaya               = 0;
+                        $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = 0;
                     }
                 }
 
                 // $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
                 // $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years)? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
-                $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = $pembayaran_tunggakan_bulan_ini;
+                $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu = $pembayaran_tunggakan_bulan_ini;
                 $pembayaran_tunggakan_bulan_ini = 0;
 
-                $tutup_buku_bulanan_biaya->updated_by          = $auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_biaya->updated_by = $auth_data->pengguna->id_pengguna;
                 $tutup_buku_bulanan_biaya->save();
             }
 
@@ -282,7 +278,7 @@ class LibCetakKeuangan
                 'id_semester_mulai' => $id_semester_mulai,
                 'id_semester_selesai' => $id_semester_selesai,
                 'id_bulan' => $id_bulan,
-                'created_by' => $auth_data->pengguna->id_pengguna
+                'created_by' => $auth_data->pengguna->id_pengguna,
             ])->get();
 
             $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
@@ -309,7 +305,7 @@ class LibCetakKeuangan
             $pembayaran_tunggakan_bulan_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu');
 
             $data_realisasi = Realisasi::selectRaw('
-                                        nm_kategori_rapb, 
+                                        nm_kategori_rapb,
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
                                         tipe_kategori_rapb,
@@ -337,20 +333,20 @@ class LibCetakKeuangan
             $data_realisasi = $data_realisasi->groupBy('realisasi.id_rapb', 'nm_kategori_rapb', 'kode_subkategori_rapb', 'nm_subkategori_rapb', 'tipe_kategori_rapb', 'dana_perkiraan_rapb')->get();
 
             if ($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()) {
-                $tutup_buku_bulanan_kas_now->updated_by                   = $auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_kas_now->updated_by = $auth_data->pengguna->id_pengguna;
             } else {
                 $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
-                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas    = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $tutup_buku_bulanan_kas_now->id_semester_mulai            = $id_semester_mulai;
-                $tutup_buku_bulanan_kas_now->id_semester_selesai          = $id_semester_selesai;
-                $tutup_buku_bulanan_kas_now->id_bulan                     = $id_bulan;
-                $tutup_buku_bulanan_kas_now->created_by                   = $auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $tutup_buku_bulanan_kas_now->id_semester_mulai = $id_semester_mulai;
+                $tutup_buku_bulanan_kas_now->id_semester_selesai = $id_semester_selesai;
+                $tutup_buku_bulanan_kas_now->id_bulan = $id_bulan;
+                $tutup_buku_bulanan_kas_now->created_by = $auth_data->pengguna->id_pengguna;
             }
-            $tutup_buku_bulanan_kas_now->kas_spp                = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
-            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
-            $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
-            $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
-            $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya   = ($tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya ?? 0) - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
+            $tutup_buku_bulanan_kas_now->kas_spp = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
+            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
+            $tutup_buku_bulanan_kas_now->sisa_tunggakan_biaya = ($tutup_buku_bulanan_kas_old->sisa_tunggakan_biaya ?? 0) - $pembayaran_tunggakan_tahun_lalu_masuk_bulan_ini;
             $tutup_buku_bulanan_kas_now->save();
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
@@ -377,7 +373,7 @@ class LibCetakKeuangan
                     $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
 
                     if (!empty($biayaInternal)) {
-                        $tingkat        = $data->tagihan_biaya->kelas->tingkat;
+                        $tingkat = $data->tagihan_biaya->kelas->tingkat;
 
                         $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
@@ -398,11 +394,11 @@ class LibCetakKeuangan
                 $subkategori_non_kbm = [
                     'status' => true,
                     'total_bayar' => $total_bayar_non_kbm,
-                    'data' => $temp_data_bayar_non_kbm
+                    'data' => $temp_data_bayar_non_kbm,
                 ];
                 // Penambahan Pengeluaran post Beban non-KBM
-                $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   += $total_bayar_non_kbm;
-                $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
+                $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran += $total_bayar_non_kbm;
+                $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
                 $tutup_buku_bulanan_kas_now->save();
             } else {
                 $subkategori_non_kbm = [
@@ -421,7 +417,7 @@ class LibCetakKeuangan
         $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->orderBy('tingkat')->get();
 
         $data_realisasi = Rapb::selectRaw('
-                                        nm_kategori_rapb, 
+                                        nm_kategori_rapb,
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
                                         tipe_kategori_rapb,
@@ -475,10 +471,213 @@ class LibCetakKeuangan
             // 'tutup_buku_tahun_ini' => $tutup_buku_tahun_ini,
             'tutup_buku_kas_bulan_ini' => $tutup_buku_kas_bulan_ini,
             'tutup_buku_kas_bulan_lalu' => $tutup_buku_kas_bulan_lalu,
-            'subkategori_non_kbm' => $subkategori_non_kbm
+            'subkategori_non_kbm' => $subkategori_non_kbm,
         ];
 
         return $data;
+    }
+
+    public static function fetchLaporanBulananPerKategori($auth_data, $start_date = null, $end_date = null)
+    {
+        if (empty(session('setting_print_keuangan'))) {
+            $print_setting = 'all';
+        } else {
+            $print_setting = session('setting_print_keuangan');
+        }
+
+        $semester_pair = getIdSemesterByTanggal($start_date, 'Y-m-d');
+        $id_bulan = $semester_pair->date_carbon->month;
+        $tahun = $semester_pair->date_carbon->year;
+
+        $dates = CarbonPeriod::create($start_date, $end_date);
+        $tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::query()
+            ->where('id_semester_mulai', $semester_pair->ganjil->id_semester)
+            ->where('id_semester_selesai', $semester_pair->genap->id_semester)
+            ->where('id_bulan', $id_bulan)
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->first();
+
+        $old_semester_pair = getIdSemesterByTanggal(Carbon::createFromFormat('Y-m-d', $start_date)->subMonth()->format('Y-m-d'), 'Y-m-d');
+        $id_bulan_lalu = $old_semester_pair->date_carbon->month;
+
+        $tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::query()
+            ->where('id_semester_mulai', $old_semester_pair->ganjil->id_semester)
+            ->where('id_semester_selesai', $old_semester_pair->genap->id_semester)
+            ->where('id_bulan', $id_bulan_lalu)
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->first();
+
+        $pembayaran_spp = PembayaranBiaya::query()
+            ->whereMonth('tgl_pembayaran', $id_bulan)
+            ->whereYear('tgl_pembayaran', $tahun)
+            ->whereHas('tagihan_biaya.detail_biaya', function ($q) {
+                $q->where('id_jenis_detail_biaya', 4);
+            })
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->get();
+
+        $realisasi_all = Realisasi::query()
+            ->with('rapb', 'rapb.subkategori', 'rapb.subkategori.kategori')
+            ->whereBetween('tgl_realisasi', [$start_date, $end_date])
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->get();
+
+        $pembayaran_tunggakan = PembayaranTunggakan::query()
+            ->whereMonth('tgl_pembayaran', $id_bulan)
+            ->whereYear('tgl_pembayaran', $tahun)
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->orderBy('tgl_pembayaran', 'asc')
+            ->get();
+
+        $data_laporan = array();
+        $no = 0;
+        $master_saldo_masuk = 0;
+
+        foreach ($dates as $dddd) {
+            $data = array();
+            $skip_this_date = true;
+            $data['date_format'] = $dddd->format('Y-m-d');
+            $data['day'] = $dddd->format('d');
+
+            $data_in = array();
+            // IF ONLY FIRST DATE
+            if ($no == 0) {
+                $data_temp['category'] = 'Lain-Lain';
+                $data_temp['text'] = 'Saldo awal BULAN';
+                $data_temp['value'] = $tutup_buku_kas_bulan_lalu->kas_akhir_bulan;
+
+                $data_in[] = $data_temp;
+                $master_saldo_masuk += $data_temp['value'];
+                $skip_this_date = false;
+            } else {
+                $data_temp['category'] = 'Lain-Lain';
+                $data_temp['text'] = 'Saldo';
+                $data_temp['value'] = $master_saldo_masuk;
+
+                $data_in[] = $data_temp;
+            }
+
+            // FOREACH FOR SPP
+            $bayar_as_date = $pembayaran_spp->where('tgl_pembayaran', $data['date_format'] . ' 00:00:00')->all();
+            if (count($bayar_as_date) > 0) {
+                $bayar_as_date_as_nominal = collect($bayar_as_date)->groupBy(function ($item, $key) {
+                    return 'SPP ' . number_format($item->besar_pembayaran);
+                });
+            } else {
+                $bayar_as_date_as_nominal = array();
+            }
+            foreach ($bayar_as_date_as_nominal as $spp_category => $bayar_as_date) {
+                $data_temp['category'] = 'SPP';
+                $data_temp['text'] = $spp_category . ' x' . $bayar_as_date->count();
+                $data_temp['value'] = $bayar_as_date->sum('besar_pembayaran');
+
+                $data_in[] = $data_temp;
+                $master_saldo_masuk += $data_temp['value'];
+                $skip_this_date = false;
+            }
+
+            // FOR TUNGGAKAN TAHUN LALU
+            // $bayar_as_date = $pembayaran_tunggakan->where('tgl_pembayaran', $data['date_format'] . ' 00:00:00')->all();
+            // if (count($bayar_as_date) > 0) {
+            //     $data_temp['category'] = 'SPP';
+            //     $data_temp['text'] = 'Tunggakan SPP Tahun Lalu';
+            //     $data_temp['value'] = collect($bayar_as_date)->sum('besar_pembayaran');
+
+            //     $data_in[] = $data_temp;
+            //     $master_saldo_masuk += $data_temp['value'];
+            //     $skip_this_date = false;
+            // }
+
+            // FOREACH FOR REALISASI INCOME NON-SPP
+            $realisasi_as_date = $realisasi_all->where('tgl_realisasi', $data['date_format'])->where('rapb.subkategori.kategori.tipe_kategori_rapb', 1)->all();
+            foreach ($realisasi_as_date as $realisasi) {
+                $data_temp['category'] = $realisasi->rapb->subkategori->deskripsi_subkategori_rapb;
+                $data_temp['text'] = $realisasi->nm_realisasi;
+                $data_temp['value'] = $realisasi->dana_realisasi;
+
+                $data_in[] = $data_temp;
+                $master_saldo_masuk += $data_temp['value'];
+                $skip_this_date = false;
+            }
+
+            $data['in'] = $data_in;
+
+            $data_out = array();
+            // FOREACH FOR REALISASI OUTCOME NON-SPP
+            $realisasi_as_date = $realisasi_all->where('tgl_realisasi', $data['date_format'])->where('rapb.subkategori.kategori.tipe_kategori_rapb', 2)->all();
+            foreach ($realisasi_as_date as $realisasi) {
+                $data_temp['category'] = $realisasi->rapb->subkategori->deskripsi_subkategori_rapb;
+                $data_temp['text'] = $realisasi->nm_realisasi;
+                $data_temp['value'] = $realisasi->dana_realisasi;
+
+                $data_out[] = $data_temp;
+                $skip_this_date = false;
+            }
+
+            $data['out'] = $data_out;
+
+            $no++;
+
+            if (!$skip_this_date) {
+                $data_laporan[] = $data;
+            }
+        }
+
+        $pembayaran_non_kbm = PembayaranBiaya::query()
+            ->with('tagihan_biaya.kelas', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
+            ->whereBetween('tgl_pembayaran', [$start_date, $end_date])
+            ->whereHas('tagihan_biaya.detail_biaya', function ($q) {
+                $q->where('id_jenis_detail_biaya', 4);
+            })
+            ->when($print_setting == 'self', function ($q) use ($auth_data) {
+                $q->where('created_by', $auth_data->pengguna->id_pengguna);
+            })
+            ->get();
+
+        $temp_data_bayar_non_kbm = [];
+        $total_bayar_non_kbm = 0;
+
+        foreach ($pembayaran_non_kbm as $data) {
+            // Get Biaya Internal (kelompok_biaya_internal)
+            $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
+
+            if (!empty($biayaInternal)) {
+                $tingkat = $data->tagihan_biaya->kelas->tingkat;
+
+                $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
+
+                foreach ($detailBiayaInternal as $x) {
+                    if ($x->nm_detail_biaya_internal != 'SPP MURNI') {
+                        if (!isset($temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat])) {
+                            $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] = $x->besar_biaya;
+                        } else {
+                            $temp_data_bayar_non_kbm[$x->nm_detail_biaya_internal][$tingkat] += $x->besar_biaya;
+                        }
+
+                        $total_bayar_non_kbm += $x->besar_biaya;
+                    }
+                }
+            }
+        }
+
+        return [
+            'bulan' => Bulan::find($id_bulan),
+            'tahun' => $tahun,
+            'report' => $data_laporan,
+            'subkategori' => SubkategoriRapb::with('kategori')->orderBy('kode_subkategori_rapb')->get(),
+            'tutup_buku_bulanan_biaya' => $tutup_buku_bulanan_biaya,
+            'total_bayar_non_kbm' => $total_bayar_non_kbm,
+        ];
     }
 
     /** Get Laporan Keuangan */
@@ -557,7 +756,7 @@ class LibCetakKeuangan
         $data = [
             'laporan' => collect($dataLaporan)->sortByDesc('tanggal'),
             'total_debit' => $totalDebit,
-            'total_kredit' => $totalKredit
+            'total_kredit' => $totalKredit,
         ];
 
         return $data;
@@ -616,7 +815,7 @@ class LibCetakKeuangan
                 $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
 
                 if (!empty($biayaInternal)) {
-                    $tingkat        = $data->tagihan_biaya->kelas->tingkat;
+                    $tingkat = $data->tagihan_biaya->kelas->tingkat;
 
                     $detailBiayaInternal = $biayaInternal->detail_biaya_internal;
 
@@ -637,7 +836,7 @@ class LibCetakKeuangan
             $subkategori_non_kbm = [
                 'status' => true,
                 'total_bayar' => $total_bayar_non_kbm,
-                'data' => $temp_data_bayar_non_kbm
+                'data' => $temp_data_bayar_non_kbm,
             ];
         } else {
             $subkategori_non_kbm = [
@@ -654,7 +853,7 @@ class LibCetakKeuangan
             }),
             'total_data' => $totalLaporan,
             'subkategori_non_kbm' => $subkategori_non_kbm,
-            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat')
+            'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
         ];
 
         return $data;
@@ -698,15 +897,15 @@ class LibCetakKeuangan
                     // Get Biaya Internal (kelompok_biaya_internal)
                     $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
                     // === var for $tempDataLaporan
-                    $date           = new DateTime($data->tgl_pembayaran);
-                    $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
-                    $count          = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
+                    $date = new DateTime($data->tgl_pembayaran);
+                    $ket_biaya = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
+                    $count = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
                         ->filter(function ($q) use ($date) {
                             $qDate = new DateTime($q->tgl_pembayaran);
                             return $qDate->format('Y-m-d') == $date->format('Y-m-d');
                         })->count();
-                    $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
-                    $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+                    $keyTempData = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
+                    $tahun_ajaran = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
                     // ===
 
                     if (!empty($biayaInternal)) {
@@ -732,15 +931,15 @@ class LibCetakKeuangan
                             $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
                                 'tanggal' => $date->format('Y-m-d'),
                                 'nominal' => ($sisa > ($x->besar_biaya - $potongan_biaya))
-                                    ? ($x->besar_biaya - $potongan_biaya)
-                                    : $x->besar_biaya + $sisa,
+                                ? ($x->besar_biaya - $potongan_biaya)
+                                : $x->besar_biaya + $sisa,
                                 'potongan' => $potongan_biaya,
                                 'frekuensi' => $count,
                                 'tipe' => 1,
                                 'nm_tipe' => 'debit',
                                 'kategori' => $stringNmBiaya,
                                 'keterangan' => $x->nm_detail_biaya_internal . ' ' . $count . 'x ' . number_format($x->besar_biaya) . ' (' . $tahun_ajaran . ')',
-                                'tahun_ajaran' => $tahun_ajaran
+                                'tahun_ajaran' => $tahun_ajaran,
                             ];
                         }
                         // dd($tempDataLaporan);
@@ -762,7 +961,7 @@ class LibCetakKeuangan
                             'nm_tipe' => 'debit',
                             'kategori' => $stringNmBiaya,
                             'keterangan' => $ket_biaya . ' ' . $count . 'x (' . $tahun_ajaran . ')',
-                            'tahun_ajaran' => $tahun_ajaran
+                            'tahun_ajaran' => $tahun_ajaran,
                         ];
                     }
                 }
@@ -783,8 +982,8 @@ class LibCetakKeuangan
         foreach ($allDataRealisasi as $x) {
             $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
             $keterangan = $x->nm_realisasi;
-            $tipe       = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
-            $date       = new DateTime($x->tgl_realisasi);
+            $tipe = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
+            $date = new DateTime($x->tgl_realisasi);
             $tempDataLaporan[] = [
                 'tanggal' => $date->format('Y-m-d'),
                 'nominal' => $x->dana_realisasi,
@@ -809,7 +1008,7 @@ class LibCetakKeuangan
         $data = [
             'laporan' => $dataLaporan,
             'total_debit' => $totalDebit,
-            'total_kredit' => $totalKredit
+            'total_kredit' => $totalKredit,
         ];
 
         return $data;
@@ -826,101 +1025,78 @@ class LibCetakKeuangan
         $dataLaporan = []; // tgl, keterangan, tipe (debit/kredit), nominal
         $tempDataLaporan = [];
 
-        $allBiaya = Biaya::get();
+        $dates = CarbonPeriod::create($start_date, $end_date);
 
-        $pembayaran = PembayaranBiaya::with('tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.potongan', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester');
+        $data_pembayaran = PembayaranBiaya::with(
+            'tagihan_biaya',
+            'tagihan_biaya.potongan',
+            'tagihan_biaya.detail_biaya',
+            'tagihan_biaya.detail_biaya.biaya',
+            'tagihan_biaya.detail_biaya.biaya_sekolah.semester'
+        );
         if (!empty($start_date) && !empty($end_date)) {
-            $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+            $data_pembayaran = $data_pembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
         }
 
         if ($print_setting == 'self') {
-            $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
+            $data_pembayaran = $data_pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
         } else {
-            $allDataPembayaran = $pembayaran->get();
+            $data_pembayaran = $data_pembayaran->get();
         }
 
-        // find Pembayaran in each Biaya
-        foreach ($allBiaya as $kategori) {
-            // pembayaran for this Biaya per TA
-            $pembayaran = $allDataPembayaran->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', '=', $kategori->nm_biaya)->groupBy('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester');
+        foreach ($dates as $date) {
+            $filter_pembayaran = $data_pembayaran->where('tgl_pembayaran', $date->format('Y-m-d') . ' 00:00:00')->values();
 
-            foreach ($pembayaran as $ta => $value) {
-                $stringNmBiaya = $value->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+            $frekuensi = array();
+            $nominal = array();
+            $potongan = array();
 
-                // loop each pembayaran
-                $val = $value;
-                foreach ($value as $data) {
-                    // Get Biaya Internal (kelompok_biaya_internal)
-                    $biayaInternal = $data->tagihan_biaya->detail_biaya->kelompok_biaya_internal;
-                    // === var for $tempDataLaporan
-                    if ($data->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == "4") {
-                        $date           = new DateTime($data->tgl_pembayaran);
-                        // $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
-                        // $id_jenis_detail_biaya      = $data->tagihan_biaya->detail_biaya->id_jenis_detail_biaya;
-                        $count          = $val->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)
-                            ->filter(function ($q) use ($date) {
-                                $qDate = new DateTime($q->tgl_pembayaran);
-                                return $qDate->format('Y-m-d') == $date->format('Y-m-d');
-                            })->count();
-                        // $bulan = Bulan::where('id_bulan', $id_bulan)->first();
-                        $keyTempData    = $kategori->nm_biaya . '-' . $ta;
-                        $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+            $kategori_biaya = array();
+            $keterangan = array();
+            $tahun_ajaran = array();
 
-                        $nominal = $val->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)->filter(function ($q) use ($date) {
-                            $qDate = new DateTime($q->tgl_pembayaran);
-                            return $qDate->format('Y-m-d') == $date->format('Y-m-d');
-                        });
-
-                        $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
-                            'tanggal' => $date->format('Y-m-d'),
-                            'nominal' => $nominal->sum('besar_pembayaran'),
-                            'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
-                                ->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)
-                                ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
-                                ->sum('tagihan_biaya.potongan.total_potongan'),
-                            'frekuensi' => $count,
-                            'tipe' => 1,
-                            'nm_tipe' => 'debit',
-                            'kategori' => $stringNmBiaya,
-                            'keterangan' => $keyTempData . ' ' . $count . 'x (' . $tahun_ajaran . ')',
-                            'tahun_ajaran' => $tahun_ajaran
-                        ];
-                    } else {
-                        $date           = new DateTime($data->tgl_pembayaran);
-                        $ket_biaya      = $data->tagihan_biaya->detail_biaya->keterangan_biaya;
-                        $count          = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
-                            ->filter(function ($q) use ($date) {
-                                $qDate = new DateTime($q->tgl_pembayaran);
-                                return $qDate->format('Y-m-d') == $date->format('Y-m-d');
-                            })->count();
-                        $keyTempData    = $kategori->nm_biaya . '-' . $ket_biaya . '-' . $ta;
-                        $tahun_ajaran   = $data->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
-
-                        $nominal = $val->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)->filter(function ($q) use ($date) {
-                            $qDate = new DateTime($q->tgl_pembayaran);
-                            return $qDate->format('Y-m-d') == $date->format('Y-m-d');
-                        });
-
-                        $tempDataLaporan[$keyTempData . $date->format('Y-m-d')] = [
-                            'tanggal' => $date->format('Y-m-d'),
-                            'nominal' => $nominal->sum('besar_pembayaran'),
-                            'potongan' => $val->where('tagihan_biaya.detail_biaya.biaya.nm_biaya', $kategori->nm_biaya)
-                                ->where('tagihan_biaya.detail_biaya.keterangan_biaya', '=', $ket_biaya)
-                                ->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.thn_akademik_semester', '=', $ta)
-                                ->sum('tagihan_biaya.potongan.total_potongan'),
-                            'frekuensi' => $count,
-                            'tipe' => 1,
-                            'nm_tipe' => 'debit',
-                            'kategori' => $stringNmBiaya,
-                            'keterangan' => $keyTempData . ' ' . $count . 'x (' . $tahun_ajaran . ')',
-                            'tahun_ajaran' => $tahun_ajaran
-                        ];
-                    }
-
-                    // ===
-
-
+            foreach ($filter_pembayaran as $pembayaran) {
+                if ($pembayaran->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4) { // SPP
+                    $keyTempData = $pembayaran->tagihan_biaya->detail_biaya->biaya->nm_biaya . '-' . $pembayaran->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+                } else { // Non-SPP
+                    $keyTempData = $pembayaran->tagihan_biaya->detail_biaya->biaya->nm_biaya . '-' . $pembayaran->tagihan_biaya->detail_biaya->keterangan_biaya . '-' . $pembayaran->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
                 }
+
+                $key_id = $keyTempData . $date->format('Y-m-d');
+
+                if (isset($frekuensi[$key_id])) {
+                    $frekuensi[$key_id] += 1;
+                    $nominal[$key_id] += $pembayaran->besar_pembayaran;
+                    if (!empty($pembayaran->tagihan_biaya->id_potongan_biaya)) {
+                        $potongan[$key_id] += $pembayaran->tagihan_biaya->potongan->total_potongan;
+                    }
+                } else {
+                    $frekuensi[$key_id] = 1;
+                    $nominal[$key_id] = $pembayaran->besar_pembayaran;
+                    if (!empty($pembayaran->tagihan_biaya->id_potongan_biaya)) {
+                        $potongan[$key_id] = $pembayaran->tagihan_biaya->potongan->total_potongan;
+                    } else {
+                        $potongan[$key_id] = 0;
+                    }
+                }
+
+                $keterangan[$key_id] = $keyTempData;
+                $kategori_biaya[$key_id] = $pembayaran->tagihan_biaya->detail_biaya->biaya->nm_biaya;
+                $tahun_ajaran[$key_id] = $pembayaran->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran;
+            }
+
+            foreach ($frekuensi as $key => $count) {
+                $tempDataLaporan[$key] = [
+                    'tanggal' => $date->format('Y-m-d'),
+                    'nominal' => $nominal[$key],
+                    'frekuensi' => $count,
+                    'potongan' => $potongan[$key],
+                    'tipe' => 1,
+                    'nm_tipe' => 'debit',
+                    'kategori' => $kategori_biaya[$key],
+                    'keterangan' => $keterangan[$key] . ' ' . $count . 'x (' . $tahun_ajaran[$key] . ')',
+                    'tahun_ajaran' => $tahun_ajaran[$key],
+                ];
             }
         }
 
@@ -943,8 +1119,8 @@ class LibCetakKeuangan
         foreach ($allDataRealisasi as $x) {
             $kategori = $x->rapb->subkategori->kategori->nm_kategori_rapb;
             $keterangan = $x->nm_realisasi;
-            $tipe       = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
-            $date       = new DateTime($x->tgl_realisasi);
+            $tipe = $x->rapb->subkategori->kategori->tipe_kategori_rapb;
+            $date = new DateTime($x->tgl_realisasi);
             $tempDataLaporan[] = [
                 'tanggal' => $date->format('Y-m-d'),
                 'nominal' => $x->dana_realisasi,
@@ -969,18 +1145,18 @@ class LibCetakKeuangan
         $data = [
             'laporan' => $dataLaporan,
             'total_debit' => $totalDebit,
-            'total_kredit' => $totalKredit
+            'total_kredit' => $totalKredit,
         ];
 
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
         $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
-        $id_bulan       = $sc_bulan->month;
-        $id_bulan_lalu  = $sc_bulan->subMonth()->month;
+        $id_bulan = $sc_bulan->month;
+        $id_bulan_lalu = $sc_bulan->subMonth()->month;
 
-        $sc_tahun       = Carbon::createFromFormat('Y-m-d', $start_date);
-        $tahun          = $sc_tahun->year;
-        $tahun_lalu     = $sc_tahun->subYear()->year;
+        $sc_tahun = Carbon::createFromFormat('Y-m-d', $start_date);
+        $tahun = $sc_tahun->year;
+        $tahun_lalu = $sc_tahun->subYear()->year;
 
         if ($id_bulan < 7) {
             $tahun_semester = $tahun - 1;
@@ -1006,19 +1182,19 @@ class LibCetakKeuangan
         }
 
         if ($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan, 'created_by' => $auth_data->pengguna->id_pengguna])->first()) {
-            $tutup_buku_bulanan_kas_now->updated_by                   = $auth_data->pengguna->id_pengguna;
+            $tutup_buku_bulanan_kas_now->updated_by = $auth_data->pengguna->id_pengguna;
         } else {
             $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
-            $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas    = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $tutup_buku_bulanan_kas_now->id_semester_mulai            = $id_semester_mulai;
-            $tutup_buku_bulanan_kas_now->id_semester_selesai          = $id_semester_selesai;
-            $tutup_buku_bulanan_kas_now->id_bulan                     = $id_bulan;
-            $tutup_buku_bulanan_kas_now->created_by                   = $auth_data->pengguna->id_pengguna;
+            $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $tutup_buku_bulanan_kas_now->id_semester_mulai = $id_semester_mulai;
+            $tutup_buku_bulanan_kas_now->id_semester_selesai = $id_semester_selesai;
+            $tutup_buku_bulanan_kas_now->id_bulan = $id_bulan;
+            $tutup_buku_bulanan_kas_now->created_by = $auth_data->pengguna->id_pengguna;
         }
-        $tutup_buku_bulanan_kas_now->kas_spp                = $kas_spp;
-        $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $kas_rapb_penerimaan;
-        $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $kas_rapb_pengeluaran;
-        $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
+        $tutup_buku_bulanan_kas_now->kas_spp = $kas_spp;
+        $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan = $kas_rapb_penerimaan;
+        $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran = $kas_rapb_pengeluaran;
+        $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan - $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran + ($tutup_buku_bulanan_kas_old->kas_akhir_bulan ?? 0);
         $tutup_buku_bulanan_kas_now->save();
 
         return $data;
@@ -1084,7 +1260,7 @@ class LibCetakKeuangan
                     'kategori_biaya' => $item->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
                     'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
-                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran
+                    'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
                 ];
             }
 
@@ -1100,7 +1276,7 @@ class LibCetakKeuangan
                 'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
                 'kelas_siswa' => $nm_kelas2,
                 'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan.total_potongan'),
-                'summary' => $summ
+                'summary' => $summ,
             ];
         }
 
@@ -1113,14 +1289,14 @@ class LibCetakKeuangan
                 'frekuensi' => $biaya->count(),
                 'id_jenis_detail_biaya' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya,
                 'total_pembayaran' => $biaya->sum('besar_pembayaran'),
-                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan')
+                'total_potongan_biaya' => $biaya->where('tagihan_biaya.detail_biaya.biaya.id_biaya', $idBiaya)->sum('tagihan_biaya.potongan.total_potongan'),
             ];
         }
 
         $result = [
             'data' => $listData,
             'summary' => $summaryData,
-            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya')
+            'kategori_biaya' => collect($summaryData)->pluck('nm_biaya', 'id_biaya'),
         ];
 
         return $result;
@@ -1151,7 +1327,7 @@ class LibCetakKeuangan
         foreach ($allDataPembayaran as $key => $value) {
 
             $listData[$key]['nama'] = $key;
-            $listData[$key]['total'] =  $value->sum('besar_pembayaran');
+            $listData[$key]['total'] = $value->sum('besar_pembayaran');
         }
 
         return $listData;
@@ -1215,7 +1391,7 @@ class LibCetakKeuangan
                     'keterangan_tagihan' => $item->tagihan_biaya->detail_biaya->id_jenis_detail_biaya == 4 ? $item->tagihan_biaya->keterangan : $ketTagihan,
                     'keterangan_biaya' => $item->tagihan_biaya->detail_biaya->biaya->keterangan_biaya,
                     'tahun_ajaran_tagihan' => $item->tagihan_biaya->detail_biaya->biaya_sekolah->semester->tahun_ajaran,
-                    'test' =>  $ketTagihan,
+                    'test' => $ketTagihan,
 
                 ];
             }
@@ -1232,7 +1408,7 @@ class LibCetakKeuangan
                 'nm_siswa' => $tagihanBiayaSiswa->siswa->pengguna->nm_pengguna,
                 'kelas_siswa' => $nm_kelas2,
                 'potongan_biaya' => $siswa->sum('tagihan_biaya.potongan.total_potongan'),
-                'summary' => $summ
+                'summary' => $summ,
             ];
         }
 
@@ -1253,10 +1429,7 @@ class LibCetakKeuangan
             //     return $item->count();
             // });;
 
-
-
         }
-
 
         // $test = $pembayaran->get()->groupBy('tagihan_biaya.keterangan');
         // $test1 = $pembayaran->get()->groupBy('tagihan_biaya.keterangan')->map(function ($item){
@@ -1266,13 +1439,12 @@ class LibCetakKeuangan
         foreach ($pembayaran->get()->groupBy('tagihan_biaya.keterangan') as $idBiaya => $biaya) {
 
             $total[] = [
-                'nama' =>   $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya != 4 ? $biaya->first()->tagihan_biaya->keterangan : "SPP",
+                'nama' => $biaya->first()->tagihan_biaya->detail_biaya->id_jenis_detail_biaya != 4 ? $biaya->first()->tagihan_biaya->keterangan : "SPP",
                 'total' => $biaya->count(),
                 'nominal' => $biaya->where('tagihan_biaya.keterangan', $idBiaya)->sum('besar_pembayaran'),
                 // 'nominal' => $biaya->first()->tagihan_biaya->besar_biaya,
             ];
         }
-
 
         $result = [
             'data' => $listData,
@@ -1313,7 +1485,7 @@ class LibCetakKeuangan
                 } else {
                     return $item->tagihan_biaya->detail_biaya->biaya->nm_biaya;
                 }
-            })
+            }),
         ];
         // dd($result);
         return $result;
@@ -1347,7 +1519,7 @@ class LibCetakKeuangan
             'data' => $allDataPembayaran,
             'dates' => CarbonPeriod::create($start_date, $end_date),
             'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
-            'data_tunggakan' => $allDataPembayaranTunggakan
+            'data_tunggakan' => $allDataPembayaranTunggakan,
         ];
 
         return $result;
@@ -1384,7 +1556,7 @@ class LibCetakKeuangan
                     'nama_biaya' => isset(collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya) ? collect($x)->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya : '',
                     'frekuensi' => collect($x)->count(),
                     'nominal_pembayaran' => collect($x)->sum('besar_pembayaran'),
-                    'potongan_biaya' => collect($x)->sum('tagihan_biaya.potongan.total_potongan')
+                    'potongan_biaya' => collect($x)->sum('tagihan_biaya.potongan.total_potongan'),
                 ];
             }
 
@@ -1392,13 +1564,13 @@ class LibCetakKeuangan
                 'tanggal_pembayaran' => $tanggal,
                 'total_pembayaran' => collect($detail)->sum('nominal_pembayaran'),
                 'total_potongan' => collect($detail)->sum('potongan_biaya'),
-                'detail' => $detail
+                'detail' => $detail,
             ];
         }
 
         $result = [
             'data' => $listData,
-            'kategori_biaya' => $pembayaran->get()->pluck('tagihan_biaya.detail_biaya.biaya.nm_biaya', 'tagihan_biaya.detail_biaya.biaya.id_biaya')
+            'kategori_biaya' => $pembayaran->get()->pluck('tagihan_biaya.detail_biaya.biaya.nm_biaya', 'tagihan_biaya.detail_biaya.biaya.id_biaya'),
         ];
 
         return $result;
@@ -1443,7 +1615,7 @@ class LibCetakKeuangan
                     'nm_biaya' => $dtl->first()->tagihan_biaya->detail_biaya->biaya->nm_biaya,
                     'frekuensi' => $dtl->count(),
                     'total_pembayaran' => $dtl->sum('besar_pembayaran'),
-                    'potongan_biaya' => $dtl->sum('tagihan_biaya.potongan.total_potongan')
+                    'potongan_biaya' => $dtl->sum('tagihan_biaya.potongan.total_potongan'),
                 ];
             }
 
@@ -1454,7 +1626,7 @@ class LibCetakKeuangan
                 'frekuensi' => $rwytBayarPerTgl->count(),
                 'total_pembayaran' => $rwytBayarPerTgl->sum('besar_pembayaran'),
                 'potongan_biaya' => $rwytBayarPerTgl->sum('tagihan_biaya.potongan.total_potongan'),
-                'details' => $details
+                'details' => $details,
             ];
         }
         $tempResult = [];
@@ -1470,14 +1642,14 @@ class LibCetakKeuangan
                     'frekuensi' => $dataPerMonth['frekuensi'] ?? 0,
                     'total_pembayaran' => $dataPerMonth['total_pembayaran'] ?? 0,
                     'total_potongan' => collect($listData)->where('kode_bulan', $b->kode_bulan)->where('tahun', $i + $start_year)->sum('potongan_biaya'),
-                    'details' => $dataPerMonth['details'] ?? []
+                    'details' => $dataPerMonth['details'] ?? [],
                 ];
             }
         }
 
         $result = [
             'data' => $tempResult,
-            'kategori_biaya' => $pembayaran->get()->pluck('tagihan_biaya.detail_biaya.biaya.nm_biaya', 'tagihan_biaya.detail_biaya.biaya.id_biaya')
+            'kategori_biaya' => $pembayaran->get()->pluck('tagihan_biaya.detail_biaya.biaya.nm_biaya', 'tagihan_biaya.detail_biaya.biaya.id_biaya'),
         ];
 
         return $result;

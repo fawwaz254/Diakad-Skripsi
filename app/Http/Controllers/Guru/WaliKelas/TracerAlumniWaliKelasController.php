@@ -28,11 +28,10 @@ class TracerAlumniWaliKelasController extends BaseController
                 $query->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna);
             })->first();
 
-        $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat', 9)->get();
+        $data_kelas = Kelas::all();
         $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
-
         if ($find_kelas) {
-            return view('guru.wali-kelas.tracer-alumni.export-tracer-alumni', compact('auth_data', 'find_kelas', 'id_kelas', 'tahun_lulus'));
+            return view('guru.wali-kelas.tracer-alumni.export-tracer-alumni', compact('auth_data', 'find_kelas', 'id_kelas', 'tahun_lulus','data_kelas'));
         } else {
         }
     }
@@ -58,7 +57,7 @@ class TracerAlumniWaliKelasController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $alumnis    = LibAlumni::getAlumnisSearchSmp($id_kelas, $tahun_lulus);
         } else {
             $alumnis    = LibAlumni::getAlumnis();

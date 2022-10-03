@@ -31,10 +31,21 @@
                                 </tbody>
                             </table>
                             <br>
+
+                            <div style="margin-bottom: 15px">
+                                <button type="submit" class="btn btn-danger waves-effect" onclick="deleteAll()">
+                                    <i class="material-icons">delete_forever</i><span>Delete All</span>
+                                </button>
+                            </div>
+                        
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>
+                                            <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in" onclick="return checkboxAll()">
+                                            <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label>
+                                        </th>
                                         <th>NIS</th>
                                         <th>Nama</th>
                                         <th>Action</th>
@@ -47,6 +58,11 @@
                                     @foreach($data_siswa as $siswa)
                                     <tr>
                                         <th>{{$no++}}</th>
+                                        <th>
+                                            <input id="{{ $siswa->siswa->id_siswa }}" onchange="checkboxSingle()" type="checkbox" name="id_siswa[]"
+                                                class="filled-in data-siswa" value="{{ $siswa->siswa->id_siswa }}">
+                                            <label for="{{ $siswa->siswa->id_siswa }}" style="margin-bottom: -10px;"></label>
+                                        </th>
                                         <th>{{$siswa->siswa->nis_siswa}}</th>
                                         <th>{{$siswa->siswa->pengguna->nm_pengguna}}</th>
                                         <th>
@@ -107,5 +123,86 @@
                 $('button').removeAttr('disabled', 'disabled');
             }
         });
+    }
+
+    function checkboxAll() {
+        let selectedValueArray = [];
+
+        $('#checkbox_select_all_primary_table').change(function () {
+            $('.data-siswa').prop('checked',this.checked);
+        });
+
+        $('.data-siswa').each(function(idx, el) {
+            if ($(el).is(':checked')) {
+                const selectedValue = $(el).val();
+                selectedValueArray.push(selectedValue);
+            }
+        });
+
+        return selectedValueArray;
+    }
+
+    function checkboxSingle() {
+        let selectedValueArray = [];
+        $('.data-siswa').each(function(idx, el) {
+            if ($(el).is(':checked')) {
+                const selectedValue = $(el).val();
+                selectedValueArray.push(selectedValue);
+            }
+        });
+
+        return selectedValueArray;
+    }
+
+    // trigger button delete all
+    function deleteAll() {
+        var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-hapus-semua-plotting-mapel-siswa';
+        let checkboxDeleteValue = checkboxSingle();
+        let checkboxDeleteAllValue = checkboxAll();
+
+        const data = [...new Set([...checkboxDeleteValue, ...checkboxDeleteAllValue])];
+
+        if (data.length < 1) {
+            swal({
+                title: "Mohon pilih data yang akan dihapus!",
+                text: "Penghapusan ini akan menghapus juga presensi yang telah dilakukan oleh guru terkait",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                closeOnConfirm: true,
+            })
+        } else {
+            swal({
+                title: "Anda sudah yakin?",
+                text: "Penghapusan ini akan menghapus juga presensi yang telah dilakukan oleh guru terkait",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                closeOnConfirm: true,
+                closeOnCancel: true
+            }, function(result) {
+                if (result) {
+                    $.ajax({
+                        type: "POST",
+                        url: delete_url,
+                        data: {
+                            id_siswa: data,
+                            id_semester: '{{ $semester_aktif->id_semester }}',
+                            id_kelas_mp: '{{ $data_kelas->id_kelas_mp }}'
+                        },
+                        success: function(response) {
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        },
+                        complete: function() {
+                            $('button').removeAttr('disabled', 'disabled');
+                        }
+                    });
+                } else {
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+            });
+        }
     }
 </script>

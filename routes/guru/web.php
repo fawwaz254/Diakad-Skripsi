@@ -81,6 +81,20 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
         });
 
+        Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
+            Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
+                Route::get('/', [JurnalPimpinanController::class, 'viewLaporanJurnalPimpinan']);
+                Route::get('add', [JurnalPimpinanController::class, 'addLaporanHarianJurnalPimpinan']);
+                Route::post('action-kerja-harian/{mode}/{id}', [JurnalPimpinanController::class, 'actionLaporanJurnalPimpinan']);
+                Route::get('datatables', [JurnalPimpinanController::class, 'datatablesJurnalPimpinan']);
+                Route::get('edit/{id}', [JurnalPimpinanController::class, 'editLaporanJurnalPimpinan']);
+                Route::get('preview-file/{id}', [JurnalPimpinanController::class, 'previewFile']);
+                Route::get('download-file/{id}', [JurnalPimpinanController::class, 'downloadFile']);
+            });
+        });
+
+        /** ==== MODUL MANAJEMEN FILE ==== **/
+        // url: /guru/manajemen-file
         Route::prefix('manajemen-file')->group(function () {
             Route::prefix('data-file')->group(function () {
                 Route::get('/', [DataFileController::class, 'viewDataFile']);
@@ -196,7 +210,6 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'editHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'updateHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
-
             });
         });
 
@@ -529,6 +542,37 @@ Route::group(array('middleware' => ['token_staff']), function () {
 
             // Route::post('approve-prestasi-siswa/{data}/{id}', [ApprovePrestasiSiswaController::class, 'actionApprovePrestasiSiswa']);
             // Route::get('approve-prestasi-siswa/print-skpi/{id}', [ApprovePrestasiSiswaController::class, 'PrintSkpi']);
+            //Menu Cek Nomor HP Siswa
+
+            Route::get('rekap-nomor-hp', [RekapNomorHpController::class, 'viewRekapNomorHp']);
+            Route::get('rekap-nomor-hp/datatables', [RekapNomorHpController::class, 'datatablesRekapNomorHp']);
+        });
+
+        // Modul Rapor Sisipan
+        Route::group(array('prefix' => 'rapor-sisipan'), function () {
+            Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
+
+                Route::get('/', 'Guru\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
+                Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
+                Route::get('add', 'Guru\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
+                Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Guru\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
+                Route::get('excel/{id}', 'Guru\RaporSisipan\RaporSisipanController@excelDaftarNilaiSTS');
+                Route::get('importExcel', 'Guru\RaporSisipan\RaporSisipanController@imporExcelSTS');
+                Route::post('importExcel', 'Guru\RaporSisipan\RaporSisipanController@uploadRaporSisipanSTS');
+                Route::get('pdf/{id}', 'Guru\RaporSisipan\RaporSisipanController@pdfDaftarNilaiSTS');
+                Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
+                // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
+            });
+
+            Route::group(array('prefix' => 'daftar-nilai-sas'), function () {
+
+                Route::get('/', 'Guru\RaporSisipan\RaporSisipanAkhirController@viewDaftarNilaiSAS');
+                Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanAkhirController@datatablesDaftarNilaiSAS');
+                Route::get('pdf/{id}', 'Guru\RaporSisipan\RaporSisipanAkhirController@pdfDaftarNilaiSAS');
+                Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController@viewKomponenInputNilai');
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController@actionInputNilai');
+            });
         });
 
         Route::prefix('kelas-daring')->group(function () {
@@ -614,7 +658,20 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
         });
 
-        Route::prefix('pembina-ekskul')->group(function () {
+        // MODUL PEMBINA EKSKUL
+        Route::group(['prefix' => 'pembina-ekskul'], function () {
+            // Menu Input Absensi Ekskul
+            Route::get('input-absensi-ekskul', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewDetailInputAbsensiEkskul');
+
+            Route::post('input-absensi-ekskul/datatables/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@datatablesInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@datatablesSiswaInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/action/{mode}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/action/{mode}/{id}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+
             // Menu Rekap Absensi Ekskul
             Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);

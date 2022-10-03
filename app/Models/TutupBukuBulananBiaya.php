@@ -37,6 +37,16 @@ class TutupBukuBulananBiaya extends Model
 
     protected $guarded = [];
 
+    public function semester_mulai()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester_mulai','id_semester');
+    }
+
+    public function semester_selesai()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester_selesai','id_semester');
+    }
+
     public function scopeIsInputByPengguna($query, $id_pengguna){
         return $query->where('tutup_buku_bulanan_biaya.created_by', $id_pengguna);
     }

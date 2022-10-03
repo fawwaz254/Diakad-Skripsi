@@ -12,6 +12,7 @@ use App\Models\Role;
 
 use App\Models\Guru;
 use App\Models\GuruPiket;
+use App\Models\JurnalPimpinan;
 use App\Models\PembinaEkskulSet;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
@@ -46,7 +47,7 @@ class TokenStaffMiddleware
                 $id_pengguna = $pengguna->id_pengguna;
                 if ($role_aktif->id_role == 2) {
                     $guru = Guru::where('id_pengguna', $id_pengguna)->first();
-
+                    $jurpin = Modul::where('id_role',2)->where('nm_modul','Jurnal Pimpinan')->pluck('id_modul')->first();
                     if ($guru) {
                         if ($this->isGuruPiket($id_pengguna)) {
                             $tambahan_modul[] = 35;
@@ -58,6 +59,10 @@ class TokenStaffMiddleware
 
                         if ($this->isGuruEkskul($guru->id_guru)) {
                             $tambahan_modul[] = 37;
+                        }
+
+                        if ($this->isJurnalPimpinan($id_pengguna)) {
+                            $tambahan_modul[] = $jurpin;
                         }
                     }
                 }
@@ -123,5 +128,10 @@ class TokenStaffMiddleware
     private function isGuruEkskul($id)
     {
         return PembinaEkskulSet::where('id_guru', $id)->where('is_aktif', 1)->exists();
+    }
+
+    private function isJurnalPimpinan($id)
+    {
+        return JurnalPimpinan::where('id_pengguna', $id)->where('is_aktif', 1)->exists();
     }
 }

@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#data-sarpras-ruangan/inventaris') }}"><i
+                href="{{ url(Request::segment(1) . '#data-inventaris-bergerak/data-inventaris') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">

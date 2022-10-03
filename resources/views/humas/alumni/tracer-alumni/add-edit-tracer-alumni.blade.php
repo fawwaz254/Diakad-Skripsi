@@ -91,7 +91,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Alamat </h2>
                             <textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
-                                aria-invalid="true"> {{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
+                                aria-invalid="true">{{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
@@ -99,7 +99,7 @@
                                 aria-invalid="true" value="{{ !empty($alumni) ?  $alumni->url_medsos : ''  }}">  
                         </div>
 
-                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian');
+                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                         <input type="hidden"name="status" value="smp">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <hr>
@@ -118,17 +118,17 @@
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Nama Sekolah</h2>
 							<textarea class="form-control" name="nm_sekolah" required="" aria-required="true"
-								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->nm_sekolah : ''}} </textarea>
+								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->nm_sekolah : ''}} </textarea>
 						</div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title"> Alamat Sekolah</h2>
 							<textarea class="form-control" name="alamat_sekolah" required="" aria-required="true"
-								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->alamat_sekolah : ''}} </textarea>
+								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->alamat_sekolah : ''}} </textarea>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title">Jurusan</h2>
 							<textarea class="form-control" name="jurusan" required="" aria-required="true"
-								aria-invalid="true"> {{(!empty($alumni))? $alumni->smp->jurusan : ''}} </textarea>
+								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->jurusan : ''}} </textarea>
                         </div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							<h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
@@ -179,7 +179,7 @@
                             @include('./humas.alumni.forms.idle_state')
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian')
+                            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian'|| $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                             <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
                                 <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
                                 </span>

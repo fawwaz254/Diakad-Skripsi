@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Kelas;
 use App\Models\link_laporan_magang;
+use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
 
@@ -17,6 +18,29 @@ function minimalisTime($time)
 
     return rtrim($time, '0');
 }
+
+if (!function_exists('getIdSemesterByTanggal')) {
+
+    function getIdSemesterByTanggal($date, $format)
+    {
+        $source_carbon = Carbon::createFromFormat($format, $date);
+        $id_bulan = $source_carbon->month;
+        $tahun = $source_carbon->year;
+
+        if ($id_bulan < 7) {
+            $tahun_akademik_semester = $tahun - 1;
+        } else {
+            $tahun_akademik_semester = $tahun;
+        }
+
+        return (object) [
+            'date_carbon' => $source_carbon,
+            'ganjil' => Semester::where('kode_semester', $tahun_akademik_semester.'1')->first(),
+            'genap' => Semester::where('kode_semester', $tahun_akademik_semester.'2')->first()
+        ];
+    }
+}
+
 
 if (!function_exists('auth_data')) {
     /**
@@ -69,7 +93,7 @@ if (!function_exists('get_keterangan_wali_kelas')) {
                 $query->where('id_pengguna', '=', $id_pengguna);
             })->first();
         if ($wali_kelas) {
-            $data_kelas = Kelas::where('tingkat', 3)->orWhere('tingkat', 9)->get();
+            $data_kelas = Kelas::all();
             $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
             if ($find_kelas) {
                 $kelas = $find_kelas;

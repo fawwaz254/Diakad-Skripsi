@@ -1,35 +1,35 @@
 <?php
 
-use App\Http\Controllers\Akademik\WelcomeController;
-use App\Http\Controllers\Akademik\Ujian\TryOutController;
-use App\Http\Controllers\ManajemenFile\DataFileController;
-use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
-use App\Http\Controllers\Akademik\Ujian\UjianUASController;
-use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
-use App\Http\Controllers\ManajemenFile\DataKategoriController;
-use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
-use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
-use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
+use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\InputNilaiController;
+use App\Http\Controllers\Akademik\AktivitasSemester\MonitoringKelasController;
+use App\Http\Controllers\Akademik\AktivitasSemester\PlottingMapelSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
+use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
+use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
 use App\Http\Controllers\Akademik\DataAkademik\KurikulumController;
-use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
+use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
+use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
+use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
+use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
+use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
+use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
-use App\Http\Controllers\Akademik\DataAkademik\MataPelajaranController;
-use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
-use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
-use App\Http\Controllers\Akademik\AktivitasSemester\CariSiswaController;
-use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
+use App\Http\Controllers\Akademik\Ujian\TryOutController;
+use App\Http\Controllers\Akademik\Ujian\UjianUASController;
+use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
+use App\Http\Controllers\Akademik\WelcomeController;
+use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
-use App\Http\Controllers\Akademik\AktivitasSemester\InputNilaiController;
-use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
-use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
-use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
-use App\Http\Controllers\Akademik\DataAkademik\SetupMapelKurikulumController;
-use App\Http\Controllers\Akademik\AktivitasSemester\MonitoringKelasController;
-use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
-use App\Http\Controllers\Akademik\AktivitasSemester\PlottingMapelSiswaController;
-use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaController;
+use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 
 // ROLE AKADEMIK
 Route::middleware(['token_staff'])->group(function () {
@@ -188,6 +188,9 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
 
+            //test automatik ploting
+            Route::get('plotting-mapel-siswa/action-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', 'Akademik\AktivitasSemester\PlottingMapelSiswaController@actionAutoPlottingMapelSiswa');
+
             //MENU Hapus Plotting Mapel Siswa
             Route::get('hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'viewHapusPlottingMapelSiswa']);
             Route::post('post-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionViewHapusPlottingMapelSiswa']);
@@ -196,6 +199,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('hapus-plotting-mapel-siswa/datatables/{id}', [HapusPlottingMapelSiswaController::class, 'datatablesHapusPlottingMapelSiswa']);
 
             Route::post('action-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusPlottingMapelSiswa']);
+
+            // hapus semua plotting
+            Route::post('action-hapus-semua-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusSemuaPlottingMapelSiswa');
 
             //MENU CARI SISWA
             Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
@@ -310,8 +316,28 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-monitoring-kelas-kosong/datatables', [MonitoringKelasKosongController::class, 'datatablesRekapMonitoringKelasKosong']);
         });
 
-        Route::prefix('monitoring')->group(function () {
-            Route::get('monitoring-presensi', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
+        // Modul Rapor Sisipan
+        Route::group(array('prefix' => 'rapor-sisipan'), function () {
+            Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
+                Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
+                Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
+                // Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
+                // Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
+                // Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
+                Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+
+                // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                // Route::get('input-nilai-magang/datatables/{id}', '[InputNilaiRaporSisipanController::class, 'datatablesKomponenNilaiMagang');
+                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', '[InputNilaiRaporSisipanController::class, 'actionInputNilai');
+            });
+
+            // Route::group(array('prefix' => 'daftar-nilai-sas'), function(){
+
+            // });
+
+        });
+
+        Route::group(array('prefix' => 'monitoring'), function () {
 
             Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
             Route::get('rekap-monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewRekapMonitoringKelasKosong']);
