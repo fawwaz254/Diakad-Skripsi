@@ -196,4 +196,70 @@ class HapusPlottingMapelSiswaController extends BaseController
             }
         }
     }
+
+    function actionHapusSemuaPlottingMapelSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'id_semester' => 'required',
+            'id_kelas_mp' => 'required',
+            'id_siswa' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            DB::beginTransaction();
+
+            try {
+                foreach ($input->id_siswa as $id_siswa) {
+                    if ($pengambilan_mp = PengambilanMp::where('id_kelas_mp', $input->id_kelas_mp)->where('id_semester', $input->id_semester)->where('id_siswa', $id_siswa)->first()) {
+                        $presensi_mp_siswa = PresensiMpSiswa::with('presensi_mp')->whereHas('presensi_mp', function ($q) use ($input) {
+                            $q->where('id_kelas_mp', $input->id_kelas_mp);
+                        })->where('id_siswa', $id_siswa)->get();
+
+                        foreach ($presensi_mp_siswa as $item) {
+                            $item->deleted_by = $auth_data->pengguna->id_pengguna;
+                            $item->save();
+                            $item->delete();
+                        }
+
+                        $nilai_mp = NilaiMp::where('id_pengambilan_mp', $pengambilan_mp->id_pengambilan_mp)->get();
+
+                        foreach ($nilai_mp as $item) {
+                            $item->deleted_by = $auth_data->pengguna->id_pengguna;
+                            $item->save();
+                            $item->delete();
+                        }
+
+                        $pengambilan_mp->deleted_by = $auth_data->pengguna->id_pengguna;
+                        $pengambilan_mp->save();
+                        $pengambilan_mp->delete();
+                    }
+                }
+
+                DB::commit();
+                // all good
+
+                return [
+                    'status'    =>  202, // SUCCESS AND LOAD CONTENT
+                    'message'   =>  'Delete Plotting Mapel Siswa successfully',
+                    'path'      =>  'aktivitas-semester/hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/' . $input->id_kelas_mp
+                ];
+            } catch (\Exception $e) {
+                DB::rollback();
+                // something went wrong
+
+                return [
+                    'status' => 300, // GAGAL
+                    'message' => 'Edit Usulan Mata Ajar Gagal! '
+                ];
+            }
+        }
+    }
 }
