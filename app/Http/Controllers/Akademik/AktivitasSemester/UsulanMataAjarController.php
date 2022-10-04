@@ -227,9 +227,9 @@ class UsulanMataAjarController extends BaseController
             'jadwal_kelas_mp.jadwal_jam_selesai',
             'pengampu_mp'
         )
-            ->with(['pengambilan_mp' => function ($q) {
-                $q->where('status_apv_pengambilan_mp', 1);
-            }])
+            // ->with(['pengambilan_mp' => function ($q) {
+            //     $q->where('status_apv_pengambilan_mp', 1);
+            // }])
             ->where('id_semester', '=', $id_semester);
 
         return Datatables::of($list_data)
