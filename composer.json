@@ -16,7 +16,6 @@
         "guzzlehttp/guzzle": "^7.0.1",
         "jrm2k6/cloudder": "^0.7.0",
         "laravel/framework": "^8.75",
-        "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "league/flysystem-aws-s3-v3": "1.0.29",
         "maatwebsite/excel": "^3.1",
