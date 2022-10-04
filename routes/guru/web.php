@@ -1,58 +1,63 @@
 <?php
 
-use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Guru\WelcomeController;
+use App\Http\Controllers\Guru\Tutorial\VideoController;
+use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\Guru\ELearningSoal\SoalController;
+use App\Http\Controllers\Guru\Jadwal\InputJadwalController;
+use App\Http\Controllers\Guru\Jadwal\JadwalUjianController;
+use App\Http\Controllers\Guru\Biodata\DataPribadiController;
+use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
+use App\Http\Controllers\Guru\Presensi\RekapAbsenController;
+use App\Http\Controllers\Guru\WaliKelas\HomeVisitController;
 use App\Http\Controllers\Guru\Biodata\DataKegiatanController;
 use App\Http\Controllers\Guru\Biodata\DataPrestasiController;
-use App\Http\Controllers\Guru\Biodata\DataPribadiController;
-use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
-use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
-use App\Http\Controllers\Guru\ELearningSoal\SoalController;
-use App\Http\Controllers\Guru\ELearning\ManajemenMateriAjarController;
-use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
-use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
-use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
-use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
-use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRekapKesehatanController;
-use App\Http\Controllers\Guru\Jadwal\InputJadwalController;
-use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
-use App\Http\Controllers\Guru\Jadwal\JadwalUjianController;
-use App\Http\Controllers\Guru\Jadwal\KalenderAkademikController;
-use App\Http\Controllers\Guru\KelasDaring\LaporanAbsenController;
-use App\Http\Controllers\Guru\KelasDaring\MengajarDaringController;
-use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
-use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
-use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
-use App\Http\Controllers\Guru\Laporan\KerjaHarianController;
-use App\Http\Controllers\Guru\PelanggaranSiswa\InputPelanggaranController;
-use App\Http\Controllers\Guru\PembinaEkskul\InputNilaiEkskulController;
-use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
-use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController;
-use App\Http\Controllers\Guru\PembinaEkskul\RekapNilaiEkskulController;
 use App\Http\Controllers\Guru\Penilaian\InputNilaiController;
-use App\Http\Controllers\Guru\Penilaian\KomponenNilaiController;
 use App\Http\Controllers\Guru\Penilaian\RekapNilaiController;
 use App\Http\Controllers\Guru\Presensi\AbsensiSiswaController;
-use App\Http\Controllers\Guru\Presensi\AbsensiTanpaJadwalController;
-use App\Http\Controllers\Guru\Presensi\RekapAbsenController;
-use App\Http\Controllers\Guru\Presensi\RekapAbsenTanpaJadwalController;
-use App\Http\Controllers\Guru\RewardSiswa\InputRewardSiswaController;
+use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
+use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
+use App\Http\Controllers\Guru\Jadwal\KalenderAkademikController;
+use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
+use App\Http\Controllers\Guru\Penilaian\KomponenNilaiController;
 use App\Http\Controllers\Guru\Sarpras\KomplainSarprasController;
-use App\Http\Controllers\Guru\Tutorial\VideoController;
-use App\Http\Controllers\Guru\WaliKelas\ApprovePrestasiSiswaController;
-use App\Http\Controllers\Guru\WaliKelas\HomeVisitController;
-use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
-use App\Http\Controllers\Guru\WaliKelas\InventarisKelasController;
-use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasController;
-use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
+use App\Http\Controllers\Guru\KelasDaring\LaporanAbsenController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController;
+use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
+use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanController;
+use App\Http\Controllers\Guru\WaliKelas\InventarisKelasController;
+use App\Http\Controllers\Guru\KelasDaring\MengajarDaringController;
+use App\Http\Controllers\Guru\Presensi\AbsensiTanpaJadwalController;
+use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasController;
+use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
+use App\Http\Controllers\Guru\RewardSiswa\InputRewardSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKeuanganKelasController;
+use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
+use App\Http\Controllers\Guru\ELearning\ManajemenMateriAjarController;
+use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+use App\Http\Controllers\Guru\PembinaEkskul\InputNilaiEkskulController;
+use App\Http\Controllers\Guru\PembinaEkskul\RekapNilaiEkskulController;
+use App\Http\Controllers\Guru\Presensi\RekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanAkhirController;
+use App\Http\Controllers\Guru\WaliKelas\ApprovePrestasiSiswaController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\WaliKelas\RekapPelanggaranKelasController;
 use App\Http\Controllers\Guru\WaliKelas\TracerAlumniWaliKelasController;
-use App\Http\Controllers\Guru\WelcomeController;
-use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
-use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
-use App\Http\Controllers\ManajemenFile\DataFileController;
-use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Http\Controllers\Guru\PembinaEkskul\InputAbsensiEkskulController;
+use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController;
+use App\Http\Controllers\Guru\PelanggaranSiswa\InputPelanggaranController;
+use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
+use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
+use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
+use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
+use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
+use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRekapKesehatanController;
+use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
+use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
+use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 
 // ROLE GURU
 Route::group(array('middleware' => ['token_staff']), function () {
@@ -552,26 +557,26 @@ Route::group(array('middleware' => ['token_staff']), function () {
         Route::group(array('prefix' => 'rapor-sisipan'), function () {
             Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
 
-                Route::get('/', 'Guru\RaporSisipan\RaporSisipanController@viewDaftarNilaiSTS');
-                Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanController@datatablesDaftarNilaiSTS');
-                Route::get('add', 'Guru\RaporSisipan\RaporSisipanController@addDaftarNilaiSTS');
-                Route::post('action-daftar-nilai-sts/{mode}/{id}', 'Guru\RaporSisipan\RaporSisipanController@actionDaftarNilaiSTS');
-                Route::get('excel/{id}', 'Guru\RaporSisipan\RaporSisipanController@excelDaftarNilaiSTS');
-                Route::get('importExcel', 'Guru\RaporSisipan\RaporSisipanController@imporExcelSTS');
-                Route::post('importExcel', 'Guru\RaporSisipan\RaporSisipanController@uploadRaporSisipanSTS');
-                Route::get('pdf/{id}', 'Guru\RaporSisipan\RaporSisipanController@pdfDaftarNilaiSTS');
-                Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@viewKomponenInputNilai');
+                Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
+                Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
+                Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
+                Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
+                Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
+                Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
+                Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
+                Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
-                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@actionInputNilai');
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
 
             Route::group(array('prefix' => 'daftar-nilai-sas'), function () {
 
-                Route::get('/', 'Guru\RaporSisipan\RaporSisipanAkhirController@viewDaftarNilaiSAS');
-                Route::get('datatables', 'Guru\RaporSisipan\RaporSisipanAkhirController@datatablesDaftarNilaiSAS');
-                Route::get('pdf/{id}', 'Guru\RaporSisipan\RaporSisipanAkhirController@pdfDaftarNilaiSAS');
-                Route::get('nilai/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController@viewKomponenInputNilai');
-                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', 'Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController@actionInputNilai');
+                Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
+                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
+                Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
         });
 
@@ -661,16 +666,16 @@ Route::group(array('middleware' => ['token_staff']), function () {
         // MODUL PEMBINA EKSKUL
         Route::group(['prefix' => 'pembina-ekskul'], function () {
             // Menu Input Absensi Ekskul
-            Route::get('input-absensi-ekskul', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewManageInputAbsensiEkskul');
-            Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@viewDetailInputAbsensiEkskul');
+            Route::get('input-absensi-ekskul', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewManageInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/manage/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', [InputAbsensiEkskulController::class, 'viewManageInputAbsensiEkskul']);
+            Route::get('input-absensi-ekskul/detail/{id_ekskul}/{id_kelas}/{tahun}/{id_bulan}', [InputAbsensiEkskulController::class, 'viewDetailInputAbsensiEkskul']);
 
-            Route::post('input-absensi-ekskul/datatables/{id_semester}/{id_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@datatablesInputAbsensiEkskul');
-            Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@datatablesSiswaInputAbsensiEkskul');
-            Route::post('input-absensi-ekskul/action/{mode}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
-            Route::post('input-absensi-ekskul/action/{mode}/{id}', 'Guru\PembinaEkskul\InputAbsensiEkskulController@actionInputAbsensiEkskul');
+            Route::post('input-absensi-ekskul/datatables/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'datatablesInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/datatables-detail/{id_semester}/{id_ekskul}/{id_presensi_ekskul}', [InputAbsensiEkskulController::class, 'datatablesSiswaInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/action/{mode}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
+            Route::post('input-absensi-ekskul/action/{mode}/{id}', [InputAbsensiEkskulController::class, 'actionInputAbsensiEkskul']);
 
             // Menu Rekap Absensi Ekskul
             Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);

@@ -160,11 +160,16 @@ class BeasiswaSiswaController extends BaseController
             } elseif ($mode == 'edit') {
                 $beasiswa 								= BeasiswaSiswa::find($id);
 
-                if($beasiswa->id_siswa != $input->siswa) {
-                    $siswa = Siswa::find($input->id_siswa);
-                    $beasiswa->id_siswa                     = $input->id_siswa;
-                    $beasiswa->id_kelas                     = $siswa->id_kelas;
-                }
+                // if($beasiswa->id_siswa != $input->siswa) {
+                //     $siswa = Siswa::find($input->id_siswa);
+                //     $beasiswa->id_siswa                     = $input->id_siswa;
+                //     $beasiswa->id_kelas                     = $siswa->id_kelas;
+                // }
+                $siswa = Siswa::find($input->id_siswa);
+                $beasiswa->id_siswa                     = $input->id_siswa;
+                $beasiswa->id_kelas                     = $siswa->id_kelas;
+
+
                 $beasiswa->jenis_beasiswa_siswa 		= $input->jenis_beasiswa_siswa;
                 $beasiswa->tahun_mulai_beasiswa_siswa 	= $input->tahun_mulai_beasiswa_siswa;
                 $beasiswa->keterangan_beasiswa_siswa 	= $input->keterangan_beasiswa_siswa;
