@@ -100,7 +100,7 @@ class JenisGedungController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-gedung/jenis-gedung',
-                    'message' => 'Save Jenis Gedung successfully'
+                    'message' => 'Save Jenis Gedung Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -114,7 +114,7 @@ class JenisGedungController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-gedung/jenis-gedung',
-                    'message' => 'Update Jenis Gedung successfully'
+                    'message' => 'Update Jenis Gedung Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -134,7 +134,7 @@ class JenisGedungController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jenis Gedung successfully'
+                        'message' => 'Delete Jenis Gedung Successfully'
                     ];
                 }
             }
