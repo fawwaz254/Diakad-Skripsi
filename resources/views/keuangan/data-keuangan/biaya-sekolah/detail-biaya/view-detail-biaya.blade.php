@@ -11,7 +11,7 @@
                         <h2>DATA DETAIL BIAYA {{$biaya_sekolah->kelompok->nm_kelompok_biaya}} {{$biaya_sekolah->semester->tahun_ajaran}} {{$biaya_sekolah->semester->nm_semester}}</h2>
                     </div>
                     <div class="body">
-                        
+
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover dataTable display nowrap" id="primary_table">
                                 <thead>
@@ -59,7 +59,7 @@
             { data: 'detail_internal', name: 'detail_internal', searchable: false, orderable: false,
                 render: function(data){
                     var html = `<ol>`;
-                    $.each(JSON.parse(data.detail.replace(/&quot;/g,'"')), function( key, item ) {
+                    $.each(data.detail, function( key, item ) {
                         html += `<li>${item.nm_detail_biaya_internal} Rp${item.besar_biaya}</li>`;
                     });
                     html += `</ol>`;

@@ -16,18 +16,21 @@ use App\Models\Pengguna;
 use App\Models\Siswa;
 use Yajra\Datatables\Datatables;
 
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Auth;
 use DB;
+use Illuminate\Support\Facades\Auth;
 use Session;
 
 class SignInController extends BaseController
 {
-    public function indexReportingDashboard(Request $request){
+    public function indexReportingDashboard(Request $request)
+    {
         return view('reporting-dashboard/index');
     }
 
     public function indexSignin(Request $request)
     {
+        // return Auth::check();
         if (Auth::check()) {
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
@@ -54,49 +57,45 @@ class SignInController extends BaseController
         // $pengguna = Pengguna::where('username', $input->username)->first();
         // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
 
-$global_pass = Sekolah::where('deleted_by', NULL)->first();
-if(Hash::check($input->password, $global_pass->password_global)) {
+        $global_pass = Sekolah::where('deleted_by', NULL)->first();
+        if (Hash::check($input->password, $global_pass->password_global)) {
 
-    $pengguna = Pengguna::where('username', $input->username)->first();
-    Auth::loginUsingId($pengguna->id_pengguna);
-    $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
-    $role = Role::find($role_aktif->id_role);
-    return redirect($role->path);
-
-
-}else{
-
-
-        if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true)) {
-            $pengguna = Auth::user();
+            $pengguna = Pengguna::where('username', $input->username)->first();
+            Auth::loginUsingId($pengguna->id_pengguna);
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
             $role = Role::find($role_aktif->id_role);
+            return redirect($role->path);
+        } else {
 
-            if ($role_aktif->id_role == 4) {
-                if ($wali_murid = WaliMurid::where('id_pengguna', $pengguna->id_pengguna)->first()) {
-                    if (!Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first()) {
-                        Auth::logout();
-                        return back()->with('toast', 'Akun Anda belum disetting menjadi wali murid')->withInput();
+
+            if (Auth::attempt(['username' => $input->username, 'password' => $input->password], true)) {
+                $pengguna = Auth::user();
+                $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
+                $role = Role::find($role_aktif->id_role);
+
+                if ($role_aktif->id_role == 4) {
+                    if ($wali_murid = WaliMurid::where('id_pengguna', $pengguna->id_pengguna)->first()) {
+                        if (!Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first()) {
+                            Auth::logout();
+                            return back()->with('toast', 'Akun Anda belum disetting menjadi wali murid')->withInput();
+                        }
                     }
                 }
+
+                // mengambil waktu sekarang
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $pengguna->last_time_login  = $now;
+                $pengguna->is_online        = 1;
+                $pengguna->save();
+
+                if ($pengguna->must_change_password == 1) {
+                    return redirect('must-change-password');
+                }
+
+                return redirect($role->path);
+            } else {
+                return back()->with('toast', 'Sign in failed')->withInput();
             }
-
-            // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            $pengguna->last_time_login  = $now;
-            $pengguna->is_online        = 1;
-            $pengguna->save();
-
-            if($pengguna->must_change_password == 1){
-                return redirect('must-change-password');
-            }
-
-            return redirect($role->path);
         }
-
-        else {
-            return back()->with('toast', 'Sign in failed')->withInput();
-        }
-    }
     }
 }

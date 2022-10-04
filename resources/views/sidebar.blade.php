@@ -199,10 +199,10 @@ if ($role_aktif == 2) {
         <!-- Footer -->
         <div class="legal">
             <div class="copyright">
-                Copyright &copy;2018
+                Copyright &copy;{{now()->format('Y')}}
             </div>
             <div class="version">
-                Made with <span style="color: #e25555;">&hearts;</span> by <a href="https://edumate.id">@eduschool</a>
+                Made with <span style="color: #e25555;">&hearts;</span> by <a href="https://solusimaster.co.id">@Digital Solusi Master</a>
             </div>
         </div>
         <!-- #Footer -->

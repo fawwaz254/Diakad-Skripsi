@@ -1,65 +1,63 @@
 <?php
-// ROLE ALUMNI
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'alumni'), function () {
-        Route::get('welcome', 'Alumni\WelcomeController@indexWelcome');
 
-       /** ==== MODUL Tracer Alumni ==== **/
-       Route::group(array('prefix' => 'alumni'), function () {
-        Route::get('/', 'Siswa\Alumni\TracerAlumniSiswaController@viewTracerAlumni');
-        Route::group(array('prefix' => 'tracer-alumni'), function () {
-            Route::get('/', 'Siswa\Alumni\TracerAlumniSiswaController@viewTracerAlumni');
-            Route::get('datatables', 'Siswa\Alumni\TracerAlumniSiswaController@datatablesTracerAlumni');
-            Route::get('add', 'Alumni\TracerAlumni\TracerAlumnicontroller@addTracerAlumni');
-            Route::get('edit/{id}', 'Siswa\Alumni\TracerAlumniSiswaController@editTracerAlumni');
-            //action arahkan ke humas
-            Route::post('action/{mode}/{id}', 'Humas\Alumni\TracerAlumniController@actionTracerAlumni');
-        });
-    });
+use App\Http\Controllers\Alumni\BursaKerja\BKKController;
+use App\Http\Controllers\Alumni\TracerAlumni\TracerAlumniController;
+use App\Http\Controllers\Alumni\WelcomeController;
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Siswa\Alumni\TracerAlumniSiswaController;
 
-        /** ==== MODUL MANAJEMEN FILE ==== **/
-        // url: /alumni/manajemen-file
-        Route::group(array('prefix' => 'manajemen-file'), function () {
-            // MENU Data Kategori
-            Route::group(array('prefix' => 'data-kategori'), function () {
-                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('alumni')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::prefix('alumni')->group(function () {
+            Route::get('/', [TracerAlumniSiswaController::class, 'viewTracerAlumni']);
+
+            Route::prefix('tracer-alumni')->group(function () {
+                Route::get('/', [TracerAlumniSiswaController::class, 'viewTracerAlumni']);
+                Route::get('datatables', [TracerAlumniSiswaController::class, 'datatablesTracerAlumni']);
+                Route::get('add', [TracerAlumniController::class, 'addTracerAlumni']);
+                Route::get('edit/{id}', [TracerAlumniSiswaController::class, 'editTracerAlumni']);
+                //action arahkan ke humas
+                Route::post('action/{mode}/{id}', [TracerAlumniController::class, 'actionTracerAlumni']);
             });
+        });
 
-            // MENU Data Sub Kategori 
-            Route::group(array('prefix' => 'data-sub-kategori'), function () {
-                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
-                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+        Route::prefix('manajemen-file')->group(function () {
+
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
+            });
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
                 //action input sub data kategori
-                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
             });
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-            // MENU Data File 
-            Route::group(array('prefix' => 'data-file'), function () {
-
-                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
-                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
-                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
-                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
-
-                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
-                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
         });
 
- 
+        Route::prefix('bursa-kerja')->group(function () {
 
-        Route::group(array('prefix' => 'bursa-kerja'), function () {
-
-            Route::group(array('prefix' => 'bkk'), function () {
-
-                Route::get('/', 'Alumni\BursaKerja\BKKController@viewBkk');
-                Route::get('detail/{id}', 'Alumni\BursaKerja\BKKController@viewDetailBkk');
-                Route::get('datatables', 'Alumni\BursaKerja\BKKController@showDatatablesBkk');
+            Route::prefix('bkk')->group(function () {
+                Route::get('/', [BKKController::class, 'viewBkk']);
+                Route::get('detail/{id}', [BKKController::class, 'viewDetailBkk']);
+                Route::get('datatables', [BKKController::class, 'showDatatablesBkk']);
             });
         });
     });

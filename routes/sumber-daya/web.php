@@ -1,134 +1,134 @@
 <?php
-// ROLE SUMBER DAYA
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'sumber-daya'), function () {
-        Route::get('welcome', 'SumberDaya\WelcomeController@indexWelcome');
 
-        /** ==== MODUL MANAJEMEN FILE ==== **/
-        // url: /sumber-daya/manajemen-file
-        Route::group(array('prefix' => 'manajemen-file'), function () {
-            // MENU Data Kategori
-            Route::group(array('prefix' => 'data-kategori'), function () {
-                Route::get('/', 'ManajemenFile\DataKategoriController@viewDataKategori');
-                Route::get('/datatables', 'ManajemenFile\DataKategoriController@datatablesCategoryfile');
+use App\Http\Controllers\ManajemenFile\DataFileController;
+use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\SumberDaya\DataSumberDaya\StatusAktifGuruController;
+use App\Http\Controllers\SumberDaya\DataSumberDaya\StatusAktifTendikController;
+use App\Http\Controllers\SumberDaya\DataSumberDaya\UnitKerjaController;
+use App\Http\Controllers\SumberDaya\Guru\InputGuruController;
+use App\Http\Controllers\SumberDaya\Guru\SettingGuruPiketController;
+use App\Http\Controllers\SumberDaya\Guru\UploadDataGuruController;
+use App\Http\Controllers\SumberDaya\Tendik\InputTendikController;
+use App\Http\Controllers\SumberDaya\Tendik\UploadDataTendikController;
+use App\Http\Controllers\SumberDaya\WelcomeController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+
+Route::middleware(['token_staff'])->group(function () {
+
+    Route::prefix('sumber-daya')->group(function () {
+        Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::prefix('manajemen-file')->group(function () {
+
+            Route::prefix('data-kategori')->group(function () {
+                Route::get('/', [DataKategoriController::class, 'viewDataKategori']);
+                Route::get('/datatables', [DataKategoriController::class, 'datatablesCategoryfile']);
             });
-
-            // MENU Data Sub Kategori
-            Route::group(array('prefix' => 'data-sub-kategori'), function () {
-                Route::get('/', 'ManajemenFile\SubDataKategoriController@viewSubDataKategori');
-                Route::get('/add', 'ManajemenFile\SubDataKategoriController@addSubDataKategori');
-                Route::get('/datatables', 'ManajemenFile\SubDataKategoriController@datatablesSubCategoryfile');
-                Route::get('/edit/{id}', 'ManajemenFile\SubDataKategoriController@editSubDataKategori');
+            Route::prefix('data-sub-kategori')->group(function () {
+                Route::get('/', [SubDataKategoriController::class, 'viewSubDataKategori']);
+                Route::get('/add', [SubDataKategoriController::class, 'addSubDataKategori']);
+                Route::get('/datatables', [SubDataKategoriController::class, 'datatablesSubCategoryfile']);
+                Route::get('/edit/{id}', [SubDataKategoriController::class, 'editSubDataKategori']);
 
                 //action input sub data kategori
-                Route::post('action-data-sub-kategori/{mode}/{id}', 'ManajemenFile\SubDataKategoriController@actionSubDataKategori');
+                Route::post('action-data-sub-kategori/{mode}/{id}', [SubDataKategoriController::class, 'actionSubDataKategori']);
             });
+            Route::prefix('data-file')->group(function () {
+                Route::get('/', [DataFileController::class, 'viewDataFile']);
+                Route::get('add', [DataFileController::class, 'addDataFile']);
+                Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
+                Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
+                Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
 
-            // MENU Data File
-            Route::group(array('prefix' => 'data-file'), function () {
-
-                Route::get('/', 'ManajemenFile\DataFileController@viewDataFile');
-                Route::get('add', 'ManajemenFile\DataFileController@addDataFile');
-                Route::get('category/{category_file_id}', 'ManajemenFile\DataFileController@viewDataFileCategory');
-                Route::get('dropdown-category', 'ManajemenFile\DataFileController@dropdownCategory');
-                Route::get('sub-category/{sub_category_file_id}', 'ManajemenFile\DataFileController@viewDataFileSubCategory');
-
-                Route::post('action-data-file/{mode}/{id}', 'ManajemenFile\DataFileController@actionDataFile');
-                Route::get('download/{id}', 'ManajemenFile\DataFileController@downloadDataFile');
+                Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
+                Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
         });
-
-        /** ==== MODUL DATA SUMBER DAYA ==== **/
-        Route::group(array('prefix' => 'data-sumber-daya'), function () {
+        Route::prefix('data-sumber-daya')->group(function () {
             // MENU Data Unit Kerja
-            Route::get('unit-kerja', 'SumberDaya\DataSumberDaya\UnitKerjaController@viewUnitKerja');
-            Route::get('unit-kerja/datatables', 'SumberDaya\DataSumberDaya\UnitKerjaController@datatablesUnitKerja');
-            Route::get('unit-kerja/add', 'SumberDaya\DataSumberDaya\UnitKerjaController@addUnitKerja');
-            Route::get('unit-kerja/edit/{id}', 'SumberDaya\DataSumberDaya\UnitKerjaController@editUnitKerja');
+            Route::get('unit-kerja', [UnitKerjaController::class, 'viewUnitKerja']);
+            Route::get('unit-kerja/datatables', [UnitKerjaController::class, 'datatablesUnitKerja']);
+            Route::get('unit-kerja/add', [UnitKerjaController::class, 'addUnitKerja']);
+            Route::get('unit-kerja/edit/{id}', [UnitKerjaController::class, 'editUnitKerja']);
 
-            Route::post('action-unit-kerja/{mode}/{id}', 'SumberDaya\DataSumberDaya\UnitKerjaController@actionUnitKerja');
+            Route::post('action-unit-kerja/{mode}/{id}', [UnitKerjaController::class, 'actionUnitKerja']);
 
             // MENU Data Jabatan Pegawai
             // TABEL DIHAPUS
-            /*Route::get('jabatan-pegawai', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@viewJabatanPegawai');
-            Route::get('jabatan-pegawai/datatables', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@datatablesJabatanPegawai');
-            Route::get('jabatan-pegawai/add', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@addJabatanPegawai');
-            Route::get('jabatan-pegawai/edit/{id}', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@editJabatanPegawai');
+            /*Route::get('jabatan-pegawai', [JabatanPegawaiController::class, 'viewJabatanPegawai']);
+            Route::get('jabatan-pegawai/datatables', [JabatanPegawaiController::class, 'datatablesJabatanPegawai']);
+            Route::get('jabatan-pegawai/add', [JabatanPegawaiController::class, 'addJabatanPegawai']);
+            Route::get('jabatan-pegawai/edit/{id}', [JabatanPegawaiController::class, 'editJabatanPegawai']);
 
-            Route::post('action-jabatan-pegawai/{mode}/{id}', 'SumberDaya\DataSumberDaya\JabatanPegawaiController@actionJabatanPegawai');*/
+            Route::post('action-jabatan-pegawai/{mode}/{id}', [JabatanPegawaiController::class, 'actionJabatanPegawai']);*/
 
             // MENU Data Status Aktif Guru
-            Route::get('status-aktif-guru', 'SumberDaya\DataSumberDaya\StatusAktifGuruController@viewStatusAktifGuru');
-            Route::get('status-aktif-guru/datatables', 'SumberDaya\DataSumberDaya\StatusAktifGuruController@datatablesStatusAktifGuru');
-            Route::get('status-aktif-guru/add', 'SumberDaya\DataSumberDaya\StatusAktifGuruController@addStatusAktifGuru');
-            Route::get('status-aktif-guru/edit/{id}', 'SumberDaya\DataSumberDaya\StatusAktifGuruController@editStatusAktifGuru');
+            Route::get('status-aktif-guru', [StatusAktifGuruController::class, 'viewStatusAktifGuru']);
+            Route::get('status-aktif-guru/datatables', [StatusAktifGuruController::class, 'datatablesStatusAktifGuru']);
+            Route::get('status-aktif-guru/add', [StatusAktifGuruController::class, 'addStatusAktifGuru']);
+            Route::get('status-aktif-guru/edit/{id}', [StatusAktifGuruController::class, 'editStatusAktifGuru']);
 
-            Route::post('action-status-aktif-guru/{mode}/{id}', 'SumberDaya\DataSumberDaya\StatusAktifGuruController@actionStatusAktifGuru');
+            Route::post('action-status-aktif-guru/{mode}/{id}', [StatusAktifGuruController::class, 'actionStatusAktifGuru']);
 
             // MENU Data Status Aktif Tendik
-            Route::get('status-aktif-tendik', 'SumberDaya\DataSumberDaya\StatusAktifTendikController@viewStatusAktifTendik');
-            Route::get('status-aktif-tendik/datatables', 'SumberDaya\DataSumberDaya\StatusAktifTendikController@datatablesStatusAktifTendik');
-            Route::get('status-aktif-tendik/add', 'SumberDaya\DataSumberDaya\StatusAktifTendikController@addStatusAktifTendik');
-            Route::get('status-aktif-tendik/edit/{id}', 'SumberDaya\DataSumberDaya\StatusAktifTendikController@editStatusAktifTendik');
+            Route::get('status-aktif-tendik', [StatusAktifTendikController::class, 'viewStatusAktifTendik']);
+            Route::get('status-aktif-tendik/datatables', [StatusAktifTendikController::class, 'datatablesStatusAktifTendik']);
+            Route::get('status-aktif-tendik/add', [StatusAktifTendikController::class, 'addStatusAktifTendik']);
+            Route::get('status-aktif-tendik/edit/{id}', [StatusAktifTendikController::class, 'editStatusAktifTendik']);
 
-            Route::post('action-status-aktif-tendik/{mode}/{id}', 'SumberDaya\DataSumberDaya\StatusAktifTendikController@actionStatusAktifTendik');
+            Route::post('action-status-aktif-tendik/{mode}/{id}', [StatusAktifTendikController::class, 'actionStatusAktifTendik']);
         });
 
-        Route::group(array('prefix' => 'kegiatan-harian'), function () {
+        Route::prefix('kegiatan-harian')->group(function () {
 
-            Route::group(array('prefix' => 'mengisi-form-kesehatan'), function () {
+            Route::prefix('mengisi-form-kesehatan')->group(function () {
                 // MENU Mengisi form kesehatan
-                Route::get('/', 'Tendik\KegiatanHarian\FormKesehatanController@viewFormKesehatan');
-                Route::get('add', 'Tendik\KegiatanHarian\FormKesehatanController@viewAddFormKesehatan');
-                Route::get('detail/{id}', 'Tendik\KegiatanHarian\FormKesehatanController@viewDetailFormKesehatan');
+                Route::get('/', [FormKesehatanController::class, 'viewFormKesehatan']);
+                Route::get('add', [FormKesehatanController::class, 'viewAddFormKesehatan']);
+                Route::get('detail/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
-                Route::post('action/{mode}', 'Tendik\KegiatanHarian\FormKesehatanController@actionFormKesehatan');
-                Route::post('datatables', 'Tendik\KegiatanHarian\FormKesehatanController@showDatatablesFormKesehatan');
+                Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
+                Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
             });
         });
-
-
-        /** ==== MODUL DATA GURU ==== **/
-        Route::group(array('prefix' => 'guru'), function () {
+        Route::prefix('guru')->group(function () {
             // MENU Input Guru Baru
-            Route::get('input-guru', 'SumberDaya\Guru\InputGuruController@viewInputGuru');
-            Route::get('input-guru/datatables', 'SumberDaya\Guru\InputGuruController@datatablesInputGuru');
-            Route::get('input-guru/add', 'SumberDaya\Guru\InputGuruController@addInputGuru');
-            Route::get('input-guru/edit/{id}', 'SumberDaya\Guru\InputGuruController@editInputGuru');
+            Route::get('input-guru', [InputGuruController::class, 'viewInputGuru']);
+            Route::get('input-guru/datatables', [InputGuruController::class, 'datatablesInputGuru']);
+            Route::get('input-guru/add', [InputGuruController::class, 'addInputGuru']);
+            Route::get('input-guru/edit/{id}', [InputGuruController::class, 'editInputGuru']);
 
-            Route::post('action-input-guru/{mode}/{id}', 'SumberDaya\Guru\InputGuruController@actionInputGuru');
+            Route::post('action-input-guru/{mode}/{id}', [InputGuruController::class, 'actionInputGuru']);
 
-            Route::get('input-guru/get-kota/{id}', 'SumberDaya\Guru\InputGuruController@getKota');
-
+            Route::get('input-guru/get-kota/{id}', [InputGuruController::class, 'getKota']);
 
             //MENU Upload Guru
-            Route::get('upload-data-guru', 'SumberDaya\Guru\UploadDataGuruController@viewUploadDataGuru');
-            Route::get('/download-file-excel', 'SumberDaya\Guru\UploadDataGuruController@downloadFileExcel')->name('guru/download-file-excel');
-            Route::post('post-file-excel', 'SumberDaya\Guru\UploadDataGuruController@uploadFileExcel');
+            Route::get('upload-data-guru', [UploadDataGuruController::class, 'viewUploadDataGuru']);
+            Route::get('/download-file-excel', [UploadDataGuruController::class, 'downloadFileExcel'])->name('guru/download-file-excel');
+            Route::post('post-file-excel', [UploadDataGuruController::class, 'uploadFileExcel']);
 
             //MENU Setting Guru Piket
-            Route::get('setting-guru-piket', 'SumberDaya\Guru\SettingGuruPiketController@viewSettingGuruPiket');
-            Route::get('setting-guru-piket/datatables', 'SumberDaya\Guru\SettingGuruPiketController@datatablesSettingGuruPiket');
-            Route::get('setting-guru-piket/add', 'SumberDaya\Guru\SettingGuruPiketController@addSettingGuruPiket');
-            Route::get('setting-guru-piket/edit/{id}', 'SumberDaya\Guru\SettingGuruPiketController@editSettingGuruPiket');
-            Route::get('setting-guru-piket/datatablesGuru', 'SumberDaya\Guru\SettingGuruPiketController@datatablesAddGuruPiket');
+            Route::get('setting-guru-piket', [SettingGuruPiketController::class, 'viewSettingGuruPiket']);
+            Route::get('setting-guru-piket/datatables', [SettingGuruPiketController::class, 'datatablesSettingGuruPiket']);
+            Route::get('setting-guru-piket/add', [SettingGuruPiketController::class, 'addSettingGuruPiket']);
+            Route::get('setting-guru-piket/edit/{id}', [SettingGuruPiketController::class, 'editSettingGuruPiket']);
+            Route::get('setting-guru-piket/datatablesGuru', [SettingGuruPiketController::class, 'datatablesAddGuruPiket']);
 
-            Route::post('action-setting-guru-piket/{mode}/{id}', 'SumberDaya\Guru\SettingGuruPiketController@actionSettingGuruPiket');
+            Route::post('action-setting-guru-piket/{mode}/{id}', [SettingGuruPiketController::class, 'actionSettingGuruPiket']);
         });
 
-        /** ==== MODUL DATA TENAGA PENDIDIK ==== **/
-        Route::group(array('prefix' => 'tendik'), function () {
-            // MENU Input Tendik Baru
-            Route::get('input-tendik', 'SumberDaya\Tendik\InputTendikController@viewInputTendik');
-            Route::get('input-tendik/datatables', 'SumberDaya\Tendik\InputTendikController@datatablesInputTendik');
-            Route::get('input-tendik/add', 'SumberDaya\Tendik\InputTendikController@addInputTendik');
-            Route::get('input-tendik/edit/{id}', 'SumberDaya\Tendik\InputTendikController@editInputTendik');
+        Route::prefix('tendik')->group(function () {
+            Route::get('input-tendik', [InputTendikController::class, 'viewInputTendik']);
+            Route::get('input-tendik/datatables', [InputTendikController::class, 'datatablesInputTendik']);
+            Route::get('input-tendik/add', [InputTendikController::class, 'addInputTendik']);
+            Route::get('input-tendik/edit/{id}', [InputTendikController::class, 'editInputTendik']);
 
-            Route::post('action-input-tendik/{mode}/{id}', 'SumberDaya\Tendik\InputTendikController@actionInputTendik');
+            Route::post('action-input-tendik/{mode}/{id}', [InputTendikController::class, 'actionInputTendik']);
 
-            Route::get('upload-data-tendik', 'SumberDaya\Tendik\UploadDataTendikController@viewUploadDataTendik');
-            Route::get('/download-file-excel', 'SumberDaya\Tendik\UploadDataTendikController@downloadFileExcel')->name('tendik/download-file-excel');
-            Route::post('post-file-excel', 'SumberDaya\Tendik\UploadDataTendikController@uploadFileExcel');
+            Route::get('upload-data-tendik', [UploadDataTendikController::class, 'viewUploadDataTendik']);
+            Route::get('/download-file-excel', [UploadDataTendikController::class, 'downloadFileExcel'])->name('tendik/download-file-excel');
+            Route::post('post-file-excel', [UploadDataTendikController::class, 'uploadFileExcel']);
         });
     });
 });

@@ -37,6 +37,15 @@
                                 @endforeach
                             </select>
                             <small style="color: red;">Wajib pilih kelas Terlebih Dahulu</small>
+                                <label>
+                                    Status
+                                    <input id="status_opsi_1" class="with-gap radio-col-light-green form-control validate"
+                                        type="radio" name="status" value="1" checked="">
+                                    <label for="status_opsi_1"> Siswa Aktif </label>
+                                    <input id="status_opsi_2" class="with-gap radio-col-light-green form-control validate"
+                                        type="radio" name="status" value="2">
+                                    <label for="status_opsi_2"> Alumni </label>
+                                </label>
                         </div>
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">
@@ -96,8 +105,7 @@
         `);
 
             $.ajax({
-                url: base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/show-list-tagihan/' + tahun +
-                    '/' + kelas,
+                url: base_url + '/' + role_url + '/laporan-keuangan/tagihan-siswa/show-list-tagihan/' + tahun + '/' + kelas,
                 type: 'get',
                 dataType: 'json',
                 success: function(response) {
@@ -129,6 +137,7 @@
                 params.kelas = $('select[name=kelas]').val();
                 params.tahun_akademik_semester = $('select[name=tahun_akademik_semester]').val();
                 params.jenis_tagihan = $('#jenis_tagihan').val();
+                params.status = $('input[name=status]:checked').val();
             },
         },
         columns: [{
@@ -192,7 +201,7 @@
             $('button').removeAttr('disabled', 'disabled');
         } else {
             $('button').removeAttr('disabled', 'disabled');
-            window.open(print_tagihan_url + '/' + ta_semester + '/' + kelas + '/' + jenis_tagihan, "_blank");
+            window.open(print_tagihan_url + '/' + ta_semester + '/' + kelas + '/' + jenis_tagihan + '?status=' + $('input[name=status]:checked').val(), "_blank");
         }
     }
 </script>
