@@ -20,6 +20,7 @@
         "league/flysystem-aws-s3-v3": "1.0.29",
         "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^2.59",
+        "sentry/sentry-laravel": "^2.14",
         "unisharp/laravel-filemanager": "^2.5",
         "yajra/laravel-datatables-oracle": "^9.21"
     },
