@@ -173,7 +173,7 @@
                     @php
                         $jumlah_in_per_date += $report_in['value'];
                     @endphp
-                    <td class="text-right"  >
+                    <td class="text-right"   >
                         {{ number_format($report_in['value']) }}
                     </td>
                     @foreach ($subkategori_out as $data_subkategori)
@@ -208,7 +208,7 @@
                     @php
                         $jumlah_out_per_date += $report_out['value'];
                     @endphp
-                    <td class="text-right">
+                    <td class="text-right" >
                         {{ number_format($report_out['value']) }}
                     </td>
                     <td></td>
@@ -220,12 +220,12 @@
                     @foreach ($subkategori_in as $data_subkategori)
                     <td class="bg-grey"></td>
                     @endforeach
-                    <td class="bg-grey text-bold text-right">{{ number_format($jumlah_in_per_date) }}</td>
+                    <td class="bg-grey text-bold text-right"  style=" font-size:9px">{{ number_format($jumlah_in_per_date) }}</td>
                     @foreach ($subkategori_out as $data_subkategori)
                     <td class="bg-grey"></td>
                     @endforeach
                     <td class="bg-grey text-bold text-right">{{ number_format($jumlah_out_per_date) }}</td>
-                    <td class="bg-grey text-bold text-right">{{ number_format($jumlah_in_per_date - $jumlah_out_per_date) }}</td>
+                    <td class="bg-grey text-bold text-right" style=" font-size:9px">{{ number_format($jumlah_in_per_date - $jumlah_out_per_date) }}</td>
                 </tr>
             @endforeach
             <tr valign=middle>
@@ -299,7 +299,7 @@
                 <td class="bg-grey"></td>
                 @endforeach
                 <td class="bg-grey text-bold text-right">{{ number_format($total_bayar_non_kbm) }}</td>
-                <td class="bg-grey text-bold text-right">{{ number_format($jumlah_in_per_date - $jumlah_out_per_date - $total_bayar_non_kbm) }}</td>
+                <td class="bg-grey text-bold text-right" >{{ number_format($jumlah_in_per_date - $jumlah_out_per_date - $total_bayar_non_kbm) }}</td>
             </tr>
             <tr>
                <td colspan="{{$length_column}}" style="height: 16px;">
@@ -310,12 +310,12 @@
                 <td class="bg-grey"></td>
                 <td class="bg-grey text-bold text-right">TOTAL</td>
                 @foreach ($subkategori_in as $data_subkategori)
-                <td class="bg-grey text-bold text-right">{{ number_format($total_all[$data_subkategori->id_subkategori_rapb]) }}</td>
+                <td class="bg-grey text-bold text-right" >{{ number_format($total_all[$data_subkategori->id_subkategori_rapb]) }}</td>
                     @php
                         $total_all['subtotal_in'] += $total_all[$data_subkategori->id_subkategori_rapb];
                     @endphp
                 @endforeach
-                <td class="bg-grey text-bold text-right" >{{ number_format($total_all['subtotal_in']) }}</td>
+                <td class="bg-grey text-bold text-right" style="font-size: 9px; ">{{ number_format($total_all['subtotal_in']) }}</td>
                 @foreach ($subkategori_out as $data_subkategori)
                 <td class="bg-grey text-bold text-right" style="font-size:8px">{{ number_format($total_all[$data_subkategori->id_subkategori_rapb]) }}</td>
                 @php
@@ -323,7 +323,7 @@
                 @endphp
                 @endforeach
                 <td class="bg-grey text-bold text-right">{{ number_format($total_all['subtotal_out']) }}</td>
-                <td class="bg-grey text-bold text-right">{{ number_format($total_all['subtotal_in'] - $total_all['subtotal_out']) }}</td>
+                <td class="bg-grey text-bold text-right" >{{ number_format($total_all['subtotal_in'] - $total_all['subtotal_out']) }}</td>
             </tr>
         </tbody>
     </table>
