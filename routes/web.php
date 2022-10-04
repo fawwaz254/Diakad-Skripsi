@@ -1,21 +1,23 @@
 <?php
 
-use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\AuthGlobalController;
-use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
-use App\Http\Controllers\SignInController;
-use App\Models\Sekolah;
 use Carbon\Carbon;
-use UniSharp\LaravelFilemanager\Controllers\CropController;
-use UniSharp\LaravelFilemanager\Controllers\DeleteController;
-use UniSharp\LaravelFilemanager\Controllers\DemoController;
-use UniSharp\LaravelFilemanager\Controllers\DownloadController;
-use UniSharp\LaravelFilemanager\Controllers\FolderController;
-use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use App\Models\Sekolah;
+use App\Http\Controllers\SignInController;
+use App\Http\Controllers\AuthGlobalController;
+use App\Http\Controllers\ForgetPasswordController;
+use App\Http\Controllers\PengisianAlumniController;
 use UniSharp\LaravelFilemanager\Controllers\LfmController;
+use UniSharp\LaravelFilemanager\Controllers\CropController;
+use UniSharp\LaravelFilemanager\Controllers\DemoController;
+use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use UniSharp\LaravelFilemanager\Controllers\DeleteController;
+use UniSharp\LaravelFilemanager\Controllers\FolderController;
 use UniSharp\LaravelFilemanager\Controllers\RenameController;
 use UniSharp\LaravelFilemanager\Controllers\ResizeController;
 use UniSharp\LaravelFilemanager\Controllers\UploadController;
+use UniSharp\LaravelFilemanager\Controllers\DownloadController;
+use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
+use App\Http\Controllers\Administrator\Device\FingerprintController;
 
 // Testing
 // Route::get('copy-biaya', function () {
@@ -114,9 +116,9 @@ Route::prefix('iclock')->group(function () {
     Route::get('cdata', function () {
         return 'OK';
     });
-    Route::post('cdata', 'Administrator\Device\FingerprintController@actionGetFinger');
+    Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
 
-    Route::get('manual-get-data', 'Administrator\Device\FingerprintController@actionGetDataFinger');
+    Route::get('manual-get-data', [FingerprintController::class, 'actionGetDataFinger']);
 });
 // END USING FOR FINGERPRINT
 
@@ -136,18 +138,18 @@ Route::get('guid', function () {
 
 Route::view('success-page', 'form-pengisian-alumni.success-page');
 Route::view('error-page', 'form-pengisian-alumni.error-page');
-Route::get('pengisian-alumni', 'PengisianAlumniController@viewPengisianAlumni');
-Route::post('action-pengisian-alumni', 'PengisianAlumniController@actionPengisianAlumni');
+Route::get('pengisian-alumni', [PengisianAlumniController::class, 'viewPengisianAlumni']);
+Route::post('action-pengisian-alumni', [PengisianAlumniController::class, 'actionPengisianAlumni']);
 
-Route::get('forget-password', 'ForgetPasswordController@index');
-Route::post('send-link-reset-password', 'ForgetPasswordController@sendLinkResetPassword');
-Route::get('check-link-reset-password', 'ForgetPasswordController@checkLinkResetPassword');
-Route::get('reset-password', 'ForgetPasswordController@resetPassword');
-Route::post('reset-password-action', 'ForgetPasswordController@resetPasswordAction');
+Route::get('forget-password', [ForgetPasswordController::class, 'index']);
+Route::post('send-link-reset-password', [ForgetPasswordController::class, 'sendLinkResetPassword']);
+Route::get('check-link-reset-password', [ForgetPasswordController::class, 'checkLinkResetPassword']);
+Route::get('reset-password', [ForgetPasswordController::class, 'resetPassword']);
+Route::post('reset-password-action', [ForgetPasswordController::class, 'resetPasswordAction']);
 
-Route::get('payment/detail/{id}', 'Keuangan\SIM\PembayaranOnlineController@viewDetail');
-Route::post('payment/notification/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionPayment');
-Route::post('payment/callback/{id}', 'Keuangan\SIM\PembayaranOnlineController@actionCallback');
+Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
+Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
+Route::post('payment/callback/{id}', [PembayaranOnlineController::class, 'actionCallback']);
 
 Route::get('payment/detail/{id}', [PembayaranOnlineController::class, 'viewDetail']);
 Route::post('payment/notification/{id}', [PembayaranOnlineController::class, 'actionPayment']);
@@ -159,8 +161,8 @@ Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
 
 Route::group(array('prefix' => 'reporting-dashboard'), function () {
-    Route::get('/', 'SignInController@indexReportingDashboard');
-    Route::get('all-diakad/{id}', 'ReportController@checkProgress');
+    Route::get('/', [SignInController::class, 'indexReportingDashboard']);
+    Route::get('all-diakad/{id}', [ReportController::class, 'checkProgress']);
     Route::get('akademik', function () {
         return view('reporting-dashboard/akademik');
     });

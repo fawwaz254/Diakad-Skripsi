@@ -200,8 +200,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('action-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusPlottingMapelSiswa']);
 
-            // hapus semua plotting
-            Route::post('action-hapus-semua-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusSemuaPlottingMapelSiswa');
+            Route::post('action-hapus-semua-plotting-mapel-siswa',[HapusPlottingMapelSiswaController::class, 'actionHapusSemuaPlottingMapelSiswa']);
 
             //MENU CARI SISWA
             Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
