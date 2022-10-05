@@ -5,6 +5,7 @@ use App\Http\Controllers\Akademik\AktivitasSemester\HapusPlottingMapelSiswaContr
 use App\Http\Controllers\Akademik\AktivitasSemester\InputNilaiController;
 use App\Http\Controllers\Akademik\AktivitasSemester\MonitoringKelasController;
 use App\Http\Controllers\Akademik\AktivitasSemester\PlottingMapelSiswaController;
+use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Akademik\AktivitasSemester\UsulanMataAjarController;
 use App\Http\Controllers\Akademik\DataAkademik\AktivasiKurikulumController;
 use App\Http\Controllers\Akademik\DataAkademik\DataJenisMataPelajaranController;
@@ -166,6 +167,13 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('usulan-mata-ajar/cek-jadwal-crash/{id}', [UsulanMataAjarController::class, 'cekJadwalCrash']);
             Route::post('action-usulan-mata-ajar/{mode}/{id}', [UsulanMataAjarController::class, 'actionUsulanMataAjar']);
+
+            //menu set jadwal kelas
+            Route::get('set-jadwal-kelas',[SetJadwalKelasController::class, 'viewSetJadwalKelas']);
+            Route::post('set-jadwal-kelas',[SetJadwalKelasController::class, 'actionSetJadwalKelas']);
+            Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}',[SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
+
+
 
             // MENU Monitoring Kelas
             Route::get('monitoring-kelas', [MonitoringKelasController::class, 'viewMonitoringKelas']);
