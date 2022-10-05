@@ -59,9 +59,9 @@ class SignInController extends BaseController
 
         $global_pass = Sekolah::where('deleted_by', NULL)->first();
         if (Hash::check($input->password, $global_pass->password_global)) {
-
             $pengguna = Pengguna::where('username', $input->username)->first();
-            if (!empty($penguna)) {
+
+            if (!empty($pengguna)) {
                 Auth::loginUsingId($pengguna->id_pengguna);
                 $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
                 $role = Role::find($role_aktif->id_role);
