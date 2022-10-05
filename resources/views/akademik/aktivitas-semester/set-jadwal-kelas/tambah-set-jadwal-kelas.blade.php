@@ -91,7 +91,7 @@
 
                                                     <td 
                                                         style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
-                                                        <span style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;;">
+                                                        <span style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }}
                                                     </span>
                                                         {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_mulai'] }}.
@@ -106,11 +106,9 @@
                                                             <i class="material-icons">edit</i></button></span>
                                                     @else
                                                     @endif
-                                                  
-                                                    
-                                            
+
                                                     </td>
-                                                    <td 
+                                                    <td
                                                         style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
                                                         @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
                                                             <button type="button"class="btn bg-red waves-effect"
@@ -157,10 +155,11 @@
 
                                             {{-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" --}}
                                             {{-- data-target="#myModal" id="open">Open Modal</button> --}}
-                                            <button type="button" class="btn bg-green waves-effect" data-toggle="modal"
-                                                data-target="#myModal" id="open">
+                                            <button type="button" class="btn bg-green waves-effect passingID" data-toggle="modal"
+                                               data-id="{{ $r->jam_ke }}" id="open">
                                                 <i class="material-icons">add</i>
                                             </button>
+
                                             {{-- {{ $r->id_jadwal_jam . $hari->id_jadwal_hari }} --}}
                                         @endif
 
@@ -179,10 +178,12 @@
 
 
 
-<form method="post" action="{{ url('chempionleague') }}" id="form">
-    @csrf
+
+  
     <!-- Modal -->
     <div class="modal" tabindex="-1" role="dialog" id="myModal">
+        <form method="post" action="{{ url('chempionleague') }}" id="form">
+            @csrf
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="alert alert-danger" style="display:none"></div>
@@ -193,14 +194,29 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <input type="hidden" class="form-control" name="idkl" id="idkl" value="1">
                 <div class="modal-body">
-                    {{-- <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="Name">Jam Masuk:</label>
-                            <input type="text" class="form-control" name="name" id="name">
-                        </div>
-                    </div> --}}
                     <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="Name">Jam Masuk : <span style="color: red">(Otomatis)</span> </label>
+                            <select class="form-control show-tick" name="id_semester" id="jamMasuk">
+                            
+                                @foreach ($jadwal_jam as $j)
+                             
+                                {{-- @if($j->jam_ke ==  ) --}}
+                                
+                                    <option value="{{ $j->id_jadwal_jam }}" id="{{ $j->jam_ke }}">{{ $j->nm_jadwal_jam }}
+                                        ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
+                                        {{ $j->jam_selesai }},{{ $j->menit_selesai }})
+                                    </option>
+                                    {{-- @endif --}}
+                                @endforeach
+                               
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
                         <div class="form-group col-md-4">
                             <label for="Club">Jam Selesai:</label>
                             <select class="form-control show-tick" name="id_semester">
@@ -212,7 +228,7 @@
                                         {{ $j->jam_selesai }},{{ $j->menit_selesai }})
                                     </option>
                                 @endforeach
-                                {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                               
                             </select>
                         </div>
                     </div>
@@ -223,6 +239,18 @@
                                 <option value="" disabled selected>Pilih Mapel</option>
                                 @foreach ($mapel as $m)
                                     <option value="{{ $m->id_mata_pelajaran }}">{{ $m->nm_mata_pelajaran }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label for="test">Ruangan : <span style="color:red">(Otomastis jika ruang sudah diatur dengan kelas)</span></label>
+                            <select class="form-control show-tick" name="id">
+                                <option value="" disabled selected>Pilih Ruangan</option>
+                                @foreach ($ruangan as $r)
+                                    <option value="{{ $r->id_ruangan }}" @if($r->id_kelas == $kelas->id_kelas)  selected @endif>{{ $r->nm_ruangan }}
                                     </option>
                                 @endforeach
                             </select>
@@ -249,8 +277,9 @@
                 </div>
             </div>
         </div>
+    </form>
     </div>
-</form>
+
 {{-- 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -308,41 +337,59 @@
     integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
 </script>
 <script>
-    jQuery(document).ready(function() {
-        jQuery('#ajaxSubmit').click(function(e) {
-            e.preventDefault();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            jQuery.ajax({
-                url: "{{ url('/chempionleague') }}",
-                method: 'post',
-                data: {
-                    name: jQuery('#name').val(),
-                    club: jQuery('#club').val(),
-                    country: jQuery('#country').val(),
-                    score: jQuery('#score').val(),
-                },
-                success: function(result) {
-                    if (result.errors) {
-                        jQuery('.alert-danger').html('');
 
-                        jQuery.each(result.errors, function(key, value) {
-                            jQuery('.alert-danger').show();
-                            jQuery('.alert-danger').append('<li>' + value +
-                                '</li>');
-                        });
-                    } else {
-                        jQuery('.alert-danger').hide();
-                        $('#open').hide();
-                        $('#myModal').modal('hide');
-                    }
-                }
-            });
-        });
-    });
+
+// You can also try like this, by using Jquery to show modal poup
+// $(document).ready(function () {
+//     createCookie("gfg", "GeeksforGeeks", "10");
+// });
+$(".passingID").click(function () {
+    var ids = parseInt($(this).attr('data-id')) ;
+    // alert(ids);
+    $("#idkl").val( ids );
+    // document.getElementById("jamMasuk").selectedIndex = ids;
+    const $select = document.querySelector('#jamMasuk');
+    const $option = document.getElementById( ids);
+    $select.value = $option.value;
+    $('#myModal').modal('show');
+});
+
+
+    // jQuery(document).ready(function() {
+    //     jQuery('#ajaxSubmit').click(function(e) {
+    //         e.preventDefault();
+    //         $.ajaxSetup({
+    //             headers: {
+    //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+    //             }
+    //         });
+    //         jQuery.ajax({
+    //             url: "{{ url('/chempionleague') }}",
+    //             method: 'post',
+    //             data: {
+    //                 name: jQuery('#name').val(),
+    //                 club: jQuery('#club').val(),
+    //                 country: jQuery('#country').val(),
+    //                 score: jQuery('#score').val(),
+    //             },
+    //             success: function(result) {
+    //                 if (result.errors) {
+    //                     jQuery('.alert-danger').html('');
+
+    //                     jQuery.each(result.errors, function(key, value) {
+    //                         jQuery('.alert-danger').show();
+    //                         jQuery('.alert-danger').append('<li>' + value +
+    //                             '</li>');
+    //                     });
+    //                 } else {
+    //                     jQuery('.alert-danger').hide();
+    //                     $('#open').hide();
+    //                     $('#myModal').modal('hide');
+    //                 }
+    //             }
+    //         });
+    //     });
+    // });
 </script>
 
 
