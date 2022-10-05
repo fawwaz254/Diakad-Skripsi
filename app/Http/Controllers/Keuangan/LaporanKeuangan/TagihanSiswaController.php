@@ -121,13 +121,13 @@ class TagihanSiswaController extends BaseController
                         } else {
                             $tagihan_bulan['judul'] = $tagihan_bulan['judul'] . ' ' . $tagihan_bulan['nm_bulan'] . ' ' . $tahun;
                         }
-                    $array_tagihan_bulan[] = $tagihan_bulan;
-                }
+                        $array_tagihan_bulan[] = $tagihan_bulan;
+                    }
 
-                if (!empty($array_tagihan_bulan)) {
-                    $array_tagihan_bulan = collect($array_tagihan_bulan)->sortBy('id_bulan')->toArray();
-                }
-
+                    if (!empty($array_tagihan_bulan)) {
+                        $array_tagihan_bulan = collect($array_tagihan_bulan)->sortBy('id_bulan')->toArray();
+                    }
+                };
                 return $array_tagihan_bulan;
             })
             ->make(true);
