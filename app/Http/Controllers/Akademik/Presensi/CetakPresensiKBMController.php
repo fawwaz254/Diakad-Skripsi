@@ -2,37 +2,38 @@
 
 namespace App\Http\Controllers\Akademik\Presensi;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use Yajra\Datatables\Datatables;
-
-use App\Models\Kurikulum as Kurikulum;
-use App\Models\MataPelajaran as MataPelajaran;
-use App\Models\Semester as Semester;
-use App\Models\KelasMp as KelasMp;
-use App\Models\Guru as Guru;
-use App\Models\Kelas as Kelas;
-use App\Models\PengampuMp as PengampuMp;
-use App\Models\JadwalHari as JadwalHari;
-use App\Models\Ruangan as Ruangan;
-use App\Models\JadwalJam as JadwalJam;
-use App\Models\JadwalKelasMp as JadwalKelasMp;
-use App\Models\PengambilanMp;
-
-use Carbon\Carbon;
-use Illuminate\Support\Facades\App;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Akademik\LibAkademik;
-use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\SumberDaya\LibGuru;
-
-use Auth;
 use DB;
 use PDF;
+
+use Auth;
+
 use Session;
 use Validator;
+use Carbon\Carbon;
+use App\Models\PresensiMp;
+use App\Models\Guru as Guru;
+use Illuminate\Http\Request;
+use App\Models\PengambilanMp;
+use App\Models\Kelas as Kelas;
+use Yajra\Datatables\Datatables;
+use App\Models\KelasMp as KelasMp;
+use App\Models\Ruangan as Ruangan;
+use Illuminate\Support\Facades\App;
+
+use App\Models\Semester as Semester;
+use App\Libraries\SumberDaya\LibGuru;
+
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Models\JadwalJam as JadwalJam;
+use App\Models\Kurikulum as Kurikulum;
+use App\Libraries\Akademik\LibAkademik;
+
+use App\Models\JadwalHari as JadwalHari;
+use App\Models\PengampuMp as PengampuMp;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\JadwalKelasMp as JadwalKelasMp;
+use App\Models\MataPelajaran as MataPelajaran;
+use Illuminate\Routing\Controller as BaseController;
 
 class CetakPresensiKBMController extends BaseController
 {
@@ -151,5 +152,22 @@ class CetakPresensiKBMController extends BaseController
 
         $pdf = PDF::loadView('akademik/presensi/cetak-presensi-kbm/download-cetak-presensi-kbm', compact('data_siswa', 'auth_data', 'semester_aktif', 'data_kelas'))->setPaper('a4', 'landscape');
         return $pdf->stream();
+    }
+
+    public function printCetakRekapPresensiKBM(Request $request, $id_jadwal_kelas_mp)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, null, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
+
+        $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp, null, 'all');
+
+        $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->orderBy('pertemuan_ke', 'asc')->get();
+
+        return view('akademik/presensi/cetak-presensi-kbm/download-cetak-rekap-absen', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
     }
 }
