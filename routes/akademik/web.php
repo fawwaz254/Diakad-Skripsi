@@ -208,8 +208,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('action-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusPlottingMapelSiswa']);
 
-            // hapus semua plotting
-            Route::post('action-hapus-semua-plotting-mapel-siswa', 'Akademik\AktivitasSemester\HapusPlottingMapelSiswaController@actionHapusSemuaPlottingMapelSiswa');
+            Route::post('action-hapus-semua-plotting-mapel-siswa',[HapusPlottingMapelSiswaController::class, 'actionHapusSemuaPlottingMapelSiswa']);
 
             //MENU CARI SISWA
             Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
@@ -292,6 +291,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('cetak-presensi-kbm/view-semester-cetak-presensi-kbm/{id}', [CetakPresensiKBMController::class, 'viewSemesterCetakPresensiKBM']);
             Route::get('cetak-presensi-kbm/datatables/{id}', [CetakPresensiKBMController::class, 'datatablesCetakPresensiKBM']);
             Route::get('cetak-presensi-kbm/print/{id}', [CetakPresensiKBMController::class, 'printCetakPresensiKBM']);
+            Route::get('cetak-rekap-presensi-kbm/print/{id}', [CetakPresensiKBMController::class, 'printCetakRekapPresensiKBM']);
 
             // MENU Cetak Presensi UTS
             Route::get('cetak-presensi-uts', [CetakPresensiUTSController::class, 'viewCetakPresensiUTS']);
