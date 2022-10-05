@@ -35,7 +35,7 @@ use App\Models\TutupBukuTahunanBiaya;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Keuangan\LibDataKeuangan;
 use App\Libraries\Pendidikan\LibDataAkademik;
-
+use App\Models\Setting;
 use Auth;
 use DB;
 use Excel;
@@ -792,8 +792,9 @@ class SppController extends BaseController
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
         $data_pemasukan_bulan_ini = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas')->whereBetween('tgl_pembayaran', [$start_month, $end_month])->get();
+        $is_ypm = Setting::where('key_Setting', 'is_ypm')->first()->value;
 
-        return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_semester', 'data_bulan', 'dates', 'tahun_akademik_semester', 'id_bulan', 'data_pemasukan_bulan_ini'));
+        return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_semester', 'data_bulan', 'dates', 'tahun_akademik_semester', 'id_bulan', 'data_pemasukan_bulan_ini', 'is_ypm'));
     }
 
     public function viewMenuPenerimaan(Request $request, $tahun_akademik_semester = null)
