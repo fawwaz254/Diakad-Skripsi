@@ -283,6 +283,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('cetak-presensi-kbm/view-semester-cetak-presensi-kbm/{id}', [CetakPresensiKBMController::class, 'viewSemesterCetakPresensiKBM']);
             Route::get('cetak-presensi-kbm/datatables/{id}', [CetakPresensiKBMController::class, 'datatablesCetakPresensiKBM']);
             Route::get('cetak-presensi-kbm/print/{id}', [CetakPresensiKBMController::class, 'printCetakPresensiKBM']);
+            Route::get('cetak-rekap-presensi-kbm/print/{id}', [CetakPresensiKBMController::class, 'printCetakRekapPresensiKBM']);
 
             // MENU Cetak Presensi UTS
             Route::get('cetak-presensi-uts', [CetakPresensiUTSController::class, 'viewCetakPresensiUTS']);

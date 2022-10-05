@@ -55,7 +55,8 @@
             { data: 'status_plotting', name: 'status_plotting' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ print_url + '/' + data.id +'">'+
+                    return '<a class="btn btn-info btn-circle waves-effect waves-circle waves-float" target="_blank" style="margin-right:10px" href="'+ print_url + '/' + data.id +'">'+
+                    '    <i class="material-icons">print</i> <a class="btn btn-success btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rekap-presensi-kbm/print' + '/' + data.id +'">'+
                     '    <i class="material-icons">print</i>';
                 }
             }
