@@ -17,6 +17,7 @@ use App\Http\Controllers\Guru\Penilaian\InputNilaiController;
 use App\Http\Controllers\Guru\Penilaian\RekapNilaiController;
 use App\Http\Controllers\Guru\Presensi\AbsensiSiswaController;
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Guru\WaliKelas\RekapNomorHpController;
 use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
 use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
 use App\Http\Controllers\Guru\Jadwal\KalenderAkademikController;
