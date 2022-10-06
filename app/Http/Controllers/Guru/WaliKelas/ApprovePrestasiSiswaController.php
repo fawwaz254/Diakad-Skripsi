@@ -276,7 +276,7 @@ class ApprovePrestasiSiswaController extends BaseController{
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-        $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa')
+        $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa')
         				->whereHas('kegiatan_siswa',function($q) use($wali_kelas,$auth_data){
         					$q->where(['siswa.id_kelas'=>$wali_kelas->id_kelas,'pengguna.id_sekolah'=>$auth_data->pengguna->id_sekolah]);
         				})
