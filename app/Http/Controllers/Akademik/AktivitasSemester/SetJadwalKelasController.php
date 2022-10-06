@@ -10,9 +10,12 @@ use App\Models\Guru;
 use App\Models\JadwalHari;
 use App\Models\JadwalJam;
 use App\Models\JadwalKelasMp;
+use App\Models\Kelas;
 use App\Models\KelasMp;
 use App\Models\MataPelajaran;
+use App\Models\PengampuMp;
 use App\Models\Ruangan;
+use Carbon\Carbon;
 use Auth;
 use DB;
 use Session;
@@ -79,9 +82,9 @@ class SetJadwalKelasController extends Controller
             ->join('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
             ->join('jadwal_jam', 'jadwal_jam.id_jadwal_jam', '=', 'jadwal_kelas_mp.id_jadwal_jam')
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-            ->join('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
-            ->join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
-            ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->leftJoin('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
+            ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+            ->leftJoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->join('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
             ->join('pengguna', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
@@ -138,6 +141,85 @@ class SetJadwalKelasController extends Controller
         $mapel      = MataPelajaran::all();
         $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
 
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel','jam','ruangan'));
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'ruangan'));
     }
+
+    public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($input);
+
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+            'jamMasuk' => 'required',
+            'jamSelesai' => 'required',
+            'mapel' => 'required',
+            'guru' => 'required',
+            'id_hari' => 'required',
+            'id_semester' => 'required',
+            'id_kelas'          => 'required'
+        ]);
+
+        if ($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            // mengambil waktu sekarang
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            if ($mode == 'add') {
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+
+                $mapel = MataPelajaran::find($input->mapel);
+                $kelas = Kelas::find($input->id_kelas);
+
+                $kelas_mp                           = new KelasMp;
+                $kelas_mp->id_kelas_mp              = $id;
+                $kelas_mp->id_semester              = $input->id_semester;
+                $kelas_mp->id_kelas                 = $input->id_kelas;
+                $kelas_mp->id_mata_pelajaran        = $input->mapel;
+                $kelas_mp->nm_kelas_mp              = $mapel->nm_mata_pelajaran.'-'.$kelas->nm_kelas;
+                $kelas_mp->jml_pertemuan_kelas_mp   = '0';
+                $kelas_mp->created_by               = 'syahrul';
+                $kelas_mp->created_at               = $now;
+                $kelas_mp->save();
+
+
+                $ruang = Ruangan::where('id_kelas',$input->id_kelas)->first();
+
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $jadwal_kelas_mp                        = new JadwalKelasMp;
+                $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp  ;
+                $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
+                $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
+                $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
+                $jadwal_kelas_mp->id_ruangan            = $ruang->id_ruangan ?? '-';
+                $jadwal_kelas_mp->created_at            = $now;
+                $jadwal_kelas_mp->created_by            = 'syahrul';
+                $jadwal_kelas_mp->save();
+
+                $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                $pengampu_mp                    = new PengampuMp();
+                        $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                        $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
+                        $pengampu_mp->id_guru           = $input->guru;
+                        $pengampu_mp->pjmp_pengampu_mp  = 1;
+                        $pengampu_mp->pjmp_uts          = 1;
+                        $pengampu_mp->pjmp_uas          = 1;
+                        $pengampu_mp->created_at        = $now;
+                        $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
+                        $pengampu_mp->save();
+                return [
+                    'status_code' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/'.$input->id_kelas.'/'.$input->id_semester,
+                    'message' => 'Save Ssuccessfully'
+                ];
+            }
+    }}
 }

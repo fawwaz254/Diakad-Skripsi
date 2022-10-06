@@ -172,7 +172,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('set-jadwal-kelas',[SetJadwalKelasController::class, 'viewSetJadwalKelas']);
             Route::post('set-jadwal-kelas',[SetJadwalKelasController::class, 'actionSetJadwalKelas']);
             Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}',[SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
-
+            Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasController::class, 'actionTambahJadwalKelas']);
 
 
             // MENU Monitoring Kelas

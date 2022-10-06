@@ -89,47 +89,49 @@
                                                 cellspacing="0" cellpadding="0">
                                                 <tr>
 
-                                                    <td 
+                                                    <td
                                                         style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
-                                                        <span style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }}
-                                                    </span>
+                                                        <span
+                                                            style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
+                                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }}
+                                                        </span>
                                                         {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_mulai'] }}.
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_mulai'] }}
                                                         -
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_selesai'] }}.
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_selesai'] }} --}}
                                                         <span style="float:right;">
-                                                        @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
-                                                        <button type="button"class="btn bg-blue waves-effect"
-                                                            style="padding: 0 4px 0 4px ">
-                                                            <i class="material-icons">edit</i></button></span>
+                                                            @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
+                                                                <button type="button"class="btn bg-blue waves-effect"
+                                                                    style="padding: 0 4px 0 4px ">
+                                                                    <i class="material-icons">edit</i></button>
+                                                        </span>
                                                     @else
-                                                    @endif
+                                        @endif
 
-                                                    </td>
-                                                    <td
-                                                        style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
-                                                        @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
-                                                            <button type="button"class="btn bg-red waves-effect"
-                                                                style="padding: 0 4px 0 4px ">
-                                                                <i class="material-icons">close</i></button>
-                                                        @else
-                                                         <br>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="text-align:right; background-color:white; font-size:9px">
-                                                        <span style="font-weight: bold; ">
+                                    </td>
+                                    <td
+                                        style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
+                                        @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
+                                            <button type="button"class="btn bg-red waves-effect"
+                                                style="padding: 0 4px 0 4px ">
+                                                <i class="material-icons">close</i></button>
+                                        @else
+                                            <br>
+                                        @endif
+                                    </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:right; background-color:white; font-size:9px">
+                                            <span style="font-weight: bold; ">
 
-                                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}</span><br>
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
+                                                {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}</span><br>
+                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
+                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
+                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
 
 
-                                                        {{-- <br>
+                                            {{-- <br>
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_mulai'] }}.
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_mulai'] }}
                                                         -
@@ -137,37 +139,38 @@
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_selesai'] }} --}}
 
 
-                                                    </td>
-                                                    <td style="font-size:9px;background-color:white">
-                                                        @if (!empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna']))
-                                                            <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna'] }}"
-                                                                alt="img" height="50" />
-                                                        @else
-                                                            <img src="https://ui-avatars.com/api/?size=100&name={{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}"
-                                                                height="50" />
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        @else
-                                            {{-- <button class="btn btn-warning btn-detail open_modal" value="test">Edit</button> --}}
+                                        </td>
+                                        <td style="font-size:9px;background-color:white">
+                                            @if (!empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna']))
+                                                <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['path_foto_pengguna'] }}"
+                                                    alt="img" height="50" />
+                                            @else
+                                                <img src="https://ui-avatars.com/api/?size=100&name={{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}"
+                                                    height="50" />
+                                            @endif
+                                        </td>
+                                    </tr>
+                    </table>
+                @else
+                    {{-- <button class="btn btn-warning btn-detail open_modal" value="test">Edit</button> --}}
 
 
-                                            {{-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" --}}
-                                            {{-- data-target="#myModal" id="open">Open Modal</button> --}}
-                                            <button type="button" class="btn bg-green waves-effect passingID" data-toggle="modal"
-                                               data-id="{{ $r->jam_ke }}" id="open">
-                                                <i class="material-icons">add</i>
-                                            </button>
+                    {{-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" --}}
+                    {{-- data-target="#myModal" id="open">Open Modal</button> --}}
+                    <button type="button" class="btn bg-green waves-effect passingID" data-toggle="modal"
+                        data-jam="{{ $r->jam_ke}}}" data-hari=" {{  $hari->id_jadwal_hari }}" id="open">
+                        <i class="material-icons ">add</i>
+                    </button>
+                    {{-- {{ $r->jam_ke.','.$hari->id_jadwal_hari  }} --}}
 
-                                            {{-- {{ $r->id_jadwal_jam . $hari->id_jadwal_hari }} --}}
-                                        @endif
+                    {{-- {{ $r->id_jadwal_jam . $hari->id_jadwal_hari }} --}}
+                    @endif
 
 
-                                    </td>
-                                @endforeach
-                                </tr>
-                            @endforeach
+                    </td>
+                    @endforeach
+                    </tr>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -179,221 +182,266 @@
 
 
 
-  
-    <!-- Modal -->
-    <div class="modal" tabindex="-1" role="dialog" id="myModal">
-        <form method="post" action="{{ url('chempionleague') }}" id="form">
-            @csrf
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="alert alert-danger" style="display:none"></div>
-                <div class="modal-header">
 
-                    <h5 class="modal-title">Input Jadwal Kelas</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <input type="hidden" class="form-control" name="idkl" id="idkl" value="1">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="Name">Jam Masuk : <span style="color: red">(Otomatis)</span> </label>
-                            <select class="form-control show-tick" name="id_semester" id="jamMasuk">
-                            
-                                @foreach ($jadwal_jam as $j)
-                             
-                                {{-- @if($j->jam_ke ==  ) --}}
-                                
-                                    <option value="{{ $j->id_jadwal_jam }}" id="{{ $j->jam_ke }}">{{ $j->nm_jadwal_jam }}
-                                        ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
-                                        {{ $j->jam_selesai }},{{ $j->menit_selesai }})
-                                    </option>
-                                    {{-- @endif --}}
-                                @endforeach
-                               
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        
-                        <div class="form-group col-md-4">
-                            <label for="Club">Jam Selesai:</label>
-                            <select class="form-control show-tick" name="id_semester">
-                                <option value="" disabled selected>Pilih Jam
+<!-- Modal -->
+
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+
+                <h5 class="modal-title">Input Jadwal Kelas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
+            <input type="hidden" name="id_kelas" value="{{ $kelas->id_kelas }}">
+            <input type="hidden" name="id_hari" id="hari" value="{{ $kelas->id_kelas }}">
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Name">Jam Masuk : <span style="color: red">(Otomatis)</span> </label>
+                        <select class="form-control show-tick" name="jamMasuk" id="jamMasuk">
+
+                            @foreach ($jadwal_jam as $j)
+                                <option value="{{ $j->id_jadwal_jam }}" id="{{ $j->jam_ke }}">
+                                    {{ $j->nm_jadwal_jam }}
+                                    ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
+                                    {{ $j->jam_selesai }},{{ $j->menit_selesai }})
                                 </option>
-                                @foreach ($jadwal_jam as $j)
-                                    <option value="{{ $j->id_jadwal_jam }}">{{ $j->nm_jadwal_jam }}
-                                        ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
-                                        {{ $j->jam_selesai }},{{ $j->menit_selesai }})
-                                    </option>
-                                @endforeach
-                               
-                            </select>
-                        </div>
+                            @endforeach
+
+                        </select>
                     </div>
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="test">Mapel:</label>
-                            <select class="form-control show-tick" name="id">
-                                <option value="" disabled selected>Pilih Mapel</option>
-                                @foreach ($mapel as $m)
-                                    <option value="{{ $m->id_mata_pelajaran }}">{{ $m->nm_mata_pelajaran }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        <label for="Club">Jam Selesai :</label>
+                        <select class="form-control show-tick" name="jamSelesai">
+                            <option value="" disabled selected>Pilih Jam
+                            </option>
+                            @foreach ($jadwal_jam as $j)
+                                <option value="{{ $j->id_jadwal_jam }}">{{ $j->nm_jadwal_jam }}
+                                    ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
+                                    {{ $j->jam_selesai }},{{ $j->menit_selesai }})
+                                </option>
+                            @endforeach
+
+                        </select>
                     </div>
-                    <div class="row">
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="test">Mapel :</label>
+                        <select class="form-control show-tick" name="mapel">
+                            <option value="" disabled selected>Pilih Mapel</option>
+                            @foreach ($mapel as $m)
+                                <option value="{{ $m->id_mata_pelajaran }}">{{ $m->nm_mata_pelajaran }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                {{-- <div class="row">
                         <div class="form-group col-md-4">
                             <label for="test">Ruangan : <span style="color:red">(Otomastis jika ruang sudah diatur dengan kelas)</span></label>
                             <select class="form-control show-tick" name="id">
                                 <option value="" disabled selected>Pilih Ruangan</option>
                                 @foreach ($ruangan as $r)
-                                    <option value="{{ $r->id_ruangan }}" @if($r->id_kelas == $kelas->id_kelas)  selected @endif>{{ $r->nm_ruangan }}
+                                    <option value="{{ $r->id_ruangan }}" @if ($r->id_kelas == $kelas->id_kelas)  selected @endif>{{ $r->nm_ruangan }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="Goal Score">Guru:</label>
-                            <select class="form-control show-tick" name="id_semester">
-                                <option value="" disabled selected>Pilih Guru
+                    </div> --}}
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Guru :</label>
+                        <select class="form-control show-tick" name="guru">
+                            <option value="" disabled selected>Pilih Guru
+                            </option>
+                            @foreach ($list_guru as $guru)
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
-                                @foreach ($list_guru as $guru)
-                                    <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
-                                    </option>
-                                @endforeach
-                                {{-- <input type="text" class="form-control" name="club" id="club"> --}}
-                            </select>
-                        </div>
+                            @endforeach
+                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                        </select>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Penanggung jawab Mata Ajar : <span
+                                style="color: red">(Opsional)</span>
+                        </label>
+                        <select class="form-control show-tick" name="penangungJawab">
+                            <option value="" disabled selected>Pilih Guru
+                            </option>
+                            @foreach ($list_guru as $guru)
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                </option>
+                            @endforeach
+                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Tim PJMA 1 : <span style="color: red">(Opsional)</span></label>
+                        <select class="form-control show-tick" name="pjma1">
+                            <option value="" disabled selected>Pilih Guru
+                            </option>
+                            @foreach ($list_guru as $guru)
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                </option>
+                            @endforeach
+                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Tim PJMA 2 : <span style="color: red">(Opsional)</span></label>
+                        <select class="form-control show-tick" name="pjma2">
+                            <option value="" disabled selected>Pilih Guru
+                            </option>
+                            @foreach ($list_guru as $guru)
+                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                </option>
+                            @endforeach
+                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                        </select>
+                    </div>
+                </div>
+                {{-- </div> --}}
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button class="btn btn-success" id="ajaxSubmit">Save changes</button>
+                    {{-- <button class="btn btn-block bg-success waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button> --}}
+                    {{-- <button type="submit" class="btn btn-block waves-effect" onclick="save()">SAVE</button> --}}
+                    <button type="submit" class="btn btn-success  waves-effect" onclick="save()">Submit</button>
                 </div>
             </div>
         </div>
+    </div>
     </form>
-    </div>
-
-{{-- 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-       <div class="modal-content">
-         <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-            <h4 class="modal-title" id="myModalLabel">Tour</h4>
-        </div>
-        <div class="modal-body">
-        <form id="frmProducts" name="frmProducts" class="form-horizontal" novalidate="">
-            <div class="form-group error">
-             <label for="inputName" class="col-sm-3 control-label">Jam Mulai</label>
-               <div class="col-sm-9">
-                <input type="text" class="form-control has-error" id="name" name="name" placeholder="Product Name" value="">
-               </div>
-               </div>
-             <div class="form-group">
-             <label for="inputDetail" class="col-sm-3 control-label">Jam Selesai</label>
-                <div class="col-sm-9">
-                <input type="text" class="form-control" id="details" name="details" placeholder="details" value="">
-                </div>
-                <div class="form-group">
-            <label for="inputDetail" class="col-sm-3 control-label">Mata Pelajaran</label>
-            <div class="col-sm-9">
-            <input type="text" class="form-control" id="details" name="details" placeholder="details" value="">
-            </div>
-                </div>
-                <div class="form-group">
-            <label for="inputDetail" class="col-sm-3 control-label">Guru</label>
-            <div class="col-sm-9">
-            <input type="text" class="form-control" id="details" name="details" placeholder="details" value="">
-            </div>
-                </div>
-        </div></div>
-        </form>
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btn-save" value="add">Simpan</button>
-        <input type="hidden" id="product_id" name="tour_id" value="0">
-        </div>
-    </div>
-  </div>
-</div>
-</div> --}}
-@include('scriptjs')
-
-{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/css/bootstrap.css" rel="stylesheet">   --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta.3/js/bootstrap.min.js"></script>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.0/jquery.js"></script>  --}}
-
-{{-- <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-    crossorigin="anonymous"></script> --}}
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
-</script>
-<script>
 
 
-// You can also try like this, by using Jquery to show modal poup
-// $(document).ready(function () {
-//     createCookie("gfg", "GeeksforGeeks", "10");
-// });
-$(".passingID").click(function () {
-    var ids = parseInt($(this).attr('data-id')) ;
-    // alert(ids);
-    $("#idkl").val( ids );
-    // document.getElementById("jamMasuk").selectedIndex = ids;
-    const $select = document.querySelector('#jamMasuk');
-    const $option = document.getElementById( ids);
-    $select.value = $option.value;
-    $('#myModal').modal('show');
-});
+    @include('scriptjs')
 
 
-    // jQuery(document).ready(function() {
-    //     jQuery('#ajaxSubmit').click(function(e) {
-    //         e.preventDefault();
-    //         $.ajaxSetup({
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-    //             }
-    //         });
-    //         jQuery.ajax({
-    //             url: "{{ url('/chempionleague') }}",
-    //             method: 'post',
-    //             data: {
-    //                 name: jQuery('#name').val(),
-    //                 club: jQuery('#club').val(),
-    //                 country: jQuery('#country').val(),
-    //                 score: jQuery('#score').val(),
-    //             },
-    //             success: function(result) {
-    //                 if (result.errors) {
-    //                     jQuery('.alert-danger').html('');
+    <script>
+        $(".passingID").click(function() {
+            var jam = parseInt($(this).attr('data-jam'));
+            var hari = parseInt($(this).attr('data-hari'));
+            // alert(jam);
+            const $select = document.querySelector('#jamMasuk');
+            const $option = document.getElementById(jam);
+            $select.value = $option.value;
+            $("#hari").val( hari );
 
-    //                     jQuery.each(result.errors, function(key, value) {
-    //                         jQuery('.alert-danger').show();
-    //                         jQuery('.alert-danger').append('<li>' + value +
-    //                             '</li>');
-    //                     });
-    //                 } else {
-    //                     jQuery('.alert-danger').hide();
-    //                     $('#open').hide();
-    //                     $('#myModal').modal('hide');
-    //                 }
-    //             }
-    //         });
-    //     });
-    // });
-</script>
+            $('#myModal').modal('show');
+        });
+
+        function save() {
+            $('#myModal').modal('hide');
+            $('button').attr('disabled', 'disabled');
+            // var pengguna = [];
+
+            // $("input:checkbox[name=id_pengguna]:checked").each(function(){
+            //     pengguna.push($(this).val());
+            // });
+            $.ajax({
+                url: base_url +
+                    '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/add/0',
+                type: 'POST',
+                data: {
+
+                    jamMasuk: $('select[name=jamMasuk]').val(),
+                    jamSelesai: $('select[name=jamSelesai]').val(),
+                    mapel: $('select[name=mapel]').val(),
+                    guru: $('select[name=guru]').val(),
+                    penangungJawab: $('select[name=penangungJawab]').val(),
+                    pjma1: $('select[name=pjma1]').val(),
+                    pjma2: $('select[name=pjma2]').val(),
+                    id_semester: $('input[name=id_semester]').val(),
+                    id_kelas: $('input[name=id_kelas]').val(),
+                    id_hari: $('input[name=id_hari]').val()
+                },
+                success: function(response) {
+                    if (response.status_code == 200) {
+                        vex.dialog.alert(response.message);
+                    } else if (response.status_code == 201) {
+                        vex.dialog.alert(response.message);
+                        window.location.href = response.link;
+                    } else if (response.status_code == 202) {
+                        vex.dialog.alert(response.message);
+                        setTimeout(function(){
+                            loadURI(response.path);
+}, 2000);
+                        
+                    } else if (response.status_code == 203) {
+                        vex.dialog.alert(response.message);
+                        primary_table.ajax.reload(null, false);
+                    } else if (response.status_code == 204) {
+                        loadURI(response.path);
+                    } else if (response.status_code == 300) {
+                        vex.dialog.alert(response.message);
+                    }
+                },
+                complete: function() {
+                    $('button').removeAttr('disabled', 'disabled');
+                }
+            });
+        }
+
+        // jQuery(document).ready(function() {
+        //     jQuery('#ajaxSubmit').click(function(e) {
+        //         e.preventDefault();
+        //         $.ajaxSetup({
+        //             headers: {
+        //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        //             }
+        //         });
+        //         jQuery.ajax({
+        //             url: "{{ url('/chempionleague') }}",
+        //             method: 'post',
+        //             data: {
+        //                 name: jQuery('#name').val(),
+        //                 club: jQuery('#club').val(),
+        //                 country: jQuery('#country').val(),
+        //                 score: jQuery('#score').val(),
+        //             },
+        //             success: function(result) {
+        //                 if (result.errors) {
+        //                     jQuery('.alert-danger').html('');
+
+        //                     jQuery.each(result.errors, function(key, value) {
+        //                         jQuery('.alert-danger').show();
+        //                         jQuery('.alert-danger').append('<li>' + value +
+        //                             '</li>');
+        //                     });
+        //                 } else {
+        //                     jQuery('.alert-danger').hide();
+        //                     $('#open').hide();
+        //                     $('#myModal').modal('hide');
+        //                 }
+        //             }
+        //         });
+        //     });
+        // });
+    </script>
 
 
-{{-- <script type="text/javascript">
+    {{-- <script type="text/javascript">
 
 $(document).on('click','.open_modal',function(){
         // var url = "domain.com/yoururl";
