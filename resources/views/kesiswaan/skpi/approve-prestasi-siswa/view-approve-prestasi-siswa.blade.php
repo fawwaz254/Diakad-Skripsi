@@ -35,6 +35,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>NIS</th>
                                     <th>Nama</th>
                                     <th>Kelas</th>
                                     <th>Prestasi</th>
@@ -115,10 +116,15 @@
 
             }
         },
-        columns: [{
+        columns: [
+            {
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+             {
+                data: 'nis_siswa',
+                name: 'nis_siswa'
             },
             {
                 data: 'nm_pengguna',
