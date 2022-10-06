@@ -94,7 +94,7 @@
                                         <td>Rp
                                             {{ number_format(
                                                 $data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [1, 7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->when($is_ypm, function ($q) {
-                                                        return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                        return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                                     })->filter(function ($item) use ($date) {
                                                         return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                     })->sum('besar_pembayaran'),
@@ -103,7 +103,7 @@
                                         <td>Rp
                                             {{ number_format(
                                                 $data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [2, 8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->when($is_ypm, function ($q) {
-                                                        return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                        return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                                     })->filter(function ($item) use ($date) {
                                                         return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                     })->sum('besar_pembayaran'),
@@ -112,7 +112,7 @@
                                         <td>Rp
                                             {{ number_format(
                                                 $data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [3, 9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->when($is_ypm, function ($q) {
-                                                        return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                        return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                                     })->filter(function ($item) use ($date) {
                                                         return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                                     })->sum('besar_pembayaran'),
@@ -129,7 +129,7 @@
                                             $tunggakan_bulan_lalu = $data_pemasukan_bulan_ini
                                                 ->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)
                                                 ->when($is_ypm, function ($q) {
-                                                    return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                    return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                                 })
                                                 ->filter(function ($item) use ($date) {
                                                     return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
@@ -155,21 +155,21 @@
                                 <td>Rp
                                     {{ number_format(
                                         $data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [1, 7, 10])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->when($is_ypm, function ($q) {
-                                                return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                             })->sum('besar_pembayaran'),
                                     ) }}
                                 </td>
                                 <td>Rp
                                     {{ number_format(
                                         $data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [2, 8, 11])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->when($is_ypm, function ($q) {
-                                                return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                             })->sum('besar_pembayaran'),
                                     ) }}
                                 </td>
                                 <td>Rp
                                     {{ number_format(
                                         $data_pemasukan_bulan_ini->whereIn('tagihan_biaya.kelas.tingkat', [3, 9, 12])->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)->when($is_ypm, function ($q) {
-                                                return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                                return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                             })->sum('besar_pembayaran'),
                                     ) }}
                                 </td>
@@ -178,7 +178,7 @@
                                     $tunggakan_bulan_lalu = $data_pemasukan_bulan_ini
                                         ->where('tagihan_biaya.detail_biaya.id_bulan', '<', $id_bulan)
                                         ->when($is_ypm, function ($q) {
-                                            return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '!=', 4);
+                                            return $q->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', 4);
                                         })
                                         ->sum('besar_pembayaran');
                                 @endphp
