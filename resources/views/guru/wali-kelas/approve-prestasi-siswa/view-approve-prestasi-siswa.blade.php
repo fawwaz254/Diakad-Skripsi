@@ -12,6 +12,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>NIS</th>
                                         <th>Nama</th>
                                         <th>Prestasi</th>
                                         <th>Kegiatan</th>
@@ -44,6 +45,7 @@
         },
         columns: [
             { data: null, searchable: false, orderable: false },
+            { data: 'nis_siswa', name: 'nis_siswa' },
             { data: 'nm_c_siswa', name: 'nm_c_siswa' },
             { data: 'prestasi', name: 'prestasi', searchable: false, orderable: false,
                 render:function(data){
