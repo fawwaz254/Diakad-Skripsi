@@ -449,7 +449,7 @@ class ApprovePrestasiSiswaController extends BaseController
                 $id_kelas = $wali_kelas ? $wali_kelas->id_kelas : '';
 //----------------------Fungsi di tap memiliki prestasi dan menunggu approval--------//
                 if ($param_semua_siswa == 0) {
-                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                     // $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
                             if ($param == 0) {
@@ -510,7 +510,7 @@ class ApprovePrestasiSiswaController extends BaseController
                         ]);
                 } else {
 
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                         ->withCount([
@@ -655,7 +655,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
                 if ($param_semua_siswa == 0) {
 
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
                         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param, $id_kelas) {
                             if ($param == 0) {
                                 $q->where('status', '!=', 0);
@@ -715,7 +715,7 @@ class ApprovePrestasiSiswaController extends BaseController
                         ]);
                 } else {
 
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
@@ -754,7 +754,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
                 if ($param_semua_siswa == 0) {
 
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
                         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
                             if ($param == 0) {
                                 $q->where('status', '!=', 0);
@@ -810,7 +810,7 @@ class ApprovePrestasiSiswaController extends BaseController
                         ]);
                 } else {
 
-                    $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::select('siswa.id_siswa','siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                         ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
