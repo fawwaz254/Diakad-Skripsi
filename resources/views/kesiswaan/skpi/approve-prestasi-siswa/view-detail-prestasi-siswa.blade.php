@@ -355,7 +355,7 @@
                                 $('#primary_table2').DataTable().ajax.reload(null, false);
                             }
                             else{
-                                primary_table3.ajax.reload(null, false);
+                                // primary_table3.ajax.reload(null, false);
                                 $('#primary_table3').DataTable().ajax.reload(null, false);
                             }
                         }else if(response.status == 300){
@@ -413,7 +413,7 @@
                                 $('#primary_table2').DataTable().ajax.reload(null, false);
                             }
                             else{
-                                primary_table3.ajax.reload(null, false);
+                                // primary_table3.ajax.reload(null, false);
                                 $('#primary_table3').DataTable().ajax.reload(null, false);
                             }
                         }else if(response.status == 300){
