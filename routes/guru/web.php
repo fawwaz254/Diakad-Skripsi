@@ -17,6 +17,7 @@ use App\Http\Controllers\Guru\Penilaian\InputNilaiController;
 use App\Http\Controllers\Guru\Penilaian\RekapNilaiController;
 use App\Http\Controllers\Guru\Presensi\AbsensiSiswaController;
 use App\Http\Controllers\Guru\Absensi\HistoriAbsensiController;
+use App\Http\Controllers\Guru\WaliKelas\RekapNomorHpController;
 use App\Http\Controllers\Guru\ELearningSoal\HasilTestController;
 use App\Http\Controllers\Guru\ELearningSoal\PaketSoalController;
 use App\Http\Controllers\Guru\Jadwal\KalenderAkademikController;
@@ -60,13 +61,14 @@ use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasI
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 
 // ROLE GURU
-Route::group(array('middleware' => ['token_staff']), function () {
-    Route::group(array('prefix' => 'guru'), function () {
+
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('guru')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
 
-        Route::group(array('prefix' => 'mgmp'), function () {
+        Route::prefix('mgmp')->group(function () {
 
-            Route::group(array('prefix' => 'laporan-harian-mgmp'), function () {
+            Route::prefix('laporan-harian-mgmp')->group(function () {
                 Route::get('/', [LaporanKerjaHarianController::class, 'viewLaporanHarianMGMP']);
                 Route::get('add', [LaporanKerjaHarianController::class, 'addLaporanHarianMGMP']);
                 Route::post('action-kerja-harian/{mode}/{id}', [LaporanKerjaHarianController::class, 'actionLaporanHarianMGMP']);
@@ -75,8 +77,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('preview-file/{id}/{no}', [LaporanKerjaHarianController::class, 'previewFile']);
                 Route::get('download-file/{id}', [LaporanKerjaHarianController::class, 'downloadFile']);
             });
-
-            Route::group(array('prefix' => 'laporan-kelompok-mgmp'), function () {
+            Route::prefix('laporan-kelompok-mgmp')->group(function () {
                 Route::get('/', [LaporanKerjaHarianController::class, 'viewLaporanKelompokMGMP']);
                 Route::get('datatables', [LaporanKerjaHarianController::class, 'datatablesKerjaHarianKelompokMGMP']);
                 Route::get('/detail/{id}', [LaporanKerjaHarianController::class, 'detailLaporanKelompokMGMP']);
@@ -86,8 +87,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
         });
 
-        Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
-            Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
+        Route::prefix('jurnal-pimpinan')->group(function () {
+            Route::prefix('laporan-jurnal-pimpinan')->group(function () {
                 Route::get('/', [JurnalPimpinanController::class, 'viewLaporanJurnalPimpinan']);
                 Route::get('add', [JurnalPimpinanController::class, 'addLaporanHarianJurnalPimpinan']);
                 Route::post('action-kerja-harian/{mode}/{id}', [JurnalPimpinanController::class, 'actionLaporanJurnalPimpinan']);
@@ -136,10 +137,11 @@ Route::group(array('middleware' => ['token_staff']), function () {
             });
         });
 
-        /** ==== MODUL E-Learning ==== **/
-        Route::group(array('prefix' => 'e-learning'), function () {
 
-            Route::group(array('prefix' => 'manajemen-materi-ajar'), function () {
+        /** ==== MODUL E-Learning ==== **/
+        Route::prefix('e-learning')->group(function () {
+
+            Route::prefix('manajemen-materi-ajar')->group(function () {
                 Route::get('/', [ManajemenMateriAjarController::class, 'viewManajemenMateriAjar']);
                 Route::get('datatables', [ManajemenMateriAjarController::class, 'datatablesManajemenMateriAjar']);
                 Route::get('add', [ManajemenMateriAjarController::class, 'addManajemenMateriAjar']);
@@ -201,7 +203,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 Route::get('/{start_date}/{end_date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
             });
 
-            Route::group(array('prefix' => 'histori-absensi-siswa'), function () {
+            Route::prefix('histori-absensi-siswa')->group(function () {
                 Route::get('/', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensiSiswa']);
                 // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class, 'getKelas']);
                 Route::post('/', [HistoriAbsensiSiswaController::class, 'actionDetailHistoriAbsensiSiswa']);
@@ -554,9 +556,8 @@ Route::group(array('middleware' => ['token_staff']), function () {
         });
 
         // Modul Rapor Sisipan
-        Route::group(array('prefix' => 'rapor-sisipan'), function () {
-            Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
-
+        Route::prefix('rapor-sisipan')->group(function () {
+            Route::prefix('daftar-nilai-sts')->group(function () {
                 Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
@@ -569,9 +570,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
                 // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
-
-            Route::group(array('prefix' => 'daftar-nilai-sas'), function () {
-
+            Route::prefix('daftar-nilai-sas')->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
                 Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
@@ -664,7 +663,7 @@ Route::group(array('middleware' => ['token_staff']), function () {
         });
 
         // MODUL PEMBINA EKSKUL
-        Route::group(['prefix' => 'pembina-ekskul'], function () {
+        Route::prefix('pembina-ekskul')->group(function () {
             // Menu Input Absensi Ekskul
             Route::get('input-absensi-ekskul', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);
             Route::get('input-absensi-ekskul/{id_semester}/{id_ekskul}', [InputAbsensiEkskulController::class, 'viewInputAbsensiEkskul']);

@@ -1045,7 +1045,7 @@ class LibCetakKeuangan
         }
 
         foreach ($dates as $date) {
-            $filter_pembayaran = $data_pembayaran->where('tgl_pembayaran', $date->format('Y-m-d') . ' 00:00:00')->values();
+            $filter_pembayaran = $data_pembayaran->where('tgl_pembayaran', '>=', $date->format('Y-m-d') . ' 00:00:00')->where('tgl_pembayaran', '<=', $date->format('Y-m-d') . ' 23:59:00')->values();
 
             $frekuensi = array();
             $nominal = array();
@@ -1537,6 +1537,7 @@ class LibCetakKeuangan
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
         }
+
         if ($print_setting == 'self') {
             $allDataPembayaran = $pembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get()->groupBy(function ($pay) {
                 return Carbon::parse($pay->tgl_pembayaran)->format('Y-m-d');
