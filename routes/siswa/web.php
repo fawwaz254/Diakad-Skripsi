@@ -136,7 +136,7 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('datatables', [DataPrestasiSiswaController::class, 'datatablesDataPrestasiSiswa']);
             });
-            Route::prefix('informasi-tambahan')->group(function () {
+            Route::prefix('informasi_tambahan')->group(function () {
                 Route::get('/', [InformasiTambahanController::class, 'viewInformasiTambahan']);
                 Route::get('add', [InformasiTambahanController::class, 'viewAddInformasiTambahan']);
                 Route::get('edit/{id}', [InformasiTambahanController::class, 'viewEditInformasiTambahan']);

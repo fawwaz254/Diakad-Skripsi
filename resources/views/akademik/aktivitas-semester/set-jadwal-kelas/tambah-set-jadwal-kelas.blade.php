@@ -91,10 +91,10 @@
 
                                                     <td
                                                         style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
-                                                        <span
+                                                        {{-- <span
                                                             style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
                                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }}
-                                                        </span>
+                                                        </span> --}}
                                                         {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_mulai'] }}.
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_mulai'] }}
                                                         -
@@ -102,6 +102,9 @@
                                                         {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_selesai'] }} --}}
                                                         <span style="float:right;">
                                                             @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
+                                                                <button type="button"class="btn bg-grey waves-effect"
+                                                                    style="padding: 0 4px 0 4px ">
+                                                                    <i class="material-icons">info_outline</i></button>
                                                                 <button type="button"class="btn bg-blue waves-effect"
                                                                     style="padding: 0 4px 0 4px ">
                                                                     <i class="material-icons">edit</i></button>
@@ -113,7 +116,8 @@
                                     <td
                                         style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
                                         @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
-                                            <button type="button"class="btn bg-red waves-effect"
+                                            <button type="button"class="btn bg-red waves-effect delete-record"
+                                                data-id="{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_kelas_mp'] }}"
                                                 style="padding: 0 4px 0 4px ">
                                                 <i class="material-icons">close</i></button>
                                         @else
@@ -125,7 +129,8 @@
                                         <td style="text-align:right; background-color:white; font-size:9px">
                                             <span style="font-weight: bold; ">
 
-                                                {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}</span><br>
+                                                {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}
+                                                ({{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }})</span><br>
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
@@ -158,7 +163,7 @@
                     {{-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" --}}
                     {{-- data-target="#myModal" id="open">Open Modal</button> --}}
                     <button type="button" class="btn bg-green waves-effect passingID" data-toggle="modal"
-                        data-jam="{{ $r->jam_ke}}}" data-hari=" {{  $hari->id_jadwal_hari }}" id="open">
+                        data-jam="{{ $r->jam_ke }}}" data-hari=" {{ $hari->id_jadwal_hari }}" id="open">
                         <i class="material-icons ">add</i>
                     </button>
                     {{-- {{ $r->jam_ke.','.$hari->id_jadwal_hari  }} --}}
@@ -244,6 +249,7 @@
                             <option value="" disabled selected>Pilih Mapel</option>
                             @foreach ($mapel as $m)
                                 <option value="{{ $m->id_mata_pelajaran }}">{{ $m->nm_mata_pelajaran }}
+                                    ({{ $m->kd_mata_pelajaran }})
                                 </option>
                             @endforeach
                         </select>
@@ -268,7 +274,8 @@
                             <option value="" disabled selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
-                                <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
+                                <option value="{{ $guru->id_guru }}">
+                                    {{ $guru->pengguna->gelar_depan }}{{ $guru->pengguna->nm_pengguna }}{{ $guru->pengguna->gelar_belakang }}
                                 </option>
                             @endforeach
                             {{-- <input type="text" class="form-control" name="club" id="club"> --}}
@@ -276,19 +283,19 @@
                     </div>
                 </div>
 
-                <div class="row">
+                {{-- <div class="row">
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Penanggung jawab Mata Ajar : <span
                                 style="color: red">(Opsional)</span>
                         </label>
                         <select class="form-control show-tick" name="penangungJawab">
-                            <option value="" disabled selected>Pilih Guru
+                            <option value="" selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
                             @endforeach
-                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                            
                         </select>
                     </div>
                 </div>
@@ -297,13 +304,13 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Tim PJMA 1 : <span style="color: red">(Opsional)</span></label>
                         <select class="form-control show-tick" name="pjma1">
-                            <option value="" disabled selected>Pilih Guru
+                            <option value=""  selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
                             @endforeach
-                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                            
                         </select>
                     </div>
                 </div>
@@ -312,16 +319,16 @@
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Tim PJMA 2 : <span style="color: red">(Opsional)</span></label>
                         <select class="form-control show-tick" name="pjma2">
-                            <option value="" disabled selected>Pilih Guru
+                            <option value=""  selected>Pilih Guru
                             </option>
                             @foreach ($list_guru as $guru)
                                 <option value="{{ $guru->id_guru }}">{{ $guru->pengguna->nm_pengguna }}
                                 </option>
                             @endforeach
-                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
+                            
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 {{-- </div> --}}
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -346,7 +353,7 @@
             const $select = document.querySelector('#jamMasuk');
             const $option = document.getElementById(jam);
             $select.value = $option.value;
-            $("#hari").val( hari );
+            $("#hari").val(hari);
 
             $('#myModal').modal('show');
         });
@@ -369,9 +376,9 @@
                     jamSelesai: $('select[name=jamSelesai]').val(),
                     mapel: $('select[name=mapel]').val(),
                     guru: $('select[name=guru]').val(),
-                    penangungJawab: $('select[name=penangungJawab]').val(),
-                    pjma1: $('select[name=pjma1]').val(),
-                    pjma2: $('select[name=pjma2]').val(),
+                    // penangungJawab: $('select[name=penangungJawab]').val(),
+                    // pjma1: $('select[name=pjma1]').val(),
+                    // pjma2: $('select[name=pjma2]').val(),
                     id_semester: $('input[name=id_semester]').val(),
                     id_kelas: $('input[name=id_kelas]').val(),
                     id_hari: $('input[name=id_hari]').val()
@@ -384,10 +391,10 @@
                         window.location.href = response.link;
                     } else if (response.status_code == 202) {
                         vex.dialog.alert(response.message);
-                        setTimeout(function(){
+                        setTimeout(function() {
                             loadURI(response.path);
-}, 2000);
-                        
+                        }, 2000);
+
                     } else if (response.status_code == 203) {
                         vex.dialog.alert(response.message);
                         primary_table.ajax.reload(null, false);
@@ -403,41 +410,93 @@
             });
         }
 
-        // jQuery(document).ready(function() {
-        //     jQuery('#ajaxSubmit').click(function(e) {
-        //         e.preventDefault();
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-        //             }
-        //         });
-        //         jQuery.ajax({
-        //             url: "{{ url('/chempionleague') }}",
-        //             method: 'post',
-        //             data: {
-        //                 name: jQuery('#name').val(),
-        //                 club: jQuery('#club').val(),
-        //                 country: jQuery('#country').val(),
-        //                 score: jQuery('#score').val(),
-        //             },
-        //             success: function(result) {
-        //                 if (result.errors) {
-        //                     jQuery('.alert-danger').html('');
+        $(".delete-record").click(function() {
+                    var token = $("meta[name='csrf-token']").attr("content");
+                    var id = $(this).data("id");
+                    // alert(id);
+                    swal({
+                            title: "Are you sure?",
+                            showCancelButton: true
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                $('.delete-record').attr("disabled", true);
+                                //swall
+                                $.ajax({
+                                        // alert(id);
+                                        url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/delete/${id}`,
+                                        type: "post",
 
-        //                     jQuery.each(result.errors, function(key, value) {
-        //                         jQuery('.alert-danger').show();
-        //                         jQuery('.alert-danger').append('<li>' + value +
-        //                             '</li>');
-        //                     });
-        //                 } else {
-        //                     jQuery('.alert-danger').hide();
-        //                     $('#open').hide();
-        //                     $('#myModal').modal('hide');
-        //                 }
-        //             }
-        //         });
-        //     });
-        // });
+                                        data: {
+                                            _token: token,
+                                                    id_semester: $('input[name=id_semester]').val(),
+                                            id_kelas: $('input[name=id_kelas]').val(),
+                                        },
+
+                                        success: function(response) {
+                                            if (response.status_code == 200) {
+                                                vex.dialog.alert(response.message);
+                                            } else if (response.status_code == 201) {
+                                                vex.dialog.alert(response.message);
+                                                window.location.href = response.link;
+                                            } else if (response.status_code == 202) {
+                                                vex.dialog.alert(response.message);
+                                                setTimeout(function() {
+                                                    loadURI(response.path);
+                                                }, 2000);
+
+                                            } else if (response.status_code == 203) {
+                                                vex.dialog.alert(response.message);
+                                                primary_table.ajax.reload(null, false);
+                                            } else if (response.status_code == 204) {
+                                                loadURI(response.path);
+                                            } else if (response.status_code == 300) {
+                                                vex.dialog.alert(response.message);
+                                            }}
+                                        });
+                                        $('.delete-record').attr("disabled", false);
+                                }
+                                // return;
+                            }
+                        );
+                    });
+
+
+                // jQuery(document).ready(function() {
+                //     jQuery('#ajaxSubmit').click(function(e) {
+                //         e.preventDefault();
+                //         $.ajaxSetup({
+                //             headers: {
+                //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                //             }
+                //         });
+                //         jQuery.ajax({
+                //             url: "{{ url('/chempionleague') }}",
+                //             method: 'post',
+                //             data: {
+                //                 name: jQuery('#name').val(),
+                //                 club: jQuery('#club').val(),
+                //                 country: jQuery('#country').val(),
+                //                 score: jQuery('#score').val(),
+                //             },
+                //             success: function(result) {
+                //                 if (result.errors) {
+                //                     jQuery('.alert-danger').html('');
+
+                //                     jQuery.each(result.errors, function(key, value) {
+                //                         jQuery('.alert-danger').show();
+                //                         jQuery('.alert-danger').append('<li>' + value +
+                //                             '</li>');
+                //                     });
+                //                 } else {
+                //                     jQuery('.alert-danger').hide();
+                //                     $('#open').hide();
+                //                     $('#myModal').modal('hide');
+                //                 }
+                //             }
+                //         });
+                //     });
+                // });
     </script>
 
 

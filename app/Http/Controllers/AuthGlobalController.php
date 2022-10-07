@@ -202,7 +202,7 @@ class AuthGlobalController extends BaseController
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
                 'link' => url('/'),
-                'message' => 'Save Profile successfully',
+                'message' => 'Save Profile Successfully',
             ];
         } else {
             return [

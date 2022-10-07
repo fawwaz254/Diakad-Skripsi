@@ -160,7 +160,7 @@ Route::get('check/payment/expired', [PembayaranOnlineController::class, 'actionC
 Route::get('/', [SignInController::class, 'indexSignIn']);
 Route::post('signin', [SignInController::class, 'actionSignIn']);
 
-Route::group(array('prefix' => 'reporting-dashboard'), function () {
+Route::prefix('reporting-dashboard')->group(function () {
     Route::get('/', [SignInController::class, 'indexReportingDashboard']);
     Route::get('all-diakad/{id}', [ReportController::class, 'checkProgress']);
     Route::get('akademik', function () {
@@ -187,9 +187,8 @@ Route::group(array('prefix' => 'reporting-dashboard'), function () {
     });
 });
 
-Route::group(array('middleware' => ['token_staff']), function () {
-    //
-    Route::group(array('prefix' => '{global}'), function () {
+Route::middleware(['token_staff'])->group(function () {
+    Route::prefix('{global}')->group(function () {
         Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
         Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
         Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
