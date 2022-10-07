@@ -53,8 +53,8 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         /** ==== Jurnal Harian ==== **/
-        Route::group(array('prefix' => 'jurnal-harian'), function () {
-            Route::group(array('prefix' => 'laporan-individu-jurnal-harian'), function () {
+        Route::prefix('jurnal-harian')->group(function () {
+            Route::prefix('laporan-individu-jurnal-harian')->group(function () {
                 Route::get('/', [JurnalHarianTendikController::class, 'viewLaporanJurnalHarian']);
                 Route::get('add', [JurnalHarianTendikController::class, 'addLaporanHarianJurnalHarian']);
                 Route::post('action-kerja-harian/{mode}/{id}', [JurnalHarianTendikController::class, 'actionLaporanHarianTendik']);
@@ -63,8 +63,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('preview-file/{id}/{no}', [JurnalHarianTendikController::class, 'previewFile']);
                 Route::get('download-file/{id}', [JurnalHarianTendikController::class, 'downloadFile']);
             });
-
-            Route::group(array('prefix' => 'laporan-kelompok-jurnal-harian'), function () {
+            Route::prefix('laporan-kelompok-jurnal-harian')->group(function () {
                 Route::get('/', [JurnalHarianTendikController::class, 'viewLaporanKelompokKerjaHarian']);
                 Route::get('datatables', [JurnalHarianTendikController::class, 'datatablesKerjaHarianKelompokTendik']);
                 Route::get('/detail/{id}', [JurnalHarianTendikController::class, 'detailLaporanKelompokTendik']);

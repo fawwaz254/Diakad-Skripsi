@@ -53,14 +53,14 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-data-kategori/{mode}/{id}', [DataKategoriMGMPController::class, 'actionDataKategori']);
             });
 
-            Route::group(array('prefix' => 'jenis-mgmp'), function () {
+            Route::prefix('jenis-mgmp')->group(function () {
                 Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
                 Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
             });
 
-            Route::group(array('prefix' => 'laporan-mgmp'), function () {
+            Route::prefix('laporan-mgmp')->group(function () {
                 Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
                 Route::get('/datatables', [DataKategoriMGMPController::class, 'datatablesKerjaHarianAllMGMP']);
                 Route::get('preview-file/{id}', [DataKategoriMGMPController::class, 'previewFile']);
@@ -169,9 +169,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-usulan-mata-ajar/{mode}/{id}', [UsulanMataAjarController::class, 'actionUsulanMataAjar']);
 
             //menu set jadwal kelas
-            Route::get('set-jadwal-kelas',[SetJadwalKelasController::class, 'viewSetJadwalKelas']);
-            Route::post('set-jadwal-kelas',[SetJadwalKelasController::class, 'actionSetJadwalKelas']);
-            Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}',[SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
+            Route::get('set-jadwal-kelas', [SetJadwalKelasController::class, 'viewSetJadwalKelas']);
+            Route::post('set-jadwal-kelas', [SetJadwalKelasController::class, 'actionSetJadwalKelas']);
+            Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
             Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasController::class, 'actionTambahJadwalKelas']);
 
 
@@ -208,7 +208,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('action-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusPlottingMapelSiswa']);
 
-            Route::post('action-hapus-semua-plotting-mapel-siswa',[HapusPlottingMapelSiswaController::class, 'actionHapusSemuaPlottingMapelSiswa']);
+            Route::post('action-hapus-semua-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusSemuaPlottingMapelSiswa']);
 
             //MENU CARI SISWA
             Route::get('cari-siswa', [CariSiswaController::class, 'viewCariSiswa']);
@@ -325,8 +325,8 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         // Modul Rapor Sisipan
-        Route::group(array('prefix' => 'rapor-sisipan'), function () {
-            Route::group(array('prefix' => 'daftar-nilai-sts'), function () {
+        Route::prefix('rapor-sisipan')->group(function () {
+            Route::prefix('daftar-nilai-sts')->group(function () {
                 Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 // Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
@@ -337,16 +337,12 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 // Route::get('input-nilai-magang/datatables/{id}', '[InputNilaiRaporSisipanController::class, 'datatablesKomponenNilaiMagang');
                 // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', '[InputNilaiRaporSisipanController::class, 'actionInputNilai');
+                // Route::prefix('daftar-nilai-sas')->group(function () {
+                // });
             });
-
-            // Route::group(array('prefix' => 'daftar-nilai-sas'), function(){
-
-            // });
-
         });
 
-        Route::group(array('prefix' => 'monitoring'), function () {
-
+        Route::prefix('monitoring')->group(function () {
             Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
             Route::get('rekap-monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewRekapMonitoringKelasKosong']);
         });
