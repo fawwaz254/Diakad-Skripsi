@@ -10,98 +10,90 @@
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                {{csrf_field()}}
+                <div class="header">
+                    <h2>Data Prestasi Siswa</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Prestasi</th>
+                                    <th>Tingkat Prestasi</th>
+                                    <th>Jenis Prestasi</th>
+                                    {{-- <th>Jenis Lomba</th> --}}
+                                    <th>Peringkat</th>
+                                    <th>Link Sertifikat</th>
+                                    <th>Status</th>
+                                    <th>Semester</th>
+                                    <th>Kelas</th>
+                                    <th>Lokasi</th>
+                                    <th>Penyelenggara</th>
+                                    <th>Tanggal</th>
+                                    {{-- <th>Ekstrakurikuler</th> --}}
+                                    <th>Guru Pendamping</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <br>
 
             <div class="card">
-                    {{csrf_field()}}
-                    <div class="header">
-                        <h2>Data Prestasi Siswa</h2>
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Prestasi</th>
-                                        <th>Tingkat Prestasi</th>
-                                        <th>Jenis Prestasi</th>
-                                        {{-- <th>Jenis Lomba</th> --}}
-                                        <th>Peringkat</th>
-                                        <th>Link Sertifikat</th>
-                                        <th>Status</th>
-                                        <th>Semester</th>
-                                        <th>Kelas</th>
-                                        <th>Lokasi</th>
-                                        <th>Penyelenggara</th>
-                                        <th>Tanggal</th>
-                                        {{-- <th>Ekstrakurikuler</th> --}}
-                                        <th>Guru Pendamping</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+                {{csrf_field()}}
+                <div class="header">
+                    <h2>Data Kegiatan Siswa</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table2">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Kegiatan</th>
+                                    <th>Lokasi</th>
+                                    <th>Penyelenggara</th>
+                                    {{-- <th>Tingkat Kegiatan</th> --}}
+                                    <th>Tanggal</th>
+                                    <th>Link Sertifikat</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
+            </div>
 
-                <br>
+            <br>
 
-                <div class="card">
-                    {{csrf_field()}}
-                    <div class="header">
-                        <h2>Data Kegiatan Siswa</h2>
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table2">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Kegiatan</th>
-                                        <th>Lokasi</th>
-                                        <th>Penyelenggara</th>
-                                        {{-- <th>Tingkat Kegiatan</th> --}}
-                                        <th>Tanggal</th>
-                                        <th>Link Sertifikat</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+            <div class="card">
+                {{csrf_field()}}
+                <div class="header">
+                    <h2>Data Informasi Tambahan</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table3">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Jenis Kegiatan</th>
+                                    <th>Nama</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                 </div>
-
-                <br>
-
-                <div class="card">
-                    {{csrf_field()}}
-                    <div class="header">
-                        <h2>Data Informasi Tambahan</h2>
-                    </div>
-                    <div class="body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table3">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Jenis Kegiatan</th>
-                                        <th>Nama</th>
-                                        <th>Name</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-
             </div>
         </div>
     </div>
@@ -319,16 +311,16 @@
         $('button').attr('disabled', 'disabled');
 
         swal({
-            title: "Are you sure?",
-            text: "For Reject this",
+            title: "Apakah Anda yakin?",
+            text: "Pastikan untuk mengisi alasan untuk ditolak",
             type: "input",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, reject it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: "Ya, lanjutkan!",
+            cancelButtonText: "Batal",
             closeOnConfirm: true,
             closeOnCancel: true,
-            inputPlaceholder: "Alasan Ditolak"
+            inputPlaceholder: "Alasan ditolak ..."
         }, function (result) {
             if (result) {
                 $.ajax({
@@ -347,16 +339,13 @@
                         }else if(response.status == 203){
                             vex.dialog.alert(response.message);
                             if(response.from == 'prestasi'){
-                                // primary_table.ajax.reload(null, false);
-                                $('#primary_table').DataTable().ajax.reload(null, false);
+                                primary_table.ajax.reload(null, false);
                             }
-                            else if(respone.from == 'kegiatan'){
-                                // primary_table2.ajax.reload(null, false);
-                                $('#primary_table2').DataTable().ajax.reload(null, false);
+                            else if(response.from == 'kegiatan'){
+                                primary_table2.ajax.reload(null, false);
                             }
                             else{
-                                // primary_table3.ajax.reload(null, false);
-                                $('#primary_table3').DataTable().ajax.reload(null, false);
+                                primary_table3.ajax.reload(null, false);
                             }
                         }else if(response.status == 300){
                             vex.dialog.alert(response.message);
@@ -367,7 +356,6 @@
                     }
                 });
             }else{
-                // alert("Alasan Ditolak Harus Diisi");
                 $('button').removeAttr('disabled', 'disabled');
                 return false;
             }
@@ -379,13 +367,11 @@
         $('button').attr('disabled', 'disabled');
 
         swal({
-            title: "Are you sure?",
-            text: "For Approve this",
+            title: "Apakah Anda yakin?",
             type: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, approve it!",
-            cancelButtonText: "No, cancel!",
+            confirmButtonText: "Ya, lanjutkan!",
+            cancelButtonText: "Batal",
             closeOnConfirm: true,
             closeOnCancel: true
         }, function (result) {
@@ -405,16 +391,13 @@
                         }else if(response.status == 203){
                             vex.dialog.alert(response.message);
                             if(response.from == 'prestasi'){
-                                // primary_table.ajax.reload(null, false);
-                                $('#primary_table').DataTable().ajax.reload(null, false);
+                                primary_table.ajax.reload(null, false);
                             }
-                            else if(respone.from == 'kegiatan'){
-                                // primary_table2.ajax.reload(null, false);
-                                $('#primary_table2').DataTable().ajax.reload(null, false);
+                            else if(response.from == 'kegiatan'){
+                                primary_table2.ajax.reload(null, false);
                             }
                             else{
-                                // primary_table3.ajax.reload(null, false);
-                                $('#primary_table3').DataTable().ajax.reload(null, false);
+                                primary_table3.ajax.reload(null, false);
                             }
                         }else if(response.status == 300){
                             vex.dialog.alert(response.message);
