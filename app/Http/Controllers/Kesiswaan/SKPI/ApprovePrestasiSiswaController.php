@@ -175,7 +175,12 @@ class ApprovePrestasiSiswaController extends BaseController
             'informasi_tambahan.nm_informasi_tambahan',
             'informasi_tambahan.nm_informasi_tambahan_eng',
             'informasi_tambahan.status'
-        );
+        )
+            ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->where('p1.id_pengguna', '=', $siswa->id_pengguna)
+            // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         if ($param == 0) $list_data = $list_data->where('status', '!=', 0)->get();
         else $list_data = $list_data->where('status', 0)->get();
@@ -438,23 +443,23 @@ class ApprovePrestasiSiswaController extends BaseController
         $alumni = $input->alumni;
 
 
-//------------------------Fungsi menampilkan data alumni--------------------//
+        //------------------------Fungsi menampilkan data alumni--------------------//
         if ($alumni == 1) {
-//-----------------------di bagian role wali kelas--------------------------//
+            //-----------------------di bagian role wali kelas--------------------------//
             if ($input->role == 'guru') {
-              
+
                 $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
                 $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
                 $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
                 $id_kelas = $wali_kelas ? $wali_kelas->id_kelas : '';
-//----------------------Fungsi di tap memiliki prestasi dan menunggu approval--------//
+                //----------------------Fungsi di tap memiliki prestasi dan menunggu approval--------//
                 if ($param_semua_siswa == 0) {
                     $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
-                    // $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                        // $data = Siswa::select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
                             if ($param == 0) {
                                 $q->where('status', '!=', 0);
-//--------------------------Fungsi di tap menunggu Approve, guru , alumni-----------------//
+                                //--------------------------Fungsi di tap menunggu Approve, guru , alumni-----------------//
                             } else {
                                 $q->where('status', 0);
                             }
@@ -544,8 +549,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
                         ]);
                 }
-            }
-            else {
+            } else {
 
                 if ($param_semua_siswa == 0) {
 
@@ -810,7 +814,7 @@ class ApprovePrestasiSiswaController extends BaseController
                         ]);
                 } else {
 
-                    $data = Siswa::select('siswa.id_siswa','siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
+                    $data = Siswa::select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna', 'nm_kelas')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                         ->join('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
@@ -908,7 +912,7 @@ class ApprovePrestasiSiswaController extends BaseController
                     ->rawColumns(['prestasi', 'kegiatan', 'informasi_tambahan'])
                     ->make(true);
             }
-        }else{
+        } else {
             if ($param == 0) {
                 return Datatables::of($data)
                     ->addColumn('prestasi', function ($item) {
@@ -953,7 +957,6 @@ class ApprovePrestasiSiswaController extends BaseController
                     ->make(true);
             }
         }
-       
     }
 
     public function editPrestasiSiswa(Request $request, $id)
@@ -1055,6 +1058,63 @@ class ApprovePrestasiSiswaController extends BaseController
     }
 
     public function actionEditKegiatanSiswa(Request $request, $id)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validator = Validator::make($request->all(), [
+            'nm_kegiatan_siswa' => 'required',
+            'id_siswa' => 'required',
+            'id_semester' => 'required',
+            'lokasi_kegiatan_siswa' => 'required',
+            'penyelenggara_kegiatan_siswa' => 'required',
+            'id_tingkat_prestasi_siswa' => 'required',
+            'tgl_kegiatan_siswa' => 'required',
+            'link_sertifikat' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+
+            $kegiatan = KegiatanSiswa::find($id);
+
+            $kegiatan->id_semester = $input->id_semester;
+            $kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
+            $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
+            $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
+            $kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
+            $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
+            $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
+            $kegiatan->updated_at = $now;
+            $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->save();
+
+            if ($auth_data->pengguna->status_join_table == 2) {
+                $path = 'wali-kelas/edit-kegiatan-siswa/' . $id;
+            } else {
+                $path = 'skpi/edit-kegiatan-siswa/' . $id;
+            }
+
+            return [
+                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => $path,
+                'message' => 'Edit Prestasi successfully'
+            ];
+        }
+    }
+
+    public function editInformasiTambahanSiswa(Request $request, $id)
+    {
+        return view('kesiswaan/skpi/approve-prestasi-siswa/edit-informasi-tambahan-siswa');
+    }
+
+    public function actionEditInformasiTambahanSiswa(Request $request, $id)
     {
 
         $input = (object) $request->input();
