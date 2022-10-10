@@ -1035,7 +1035,7 @@ class ApprovePrestasiSiswaController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => $path,
-                'message' => 'Edit Prestasi successfully'
+                'message' => 'Edit Prestasi Successfully'
             ];
         }
     }
@@ -1051,7 +1051,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         $data_semester = Semester::where('semester.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
-        $tingkat = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $tingkat = TingkatPrestasiSiswa::where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
         $kegiatan = KegiatanSiswa::join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')->where('id_kegiatan_siswa', '=', $id)->first();
 
         return view('kesiswaan/skpi/approve-prestasi-siswa/edit-kegiatan-siswa', compact('auth_data', 'data_kelas', 'data_semester', 'tingkat', 'kegiatan'));
@@ -1104,14 +1104,18 @@ class ApprovePrestasiSiswaController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => $path,
-                'message' => 'Edit Prestasi successfully'
+                'message' => 'Edit Prestasi Successfully'
             ];
         }
     }
 
     public function editInformasiTambahanSiswa(Request $request, $id)
     {
-        return view('kesiswaan/skpi/approve-prestasi-siswa/edit-informasi-tambahan-siswa');
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $informasi_tambahan = InformasiTambahan::findOrFail($id);
+
+        return view('kesiswaan/skpi/approve-prestasi-siswa/edit-informasi-tambahan-siswa', compact('auth_data', 'informasi_tambahan'));
     }
 
     public function actionEditInformasiTambahanSiswa(Request $request, $id)
@@ -1122,14 +1126,9 @@ class ApprovePrestasiSiswaController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $validator = Validator::make($request->all(), [
-            'nm_kegiatan_siswa' => 'required',
-            'id_siswa' => 'required',
-            'id_semester' => 'required',
-            'lokasi_kegiatan_siswa' => 'required',
-            'penyelenggara_kegiatan_siswa' => 'required',
-            'id_tingkat_prestasi_siswa' => 'required',
-            'tgl_kegiatan_siswa' => 'required',
-            'link_sertifikat' => 'required'
+            'jenis_informasi_tambahan' => 'required',
+            'nm_informasi_tambahan' => 'required',
+            'nm_informasi_tambahan_eng' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -1138,30 +1137,24 @@ class ApprovePrestasiSiswaController extends BaseController
                 'message' => $validator->errors()->first()
             ];
         } else {
-
-            $kegiatan = KegiatanSiswa::find($id);
-
-            $kegiatan->id_semester = $input->id_semester;
-            $kegiatan->nm_kegiatan_siswa = $input->nm_kegiatan_siswa;
-            $kegiatan->lokasi_kegiatan_siswa = $input->lokasi_kegiatan_siswa;
-            $kegiatan->penyelenggara_kegiatan_siswa = $input->penyelenggara_kegiatan_siswa;
-            $kegiatan->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
-            $kegiatan->tgl_kegiatan_siswa = date("Y-m-d", strtotime($input->tgl_kegiatan_siswa));
-            $kegiatan->nm_kegiatan_scan_sertif = $input->link_sertifikat;
-            $kegiatan->updated_at = $now;
-            $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
-            $kegiatan->save();
+            $informasi = InformasiTambahan::find($id);
+            $informasi->jenis_informasi_tambahan = $input->jenis_informasi_tambahan;
+            $informasi->nm_informasi_tambahan = $input->nm_informasi_tambahan;
+            $informasi->nm_informasi_tambahan_eng = $input->nm_informasi_tambahan_eng;
+            $informasi->updated_at = $now;
+            $informasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+            $informasi->save();
 
             if ($auth_data->pengguna->status_join_table == 2) {
-                $path = 'wali-kelas/edit-kegiatan-siswa/' . $id;
+                $path = 'wali-kelas/edit-informasi-tambahan-siswa/' . $id;
             } else {
-                $path = 'skpi/edit-kegiatan-siswa/' . $id;
+                $path = 'skpi/edit-informasi-tambahan-siswa/' . $id;
             }
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => $path,
-                'message' => 'Edit Prestasi successfully'
+                'message' => 'Edit Informasi Tambahan Successfully'
             ];
         }
     }

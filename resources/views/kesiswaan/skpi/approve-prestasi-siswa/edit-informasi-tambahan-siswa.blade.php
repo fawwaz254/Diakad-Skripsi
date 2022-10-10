@@ -33,7 +33,6 @@
                         </div>
 
                         <div class="row">
-
                             <div class="col-md-6">
                                 <h2 class="card-inside-title">
                                     Nama
