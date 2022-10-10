@@ -312,7 +312,7 @@ class InputPelanggaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/tindakan-pelanggaran',
-                    'message' => 'Save Pelanggaran Siswa successfully'
+                    'message' => 'Save Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 $siswa = Siswa::where('id_siswa', '=', $input->id_siswa)->first();
@@ -336,7 +336,7 @@ class InputPelanggaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/tindakan-pelanggaran',
-                    'message' => 'Update Pelanggaran Siswa successfully'
+                    'message' => 'Update Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($tindakanPelanggaran = TindakanPelanggaran::where('id_pelanggaran_siswa', $id)->first()) {
@@ -354,7 +354,7 @@ class InputPelanggaranController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Pelanggaran Siswa successfully'
+                        'message' => 'Delete Pelanggaran Siswa Successfully'
                     ];
                 }
             }

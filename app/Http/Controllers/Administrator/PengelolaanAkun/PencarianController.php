@@ -306,7 +306,7 @@ class PencarianController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pengelolaan-akun/pencarian/view-detail-pengguna/'.$pengguna->id_pengguna.'/'.$input->username_nama_cari,
-                    'message' => 'Update Data successfully'
+                    'message' => 'Update Data Successfully'
                 ];
             }
             elseif ($mode == 'delete') {
@@ -319,7 +319,7 @@ class PencarianController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Role Pengguna successfully'
+                    'message' => 'Delete Role Pengguna Successfully'
                 ];
             }
             elseif ($mode == 'add-role-pengguna') {
@@ -337,7 +337,7 @@ class PencarianController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pengelolaan-akun/pencarian/view-detail-pengguna/'.$input->id_pengguna.'/'.$input->username_nama_cari,
-                    'message' => 'Tambah Role Pengguna successfully'
+                    'message' => 'Tambah Role Pengguna Successfully'
                 ];
             }
             elseif ($mode == 'reset-password') {
@@ -358,7 +358,7 @@ class PencarianController extends BaseController
 
                 return [
                     'status' => 203,
-                    'message' => 'Reset Password successfully'
+                    'message' => 'Reset Password Successfully'
                 ];   
             }
         }
@@ -391,7 +391,7 @@ class PencarianController extends BaseController
             return response()->json([
                 'status_code' 	=> 200,
                 'status_text' 	=> 'Success',
-                'message' => 'Reset some password account successfully'
+                'message' => 'Reset some password account Successfully'
             ]);
         } catch (\Exception $e) {
             DB::rollback();

@@ -145,7 +145,7 @@ class KesimpulanPelanggaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-pelanggaran/kesimpulan-pelanggaran',
-                    'message' => 'Save Kesimpulan Pelanggaran successfully'
+                    'message' => 'Save Kesimpulan Pelanggaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -166,7 +166,7 @@ class KesimpulanPelanggaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-pelanggaran/kesimpulan-pelanggaran',
-                    'message' => 'Save Kesimpulan Pelanggaran successfully'
+                    'message' => 'Save Kesimpulan Pelanggaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -179,7 +179,7 @@ class KesimpulanPelanggaranController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Kesimpulan Pelanggaran successfully'
+                    'message' => 'Delete Kesimpulan Pelanggaran Successfully'
                 ];
             }
         }

@@ -182,7 +182,7 @@ class HapusPlottingMapelSiswaController extends BaseController
 
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                    'message'   =>  'Delete Plotting Mapel Siswa successfully',
+                    'message'   =>  'Delete Plotting Mapel Siswa Successfully',
                     'path'      =>  'aktivitas-semester/hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/' . $input->id_kelas_mp
                 ];
             } catch (\Exception $e) {
@@ -248,7 +248,7 @@ class HapusPlottingMapelSiswaController extends BaseController
 
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                    'message'   =>  'Delete Plotting Mapel Siswa successfully',
+                    'message'   =>  'Delete Plotting Mapel Siswa Successfully',
                     'path'      =>  'aktivitas-semester/hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/' . $input->id_kelas_mp
                 ];
             } catch (\Exception $e) {
