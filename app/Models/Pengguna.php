@@ -119,6 +119,11 @@ class Pengguna extends Authenticatable
         return $this->belongsTo('App\Models\Guru', 'id_pengguna','id_pengguna');
     }
 
+    public function staff()
+    {
+        return $this->belongsTo('App\Models\Staff', 'id_pengguna','id_pengguna');
+    }
+
     public function status_pengguna()
     {
         return $this->belongsTo('App\Models\StatusPengguna', 'id_status_pengguna');
