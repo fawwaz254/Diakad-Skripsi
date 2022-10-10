@@ -10,10 +10,13 @@ use App\Http\Controllers\Administrator\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\ReportController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+
+        Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
 
         Route::prefix('device')->group(function () {
             Route::prefix('fingerprint')->group(function () {
