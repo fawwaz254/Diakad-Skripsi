@@ -6,6 +6,7 @@ use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\SumberDaya\DataSumberDaya\StatusAktifGuruController;
 use App\Http\Controllers\SumberDaya\DataSumberDaya\StatusAktifTendikController;
 use App\Http\Controllers\SumberDaya\DataSumberDaya\UnitKerjaController;
+use App\Http\Controllers\SumberDaya\DataSumberDaya\UpdateFotoUnitKerjaController;
 use App\Http\Controllers\SumberDaya\Guru\InputGuruController;
 use App\Http\Controllers\SumberDaya\Guru\SettingGuruPiketController;
 use App\Http\Controllers\SumberDaya\Guru\UploadDataGuruController;
@@ -53,6 +54,19 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('unit-kerja/edit/{id}', [UnitKerjaController::class, 'editUnitKerja']);
 
             Route::post('action-unit-kerja/{mode}/{id}', [UnitKerjaController::class, 'actionUnitKerja']);
+
+
+            //Menu Upload Foto
+
+            Route::get('update-foto', [UpdateFotoUnitKerjaController::class, 'viewUpdateFoto']);
+            Route::get('update-foto/batch', [UpdateFotoUnitKerjaController::class, 'viewBatchUpdateFoto']);
+            Route::post('post-view-update-foto', [UpdateFotoUnitKerjaController::class, 'actionViewUpdateFoto']);
+            Route::get('update-foto/view-detail-update-foto/{unit_kerja}/{status_join_table}', [UpdateFotoUnitKerjaController::class, 'viewDetailUpdateFoto']);
+            Route::get('update-foto/datatables/{unit_kerja}/{status_join_table}', [UpdateFotoUnitKerjaController::class, 'datatablesUpdateFoto']);
+            Route::get('update-foto/upload/{id_pengguna}', [UpdateFotoUnitKerjaController::class, 'viewUpload']);
+            Route::post('action-update-foto/{mode}/{id}', [UpdateFotoUnitKerjaController::class, 'actionUpdateFoto']);
+            Route::post('action-batch-upload-foto', [UpdateFotoUnitKerjaController::class, 'actionBatchUploadFoto']);
+
 
             // MENU Data Jabatan Pegawai
             // TABEL DIHAPUS
