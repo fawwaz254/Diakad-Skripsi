@@ -147,7 +147,7 @@ class PeriodeWisudaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'wisuda/periode-wisuda',
-                    'message' => 'Save Periode Wisuda successfully'
+                    'message' => 'Save Periode Wisuda Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -167,7 +167,7 @@ class PeriodeWisudaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'wisuda/periode-wisuda',
-                    'message' => 'Update Periode Wisuda successfully'
+                    'message' => 'Update Periode Wisuda Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -187,7 +187,7 @@ class PeriodeWisudaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Periode Wisuda successfully'
+                        'message' => 'Delete Periode Wisuda Successfully'
                     ];
                 }
             }

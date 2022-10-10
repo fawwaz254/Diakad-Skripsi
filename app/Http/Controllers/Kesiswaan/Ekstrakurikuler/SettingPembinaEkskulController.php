@@ -136,7 +136,7 @@ class SettingPembinaEkskulController extends BaseController
               return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/setting-pembina-ekskul',
-                    'message' => 'Save Data pembina  Ekskul successfully'
+                    'message' => 'Save Data pembina  Ekskul Successfully'
                 ];      
           }elseif($mode == 'delete'){
             $ekskul         = PembinaEkskulSet::find($id);
@@ -154,7 +154,7 @@ class SettingPembinaEkskulController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Unassign Pembina Ekskul successfully'
+                        'message' => 'Unassign Pembina Ekskul Successfully'
                     ];
           }
         }

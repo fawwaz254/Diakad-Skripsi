@@ -113,7 +113,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             }
             return [
                 'status' => 202,
-                'message' => 'Save successfully',
+                'message' => 'Save Successfully',
                 'path' => 'rapor-sisipan/daftar-nilai-sas/nilai/' . $id_rapor_sisipan
             ];
         }

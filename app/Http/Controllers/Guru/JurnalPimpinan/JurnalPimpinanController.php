@@ -124,7 +124,7 @@ class JurnalPimpinanController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'jurnal-pimpinan/laporan-jurnal-pimpinan',
-                    'message' => 'Save Laporan Laporan Kerja Harian successfully'
+                    'message' => 'Save Laporan Laporan Kerja Harian Successfully'
                 ];
             }
 
@@ -164,7 +164,7 @@ class JurnalPimpinanController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'jurnal-pimpinan/laporan-jurnal-pimpinan',
-                    'message' => 'Update Laporan Laporan Kerja Harian  successfully'
+                    'message' => 'Update Laporan Laporan Kerja Harian  Successfully'
                 ];
 
             }
@@ -178,7 +178,7 @@ class JurnalPimpinanController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Laporan Kerja Harian successfully'
+                    'message' => 'Delete Laporan Kerja Harian Successfully'
                 ];
 
             }

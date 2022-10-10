@@ -195,7 +195,7 @@ class Apiv1Controller extends BaseController
             return response()->json([
                 'status_code' 	=> 200,
                 'status_text' 	=> 'Success',
-                'message' => 'Update data pribadi Successfully'
+                'message' => 'Update Data Pribadi Successfully'
             ]);
         } catch (\Exception $e) {
             DB::rollback();
@@ -3372,7 +3372,7 @@ $validator = Validator::make($request->all(), $syarat);
     return response()->json([
         'status_code' 	=> 200,
         'status_text' 	=> 'Success',
-        'message' => 'Update data pribadi Successfully'
+        'message' => 'Update Data Pribadi Successfully'
     ]);
 } catch (\Exception $e) {
     DB::rollback();

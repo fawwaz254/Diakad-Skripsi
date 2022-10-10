@@ -347,7 +347,7 @@ class DetailBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-sekolah/detail-biaya/'.$input->id_biaya_sekolah,
-                    'message' => 'Save Detail Biaya successfully'
+                    'message' => 'Save Detail Biaya Successfully'
                 ];
             }
 
@@ -372,7 +372,7 @@ class DetailBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-sekolah/detail-biaya/'.$input->id_biaya_sekolah,
-                    'message' => 'Update Detail Biaya successfully'
+                    'message' => 'Update Detail Biaya Successfully'
                 ];
             }
 
@@ -394,7 +394,7 @@ class DetailBiayaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Detail Biaya successfully'
+                        'message' => 'Delete Detail Biaya Successfully'
                     ];
                 }
             }
@@ -468,7 +468,7 @@ class DetailBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/detail-biaya',
-                    'message' => 'Save Detail Biaya successfully'
+                    'message' => 'Save Detail Biaya Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -491,7 +491,7 @@ class DetailBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/detail-biaya',
-                    'message' => 'Update Detail Biaya successfully'
+                    'message' => 'Update Detail Biaya Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -512,7 +512,7 @@ class DetailBiayaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Detail Biaya successfully'
+                        'message' => 'Delete Detail Biaya Successfully'
                     ];
                 }
             }

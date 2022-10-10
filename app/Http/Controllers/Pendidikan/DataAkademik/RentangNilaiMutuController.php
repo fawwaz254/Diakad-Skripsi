@@ -171,7 +171,7 @@ class RentangNilaiMutuController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-akademik/rentang-nilai-mutu',
-                        'message' => 'Save Rentang Nilai Mutu successfully'
+                        'message' => 'Save Rentang Nilai Mutu Successfully'
                     ];
                 }
             }
@@ -190,7 +190,7 @@ class RentangNilaiMutuController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/rentang-nilai-mutu',
-                    'message' => 'Update Rentang Nilai Mutu successfully'
+                    'message' => 'Update Rentang Nilai Mutu Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -203,7 +203,7 @@ class RentangNilaiMutuController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Rentang Nilai Mutu successfully'
+                    'message' => 'Delete Rentang Nilai Mutu Successfully'
                 ];
             }
         }

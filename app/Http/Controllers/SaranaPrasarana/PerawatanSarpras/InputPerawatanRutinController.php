@@ -179,7 +179,7 @@ class InputPerawatanRutinController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'perawatan-sarpras/input-perawatan-rutin',
-                        'message' => 'Input Perawatan Rutin successfully'
+                        'message' => 'Input Perawatan Rutin Successfully'
                     ];
                 } else {
                     return [
@@ -201,7 +201,7 @@ class InputPerawatanRutinController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'perawatan-sarpras/input-perawatan-rutin',
-                    'message' => 'Update Perawatan Rutin successfully'
+                    'message' => 'Update Perawatan Rutin Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
@@ -213,7 +213,7 @@ class InputPerawatanRutinController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Perawatan Rutin successfully'
+                    'message' => 'Delete Perawatan Rutin Successfully'
                 ];
             }
         }

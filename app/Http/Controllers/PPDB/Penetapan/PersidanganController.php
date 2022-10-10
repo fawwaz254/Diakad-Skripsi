@@ -219,7 +219,7 @@ class PersidanganController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penetapan/data-penetapan',
-                    'message' => 'Save Penetapan successfully'
+                    'message' => 'Save Penetapan Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -244,7 +244,7 @@ class PersidanganController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penetapan/data-penetapan',
-                    'message' => 'Update Penetapan successfully'
+                    'message' => 'Update Penetapan Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -258,7 +258,7 @@ class PersidanganController extends BaseController {
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Penetapan successfully'
+                        'message' => 'Delete Penetapan Successfully'
                     ];
                 
             }

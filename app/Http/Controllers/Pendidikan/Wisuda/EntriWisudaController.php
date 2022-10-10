@@ -308,7 +308,7 @@ class EntriWisudaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'wisuda/entri-wisuda/view-detail/' . $input->id_periode_wisuda . '/' . $input->id_kelas,
-                        'message' => 'Entri Data Wisuda successfully'
+                        'message' => 'Entri Data Wisuda Successfully'
                     ];
                 }
             }

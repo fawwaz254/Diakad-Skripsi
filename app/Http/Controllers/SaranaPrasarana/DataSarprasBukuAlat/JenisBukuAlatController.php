@@ -106,7 +106,7 @@ class JenisBukuAlatController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-buku-alat/jenis-buku-alat',
-                    'message' => 'Save Jenis Buku/Alat successfully'
+                    'message' => 'Save Jenis Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -120,7 +120,7 @@ class JenisBukuAlatController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-buku-alat/jenis-buku-alat',
-                    'message' => 'Update Jenis Buku/Alat successfully'
+                    'message' => 'Update Jenis Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($bukuAlat = BukuAlat::where('id_jenis_buku_alat', $id)->first()) {
@@ -138,7 +138,7 @@ class JenisBukuAlatController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jenis Buku/Alat successfully'
+                        'message' => 'Delete Jenis Buku/Alat Successfully'
                     ];
                 }
             }

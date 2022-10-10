@@ -126,7 +126,7 @@ class JamKBMController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jam-kbm',
-                    'message' => 'Save Jam KBM successfully'
+                    'message' => 'Save Jam KBM Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -145,7 +145,7 @@ class JamKBMController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jam-kbm',
-                    'message' => 'Update Jam KBM successfully'
+                    'message' => 'Update Jam KBM Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -165,7 +165,7 @@ class JamKBMController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jam KBM successfully'
+                        'message' => 'Delete Jam KBM Successfully'
                     ];
                 }
             }

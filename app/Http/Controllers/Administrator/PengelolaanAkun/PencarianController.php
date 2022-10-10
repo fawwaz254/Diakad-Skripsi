@@ -391,7 +391,7 @@ class PencarianController extends BaseController
             return response()->json([
                 'status_code' 	=> 200,
                 'status_text' 	=> 'Success',
-                'message' => 'Reset some password account Successfully'
+                'message' => 'Reset Some Password Account Successfully'
             ]);
         } catch (\Exception $e) {
             DB::rollback();

@@ -314,7 +314,7 @@ class AbsensiHarianSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'guru-piket/absensi-harian-siswa/'.$input->id_semester.'/'.$input->id_kelas,
-                        'message' => 'Save Absensi Harian Siswa successfully'
+                        'message' => 'Save Absensi Harian Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -336,7 +336,7 @@ class AbsensiHarianSiswaController extends BaseController
 
                     return [
                         'status' => 200, // SUCCESS AND LOAD DATATABLES
-                        'message' => 'Delete Absensi Harian Siswa successfully'
+                        'message' => 'Delete Absensi Harian Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

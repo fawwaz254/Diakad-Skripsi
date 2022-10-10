@@ -290,7 +290,7 @@ class TanggapiKomplainController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'komplain-sarpras/tanggapi-komplain',
-                    'message' => 'Tanggapi Komplain successfully'
+                    'message' => 'Tanggapi Komplain Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -303,7 +303,7 @@ class TanggapiKomplainController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Komplain Sarpras successfully'
+                    'message' => 'Delete Komplain Sarpras Successfully'
                 ];
             }
         }

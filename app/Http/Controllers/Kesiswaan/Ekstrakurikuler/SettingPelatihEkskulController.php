@@ -243,7 +243,7 @@ class SettingPelatihEkskulController extends BaseController
         		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/setting-pelatih-ekskul/view-pelatih',
-                    'message' => 'Save Data Pelatih  Ekskul successfully'
+                    'message' => 'Save Data Pelatih  Ekskul Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -269,7 +269,7 @@ class SettingPelatihEkskulController extends BaseController
             	return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/setting-pelatih-ekskul/view-pelatih',
-                    'message' => 'Save Data Pelatih  Ekskul successfully'
+                    'message' => 'Save Data Pelatih  Ekskul Successfully'
                 ];
            	}
             elseif($mode == 'edit-status') {
@@ -282,7 +282,7 @@ class SettingPelatihEkskulController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/setting-pelatih-ekskul',
-                    'message' => 'Save Data Pelatih  Ekskul successfully'
+                    'message' => 'Save Data Pelatih  Ekskul Successfully'
                 ];
             }
            	elseif ($mode == 'assign') {
@@ -307,7 +307,7 @@ class SettingPelatihEkskulController extends BaseController
            		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/setting-pelatih-ekskul',
-                    'message' => 'Save Data Pelatih  Ekskul successfully'
+                    'message' => 'Save Data Pelatih  Ekskul Successfully'
                 ]; 			
            	}
             elseif ($mode == 'unassign') {
@@ -318,7 +318,7 @@ class SettingPelatihEkskulController extends BaseController
                     $ekskul->delete();
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Unassign Pelatih Ekskul successfully'
+                        'message' => 'Unassign Pelatih Ekskul Successfully'
                     ];          
             }
            	elseif ($mode == 'delete') {
@@ -338,7 +338,7 @@ class SettingPelatihEkskulController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Pelatih successfully'
+                        'message' => 'Delete Data Pelatih Successfully'
                     ];
                 }
            	}

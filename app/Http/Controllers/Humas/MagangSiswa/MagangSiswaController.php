@@ -99,7 +99,7 @@ class MagangSiswaController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'magang-siswa/nama-magang',
-                'message' => 'Save Magang Siswa successfully'
+                'message' => 'Save Magang Siswa Successfully'
             ];
         }
         elseif($mode == 'edit'){
@@ -114,7 +114,7 @@ class MagangSiswaController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'magang-siswa/nama-magang',
-                'message' => 'Update Magang Siswa successfully'
+                'message' => 'Update Magang Siswa Successfully'
             ];
         }
         elseif($mode == 'delete'){
@@ -134,7 +134,7 @@ class MagangSiswaController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Magang Siswa successfully'
+                    'message' => 'Delete Magang Siswa Successfully'
                 ];
             }
         }

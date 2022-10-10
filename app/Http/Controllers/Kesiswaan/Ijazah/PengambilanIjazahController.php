@@ -138,7 +138,7 @@ class PengambilanIjazahController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ijazah/pengambilan-ijazah',
-                    'message' => 'Save Pengambilan Ijazah successfully'
+                    'message' => 'Save Pengambilan Ijazah Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -161,7 +161,7 @@ class PengambilanIjazahController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ijazah/pengambilan-ijazah',
-                    'message' => 'Update Pengambilan Ijazah successfully'
+                    'message' => 'Update Pengambilan Ijazah Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -174,7 +174,7 @@ class PengambilanIjazahController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Pengambilan Ijazah successfully'
+                    'message' => 'Delete Pengambilan Ijazah Successfully'
                 ];
             }
         }

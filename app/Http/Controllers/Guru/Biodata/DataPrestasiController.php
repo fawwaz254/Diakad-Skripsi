@@ -128,7 +128,7 @@ class DataPrestasiController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => $path,
-                    'message' => 'Save Prestasi successfully'
+                    'message' => 'Save Prestasi Successfully'
                 ];
 
             }
@@ -164,7 +164,7 @@ class DataPrestasiController extends BaseController
                    return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
                             'path' => $path,
-                            'message' => 'Edit Prestasi successfully'
+                            'message' => 'Edit Prestasi Successfully'
                 ];
 
             }
@@ -180,7 +180,7 @@ class DataPrestasiController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Prestasi successfully'
+                    'message' => 'Delete Prestasi Successfully'
                 ];
 
             }

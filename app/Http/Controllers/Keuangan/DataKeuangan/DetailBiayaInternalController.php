@@ -264,7 +264,7 @@ class DetailBiayaInternalController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-sekolah/detail-biaya/detail-biaya-internal/'.$id_detail_biaya,
-                    'message' => 'Save Detail Biaya Internal successfully'
+                    'message' => 'Save Detail Biaya Internal Successfully'
                 ];
 
             }
@@ -293,7 +293,7 @@ class DetailBiayaInternalController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-sekolah/detail-biaya/detail-biaya-internal/'.$id_detail_biaya,
-                    'message' => 'Update Detail Biaya Internal successfully'
+                    'message' => 'Update Detail Biaya Internal Successfully'
                 ];
 
             }
@@ -307,7 +307,7 @@ class DetailBiayaInternalController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Detail Biaya Internal successfully'
+                    'message' => 'Delete Detail Biaya Internal Successfully'
                 ];
             }
         }
@@ -348,7 +348,7 @@ class DetailBiayaInternalController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/detail-biaya-internal',
-                    'message' => 'Save Detail Biaya Internal successfully'
+                    'message' => 'Save Detail Biaya Internal Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -364,7 +364,7 @@ class DetailBiayaInternalController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/detail-biaya-internal',
-                    'message' => 'Update Detail Biaya Internal successfully'
+                    'message' => 'Update Detail Biaya Internal Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -377,7 +377,7 @@ class DetailBiayaInternalController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Detail Biaya Internal successfully'
+                    'message' => 'Delete Detail Biaya Internal Successfully'
                 ];
             }
         }

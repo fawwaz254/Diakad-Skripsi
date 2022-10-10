@@ -391,7 +391,7 @@ class PengadaanSarprasController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Unit successfully'
+                  'message' => 'Approve Kepala Unit Successfully'
               ];
             } elseif (! empty($staff->id_pengguna)) {
                 // make object to find id
@@ -403,7 +403,7 @@ class PengadaanSarprasController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Unit successfully'
+                  'message' => 'Approve Kepala Unit Successfully'
               ];
             } else {
                 return [
@@ -433,7 +433,7 @@ class PengadaanSarprasController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Sarpras successfully'
+                  'message' => 'Approve Kepala Sarpras Successfully'
               ];
             } elseif (! empty($staff->id_pengguna)) {
                 // make object to find id
@@ -445,7 +445,7 @@ class PengadaanSarprasController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Approve Kepala Sarpras successfully'
+                    'message' => 'Approve Kepala Sarpras Successfully'
                 ];
             } else {
                 return [
@@ -480,7 +480,7 @@ class PengadaanSarprasController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD CONTENT
-                        'message' => 'Approve Supplier Oleh Kepala Sarpras successfully'
+                        'message' => 'Approve Supplier Oleh Kepala Sarpras Successfully'
                     ];
                 } elseif (! empty($staff->id_pengguna)) {
                     // make object to find id
@@ -492,7 +492,7 @@ class PengadaanSarprasController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD CONTENT
-                        'message' => 'Approve Supplier Oleh Kepala Sarpras successfully'
+                        'message' => 'Approve Supplier Oleh Kepala Sarpras Successfully'
                     ];
                 } else {
                     return [
@@ -536,7 +536,7 @@ class PengadaanSarprasController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Approve Supplier successfully'
+                    'message' => 'Approve Supplier Successfully'
                 ];
             }
             else {
@@ -626,7 +626,7 @@ class PengadaanSarprasController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'perawatan-sarpras/pengadaan-sarpras',
-                        'message' => 'Input Pengadaan Barang/Sarpras successfully'
+                        'message' => 'Input Pengadaan Barang/Sarpras Successfully'
                     ];
                 } else {
                     return [
@@ -660,7 +660,7 @@ class PengadaanSarprasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'perawatan-sarpras/pengadaan-sarpras/view-detail-supplier/'.$input->id_rpb_sarpras,
-                    'message' => 'Input Pengadaan Supplier successfully'
+                    'message' => 'Input Pengadaan Supplier Successfully'
                 ];
             }
             elseif ($mode == 'edit-apv-supplier') {
@@ -681,7 +681,7 @@ class PengadaanSarprasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'perawatan-sarpras/pengadaan-sarpras/view-detail-supplier/'.$input->id_rpb_sarpras,
-                    'message' => 'Edit Approve Pengadaan Supplier successfully'
+                    'message' => 'Edit Approve Pengadaan Supplier Successfully'
                 ];
             }
         }

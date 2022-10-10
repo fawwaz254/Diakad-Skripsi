@@ -282,7 +282,7 @@ class PrestasiSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-kesiswaan/prestasi-siswa',
-                        'message' => 'Save Data Prestasi Siswa successfully'
+                        'message' => 'Save Data Prestasi Siswa Successfully'
                     ];
                 } else {
                     return [
@@ -316,7 +316,7 @@ class PrestasiSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-kesiswaan/prestasi-siswa',
-                        'message' => 'Save Data Prestasi Siswa successfully'
+                        'message' => 'Save Data Prestasi Siswa Successfully'
                     ];
                 } else {
                     return [
@@ -333,7 +333,7 @@ class PrestasiSiswaController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Data Prestasi Siswa successfully'
+                    'message' => 'Delete Data Prestasi Siswa Successfully'
                 ];
             }
         }

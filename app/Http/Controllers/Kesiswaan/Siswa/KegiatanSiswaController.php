@@ -159,7 +159,7 @@ class KegiatanSiswaController extends BaseController
 	        		return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-kesiswaan/kegiatan-siswa',
-                        'message' => 'Save Data Kegiatan Siswa successfully'
+                        'message' => 'Save Data Kegiatan Siswa Successfully'
                     ];
 
 	            }
@@ -197,7 +197,7 @@ class KegiatanSiswaController extends BaseController
 	        		return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-kesiswaan/kegiatan-siswa',
-                        'message' => 'Update Data Kegiatan Siswa successfully'
+                        'message' => 'Update Data Kegiatan Siswa Successfully'
                     ];
 
         		}
@@ -224,7 +224,7 @@ class KegiatanSiswaController extends BaseController
 
                 return [
 	                        'status' => 203, // SUCCESS AND LOAD TABLE
-	                        'message' => 'Delete Data Prestasi Siswa successfully'
+	                        'message' => 'Delete Data Prestasi Siswa Successfully'
 	                    ];
 	        }
 

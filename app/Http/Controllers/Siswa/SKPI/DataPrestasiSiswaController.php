@@ -139,7 +139,7 @@ class DataPrestasiSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'skpi/data-prestasi-siswa',
-                    'message' => 'Save Prestasi successfully'
+                    'message' => 'Save Prestasi Successfully'
                 ];
 
             }
@@ -176,7 +176,7 @@ class DataPrestasiSiswaController extends BaseController
                return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'skpi/data-prestasi-siswa',
-                        'message' => 'Edit Prestasi successfully'
+                        'message' => 'Edit Prestasi Successfully'
             ];
 
             }
@@ -191,7 +191,7 @@ class DataPrestasiSiswaController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Prestasi successfully'
+                    'message' => 'Delete Prestasi Successfully'
                 ];
 
             }

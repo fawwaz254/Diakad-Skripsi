@@ -256,7 +256,7 @@ class TagihanSiswaController extends BaseController
                   return [
                       'status' => 202, // SUCCESS AND LOAD CONTENT
                       'path' => 'utility/tagihan-siswa/view-detail-tagihan-siswa/'.$input->thn_masuk_siswa.'/'.$input->id_semester.'/'.$input->id_kelompok_biaya.'/'.$input->id_jalur.'/'.$input->is_insert_replace,
-                      'message' => $input->is_insert_replace == '3' ? 'Update Tagihan Siswa successfully' : 'Generate Tagihan Siswa successfully'
+                      'message' => $input->is_insert_replace == '3' ? 'Update Tagihan Siswa Successfully' : 'Generate Tagihan Siswa Successfully'
                   ];
 
                 } catch (\Exception $e) {

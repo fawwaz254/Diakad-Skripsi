@@ -162,7 +162,7 @@ class UploadDataTendikController extends BaseController
 						return [
 							'status' => 202, // SUCCESS AND LOAD CONTENT
 							'path' => 'tendik/input-tendik',
-							'message' => 'Save Tendik successfully'
+							'message' => 'Save Tendik Successfully'
 						];
 					} catch (\Exception $e) {
 						DB::rollback();
