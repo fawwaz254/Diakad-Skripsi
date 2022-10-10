@@ -89,25 +89,24 @@
                                                 cellspacing="0" cellpadding="0">
                                                 <tr>
 
-                                                    <td
+                                                    <td width="85px"
                                                         style="padding:  0 10px 0 10px ; background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}; font-weight: bold;text-align:left;vertical-align: middle">
-                                                        {{-- <span
-                                                            style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">
-                                                            {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }}
-                                                        </span> --}}
-                                                        {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_mulai'] }}.
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_mulai'] }}
-                                                        -
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_selesai'] }}.
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_selesai'] }} --}}
                                                         <span style="float:right;">
                                                             @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
-                                                                <button type="button"class="btn bg-grey waves-effect"
-                                                                    style="padding: 0 4px 0 4px ">
-                                                                    <i class="material-icons">info_outline</i></button>
-                                                                <button type="button"class="btn bg-blue waves-effect"
+                                                                {{-- <button type="button"class="btn bg-blue waves-effect passingID3"
+                                                                    style="padding: 0 4px 0 4px " ata-toggle="modal"
+                                                                    data-id='test'  id="person">
+                                                                    <i class="material-icons">person</i></button> --}}
+                                                                <button type="button"class="btn bg-blue waves-effect passingID2" data-toggle="modal"
+                                                                data-id-jadwal-kelas-mp='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_kelas_mp'] }}'
+                                                                {{-- data-id-jadwal-hari = '{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_hari'] }} '  --}}
+                                                                data-id-jadwal-jam='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}' 
+                                                                data-id-jadwal-jam-selesai='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }}'  
+                                                                data-id-guru='{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_guru'] }}' data-hari=" {{ $hari->id_jadwal_hari }}" data-id-pengampu-mp = '{{  $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_pengampu_mp']  }}' id="edit"
                                                                     style="padding: 0 4px 0 4px ">
                                                                     <i class="material-icons">edit</i></button>
+                                                                    {{-- {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam']  }}
+                                                                    {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_jadwal_jam_selesai'] }} --}}
                                                         </span>
                                                     @else
                                         @endif
@@ -130,19 +129,11 @@
                                             <span style="font-weight: bold; ">
 
                                                 {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_mata_pelajaran'] }}
-                                                ({{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }})</span><br>
+                                                ({{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['kd_mata_pelajaran'] }})
+                                            </span><br>
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_depan'] }}
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['nm_pengguna'] }}
                                             {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['gelar_belakang'] }}
-
-
-                                            {{-- <br>
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_mulai'] }}.
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_mulai'] }}
-                                                        -
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['jam_selesai'] }}.
-                                                        {{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['menit_selesai'] }} --}}
-
 
                                         </td>
                                         <td style="font-size:9px;background-color:white">
@@ -157,18 +148,10 @@
                                     </tr>
                     </table>
                 @else
-                    {{-- <button class="btn btn-warning btn-detail open_modal" value="test">Edit</button> --}}
-
-
-                    {{-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" --}}
-                    {{-- data-target="#myModal" id="open">Open Modal</button> --}}
                     <button type="button" class="btn bg-green waves-effect passingID" data-toggle="modal"
                         data-jam="{{ $r->jam_ke }}}" data-hari=" {{ $hari->id_jadwal_hari }}" id="open">
                         <i class="material-icons ">add</i>
                     </button>
-                    {{-- {{ $r->jam_ke.','.$hari->id_jadwal_hari  }} --}}
-
-                    {{-- {{ $r->id_jadwal_jam . $hari->id_jadwal_hari }} --}}
                     @endif
 
 
@@ -184,15 +167,15 @@
 
 
 
-
-
+<input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
+<input type="hidden" name="id_kelas" value="{{ $kelas->id_kelas }}">
+<input type="hidden" name="id_hari" id="hari" value="">
+<input type="hidden" name="id_jadwal_kelas_mp" id="id_jadwal_kelas_mp" value="">
+<input type="hidden" name="id_pengampu_mp" id="id_pengampu_mp" value="">
 
 
 <!-- Modal -->
-
-
 <div class="modal" tabindex="-1" role="dialog" id="myModal">
-
 
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -204,9 +187,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
-            <input type="hidden" name="id_kelas" value="{{ $kelas->id_kelas }}">
-            <input type="hidden" name="id_hari" id="hari" value="{{ $kelas->id_kelas }}">
+            
 
             <div class="modal-body">
                 <div class="row">
@@ -255,18 +236,6 @@
                         </select>
                     </div>
                 </div>
-                {{-- <div class="row">
-                        <div class="form-group col-md-4">
-                            <label for="test">Ruangan : <span style="color:red">(Otomastis jika ruang sudah diatur dengan kelas)</span></label>
-                            <select class="form-control show-tick" name="id">
-                                <option value="" disabled selected>Pilih Ruangan</option>
-                                @foreach ($ruangan as $r)
-                                    <option value="{{ $r->id_ruangan }}" @if ($r->id_kelas == $kelas->id_kelas)  selected @endif>{{ $r->nm_ruangan }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div> --}}
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Guru :</label>
@@ -278,12 +247,121 @@
                                     {{ $guru->pengguna->gelar_depan }}{{ $guru->pengguna->nm_pengguna }}{{ $guru->pengguna->gelar_belakang }}
                                 </option>
                             @endforeach
-                            {{-- <input type="text" class="form-control" name="club" id="club"> --}}
                         </select>
                     </div>
                 </div>
 
-                {{-- <div class="row">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success  waves-effect" onclick="save()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{{-- Modal 2 untuk edit --}}
+<div class="modal" tabindex="-1" role="dialog" id="myModal2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+
+                <h5 class="modal-title">Edit Jadwal Kelas </h5>
+                {{-- <input type="text" name="id_semester" value="{{ $semester->id_semester }}" disabled> --}}
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{-- <input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
+            <input type="hidden" name="id_kelas" value="{{ $kelas->id_kelas }}">
+            <input type="hidden" name="id_hari" id="hari" value=""> --}}
+           
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Name">Jam Masuk : <span style="color: red">(Otomatis)</span> </label>
+                        <select class="form-control show-tick" name="jamMasukEdit" id="jamMasukEdit">
+
+                            @foreach ($jadwal_jam as $j)
+                                <option value="{{ $j->id_jadwal_jam }}" id="{{ $j->jam_ke }}">
+                                    {{ $j->nm_jadwal_jam }}
+                                    ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
+                                    {{ $j->jam_selesai }},{{ $j->menit_selesai }})
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-md-4">
+                        <label for="Club">Jam Selesai :</label>
+                        <select class="form-control show-tick" name="jamSelesaiEdit"  id="jamSelesaiEdit">
+                            <option value="" disabled selected>Pilih Jam
+                            </option>
+                            @foreach ($jadwal_jam as $j)
+                                <option value="{{ $j->id_jadwal_jam }}">{{ $j->nm_jadwal_jam }}
+                                    ({{ $j->jam_mulai }},{{ $j->menit_mulai }} -
+                                    {{ $j->jam_selesai }},{{ $j->menit_selesai }})
+                                </option>
+                            @endforeach
+
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Guru :</label>
+                        <select class="form-control show-tick" name="guruEdit"  id="guruEdit">
+                            <option value="" disabled selected>Pilih Guru
+                            </option>
+                            @foreach ($list_guru as $guru)
+                                <option value="{{ $guru->id_guru }}">
+                                    {{ $guru->pengguna->gelar_depan }}{{ $guru->pengguna->nm_pengguna }}{{ $guru->pengguna->gelar_belakang }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success  waves-effect" onclick="saveEdit()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{{-- Modal 3 untuk penangung jawab --}}
+
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal3">
+
+
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="alert alert-danger" style="display:none"></div>
+            <div class="modal-header">
+
+                <h5 class="modal-title">Input Penangung Jawab</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{-- <input type="hidden" name="id_semester" value="{{ $semester->id_semester }}">
+            <input type="hidden" name="id_kelas" value="{{ $kelas->id_kelas }}">
+            <input type="hidden" name="id_hari" id="hari" value="{{ $kelas->id_kelas }}"> --}}
+
+            <div class="modal-body">
+
+               <div class="row">
                     <div class="form-group col-md-4">
                         <label for="Goal Score">Penanggung jawab Mata Ajar : <span
                                 style="color: red">(Opsional)</span>
@@ -328,192 +406,228 @@
                             
                         </select>
                     </div>
-                </div> --}}
-                {{-- </div> --}}
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    {{-- <button class="btn btn-block bg-success waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button> --}}
-                    {{-- <button type="submit" class="btn btn-block waves-effect" onclick="save()">SAVE</button> --}}
                     <button type="submit" class="btn btn-success  waves-effect" onclick="save()">Submit</button>
                 </div>
             </div>
         </div>
     </div>
-    </form>
+</div>
 
 
-    @include('scriptjs')
 
 
-    <script>
-        $(".passingID").click(function() {
-            var jam = parseInt($(this).attr('data-jam'));
-            var hari = parseInt($(this).attr('data-hari'));
-            // alert(jam);
-            const $select = document.querySelector('#jamMasuk');
-            const $option = document.getElementById(jam);
-            $select.value = $option.value;
-            $("#hari").val(hari);
+@include('scriptjs')
 
-            $('#myModal').modal('show');
-        });
 
-        function save() {
-            $('#myModal').modal('hide');
-            $('button').attr('disabled', 'disabled');
-            // var pengguna = [];
+<script>
+    $(".passingID").click(function() {
+        var jam = parseInt($(this).attr('data-jam'));
+        var hari = parseInt($(this).attr('data-hari'));
+        // alert(jam);
+        const $select = document.querySelector('#jamMasuk');
+        const $option = document.getElementById(jam);
+        $select.value = $option.value;
+        $("#hari").val(hari);
 
-            // $("input:checkbox[name=id_pengguna]:checked").each(function(){
-            //     pengguna.push($(this).val());
-            // });
-            $.ajax({
-                url: base_url +
-                    '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/add/0',
-                type: 'POST',
-                data: {
+        $('#myModal').modal('show');
+    });
 
-                    jamMasuk: $('select[name=jamMasuk]').val(),
-                    jamSelesai: $('select[name=jamSelesai]').val(),
-                    mapel: $('select[name=mapel]').val(),
-                    guru: $('select[name=guru]').val(),
-                    // penangungJawab: $('select[name=penangungJawab]').val(),
-                    // pjma1: $('select[name=pjma1]').val(),
-                    // pjma2: $('select[name=pjma2]').val(),
-                    id_semester: $('input[name=id_semester]').val(),
-                    id_kelas: $('input[name=id_kelas]').val(),
-                    id_hari: $('input[name=id_hari]').val()
-                },
-                success: function(response) {
-                    if (response.status_code == 200) {
-                        vex.dialog.alert(response.message);
-                    } else if (response.status_code == 201) {
-                        vex.dialog.alert(response.message);
-                        window.location.href = response.link;
-                    } else if (response.status_code == 202) {
-                        vex.dialog.alert(response.message);
-                        setTimeout(function() {
-                            loadURI(response.path);
-                        }, 2000);
+    $(".passingID2").click(function() {
+        var jadwal_kelas_kelas_mp = parseInt($(this).attr('data-id-jadwal-kelas-mp'));
+        var jadwal_jam = $(this).attr('data-id-jadwal-jam');
+        var jadwal_jam_selesai = $(this).attr('data-id-jadwal-jam-selesai');
+        var guru = $(this).attr('data-id-guru');
+        const $select1 = document.querySelector('#jamMasukEdit');
+        $select1.value = jadwal_jam;
 
-                    } else if (response.status_code == 203) {
-                        vex.dialog.alert(response.message);
-                        primary_table.ajax.reload(null, false);
-                    } else if (response.status_code == 204) {
+        const $select2 = document.querySelector('#jamSelesaiEdit');
+        $select2.value = jadwal_jam_selesai;
+        const $select3 = document.querySelector('#guruEdit');
+        $select3.value = guru;
+        var hari = parseInt($(this).attr('data-hari'));
+        $("#hari").val(hari);
+
+        $('#myModal2').modal('show');
+
+        var id_jadwal_kelas_mp =  $(this).attr('data-id-jadwal-kelas-mp');
+        // alert(id_jadwal_kelas_mp)
+        $("#id_jadwal_kelas_mp").val(id_jadwal_kelas_mp);
+
+
+        var  id_pengampu_mp = $(this).attr('data-id-pengampu-mp');
+        $("#id_pengampu_mp").val(id_pengampu_mp);
+    });
+
+    $(".passingID3").click(function() {
+        // var jam = parseInt($(this).attr('data-jam'));
+        // var hari = parseInt($(this).attr('data-hari'));
+        // alert(jam);
+        // const $select = document.querySelector('#jamMasuk');
+        // const $option = document.getElementById(jam);
+        // $select.value = $option.value;
+        // $("#hari").val(hari);
+
+        $('#myModal3').modal('show');
+    });
+
+    function save() {
+        $('#myModal').modal('hide');
+        $('button').attr('disabled', 'disabled');
+        // var pengguna = [];
+
+        // $("input:checkbox[name=id_pengguna]:checked").each(function(){
+        //     pengguna.push($(this).val());
+        // });
+        $.ajax({
+            url: base_url +
+                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/add/0',
+            type: 'POST',
+            data: {
+
+                jamMasuk: $('select[name=jamMasuk]').val(),
+                jamSelesai: $('select[name=jamSelesai]').val(),
+                mapel: $('select[name=mapel]').val(),
+                guru: $('select[name=guru]').val(),
+                // penangungJawab: $('select[name=penangungJawab]').val(),
+                // pjma1: $('select[name=pjma1]').val(),
+                // pjma2: $('select[name=pjma2]').val(),
+                id_semester: $('input[name=id_semester]').val(),
+                id_kelas: $('input[name=id_kelas]').val(),
+                id_hari: $('input[name=id_hari]').val()
+            },
+            success: function(response) {
+                if (response.status_code == 200) {
+                    vex.dialog.alert(response.message);
+                } else if (response.status_code == 201) {
+                    vex.dialog.alert(response.message);
+                    window.location.href = response.link;
+                } else if (response.status_code == 202) {
+                    vex.dialog.alert(response.message);
+                    setTimeout(function() {
                         loadURI(response.path);
-                    } else if (response.status_code == 300) {
-                        vex.dialog.alert(response.message);
-                    }
-                },
-                complete: function() {
-                    $('button').removeAttr('disabled', 'disabled');
+                    }, 2000);
+
+                } else if (response.status_code == 203) {
+                    vex.dialog.alert(response.message);
+                    primary_table.ajax.reload(null, false);
+                } else if (response.status_code == 204) {
+                    loadURI(response.path);
+                } else if (response.status_code == 300) {
+                    vex.dialog.alert(response.message);
                 }
-            });
-        }
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
 
-        $(".delete-record").click(function() {
-                    var token = $("meta[name='csrf-token']").attr("content");
-                    var id = $(this).data("id");
-                    // alert(id);
-                    swal({
-                            title: "Are you sure?",
-                            showCancelButton: true
+    function saveEdit() {
+        $('#myModal2').modal('hide');
+        $('button').attr('disabled', 'disabled');
+        // var pengguna = [];
+        // $id_jadwal_kelas_mp= $('input[name=id_jadwal_kelas_mp]').val();
+// alert($('input[name=id_jadwal_kelas_mp]').val())
+        // $("input:checkbox[name=id_pengguna]:checked").each(function(){
+        //     pengguna.push($(this).val());
+        // });
+        $.ajax({
+            url: base_url +
+                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/edit/'+ $('input[name=id_jadwal_kelas_mp]').val(),
+            type: 'POST',
+            data: {
+
+                jamMasuk: $('select[name=jamMasukEdit]').val(),
+                jamSelesai: $('select[name=jamSelesaiEdit]').val(),
+                // mapel: $('select[name=mapelEdit]').val(),
+                guru: $('select[name=guruEdit]').val(),
+                // penangungJawab: $('select[name=penangungJawab]').val(),
+                // pjma1: $('select[name=pjma1]').val(),
+                // pjma2: $('select[name=pjma2]').val(),
+                id_pengampu_mp : $('input[name=id_pengampu_mp]').val(),
+                id_semester: $('input[name=id_semester]').val(),
+                id_kelas: $('input[name=id_kelas]').val(),
+                id_hari: $('input[name=id_hari]').val()
+            },
+            success: function(response) {
+                if (response.status_code == 200) {
+                    vex.dialog.alert(response.message);
+                } else if (response.status_code == 201) {
+                    vex.dialog.alert(response.message);
+                    window.location.href = response.link;
+                } else if (response.status_code == 202) {
+                    vex.dialog.alert(response.message);
+                    setTimeout(function() {
+                        loadURI(response.path);
+                    }, 2000);
+
+                } else if (response.status_code == 203) {
+                    vex.dialog.alert(response.message);
+                    primary_table.ajax.reload(null, false);
+                } else if (response.status_code == 204) {
+                    loadURI(response.path);
+                } else if (response.status_code == 300) {
+                    vex.dialog.alert(response.message);
+                }
+            },
+            complete: function() {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+
+
+    $(".delete-record").click(function() {
+        var token = $("meta[name='csrf-token']").attr("content");
+        var id = $(this).data("id");
+        // alert(id);
+        swal({
+                title: "Are you sure?",
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('.delete-record').attr("disabled", true);
+                    //swall
+                    $.ajax({
+                        // alert(id);
+                        url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/delete/${id}`,
+                        type: "post",
+
+                        data: {
+                            _token: token,
+                            id_semester: $('input[name=id_semester]').val(),
+                            id_kelas: $('input[name=id_kelas]').val(),
                         },
-                        function(isConfirm) {
-                            if (isConfirm) {
-                                $('.delete-record').attr("disabled", true);
-                                //swall
-                                $.ajax({
-                                        // alert(id);
-                                        url: `{{ Request::segment(1) }}/{{ Request::segment(2) }}/action-set-jadwal-kelas/delete/${id}`,
-                                        type: "post",
 
-                                        data: {
-                                            _token: token,
-                                                    id_semester: $('input[name=id_semester]').val(),
-                                            id_kelas: $('input[name=id_kelas]').val(),
-                                        },
+                        success: function(response) {
+                            if (response.status_code == 200) {
+                                vex.dialog.alert(response.message);
+                            } else if (response.status_code == 201) {
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            } else if (response.status_code == 202) {
+                                vex.dialog.alert(response.message);
+                                setTimeout(function() {
+                                    loadURI(response.path);
+                                }, 2000);
 
-                                        success: function(response) {
-                                            if (response.status_code == 200) {
-                                                vex.dialog.alert(response.message);
-                                            } else if (response.status_code == 201) {
-                                                vex.dialog.alert(response.message);
-                                                window.location.href = response.link;
-                                            } else if (response.status_code == 202) {
-                                                vex.dialog.alert(response.message);
-                                                setTimeout(function() {
-                                                    loadURI(response.path);
-                                                }, 2000);
-
-                                            } else if (response.status_code == 203) {
-                                                vex.dialog.alert(response.message);
-                                                primary_table.ajax.reload(null, false);
-                                            } else if (response.status_code == 204) {
-                                                loadURI(response.path);
-                                            } else if (response.status_code == 300) {
-                                                vex.dialog.alert(response.message);
-                                            }}
-                                        });
-                                        $('.delete-record').attr("disabled", false);
-                                }
-                                // return;
+                            } else if (response.status_code == 203) {
+                                vex.dialog.alert(response.message);
+                                primary_table.ajax.reload(null, false);
+                            } else if (response.status_code == 204) {
+                                loadURI(response.path);
+                            } else if (response.status_code == 300) {
+                                vex.dialog.alert(response.message);
                             }
-                        );
+                        }
                     });
-
-
-                // jQuery(document).ready(function() {
-                //     jQuery('#ajaxSubmit').click(function(e) {
-                //         e.preventDefault();
-                //         $.ajaxSetup({
-                //             headers: {
-                //                 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                //             }
-                //         });
-                //         jQuery.ajax({
-                //             url: "{{ url('/chempionleague') }}",
-                //             method: 'post',
-                //             data: {
-                //                 name: jQuery('#name').val(),
-                //                 club: jQuery('#club').val(),
-                //                 country: jQuery('#country').val(),
-                //                 score: jQuery('#score').val(),
-                //             },
-                //             success: function(result) {
-                //                 if (result.errors) {
-                //                     jQuery('.alert-danger').html('');
-
-                //                     jQuery.each(result.errors, function(key, value) {
-                //                         jQuery('.alert-danger').show();
-                //                         jQuery('.alert-danger').append('<li>' + value +
-                //                             '</li>');
-                //                     });
-                //                 } else {
-                //                     jQuery('.alert-danger').hide();
-                //                     $('#open').hide();
-                //                     $('#myModal').modal('hide');
-                //                 }
-                //             }
-                //         });
-                //     });
-                // });
-    </script>
-
-
-    {{-- <script type="text/javascript">
-
-$(document).on('click','.open_modal',function(){
-        // var url = "domain.com/yoururl";
-        // var tour_id= $(this).val();
-        // $.get(url + '/' + tour_id, function (data) {
-        //     //success data
-        //     console.log(data);
-        //     $('#tour_id').val(data.id);
-        //     $('#name').val(data.name);
-        //     $('#details').val(data.details);
-        //     $('#btn-save').val("update");
-            $('#myModal').modal('show');
-        }) 
-    // });
-
-</script>  --}}
+                    $('.delete-record').attr("disabled", false);
+                }
+            }
+        );
+    });
+</script>
