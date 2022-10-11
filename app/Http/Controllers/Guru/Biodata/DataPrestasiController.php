@@ -197,7 +197,6 @@ class DataPrestasiController extends BaseController
 
         $list_data = PrestasiGuru::select(
             'prestasi_guru.nm_prestasi',
-            'prestasi_guru.keterangan',
             'prestasi_guru.jenis_prestasi',
             'prestasi_guru.peringkat',
             'prestasi_guru.link_sertifikat',
@@ -241,13 +240,13 @@ class DataPrestasiController extends BaseController
                             return $data;
                         })
                 ->addColumn('jenis_prestasi', function ($item) {
-                    if ($item->jenis_prestasi_siswa == 1) {
+                    if ($item->jenis_prestasi == 1) {
                         return "Sains";
-                    } elseif ($item->jenis_prestasi_siswa == 2) {
+                    } elseif ($item->jenis_prestasi == 2) {
                         return "Seni";
-                    } elseif ($item->jenis_prestasi_siswa == 3) {
+                    } elseif ($item->jenis_prestasi == 3) {
                         return "Olahraga";
-                    } elseif ($item->jenis_prestasi_siswa == 99) {
+                    } elseif ($item->jenis_prestasi == 99) {
                         return "Lain-Lain";
                     }
                 })
