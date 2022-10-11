@@ -214,10 +214,6 @@ class ApprovePrestasiSiswaController extends BaseController
             ->make(true);
     }
 
-
-
-
-
     public function datatablesPrestasiApprovePrestasiSiswa(Request $request, $id, $param)
     {
         $input = (object) $request->input();
@@ -432,7 +428,6 @@ class ApprovePrestasiSiswaController extends BaseController
         ];
     }
 
-
     public function datatablesApprovePrestasiSiswa(Request $request)
     {
 
@@ -553,7 +548,7 @@ class ApprovePrestasiSiswaController extends BaseController
 
                 if ($param_semua_siswa == 0) {
 
-                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                         // ->with('logKelasSiswa.kelas')
                         ->whereHas('kegiatan_siswa', function ($q) use ($auth_data, $param) {
                             if ($param == 0) {
@@ -613,7 +608,7 @@ class ApprovePrestasiSiswaController extends BaseController
                             },
                         ]);
                 } else {
-                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
+                    $data = Siswa::where('id_kelas', null)->select('siswa.id_siswa', 'siswa.nis_siswa', 'calon_siswa_baru.nm_c_siswa', 'nm_pengguna')
                         ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
                         ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
                         ->withCount([
@@ -874,7 +869,7 @@ class ApprovePrestasiSiswaController extends BaseController
                         );
                         return $data;
                     })->addColumn('nm_kelas', function ($item) {
-                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'des')->first();
+                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
                         // $kelas = Kelas::where('id_kelas',$id_kelas->id_id_kelas)->first();
                         if (isset($id_kelas->kelas->nm_kelas)) {
                             return $id_kelas->kelas->nm_kelas;
@@ -895,7 +890,7 @@ class ApprovePrestasiSiswaController extends BaseController
                     ->addColumn('informasi_tambahan', function ($item) {
                         return '<button class="btn bg-pink">' . $item->informasi_tambahan_not_approved . ' belum di approve</button>';
                     })->addColumn('nm_kelas', function ($item) {
-                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'des')->first();
+                        $id_kelas = LogKelasSiswa::where('id_siswa', $item->id_siswa)->with('kelas')->orderBy('created_at', 'desc')->first();
                         // $kelas = Kelas::where('id_kelas',$id_kelas->id_id_kelas)->first();
                         if (isset($id_kelas->kelas->nm_kelas)) {
                             return $id_kelas->kelas->nm_kelas;
@@ -1026,15 +1021,15 @@ class ApprovePrestasiSiswaController extends BaseController
 
             $prestasi->save();
 
-            if ($auth_data->pengguna->status_join_table == 2) {
-                $path = 'wali-kelas/edit-prestasi-siswa/' . $id;
-            } else {
-                $path = 'skpi/edit-prestasi-siswa/' . $id;
-            }
+            // if ($auth_data->pengguna->status_join_table == 2) {
+            //     $path = 'wali-kelas/edit-prestasi-siswa/' . $id;
+            // } else {
+            //     $path = 'skpi/edit-prestasi-siswa/' . $id;
+            // }
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => $path,
+                'path' => 'skpi/edit-prestasi-siswa/' . $id,
                 'message' => 'Edit Prestasi Successfully'
             ];
         }
@@ -1095,15 +1090,15 @@ class ApprovePrestasiSiswaController extends BaseController
             $kegiatan->updated_by = $input->auth_data->pengguna->id_pengguna;
             $kegiatan->save();
 
-            if ($auth_data->pengguna->status_join_table == 2) {
-                $path = 'wali-kelas/edit-kegiatan-siswa/' . $id;
-            } else {
-                $path = 'skpi/edit-kegiatan-siswa/' . $id;
-            }
+            // if ($auth_data->pengguna->status_join_table == 2) {
+            //     $path = 'wali-kelas/edit-kegiatan-siswa/' . $id;
+            // } else {
+            //     $path = 'skpi/edit-kegiatan-siswa/' . $id;
+            // }
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => $path,
+                'path' => 'skpi/edit-kegiatan-siswa/' . $id,
                 'message' => 'Edit Prestasi Successfully'
             ];
         }
@@ -1145,15 +1140,15 @@ class ApprovePrestasiSiswaController extends BaseController
             $informasi->updated_by = $input->auth_data->pengguna->id_pengguna;
             $informasi->save();
 
-            if ($auth_data->pengguna->status_join_table == 2) {
-                $path = 'wali-kelas/edit-informasi-tambahan-siswa/' . $id;
-            } else {
-                $path = 'skpi/edit-informasi-tambahan-siswa/' . $id;
-            }
+            // if (true) {
+            //     $path = 'wali-kelas/edit-informasi-tambahan-siswa/' . $id;
+            // } else {
+            //     $path = 'skpi/edit-informasi-tambahan-siswa/' . $id;
+            // }
 
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
-                'path' => $path,
+                'path' => 'skpi/edit-informasi-tambahan-siswa/' . $id,
                 'message' => 'Edit Informasi Tambahan Successfully'
             ];
         }
