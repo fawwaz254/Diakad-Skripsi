@@ -226,6 +226,17 @@
             },
         ]
     });
+
+    primary_table.on( 'draw', function () {
+        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            var start = this.page.info().page * this.page.info().length;
+            cell.innerHTML = start + i + 1;
+            primary_table.cell(cell).invalidate('dom');
+        } );
+    } ).draw();
+
+    primary_table.buttons().container()
+            .appendTo( $('.col-sm-6:eq(0)', primary_table.table().container() ) );
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
