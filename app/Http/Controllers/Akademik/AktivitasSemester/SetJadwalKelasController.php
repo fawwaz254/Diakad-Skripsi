@@ -50,7 +50,7 @@ class SetJadwalKelasController extends Controller
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => 'Harap untuk memilih kelas terlebih dahulu'
             ];
         } else {
             return [
