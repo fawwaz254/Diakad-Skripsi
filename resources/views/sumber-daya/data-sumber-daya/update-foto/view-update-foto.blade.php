@@ -18,9 +18,9 @@
                                 </h2>
                                 <select class="form-control show-tick" name="unit_kerja" id="unit_kerja">
                                     <option value="0">-- Semua --</option>
-                                    @foreach($list_unit_kerja as $unit_kerja)
+                                    {{-- @foreach($list_unit_kerja as $unit_kerja)
                                         <option value="{{$unit_kerja->id_unit_kerja}}">{{$unit_kerja->nm_unit_kerja}}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                             <div class="col-md-6 col-sm-12 col-xs-12">

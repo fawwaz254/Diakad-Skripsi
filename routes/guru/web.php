@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
 use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
@@ -59,6 +60,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\Jadwal\SetJadwalKelasGuruController;
 
 // ROLE GURU
 
@@ -250,7 +252,21 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-jadwal/edit/{id}', [InputJadwalController::class, 'editInputJadwal']);
 
             Route::post('action-input-jadwal/{mode}/{id}', [InputJadwalController::class, 'actionInputJadwal']);
+
+            //menu set jadwal kelas
+            Route::get('set-jadwal-kelas', [SetJadwalKelasGuruController::class, 'viewSetJadwalKelas']);
+            Route::post('set-jadwal-kelas', [SetJadwalKelasGuruController::class, 'actionSetJadwalKelas']);
+            Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'viewTambahJadwalKelas']);
+            Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasGuruController::class, 'actionTambahJadwalKelas']);
         });
+
+        // Route::prefix('aktivitas-semester')->group(function () {
+        //     Route::get('set-jadwal-kelas', [SetJadwalKelasController::class, 'viewSetJadwalKelas']);
+        //     Route::post('set-jadwal-kelas', [SetJadwalKelasController::class, 'actionSetJadwalKelas']);
+        //     Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
+        //     Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasController::class, 'actionTambahJadwalKelas']);
+        // });
+
 
         Route::prefix('presensi')->group(function () {
             // MENU Absensi Siswa
