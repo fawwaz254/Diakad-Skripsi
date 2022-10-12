@@ -128,7 +128,7 @@ class NamaSemesterController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/nama-semester',
-                    'message' => 'Save Nama Semester successfully'
+                    'message' => 'Save Nama Semester Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -158,7 +158,7 @@ class NamaSemesterController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/nama-semester',
-                    'message' => 'Update Nama Semester successfully'
+                    'message' => 'Update Nama Semester Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -179,7 +179,7 @@ class NamaSemesterController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Nama Semester successfully'
+                        'message' => 'Delete Nama Semester Successfully'
                     ]; 
                 }
                 

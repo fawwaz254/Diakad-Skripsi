@@ -113,7 +113,7 @@ class JenisRuanganController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-ruangan/jenis-ruangan',
-                    'message' => 'Save Jenis Ruangan successfully'
+                    'message' => 'Save Jenis Ruangan Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -127,7 +127,7 @@ class JenisRuanganController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-ruangan/jenis-ruangan',
-                    'message' => 'Update Jenis Ruangan successfully'
+                    'message' => 'Update Jenis Ruangan Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($ruangan = Ruangan::where('id_jenis_ruangan', $id)->first()) {
@@ -145,7 +145,7 @@ class JenisRuanganController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jenis Ruangan successfully'
+                        'message' => 'Delete Jenis Ruangan Successfully'
                     ];
                 }
             }

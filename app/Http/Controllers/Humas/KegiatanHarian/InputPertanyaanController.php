@@ -151,7 +151,7 @@ class InputPertanyaanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'kegiatan-harian/input-pertanyaan',
-                    'message' => 'Save successfully'
+                    'message' => 'Save Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -165,7 +165,7 @@ class InputPertanyaanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'kegiatan-harian/input-pertanyaan',
-                    'message' => 'Update successfully'
+                    'message' => 'Update Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -185,7 +185,7 @@ class InputPertanyaanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Pertanyaan successfully'
+                        'message' => 'Delete Pertanyaan Successfully'
                     ];
                 }
             }
@@ -248,7 +248,7 @@ class InputPertanyaanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'kegiatan-harian/input-pertanyaan/jawaban/detail/'.$kegiatan_harian_jawaban->id_kegiatan_harian_pertanyaan,
-                    'message' => 'Save successfully'
+                    'message' => 'Save Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -263,7 +263,7 @@ class InputPertanyaanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'kegiatan-harian/input-pertanyaan/jawaban/detail/'.$kegiatan_harian_jawaban->id_kegiatan_harian_pertanyaan,
-                    'message' => 'Update successfully'
+                    'message' => 'Update Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -274,7 +274,7 @@ class InputPertanyaanController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete successfully'
+                    'message' => 'Delete Successfully'
                 ];
             }
         }

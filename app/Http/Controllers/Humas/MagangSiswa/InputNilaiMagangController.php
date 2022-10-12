@@ -253,21 +253,21 @@ class InputNilaiMagangController extends BaseController
 		                }else{
                             return [
                                 'status' => 202,
-                                'message' => 'Save successfully',
+                                'message' => 'Save Successfully',
                                 'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang
                             ];
 						}	
 					}else{
                           return [
                               'status' => 202,
-                              'message' => 'Save successfully',
+                              'message' => 'Save Successfully',
                               'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang
                           ];
 					}	
             	}
                 return [
                     'status' => 202,
-                    'message' => 'Save successfully',
+                    'message' => 'Save Successfully',
                     'path' => 'magang-siswa/input-nilai-magang/view-komponen/'.$id_periode_magang
                 ];
             }

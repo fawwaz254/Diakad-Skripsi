@@ -91,7 +91,7 @@ class InformasiTambahanController extends Controller
         		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'skpi/informasi_tambahan',
-                    'message' => 'Save Informasi Tambahan successfully'
+                    'message' => 'Save Informasi Tambahan Successfully'
                 ];
 
         	}
@@ -109,7 +109,7 @@ class InformasiTambahanController extends Controller
 	    		return [
 	                    'status' => 202, // SUCCESS AND LOAD CONTENT
 	                    'path' => 'skpi/informasi_tambahan',
-	                    'message' => 'Edit Informasi Tambahan successfully'
+	                    'message' => 'Edit Informasi Tambahan Successfully'
 	                ];
 
         	}
@@ -125,7 +125,7 @@ class InformasiTambahanController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Informasi Tambahan successfully'
+                    'message' => 'Delete Informasi Tambahan Successfully'
                 ];
 
         	}

@@ -324,7 +324,7 @@ class InputGuruController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'guru/input-guru',
-                    'message' => 'Save Guru successfully'
+                    'message' => 'Save Guru Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // get id_pengguna
@@ -437,7 +437,7 @@ class InputGuruController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'guru/input-guru',
-                    'message' => 'Update Guru successfully'
+                    'message' => 'Update Guru Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($pengampuMp = PengampuMp::where('id_guru', $id)->first()) {
@@ -462,7 +462,7 @@ class InputGuruController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Guru successfully!'
+                        'message' => 'Delete Guru Successfully!'
                     ];
                 }
             }

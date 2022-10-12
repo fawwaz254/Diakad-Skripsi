@@ -102,7 +102,7 @@ class KategoriPemasukanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pemasukan-sekolah/kategori-pemasukan',
-                    'message' => 'Save Kategori Pemasukan successfully'
+                    'message' => 'Save Kategori Pemasukan Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class KategoriPemasukanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pemasukan-sekolah/kategori-pemasukan',
-                    'message' => 'Update Kategori Pemasukan successfully'
+                    'message' => 'Update Kategori Pemasukan Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class KategoriPemasukanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pemasukan successfully'
+                        'message' => 'Delete Kategori Pemasukan Successfully'
                     ];
                 }
             }

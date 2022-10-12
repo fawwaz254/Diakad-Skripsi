@@ -288,7 +288,7 @@ class InputTendikController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'tendik/input-tendik',
-                    'message' => 'Save Tendik successfully'
+                    'message' => 'Save Tendik Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -400,7 +400,7 @@ class InputTendikController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'tendik/input-tendik',
-                    'message' => 'Update Tendik successfully'
+                    'message' => 'Update Tendik Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -428,7 +428,7 @@ class InputTendikController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Tendik successfully'
+                        'message' => 'Delete Tendik Successfully'
                     ];
             }
         }

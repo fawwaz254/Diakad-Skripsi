@@ -191,7 +191,7 @@ class BiayaSekolahController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-sekolah',
-                    'message' => 'Save Biaya Sekolah successfully'
+                    'message' => 'Save Biaya Sekolah Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -212,7 +212,7 @@ class BiayaSekolahController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-sekolah',
-                    'message' => 'Update Biaya Sekolah successfully'
+                    'message' => 'Update Biaya Sekolah Successfully'
                 ];
             } elseif ($mode == 'copy') {
                 DB::beginTransaction();
@@ -291,7 +291,7 @@ class BiayaSekolahController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-keuangan/biaya-sekolah',
-                        'message' => 'Copy Biaya Sekolah successfully'
+                        'message' => 'Copy Biaya Sekolah Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -318,7 +318,7 @@ class BiayaSekolahController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Biaya Sekolah successfully'
+                        'message' => 'Delete Biaya Sekolah Successfully'
                     ];
                 }
             }

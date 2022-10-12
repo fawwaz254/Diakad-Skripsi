@@ -102,7 +102,7 @@ class WisudaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'wisuda/nama-wisuda',
-                    'message' => 'Save Wisuda successfully'
+                    'message' => 'Save Wisuda Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class WisudaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'wisuda/nama-wisuda',
-                    'message' => 'Update Wisuda successfully'
+                    'message' => 'Update Wisuda Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class WisudaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Wisuda successfully'
+                        'message' => 'Delete Wisuda Successfully'
                     ];
                 }
             }

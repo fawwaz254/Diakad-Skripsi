@@ -123,7 +123,7 @@ class DataFileController extends Controller
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'mgmp/data-file-mapel/sub-category/' . $input->sub_category_file_id,
-                'message' => 'Delete File successfully'
+                'message' => 'Delete File Successfully'
             ];
         }
 
@@ -137,7 +137,7 @@ class DataFileController extends Controller
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'mgmp/data-file-mapel/sub-category/' . $input->sub_category_file_id,
-                'message' => 'Delete File successfully'
+                'message' => 'Delete File Successfully'
             ];
         }
       
@@ -239,7 +239,7 @@ class DataFileController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'mgmp/data-file-mapel/sub-category/'.$input->sub_category_file_id,
-                    'message' => 'Save File Pegguna successfully'
+                    'message' => 'Save File Pegguna Successfully'
                 ];
             }
         }

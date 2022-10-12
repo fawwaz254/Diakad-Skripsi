@@ -261,7 +261,7 @@ class UjianUASController extends BaseController
         return [
           'status' => 202, // SUCCESS AND LOAD CONTENT
           'path' => 'ujian/ujian-uas-reguler-online/add/' . $input->is_online,
-          'message' => 'Save Ujian UAS successfully'
+          'message' => 'Save Ujian UAS Successfully'
         ];
       } elseif ($mode == 'edit') {
         $ujian                        = UjianMp::find($id);
@@ -286,7 +286,7 @@ class UjianUASController extends BaseController
         return [
           'status' => 202, // SUCCESS AND LOAD CONTENT
           'path' => 'ujian/ujian-uas-reguler-online',
-          'message' => 'Save Ujian UAS successfully'
+          'message' => 'Save Ujian UAS Successfully'
         ];
       } elseif ($mode == 'delete') {
         $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
@@ -337,7 +337,7 @@ class UjianUASController extends BaseController
           return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
             'path' => 'ujian/ujian-uas-reguler-online/',
-            'message' => 'Tambah Peserta UAS successfully'
+            'message' => 'Tambah Peserta UAS Successfully'
           ];
         } catch (\Exception $e) {
           DB::rollback();

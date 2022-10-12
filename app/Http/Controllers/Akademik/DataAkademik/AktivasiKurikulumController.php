@@ -115,7 +115,7 @@ class AktivasiKurikulumController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/aktivasi-kurikulum',
-                    'message' => 'Update Aktivasi Kurikulum successfully'
+                    'message' => 'Update Aktivasi Kurikulum Successfully'
                 ];
             }
         }

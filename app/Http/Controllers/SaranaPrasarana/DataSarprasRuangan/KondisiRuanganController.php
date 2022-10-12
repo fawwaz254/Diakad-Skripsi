@@ -132,7 +132,7 @@ class KondisiRuanganController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-sarpras-ruangan/kondisi-ruangan',
-                        'message' => 'Save Kondisi Ruangan successfully'
+                        'message' => 'Save Kondisi Ruangan Successfully'
                     ];
                 }
             } elseif ($mode == 'edit') {
@@ -156,7 +156,7 @@ class KondisiRuanganController extends BaseController
                         return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
                             'path' => 'data-sarpras-ruangan/kondisi-ruangan',
-                            'message' => 'Update Kondisi Ruangan successfully'
+                            'message' => 'Update Kondisi Ruangan Successfully'
                         ];
                     }
                 }
@@ -170,7 +170,7 @@ class KondisiRuanganController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Kondisi Ruangan successfully'
+                    'message' => 'Delete Kondisi Ruangan Successfully'
                 ];
             }
         }

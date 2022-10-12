@@ -212,7 +212,7 @@ class PenetapanController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penetapan/data-penetapan',
-                    'message' => 'Save Penetapan successfully'
+                    'message' => 'Save Penetapan Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -236,7 +236,7 @@ class PenetapanController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penetapan/data-penetapan',
-                    'message' => 'Update Penetapan successfully'
+                    'message' => 'Update Penetapan Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -248,7 +248,7 @@ class PenetapanController extends BaseController {
                     $penetapan->delete();
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Penetapan successfully'
+                        'message' => 'Delete Penetapan Successfully'
                     ];
                 
             }
@@ -285,7 +285,7 @@ class PenetapanController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penetapan/data-penetapan/view-penetapan-penerimaan/'.$input->id_penetapan,
-                    'message' => 'Save Penetapan Penerimaan successfully'
+                    'message' => 'Save Penetapan Penerimaan Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -310,7 +310,7 @@ class PenetapanController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penetapan/data-penetapan',
-                    'message' => 'Update Penetapan Penerimaan successfully'
+                    'message' => 'Update Penetapan Penerimaan Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -323,7 +323,7 @@ class PenetapanController extends BaseController {
                     $penetapan_penerimaan->delete();
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Penetapan Penerimaan successfully'
+                        'message' => 'Delete Penetapan Penerimaan Successfully'
                     ];
                 
             }

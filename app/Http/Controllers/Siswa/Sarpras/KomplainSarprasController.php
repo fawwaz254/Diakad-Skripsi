@@ -386,7 +386,7 @@ class KomplainSarprasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/'.$input->id_ruangan,
-                    'message' => 'Save Komplain Sarpras successfully'
+                    'message' => 'Save Komplain Sarpras Successfully'
                 ];
             }
             elseif($mode == 'edit-ruangan') {
@@ -409,7 +409,7 @@ class KomplainSarprasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sarpras/komplain-sarpras/ruangan-sarpras/view-ruangan/'.$input->id_ruangan,
-                    'message' => 'Update Komplain Sarpras successfully'
+                    'message' => 'Update Komplain Sarpras Successfully'
                 ];
             }
             elseif($mode == 'delete-ruangan') {
@@ -422,7 +422,7 @@ class KomplainSarprasController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Komplain Sarpras successfully'
+                    'message' => 'Delete Komplain Sarpras Successfully'
                 ];
             }
             //** MODE UNTUK BUKU/ALAT
@@ -442,7 +442,7 @@ class KomplainSarprasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/'.$input->id_buku_alat,
-                    'message' => 'Save Komplain Sarpras successfully'
+                    'message' => 'Save Komplain Sarpras Successfully'
                 ];
             }
             elseif($mode == 'edit-bukualat') {
@@ -459,7 +459,7 @@ class KomplainSarprasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sarpras/komplain-sarpras/bukualat-sarpras/view-bukualat/'.$input->id_buku_alat,
-                    'message' => 'Update Komplain Sarpras successfully'
+                    'message' => 'Update Komplain Sarpras Successfully'
                 ];
             }
             elseif($mode == 'delete-bukualat') {
@@ -472,7 +472,7 @@ class KomplainSarprasController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Komplain Sarpras successfully'
+                    'message' => 'Delete Komplain Sarpras Successfully'
                 ];
             }
         }

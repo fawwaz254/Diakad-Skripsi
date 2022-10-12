@@ -154,7 +154,7 @@ class AdmisiSiswaController extends BaseController
                         return [
                       'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
                       'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
-                      'message' => 'Update Admisi successfully'
+                      'message' => 'Update Admisi Successfully'
                   ];
                     }
                 } else {
@@ -221,7 +221,7 @@ class AdmisiSiswaController extends BaseController
                             return [
                           'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
                           'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
-                          'message' => 'Insert Admisi successfully'
+                          'message' => 'Insert Admisi Successfully'
                       ];
                         }
                     } else {

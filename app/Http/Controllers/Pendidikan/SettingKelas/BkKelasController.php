@@ -225,7 +225,7 @@ class BkKelasController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'setting-kelas/bk-kelas/view-kelas/'.$input->id_kelas,
-                        'message' => 'Save BK Kelas successfully'
+                        'message' => 'Save BK Kelas Successfully'
                     ];
                 }
             } 
@@ -257,7 +257,7 @@ class BkKelasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'setting-kelas/bk-kelas/view-kelas/'.$input->id_kelas,
-                    'message' => 'Update BK Kelas successfully'
+                    'message' => 'Update BK Kelas Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
@@ -269,7 +269,7 @@ class BkKelasController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete BK Kelas successfully'
+                    'message' => 'Delete BK Kelas Successfully'
                 ];
             }
         }

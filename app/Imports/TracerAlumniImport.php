@@ -166,7 +166,7 @@ class TracerAlumniImport implements ToCollection, WithHeadingRow
 
                     DB::commit();
 
-                    Debugbar::error('Save Siswa Tracer alumni successfully');
+                    Debugbar::error('Save Siswa Tracer alumni Successfully');
                 } catch (\Exception $e) {
 
                     DB::rollback();

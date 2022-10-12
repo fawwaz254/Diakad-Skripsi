@@ -256,7 +256,7 @@ class PengajuanWisudaController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'wisuda/pengajuan-wisuda/view-detail/'.$input->id_periode_wisuda.'/'.$input->id_kelas,
-                        'message' => 'Cancel Pengajuan Wisuda successfully'
+                        'message' => 'Cancel Pengajuan Wisuda Successfully'
                     ];
                 }
             }
@@ -354,7 +354,7 @@ class PengajuanWisudaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Pengajuan Wisuda successfully'
+                        'message' => 'Pengajuan Wisuda Successfully'
                     ];
                     
                 } catch (\Exception $e) {

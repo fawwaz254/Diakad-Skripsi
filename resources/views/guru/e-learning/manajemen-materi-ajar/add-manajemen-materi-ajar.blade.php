@@ -57,8 +57,7 @@
 
                             <div class="col-md-6">
                                 <label>Judul Materi</label>
-                                <input type="text" class="form-control" name="judul_materi" required=""
-                                    aria-required="true" aria-invalid="true">
+                                <input type="text" class="form-control" name="judul_materi" aria-invalid="true">
                             </div>
 
                         </div>
@@ -89,8 +88,8 @@
 
                             <div class="col-md-5" style="display:none;" id="place_link">
                                 <label>Link</label>
-                                <input type="text" class="form-control" name="link[]" aria-required="true" required=""
-                                    aria-invalid="true" />
+                                <input type="text" class="form-control" name="link[]" aria-required="true"
+                                    required="" aria-invalid="true" />
                             </div>
 
                             <div class="col-md-5" id="place_file">
@@ -137,7 +136,7 @@
 @include('scriptjs')
 
 <script type="text/javascript">
- $(document).ready(function() {
+    $(document).ready(function() {
         $('select').select();
     });
 
@@ -149,7 +148,8 @@
         console.log(e);
         var id_jurusan = e.target.value;
         // alert(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan);
-        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' + id_jurusan,
+        $.get(base_url + '/' + role_url + '/' + modul_url + '/' + 'manajemen-materi-ajar/get-kelas/' +
+            id_jurusan,
             function(data) {
                 console.log(data);
                 $('#kelas').empty();
@@ -224,9 +224,9 @@
                     } else if (response.status == 202) {
                         vex.dialog.alert(response.message);
                         loadURI(response.path);
-                    // } else if (response.status == 203) {
-                    //     vex.dialog.alert(response.message);
-                    //     primary_table.ajax.reload(null, false);
+                        // } else if (response.status == 203) {
+                        //     vex.dialog.alert(response.message);
+                        //     primary_table.ajax.reload(null, false);
                     } else if (response.status == 204) {
                         loadURI(response.path);
                     } else if (response.status == 300) {

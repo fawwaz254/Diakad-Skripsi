@@ -111,7 +111,7 @@ class PeriodeMagangController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'magang-siswa/periode-magang',
-                'message' => 'Save Periode Magang successfully'
+                'message' => 'Save Periode Magang Successfully'
             ];
         }
         elseif($mode == 'edit'){
@@ -131,7 +131,7 @@ class PeriodeMagangController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'magang-siswa/periode-magang',
-                'message' => 'Update Periode Magang successfully'
+                'message' => 'Update Periode Magang Successfully'
             ];
         }
         elseif($mode == 'delete'){
@@ -151,7 +151,7 @@ class PeriodeMagangController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Periode Magang successfully'
+                    'message' => 'Delete Periode Magang Successfully'
                 ];
             }
         }

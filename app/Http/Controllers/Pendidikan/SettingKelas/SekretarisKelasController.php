@@ -221,7 +221,7 @@ class SekretarisKelasController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'setting-kelas/sekretaris-kelas/view-kelas/'.$input->id_kelas,
-                        'message' => 'Save Sekretaris Kelas successfully'
+                        'message' => 'Save Sekretaris Kelas Successfully'
                     ];
                 }
             }
@@ -251,7 +251,7 @@ class SekretarisKelasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'setting-kelas/sekretaris-kelas/view-kelas/'.$input->id_kelas,
-                    'message' => 'Update Sekretaris Kelas successfully'
+                    'message' => 'Update Sekretaris Kelas Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -264,7 +264,7 @@ class SekretarisKelasController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Sekretaris Kelas successfully'
+                    'message' => 'Delete Sekretaris Kelas Successfully'
                 ];
             }
         }

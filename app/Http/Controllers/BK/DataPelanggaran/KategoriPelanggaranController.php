@@ -104,7 +104,7 @@ class KategoriPelanggaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-pelanggaran/kategori-pelanggaran',
-                    'message' => 'Save Kategori Pelanggaran successfully'
+                    'message' => 'Save Kategori Pelanggaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -120,7 +120,7 @@ class KategoriPelanggaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-pelanggaran/kategori-pelanggaran',
-                    'message' => 'Save Kategori Pelanggaran successfully'
+                    'message' => 'Save Kategori Pelanggaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -140,7 +140,7 @@ class KategoriPelanggaranController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pelanggaran successfully'
+                        'message' => 'Delete Kategori Pelanggaran Successfully'
                     ];
                 }
             }

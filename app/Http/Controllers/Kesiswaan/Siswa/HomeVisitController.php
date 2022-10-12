@@ -241,7 +241,7 @@ class HomeVisitController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/home-visit',
-                    'message' => 'Save Data Home Visit successfully'
+                    'message' => 'Save Data Home Visit Successfully'
                 ];
             }
         }

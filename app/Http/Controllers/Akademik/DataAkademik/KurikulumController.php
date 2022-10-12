@@ -151,7 +151,7 @@ class KurikulumController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/kurikulum',
-                    'message' => 'Save Kurikulum successfully'
+                    'message' => 'Save Kurikulum Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -173,7 +173,7 @@ class KurikulumController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/kurikulum',
-                    'message' => 'Update Kurikulum successfully'
+                    'message' => 'Update Kurikulum Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -193,7 +193,7 @@ class KurikulumController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kurikulum successfully'
+                        'message' => 'Delete Kurikulum Successfully'
                     ];
                 }
             }

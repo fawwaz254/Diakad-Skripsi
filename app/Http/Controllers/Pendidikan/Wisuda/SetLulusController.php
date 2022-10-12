@@ -307,7 +307,7 @@ class SetLulusController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Set Lulus successfully'
+                        'message' => 'Set Lulus Successfully'
                     ];
 
                 } catch (\Exception $e) {

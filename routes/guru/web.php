@@ -152,8 +152,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('view/{id}', [ManajemenMateriAjarController::class, 'listViewManajemenMateriAjar']);
                 Route::get('view/datatables/{id}', [ManajemenMateriAjarController::class, 'datatablesViewManajemenMateriAjar']);
                 Route::post('deleteItem/{id_materi_ajar_file}', [ManajemenMateriAjarController::class, 'deleteItem']);
-                Route::post('action-manajemen-materi-ajar/{mode}/{id}', [ManajemenMateriAjarController::class, 'actionManajemenMateriAjar']);
             });
+            Route::post('action-manajemen-materi-ajar/{mode}/{id}', [ManajemenMateriAjarController::class, 'actionManajemenMateriAjar']);
         });
 
         Route::prefix('e-learning-soal')->group(function () {
@@ -536,11 +536,11 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('approve-prestasi-siswa', [ApprovePrestasiSiswaController::class, 'viewApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/datatables', [ApprovePrestasiSiswaController::class, 'datatablesApprovePrestasiSiswa']);
-            Route::get('approve-prestasi-siswa/{id}/{param}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
-            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);
+            Route::get('approve-prestasi-siswa/{id}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
+            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/print/skpi/{id}', [ApprovePrestasiSiswaController::class, 'PrintSkpi']);
-            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesKegiatanApprovePrestasiSiswa']);
-            Route::get('approve-prestasi-siswa/informasi-tambahan/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesInformasiTambahan']);
+            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', [ApprovePrestasiSiswaController::class, 'datatablesKegiatanApprovePrestasiSiswa']);
+            Route::get('approve-prestasi-siswa/informasi-tambahan/datatables/{id}', [ApprovePrestasiSiswaController::class, 'datatablesInformasiTambahan']);
             Route::post('approve-prestasi-siswa/{data}/{id}', [ApprovePrestasiSiswaController::class, 'actionApprovePrestasiSiswa']);
             Route::post('reject-prestasi-siswa/{data}/{id}', [ApprovePrestasiSiswaController::class, 'actionRejectPrestasiSiswa']);
 

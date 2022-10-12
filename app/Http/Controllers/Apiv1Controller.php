@@ -195,7 +195,7 @@ class Apiv1Controller extends BaseController
             return response()->json([
                 'status_code' 	=> 200,
                 'status_text' 	=> 'Success',
-                'message' => 'Update data pribadi successfully'
+                'message' => 'Update Data Pribadi Successfully'
             ]);
         } catch (\Exception $e) {
             DB::rollback();
@@ -502,7 +502,7 @@ class Apiv1Controller extends BaseController
                     return response()->json([
                         'status_code' 	=> 200,
                         'status_text' 	=> 'Success',
-                        'message' => 'Save Absensi Harian Siswa successfully'
+                        'message' => 'Save Absensi Harian Siswa Successfully'
                     ]);
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -526,7 +526,7 @@ class Apiv1Controller extends BaseController
                     return response()->json([
                         'status_code' 	=> 200,
                         'status_text' 	=> 'Success',
-                        'message' => 'Delete Absensi Harian Siswa successfully'
+                        'message' => 'Delete Absensi Harian Siswa Successfully'
                     ]);
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -596,7 +596,7 @@ $validator = Validator::make($request->all(), $syarat);
 
         return  [
             'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Delete successfully'
+            'message' => 'Delete Successfully'
         ];
     }
     public function getdatamonitoringkesehatan(Request $request){
@@ -1550,7 +1550,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
-                    $message = 'Save Komplain Sarpras successfully';
+                    $message = 'Save Komplain Sarpras Successfully';
                 } elseif ($mode == 'edit-ruangan') {
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -1567,7 +1567,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
-                    $message = 'Update Komplain Sarpras successfully';
+                    $message = 'Update Komplain Sarpras Successfully';
                 } elseif ($mode == 'delete-ruangan') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -1576,7 +1576,7 @@ $validator = Validator::make($request->all(), $syarat);
 
                     $komplainSarpras->delete();
 
-                    $message = 'Delete Komplain Sarpras successfully';
+                    $message = 'Delete Komplain Sarpras Successfully';
                 }
                 //** MODE UNTUK BUKU/ALAT
                 elseif ($mode == 'add-bukualat') {
@@ -1592,7 +1592,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
-                    $message = 'Save Komplain Sarpras successfully';
+                    $message = 'Save Komplain Sarpras Successfully';
                 } elseif ($mode == 'edit-bukualat') {
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -1604,7 +1604,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
-                    $message = 'Update Komplain Sarpras successfully';
+                    $message = 'Update Komplain Sarpras Successfully';
                 } elseif ($mode == 'delete-bukualat') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -1613,7 +1613,7 @@ $validator = Validator::make($request->all(), $syarat);
 
                     $komplainSarpras->delete();
 
-                    $message = 'Delete Komplain Sarpras successfully';
+                    $message = 'Delete Komplain Sarpras Successfully';
                 }
 
                 DB::commit();
@@ -2231,7 +2231,7 @@ $validator = Validator::make($request->all(), $syarat);
                     return response()->json([
                         'status_code' 	=> 200,
                         'status_text' 	=> 'Success',
-                        'message' => 'Update Usulan Mata Ajar successfully'
+                        'message' => 'Update Usulan Mata Ajar Successfully'
                     ]);
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -2404,7 +2404,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $return_array = [
                         'status_code' 	=> 200,
                         'status_text' 	=> 'Success',
-                        'message' 	=> 'Save Pelanggaran Siswa successfully',
+                        'message' 	=> 'Save Pelanggaran Siswa Successfully',
                         'data' => json_decode($result, true)
                     ];
                 } elseif ($mode == 'edit') {
@@ -2423,7 +2423,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $return_array = [
                         'status_code' 	=> 200,
                         'status_text' 	=> 'Success',
-                        'message' 	=> 'Update Pelanggaran Siswa successfully'
+                        'message' 	=> 'Update Pelanggaran Siswa Successfully'
                     ];
                 } elseif ($mode == 'delete') {
                     $id = $input->id;
@@ -2445,7 +2445,7 @@ $validator = Validator::make($request->all(), $syarat);
                         $return_array = [
                             'status_code' 	=> 200,
                             'status_text' 	=> 'Success',
-                            'message' 	=> 'Delete Pelanggaran Siswa successfully'
+                            'message' 	=> 'Delete Pelanggaran Siswa Successfully'
                         ];
                     }
                 }
@@ -2956,7 +2956,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
-                    $message = 'Save Komplain Sarpras successfully';
+                    $message = 'Save Komplain Sarpras Successfully';
                 } elseif ($mode == 'edit-ruangan') {
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -2973,7 +2973,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
-                    $message = 'Update Komplain Sarpras successfully';
+                    $message = 'Update Komplain Sarpras Successfully';
                 } elseif ($mode == 'delete-ruangan') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -2982,7 +2982,7 @@ $validator = Validator::make($request->all(), $syarat);
 
                     $komplainSarpras->delete();
 
-                    $message = 'Delete Komplain Sarpras successfully';
+                    $message = 'Delete Komplain Sarpras Successfully';
                 }
                 //** MODE UNTUK BUKU/ALAT
                 elseif ($mode == 'add-bukualat') {
@@ -2998,7 +2998,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->created_by                = $input->auth_data->pengguna->id_pengguna;
                     $komplainSarpras->save();
 
-                    $message = 'Save Komplain Sarpras successfully';
+                    $message = 'Save Komplain Sarpras Successfully';
                 } elseif ($mode == 'edit-bukualat') {
                     // make object to find id
                     $komplainSarpras                            = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -3010,7 +3010,7 @@ $validator = Validator::make($request->all(), $syarat);
                     $komplainSarpras->updated_at                = $now;
                     $komplainSarpras->save();
 
-                    $message = 'Update Komplain Sarpras successfully';
+                    $message = 'Update Komplain Sarpras Successfully';
                 } elseif ($mode == 'delete-bukualat') {
                     // make object to find id
                     $komplainSarpras               = KomplainSarpras::find($input->id_komplain_sarpras);
@@ -3019,7 +3019,7 @@ $validator = Validator::make($request->all(), $syarat);
 
                     $komplainSarpras->delete();
 
-                    $message = 'Delete Komplain Sarpras successfully';
+                    $message = 'Delete Komplain Sarpras Successfully';
                 }
 
                 DB::commit();
@@ -3372,7 +3372,7 @@ $validator = Validator::make($request->all(), $syarat);
     return response()->json([
         'status_code' 	=> 200,
         'status_text' 	=> 'Success',
-        'message' => 'Update data pribadi successfully'
+        'message' => 'Update Data Pribadi Successfully'
     ]);
 } catch (\Exception $e) {
     DB::rollback();

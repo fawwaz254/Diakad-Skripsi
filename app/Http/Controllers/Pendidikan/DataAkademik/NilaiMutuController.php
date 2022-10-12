@@ -104,7 +104,7 @@ class NilaiMutuController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/nilai-mutu',
-                    'message' => 'Save Nilai Mutu successfully'
+                    'message' => 'Save Nilai Mutu Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -120,7 +120,7 @@ class NilaiMutuController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/nilai-mutu',
-                    'message' => 'Update Nilai Mutu successfully'
+                    'message' => 'Update Nilai Mutu Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -140,7 +140,7 @@ class NilaiMutuController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Nilai Mutu successfully'
+                        'message' => 'Delete Nilai Mutu Successfully'
                     ];
                 }
             }

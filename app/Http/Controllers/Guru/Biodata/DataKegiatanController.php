@@ -112,7 +112,7 @@ class DataKegiatanController extends BaseController{
         		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => $path,
-                    'message' => 'Save Kegiatan successfully'
+                    'message' => 'Save Kegiatan Successfully'
                 ];
 
         	}
@@ -144,7 +144,7 @@ class DataKegiatanController extends BaseController{
 	    		return [
 	                    'status' => 202, // SUCCESS AND LOAD CONTENT
 	                    'path' => $path,
-	                    'message' => 'Edit Kegiatan successfully'
+	                    'message' => 'Edit Kegiatan Successfully'
 	                ];
 
         	}
@@ -160,7 +160,7 @@ class DataKegiatanController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Kegiatan successfully'
+                    'message' => 'Delete Kegiatan Successfully'
                 ];
 
         	}

@@ -176,7 +176,7 @@ class RekapPelanggaranKelasController extends BaseController
 
         return [
             'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Delete Tindakan Pelanggaran Siswa successfully'
+            'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
         ];
     }
 

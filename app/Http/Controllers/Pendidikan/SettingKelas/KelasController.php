@@ -211,7 +211,7 @@ class KelasController extends BaseController
                 return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'setting-kelas/kelas',
-                        'message' => 'Save Kelas successfully'
+                        'message' => 'Save Kelas Successfully'
                     ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -227,7 +227,7 @@ class KelasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'setting-kelas/kelas',
-                    'message' => 'Update Kelas successfully'
+                    'message' => 'Update Kelas Successfully'
                 ];
             } elseif ($mode == 'copy') {
                 DB::beginTransaction();
@@ -241,7 +241,7 @@ class KelasController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'setting-kelas/kelas',
-                        'message' => 'Copy Kelas successfully'
+                        'message' => 'Copy Kelas Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -268,7 +268,7 @@ class KelasController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kelas successfully'
+                        'message' => 'Delete Kelas Successfully'
                     ];
                 }
             }
