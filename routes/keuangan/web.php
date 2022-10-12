@@ -448,6 +448,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('print-laporan-bulanan/{jenis}/{start_date}/{end_date}', [CetakLaporanController::class, 'printCetakLaporanBulanan']);
 
                 Route::post('setting', [CetakLaporanController::class, 'actionSetSettingCetak']);
+                Route::post('setting2', [CetakLaporanController::class, 'actionSetSettingCetak2']);
             });
             Route::prefix('pembayaran-siswa')->group(function () {
                 Route::get('/', [LaporanKeuanganPembayaranSiswaController::class, 'viewPembayaranSiswa']);

@@ -1,18 +1,19 @@
     <div class="container-fluid">
         <div class="block-header">
-            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#siswa/update-foto/')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
+            <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#data-sumber-daya/update-foto/')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
         </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            UPDATE FOTO SISWA 
+                            UPDATE FOTO GURU / TENDIK
                         </h2>
                     </div>
                     <div class="body">
                         <form id="form-upload" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/action-update-foto/upload/'.$id_pengguna)}}" enctype="multipart/form-data">
                             {{csrf_field()}}
+                            {{-- {{url(Request::segment(1).'/'.Request::segment(2).'/action-update-foto/upload/'.$id_pengguna)}} --}}
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h3>Upload Foto</h3>

@@ -17,18 +17,18 @@
                                 <select class="form-control show-tick" name="unit_kerja" id="unit_kerja"> 
                                     @if($unit_kerja == "0")
                                         <option value="0" selected>-- Semua --</option>
-                                        @foreach($list_unit_kerja as $u)
+                                        {{-- @foreach($list_unit_kerja as $u)
                                             <option value="{{$u->id_unit_kerja}}">{{$u->nm_unit_kerja}}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     @else
                                         <option value="0">-- Semua --</option>
-                                        @foreach($list_unit_kerja as $u)
+                                        {{-- @foreach($list_unit_kerja as $u)
                                             @if($u->id_unit_kerja == $unit_kerja)
                                                 <option value="{{$u->id_unit_kerja}}" selected >{{$u->nm_unit_kerja}}</option>
                                             @else
-                                                <option value="{{$u->id_unit_kerjaa}}">{{$u->nm_unit_kerja}}</option>
+                                                <option value="{{$u->id_unit_kerja}}">{{$u->nm_unit_kerja}}</option>
                                             @endif
-                                        @endforeach
+                                        @endforeach --}}
                                     @endif
                                 </select>
                                 {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
@@ -70,9 +70,9 @@
                                     <th>Nama</th>
                                     {{-- <th>Tahun Masuk</th> --}}
                                     {{-- <th>Jurusan</th> --}}
-                                    {{-- <th>Unit Kerja</th> --}}
+                                    <th>Role</th>
+                                    <th>Unit Kerja</th>
                                     {{-- <th>Status</th> --}}
-                                    {{-- <th>Role</th> --}}
                                     <th>Action</th>
                                    
                                 </tr>
@@ -115,6 +115,8 @@
             { data: 'username', name: 'username' },
             // { data: 'nisn_siswa', name: 'nisn_siswa' },
             { data: 'nm_pengguna', name: 'nm_pengguna' },
+            { data: 'role', name: 'role' },
+            { data: 'unit_kerja', name: 'unit_kerja' },
             // { data: 'thn_masuk_siswa', name: 'thn_masuk_siswa' },
             // { data: 'nm_jurusan', name: 'nm_jurusan' },
             // { data: 'nm_kelas', name: 'nm_kelas' },

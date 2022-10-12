@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Akademik\AktivitasSemester;
+namespace App\Http\Controllers\Guru\Jadwal;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ use Session;
 use Validator;
 use App\Libraries\Akademik\LibAkademik;
 
-class SetJadwalKelasController extends Controller
+class SetJadwalKelasGuruController extends Controller
 {
     public function viewSetJadwalKelas(Request $request)
     {
@@ -34,7 +34,7 @@ class SetJadwalKelasController extends Controller
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
 
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/view-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas'));
+        return view('guru/jadwal/set-jadwal-kelas/view-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas'));
     }
 
     public function actionSetJadwalKelas(Request $request)
@@ -55,7 +55,7 @@ class SetJadwalKelasController extends Controller
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
             ];
         }
     }
@@ -132,7 +132,7 @@ class SetJadwalKelasController extends Controller
         $mapel      = MataPelajaran::all();
         $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
 
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'ruangan'));
+        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'ruangan'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
@@ -141,7 +141,7 @@ class SetJadwalKelasController extends Controller
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        // dd($input);
+        // dd($mode);
 
 
         $validator = Validator::make($request->all(), [
@@ -164,10 +164,7 @@ class SetJadwalKelasController extends Controller
                     'message' => 'Jam Keluar tidak boleh lebih kecil dari Jam Masuk'
                 ];
             }
-
-
             $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->guru, '-', $input->id_hari, $input->jamMasuk, $input->jamSelesai);
-
             if ($mode == 'add') {
                 if ($cek_jadwal['guru'] == 0) {
                     return [
@@ -240,9 +237,31 @@ class SetJadwalKelasController extends Controller
                 $pengampu_mp->save();
                 return [
                     'status_code' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                    'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
                     'message' => 'Save Ssuccessfully'
                 ];
+            }elseif ($mode == 'delete') {
+                // dd($id);
+                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+                    return [
+                        'status_code' => 300, // SUCCESS AND LOAD TABLE
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
+                    ];
+                } else {
+                    // dd($id);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+
+                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $id)->delete();
+
+
+                    return [
+                        'status_code' => 202, // SUCCESS AND LOAD TABLE
+                        'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                        'message' => 'Delete Jadwal Mata Ajar Successfully'
+                    ];
+                }
             } elseif ($mode = 'edit') {
                 $jadwal_kelas_mp                        = JadwalKelasMp::find($id);
                 // $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -268,32 +287,10 @@ class SetJadwalKelasController extends Controller
                 $pengampu_mp->save();
                 return [
                     'status_code' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                    'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
                     'message' => 'Save Ssuccessfully'
                 ];
-            } elseif ($mode == 'delete') {
-                // dd($id);
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
-                    return [
-                        'status_code' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
-                    ];
-                } else {
-                    // dd($id);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
-
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    PengampuMp::where('id_kelas_mp', $id)->delete();
-
-
-                    return [
-                        'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                        'message' => 'Delete Jadwal Mata Ajar Successfully'
-                    ];
-                }
-            }
+            } 
         }
     }
 }

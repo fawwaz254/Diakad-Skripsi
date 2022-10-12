@@ -2,9 +2,9 @@
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1).'#aktivitas-semester/usulan-mata-ajar')}}"><i class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
-    <div class="block-header">
+    {{-- <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1).'#aktivitas-semester/usulan-mata-ajar/tambah-mata-ajar/'.$id)}}"><i class="material-icons">note_add</i><span>Tambah Usulan Mata Ajar</span></a></h2>
-    </div>
+    </div> --}}
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -89,9 +89,9 @@
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+
                     '    <i class="material-icons">edit</i>'+
                     '</a> '+
-                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ copy_url + '/' + data.id +'">'+
-                    '    <i class="material-icons">file_copy</i>'+
-                    '</a> '+
+                    // '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ copy_url + '/' + data.id +'">'+
+                    // '    <i class="material-icons">file_copy</i>'+
+                    // '</a> '+
                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
                     '    <i class="material-icons">delete_forever</i>'+
                     '</button>';

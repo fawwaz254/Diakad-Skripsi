@@ -48,6 +48,26 @@ class CetakLaporanController extends BaseController
         return $input->print_setting;
     }
 
+    public function actionSetSettingCetak2(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $validator = Validator::make($request->all(), [
+            'print_setting' => 'required|in:semua,spp,lain',
+        ]);
+
+        if ($validator->fails()) {
+            return $validator->errors()->first();
+        }
+
+        if (empty(session('setting_print_keuangan2'))) {
+            session(['setting_print_keuangan2' => 'semua']);
+        } else {
+            session(['setting_print_keuangan2' => $input->print_setting]);
+        }
+        return $input->print_setting;
+    }
+
     public function printCetakLaporanPengeluaran(Request $request, $jenis, $start_date, $end_date)
     {
         $input = (object) $request->input();
