@@ -1517,7 +1517,21 @@ class LibCetakKeuangan
             $print_setting2 = session('setting_print_keuangan2');
         }
 
-        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas');
+        if($print_setting2 == 'spp'){
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya', 4);
+            });
+        }elseif($print_setting2== 'lain'){
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya','!=', 4);
+            });
+        }else{
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas');
+        }
+      
+       
+
+
         $allDataPembayaranTunggakan = PembayaranTunggakan::query();
 
         if (!empty($start_date) && !empty($end_date)) {
@@ -1525,21 +1539,23 @@ class LibCetakKeuangan
             $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
         }
 
-        if($print_setting2 == 'spp'){
-            $allDataPembayaran = $allDataPembayaran->whereHas('tagihan_biaya.detail_biaya', function ($query){
-                $query->where('id_jenis_detail_biaya', 4);
-            });
-            // $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
-            //     $query->where('id_jenis_detail_biaya', 4);
-            // });
-        }elseif($print_setting2== 'lain'){
-            $allDataPembayaranTunggakan =  $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
-                $query->where('id_jenis_detail_biaya', '!=' , 4);
-            });
-            // $allDataPembayaranTunggakan =  $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
-            //     $query->where('id_jenis_detail_biaya', '!=' , 4);
-            // });
-        }
+        // if($print_setting2 == 'spp'){
+        //     $allDataPembayaran = $allDataPembayaran->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya', '=', 4)->get();
+        //     // $allDataPembayaran = $allDataPembayaran->whereHas('tagihan_biaya.detail_biaya', function ($query){
+        //     //     $query->where('id_jenis_detail_biaya', 4);
+        //     // });
+        //     // $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
+        //     //     $query->where('id_jenis_detail_biaya', 4);
+        //     // });
+        // }elseif($print_setting2== 'lain'){
+        //     $allDataPembayaran = $allDataPembayaran->where('tagihan_biaya.detail_biaya.id_jenis_detail_biaya','!=' ,4)->get();
+        //     // $allDataPembayaranTunggakan =  $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
+        //     //     $query->where('id_jenis_detail_biaya', '!=' , 4);
+        //     // });
+        //     // $allDataPembayaranTunggakan =  $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
+        //     //     $query->where('id_jenis_detail_biaya', '!=' , 4);
+        //     // });
+        // }
 
         if ($print_setting == 'self') {
             $allDataPembayaran = $allDataPembayaran->isInputByPengguna($auth_data->pengguna->id_pengguna)->get();
