@@ -29,6 +29,12 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
+        // if (empty(session('setting_print_keuangan2'))) {
+        //     $print_setting2 = 'semua';
+        // } else {
+        //     $print_setting2 = session('setting_print_keuangan2');
+        // }
+
         $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
         $id_bulan = $sc_bulan->month;
         $id_bulan_lalu = $sc_bulan->subMonth()->month;
@@ -65,6 +71,12 @@ class LibCetakKeuangan
         } else {
             $where_personal = "";
         }
+
+        // if ($print_setting2 == 'self') {
+        //     $where_personal = " AND kelas.created_by = '" . $auth_data->pengguna->id_pengguna . "'";
+        // } else {
+        //     $where_personal = "";
+        // }
 
         $list_data_jml_siswa = DB::select(
             'SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
@@ -1499,12 +1511,34 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
+        if (empty(session('setting_print_keuangan2'))) {
+            $print_setting2 = 'semua';
+        } else {
+            $print_setting2 = session('setting_print_keuangan2');
+        }
+
         $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas');
         $allDataPembayaranTunggakan = PembayaranTunggakan::query();
 
         if (!empty($start_date) && !empty($end_date)) {
             $allDataPembayaran = $allDataPembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
             $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
+        }
+
+        if($print_setting2 == 'spp'){
+            $allDataPembayaran = $allDataPembayaran->whereHas('tagihan_biaya.detail_biaya', function ($query){
+                $query->where('id_jenis_detail_biaya', 4);
+            });
+            // $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
+            //     $query->where('id_jenis_detail_biaya', 4);
+            // });
+        }elseif($print_setting2== 'lain'){
+            $allDataPembayaranTunggakan =  $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
+                $query->where('id_jenis_detail_biaya', '!=' , 4);
+            });
+            // $allDataPembayaranTunggakan =  $allDataPembayaranTunggakan->whereHas('tagihan_biaya.detail_biaya', function ($query){
+            //     $query->where('id_jenis_detail_biaya', '!=' , 4);
+            // });
         }
 
         if ($print_setting == 'self') {
@@ -1514,6 +1548,8 @@ class LibCetakKeuangan
             $allDataPembayaran = $allDataPembayaran->get();
             $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->get();
         }
+
+        
 
         $result = [
             'data' => $allDataPembayaran,
@@ -1585,12 +1621,33 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
+        if (empty(session('setting_print_keuangan2'))) {
+            $print_setting2 = 'semua';
+        } else {
+            $print_setting2 = session('setting_print_keuangan2');
+        }
+
         $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
 
         if (!empty($start_year) && !empty($end_year)) {
             $pembayaran = $pembayaran->where(function ($month) use ($start_year, $end_year) {
                 $month->whereYear('tgl_pembayaran', '>=', $start_year);
                 $month->whereYear('tgl_pembayaran', '<=', $end_year);
+            });
+        }
+
+
+    //     Event::whereHas('participants', function ($query) {
+    //         $query->where('user_id', '=', 1);
+    //    })->get();
+        // dd($pembayaran);
+        if($print_setting2 == 'spp'){
+            $pembayaran = $pembayaran->whereHas('tagihan_biaya.detail_biaya', function ($query){
+                $query->where('id_jenis_detail_biaya', 4);
+            });
+        }elseif($print_setting2== 'lain'){
+            $pembayaran =  $pembayaran->whereHas('tagihan_biaya.detail_biaya', function ($query){
+                $query->where('id_jenis_detail_biaya', '!=' , 4);
             });
         }
 
