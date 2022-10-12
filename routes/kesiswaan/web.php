@@ -129,9 +129,11 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('edit-prestasi-siswa/{id}', [ApprovePrestasiSiswaController::class, 'editPrestasiSiswa']);
             Route::get('edit-kegiatan-siswa/{id}', [ApprovePrestasiSiswaController::class, 'editKegiatanSiswa']);
+            Route::get('edit-informasi-tambahan-siswa/{id}', [ApprovePrestasiSiswaController::class, 'editInformasiTambahanSiswa']);
 
             Route::post('action-edit-prestasi-siswa/{id}', [ApprovePrestasiSiswaController::class, 'actionEditPrestasiSiswa']);
             Route::post('action-edit-kegiatan-siswa/{id}', [ApprovePrestasiSiswaController::class, 'actionEditKegiatanSiswa']);
+            Route::post('action-edit-informasi-tambahan-siswa/{id}', [ApprovePrestasiSiswaController::class, 'actionEditInformasiTambahanSiswa']);
         });
 
         Route::prefix('ekstrakurikuler')->group(function () {

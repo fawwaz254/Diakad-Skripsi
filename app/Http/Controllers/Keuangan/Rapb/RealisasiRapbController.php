@@ -538,7 +538,7 @@ class RealisasiRapbController extends BaseController
 
               return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Cek Keuangan successfully'
+                  'message' => 'Cek Keuangan Successfully'
               ]; 
             }  
             else {
@@ -558,7 +558,7 @@ class RealisasiRapbController extends BaseController
 
                   return [
                       'status' => 203, // SUCCESS AND LOAD CONTENT
-                      'message' => 'Cek Keuangan successfully'
+                      'message' => 'Cek Keuangan Successfully'
                   ]; 
                 }
                 else {
@@ -590,7 +590,7 @@ class RealisasiRapbController extends BaseController
 
               return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan successfully'
+                  'message' => 'Approve Kepala Keuangan Successfully'
               ]; 
             }    
             elseif(! empty($staff->id_pengguna)) {
@@ -603,7 +603,7 @@ class RealisasiRapbController extends BaseController
 
               return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan successfully'
+                  'message' => 'Approve Kepala Keuangan Successfully'
               ]; 
             }    
             else {
@@ -634,7 +634,7 @@ class RealisasiRapbController extends BaseController
 
               return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan successfully'
+                  'message' => 'Approve Kepala Keuangan Successfully'
               ]; 
             }    
             elseif(! empty($staff->id_pengguna)) {
@@ -647,7 +647,7 @@ class RealisasiRapbController extends BaseController
 
               return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan successfully'
+                  'message' => 'Approve Kepala Keuangan Successfully'
               ]; 
             }    
             else {
@@ -740,7 +740,7 @@ class RealisasiRapbController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'rapb/realisasi-rapb/view-detail-realisasi/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai.'/'.$input->id_rapb,
-                        'message' => 'Input Realisasi RAPB successfully'
+                        'message' => 'Input Realisasi RAPB Successfully'
                     ];  
 
                 }
@@ -748,7 +748,7 @@ class RealisasiRapbController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'rapb/realisasi-rapb/view-detail-realisasi-sarpras/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai.'/'.$input->id_rapb,
-                        'message' => 'Input Realisasi Sarpras successfully'
+                        'message' => 'Input Realisasi Sarpras Successfully'
                     ];  
                 }
             }
@@ -768,7 +768,7 @@ class RealisasiRapbController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/realisasi-rapb/view-detail-realisasi-termin/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai.'/'.$input->id_rapb.'/'.$input->id_realisasi,
-                    'message' => 'Input RAPB successfully'
+                    'message' => 'Input RAPB Successfully'
                 ];  
             }
             elseif($mode == 'delete'){
@@ -788,7 +788,7 @@ class RealisasiRapbController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete RAPB successfully'
+                        'message' => 'Delete RAPB Successfully'
                     ];
                 }
             }

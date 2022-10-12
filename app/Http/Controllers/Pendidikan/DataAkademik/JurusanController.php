@@ -102,7 +102,7 @@ class JurusanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jurusan',
-                    'message' => 'Save Jurusan successfully'
+                    'message' => 'Save Jurusan Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class JurusanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jurusan',
-                    'message' => 'Update Jurusan successfully'
+                    'message' => 'Update Jurusan Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class JurusanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jurusan successfully'
+                        'message' => 'Delete Jurusan Successfully'
                     ];
                 }
             }

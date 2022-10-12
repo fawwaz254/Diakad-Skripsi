@@ -489,7 +489,7 @@ class InputJadwalController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'message' => 'Update Usulan Mata Ajar successfully',
+                        'message' => 'Update Usulan Mata Ajar Successfully',
                         'path'      =>  'jadwal/input-jadwal'
                     ];
                 } catch (\Exception $e) {

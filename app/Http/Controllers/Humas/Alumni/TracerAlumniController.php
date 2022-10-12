@@ -269,7 +269,7 @@ class TracerAlumniController extends BaseController
 
                 DB::commit();
 
-                return web_response(202, "Update successfully", self::PATH);
+                return web_response(202, "Update Successfully", self::PATH);
             } catch (\Exception $e) {
 
                 DB::rollback();
@@ -343,9 +343,9 @@ class TracerAlumniController extends BaseController
 
 
                 if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
-                    return web_response(202, "Update successfully", self::PATH);
+                    return web_response(202, "Update Successfully", self::PATH);
                 } else {
-                    return web_response(202, "Update successfully", self::PATH2);
+                    return web_response(202, "Update Successfully", self::PATH2);
                 }
             } catch (\Exception $e) {
 
@@ -435,12 +435,12 @@ class TracerAlumniController extends BaseController
             
                 if($cek = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()){
                     if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
-                        return web_response(202, "Update successfully", self::PATH);
+                        return web_response(202, "Update Successfully", self::PATH);
                     } else {
-                        return web_response(202, "Update successfully", self::PATH2);
+                        return web_response(202, "Update Successfully", self::PATH2);
                     }
                 }else{
-                    return web_response(202, "Update successfully", self::PATH);
+                    return web_response(202, "Update Successfully", self::PATH);
                 }
 
                 
@@ -460,7 +460,7 @@ class TracerAlumniController extends BaseController
 
             return [
                 'status' => 203, // SUCCESS AND LOAD TABLE
-                'message' => 'Delete Alumni successfully'
+                'message' => 'Delete Alumni Successfully'
             ];
         }
     }

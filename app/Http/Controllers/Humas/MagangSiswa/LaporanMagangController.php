@@ -172,7 +172,7 @@ class LaporanMagangController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'magang-siswa/laporan-magang',
-                    'message' => 'Save Link Laporan Magang Siswa successfully'
+                    'message' => 'Save Link Laporan Magang Siswa Successfully'
                 ];
             } else if ($mode == 'edit') {
                 $linkLaporanMagang          = link_laporan_magang::find($id);
@@ -182,7 +182,7 @@ class LaporanMagangController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'magang-siswa/laporan-magang',
-                    'message' => 'Save Link Laporan Magang Siswa successfully'
+                    'message' => 'Save Link Laporan Magang Siswa Successfully'
                 ];
             }
         }

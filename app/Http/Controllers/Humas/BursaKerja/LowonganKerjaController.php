@@ -104,7 +104,7 @@ class LowonganKerjaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'bursa-kerja/lowongan-kerja',
-                    'message' => 'Save successfully'
+                    'message' => 'Save Successfully'
                 ];
             } elseif ($mode == 'edit') {
 
@@ -124,7 +124,7 @@ class LowonganKerjaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'bursa-kerja/lowongan-kerja',
-                    'message' => 'Save successfully'
+                    'message' => 'Save Successfully'
                 ];
             }
         }
@@ -143,7 +143,7 @@ class LowonganKerjaController extends BaseController
 
         return [
             'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Delete Lowongan Kerja successfully'
+            'message' => 'Delete Lowongan Kerja Successfully'
         ];
     }
 

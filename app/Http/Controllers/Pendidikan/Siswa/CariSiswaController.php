@@ -279,7 +279,7 @@ class CariSiswaController extends BaseController
       return response()->json([
         'status_code'   => 200,
         'status_text'   => 'Success',
-        'message' => 'Reset password successfully'
+        'message' => 'Reset password Successfully'
       ]);
     } catch (\Exception $e) {
       DB::rollback();

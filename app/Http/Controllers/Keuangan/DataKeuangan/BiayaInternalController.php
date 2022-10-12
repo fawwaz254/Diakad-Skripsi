@@ -119,7 +119,7 @@ class BiayaInternalController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-internal',
-                    'message' => 'Save Biaya Internal successfully'
+                    'message' => 'Save Biaya Internal Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -135,7 +135,7 @@ class BiayaInternalController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/biaya-internal',
-                    'message' => 'Update Biaya Internal successfully'
+                    'message' => 'Update Biaya Internal Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -155,7 +155,7 @@ class BiayaInternalController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Biaya Internal successfully'
+                        'message' => 'Delete Biaya Internal Successfully'
                     ];
                 }
             }

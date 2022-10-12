@@ -97,7 +97,7 @@ class ManajemenMateriAjarController extends BaseController
             return [
                 'status' => 202,
                 'path' => 'e-learning/manajemen-materi-ajar',
-                'message' => 'Delete Materi Ajar successfully'
+                'message' => 'Delete Materi Ajar Successfully'
             ];
         }
 
@@ -188,7 +188,7 @@ class ManajemenMateriAjarController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'e-learning/manajemen-materi-ajar',
-                        'message' => 'Save Materi Ajar successfully'
+                        'message' => 'Save Materi Ajar Successfully'
                     ];
                 } catch (\Exception $e) {
 
@@ -258,7 +258,7 @@ class ManajemenMateriAjarController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'e-learning/manajemen-materi-ajar',
-                        'message' => 'Save Materi Ajar successfully'
+                        'message' => 'Save Materi Ajar Successfully'
                     ];
                 } catch (\Exception $e) {
 

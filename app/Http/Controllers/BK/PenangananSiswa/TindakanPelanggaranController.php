@@ -246,7 +246,7 @@ $pelanggaranSiswa->delete();
 
 return [
     'status' => 203, // SUCCESS AND LOAD TABLE
-    'message' => 'Delete Tindakan Pelanggaran Siswa successfully'
+    'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
 ];
 
     }
@@ -467,7 +467,7 @@ return [
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/tindakan-pelanggaran',
-                    'message' => 'Save Tindakan Pelanggaran Siswa successfully'
+                    'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'add-kbm') {
                 $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
@@ -493,7 +493,7 @@ return [
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/tindakan-pelanggaran',
-                    'message' => 'Save Tindakan Pelanggaran Siswa successfully'
+                    'message' => 'Save Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -512,7 +512,7 @@ return [
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/tindakan-pelanggaran',
-                    'message' => 'Update Tindakan Pelanggaran Siswa successfully'
+                    'message' => 'Update Tindakan Pelanggaran Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($tindakanPelanggaran = TindakanPelanggaran::where('id_tindakan_pelanggaran',$id)->where('created_by', '<>', $input->auth_data->pengguna->id_pengguna)->first()) {
@@ -544,7 +544,7 @@ return [
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Tindakan Pelanggaran Siswa successfully'
+                        'message' => 'Delete Tindakan Pelanggaran Siswa Successfully'
                     ];
                 }
             }

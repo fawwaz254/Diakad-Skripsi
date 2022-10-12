@@ -235,7 +235,7 @@ class InputRewardSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'reward-siswa/rekap-input-reward-siswa',
-                    'message' => 'Input Reward Siswa successfully'
+                    'message' => 'Input Reward Siswa Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -250,7 +250,7 @@ class InputRewardSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'reward-siswa/rekap-input-reward-siswa',
-                    'message' => 'Update Reward Siswa successfully'
+                    'message' => 'Update Reward Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
@@ -262,7 +262,7 @@ class InputRewardSiswaController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Reward Siswa successfully'
+                    'message' => 'Delete Reward Siswa Successfully'
                 ];
             }
         }

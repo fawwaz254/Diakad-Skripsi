@@ -201,7 +201,7 @@ class SppController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'sim/spp/upload-pembayaran',
-                        'message' => 'Upload Pembayaran successfully'
+                        'message' => 'Upload Pembayaran Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -1148,7 +1148,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-tunggakan-tahun-lalu',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save Gedung Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 $data = TutupBukuTahunanBiaya::find($id);
@@ -1166,7 +1166,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-tunggakan-tahun-lalu',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save Gedung Successfully'
                 ];
             }
         }
@@ -1296,7 +1296,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save successfully'
+                    'message' => 'Save Successfully'
                 ];
             } elseif ($mode == 'edit') {
 
@@ -1308,7 +1308,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save successfully'
+                    'message' => 'Save Successfully'
                 ];
             }
         }

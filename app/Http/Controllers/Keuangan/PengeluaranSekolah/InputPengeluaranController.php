@@ -169,7 +169,7 @@ class InputPengeluaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pengeluaran-sekolah/input-pengeluaran',
-                    'message' => 'Save Pengeluaran successfully'
+                    'message' => 'Save Pengeluaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -189,7 +189,7 @@ class InputPengeluaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pengeluaran-sekolah/input-pengeluaran',
-                    'message' => 'Update Pengeluaran successfully'
+                    'message' => 'Update Pengeluaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -202,7 +202,7 @@ class InputPengeluaranController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Pengeluaran successfully'
+                    'message' => 'Delete Pengeluaran Successfully'
                 ];
             }
         }

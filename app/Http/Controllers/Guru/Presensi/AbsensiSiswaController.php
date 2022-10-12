@@ -407,7 +407,7 @@ class AbsensiSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'presensi/absensi-siswa/view-kbm/' . $id_jadwal_kelas_mp . '/' . $pertemuan_ke,
-                        'message' => 'Save Absensi KBM Siswa successfully'
+                        'message' => 'Save Absensi KBM Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -444,7 +444,7 @@ class AbsensiSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'presensi/absensi-siswa/',
-                    'message' => 'Delete Absensi KBM Siswa successfully'
+                    'message' => 'Delete Absensi KBM Siswa Successfully'
                 ];
             } elseif ($mode == 'add-uts') {
                 $id_ujian_mp = $id;
@@ -472,7 +472,7 @@ class AbsensiSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'presensi/absensi-siswa/view-uts/' . $id_ujian_mp,
-                        'message' => 'Save Absensi UTS Siswa successfully'
+                        'message' => 'Save Absensi UTS Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -509,7 +509,7 @@ class AbsensiSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'presensi/absensi-siswa/view-uas/' . $id_ujian_mp,
-                        'message' => 'Save Absensi UAS Siswa successfully'
+                        'message' => 'Save Absensi UAS Siswa Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

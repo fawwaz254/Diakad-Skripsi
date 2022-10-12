@@ -80,7 +80,7 @@ class AuthGlobalController extends BaseController
         return [
             'status' => 201, // SUCCESS AND REDIRECT
             'link' => url('/'),
-            'message' => 'Use default password successfully',
+            'message' => 'Use Default Password Successfully',
         ];
     }
 
@@ -115,7 +115,7 @@ class AuthGlobalController extends BaseController
                 return [
                     'status' => 201, // SUCCESS AND REDIRECT
                     'link' => url('/'),
-                    'message' => 'Change password successfully',
+                    'message' => 'Change Password Successfully',
                 ];
             } else {
                 return [

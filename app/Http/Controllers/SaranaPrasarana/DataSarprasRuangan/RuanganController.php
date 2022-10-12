@@ -150,7 +150,7 @@ class RuanganController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-ruangan/ruangan',
-                    'message' => 'Save Ruangan successfully'
+                    'message' => 'Save Ruangan Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -171,7 +171,7 @@ class RuanganController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-ruangan/ruangan',
-                    'message' => 'Update Ruangan successfully'
+                    'message' => 'Update Ruangan Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($ruanganKelas = RuanganKelas::where('id_ruangan', $id)->first() or $inventarisRuangan = InventarisRuangan::where('id_ruangan', $id)->first() or $jadwal_kelas_mp = JadwalKelasMp::where('id_ruangan', $id)->first()) {
@@ -189,7 +189,7 @@ class RuanganController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Ruangan successfully'
+                        'message' => 'Delete Ruangan Successfully'
                     ];
                 }
             }

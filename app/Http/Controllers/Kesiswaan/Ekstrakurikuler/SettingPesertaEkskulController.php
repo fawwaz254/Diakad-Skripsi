@@ -308,7 +308,7 @@ class SettingPesertaEkskulController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Peserta Ekskul successfully'
+                        'message' => 'Delete Peserta Ekskul Successfully'
                     ];
                 }
             } elseif ($mode == "edit") {

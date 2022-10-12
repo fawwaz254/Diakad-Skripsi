@@ -240,11 +240,11 @@ class InputDokumenController extends BaseController
                     }
 
                     DB::commit();
-                    // successfully
+                    // Successfully
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-dokumen/input-dokumen',
-                        'message' => 'Save Data Dokumen successfully'
+                        'message' => 'Save Data Dokumen Successfully'
                     ];
                 } catch(\Exception $e) {
                     DB::rollback();
@@ -311,11 +311,11 @@ class InputDokumenController extends BaseController
 
                     
                     DB::commit();
-                    //  successfully
+                    //  Successfully
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-dokumen/input-dokumen/edit/'.$id,
-                        'message' => 'Save Data Dokumen successfully'
+                        'message' => 'Save Data Dokumen Successfully'
                     ];
 
                 } catch(\Exception $e) {
@@ -381,7 +381,7 @@ class InputDokumenController extends BaseController
                 return [
                         'status' => 202, // SUCCESS AND LOAD TABLE
                         'path' => 'data-dokumen/input-dokumen/upload/'.$id_arsip_dokumen,
-                        'message' => 'Delete File Dokumen successfully'
+                        'message' => 'Delete File Dokumen Successfully'
                     ];               
             }
             elseif($mode == 'delete'){
@@ -400,7 +400,7 @@ class InputDokumenController extends BaseController
 
             		return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Dokumen successfully'
+                        'message' => 'Delete Data Dokumen Successfully'
                     ];
                 }
             }            

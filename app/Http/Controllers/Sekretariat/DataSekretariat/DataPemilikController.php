@@ -100,7 +100,7 @@ class DataPemilikController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sekretariat/data-pemilik',
-                    'message' => 'Save Data Arsip Pemilik successfully'
+                    'message' => 'Save Data Arsip Pemilik Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -114,7 +114,7 @@ class DataPemilikController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sekretariat/data-pemilik',
-                    'message' => 'Save Data Pemilik successfully'
+                    'message' => 'Save Data Pemilik Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -133,7 +133,7 @@ class DataPemilikController extends BaseController
 
             		return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Arsip Pemilik successfully'
+                        'message' => 'Delete Data Arsip Pemilik Successfully'
                     ];
                 }
             }

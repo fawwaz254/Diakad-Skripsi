@@ -234,7 +234,7 @@ class PenerimaanController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pendaftaran/penerimaan',
-                    'message' => 'Save Penerimaan successfully'
+                    'message' => 'Save Penerimaan Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -269,7 +269,7 @@ class PenerimaanController extends BaseController {
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pendaftaran/penerimaan',
-                    'message' => 'Update Penerimaan successfully'
+                    'message' => 'Update Penerimaan Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -289,7 +289,7 @@ class PenerimaanController extends BaseController {
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Penerimaan successfully'
+                        'message' => 'Delete Penerimaan Successfully'
                     ];
                 }
             }

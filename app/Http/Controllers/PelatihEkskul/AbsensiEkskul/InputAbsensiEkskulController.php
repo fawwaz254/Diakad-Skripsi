@@ -298,7 +298,7 @@ class InputAbsensiEkskulController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'absensi-ekskul/input-absensi-ekskul/'.$input->id_semester.'/'.$input->id_ekskul,
-                        'message' => 'Save Absensi Ekskul successfully'
+                        'message' => 'Save Absensi Ekskul Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -320,7 +320,7 @@ class InputAbsensiEkskulController extends BaseController
 
                     return [
                         'status' => 200, // SUCCESS AND LOAD DATATABLES
-                        'message' => 'Delete Absensi Ekskul successfully'
+                        'message' => 'Delete Absensi Ekskul Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

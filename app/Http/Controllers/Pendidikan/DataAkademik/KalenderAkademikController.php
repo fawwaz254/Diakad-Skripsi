@@ -185,7 +185,7 @@ class KalenderAkademikController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'data-akademik/kalender-akademik/view-semester/'.$input->id_semester,
-                        'message' => 'Save Kalender Akademik successfully'
+                        'message' => 'Save Kalender Akademik Successfully'
                     ];
                 }
             }
@@ -205,7 +205,7 @@ class KalenderAkademikController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/kalender-akademik/view-semester/'.$input->id_semester,
-                    'message' => 'Update Kalender Akademik successfully'
+                    'message' => 'Update Kalender Akademik Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -218,7 +218,7 @@ class KalenderAkademikController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Kalender Akademik successfully'
+                    'message' => 'Delete Kalender Akademik Successfully'
                 ];
             }
         }

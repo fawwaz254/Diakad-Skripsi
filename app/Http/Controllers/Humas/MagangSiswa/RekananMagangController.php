@@ -267,7 +267,7 @@ class RekananMagangController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'magang-siswa/rekanan-magang',
-                    'message' => 'Save Rekanan Magang successfully'
+                    'message' => 'Save Rekanan Magang Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -288,7 +288,7 @@ class RekananMagangController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'magang-siswa/rekanan-magang',
-                    'message' => 'Update Rekanan Magang successfully'
+                    'message' => 'Update Rekanan Magang Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -308,7 +308,7 @@ class RekananMagangController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Rekanan Magang successfully'
+                        'message' => 'Delete Rekanan Magang Successfully'
                     ];
                 }
             }

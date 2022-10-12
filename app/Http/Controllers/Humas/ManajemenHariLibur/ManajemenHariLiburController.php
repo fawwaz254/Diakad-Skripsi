@@ -57,7 +57,7 @@ class ManajemenHariLiburController extends BaseController
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
             'path' => 'absensi/manajemen-hari-libur',
-            'message' => 'Add Hari Libur successfully'
+            'message' => 'Add Hari Libur Successfully'
         ];
     }
 
@@ -86,7 +86,7 @@ class ManajemenHariLiburController extends BaseController
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
             'path' => 'absensi/manajemen-hari-libur',
-            'message' => 'Add Hari Libur successfully'
+            'message' => 'Add Hari Libur Successfully'
         ];
     }
 
@@ -100,7 +100,7 @@ class ManajemenHariLiburController extends BaseController
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
             'path' => 'absensi/manajemen-hari-libur',
-            'message' => 'Delete Hari Libur successfully'
+            'message' => 'Delete Hari Libur Successfully'
         ];
     }
 }

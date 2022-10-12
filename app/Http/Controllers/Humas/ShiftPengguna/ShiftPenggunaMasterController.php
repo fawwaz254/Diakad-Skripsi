@@ -39,7 +39,7 @@ class ShiftPenggunaMasterController extends Controller
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'absensi/shift_pengguna/managementShift',
-                'message' => 'Save Shift successfully'
+                'message' => 'Save Shift Successfully'
             ];
         }
     }

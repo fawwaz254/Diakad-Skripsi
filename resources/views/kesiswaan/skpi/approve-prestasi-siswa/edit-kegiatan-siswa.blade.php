@@ -38,6 +38,8 @@
                                     value="{{ $kegiatan->nm_pengguna }}">
                                 <input type="hidden" class="form-control" name="id_siswa" readonly="" aria-required="true" aria-invalid="true"
                                     value="{{ $kegiatan->id_siswa }}">
+                                <input type="hidden" class="form-control" name="id_tingkat_prestasi_siswa" readonly="" aria-required="true" aria-invalid="true"
+                                    value="{{ $tingkat->id_tingkat_prestasi_siswa }}">
                             </div>
                         </div>
 

@@ -255,7 +255,7 @@ class TryOutController extends BaseController
                 return [
               'status' => 202, // SUCCESS AND LOAD CONTENT
               'path' => 'ujian/tryout-reguler-online/add/'.$input->is_online,
-              'message' => 'Save Ujian Try Out successfully'
+              'message' => 'Save Ujian Try Out Successfully'
             ];
             } elseif ($mode == 'edit') {
                 $ujian                        = UjianMp::find($id);
@@ -280,7 +280,7 @@ class TryOutController extends BaseController
                 return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'ujian/tryout-reguler-online',
-                'message' => 'Save Ujian Try Out successfully'
+                'message' => 'Save Ujian Try Out Successfully'
               ];
             } elseif ($mode == 'delete') {
                 $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
@@ -331,7 +331,7 @@ class TryOutController extends BaseController
                     return [
                   'status' => 202, // SUCCESS AND LOAD CONTENT
                   'path' => 'ujian/tryout-reguler-online/',
-                  'message' => 'Tambah Peserta Try Out successfully'
+                  'message' => 'Tambah Peserta Try Out Successfully'
                 ];
                 } catch (\Exception $e) {
                     DB::rollback();

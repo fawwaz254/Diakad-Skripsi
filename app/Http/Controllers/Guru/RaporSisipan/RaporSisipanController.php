@@ -70,7 +70,7 @@ class RaporSisipanController extends Controller
             return [
                 'status' => 202,
                 'path' => 'rapor-sisipan/daftar-nilai-sts',
-                'message' => 'Delete Rapor Sisipan successfully'
+                'message' => 'Delete Rapor Sisipan Successfully'
             ];
         }
 
@@ -131,7 +131,7 @@ class RaporSisipanController extends Controller
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'rapor-sisipan/daftar-nilai-sts',
-                        'message' => 'Save Tambah Nilai successfully'
+                        'message' => 'Save Tambah Nilai Successfully'
                     ];
                 } catch (\Exception $e) {
 
