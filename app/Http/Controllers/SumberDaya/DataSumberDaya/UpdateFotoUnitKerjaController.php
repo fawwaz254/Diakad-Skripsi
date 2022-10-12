@@ -43,7 +43,7 @@ class UpdateFotoUnitKerjaController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $validator = Validator::make($request->all(), [
-         
+
       ]);
 
         if ($validator->fails()) {
@@ -79,17 +79,78 @@ class UpdateFotoUnitKerjaController extends Controller
 
         // $siswa = LibSiswa::fetchDataSiswaDetail($auth_data, $id_jurusan, $id_kelas, $thn_masuk_siswa, $id_jalur, $id_status_pengguna);
 
-        if($status_join_table == '0' ){
-            $pengguna = Pengguna::whereIn('status_join_table',[1,2])->with('status_pengguna','guru','staff','guru.unit_kerja','staff.unit_kerja')
+        if($status_join_table == '0' && $unit_kerja == '0'   ){
+            $pengguna = Pengguna::whereIn('status_join_table',[1,2])->with('status_pengguna','guru','staff')
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('nm_status_pengguna', '=', 'AKTIF');
             })->get();
 
         }else{
-            $pengguna = Pengguna::where('status_join_table',$unit_kerja)->with('status_pengguna','guru','staff','guru.unit_kerja','staff.unit_kerja')
-            ->whereHas('status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
+            if($status_join_table == '0'){
+                // $pengguna = Pengguna::whereIn('status_join_table',[1,2])->with('status_pengguna','guru','staff')
+                // ->whereHas('status_pengguna', function ($query) {
+                //     $query->where('nm_status_pengguna', '=', 'AKTIF');
+                // })->get();
+                $pengguna = Pengguna::whereIn('status_join_table',[1,2])->with('status_pengguna','guru','staff')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->whereHas('guru', function ($query) use($unit_kerja) {
+                    $query->where('id_unit_kerja', '=', $unit_kerja);
+                })->whereHas('staff', function ($query) use($unit_kerja) {
+                    $query->where('id_unit_kerja', '=', $unit_kerja);
+                })
+                ->get();
+
+                // $pengguna = Pengguna::whereIn('status_join_table',[1,2])
+            
+                // ->leftjoin('guru', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                // ->leftjoin('staff', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
+             
+                // ->where('guru.id_unit_kerja', '=', $unit_kerja)->orWhere('staff.id_unit_kerja','=', $unit_kerja)
+                // ->get();
+
+                // $pengguna = Pengguna::whereIn('status_join_table',[1,2])->with('status_pengguna','guru','staff')
+                // ->whereHas('status_pengguna', function ($query) {
+                //     $query->where('nm_status_pengguna', '=', 'AKTIF');
+                // })->whereHas('staff', function ($query) use($unit_kerja) {
+                //     $query->where('id_unit_kerja', '=', $unit_kerja);
+                // })->get();
+
+                // if($unit_kerja == '1'){
+                   
+                // }else{
+                //     $pengguna = Pengguna::whereIn('status_join_table',[1,2])->with('status_pengguna','guru','staff')
+                //     ->whereHas('status_pengguna', function ($query) {
+                //         $query->where('nm_status_pengguna', '=', 'AKTIF');
+                //     })->whereHas('guru', function ($query) use($unit_kerja) {
+                //         $query->where('id_unit_kerja', '=', $unit_kerja);
+                //     })->get();
+                // }
+            }else if($unit_kerja == '0')
+            {
+                $pengguna = Pengguna::where('status_join_table',$status_join_table)->with('status_pengguna','guru','staff')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })
+                ->get();
+            }
+            else{
+                $pengguna = Pengguna::where('status_join_table',$status_join_table)->with('status_pengguna','guru','staff')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->whereHas('guru', function ($query) use($unit_kerja) {
+                    $query->where('id_unit_kerja', '=', $unit_kerja);
+                })->whereHas('staff', function ($query) use($unit_kerja) {
+                    $query->where('id_unit_kerja', '=', $unit_kerja);
+                })
+                ->get();
+
+
+            }
+            // $pengguna = Pengguna::where('status_join_table',$status_join_table)->with('status_pengguna','guru','staff','guru.unit_kerja','staff.unit_kerja')
+            // ->whereHas('status_pengguna', function ($query) {
+            //     $query->where('nm_status_pengguna', '=', 'AKTIF');
+            // })->get();
         }
 
         // dd($pengguna);
@@ -99,6 +160,18 @@ class UpdateFotoUnitKerjaController extends Controller
                         return Storage::disk('spaces')->url($item->path_foto_pengguna);
                     } else {
                         return asset('media/blank-user.png');
+                    }
+                })->editColumn('role', function ($item) {
+                    if (!empty($item->guru)) {
+                        return 'Guru';
+                    } else {
+                        return 'Tendik';
+                    }
+                })->editColumn('unit_kerja', function ($item) {
+                    if (!empty($item->guru)) {
+                        return $item->guru->unit_kerja->nm_unit_kerja;
+                    } else {
+                        return $item->staff->unit_kerja->nm_unit_kerja;
                     }
                 })
                 // ->addColumn('thn_masuk_siswa', function ($item) {
@@ -118,7 +191,7 @@ class UpdateFotoUnitKerjaController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('pendidikan/siswa/update-foto/view-upload-foto', compact('auth_data', 'id_pengguna'));
+        return view('sumber-daya/data-sumber-daya/update-foto/view-upload-foto', compact('auth_data', 'id_pengguna'));
     }
 
     public function actionUpdateFoto(Request $request, $mode, $id = null)
@@ -145,7 +218,7 @@ class UpdateFotoUnitKerjaController extends Controller
 
                 $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
 
-                $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/siswa/'.$id, request()->file, 'public');
+                $file = Storage::disk('spaces')->putFile($singkat_sekolah.'/penguna/'.$id, request()->file, 'public');
                 
                 //save file name to database
                 $siswa                          = Pengguna::find($id);
@@ -155,8 +228,8 @@ class UpdateFotoUnitKerjaController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Succes Upload foto siswa', // SUCCESS AND LOAD CONTENT
-                    'path' => 'kesiswaan#siswa/update-foto/upload/'.$id
+                    'message' => 'Succes Upload foto', // SUCCESS AND LOAD CONTENT
+                    'path' => 'data-sumber-daya/update-foto/upload/'.$id
                 ];
             }
         }
