@@ -106,7 +106,7 @@ class PemilikSarprasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-ruangan/pemilik-sarpras',
-                    'message' => 'Save Pemilik Sarpras successfully'
+                    'message' => 'Save Pemilik Sarpras Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -120,7 +120,7 @@ class PemilikSarprasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-ruangan/pemilik-sarpras',
-                    'message' => 'Update Pemilik Sarpras successfully'
+                    'message' => 'Update Pemilik Sarpras Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($ruangan = Ruangan::where('id_pemilik_sarpras', $id)->first()) {
@@ -138,7 +138,7 @@ class PemilikSarprasController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Pemilik Sarpras successfully'
+                        'message' => 'Delete Pemilik Sarpras Successfully'
                     ];
                 }
             }

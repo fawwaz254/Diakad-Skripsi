@@ -104,7 +104,7 @@ class DataJenisMataPelajaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jenis-mata-pelajaran',
-                    'message' => 'Save Jenis Mata Pelajaran successfully'
+                    'message' => 'Save Jenis Mata Pelajaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -119,7 +119,7 @@ class DataJenisMataPelajaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jenis-mata-pelajaran',
-                    'message' => 'Update Jenis Mata Pelajaran successfully'
+                    'message' => 'Update Jenis Mata Pelajaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -139,7 +139,7 @@ class DataJenisMataPelajaranController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jenis Mata Pelajaran successfully'
+                        'message' => 'Delete Jenis Mata Pelajaran Successfully'
                     ];
                 }
             }

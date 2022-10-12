@@ -338,7 +338,7 @@ class FormKesehatanController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete successfully'
+                    'message' => 'Delete Successfully'
                 ];
             }
         }

@@ -119,7 +119,7 @@ class EkskulWajibController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/ekskul-wajib',
-                    'message' => 'Save Data Ekskul wajib successfully'
+                    'message' => 'Save Data Ekskul wajib Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -134,7 +134,7 @@ class EkskulWajibController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'ekstrakurikuler/ekskul-wajib',
-                    'message' => 'Save Data Ekskul Wajib successfully'
+                    'message' => 'Save Data Ekskul Wajib Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -146,7 +146,7 @@ class EkskulWajibController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Ekskul wajib successfully'
+                        'message' => 'Delete Data Ekskul wajib Successfully'
                     ];
             }
 

@@ -136,7 +136,7 @@ class StatusSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'siswa/status-siswa',
-                        'message' => 'Save Status Siswa successfully'
+                        'message' => 'Save Status Siswa Successfully'
                     ];
                 }
             } elseif ($mode == 'edit') {
@@ -151,7 +151,7 @@ class StatusSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'siswa/status-siswa',
-                    'message' => 'Update Status Siswa successfully'
+                    'message' => 'Update Status Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($pengguna = Pengguna::where('id_status_pengguna', $id)->first()) {
@@ -169,7 +169,7 @@ class StatusSiswaController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Status Siswa successfully'
+                        'message' => 'Delete Status Siswa Successfully'
                     ];
                 }
             }

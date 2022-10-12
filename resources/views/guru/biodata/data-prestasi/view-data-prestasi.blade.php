@@ -25,7 +25,6 @@
                                         <th>Peringkat</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
-                                        <th>Keterangan</th>
                                         <th>Lokasi</th>
                                         <th>Penyelenggara</th>
                                         <th>Tanggal</th>
@@ -77,7 +76,6 @@
                     return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
                 }
             },
-            { data: 'keterangan', name: 'keterangan' },
             { data: 'lokasi', name: 'lokasi' },
             { data: 'penyelenggara', name: 'penyelenggara' },
             { data: 'tanggal', name: 'tanggal' },

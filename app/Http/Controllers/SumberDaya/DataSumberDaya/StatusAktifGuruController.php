@@ -114,7 +114,7 @@ class StatusAktifGuruController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/status-aktif-guru',
-                    'message' => 'Save Status Aktif Guru successfully'
+                    'message' => 'Save Status Aktif Guru Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -129,7 +129,7 @@ class StatusAktifGuruController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/status-aktif-guru',
-                    'message' => 'Update Status Aktif Guru successfully'
+                    'message' => 'Update Status Aktif Guru Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -149,7 +149,7 @@ class StatusAktifGuruController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Status Aktif Guru successfully'
+                        'message' => 'Delete Status Aktif Guru Successfully'
                     ];
                 }
             }

@@ -214,7 +214,7 @@ class WaliKelasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'laporan/wali-kelas',
-                    'message' => 'Save Laporan Wali Kelas successfully'
+                    'message' => 'Save Laporan Wali Kelas Successfully'
                 ];
 
             }
@@ -257,7 +257,7 @@ class WaliKelasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'laporan/wali-kelas',
-                    'message' => 'Update Laporan Wali Kelas  successfully'
+                    'message' => 'Update Laporan Wali Kelas  Successfully'
                 ];
 
             }
@@ -277,7 +277,7 @@ class WaliKelasController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Laporan Wali Kelas successfully'
+                    'message' => 'Delete Laporan Wali Kelas Successfully'
                 ];
 
             }

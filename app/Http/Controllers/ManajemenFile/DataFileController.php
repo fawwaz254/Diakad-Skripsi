@@ -185,7 +185,7 @@ class DataFileController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'manajemen-file/data-file',
-                    'message' => 'Save File Pegguna successfully'
+                    'message' => 'Save File Pengguna Successfully'
                 ];
             }
         }

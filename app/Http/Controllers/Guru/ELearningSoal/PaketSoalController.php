@@ -170,7 +170,7 @@ class PaketSoalController extends Controller
                 'message' => 'Berhasil Menambah paket Soal'
             ];
 
-            // return back()->with('toast', 'Save item successfully');
+            // return back()->with('toast', 'Save item Successfully');
         }
     }
 

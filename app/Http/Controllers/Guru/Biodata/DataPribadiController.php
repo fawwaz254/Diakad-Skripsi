@@ -153,7 +153,7 @@ class DataPribadiController extends BaseController
 
             return [
                 'status' => 200, // SUCCESS AND LOAD CONTENT
-                'message' => 'Update Data Pribadi successfully'
+                'message' => 'Update Data Pribadi Successfully'
             ];
         }
     }

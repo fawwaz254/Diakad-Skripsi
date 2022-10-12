@@ -350,11 +350,11 @@ class DokumenController extends BaseController
                     }
 
                     DB::commit();
-                    // successfully
+                    // Successfully
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'kesekretariatan/dokumen',
-                        'message' => 'Save Data Dokumen successfully'
+                        'message' => 'Save Data Dokumen Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -420,11 +420,11 @@ class DokumenController extends BaseController
 
 
                     DB::commit();
-                    //  successfully
+                    //  Successfully
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'kesekretariatan/upload-dokumen/edit/' . $id,
-                        'message' => 'Save Data Dokumen successfully'
+                        'message' => 'Save Data Dokumen Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
@@ -493,7 +493,7 @@ class DokumenController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD TABLE
                     'path' => 'kesekretariatan/upload-dokumen/upload/' . $id_arsip_dokumen,
-                    'message' => 'Delete File Dokumen successfully'
+                    'message' => 'Delete File Dokumen Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // if (ArsipDokumenFile::where('id_arsip_dokumen', '=', $id)->first()) {
@@ -511,7 +511,7 @@ class DokumenController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Dokumen successfully'
+                        'message' => 'Delete Data Dokumen Successfully'
                     ];
                 // }
             }

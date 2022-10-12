@@ -114,7 +114,7 @@ class StatusAktifTendikController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/status-aktif-tendik',
-                    'message' => 'Save Status Aktif Tendik successfully'
+                    'message' => 'Save Status Aktif Tendik Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -129,7 +129,7 @@ class StatusAktifTendikController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/status-aktif-tendik',
-                    'message' => 'Update Status Aktif Tendik successfully'
+                    'message' => 'Update Status Aktif Tendik Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -149,7 +149,7 @@ class StatusAktifTendikController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Status Aktif Tendik successfully'
+                        'message' => 'Delete Status Aktif Tendik Successfully'
                     ];
                 }
             }

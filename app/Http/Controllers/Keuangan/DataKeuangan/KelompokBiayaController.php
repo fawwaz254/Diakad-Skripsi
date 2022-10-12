@@ -113,7 +113,7 @@ class KelompokBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/kelompok-biaya',
-                    'message' => 'Save Kelompok Biaya successfully'
+                    'message' => 'Save Kelompok Biaya Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -130,7 +130,7 @@ class KelompokBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/kelompok-biaya',
-                    'message' => 'Update Kelompok Biaya successfully'
+                    'message' => 'Update Kelompok Biaya Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -150,7 +150,7 @@ class KelompokBiayaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kelompok Biaya successfully'
+                        'message' => 'Delete Kelompok Biaya Successfully'
                     ];
                 }
             }

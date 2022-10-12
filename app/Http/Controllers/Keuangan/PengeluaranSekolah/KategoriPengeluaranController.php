@@ -102,7 +102,7 @@ class KategoriPengeluaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pengeluaran-sekolah/kategori-pengeluaran',
-                    'message' => 'Save Kategori Pengeluaran successfully'
+                    'message' => 'Save Kategori Pengeluaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class KategoriPengeluaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pengeluaran-sekolah/kategori-pengeluaran',
-                    'message' => 'Update Kategori Pengeluaran successfully'
+                    'message' => 'Update Kategori Pengeluaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class KategoriPengeluaranController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pengeluaran successfully'
+                        'message' => 'Delete Kategori Pengeluaran Successfully'
                     ];
                 }
             }

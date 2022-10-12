@@ -150,7 +150,7 @@ class BukuAlatController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-buku-alat/buku-alat',
-                    'message' => 'Save Buku/Alat successfully'
+                    'message' => 'Save Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -177,7 +177,7 @@ class BukuAlatController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-buku-alat/buku-alat',
-                    'message' => 'Update Buku/Alat successfully'
+                    'message' => 'Update Buku/Alat Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
@@ -189,7 +189,7 @@ class BukuAlatController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Buku/Alat successfully'
+                    'message' => 'Delete Buku/Alat Successfully'
                 ];
             }
         }

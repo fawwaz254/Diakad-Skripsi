@@ -261,7 +261,7 @@ class KategoriPenerimaanController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-penerimaan',
-                    'message' => 'Save Kategori Penerimaan successfully'
+                    'message' => 'Save Kategori Penerimaan Successfully'
                 ];
             } elseif ($mode == 'edit-kategori') {
                 // make object to find id
@@ -277,7 +277,7 @@ class KategoriPenerimaanController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-penerimaan',
-                    'message' => 'Update Kategori Penerimaan successfully'
+                    'message' => 'Update Kategori Penerimaan Successfully'
                 ];
             } elseif ($mode == 'delete-kategori') {
                 if ($subkategoriRapb = SubkategoriRapb::where('id_kategori_rapb', $id)->first()) {
@@ -295,7 +295,7 @@ class KategoriPenerimaanController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Penerimaan successfully'
+                        'message' => 'Delete Kategori Penerimaan Successfully'
                     ];
                 }
             } elseif ($mode == 'add-subkategori') {
@@ -313,7 +313,7 @@ class KategoriPenerimaanController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-penerimaan/sub/'.$input->id_kategori_rapb,
-                    'message' => 'Save Sub-Kategori Penerimaan successfully'
+                    'message' => 'Save Sub-Kategori Penerimaan Successfully'
                 ];
             } elseif ($mode == 'edit-subkategori') {
                 // make object to find id
@@ -328,7 +328,7 @@ class KategoriPenerimaanController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-penerimaan/sub/'.$input->id_kategori_rapb,
-                    'message' => 'Update Sub-Kategori Penerimaan successfully'
+                    'message' => 'Update Sub-Kategori Penerimaan Successfully'
                 ];
             } elseif ($mode == 'delete-subkategori') {
                 if ($rapb = Rapb::where('id_subkategori_rapb', $id)->first()) {
@@ -346,7 +346,7 @@ class KategoriPenerimaanController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Sub-Kategori Penerimaan successfully'
+                        'message' => 'Delete Sub-Kategori Penerimaan Successfully'
                     ];
                 }
             } elseif ($mode == 'add-ket-subkategori') {
@@ -363,7 +363,7 @@ class KategoriPenerimaanController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-penerimaan/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
-                    'message' => 'Save Keterangan Sub-Kategori Penerimaan successfully'
+                    'message' => 'Save Keterangan Sub-Kategori Penerimaan Successfully'
                 ];
             } elseif ($mode == 'edit-ket-subkategori') {
                 // make object to find id
@@ -377,7 +377,7 @@ class KategoriPenerimaanController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-penerimaan/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
-                    'message' => 'Update Keterangan Sub-Kategori Penerimaan successfully'
+                    'message' => 'Update Keterangan Sub-Kategori Penerimaan Successfully'
                 ];
             } elseif ($mode == 'delete-ket-subkategori') {
                 // make object to find id
@@ -389,7 +389,7 @@ class KategoriPenerimaanController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Keterangan Sub-Kategori Penerimaan successfully'
+                    'message' => 'Delete Keterangan Sub-Kategori Penerimaan Successfully'
                 ];
             }
         }

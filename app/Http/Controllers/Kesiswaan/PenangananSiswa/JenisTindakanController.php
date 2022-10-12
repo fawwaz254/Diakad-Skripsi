@@ -102,7 +102,7 @@ class JenisTindakanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/jenis-tindakan',
-                    'message' => 'Save Jenis Tindakan successfully'
+                    'message' => 'Save Jenis Tindakan Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class JenisTindakanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penanganan-siswa/jenis-tindakan',
-                    'message' => 'Update Jenis Tindakan successfully'
+                    'message' => 'Update Jenis Tindakan Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class JenisTindakanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jenis Tindakan successfully'
+                        'message' => 'Delete Jenis Tindakan Successfully'
                     ];
                 }
             }

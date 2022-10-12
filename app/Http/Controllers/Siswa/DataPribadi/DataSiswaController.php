@@ -317,7 +317,7 @@ class DataSiswaController extends BaseController
 					DB::commit();
 					return [
 						'status' => 200, // SUCCESS AND LOAD TABLE
-						'message' => 'Update Data Siswa Berhasil!'
+						'message' => 'Update Data Siswa Berhasil'
 					];
 				} catch (\Exception $e) {
 					DB::rollback();

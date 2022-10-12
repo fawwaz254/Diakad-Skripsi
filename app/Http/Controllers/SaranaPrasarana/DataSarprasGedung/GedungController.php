@@ -113,7 +113,7 @@ class GedungController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-gedung/gedung',
-                    'message' => 'Save Gedung successfully'
+                    'message' => 'Save Gedung Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -131,7 +131,7 @@ class GedungController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sarpras-gedung/gedung',
-                    'message' => 'Update Gedung successfully'
+                    'message' => 'Update Gedung Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -151,7 +151,7 @@ class GedungController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Gedung successfully'
+                        'message' => 'Delete Gedung Successfully'
                     ];
                 }
             }

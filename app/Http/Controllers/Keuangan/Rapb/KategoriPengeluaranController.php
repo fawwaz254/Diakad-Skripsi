@@ -261,7 +261,7 @@ class KategoriPengeluaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-pengeluaran',
-                    'message' => 'Save Kategori Pengeluaran successfully'
+                    'message' => 'Save Kategori Pengeluaran Successfully'
                 ];
             } elseif ($mode == 'edit-kategori') {
                 // make object to find id
@@ -277,7 +277,7 @@ class KategoriPengeluaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-pengeluaran',
-                    'message' => 'Update Kategori Pengeluaran successfully'
+                    'message' => 'Update Kategori Pengeluaran Successfully'
                 ];
             } elseif ($mode == 'delete-kategori') {
                 if ($subkategoriRapb = SubkategoriRapb::where('id_kategori_rapb', $id)->first()) {
@@ -295,7 +295,7 @@ class KategoriPengeluaranController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kategori Pengeluaran successfully'
+                        'message' => 'Delete Kategori Pengeluaran Successfully'
                     ];
                 }
             } elseif ($mode == 'add-subkategori') {
@@ -313,7 +313,7 @@ class KategoriPengeluaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-pengeluaran/sub/'.$input->id_kategori_rapb,
-                    'message' => 'Save Sub-Kategori Pengeluaran successfully'
+                    'message' => 'Save Sub-Kategori Pengeluaran Successfully'
                 ];
             } elseif ($mode == 'edit-subkategori') {
                 // make object to find id
@@ -328,7 +328,7 @@ class KategoriPengeluaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-pengeluaran/sub/'.$input->id_kategori_rapb,
-                    'message' => 'Update Sub-Kategori Pengeluaran successfully'
+                    'message' => 'Update Sub-Kategori Pengeluaran Successfully'
                 ];
             } elseif ($mode == 'delete-subkategori') {
                 if ($rapb = Rapb::where('id_subkategori_rapb', $id)->first()) {
@@ -346,7 +346,7 @@ class KategoriPengeluaranController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Sub-Kategori Pengeluaran successfully'
+                        'message' => 'Delete Sub-Kategori Pengeluaran Successfully'
                     ];
                 }
             } elseif ($mode == 'add-ket-subkategori') {
@@ -363,7 +363,7 @@ class KategoriPengeluaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-pengeluaran/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
-                    'message' => 'Save Keterangan Sub-Kategori Pengeluaran successfully'
+                    'message' => 'Save Keterangan Sub-Kategori Pengeluaran Successfully'
                 ];
             } elseif ($mode == 'edit-ket-subkategori') {
                 // make object to find id
@@ -377,7 +377,7 @@ class KategoriPengeluaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/kategori-pengeluaran/sub/ket/'.$input->id_kategori_rapb.'/'.$input->id_subkategori_rapb,
-                    'message' => 'Update Keterangan Sub-Kategori Pengeluaran successfully'
+                    'message' => 'Update Keterangan Sub-Kategori Pengeluaran Successfully'
                 ];
             } elseif ($mode == 'delete-ket-subkategori') {
                 // make object to find id
@@ -389,7 +389,7 @@ class KategoriPengeluaranController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Keterangan Sub-Kategori Pengeluaran successfully'
+                    'message' => 'Delete Keterangan Sub-Kategori Pengeluaran Successfully'
                 ];
             }
         }

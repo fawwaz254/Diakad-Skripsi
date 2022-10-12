@@ -100,7 +100,7 @@ class DataKegiatanSiswaController extends BaseController{
         		return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'skpi/data-kegiatan-siswa',
-                    'message' => 'Save Kegiatan successfully'
+                    'message' => 'Save Kegiatan Successfully'
                 ];
 
         	}
@@ -123,7 +123,7 @@ class DataKegiatanSiswaController extends BaseController{
 	    		return [
 	                    'status' => 202, // SUCCESS AND LOAD CONTENT
 	                    'path' => 'skpi/data-kegiatan-siswa',
-	                    'message' => 'Edit Kegiatan successfully'
+	                    'message' => 'Edit Kegiatan Successfully'
 	                ];
 
         	}
@@ -139,7 +139,7 @@ class DataKegiatanSiswaController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Kegiatan successfully'
+                    'message' => 'Delete Kegiatan Successfully'
                 ];
 
         	}

@@ -872,7 +872,7 @@ class PembayaranSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'utility/pembayaran-siswa/view-detail-siswa/' . $input->nis_siswa . '/' . $input->nis_nama_siswa_asli,
-                    'message' => 'Save Pembayaran successfully'
+                    'message' => 'Save Pembayaran Successfully'
                 ];
             } elseif ($mode == 'lunas') {
 
@@ -975,7 +975,7 @@ class PembayaranSiswaController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Save Pelunasan successfully',
+                    'message' => 'Save Pelunasan Successfully',
                     'data' => [
                         'id' => $pembayaranBiaya->id_pembayaran_biaya,
                         'date' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'd/m'),
@@ -1084,7 +1084,7 @@ class PembayaranSiswaController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'utility/pembayaran-siswa/view-detail-siswa/' . $input->nis_siswa . '/' . $input->nis_nama_siswa_asli,
-                        'message' => 'Save Discount successfully'
+                        'message' => 'Save Discount Successfully'
                     ];
                 } catch (Exception $e) {
                     DB::rollback();
@@ -1108,7 +1108,7 @@ class PembayaranSiswaController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Pembayaran Siswa successfully'
+                    'message' => 'Delete Pembayaran Siswa Successfully'
                 ];
             }
         }
@@ -1128,7 +1128,7 @@ class PembayaranSiswaController extends BaseController
 
         return [
             'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Delete Tagihan Siswa successfully'
+            'message' => 'Delete Tagihan Siswa Successfully'
         ];
     }
 
@@ -1255,7 +1255,7 @@ class PembayaranSiswaController extends BaseController
 
             return [
                 'status' => 203, // SUCCESS AND LOAD TABLE
-                'message' => 'Pembayaran Siswa successfully'
+                'message' => 'Pembayaran Siswa Successfully'
             ];
         }
     }

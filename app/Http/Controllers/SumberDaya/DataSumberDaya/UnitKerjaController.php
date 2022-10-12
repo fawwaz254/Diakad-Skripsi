@@ -116,7 +116,7 @@ class UnitKerjaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/unit-kerja',
-                    'message' => 'Save Unit Kerja successfully'
+                    'message' => 'Save Unit Kerja Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -134,7 +134,7 @@ class UnitKerjaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/unit-kerja',
-                    'message' => 'Update Unit Kerja successfully'
+                    'message' => 'Update Unit Kerja Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -154,7 +154,7 @@ class UnitKerjaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Unit Kerja successfully'
+                        'message' => 'Delete Unit Kerja Successfully'
                     ];
                 }
             }

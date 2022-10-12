@@ -119,7 +119,7 @@ class InventarisController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-inventaris-bergerak/data-inventaris',
-                    'message' => 'Save Inventaris successfully'
+                    'message' => 'Save Inventaris Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -141,7 +141,7 @@ class InventarisController extends Controller
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-inventaris-bergerak/data-inventaris',
-                    'message' => 'Update Inventaris successfully'
+                    'message' => 'Update Inventaris Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
@@ -153,7 +153,7 @@ class InventarisController extends Controller
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Inventaris successfully'
+                    'message' => 'Delete Inventaris Successfully'
                 ];
             }
         }

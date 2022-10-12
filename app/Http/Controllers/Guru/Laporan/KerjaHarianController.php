@@ -135,7 +135,7 @@ class KerjaHarianController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'laporan/kerja-harian',
-                    'message' => 'Save Laporan Laporan Kerja Harian successfully'
+                    'message' => 'Save Laporan Laporan Kerja Harian Successfully'
                 ];
 
             }
@@ -184,7 +184,7 @@ class KerjaHarianController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'laporan/kerja-harian',
-                    'message' => 'Update Laporan Laporan Kerja Harian  successfully'
+                    'message' => 'Update Laporan Laporan Kerja Harian  Successfully'
                 ];
 
             }
@@ -198,7 +198,7 @@ class KerjaHarianController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Laporan Kerja Harian successfully'
+                    'message' => 'Delete Laporan Kerja Harian Successfully'
                 ];
 
             }

@@ -155,7 +155,7 @@ class KomponenNilaiMagangController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'magang-siswa/komponen-nilai-magang/view-periode/'.$input->id_periode_magang,
-                        'message' => 'Save Komponen Nilai Magang successfully'
+                        'message' => 'Save Komponen Nilai Magang Successfully'
                     ];
                 }
             }
@@ -181,7 +181,7 @@ class KomponenNilaiMagangController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'magang-siswa/komponen-nilai-magang/view-periode/'.$input->id_periode_magang,
-                        'message' => 'Update Komponen Nilai Magang successfully'
+                        'message' => 'Update Komponen Nilai Magang Successfully'
                     ];
                 }
             }
@@ -202,7 +202,7 @@ class KomponenNilaiMagangController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Komponen Nilai Magang successfully'
+                        'message' => 'Delete Komponen Nilai Magang Successfully'
                     ];
                 }
             }

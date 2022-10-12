@@ -245,7 +245,7 @@ class KomponenNilaiController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'penilaian/komponen-nilai/view-kelas/'.$input->id_kelas_mp,
-                        'message' => 'Save Komponen Nilai successfully'
+                        'message' => 'Save Komponen Nilai Successfully'
                     ];
                 }
             }
@@ -281,7 +281,7 @@ class KomponenNilaiController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'penilaian/komponen-nilai/view-kelas/'.$input->id_kelas_mp,
-                        'message' => 'Update Komponen Nilai successfully'
+                        'message' => 'Update Komponen Nilai Successfully'
                     ];
                 }
             }
@@ -304,7 +304,7 @@ class KomponenNilaiController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Komponen Nilai successfully'
+                        'message' => 'Delete Komponen Nilai Successfully'
                     ];
                 }
             }
@@ -356,7 +356,7 @@ class KomponenNilaiController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'penilaian/komponen-nilai/view-sub-komponen/'.$input->id_kelas_mp.'/'.$input->id_komponen_mp,
-                        'message' => 'Save Sub Komponen Nilai successfully'
+                        'message' => 'Save Sub Komponen Nilai Successfully'
                     ];
                 }
             }
@@ -397,7 +397,7 @@ class KomponenNilaiController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penilaian/komponen-nilai/view-sub-komponen/'.$input->id_kelas_mp.'/'.$input->id_komponen_mp,
-                    'message' => 'Save Sub Komponen Nilai successfully'
+                    'message' => 'Save Sub Komponen Nilai Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -425,7 +425,7 @@ class KomponenNilaiController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Sub Komponen Nilai successfully'
+                        'message' => 'Delete Sub Komponen Nilai Successfully'
                     ];
                 }
             }
@@ -591,7 +591,7 @@ class KomponenNilaiController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'penilaian/komponen-nilai/nilai-mapel/'.$input->id_kelas_mp.'/'.$input->id_pengguna.'/'.$input->id_semester,
-                    'message' => 'Save Nilai successfully'
+                    'message' => 'Save Nilai Successfully'
                 ];
             }
         }

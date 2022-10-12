@@ -201,7 +201,7 @@ class KomponenNilaiEkskulController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'pembina-ekskul/komponen-nilai-ekskul/list/'.$input->id_semester.'/'.$input->id_ekskul,
-                        'message' => 'Save Komponen Nilai Ekskul successfully'
+                        'message' => 'Save Komponen Nilai Ekskul Successfully'
                     ];
                 }
 
@@ -253,7 +253,7 @@ class KomponenNilaiEkskulController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'pembina-ekskul/komponen-nilai-ekskul/list/'.$input->id_semester.'/'.$input->id_ekskul,
-                    'message' => 'Save Komponen Nilai Ekskul successfully'
+                    'message' => 'Save Komponen Nilai Ekskul Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -282,7 +282,7 @@ class KomponenNilaiEkskulController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Komponen Nilai Ekskul successfully'
+                    'message' => 'Delete Komponen Nilai Ekskul Successfully'
                 ];
             }
         }

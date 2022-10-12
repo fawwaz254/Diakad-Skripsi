@@ -149,7 +149,7 @@ class MataPelajaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/mata-pelajaran',
-                    'message' => 'Save Mata Pelajaran successfully'
+                    'message' => 'Save Mata Pelajaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -182,7 +182,7 @@ class MataPelajaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/mata-pelajaran',
-                    'message' => 'Update Mata Pelajaran successfully'
+                    'message' => 'Update Mata Pelajaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -202,7 +202,7 @@ class MataPelajaranController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Mata Pelajaran successfully'
+                        'message' => 'Delete Mata Pelajaran Successfully'
                     ];
                 }
             }

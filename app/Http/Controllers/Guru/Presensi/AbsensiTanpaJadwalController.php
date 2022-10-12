@@ -315,7 +315,7 @@ class AbsensiTanpaJadwalController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'presensi/absensi-tanpa-jadwal',
-                        'message' => 'Save Absensi KBM Tanpa Jadwal successfully'
+                        'message' => 'Save Absensi KBM Tanpa Jadwal Successfully'
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

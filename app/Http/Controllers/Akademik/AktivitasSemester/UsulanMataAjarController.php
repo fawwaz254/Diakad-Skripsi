@@ -297,7 +297,7 @@ class UsulanMataAjarController extends BaseController
         return [
             'status'  => 202, // SUCCESS AND LOAD TABLE
             'path'    => 'aktivitas-semester/usulan-mata-ajar/edit/'.$kelas_mp,
-            'message' => 'Delete Jadwal Kelas successfully'
+            'message' => 'Delete Jadwal Kelas Successfully'
         ];
 
     }
@@ -497,7 +497,7 @@ class UsulanMataAjarController extends BaseController
 
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                    'message'   =>  'Save Usulan Mata Ajar successfully',
+                    'message'   =>  'Save Usulan Mata Ajar Successfully',
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
             } 
@@ -529,7 +529,7 @@ class UsulanMataAjarController extends BaseController
 
                 return [
                     'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                    'message'   =>  'Save Usulan Mata Ajar successfully',
+                    'message'   =>  'Save Usulan Mata Ajar Successfully',
                     'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$input->id_semester
                 ];
             } 
@@ -642,7 +642,7 @@ class UsulanMataAjarController extends BaseController
 
                     return [
                         'status'    =>  202, // SUCCESS AND LOAD CONTENT
-                        'message'   =>  'Save Copy Usulan Mata Ajar successfully',
+                        'message'   =>  'Save Copy Usulan Mata Ajar Successfully',
                         'path'      =>  'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/'.$id_semester
                     ];
                 } catch (\Exception $e) {
@@ -966,7 +966,7 @@ class UsulanMataAjarController extends BaseController
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'message' => 'Update Usulan Mata Ajar successfully',
+                        'message' => 'Update Usulan Mata Ajar Successfully',
                         'path'      =>  'aktivitas-semester/usulan-mata-ajar/edit/'.$id
                     ];
                 } 
@@ -1004,7 +1004,7 @@ class UsulanMataAjarController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Mata Ajar successfully'
+                        'message' => 'Delete Mata Ajar Successfully'
                     ];
                 }
             }
