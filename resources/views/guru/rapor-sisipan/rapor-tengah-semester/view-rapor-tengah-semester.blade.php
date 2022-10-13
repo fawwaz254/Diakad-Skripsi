@@ -38,15 +38,15 @@
         </div>
     </div>
 </div>
-{{-- 
+
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rapor-tengah-semester/datatables';
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
-    var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
-    var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/excel';
-    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
+    var nilai_url = role_url + '#' + modul_url + '/' + 'rapor-tengah-semester/nilai';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rapor-tengah-semester/action-rapor-tengah-semester/delete';
+    var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rapor-tengah-semester/excel';
+    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'rapor-tengah-semester/pdf';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -85,6 +85,11 @@
                 {
                 data: 'semester',
                 name: 'semester',
+                className: 'align-center'
+            },
+            {
+                data: 'kkm',
+                name: 'kkm',
                 className: 'align-center'
             },
             {
@@ -146,4 +151,4 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-</script>  --}}
+</script> 

@@ -19,6 +19,7 @@ use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
 use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Models\RaporSisipan;
 
 // ROLE AKADEMIK
 Route::middleware(['token_staff'])->group(function () {
