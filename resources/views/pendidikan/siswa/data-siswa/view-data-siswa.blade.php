@@ -45,7 +45,7 @@
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Tahun Masuk
                                 </h2>
@@ -60,7 +60,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Jalur
                                 </h2>
@@ -71,9 +71,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Status Siswa
                                 </h2>
@@ -82,6 +80,19 @@
                                     @foreach ($status_pengguna as $status_siswa)
                                         <option value="{{ $status_siswa->id_status_pengguna }}">
                                             {{ $status_siswa->nm_status_pengguna }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Filter Berdasarkan Abjad
+                                </h2>
+                                <select class="form-control" name="filter_by" id="filter_by">
+                                    <option value="0">Semua</option>
+                                    @foreach (range('A','Z') as $value)
+                                        <option value="{{ $value }}">{{ $value }}</option>
                                     @endforeach
                                 </select>
                             </div>
