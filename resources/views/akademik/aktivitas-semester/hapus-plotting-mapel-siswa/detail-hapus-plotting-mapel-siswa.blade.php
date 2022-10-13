@@ -182,6 +182,12 @@
                 closeOnConfirm: true,
                 closeOnCancel: true
             }, function(result) {
+                        $('button').attr('disabled', 'disabled');
+                        $('button').html(
+                            `<div class="spinner-border text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>`
+                        );
                 if (result) {
                     $.ajax({
                         type: "POST",
