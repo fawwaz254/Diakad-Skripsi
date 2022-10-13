@@ -245,7 +245,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('data-siswa', [DataSiswaController::class, 'viewDataSiswa']);
             Route::get('data-siswa/get-kelas/{id_jurusan}', [DataSiswaController::class, 'getKelas']);
             Route::post('post-view-data-siswa', [DataSiswaController::class, 'actionViewDataSiswa']);
-            Route::get('data-siswa/view-detail-data-siswa/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', [DataSiswaController::class, 'viewDetailDataSiswa']);
+            Route::get('data-siswa/view-detail-data-siswa/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}/{filter_by}', [DataSiswaController::class, 'viewDetailDataSiswa']);
             Route::get('data-siswa/datatables/{id_jurusan}/{id_kelas}/{thn_masuk_siswa}/{id_jalur}/{id_status_pengguna}', [DataSiswaController::class, 'datatablesDataSiswa']);
 
             //MENU UPDATE FOTO

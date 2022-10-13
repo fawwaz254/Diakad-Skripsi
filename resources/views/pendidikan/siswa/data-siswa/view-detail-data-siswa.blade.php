@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Tahun Masuk
                                 </h2>
@@ -80,7 +80,7 @@
                                         @endif
                                 </select>
                             </div>
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Jalur
                                 </h2>
@@ -102,9 +102,7 @@
                                     @endif
                                 </select>
                             </div>
-                        </div>
-                        <div class="row clearfix">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
                                     Status Siswa
                                 </h2>
@@ -124,6 +122,19 @@
                                             @endif
                                         @endforeach
                                     @endif
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">
+                                    Filter Berdasarkan Abjad
+                                </h2>
+                                <select class="form-control" name="filter_by" id="filter_by">
+                                    <option value="0">Semua</option>
+                                    @foreach (range('A','Z') as $value)
+                                        <option value="{{ $value }}">{{ $value }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -186,23 +197,26 @@
         buttons: dtButtonConfig,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(params){
+                params.filter_by = window.location.href.substr(-1);
+            }
         },
         columns: [
             { data: 'index_column', defaultContent: '', searchable: false, orderable: false },
-            { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran' },
+            { data: 'nomor_pendaftaran', name: 'nomor_pendaftaran', searchable: false },
             { data: 'nis_siswa', name: 'nis_siswa' },
-            { data: 'nisn_siswa', name: 'nisn_siswa' },
+            { data: 'nisn_siswa', name: 'nisn_siswa', searchable: false },
             { data: 'nm_pengguna', name: 'nm_pengguna' },
-            { data: 'thn_masuk_siswa', name: 'thn_masuk_siswa' },
-            { data: 'nm_jurusan', name: 'nm_jurusan' },
-            { data: 'nm_kelas', name: 'nm_kelas' },
-            { data: 'nm_status_pengguna', name: 'nm_status_pengguna' },
-            { data: 'nm_jalur', name: 'nm_jalur' },
-            { data: 'asal_sekolah', name: 'asal_sekolah' },
-            { data: 'alamat', name: 'alamat' },
-            { data: 'nomor_hp', name: 'nomor_hp' },
-            { data: 'nomor_hp_ortu', name: 'nomor_hp_ortu' },
+            { data: 'thn_masuk_siswa', name: 'thn_masuk_siswa', searchable: false },
+            { data: 'nm_jurusan', name: 'nm_jurusan', searchable: false },
+            { data: 'nm_kelas', name: 'nm_kelas', searchable: false },
+            { data: 'nm_status_pengguna', name: 'nm_status_pengguna', searchable: false },
+            { data: 'nm_jalur', name: 'nm_jalur', searchable: false },
+            { data: 'asal_sekolah', name: 'asal_sekolah', searchable: false },
+            { data: 'alamat', name: 'alamat', searchable: false },
+            { data: 'nomor_hp', name: 'nomor_hp', searchable: false },
+            { data: 'nomor_hp_ortu', name: 'nomor_hp_ortu', searchable: false },
             { data: 'nis_siswa',  searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="btn bg-red btn-circle waves-effect waves-circle waves-float" target="_blank" href="'+ print_url + '/' + data + '">'+
