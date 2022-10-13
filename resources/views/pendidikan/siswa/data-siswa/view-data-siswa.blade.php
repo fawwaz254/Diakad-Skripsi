@@ -87,7 +87,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title">
-                                    Filter Berdasarkan
+                                    Filter Berdasarkan Abjad
                                 </h2>
                                 <select class="form-control" name="filter_by" id="filter_by">
                                     <option value="0">Semua</option>

@@ -133,7 +133,7 @@
                                 <select class="form-control" name="filter_by" id="filter_by">
                                     <option value="0">Semua</option>
                                     @foreach (range('A','Z') as $value)
-                                        <option value="{{$value}}">{{ $value }}</option>
+                                        <option value="{{ $value }}">{{ $value }}</option>
                                     @endforeach
                                 </select>
                             </div>
