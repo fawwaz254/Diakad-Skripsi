@@ -138,13 +138,17 @@ class InformasiTambahanController extends Controller
         $auth_data = $input->auth_data;
 
         $list_data = InformasiTambahan::Select(
-        			'informasi_tambahan.id_informasi_tambahan',
-        			'informasi_tambahan.jenis_informasi_tambahan',
+                    'informasi_tambahan.id_informasi_tambahan',
+                    'informasi_tambahan.jenis_informasi_tambahan',
                     'informasi_tambahan.nm_informasi_tambahan',
                     'informasi_tambahan.nm_informasi_tambahan_eng',
                     'informasi_tambahan.status',
-        			'informasi_tambahan.keterangan'
-                   )->get();
+                    'informasi_tambahan.keterangan'
+                    )
+                    ->join('siswa', 'siswa.id_siswa', '=', 'informasi_tambahan.id_siswa')
+                    ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+                    ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         return Datatables::of($list_data)
                         ->addColumn('keterangan_status', function ($item) {
