@@ -61,6 +61,7 @@ use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketI
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 use App\Http\Controllers\Guru\Jadwal\SetJadwalKelasGuruController;
+use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 
 // ROLE GURU
 
@@ -593,6 +594,22 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
+
+            Route::prefix('rapor-tengah-semester')->group(function () {
+                Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
+                Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
+                Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
+                Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
+                // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
+                // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
+                // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
+                // Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
+
+            });
+
+
         });
 
         Route::prefix('kelas-daring')->group(function () {
