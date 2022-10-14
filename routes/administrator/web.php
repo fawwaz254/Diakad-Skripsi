@@ -1,16 +1,18 @@
 <?php
 
-use App\Http\Controllers\Administrator\Device\FingerprintController;
-use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
-use App\Http\Controllers\Administrator\PengelolaanAkun\GuruController;
-use App\Http\Controllers\Administrator\PengelolaanAkun\PencarianController;
-use App\Http\Controllers\Administrator\PengelolaanAkun\SiswaController;
-use App\Http\Controllers\Administrator\PengelolaanAkun\TendikController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Administrator\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Administrator\Device\FingerprintController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\GuruController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\SiswaController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\TendikController;
+use App\Http\Controllers\Administrator\PengelolaanAkun\PencarianController;
+use App\Http\Controllers\Administrator\JurnalPimpinan\JurnalPimpinanController;
+use App\Http\Controllers\Administrator\ManajemenMenu\SettingDashboardController;
+use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpinanController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
@@ -85,6 +87,33 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('siswa/view-detail/{id_kelas}', [SiswaController::class, 'viewDetailSiswa']);
             Route::get('siswa/datatables/{id_kelas}', [SiswaController::class, 'datatablesSiswa']);
         });
+
+        //Jurnal pimpinan
+        Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
+            Route::group(array('prefix' => 'tambah-jurnal-pimpinan'), function () {
+                Route::get('/', [JurnalPimpinanController::class, 'viewSettingJurnalPimpinan']);
+                Route::get('datatables', [JurnalPimpinanController::class, 'datatablesSettingJurnalPimpinan']);
+                Route::get('add', [JurnalPimpinanController::class, 'addSettingJurnalPimpinan']);
+                Route::get('edit/{id}', [JurnalPimpinanController::class, 'editSettingJurnalPimpinan']);
+                Route::get('datatablesJurnalPimpinan', [JurnalPimpinanController::class, 'datatablesAddJurnalPimpinan']);
+
+                Route::post('action-setting-jurnal-pimpinan/{mode}/{id}', [JurnalPimpinanController::class, 'actionSettingJurnalPimpinan']);
+            });
+
+            Route::group(array('prefix' => 'jenis-jurnal-pimpinan'), function () {
+                Route::get('/', [JenisKategoriJurnalPimpinanController::class, 'viewDataJenis']);
+                Route::get('/datatables', [JenisKategoriJurnalPimpinanController::class, 'datatablesjenis']);
+                // Route::get('/add', [JenisKategoriJurnalPimpinanController::class, 'addDataJenis']);
+                Route::post('action-data-kategori/{mode}/{id}', [JenisKategoriJurnalPimpinanController::class, 'actionDataJenis']);
+            });
+
+			Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
+				Route::get('/', [JurnalPimpinanController::class, 'viewLaporanAllJurnalPimpinan']);
+				Route::get('/datatables', [JurnalPimpinanController::class, 'datatablesLaporanJurnalPimpinan']);
+                Route::get('preview-file/{id}', [JurnalPimpinanController::class, 'previewFile']);
+				Route::get('download-file/{id}', [JurnalPimpinanController::class, 'downloadFile']);				
+			});
+		});
 
         Route::prefix('manajemen-menu')->group(function () {
             // MENU Setting Dashboard
