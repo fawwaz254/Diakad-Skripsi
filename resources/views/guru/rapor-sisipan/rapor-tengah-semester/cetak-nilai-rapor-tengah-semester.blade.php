@@ -65,7 +65,7 @@
 
 <body>
     <div class="page">
-        <table style="width: 40%; margin-left:5%;">
+        {{-- <table style="width: 40%; margin-left:5%;">
             <tr>
                 <td colspan="4">
                     <h2 align="center" style="margin-top: 1px; font-family: 'Calibri';">
@@ -76,15 +76,16 @@
                 </td>
             </tr>
         </table>
-        <br>
+        <br> --}}
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
 
             <tr>
                 <td colspan="10" style="border-style : hidden">
 
                     <h2 align="center" style="margin-top: 3px">
-                        DAFTAR NILAI RAPOR SISIPAN<br>
+                        LAPORAN PENILAIAN HASIL BELAJAR<br>
                         {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
+                        TENGAH SEMESTER GASAL<br>
                         TAHUN AJARAN {{ $rapor_sisipan->semester->tahun_ajaran }}
 
                     </h2>
@@ -104,23 +105,17 @@
                 <tr>
                     <td colspan="2" style="text-align: center;font-weight: bold;">NOMOR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
-                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR<br>SISIPAN</td>
+                    {{-- <td colspan="4" style="text-align: center;font-weight: bold;">MATA PELAJARAN</td> --}}
+                    <td colspan="2" style="text-align: center;font-weight: bold;">NILAI UTS</td>
+                    {{-- <td rowspan="2" style="text-align: center;font-weight: bold;"></td> --}}
+                    {{-- <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
+                    <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR<br>SISIPAN</td> --}}
                 </tr>
                 <tr>
                     <td style="text-align: center;font-weight: bold;">URT</td>
                     <td style="text-align: center;font-weight: bold;">INDUK</td>
-                    <td style="text-align: center;font-weight: bold;">1</td>
-                    <td style="text-align: center;font-weight: bold;">2</td>
-                    <td style="text-align: center;font-weight: bold;">3</td>
-                    <td style="text-align: center;font-weight: bold;">4</td>
-                    <td style="text-align: center;font-weight: bold;">1</td>
-                    <td style="text-align: center;font-weight: bold;">2</td>
-                    <td style="text-align: center;font-weight: bold;">3</td>
-                    <td style="text-align: center;font-weight: bold;">4</td>
+                    <td style="text-align: center;font-weight: bold;">KKM</td>
+                    <td style="text-align: center;font-weight: bold;">NILAI</td>
                 </tr>
             </thead>
             <tbody class="body">
@@ -135,51 +130,52 @@
                         <td style="text-align: center;">{{ ++$no }}</td>
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
-                        @foreach ($list_data as $nilai)
+                        <td style="text-align: center;">{{ $rapor_sisipan->kkm }}</td>
+                        <td style="text-align: center;">{{ $nilai_siswa[ $siswa->id_siswa . $id_rapor_sisipan] }}</td>
+                        {{-- @foreach ($list_data as $nilai)
                         @if (in_array($nilai->urutan, [1, 2]))
                             <td style="text-align: center;">
-                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                                
                                 {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
                             </td>
                         @endif
-                    @endforeach
-                    <td></td>
-                    <td></td>
-                    @foreach ($list_data as $nilai)
+                    @endforeach --}}
+                    {{-- <td></td>
+                    <td></td> --}}
+                    {{-- @foreach ($list_data as $nilai)
                         @if (in_array($nilai->urutan, [5, 6]))
                             <td style="text-align: center;">
-                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                               
                                 {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
                             </td>
                         @endif
-                    @endforeach
-                    <td></td>
-                    <td></td>
-                    <td style="text-align: center;">
-
-                        {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
-                    </td>
-                    @foreach ($list_data as $nilai)
+                    @endforeach --}}
+                    {{-- <td></td>
+                    <td></td> --}}
+                    {{-- @foreach ($list_data as $nilai)
                         @if ($nilai->urutan == 9)
                             <td style="text-align: center;">
-                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                           
                                 {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
                             </td>
                         @endif
                     @endforeach
-                       
+                        <td style="text-align: center;">
+
+                            {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
+                        </td>
                         <td style="text-align: center;">
 
                             {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}
 
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
             </tbody>
 
         </table>
-        <table style="width: 30%; margin-left:10%; margin-top:20px">
-            <tr>
+        {{-- <table style="width: 30%; margin-left:10%; margin-top:20px">
+             <tr>
                 <td colspan="4">
                     <p align="center" style="display: inline">
                         RAPOR =
@@ -188,17 +184,17 @@
                         {(2 x RT2 SMT)+(STS)}
                     </p>
                 </td>
-            </tr>
-        </table>
-
+            </tr> 
+        </table> --}}
+<br><br>
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
             <tr>
                 <td style=" border-style : hidden; width:65%; vertical-align: text-top; padding:0">
-                   <p style="margin-left: 10%;">
+                   {{-- <p style="margin-left: 10%;">
                         SMT = Sumatif
                     <br>
                         STS = Sumatif Tengah Semester
-                    </p>
+                    </p> --}}
                 </td>
 
                 <td style="width:25%">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
@@ -210,7 +206,7 @@
 
             </tr>
 
-        </table>
+        </table> 
 
     </div>
 </body>

@@ -112,9 +112,10 @@ class RaporSisipanController extends Controller
                     $rapor_sisipan->save();
 
                     $siswa = Siswa::where('id_kelas', $input->id_kelas)->get();
-                    $komponen_nilai = KomponenNilaiRaporSisipan::all();
+                    $komponen_nilai = KomponenNilaiRaporSisipan::where('status',1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_nilai as $komponen) {
+                            usleep( 1 );
                             $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
                             $nilai_rapor_sisipan                                    = new NilaiRaporSisipan;
                             $nilai_rapor_sisipan->id_nilai_rapor_sisipan            = $id;
@@ -157,35 +158,35 @@ class RaporSisipanController extends Controller
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            ->addColumn('jumlah', function ($item) {
-                //semua siswa
-                $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
+            // ->addColumn('jumlah', function ($item) {
+            //     //semua siswa
+            //     $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
 
-                //cari siswa yang ada nilai 0 nya
-                $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
-                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->groupBy('id_siswa')
-                    ->selectRaw('count(*) as total, id_siswa')
-                    ->get()->toArray();
+            //     //cari siswa yang ada nilai 0 nya
+            //     $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+            //         $query->where('id_kelas', '=', $item->kelas->id_kelas);
+            //     })->groupBy('id_siswa')
+            //         ->selectRaw('count(*) as total, id_siswa')
+            //         ->get()->toArray();
 
-                //hitung ada berapa nilai kosongnya
-                $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+            //     //hitung ada berapa nilai kosongnya
+            //     $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
 
-                //loop dan cari nilai kosong yang diatas 5
-                $nilaiSiswaYangKosong = 0;
-                for ($i = 6; $i <= 10; $i++) {
-                    if (isset($arrayJumlahBelumTerisi[$i])) {
-                        $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
-                    }
-                }
+            //     //loop dan cari nilai kosong yang diatas 5
+            //     $nilaiSiswaYangKosong = 0;
+            //     for ($i = 6; $i <= 10; $i++) {
+            //         if (isset($arrayJumlahBelumTerisi[$i])) {
+            //             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+            //         }
+            //     }
 
-                $data = array(
-                    'jumlah_siswa' => $allSiswa,
-                    'terisi_siswa' => $allSiswa - $nilaiSiswaYangKosong,
-                );
-                // dd($data['terisi_siswa']);
-                return $data;
-            })
+            //     $data = array(
+            //         'jumlah_siswa' => $allSiswa,
+            //         'terisi_siswa' => $allSiswa - $nilaiSiswaYangKosong,
+            //     );
+            //     // dd($data['terisi_siswa']);
+            //     return $data;
+            // })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
             })
