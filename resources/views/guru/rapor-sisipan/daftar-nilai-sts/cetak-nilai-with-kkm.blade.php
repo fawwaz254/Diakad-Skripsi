@@ -131,7 +131,7 @@
                         <td style="text-align: center;">{{ ++$no }}</td>
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
-                        <td style="text-align: center;">{{ $rapor_sisipan->kkm }}</td>
+                        <td style="text-align: center;">{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan . 'kkm'] }}</td>
                         <td style="text-align: center;">{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}</td>
                         {{-- @foreach ($list_data as $nilai)
                         @if (in_array($nilai->urutan, [1, 2]))

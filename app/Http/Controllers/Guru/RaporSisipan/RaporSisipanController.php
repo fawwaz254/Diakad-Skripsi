@@ -286,10 +286,6 @@ class RaporSisipanController extends Controller
 
     public function pdfDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     {
-
-
-
-
         set_time_limit(1800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -314,6 +310,7 @@ class RaporSisipanController extends Controller
                     foreach ($nilai as $nilaiRapor) {
                         foreach ($nilaiRapor as $a) {
                             $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+                            $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan'].'kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
 
                                 // $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
                                 // $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
