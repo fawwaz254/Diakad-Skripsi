@@ -12,9 +12,9 @@
 
     <style type="text/css">
         * {
-
             font-family: 'Times New Roman', Times, serif;
         }
+
         .bg {
             background-image: url("{{ asset('media/vxskpi.png') }}");
             /* Full height */
@@ -33,7 +33,6 @@
             margin-left: auto;
             margin-right: auto;
             position: absolute;
-
             margin-top: 45px;
         }
 
@@ -69,7 +68,6 @@
         }
 
         @media print {
-
             .ttd {
                 position: relative;
             }
@@ -79,11 +77,7 @@
             }
 
             .bg {
-
                 background-image: url("{{ asset('media/vxskpi.png') }}");
-
-
-
                 /* Center and scale the image nicely */
                 background-position: center;
                 background-repeat: no-repeat;
@@ -101,7 +95,6 @@
             table,
             td,
             th {
-
                 border: 1px solid black;
                 padding-left: 10px;
                 padding: 8px;
@@ -121,48 +114,42 @@
 
 
 
-@if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-<style type="text/css">
-
-.bg {
-    
-    background-image: url("{{ asset('media/skpi-wh2.png') }}");
-}
-@media print {
-    .bg {
-    background-image: url("{{ asset('media/skpi-wh2.png') }}"); 
-    }
-    tr:nth-child(even) {
-                background-color: #439dd6;
-            }
-    .logo {
-            left: 0;
-            right: 0;
-            padding-left: 0px;
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-            position: absolute;
-
-            margin-top: 45px;
-        }
-        tr:nth-child(even) {
-                background-color: #439dd6;
+    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+        <style type="text/css">
+            .bg {
+                background-image: url("{{ asset('media/skpi-wh2.png') }}");
             }
 
-}
+            @media print {
+                .bg {
+                background-image: url("{{ asset('media/skpi-wh2.png') }}"); 
+                }
 
+                tr:nth-child(even) {
+                            background-color: #439dd6;
+                }
 
-</style>
+                .logo {
+                    left: 0;
+                    right: 0;
+                    padding-left: 0px;
+                    text-align: center;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: absolute;
+                    margin-top: 45px;
+                }
 
-
-
-@endif
+                tr:nth-child(even) {
+                    background-color: #439dd6;
+                }
+            }
+        </style>
+    @endif
 
     @if ($siswa->keterangan_kelas == 'Internasional')
         <style>
             @media print {
-
                 table,
                 td,
                 th {
@@ -170,30 +157,24 @@
                     border: 1px solid black;
                     padding-top: 1px;
                     padding-bottom: 1px;
-
                 }
             }
-
         </style>
     @endif
 
-
     {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-<style>
-table.bg-color tr td{
-	background-color: rgb(162, 219, 250, 0.6);
-}
-</style>
-@else
-<style>
-table.bg-color tr td{
-	background-color: rgb(102, 222, 147, 0.6);}
-
-
-}
-
-</style> --}}
-    {{-- @endif --}}
+        <style>
+            table.bg-color tr td{
+                background-color: rgb(162, 219, 250, 0.6);
+            }
+        </style>
+    @else
+        <style>
+            table.bg-color tr td{
+                background-color: rgb(102, 222, 147, 0.6);
+            }
+        </style>
+    @endif --}}
     <title>SKPI Siswa</title>
 </head>
 
@@ -213,7 +194,6 @@ table.bg-color tr td{
         <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
             <tr>
                 <td colspan="10">
-                
                     <h5 align="center" style="font-family: Segoe Print; color:green; margin-top: 5px">
                         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
                             Yayasan Pendidikan & Sosial Ma'arif
@@ -223,31 +203,34 @@ table.bg-color tr td{
                     </h5>
                 </td>
         </table>
+
         <table class="header" cellspacing="0" cellpadding="10" style="width: 100%; margin-top:-15px">
-            <td colspan="10">
-                <h1 align="center" style="font-family: Arial Black; color:blue;">
-                    {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}</h1>
-                <h3 align="center" style=" margin-top:-10px"><b>TERAKREDITASI : A ( UNGGUL )</b>
-                    @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
-                        <br>NSS : 204050214055 NDS : 2005020203 NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}
-                    @endif
-                </h3>
-            </td>
+            <tr>
+                <td colspan="10">
+                    <h1 align="center" style="font-family: Arial Black; color:blue;">
+                        {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
+                    </h1>
+                    <h3 align="center" style=" margin-top:-10px"><b>TERAKREDITASI : A ( UNGGUL )</b>
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah != 'smawh2')
+                            <br>NSS : 204050214055 NDS : 2005020203 NPSN : {{ $auth_data->sekolah_data->npsn_sekolah }}
+                        @endif
+                    </h3>
+                </td>
             </tr>
         </table>
+        
         @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-        <table class="header" cellspacing="0" cellpadding="10" style="width: 80%; border:1px solid; margin-left: auto;
-        margin-right: auto; background-color: rgb(158, 198, 255);">
+            <table class="header" cellspacing="0" cellpadding="10" style="width: 80%; border:1px solid; margin-left: auto;
+            margin-right: auto; background-color: rgb(158, 198, 255);">
         @else
-        <table class="header" cellspacing="0" cellpadding="10" style="width: 80%; border:1px solid; margin-left: auto;
-        margin-right: auto; background-color: rgb(214, 227, 188);">
+            <table class="header" cellspacing="0" cellpadding="10" style="width: 80%; border:1px solid; margin-left: auto;
+            margin-right: auto; background-color: rgb(214, 227, 188);">
         @endif
-
             <tr>
                 <td colspan=9>
                     <p align="center">Alamat : {{ $auth_data->sekolah_data->alamat_jalan }}
                         {{ $auth_data->sekolah_data->alamat_kelurahan }} Tlp.
-                        {{ $auth_data->sekolah_data->nomor_telp_sekolah }} –
+                        {{ $auth_data->sekolah_data->nomor_telp_sekolah }} -
                         {{ $auth_data->sekolah_data->nomor_fax_sekolah }} Kecamatan
                         {{ $auth_data->sekolah_data->alamat_kecamatan }}
                         Kabupaten {{ $auth_data->sekolah_data->kota->nm_kota }}, Kode Pos
@@ -260,13 +243,11 @@ table.bg-color tr td{
         <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
             @if ($siswa->keterangan_kelas == 'Internasional')
                 <h4 class="text-center" style="margin-top: 10px; font-family: 'Franklin Gothic Demi Cond, monospace">
-                    <b>SURAT
-                        KETERANGAN PENDAMPING IJAZAH</b>
+                    <b>SURAT KETERANGAN PENDAMPING IJAZAH</b>
                 </h4>
             @else
                 <h4 class="text-center" style="margin-top: 20px;  font-family: 'Franklin Gothic Demi Cond, monospace">
-                    <b>SURAT
-                        KETERANGAN PENDAMPING IJAZAH</b>
+                    <b>SURAT KETERANGAN PENDAMPING IJAZAH</b>
                 </h4>
             @endif
 
@@ -279,31 +260,25 @@ table.bg-color tr td{
 
         </table>
         <table class="header" cellspacing="0" cellpadding="10" style="width: 100%;">
-            <p style=" border-top: 3px solid; border-bottom: 3px solid; width: 80%;margin-left: auto;
-    margin-right: auto;">Surat Keterangan Pendamping Ijazah yang dikeluarkan oleh
-                {{ $auth_data->sekolah_data->nm_sekolah }} sebagai pelengkap ijazah yang menerangkan capaian
-                pembelajaran dan
-                prestasi dari pemegang ijazah selama masa studi
+            <p style=" border-top: 3px solid; border-bottom: 3px solid; width: 80%;margin-left: auto;margin-right: auto;">Surat Keterangan Pendamping Ijazah yang dikeluarkan oleh {{ $auth_data->sekolah_data->nm_sekolah }} sebagai pelengkap ijazah yang menerangkan capaian pembelajaran dan prestasi dari pemegang ijazah selama masa studi
                 @if ($siswa->keterangan_kelas == 'Internasional')
                     <br><i>The Diploma Supplement is issued by {{ $auth_data->sekolah_data->nm_sekolah }} Sidoarjo
-                        accompanies a
-                        higher education certificate providing a standardized description of the nature, level, context,
-                        content, and
-                        status of the studies completed by its holder</i>
+                        accompanies a higher education certificate providing a standardized description of the nature, level, context,
+                        content, and status of the studies completed by its holder</i>
                 @endif
             </p>
-
         </table>
+
         @if ($siswa->keterangan_kelas == 'Internasional')
             <div class="container" style="margin-top: 20px;">
                 <h5 style="margin-left: 15px"><b>I. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI
                         <br><i style="margin-left: 17px">INFORMATION OF PERSONAL DIPLOMA SUPPLEMENT HOLDER</i> </b>
                 </h5>
-            @else
-                <div class="container" style="margin-top: 20px;">
-                    <h5 style="margin-top: 30px; margin-left: 40px"><b>I. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI
-                        </b>
-                    </h5>
+        @else
+            <div class="container" style="margin-top: 20px;">
+                <h5 style="margin-top: 30px; margin-left: 35px"><b>I. INFORMASI TENTANG IDENTITAS DIRI PEMEGANG SKPI
+                    </b>
+                </h5>
         @endif
 
         <table class="bg-color">
@@ -375,11 +350,9 @@ table.bg-color tr td{
 
         @if ($siswa->keterangan_kelas == 'Internasional')
             <h5 style="margin-top: 40px;  margin-left: 10px"><b>II. INFORMASI TENTANG IDENTITAS PENYELENGGARA
-                    <br><i style="margin-left: 25px">INFORMATION OF IDENTITYHIGHER EDUCATION INSTITUTION</i>
-                </b></h5>
+                <br><i style="margin-left: 25px">INFORMATION OF IDENTITYHIGHER EDUCATION INSTITUTION</i></b></h5>
         @else
-            <h5 style="margin-top: 40px;  margin-left: 40px"><b>II. INFORMASI TENTANG IDENTITAS PENYELENGGARA
-                </b></h5>
+            <h5 style="margin-top: 40px;  margin-left: 35px"><b>II. INFORMASI TENTANG IDENTITAS PENYELENGGARA</b></h5>
         @endif
 
         <table class="bg-color break-after">
@@ -490,20 +463,19 @@ table.bg-color tr td{
         </table>
     </div>
     <br>
-    <h5 style="margin-top: 80px;margin-left: 90px"><b>III. INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN
+
+    <h5 style="margin-top: 80px;margin-left: 110px"><b>III. INFORMASI TENTANG KECAKAPAN DAN HASIL PEMBELAJARAN
             @if ($siswa->keterangan_kelas == 'Internasional')
                 <br><i style="margin-left: 30px">INFORMATION OF PROFICIENCY AND LEARNING OUTCOME</i>
             @endif
         </b></h5>
-    <h6 style="margin-top: 15px;margin-left: 120px">A. Capaian Pembelajaran
+    <h6 style="margin-top: 15px;margin-left: 110px">A. Capaian Pembelajaran
         @if ($siswa->keterangan_kelas == 'Internasional')
             <br><i style="margin-left: 17px">Learning Outcome</i>
         @endif
     </h6>
-    <table class="bg-color" style="width: 79%;
-border-collapse: collapse;
-margin-left: 140px;
-margin-right: auto;">
+
+    <table class="bg-color" style="width: 80%;border-collapse: collapse;margin-left: auto;margin-right: auto;">
         <tr>
             <td style="width: 5%;">3.A1</td>
             <td>Bertaqwa kepada Tuhan Yang Maha Esa dan menjunjung tinggi sikap religius</td>
@@ -564,26 +536,18 @@ margin-right: auto;">
     <p style="display: none"> {{ $urutan = 'B' }}</p>
 
     @if ($prestasi->count() > 0)
-        <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Lomba/Olimpiade
-
+        <h6 style="margin-top: 15px;margin-left: 110px">{{ $urutan }}. Lomba/Olimpiade
             @if ($siswa->keterangan_kelas == 'Internasional')
                 <br><i style="margin-left: 17px">Competition/Olympics</i>
             @endif
         </h6>
 
-        <table class="bg-color" style="width: 79%;
-border-collapse: collapse;
-margin-left: 140px;
-margin-right: auto;
-text-align: center;
-">
-
-@if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-<thead style="background-color: #439dd6;">
-@else
-<thead style="background-color: #6e9c6e;">
-@endif
-  
+        <table class="bg-color" style="width: 80%;border-collapse: collapse;margin-left: auto;margin-right: auto;text-align: center;">
+            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <thead style="background-color: #439dd6;">
+            @else
+                <thead style="background-color: #6e9c6e;">
+            @endif
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
@@ -635,28 +599,28 @@ text-align: center;
                         <td>{{ $r->nm_prestasi_siswa }}</td>
                         <td>{{ $r->nm_tingkat_prestasi_siswa }}</td>
                         {{-- <td>
-              @if ($r->jenis_prestasi_siswa == 1)
-              Sains
-              @if ($siswa->keterangan_kelas == 'Internasional')
-              <br><i>Science</i>
-              @endif
-              @elseif ($r->jenis_prestasi_siswa == 2)
-              Seni
-              @if ($siswa->keterangan_kelas == 'Internasional')
-              <br><i>Art</i>
-              @endif
-              @elseif ($r->jenis_prestasi_siswa == 3)
-              Olahraga
-              @if ($siswa->keterangan_kelas == 'Internasional')
-              <br><i>Sport</i>
-              @endif
-              @else
-              Lain lain
-              @if ($siswa->keterangan_kelas == 'Internasional')
-              <br><i>Etc</i>
-              @endif
-              @endif
-            </td> --}}
+                        @if ($r->jenis_prestasi_siswa == 1)
+                        Sains
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                        <br><i>Science</i>
+                        @endif
+                        @elseif ($r->jenis_prestasi_siswa == 2)
+                        Seni
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                        <br><i>Art</i>
+                        @endif
+                        @elseif ($r->jenis_prestasi_siswa == 3)
+                        Olahraga
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                        <br><i>Sport</i>
+                        @endif
+                        @else
+                        Lain lain
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                        <br><i>Etc</i>
+                        @endif
+                        @endif
+                        </td> --}}
                         <td>{{ $r->jenis_lomba_siswa }}</td>
                         <td>
                             @if ($r->peringkat_prestasi_siswa == 1)
@@ -686,22 +650,17 @@ text-align: center;
     @endif
 
     @if ($kegiatan->count() > 0)
-        <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Kegiatan Sosial
+        <h6 style="margin-top: 15px;margin-left: 110px">{{ $urutan }}. Kegiatan Sosial
             @if ($siswa->keterangan_kelas == 'Internasional')
                 <br><i style="margin-left: 17px">Social Activities</i>
             @endif
         </h6>
-        <table class="bg-color" style="width: 79%;
-border-collapse: collapse;
-margin-left: 140px;
-margin-right: auto;
-text-align: center;
-">
-@if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-<thead style="background-color: #439dd6;">
-@else
-<thead style="background-color: #6e9c6e;">
-@endif
+        <table class="bg-color" style="width: 80%;border-collapse: collapse;margin-left: auto;margin-right: auto;text-align: center;">
+            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                <thead style="background-color: #439dd6;">
+            @else
+                <thead style="background-color: #6e9c6e;">
+            @endif
                 <tr>
                     <td><b>Nomor</b>
                         @if ($siswa->keterangan_kelas == 'Internasional')
@@ -754,12 +713,13 @@ text-align: center;
     {{-- //informasi tambahan --}}
     {{-- @if ($informasi_tambahan->count() > 0) --}}
     @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-    <h6 style="margin-top: 15px;margin-left: 120px">{{ $urutan }}. Informasi Tambahan
+    <h6 style="margin-top: 15px;margin-left: 110px">{{ $urutan }}. Informasi Tambahan
         @if ($siswa->keterangan_kelas == 'Internasional')
             <br><i style="margin-left: 17px">Additional Information</i>
         @endif
     </h6>
-    <table class="bg-color" style="width: 79%;margin-top: -20px; border-collapse: collapse; margin-left: 140px;">
+
+    <table class="bg-color" style="width: 80%;margin-top: -20px; border-collapse: collapse; margin-left: auto;">
         <tr>
             <td>3.{{ $urutan }}1</td>
             <td>Bahasa Internasional
@@ -787,8 +747,6 @@ text-align: center;
             </td>
         </tr>
 
-
-
         <p style="display:none">{{ $no = 2 }}</p>
 
         {{-- //ektra --}}
@@ -802,18 +760,17 @@ text-align: center;
                         <i>Extracurricular</i>
                 </td>
         @endif
-        <td style="width: 55%;">
-            @foreach ($informasi_tambahan_ekstrakurikuler as $r)
-                {{ $r->nm_informasi_tambahan }}
-                @if ($siswa->keterangan_kelas == 'Internasional')
-                    <br>
-                    <i>{{ $r->nm_informasi_tambahan_eng }}</i>
-                @endif
-                <br>
-            @endforeach
-
-        </td>
-        </tr>
+                <td style="width: 55%;">
+                    @foreach ($informasi_tambahan_ekstrakurikuler as $r)
+                        {{ $r->nm_informasi_tambahan }}
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                            <br>
+                            <i>{{ $r->nm_informasi_tambahan_eng }}</i>
+                        @endif
+                        <br>
+                    @endforeach
+                </td>
+            </tr>
         @endif
 
         {{-- produk lomba sosial --}}
@@ -827,17 +784,17 @@ text-align: center;
                         <i>Competition Product</i>
                 </td>
         @endif
-        <td style="width: 55%;">
-            @foreach ($informasi_produk_lomba as $r)
-                {{ $r->nm_informasi_tambahan }}
-                @if ($siswa->keterangan_kelas == 'Internasional')
-                    <br>
-                    <i>{{ $r->nm_informasi_tambahan_eng }}</i>
-                @endif
-                <br>
-            @endforeach
-        </td>
-        </tr>
+                <td style="width: 55%;">
+                    @foreach ($informasi_produk_lomba as $r)
+                        {{ $r->nm_informasi_tambahan }}
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                            <br>
+                            <i>{{ $r->nm_informasi_tambahan_eng }}</i>
+                        @endif
+                        <br>
+                    @endforeach
+                </td>
+            </tr>
         @endif
 
         <br>
@@ -846,55 +803,52 @@ text-align: center;
     <div class="avoid-break mt-4 mb-4">
         <table cellspacing="0" style="width: 80%; border:none; margin:auto; text-align:left; ">
             <tr>
-                <td style="width: 70%; border: none;">
-                </td>
+                <td style="width: 70%; border: none;"></td>
                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                <td style="border: none;"></td>
+                    <td style="border: none;"></td>
                 @endif
                 <td style="border: none;">Kab. Sidoarjo,
                     {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                 </td>
             </tr>
             <tr>
-            <tr style="vertical-align: top;top:20px">
-                <td style="width: 70%; border: none;">
-                </td>
-                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                <td style="border: none;">
-                    <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $siswa->pengguna->path_foto_pengguna }}" alt="img" style="height:165px; width:124px; margin-left:-160px;"/>
-                </td>
-                @endif
-                <td style="border: none; position: relative;">
-                    Kepala Sekolah
-                    <br>
+                <tr style="vertical-align: top;top:20px">
+                    <td style="width: 70%; border: none;"></td>
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                        <br>
-                        <img  src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" style="height:90px; margin-left:-40px;"  width="220px" />
-                        <br>
-                    @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
-                        <img style="position: absolute; top: 5%; margin-left:-40px;" src="{{ asset('media/ttd/smpypm1.png') }}"
-                            alt="TTD" width="160px" height="160px" class="ttd">
-                        <br>
-                        <br>
-                        <br>
-                    @else
-                        <br>
-                        <br>
-                        <br>
+                        <td style="border: none;">
+                            <img src="https://diakad.sgp1.digitaloceanspaces.com/{{ $siswa->pengguna->path_foto_pengguna }}" alt="img" style="height:165px; width:124px; margin-left:-160px;"/>
+                        </td>
                     @endif
-                    @if ($siswa->keterangan_kelas == 'Internasional')
+                    <td style="border: none; position: relative;">
+                        Kepala Sekolah
                         <br>
-
-                        <br>
-                    @endif
-                    <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
-                </td>
-            </tr>
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
+                            <br>
+                            <img  src="{{ asset('media/ttd/smawh2.png') }}" alt="TTD" style="height:90px; margin-left:-40px;"  width="220px" />
+                            <br>
+                        @elseif($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1')
+                            <img style="position: absolute; top: 5%; margin-left:-40px;" src="{{ asset('media/ttd/smpypm1.png') }}"
+                                alt="TTD" width="160px" height="160px" class="ttd">
+                            <br>
+                            <br>
+                            <br>
+                        @else
+                            <br>
+                            <br>
+                            <br>
+                        @endif
+                        @if ($siswa->keterangan_kelas == 'Internasional')
+                            <br>
+                            <br>
+                        @endif
+                        <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
+                    </td>
+                </tr>
             </tr>
         </table>
         {{-- @endif --}}
     </div>
-    </div>
+<div>
     <script>
         window.print();
     </script>
