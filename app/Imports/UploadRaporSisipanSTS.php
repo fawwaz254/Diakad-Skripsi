@@ -29,7 +29,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
         set_time_limit(9800);
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $id_pengguna = Auth::id();
-        $list_komponen = KomponenNilaiRaporSisipan::whereIn('urutan', [1, 2, 3, 4, 5, 6, 7,8, 9])->get();
+        $list_komponen = KomponenNilaiRaporSisipan::where('status',1)->get();
         foreach ($rows as $row) {
             foreach($list_komponen as $komponen){
                 // dd( str_replace(" ","_",strtolower($komponen->nm_nilai)));

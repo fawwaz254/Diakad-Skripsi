@@ -65,11 +65,11 @@
                                         aria-invalid="true" value="{{$data_mata_pelajaran->nm_mata_pelajaran_en}}">
                                 </div>
 
-                               <!--  <div class="col-md-4">
+                               <div class="col-md-4">
                                     <label>Nilai KKM</label>
                                     <input type="number" class="form-control" name="nilai_kkm" required="" aria-required="true" aria-invalid="true"
                                         value="{{$data_mata_pelajaran->nilai_kkm}}">
-                                </div> -->
+                                </div>
 
                               <!--   <div class="col-md-4">
                                     <label>Jam KBM</label>
