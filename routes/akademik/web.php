@@ -19,6 +19,10 @@ use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
+use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanController;
+use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
+use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController ;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
 use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
@@ -26,11 +30,14 @@ use App\Http\Controllers\Akademik\WelcomeController;
 use App\Http\Controllers\Guru\GuruPiket\AbsensiHarianSiswaController;
 use App\Http\Controllers\Guru\GuruPiket\MonitoringKelasKosongController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
+// use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
+// use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Kesiswaan\Laporan\WaliKelasController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Models\RaporSisipan;
 
 // ROLE AKADEMIK
 Route::middleware(['token_staff'])->group(function () {
@@ -340,6 +347,24 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::prefix('daftar-nilai-sas')->group(function () {
                 // });
             });
+
+            Route::prefix('nilai-rapor-tengah-semester')->group(function () {
+                Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
+                Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesDaftarNilaiSTS']);
+                Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
+
+            });
+
+            Route::prefix('komponen-nilai')->group(function () {
+                Route::get('/', [KomponenNilaiRaporSisipanController::class, 'viewKomponenNilai']);
+                Route::get('datatables', [KomponenNilaiRaporSisipanController::class, 'datatablesKomponenNilai']);
+                Route::get('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'editKomponenNilai']);
+                Route::post('edit/{id}', [KomponenNilaiRaporSisipanController::class, 'actionEditKomponenNilai']);
+                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
+
+            });
+
+
         });
 
         Route::prefix('monitoring')->group(function () {

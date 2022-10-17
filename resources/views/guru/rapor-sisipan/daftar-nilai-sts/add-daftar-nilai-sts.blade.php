@@ -23,7 +23,7 @@
                                 <select class="form-control show-tick" name="id_mata_pelajaran">
                                     <option selected disabled>-- Pilih Mata Pelajaran --</option>
                                     @foreach ($list_mapel as $r)
-                                        <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }}
+                                        <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }} ({{ $r->kd_mata_pelajaran }})
                                         </option>
                                     @endforeach
                                 </select>

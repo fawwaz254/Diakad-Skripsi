@@ -603,7 +603,7 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
                 // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
                 // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
-                // Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
                 // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
 
