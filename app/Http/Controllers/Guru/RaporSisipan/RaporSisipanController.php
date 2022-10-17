@@ -158,7 +158,7 @@ class RaporSisipanController extends Controller
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            ->addColumn('jumlah', function ($item) {
+            ->addColumn('jumlah', function ($item) use($auth_data) {
                 //semua siswa
                 $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
 
@@ -173,11 +173,16 @@ class RaporSisipanController extends Controller
                 $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
 
                 //loop dan cari nilai kosong yang diatas 5
-                $nilaiSiswaYangKosong = 0;
-                for ($i = 6; $i <= 10; $i++) {
-                    if (isset($arrayJumlahBelumTerisi[$i])) {
-                        $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
+                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2];
+                }else{
+                    $nilaiSiswaYangKosong = 0;
+                    for ($i = 6; $i <= 10; $i++) {
+                        if (isset($arrayJumlahBelumTerisi[$i])) {
+                            $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                        }
                     }
+    
                 }
 
                 $data = array(

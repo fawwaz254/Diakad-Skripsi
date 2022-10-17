@@ -1477,7 +1477,20 @@ class LibCetakKeuangan
             $print_setting = session('setting_print_keuangan');
         }
 
-        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.biaya');
+        if (empty(session('setting_print_keuangan2'))) {
+            $print_setting2 = 'semua';
+        } else {
+            $print_setting2 = session('setting_print_keuangan2');
+        }
+
+        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan','tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.biaya')
+        ->whereHas('tagihan_biaya.detail_biaya', function ($query) use($print_setting2) {
+            if($print_setting2 == 'spp'){
+                return $query->where('id_jenis_detail_biaya', '=', 4);
+            }elseif($print_setting2 == 'lain'){
+                return $query->where('id_jenis_detail_biaya', '!=', 4);
+            }
+        });
 
         if (!empty($start_date) && !empty($end_date)) {
             $allDataPembayaran = $allDataPembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
