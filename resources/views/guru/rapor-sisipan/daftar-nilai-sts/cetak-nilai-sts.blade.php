@@ -106,8 +106,8 @@
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
                     <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
                     <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
+                    <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR<br>SISIPAN</td>
                 </tr>
                 <tr>
@@ -155,6 +155,10 @@
                     @endforeach
                     <td></td>
                     <td></td>
+                    <td style="text-align: center;">
+
+                        {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
+                    </td>
                     @foreach ($list_data as $nilai)
                         @if ($nilai->urutan == 9)
                             <td style="text-align: center;">
@@ -163,10 +167,7 @@
                             </td>
                         @endif
                     @endforeach
-                        <td style="text-align: center;">
-
-                            {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
-                        </td>
+                       
                         <td style="text-align: center;">
 
                             {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}

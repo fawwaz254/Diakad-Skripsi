@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\Menu;
 use App\Models\Modul;
 
-class CreateMenuRaporTengahSemesterRoleAkademik extends Migration
+class AddMenuKomponenNilai extends Migration
 {
     /**
      * Run the migrations.
@@ -19,19 +19,17 @@ class CreateMenuRaporTengahSemesterRoleAkademik extends Migration
 
         $menu = new Menu;
         $menu->id_modul = $modul->id_modul;
-        $menu->nm_menu = 'Nilai Rapor Tengah Semester';
-        $menu->page = 'nilai-rapor-tengah-semester';
-        $menu->urutan = 3;
-        $menu->akses = 0;
+        $menu->nm_menu = 'Komponen Nilai';
+        $menu->page = 'komponen-nilai';
+        $menu->urutan = 1;
+        $menu->akses = 1;
         $menu->save();
 
-        $menu2 = new Menu;
-        $menu2->id_modul = $modul->id_modul;
-        $menu2->nm_menu = 'Cetak Rapor Tengah Semester';
-        $menu2->page = 'cetak-rapor-tengah-semester';
-        $menu2->urutan = 4;
-        $menu2->akses = 0;
-        $menu2->save();
+        $modul = Modul::where('id_role', '7')->where('nm_modul', 'Rapor Sisipan')->first();
+
+        $modul->menus()->where('nm_menu', 'Daftar Nilai STS')->update([
+            "urutan" => "2"
+        ]);
     }
 
     /**
@@ -41,6 +39,6 @@ class CreateMenuRaporTengahSemesterRoleAkademik extends Migration
      */
     public function down()
     {
-    //     Schema::dropIfExists('menu_rapor_tengah_semester_role_akademik');
+        //
     }
 }
