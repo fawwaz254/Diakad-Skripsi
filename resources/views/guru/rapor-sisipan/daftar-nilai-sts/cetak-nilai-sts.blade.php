@@ -92,9 +92,9 @@
             <tr>
 
             <tr style="border-style : hidden">
-                <td style="border-style : hidden;width: 75%;font-weight: bold;">MATA PELAJARAN :
+                <td style="border-style : hidden;font-weight: bold;float:left">MATA PELAJARAN :
                     {{ $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran }}</td>
-                <td style="border-style : hidden;width: 25%;font-weight: bold;">KELAS :
+                <td style="border-style : hidden;font-weight: bold;float:right">KELAS :
                     {{ $rapor_sisipan->kelas->nm_kelas }}</td>
             </tr>
         </table>
