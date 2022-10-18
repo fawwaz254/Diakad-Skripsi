@@ -192,16 +192,14 @@ class AuthGlobalController extends BaseController
                     $role_pengguna->save();
                 }
             }
-
+            $role_pengguna_selected->id_role;
             $pengguna = $input->auth_data->pengguna;
-            $pengguna->is_online = 0;
             $pengguna->save();
-
             Session::flush();
-            Auth::logout();
+
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
-                'link' => url('/'),
+                'link' => url($role_pengguna_selected->path),
                 'message' => 'Save Profile Successfully',
             ];
         } else {
