@@ -156,6 +156,7 @@ Route::middleware(['token_staff'])->group(function () {
                 // Route::get('/export-excel/{id_pengguna}/{start_date}/{end_date}/{role}', [HistoriAbsensiController::class, 'export_excel']);
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
+                Route::get('/{date}/{unit_kerja}/{status}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'createHistoriAbsensi']);
                 Route::post('/{id_pengguna}/{date}/add', [HistoriAbsensiController::class, 'storeHistoriAbsensi']);
                 Route::get('/{id_presensi_pengguna}/{date}/edit', [HistoriAbsensiController::class, 'editHistoriAbsensi']);

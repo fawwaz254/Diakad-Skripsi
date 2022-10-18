@@ -336,6 +336,7 @@ class PlottingMapelSiswaController extends BaseController
 
             // ACTION ADD
             if ($mode == 'add-krs') {
+                set_time_limit(300);
                 DB::beginTransaction();
 
                 try {
