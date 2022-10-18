@@ -66,16 +66,17 @@ class HistoriAbsensiController extends BaseController
 
             $cek_libur = ManajemenHariLibur::where('date', $value->format('Y-m-d'))->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('date', $value->format('Y-m-d'))->first();
-            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
             $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
 
             if (!empty($shiftPengguna)) {
+                $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
                 if (!empty($shiftMaster)) {
                     $hasil[$key]['shift'] = $shiftMaster['code'];
                     $hasil[$key]['start'] = minimalisTime($shiftMaster['start_time']);
                     $hasil[$key]['end'] = minimalisTime($shiftMaster['end_time']);
                 }
             }
+
             if (!empty($attendance)) {
 
                 if ($attendance->status) {
