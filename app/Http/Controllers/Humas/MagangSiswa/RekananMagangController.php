@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Humas\MagangSiswa;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use App\Models\RekananMagang as RekananMagang;
-use App\Models\PengambilanMagang as PengajuanSiswaMagang;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
-use App\Libraries\Pendidikan\LibMagangSiswa;
-
-use Auth;
 use DB;
-use Session;
-use Validator;
+use Auth;
+
 use Excel;
+use Session;
+
+use Validator;
+use Carbon\Carbon;
+
+use Illuminate\Http\Request;
+
+use App\Imports\DataImportExcel;
+use Yajra\Datatables\Datatables;
+use App\Libraries\Pendidikan\LibMagangSiswa;
+use App\Models\RekananMagang as RekananMagang;
+use Illuminate\Routing\Controller as BaseController;
+use App\Models\PengambilanMagang as PengajuanSiswaMagang;
 
 class RekananMagangController extends BaseController
 {
@@ -59,16 +60,18 @@ class RekananMagangController extends BaseController
 
             if($request->hasFile('file-excel')){
 
-                $path = $request->file('file-excel')->getRealPath();
-                $data = Excel::load($path)->get();
+                $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
+                $data = $data[0];
 
-                if($data->count()){
+                if(count($data)){
 
                     DB::beginTransaction();
                     
                     try {
 
                         foreach ($data as $key => $value) {
+                            
+                            $value = (object) $value;
 
                             if(empty($value->nama_rekanan_magang)){
                                 return [
@@ -122,8 +125,8 @@ class RekananMagangController extends BaseController
                                 $data->nomor_hp_rekanan_magang       = $value->no_hp;
                             }
                             $data->alamat_rekanan_magang         = $value->alamat;
-                            $data->tgl_awal_kerjasama       = date_format(date_create($value->tanggal_awal_kerja_sama),"Y-m-d");
-                            $data->tgl_akhir_kerjasama      = date_format(date_create($value->tanggal_akhir_kerja_sama),"Y-m-d");
+                            $data->tgl_awal_kerjasama            = date("Y-m-d", strtotime($value->tanggal_awal_kerja_sama));
+                            $data->tgl_akhir_kerjasama           = date("Y-m-d", strtotime($value->tanggal_akhir_kerja_sama));
                             $data->kuota_rekanan_magang          = $value->kuota_magang;
                             $data->contact_person_rekanan_magang = $value->contact_person_magang;
                             $data->id_sekolah                    = $input->auth_data->pengguna->id_sekolah;
