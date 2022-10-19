@@ -82,8 +82,11 @@
                             LAPORAN PENILAIAN HASIL BELAJAR<br>
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                             TENGAH SEMESTER GASAL<br>
-
-                            {{-- TAHUN AJARAN {{ $rapor_sisipan->semester->tahun_ajaran }} --}}
+                            @php
+                            $nama = $list_nilai->first();
+                                // dd($nama->rapor_sisipan->semester->tahun_ajaran);
+                            echo 'TAHUN AJARAN '.$nama->rapor_sisipan->semester->tahun_ajaran ;
+                        @endphp
 
                         </h2>
                         <hr>
@@ -157,23 +160,25 @@
                         <td style="text-align: center;"></td>
                     </tr>
                     @php
-                        $no = 0;
+                        $no = 1;
                     @endphp
 
                     @foreach ($k->mapel as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A')
                             <tr>
                                 <td></td>
-                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                                <td style="text-align: center;">{{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
-                                {{-- <td>{{ $m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran }}</td> --}}
+                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                                 <td style="text-align: center;">
-                                @php
-                                $nama = $list_nilai->where('siswa.id_siswa', $siswa->id_siswa)->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)->first();
-                                echo $nama->nilai ?? 'Belum Diset';
-                                @endphp
+                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
+                                <td style="text-align: center;">
+                                    @php
+                                        $nama = $list_nilai
+                                            ->where('siswa.id_siswa', $siswa->id_siswa)
+                                            ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
+                                            ->first();
+                                        echo $nama->nilai ?? 'Belum Diset';
+                                    @endphp
                                 </td>
-                                {{-- <td></td> --}}
                             </tr>
                         @endif
                     @endforeach
@@ -191,23 +196,28 @@
                         @endphp</td>
                         <td style="text-align: center;"></td>
                         <td style="text-align: center;">
-                           
-                            </td>
+                        </td>
                     </tr>
-
+                    @php
+                    $no = 1;
+                @endphp
                     @foreach ($k->mapel as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'B')
                             <tr>
                                 <td></td>
-                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                                <td style="text-align: center;">{{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
+                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                                 <td style="text-align: center;">
-                                @php
-                                $nama = $list_nilai->where('siswa.id_siswa', $siswa->id_siswa)->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)->first();
-                                echo $nama->nilai ?? 'Belum Diset';
-                                @endphp
-                                </td>    
-                        </tr>
+                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
+                                <td style="text-align: center;">
+                                    @php
+                                        $nama = $list_nilai
+                                            ->where('siswa.id_siswa', $siswa->id_siswa)
+                                            ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
+                                            ->first();
+                                        echo $nama->nilai ?? 'Belum Diset';
+                                    @endphp
+                                </td>
+                            </tr>
                         @endif
                     @endforeach
                     <tr>
@@ -224,21 +234,28 @@
                                 echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? 'MUATAN PEMINATAN KEJURUAN';
                             @endphp
                         </td>
-                       <td></td>
+                        <td></td>
                         <td style="text-align: center;"></td>
                     </tr>
+                    @php
+                    $no = 1;
+                @endphp
                     @foreach ($k->mapel as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'C')
                             <tr>
                                 <td></td>
-                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                                <td style="text-align: center;">{{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
+                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                                <td style="text-align: center;">
+                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
                                 <td style="text-align: center;">
                                     @php
-                                    $nama = $list_nilai->where('siswa.id_siswa', $siswa->id_siswa)->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)->first();
-                                    echo $nama->nilai ?? 'Belum Diset';
+                                        $nama = $list_nilai
+                                            ->where('siswa.id_siswa', $siswa->id_siswa)
+                                            ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
+                                            ->first();
+                                        echo $nama->nilai ?? 'Belum Diset';
                                     @endphp
-                                    </td>
+                                </td>
                             </tr>
                         @endif
                     @endforeach
@@ -254,22 +271,29 @@
                             $nama = $k->mapel->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'D');
                             echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran;
                         @endphp</td>
-                      <td></td>
+                        <td></td>
                         <td style="text-align: center;"></td>
                     </tr>
+                    @php
+                    $no = 1;
+                @endphp
                     @foreach ($k->mapel as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'D')
                             <tr>
                                 <td></td>
-                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                                <td style="text-align: center;">{{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
+                                <td>{{ $no++ . '.    ' .  $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                                <td style="text-align: center;">
+                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
                                 <td style="text-align: center;">
                                     @php
-                                    $nama = $list_nilai->where('siswa.id_siswa', $siswa->id_siswa)->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)->first();
-                                    // dd($nama);
-                                    echo $nama->nilai ?? 'Belum Diset';
+                                        $nama = $list_nilai
+                                            ->where('siswa.id_siswa', $siswa->id_siswa)
+                                            ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
+                                            ->first();
+                                        // dd($nama);
+                                        echo $nama->nilai ?? 'Belum Diset';
                                     @endphp
-                                    </td>
+                                </td>
                             </tr>
                         @endif
                     @endforeach
@@ -338,18 +362,20 @@
             <br><br>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
                 <tr>
-                    <td style=" border-style : hidden; width:65%; vertical-align: text-top; padding:0">
-                        {{-- <p style="margin-left: 10%;">
-                        SMT = Sumatif
-                    <br>
-                        STS = Sumatif Tengah Semester
-                    </p> --}}
-                    </td>
-
-                    <td style="width:25%">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
+                        Mengetahui,
                         <br>
-                        Guru Bidang Study
+                        Kepala Sekolah
                         <br><br><br><br><br><br><br>
+                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+                    </td>
+                    <td style="width:50%; border-style : hidden"></td>
+
+                    <td style="width:25%" align="center">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                        <br>
+                        Wali Kelas
+                        <br><br><br><br><br><br><br>
+                        {{ $wali_kelas->guru->pengguna->gelar_depan }} {{ $wali_kelas->guru->pengguna->nm_pengguna }}  {{ $wali_kelas->guru->pengguna->gelar_belakang }}
                         {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
 

@@ -73,14 +73,15 @@ class CetakRaporController extends Controller
             // $list_siswa = Siswa::where('id_kelas', $id_kelas)->get();
             $kurikulum = Kurikulum::orderBy('tahun_kurikulum', 'DESC')->with('mapel.mata_pelajaran.jenis_mata_pelajaran')->get();
             $k = $kurikulum->firstWhere('id_jurusan', $kelas->jurusan->id_jurusan);
-//////////////////////////////////////////////////////////////////////////
+            $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif',1)->where('id_kelas',$id_kelas)->first();
+
 // dd($k);
         // $rapor_sisipan = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->get();
 
         // $list_data = KomponenNilaiRaporSisipan::where('status',1)->where('type','!=','uas')->get();
         $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
 
-        $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai','rapor_sisipan')
+        $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai','rapor_sisipan.semester')
             ->whereHas('siswa', function ($query) use ($id_kelas) {
                 $query->where('id_kelas', '=', $id_kelas);
             })
@@ -116,7 +117,7 @@ class CetakRaporController extends Controller
                 //     dd($a);
                 // }
                 // dd($list_nilai);
-                            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data','kelas','list_siswa','k','list_nilai'));
+                            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data','kelas','list_siswa','k','list_nilai','wali_kelas'));
 
     }}
 
