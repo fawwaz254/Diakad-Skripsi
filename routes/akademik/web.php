@@ -19,6 +19,7 @@ use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
+use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
@@ -364,7 +365,11 @@ Route::middleware(['token_staff'])->group(function () {
 
             });
 
-
+            Route::prefix('cetak-rapor')->group(function () {
+                Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
+                Route::get('datatables',[CetakRaporController::class, 'datatablesCetakRapor']);
+                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+            });
         });
 
         Route::prefix('monitoring')->group(function () {

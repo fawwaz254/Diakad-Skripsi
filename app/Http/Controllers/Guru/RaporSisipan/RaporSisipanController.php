@@ -174,7 +174,7 @@ class RaporSisipanController extends Controller
 
                 //loop dan cari nilai kosong yang diatas 5
                 if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
-                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2];
+                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
                 }else{
                     $nilaiSiswaYangKosong = 0;
                     for ($i = 6; $i <= 10; $i++) {
