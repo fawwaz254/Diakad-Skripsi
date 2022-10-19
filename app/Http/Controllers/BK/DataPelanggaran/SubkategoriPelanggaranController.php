@@ -114,7 +114,7 @@ class SubkategoriPelanggaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-pelanggaran/subkategori-pelanggaran',
-                    'message' => 'Save Sub-Kategori Pelanggaran successfully'
+                    'message' => 'Save Sub-Kategori Pelanggaran Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -131,7 +131,7 @@ class SubkategoriPelanggaranController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-pelanggaran/subkategori-pelanggaran',
-                    'message' => 'Update Sub-Kategori Pelanggaran successfully'
+                    'message' => 'Update Sub-Kategori Pelanggaran Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($pelanggaranSiswa = PelanggaranSiswa::where('id_subkategori_pelanggaran', $id)->first()) {
@@ -149,7 +149,7 @@ class SubkategoriPelanggaranController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Sub-Kategori Pelanggaran successfully'
+                        'message' => 'Delete Sub-Kategori Pelanggaran Successfully'
                     ];
                 }
             }

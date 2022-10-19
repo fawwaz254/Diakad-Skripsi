@@ -184,7 +184,7 @@ class BiayaSiswaController extends BaseController{
 
                 return [
                     'status' => 200, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Save Biaya Siswa successfully'
+                    'message' => 'Save Biaya Siswa Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -200,7 +200,7 @@ class BiayaSiswaController extends BaseController{
 
                 return [
                     'status' => 200, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Update Biaya Siswa successfully'
+                    'message' => 'Update Biaya Siswa Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -216,7 +216,7 @@ class BiayaSiswaController extends BaseController{
 
                 return [
                     'status' => 200, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Delete Biaya Siswa successfully'
+                    'message' => 'Delete Biaya Siswa Successfully'
                 ];
             }
             
@@ -251,7 +251,7 @@ class BiayaSiswaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'utility/biaya-siswa',
-                    'message' => 'Save Biaya Siswa successfully'
+                    'message' => 'Save Biaya Siswa Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -263,7 +263,7 @@ class BiayaSiswaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'utility/biaya-siswa',
-                    'message' => 'Update Biaya Siswa successfully'
+                    'message' => 'Update Biaya Siswa Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -274,7 +274,7 @@ class BiayaSiswaController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Biaya Siswa successfully'
+                    'message' => 'Delete Biaya Siswa Successfully'
                 ];
             }
         }

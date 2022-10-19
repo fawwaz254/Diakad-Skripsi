@@ -115,7 +115,7 @@ class InputTagihanSiswaController extends BaseController
              return [
                       'status' => 202, // SUCCESS AND LOAD CONTENT
                       'path' => 'utility/input-tagihan-siswa',
-                      'message' => 'Insert Tagihan Siswa successfully'
+                      'message' => 'Insert Tagihan Siswa Successfully'
                   ];
 
           }

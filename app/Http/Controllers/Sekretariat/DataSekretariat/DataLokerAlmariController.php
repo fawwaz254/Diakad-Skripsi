@@ -100,7 +100,7 @@ class DataLokerAlmariController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sekretariat/data-loker-almari',
-                    'message' => 'Save Data Loker Almari successfully'
+                    'message' => 'Save Data Loker Almari Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -114,7 +114,7 @@ class DataLokerAlmariController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sekretariat/data-loker-almari',
-                    'message' => 'Save Data Loker Almari successfully'
+                    'message' => 'Save Data Loker Almari Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -133,7 +133,7 @@ class DataLokerAlmariController extends BaseController
 
             		return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Arsip Loker/Almari successfully'
+                        'message' => 'Delete Data Arsip Loker/Almari Successfully'
                     ];
                 }
             }

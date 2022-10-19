@@ -82,7 +82,9 @@ class Staff extends Model
 
     protected $guarded = [];
 
-
+    public function unit_kerja(){
+        return $this->belongsTo(UnitKerja::class, 'id_unit_kerja');
+    }
 
 
 

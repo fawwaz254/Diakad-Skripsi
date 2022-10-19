@@ -104,7 +104,7 @@ class TingkatPrestasiSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/tingkat-prestasi-siswa',
-                    'message' => 'Save Data Tingkat Prestasi Siswa successfully'
+                    'message' => 'Save Data Tingkat Prestasi Siswa Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -117,7 +117,7 @@ class TingkatPrestasiSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/tingkat-prestasi-siswa',
-                    'message' => 'Save Data Tingkat Prestasi Siswa successfully'
+                    'message' => 'Save Data Tingkat Prestasi Siswa Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class TingkatPrestasiSiswaController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Tingkat Prestasi Siswa successfully'
+                        'message' => 'Delete Data Tingkat Prestasi Siswa Successfully'
                     ];
                 }
             }

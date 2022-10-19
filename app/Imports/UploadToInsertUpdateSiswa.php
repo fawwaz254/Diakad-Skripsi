@@ -1351,7 +1351,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 LibGlobal::insertUpdateUserInCenter($pengguna_center);
                 DB::commit();
 
-                Debugbar::error('Save Siswa successfully');
+                Debugbar::error('Save Siswa Successfully');
             } catch (\Exception $e) {
 
                 DB::rollback();

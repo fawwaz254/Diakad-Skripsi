@@ -549,7 +549,7 @@ class InsertUpdateSiswaController extends BaseController
 	    		else{
 	    			return [
 			                'status' => 200, // SUCCESS AND LOAD TABLE
-			               	'message' => 'Siswa Tidak Ditemukan!'
+			               	'message' => 'Siswa Tidak Ditemukan'
 			        ];
 	    		}
 	    	}

@@ -80,7 +80,7 @@ class AuthGlobalController extends BaseController
         return [
             'status' => 201, // SUCCESS AND REDIRECT
             'link' => url('/'),
-            'message' => 'Use default password successfully',
+            'message' => 'Use Default Password Successfully',
         ];
     }
 
@@ -115,7 +115,7 @@ class AuthGlobalController extends BaseController
                 return [
                     'status' => 201, // SUCCESS AND REDIRECT
                     'link' => url('/'),
-                    'message' => 'Change password successfully',
+                    'message' => 'Change Password Successfully',
                 ];
             } else {
                 return [
@@ -185,6 +185,7 @@ class AuthGlobalController extends BaseController
         if ($role_pengguna_selected = RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->where('id_role', $input->role)->first()) {
             foreach (RolePengguna::where('id_pengguna', $pengguna->id_pengguna)->get() as $role_pengguna) {
                 if ($role_pengguna->id_role == $role_pengguna_selected->id_role) {
+                    $role = Role::where('id_role', $role_pengguna_selected->id_role)->first();
                     $role_pengguna->is_aktif = 1;
                     $role_pengguna->save();
                 } else {
@@ -192,16 +193,13 @@ class AuthGlobalController extends BaseController
                     $role_pengguna->save();
                 }
             }
-
-            $pengguna = $input->auth_data->pengguna;
-            $pengguna->is_online = 0;
-            $pengguna->save();
-
             Session::flush();
-            Auth::logout();
+
+            Auth::loginUsingId($pengguna->id_pengguna);
+
             return [
                 'status' => 201, // SUCCESS AND REDIRECT
-                'link' => url('/'),
+                'link' => url($role->path),
                 'message' => 'Save Profile Successfully',
             ];
         } else {

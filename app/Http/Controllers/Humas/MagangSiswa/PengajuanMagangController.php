@@ -125,7 +125,7 @@ class PengajuanMagangController extends BaseController
             return [
               'status' => 202, // SUCCESS AND LOAD CONTENT
               'path' => 'magang-siswa/pengajuan-magang',
-              'message' => 'Import Magang Siswa successfully'
+              'message' => 'Import Magang Siswa Successfully'
             ];
           } catch (\Exception $e) {
 

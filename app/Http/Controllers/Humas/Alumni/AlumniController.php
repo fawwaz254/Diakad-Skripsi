@@ -72,7 +72,7 @@ class AlumniController extends Controller
             $this->storePartialData($request, $idAlumni);
     
             DB::commit();
-            return web_response(202, "Save successfully", self::PATH);
+            return web_response(202, "Save Successfully", self::PATH);
         } catch (\Exception $e) {
             DB::rollback();
             return error_response($e);
@@ -121,7 +121,7 @@ class AlumniController extends Controller
             $this->updateAlumni($alumni, $request);
             
             DB::commit();
-            return web_response(202, "Update successfully", self::PATH);
+            return web_response(202, "Update Successfully", self::PATH);
         } catch (\Exception $e) {
             DB::rollback();
             return error_response($e);
@@ -138,7 +138,7 @@ class AlumniController extends Controller
     public function destroy(Request $request, Alumni $alumni)
     {
         $alumni->delete();
-        return web_response(203, "Delete alumni successfully");    
+        return web_response(203, "Delete alumni Successfully");    
     }
 
     public function renderDatatables(Request $request)

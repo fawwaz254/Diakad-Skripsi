@@ -212,7 +212,7 @@ class PengajuanSiswaMagangController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'magang-siswa/pengajuan-siswa-magang/view-detail/'.$input->id_periode_magang.'/'.$input->id_rekanan_magang.'/0',
-                        'message' => 'Cancel Pengajuan magang successfully'
+                        'message' => 'Cancel Pengajuan Magang Successfully'
                     ];
                 }
             }
@@ -246,7 +246,7 @@ class PengajuanSiswaMagangController extends BaseController
 
                         return [
                             'status' => 203, // SUCCESS AND LOAD TABLE
-                            'message' => 'Pengajuan magang successfully'
+                            'message' => 'Pengajuan magang Successfully'
                         ];
                     }
                     else {
@@ -272,7 +272,7 @@ class PengajuanSiswaMagangController extends BaseController
 
                             return [
                                 'status' => 203, // SUCCESS AND LOAD TABLE
-                                'message' => 'Pengajuan magang successfully'
+                                'message' => 'Pengajuan Magang Successfully'
                             ];
                         }
                         else {
@@ -339,7 +339,7 @@ class PengajuanSiswaMagangController extends BaseController
 
                             return [
                                 'status' => 203, // SUCCESS AND LOAD TABLE
-                                'message' => 'Approve Magang successfully'
+                                'message' => 'Approve Magang Successfully'
                             ];
                         }
                         else {

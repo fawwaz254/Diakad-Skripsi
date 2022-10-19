@@ -224,7 +224,7 @@ class WaliKelasController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas,
-                        'message' => 'Save Wali Kelas successfully'
+                        'message' => 'Save Wali Kelas Successfully'
                     ];
                 }
             } elseif ($mode == 'edit') {
@@ -253,7 +253,7 @@ class WaliKelasController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'setting-kelas/wali-kelas/view-kelas/'.$input->id_kelas,
-                    'message' => 'Update Wali Kelas successfully'
+                    'message' => 'Update Wali Kelas Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // make object to find id
@@ -265,7 +265,7 @@ class WaliKelasController extends BaseController
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Wali Kelas successfully'
+                    'message' => 'Delete Wali Kelas Successfully'
                 ];
             }
         }

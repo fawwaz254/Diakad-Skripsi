@@ -126,7 +126,7 @@ class JabatanPegawaiController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/jabatan-pegawai',
-                    'message' => 'Save Jabatan Pegawai successfully'
+                    'message' => 'Save Jabatan Pegawai Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -143,7 +143,7 @@ class JabatanPegawaiController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/jabatan-pegawai',
-                    'message' => 'Update Jabatan Pegawai successfully'
+                    'message' => 'Update Jabatan Pegawai Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -163,7 +163,7 @@ class JabatanPegawaiController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jabatan Pegawai successfully'
+                        'message' => 'Delete Jabatan Pegawai Successfully'
                     ];
                 }
             }

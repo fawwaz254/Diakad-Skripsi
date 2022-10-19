@@ -100,7 +100,7 @@ class MataPelajaranController extends BaseController{
             // 'kredit_prak_lapangan'  => 'required',
             // 'kredit_simulasi'       => 'required',
             // 'tingkat_semester'      => 'required',
-            // 'nilai_kkm'             => 'required'
+            'nilai_kkm'             => 'required'
             // 'ada_sap'               => 'required',
             // 'ada_silabus'           => 'required',
             // 'ada_bahan_ajar'        => 'required',
@@ -138,7 +138,7 @@ class MataPelajaranController extends BaseController{
                 // $mataPelajaran->kredit_prak_lapangan    = $input->kredit_prak_lapangan;
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
-                // $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
+                $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
@@ -149,7 +149,7 @@ class MataPelajaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/mata-pelajaran',
-                    'message' => 'Save Mata Pelajaran successfully'
+                    'message' => 'Save Mata Pelajaran Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -170,7 +170,7 @@ class MataPelajaranController extends BaseController{
                 // $mataPelajaran->kredit_prak_lapangan    = $input->kredit_prak_lapangan;
                 // $mataPelajaran->kredit_simulasi         = $input->kredit_simulasi;
                 // $mataPelajaran->tingkat_semester        = $input->tingkat_semester;
-                // $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
+                $mataPelajaran->nilai_kkm               = $input->nilai_kkm;
                 // $mataPelajaran->ada_sap                 = $input->ada_sap;
                 // $mataPelajaran->ada_silabus             = $input->ada_silabus;
                 // $mataPelajaran->ada_bahan_ajar          = $input->ada_bahan_ajar;
@@ -182,7 +182,7 @@ class MataPelajaranController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/mata-pelajaran',
-                    'message' => 'Update Mata Pelajaran successfully'
+                    'message' => 'Update Mata Pelajaran Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -202,7 +202,7 @@ class MataPelajaranController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Mata Pelajaran successfully'
+                        'message' => 'Delete Mata Pelajaran Successfully'
                     ];
                 }
             }

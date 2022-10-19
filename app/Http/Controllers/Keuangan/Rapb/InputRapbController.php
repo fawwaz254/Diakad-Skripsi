@@ -277,7 +277,7 @@ class InputRapbController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Unit successfully'
+                  'message' => 'Approve Kepala Unit Successfully'
               ];
             } elseif (! empty($staff->id_pengguna)) {
                 // make object to find id
@@ -289,7 +289,7 @@ class InputRapbController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Unit successfully'
+                  'message' => 'Approve Kepala Unit Successfully'
               ];
             } else {
                 return [
@@ -318,7 +318,7 @@ class InputRapbController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan successfully'
+                  'message' => 'Approve Kepala Keuangan Successfully'
               ];
             } elseif (! empty($staff->id_pengguna)) {
                 // make object to find id
@@ -330,7 +330,7 @@ class InputRapbController extends BaseController
 
                 return [
                   'status' => 203, // SUCCESS AND LOAD CONTENT
-                  'message' => 'Approve Kepala Keuangan successfully'
+                  'message' => 'Approve Kepala Keuangan Successfully'
               ];
             } else {
                 return [
@@ -383,7 +383,7 @@ class InputRapbController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai,
-                    'message' => 'Input RAPB successfully'
+                    'message' => 'Input RAPB Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 // make object to find id
@@ -402,7 +402,7 @@ class InputRapbController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'rapb/input-rapb/view-detail-input-rapb/'.$input->id_semester_mulai.'/'.$input->id_semester_selesai,
-                    'message' => 'Input RAPB successfully'
+                    'message' => 'Input RAPB Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 if ($realisasi = Realisasi::where('id_rapb', $id)->first()) {
@@ -420,7 +420,7 @@ class InputRapbController extends BaseController
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete RAPB successfully'
+                        'message' => 'Delete RAPB Successfully'
                     ];
                 }
             }

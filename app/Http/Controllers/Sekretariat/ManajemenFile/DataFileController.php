@@ -115,7 +115,7 @@ class DataFileController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
-                'message' => 'Delete File successfully'
+                'message' => 'Delete File Successfully'
             ];
         }
 
@@ -129,7 +129,7 @@ class DataFileController extends BaseController
             return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'manajemen-file/data-file/sub-category/' . $input->sub_category_file_id,
-                'message' => 'Delete File successfully'
+                'message' => 'Delete File Successfully'
             ];
         }
         $list_validator = [
@@ -223,7 +223,7 @@ class DataFileController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'manajemen-file/data-file',
-                    'message' => 'Save File Pegguna successfully'
+                    'message' => 'Save File Pegguna Successfully'
                 ];
             }
         }

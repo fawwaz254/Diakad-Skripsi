@@ -95,7 +95,7 @@ class DataKategoriController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sekretariat/data-kategori',
-                    'message' => 'Save Data Arsip Kategori successfully'
+                    'message' => 'Save Data Arsip Kategori Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -108,7 +108,7 @@ class DataKategoriController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sekretariat/data-kategori',
-                    'message' => 'Save Data Arsip Kategori successfully'
+                    'message' => 'Save Data Arsip Kategori Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -127,7 +127,7 @@ class DataKategoriController extends BaseController
 
             		return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Arsip Kategori successfully'
+                        'message' => 'Delete Data Arsip Kategori Successfully'
                     ];
                 }
             }

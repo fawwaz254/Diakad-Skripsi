@@ -182,7 +182,7 @@ class DataPribadiController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'tendik/input-tendik',
-                    'message' => 'Save Tendik successfully'
+                    'message' => 'Save Tendik Successfully'
                 ];
             }
             elseif($mode == 'edit') {
@@ -284,7 +284,7 @@ class DataPribadiController extends BaseController{
 
                 return [
                     'status' => 300, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Update Data successfully'
+                    'message' => 'Update Data Successfully'
                 ];
             }
             elseif($mode == 'delete') {
@@ -312,7 +312,7 @@ class DataPribadiController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Tendik successfully'
+                        'message' => 'Delete Tendik Successfully'
                     ];
             }
         }

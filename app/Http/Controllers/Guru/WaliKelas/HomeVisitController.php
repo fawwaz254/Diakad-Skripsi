@@ -234,7 +234,7 @@ class HomeVisitController extends BaseController{
                         return [
                             'status' => 202, // SUCCESS AND LOAD CONTENT
                             'path' => 'wali-kelas/home-visit',
-                            'message' => 'Save Home Visit successfully'
+                            'message' => 'Save Home Visit Successfully'
                         ];
                     }else{
                         return [
@@ -262,7 +262,7 @@ class HomeVisitController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'wali-kelas/home-visit',
-                        'message' => 'Update Home Visit successfully'
+                        'message' => 'Update Home Visit Successfully'
                     ];
                 }else{
                     return [
@@ -289,7 +289,7 @@ class HomeVisitController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Home Visit successfully'
+                        'message' => 'Delete Home Visit Successfully'
                     ];
                 }
             }

@@ -265,7 +265,7 @@ class InputNilaiEkskulController extends BaseController{
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
             'path' => 'pembina-ekskul/input-nilai-ekskul/detail/'.$input->id_semester.'/'.$input->id_ekskul,
-            'message' => 'Save Nilai Ekskul successfully'
+            'message' => 'Save Nilai Ekskul Successfully'
         ];
     }
 }

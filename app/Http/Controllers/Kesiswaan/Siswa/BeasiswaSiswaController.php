@@ -155,7 +155,7 @@ class BeasiswaSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/beasiswa-siswa',
-                    'message' => 'Save Data Beasiswa Siswa successfully'
+                    'message' => 'Save Data Beasiswa Siswa Successfully'
                 ];
             } elseif ($mode == 'edit') {
                 $beasiswa 								= BeasiswaSiswa::find($id);
@@ -181,7 +181,7 @@ class BeasiswaSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-kesiswaan/beasiswa-siswa',
-                    'message' => 'Save Data Beasiswa Siswa successfully'
+                    'message' => 'Save Data Beasiswa Siswa Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 $beasiswa                 = BeasiswaSiswa::find($id);
@@ -192,7 +192,7 @@ class BeasiswaSiswaController extends BaseController
 
                 return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Beasiswa Siswa successfully'
+                        'message' => 'Delete Data Beasiswa Siswa Successfully'
                     ];
             }
         }

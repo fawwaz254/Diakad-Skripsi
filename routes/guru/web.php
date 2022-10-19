@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
 use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
@@ -59,6 +60,8 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\Jadwal\SetJadwalKelasGuruController;
+use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 
 // ROLE GURU
 
@@ -150,8 +153,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('view/{id}', [ManajemenMateriAjarController::class, 'listViewManajemenMateriAjar']);
                 Route::get('view/datatables/{id}', [ManajemenMateriAjarController::class, 'datatablesViewManajemenMateriAjar']);
                 Route::post('deleteItem/{id_materi_ajar_file}', [ManajemenMateriAjarController::class, 'deleteItem']);
-                Route::post('action-manajemen-materi-ajar/{mode}/{id}', [ManajemenMateriAjarController::class, 'actionManajemenMateriAjar']);
             });
+            Route::post('action-manajemen-materi-ajar/{mode}/{id}', [ManajemenMateriAjarController::class, 'actionManajemenMateriAjar']);
         });
 
         Route::prefix('e-learning-soal')->group(function () {
@@ -250,7 +253,21 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-jadwal/edit/{id}', [InputJadwalController::class, 'editInputJadwal']);
 
             Route::post('action-input-jadwal/{mode}/{id}', [InputJadwalController::class, 'actionInputJadwal']);
+
+            //menu set jadwal kelas
+            Route::get('set-jadwal-kelas', [SetJadwalKelasGuruController::class, 'viewSetJadwalKelas']);
+            Route::post('set-jadwal-kelas', [SetJadwalKelasGuruController::class, 'actionSetJadwalKelas']);
+            Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasGuruController::class, 'viewTambahJadwalKelas']);
+            Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasGuruController::class, 'actionTambahJadwalKelas']);
         });
+
+        // Route::prefix('aktivitas-semester')->group(function () {
+        //     Route::get('set-jadwal-kelas', [SetJadwalKelasController::class, 'viewSetJadwalKelas']);
+        //     Route::post('set-jadwal-kelas', [SetJadwalKelasController::class, 'actionSetJadwalKelas']);
+        //     Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
+        //     Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasController::class, 'actionTambahJadwalKelas']);
+        // });
+
 
         Route::prefix('presensi')->group(function () {
             // MENU Absensi Siswa
@@ -520,11 +537,11 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('approve-prestasi-siswa', [ApprovePrestasiSiswaController::class, 'viewApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/datatables', [ApprovePrestasiSiswaController::class, 'datatablesApprovePrestasiSiswa']);
-            Route::get('approve-prestasi-siswa/{id}/{param}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
-            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);
+            Route::get('approve-prestasi-siswa/{id}', [ApprovePrestasiSiswaController::class, 'viewDetailPrestasiSiswa']);
+            Route::get('approve-prestasi-siswa/prestasi/datatables/{id}', [ApprovePrestasiSiswaController::class, 'datatablesPrestasiApprovePrestasiSiswa']);
             Route::get('approve-prestasi-siswa/print/skpi/{id}', [ApprovePrestasiSiswaController::class, 'PrintSkpi']);
-            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesKegiatanApprovePrestasiSiswa']);
-            Route::get('approve-prestasi-siswa/informasi-tambahan/datatables/{id}/{param}', [ApprovePrestasiSiswaController::class, 'datatablesInformasiTambahan']);
+            Route::get('approve-prestasi-siswa/kegiatan/datatables/{id}', [ApprovePrestasiSiswaController::class, 'datatablesKegiatanApprovePrestasiSiswa']);
+            Route::get('approve-prestasi-siswa/informasi-tambahan/datatables/{id}', [ApprovePrestasiSiswaController::class, 'datatablesInformasiTambahan']);
             Route::post('approve-prestasi-siswa/{data}/{id}', [ApprovePrestasiSiswaController::class, 'actionApprovePrestasiSiswa']);
             Route::post('reject-prestasi-siswa/{data}/{id}', [ApprovePrestasiSiswaController::class, 'actionRejectPrestasiSiswa']);
 
@@ -577,6 +594,22 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);
             });
+
+            Route::prefix('rapor-tengah-semester')->group(function () {
+                Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
+                Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesRaporTengahSemester']);
+                Route::get('add', [RaporTengahSemesterController::class, 'addRaporTengahSemester']);
+                Route::post('action-rapor-tengah-semester/{mode}/{id}', [RaporTengahSemesterController::class, 'actionRaporTengahSemester']);
+                // Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
+                // Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
+                // Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
+                Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfRaporTengahSemester']);
+                // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
+
+            });
+
+
         });
 
         Route::prefix('kelas-daring')->group(function () {

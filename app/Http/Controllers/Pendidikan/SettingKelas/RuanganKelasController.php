@@ -198,7 +198,7 @@ class RuanganKelasController extends BaseController{
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'setting-kelas/ruangan-kelas/view-kelas/'.$input->id_kelas,
-                        'message' => 'Save Ruangan Kelas successfully'
+                        'message' => 'Save Ruangan Kelas Successfully'
                     ];
                 }
             }
@@ -228,7 +228,7 @@ class RuanganKelasController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'setting-kelas/ruangan-kelas/view-kelas/'.$input->id_kelas,
-                    'message' => 'Update Ruangan Kelas successfully'
+                    'message' => 'Update Ruangan Kelas Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -241,7 +241,7 @@ class RuanganKelasController extends BaseController{
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Ruangan Kelas successfully'
+                    'message' => 'Delete Ruangan Kelas Successfully'
                 ];
             }
         }

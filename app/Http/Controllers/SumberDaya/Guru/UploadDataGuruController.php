@@ -148,7 +148,7 @@ class UploadDataGuruController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'guru/input-guru',
-                        'message' => 'Save Guru successfully',
+                        'message' => 'Save Guru Successfully',
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();

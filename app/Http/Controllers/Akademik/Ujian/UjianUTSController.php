@@ -259,7 +259,7 @@ class UjianUTSController extends BaseController
                 return [
               'status' => 202, // SUCCESS AND LOAD CONTENT
               'path' => 'ujian/ujian-uts-reguler-online/add/'.$input->is_online,
-              'message' => 'Save Ujian UTS successfully'
+              'message' => 'Save Ujian UTS Successfully'
             ];
             } elseif ($mode == 'edit') {
                 $ujian                        = UjianMp::find($id);
@@ -284,7 +284,7 @@ class UjianUTSController extends BaseController
                 return [
                 'status' => 202, // SUCCESS AND LOAD CONTENT
                 'path' => 'ujian/ujian-uts-reguler-online',
-                'message' => 'Save Ujian UTS successfully'
+                'message' => 'Save Ujian UTS Successfully'
               ];
             } elseif ($mode == 'delete') {
                 $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
@@ -335,7 +335,7 @@ class UjianUTSController extends BaseController
                     return [
                   'status' => 202, // SUCCESS AND LOAD CONTENT
                   'path' => 'ujian/ujian-uts-reguler-online/',
-                  'message' => 'Tambah Peserta UTS successfully'
+                  'message' => 'Tambah Peserta UTS Successfully'
                 ];
                 } catch (\Exception $e) {
                     DB::rollback();

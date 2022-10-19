@@ -123,7 +123,7 @@ class KegiatanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/kegiatan',
-                    'message' => 'Save Kegiatan successfully'
+                    'message' => 'Save Kegiatan Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -139,7 +139,7 @@ class KegiatanController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/kegiatan',
-                    'message' => 'Update Kegiatan successfully'
+                    'message' => 'Update Kegiatan Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -159,7 +159,7 @@ class KegiatanController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Kegiatan successfully'
+                        'message' => 'Delete Kegiatan Successfully'
                     ];
                 }
             }

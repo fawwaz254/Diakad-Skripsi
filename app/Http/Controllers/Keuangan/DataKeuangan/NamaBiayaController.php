@@ -102,7 +102,7 @@ class NamaBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/nama-biaya',
-                    'message' => 'Save Nama Biaya successfully'
+                    'message' => 'Save Nama Biaya Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class NamaBiayaController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-keuangan/nama-biaya',
-                    'message' => 'Update Nama Biaya successfully'
+                    'message' => 'Update Nama Biaya Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class NamaBiayaController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Nama Biaya successfully'
+                        'message' => 'Delete Nama Biaya Successfully'
                     ];
                 }
             }

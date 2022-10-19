@@ -102,7 +102,7 @@ class JalurController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jalur',
-                    'message' => 'Save Jalur successfully'
+                    'message' => 'Save Jalur Successfully'
                 ];
             }
             elseif($mode == 'edit'){
@@ -117,7 +117,7 @@ class JalurController extends BaseController{
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'data-akademik/jalur',
-                    'message' => 'Update Jalur successfully'
+                    'message' => 'Update Jalur Successfully'
                 ];
             }
             elseif($mode == 'delete'){
@@ -137,7 +137,7 @@ class JalurController extends BaseController{
 
                     return [
                         'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Jalur successfully'
+                        'message' => 'Delete Jalur Successfully'
                     ];
                 }
             }

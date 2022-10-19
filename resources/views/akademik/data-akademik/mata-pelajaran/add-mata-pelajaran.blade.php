@@ -57,10 +57,10 @@
                                         aria-invalid="true">
                                 </div>
 
-                              <!--   <div class="col-md-4">
+                               <div class="col-md-4">
                                     <label>Nilai KKM</label>
                                     <input type="number" class="form-control" name="nilai_kkm" required="" aria-required="true" aria-invalid="true">
-                                </div> -->
+                                </div> 
 
                                <!--  <div class="col-md-4">
                                     <label>Jam KBM</label>
