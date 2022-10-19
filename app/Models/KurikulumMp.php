@@ -31,7 +31,10 @@ class KurikulumMp extends Model
     protected $guarded = [];
 
 
-
+    public function mata_pelajaran()
+    {
+        return $this->belongsTo(MataPelajaran::class, 'id_mata_pelajaran');
+    }
 
 
 
