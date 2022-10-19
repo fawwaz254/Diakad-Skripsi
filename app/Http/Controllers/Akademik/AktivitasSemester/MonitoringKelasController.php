@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Akademik\LibAkademik;
+use App\Models\Ruangan;
 use App\Models\Semester;
 use Auth;
 use DB;
@@ -96,9 +97,10 @@ class MonitoringKelasController extends BaseController
             'kelas_mp.kelas',
             'kelas_mp.pengampu_mp_utama.guru.pengguna',
             'kelas_mp.mata_pelajaran'
-        )->with(['kelas_mp.pengambilan_mp' => function ($q) {
-            $q->where('status_apv_pengambilan_mp', 1);
-        }])
+        )
+            // ->with(['kelas_mp.pengambilan_mp' => function ($q) {
+            //     $q->where('status_apv_pengambilan_mp', 1);
+            // }])
             ->whereHas('kelas_mp', function ($q) use ($id) {
                 $q->where('id_semester', $id);
             });
