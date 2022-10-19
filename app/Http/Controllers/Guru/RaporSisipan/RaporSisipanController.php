@@ -174,7 +174,7 @@ class RaporSisipanController extends Controller
 
                 //loop dan cari nilai kosong yang diatas 5
                 if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
-                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2];
+                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
                 }else{
                     $nilaiSiswaYangKosong = 0;
                     for ($i = 6; $i <= 10; $i++) {
@@ -182,7 +182,6 @@ class RaporSisipanController extends Controller
                             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
                         }
                     }
-    
                 }
 
                 $data = array(
@@ -203,7 +202,6 @@ class RaporSisipanController extends Controller
             })
             ->make(true);
     }
-
 
     public function excelDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     {
@@ -269,22 +267,33 @@ class RaporSisipanController extends Controller
     }
 
 
-
     public function uploadRaporSisipanSTS(Request $request)
 	{
-        // dd($request->file('file-excel'));
-		// validasi
-		// $this->validate($request, [
-		// 	'file' => 'required|mimes:csv,xls,xlsx'
-		// ]);
-		// dd($request);
-		// menangkap file excel
 
-		// import data
-		Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
+
+        $input = (object) $request->input();
+		// $auth_data = $input->auth_data;
+		// $now = Carbon::now(env('APP_TIMEZONE', ''));
+		if ($request->hasFile('file-excel')) {
+			// $path = $request->file('file-excel')->getRealPath();
+			// $data = Excel::load($path)->get();
+            Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
+			return [
+				'status' 	=> 200, // FAILED
+				'message' 	=> "Upload Sukses"
+			];;
+		} else {
+			return [
+				'status' 	=> 300, // FAILED
+				'message' 	=> "File Excel tidak ditemukan"
+			];
+		}
+	
+        // import data
+
 
 		// notifikasi dengan session
-		return back();
+		// return back();
 		// // alihkan halaman kembali
 		// return redirect('/siswa');
 	}
@@ -329,8 +338,6 @@ class RaporSisipanController extends Controller
                                 // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
                                 //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
                                 // }
-                            
-                           
                         }
                     }
                 }
