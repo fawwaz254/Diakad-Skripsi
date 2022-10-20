@@ -1483,14 +1483,14 @@ class LibCetakKeuangan
             $print_setting2 = session('setting_print_keuangan2');
         }
 
-        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan','tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.biaya')
-        ->whereHas('tagihan_biaya.detail_biaya', function ($query) use($print_setting2) {
-            if($print_setting2 == 'spp'){
-                return $query->where('id_jenis_detail_biaya', '=', 4);
-            }elseif($print_setting2 == 'lain'){
-                return $query->where('id_jenis_detail_biaya', '!=', 4);
-            }
-        });
+        $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya.kelas', 'tagihan_biaya.potongan', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.biaya')
+            ->whereHas('tagihan_biaya.detail_biaya', function ($query) use ($print_setting2) {
+                if ($print_setting2 == 'spp') {
+                    return $query->where('id_jenis_detail_biaya', '=', 4);
+                } elseif ($print_setting2 == 'lain') {
+                    return $query->where('id_jenis_detail_biaya', '!=', 4);
+                }
+            });
 
         if (!empty($start_date) && !empty($end_date)) {
             $allDataPembayaran = $allDataPembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
@@ -1530,20 +1530,17 @@ class LibCetakKeuangan
             $print_setting2 = session('setting_print_keuangan2');
         }
 
-        if($print_setting2 == 'spp'){
-            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
+        if ($print_setting2 == 'spp') {
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
                 $query->where('id_jenis_detail_biaya', 4);
             });
-        }elseif($print_setting2== 'lain'){
-            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
-                $query->where('id_jenis_detail_biaya','!=', 4);
+        } elseif ($print_setting2 == 'lain') {
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
+                $query->where('id_jenis_detail_biaya', '!=', 4);
             });
-        }else{
-            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas');
+        } else {
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas');
         }
-      
-       
-
 
         $allDataPembayaranTunggakan = PembayaranTunggakan::query();
 
@@ -1578,10 +1575,21 @@ class LibCetakKeuangan
             $allDataPembayaranTunggakan = $allDataPembayaranTunggakan->get();
         }
 
-        
+        $sc_bulan = Carbon::createFromFormat('Y-m-d', $start_date);
+        $id_bulan = $sc_bulan->month;
+
+        $sc_tahun = Carbon::createFromFormat('Y-m-d', $start_date);
+        $tahun = $sc_tahun->year;
+
+        if ($id_bulan < 7) {
+            $tahun_semester = $tahun - 1;
+        } else {
+            $tahun_semester = $tahun;
+        }
 
         $result = [
             'data' => $allDataPembayaran,
+            'semester_aktif' => Semester::where('kode_semester', $tahun_semester . '1')->first(),
             'dates' => CarbonPeriod::create($start_date, $end_date),
             'tingkat' => Kelas::select('tingkat')->distinct()->get()->pluck('tingkat'),
             'data_tunggakan' => $allDataPembayaranTunggakan,
@@ -1656,20 +1664,19 @@ class LibCetakKeuangan
             $print_setting2 = session('setting_print_keuangan2');
         }
 
-        if($print_setting2 == 'spp'){
+        if ($print_setting2 == 'spp') {
             $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
-            ->whereHas('tagihan_biaya.detail_biaya', function ($query) {
-                $query->where('id_jenis_detail_biaya', 4);
-            });
-        }elseif($print_setting2== 'lain'){
+                ->whereHas('tagihan_biaya.detail_biaya', function ($query) {
+                    $query->where('id_jenis_detail_biaya', 4);
+                });
+        } elseif ($print_setting2 == 'lain') {
             $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
-            ->whereHas('tagihan_biaya.detail_biaya', function ($query) {
-                $query->where('id_jenis_detail_biaya','!=', 4);
-            });
-        }else{
+                ->whereHas('tagihan_biaya.detail_biaya', function ($query) {
+                    $query->where('id_jenis_detail_biaya', '!=', 4);
+                });
+        } else {
             $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal');
         }
-        
 
         if (!empty($start_year) && !empty($end_year)) {
             $pembayaran = $pembayaran->where(function ($month) use ($start_year, $end_year) {
@@ -1678,8 +1685,6 @@ class LibCetakKeuangan
             });
         }
 
-
-    
         // if($print_setting2 == 'spp'){
         //     $pembayaran = $pembayaran->whereHas('tagihan_biaya.detail_biaya', function ($query){
         //         $query->where('id_jenis_detail_biaya', 4);

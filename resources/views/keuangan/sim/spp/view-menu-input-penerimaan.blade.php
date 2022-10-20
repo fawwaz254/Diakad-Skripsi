@@ -15,12 +15,21 @@
                         {{csrf_field()}}
                         <div class="row clearfix">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                @if($realisasi)
+                                <input type="hidden" name="id_realisasi" value="{{$realisasi->id_realisasi}}">
+                                @endif
                                 <label>Tahun Ajaran</label>
                                 <select class="form-control show-tick" name="tahun">
                                 @foreach($data_semester as $semester)
-                                    <option value="{{$semester->thn_akademik_semester}}" 
-                                        @if($semester->thn_akademik_semester == $tahun_akademik_semester)
-                                            selected
+                                    <option value="{{$semester->thn_akademik_semester}}"
+                                        @if($realisasi)
+                                            @if($semester->id_semester == $realisasi->id_semester_realisasi)
+                                                selected
+                                            @endif
+                                        @else
+                                            @if($semester->thn_akademik_semester == $tahun_akademik_semester)
+                                                selected
+                                            @endif
                                         @endif>
                                     {{$semester->tahun_ajaran}}</option>
                                 @endforeach
@@ -29,26 +38,30 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Tanggal Terima</label>
+                                        @if($realisasi)
+                                        <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" value="{{$realisasi->tgl_realisasi}}">
+                                        @else
                                         <input type="text" class="datepicker form-control" name="tgl_realisasi" required="" value="{{\Carbon\Carbon::now()->format('Y-m-d')}}">
+                                        @endif
                                     </div>
                                 </div>
                                 <label>Kategori</label>
                                 <select class="form-control show-tick" name="id_subkategori_rapb">
                                     @foreach($data_subkategori as $subkategori)
-                                    <option value="{{$subkategori->id_subkategori_rapb}}">{{$subkategori->kode_subkategori_rapb}} {{$subkategori->nm_subkategori_rapb}}</option>
+                                    <option value="{{$subkategori->id_subkategori_rapb}}" {{$realisasi? ($realisasi->rapb->id_ket_subkategori_rapb == $subkategori->id_subkategori_rapb)? 'selected' : '' : ''}}>{{$subkategori->kode_subkategori_rapb}} {{$subkategori->nm_subkategori_rapb}}</option>
                                     @endforeach
                                 </select>
                                 <br>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Uraian</label>
-                                        <textarea class="form-control" name="nm_realisasi" rows="4" cols="100"></textarea>
+                                        <textarea class="form-control" name="nm_realisasi" rows="4" cols="100">@if($realisasi){{$realisasi->nm_realisasi}}@endif</textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
                                         <label>Nilai</label>
-                                        <input type="number" class="form-control" name="dana_realisasi" required="">
+                                        <input type="number" class="form-control" name="dana_realisasi" required="" @if($realisasi) value="{{$realisasi->dana_realisasi}}" @endif>
                                     </div>
                                 </div>
                             </div>
@@ -64,7 +77,7 @@
 </div>
 @include('scriptjs')
     <script>
-    $(function(){    
+    $(function(){
         $('.datepicker').bootstrapMaterialDatePicker({
             format: 'YYYY-MM-DD',
             //lang : 'id',
