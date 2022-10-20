@@ -85,7 +85,7 @@
                             @php
                             $nama = $list_nilai->first();
                                 // dd($nama->rapor_sisipan->semester->tahun_ajaran);
-                            echo 'TAHUN AJARAN '.$nama->rapor_sisipan->semester->tahun_ajaran ;
+                            echo  isset($nama->rapor_sisipan->semester->tahun_ajaran) ? 'TAHUN AJARAN '.$nama->rapor_sisipan->semester->tahun_ajaran : '' ;
                         @endphp
 
                         </h2>

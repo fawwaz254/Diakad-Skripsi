@@ -75,7 +75,7 @@ class CetakRaporController extends Controller
             $k = $kurikulum->firstWhere('id_jurusan', $kelas->jurusan->id_jurusan);
             $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif',1)->where('id_kelas',$id_kelas)->first();
 
-// dd($k);
+
         // $rapor_sisipan = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->get();
 
         // $list_data = KomponenNilaiRaporSisipan::where('status',1)->where('type','!=','uas')->get();
