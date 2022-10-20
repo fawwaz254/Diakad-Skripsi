@@ -241,7 +241,7 @@ class SetJadwalKelasController extends Controller
                 return [
                     'status_code' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                    'message' => 'Save Ssuccessfully'
+                    'message' => 'Save Successfully'
                 ];
             } elseif ($mode == 'delete') {
                 // dd($id);
@@ -291,7 +291,7 @@ class SetJadwalKelasController extends Controller
                 return [
                     'status_code' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                    'message' => 'Save Ssuccessfully'
+                    'message' => 'Save Successfully'
                 ];
             } 
         }

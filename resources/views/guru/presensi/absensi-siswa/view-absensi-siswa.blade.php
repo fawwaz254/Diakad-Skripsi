@@ -39,7 +39,7 @@
                                             @foreach($grup_kbm_perhari as $hari => $data_kbm)
                                             <optgroup label="{{$hari}}">
                                                 @foreach($data_kbm as $data)
-                                                    <option value="{{$data->id_jadwal_kelas_mp}}">{{$data->nm_mata_pelajaran}} - {{$data->nm_kelas}} - {{$data->nm_ruangan}}</option>
+                                                    <option value="{{$data->id_jadwal_kelas_mp}}">{{$data->nm_mata_pelajaran}} - {{$data->nm_kelas}} - {{$data->nm_ruangan}} - JAM {{$data->jam_mulai}}:{{$data->menit_mulai}} - {{$data->jam_selesai}}:{{$data->menit_selesai}}</option>
                                                 @endforeach
                                             </optgroup>
                                             @endforeach
