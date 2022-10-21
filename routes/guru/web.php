@@ -584,6 +584,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                Route::post('jurusan', [RaporSisipanController::class, 'getDataFromJurusan']);
+
                 // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });

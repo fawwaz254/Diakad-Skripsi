@@ -18,25 +18,35 @@
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action-daftar-nilai-sts/add/0') }}">
                         {{ csrf_field() }}
                         <div class="row clearfix">
-                            <div class="col-md-6">
-                                <label>Mata Pelajaran</label>
-                                <select class="form-control show-tick" name="id_mata_pelajaran">
-                                    <option selected disabled>-- Pilih Mata Pelajaran --</option>
-                                    @foreach ($list_mapel as $r)
-                                        <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }} ({{ $r->kd_mata_pelajaran }})
+                            <div class="col-md-4">
+                                <label>Jurusan</label>
+                                <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)">
+                                    <option selected disabled>-- Pilih Jurusan --</option>
+                                    @foreach ($list_jurusan as $jurusan)
+                                        <option value="{{ $jurusan->id_jurusan}}">{{ $jurusan->nm_jurusan }}
                                         </option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Mata Pelajaran</label>
+                                <select class="form-control show-tick" name="id_mata_pelajaran">
+                                    {{-- <option selected disabled>-- Pilih Mata Pelajaran --</option> --}}
+                                    {{-- @foreach ($list_mapel as $r)
+                                        <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }} ({{ $r->kd_mata_pelajaran }})
+                                        </option>
+                                    @endforeach --}}
                                 </select>
                             </div>
 
                             <div class="col-md-4">
                                 <label>Kelas</label>
                                 <select class="form-control show-tick" name="id_kelas">
-                                    <option selected disabled>-- Pilih Kelas --</option>
-                                    @foreach ($list_kelas as $r)
+                                    {{-- <option selected disabled>-- Pilih Kelas --</option> --}}
+                                    {{-- @foreach ($list_kelas as $r)
                                     <option value="{{ $r->id_kelas }}">{{ $r->nm_kelas }}
                                     </option>
-                                @endforeach
+                                @endforeach --}}
                                 </select>
                             </div>
 
@@ -58,3 +68,32 @@
 </div>
 
 @include('scriptjs')
+
+<script>
+    function changeJurusan(el){
+        $.ajax({
+            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/jurusan')}}',
+            type: 'POST',
+            data: {
+                jurusan: $('select[name=id_jurusan]').val()
+            },
+            success: function(result) {
+                // alert(result);
+                $('select[name=id_mata_pelajaran]').html('');
+                var html = '<option value="">-- Pilih Mata Pelajaran --</option>';
+                $.each(result['mapel'], function( key, item ) {
+                    html += '<option value="'+item.id_mata_pelajaran+'">'+item.nm_mata_pelajaran+' ('+item.kd_mata_pelajaran+')</option>'
+                });
+                $('select[name=id_mata_pelajaran]').html(html);
+
+                $('select[name=id_kelas]').html('');
+                var html = '<option value="">-- Pilih Kelas --</option>';
+                $.each(result['kelas'], function( key, item ) {
+                    html += '<option value="'+item.id_kelas+'">'+item.nm_kelas+'</option>'
+                });
+                $('select[name=id_kelas]').html(html);
+            }
+        });
+    }
+
+</script>

@@ -104,7 +104,6 @@ class CetakRaporController extends Controller
 
                             $nilai_sumatif1 = $list_komponen->firstWhere('urutan',1);
                             $nilai_sumatif2 = $list_komponen->firstWhere('urutan',2);
-                            // dd($nilai_sumatif1);
                             $sts = $list_komponen->where('type','uts')->where('urutan',9)->first();
                             if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
@@ -118,37 +117,9 @@ class CetakRaporController extends Controller
                     }
                 }
             }
-// dd($nilai_komponen);
+
 
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor2', compact('auth_data', 'kelas', 'list_siswa', 'k', 'list_nilai', 'wali_kelas','nilai_siswa','list_komponen','nilai_komponen'));
-            // $nilai_siswa = [];
-            // // $nilai_komponen = [];
-            // if ($list_siswa) {
-            //     $nilai = $list_nilai->toArray();
-            //     foreach ($nilai as $nilaiRapor) {
-            //         foreach ($nilaiRapor as $a) {
-            //             $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
-            //             // $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan'].'kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
-
-            //                 // $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
-            //                 // $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
-            //                 // $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
-            //                 // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-            //                 //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-            //                 // }
-            //                 // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-            //                 //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-            //                 // }
-            //                 // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-            //                 //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-            //                 // }
-            //         }
-            //     }
-            // }
-            // foreach($list_nilai as $a){
-            //     dd($a);
-            // }
-            // dd($list_nilai);
         }
     }
 }
