@@ -6,7 +6,8 @@
             </a>
             <ul class="dropdown-menu pull-left">
                 <li><a href="{{Request::segment(1)}}#sim/spp/input" class="target-link waves-effect waves-block">Input Penerimaan</a></li>
-                <li><a href="{{Request::segment(1)}}#sim/spp/penerimaan" class="target-link waves-effect waves-block">Tampilkan</a></li>
+                <li><a href="{{Request::segment(1)}}#sim/spp/detail-penerimaan" class="target-link waves-effect waves-block">Tampilkan Detail</a></li>
+                <li><a href="{{Request::segment(1)}}#sim/spp/penerimaan" class="target-link waves-effect waves-block">Rekapan</a></li>
             </ul>
         </li>
         <li><a href="{{Request::segment(1)}}#sim/spp/pemasukan" class="target-link">PEMASUKAN SPP</a></li>

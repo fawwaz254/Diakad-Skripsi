@@ -3,44 +3,38 @@
 namespace App\Http\Controllers\Keuangan\SIM;
 
 use App\Imports\DataImportExcel;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
-use Yajra\Datatables\Datatables;
-
+use App\Libraries\Keuangan\LibCetakKeuangan;
+use App\Libraries\Keuangan\LibDataKeuangan;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\Pendidikan\LibKelas;
 use App\Models\Biaya;
 use App\Models\BiayaSekolah;
 use App\Models\Bulan;
 use App\Models\DetailBiaya;
 use App\Models\Guru;
+use App\Models\JenisDetailBiaya;
 use App\Models\Kelas;
 use App\Models\KelompokBiaya;
 use App\Models\KelompokBiayaInternal;
-use App\Models\JenisDetailBiaya;
-use App\Models\Rapb;
 use App\Models\PembayaranBiaya;
+use App\Models\PembayaranTunggakan;
+use App\Models\Rapb;
 use App\Models\Realisasi;
 use App\Models\Semester;
 use App\Models\Siswa;
 use App\Models\Staff;
 use App\Models\SubkategoriRapb;
-use App\Models\PembayaranTunggakan;
 use App\Models\TagihanBiaya;
 use App\Models\TutupBukuBulananBiaya;
 use App\Models\TutupBukuBulananKas;
 use App\Models\TutupBukuTahunanBiaya;
-
-use App\Libraries\Pendidikan\LibKelas;
-use App\Libraries\Keuangan\LibDataKeuangan;
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\Setting;
-use Auth;
+use Carbon\Carbon;
 use DB;
 use Excel;
-use Session;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 use Validator;
+use Yajra\Datatables\Datatables;
 
 class SppController extends BaseController
 {
@@ -52,7 +46,7 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-spp', compact('auth_data'));
     }
 
-    public function viewMenuInput(Request $request)
+    public function viewMenuInput(Request $request, $id = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -68,7 +62,13 @@ class SppController extends BaseController
             $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
         })->get();
 
-        return view('keuangan/sim/spp/view-menu-input-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori'));
+        if (!empty($id)) {
+            $realisasi = Realisasi::where('id_realisasi', $id)->first();
+        } else {
+            $realisasi = null;
+        }
+
+        return view('keuangan/sim/spp/view-menu-input-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'realisasi'));
     }
 
     public function viewMenuEditSetting(Request $request, $thn_akademik_semester, $id)
@@ -160,8 +160,8 @@ class SppController extends BaseController
 
                             if (!$siswa) {
                                 return [
-                                    'status'    => 300, // FAILED
-                                    'message'   => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem'
+                                    'status' => 300, // FAILED
+                                    'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
                                 ];
                             } else {
                                 $semester = Semester::where('kode_semester', $item->kode_semester)->first();
@@ -178,19 +178,19 @@ class SppController extends BaseController
                                     })->first();
 
                                 if ($tagihan_siswa) {
-                                    $pembayaran_biaya                        = new PembayaranBiaya;
-                                    $pembayaran_biaya->id_pembayaran_biaya   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                    $pembayaran_biaya->id_tagihan_biaya      = $tagihan_siswa->id_tagihan_biaya;
-                                    $pembayaran_biaya->id_staff_bayar        = $input->auth_data->pengguna->id_pengguna;
-                                    $pembayaran_biaya->id_semester_bayar     = $semester->id_semester;
-                                    $pembayaran_biaya->besar_pembayaran      = $tagihan_siswa->besar_biaya;
-                                    $pembayaran_biaya->tgl_pembayaran        = $tanggal_bayar;
-                                    $pembayaran_biaya->keterangan            = "Langsung Lunas";
-                                    $pembayaran_biaya->created_by            = $input->auth_data->pengguna->id_pengguna;
+                                    $pembayaran_biaya = new PembayaranBiaya;
+                                    $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                    $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
+                                    $pembayaran_biaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+                                    $pembayaran_biaya->id_semester_bayar = $semester->id_semester;
+                                    $pembayaran_biaya->besar_pembayaran = $tagihan_siswa->besar_biaya;
+                                    $pembayaran_biaya->tgl_pembayaran = $tanggal_bayar;
+                                    $pembayaran_biaya->keterangan = "Langsung Lunas";
+                                    $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
                                     $pembayaran_biaya->save();
 
-                                    $tagihan_siswa->is_tagih     = 0;
-                                    $tagihan_siswa->updated_by   = $input->auth_data->pengguna->id_pengguna;
+                                    $tagihan_siswa->is_tagih = 0;
+                                    $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
                                     $tagihan_siswa->save();
                                 }
                             }
@@ -201,26 +201,26 @@ class SppController extends BaseController
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'sim/spp/upload-pembayaran',
-                        'message' => 'Upload Pembayaran Successfully'
+                        'message' => 'Upload Pembayaran Successfully',
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
                     return [
-                        'status'     => 203, // GAGAL
-                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+                        'status' => 203, // GAGAL
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
                     ];
                 }
             } else {
                 return [
-                    'status'     => 300, // FAILED
-                    'message'     => "File Excel Anda Kosong"
+                    'status' => 300, // FAILED
+                    'message' => "File Excel Anda Kosong",
                 ];
             }
         } else {
             return [
-                'status'     => 300, // FAILED
-                'message'     => "File Excel tidak ditemukan"
+                'status' => 300, // FAILED
+                'message' => "File Excel tidak ditemukan",
             ];
         }
     }
@@ -229,7 +229,7 @@ class SppController extends BaseController
     {
         $input = (object) $request->input();
 
-        $tahun      = $tahun_akademik_semester;
+        $tahun = $tahun_akademik_semester;
 
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -246,7 +246,7 @@ class SppController extends BaseController
         $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
             'id_semester_mulai' => $id_semester_mulai,
             'id_semester_selesai' => $id_semester_selesai,
-            'id_bulan' => $id_bulan
+            'id_bulan' => $id_bulan,
         ])->orderBy('tingkat')->get();
 
         $subkategori_rapb = SubkategoriRapb::whereHas('kategori', function ($q) {
@@ -254,7 +254,7 @@ class SppController extends BaseController
         })->get()->pluck('id_subkategori_rapb');
 
         $data_realisasi = Rapb::selectRaw('
-                                        nm_kategori_rapb, 
+                                        nm_kategori_rapb,
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
                                         tipe_kategori_rapb,
@@ -282,11 +282,11 @@ class SppController extends BaseController
 
         $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first();
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first();
-        if ($tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) { } else {
+        if ($tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) {} else {
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
-                'message' => 'Tagihan bulan lalu belum diproses'
+                'message' => 'Tagihan bulan lalu belum diproses',
             ]);
         }
 
@@ -300,7 +300,7 @@ class SppController extends BaseController
         // $tahun      = $input->tahun;
         // $id_bulan   = $input->bulan;
 
-        $tahun      = $tahun_akademik_semester;
+        $tahun = $tahun_akademik_semester;
 
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -367,7 +367,7 @@ class SppController extends BaseController
                                 AND biaya_sekolah.deleted_at IS NULL
                             WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
-                                AND pembayaran_biaya.deleted_at IS NULL 
+                                AND pembayaran_biaya.deleted_at IS NULL
                             GROUP BY kelas.tingkat
                             ORDER BY kelas.tingkat',
             [$id_bulan, $id_semester, $tahun, $id_bulan]
@@ -387,7 +387,7 @@ class SppController extends BaseController
                             JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
                                 AND biaya_sekolah.id_semester = ?
                                 AND biaya_sekolah.deleted_at IS NULL
-                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
+                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND pembayaran_biaya.deleted_at IS NULL
                             GROUP BY kelas.tingkat
@@ -411,7 +411,7 @@ class SppController extends BaseController
                             JOIN semester ON semester.id_semester = biaya_sekolah.id_semester
                                 AND semester.kode_semester < ?
                                 AND semester.deleted_at IS NULL
-                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ? 
+                            WHERE YEAR(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND MONTH(pembayaran_biaya.tgl_pembayaran) = ?
                                 AND pembayaran_biaya.deleted_at IS NULL
                             GROUP BY kelas.tingkat
@@ -419,14 +419,13 @@ class SppController extends BaseController
             [$id_bulan, $kode_semester_mulai, $tahun, $id_bulan]
         );
 
-
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
-        if ($tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) { } else {
+        if ($tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) {} else {
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
-                'message' => 'Tagihan bulan lalu belum diproses'
+                'message' => 'Tagihan bulan lalu belum diproses',
             ]);
         }
 
@@ -438,62 +437,62 @@ class SppController extends BaseController
                     'id_semester_mulai' => $id_semester_mulai,
                     'id_semester_selesai' => $id_semester_selesai,
                     'id_bulan' => $id_bulan,
-                    'tingkat' => $data->tingkat
+                    'tingkat' => $data->tingkat,
                 ])->first();
 
                 if ($tutup_buku_bulanan_biaya) {
-                    $tutup_buku_bulanan_biaya->jml_siswa            = $data->jml_siswa;
+                    $tutup_buku_bulanan_biaya->jml_siswa = $data->jml_siswa;
 
                     $tagihan = collect($list_data_tagihan)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_tagihan_biaya    = (!empty($tagihan) ? $tagihan->jml_tagihan_biaya : 0);
+                    $tutup_buku_bulanan_biaya->jml_tagihan_biaya = (!empty($tagihan) ? $tagihan->jml_tagihan_biaya : 0);
 
                     $pembayaran = collect($list_data_pembayaran)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya    = (!empty($pembayaran) ? $pembayaran->jml_pembayaran_biaya : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya = (!empty($pembayaran) ? $pembayaran->jml_pembayaran_biaya : 0);
 
-                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya    = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
+                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
 
                     if ($id_bulan == 7) {
-                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = 0;
+                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu = 0;
                     } else {
                         $pembayaran_old_month = collect($list_data_pembayaran_old_month)->firstWhere('tingkat', $data->tingkat);
-                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = (!empty($pembayaran_old_month) ? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
+                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu = (!empty($pembayaran_old_month) ? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
                     }
 
                     $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years) ? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu = (!empty($pembayaran_old_years) ? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
 
-                    $tutup_buku_bulanan_biaya->updated_by          = $input->auth_data->pengguna->id_pengguna;
+                    $tutup_buku_bulanan_biaya->updated_by = $input->auth_data->pengguna->id_pengguna;
                     $tutup_buku_bulanan_biaya->save();
                 } else {
                     $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $tutup_buku_bulanan_biaya                               = new TutupBukuBulananBiaya;
-                    $tutup_buku_bulanan_biaya->id_tutup_buku_bulanan_biaya  = $id;
-                    $tutup_buku_bulanan_biaya->id_semester_mulai            = $id_semester_mulai;
-                    $tutup_buku_bulanan_biaya->id_semester_selesai          = $id_semester_selesai;
-                    $tutup_buku_bulanan_biaya->id_bulan                     = $id_bulan;
-                    $tutup_buku_bulanan_biaya->tingkat                      = $data->tingkat;
-                    $tutup_buku_bulanan_biaya->jml_siswa                    = $data->jml_siswa;
+                    $tutup_buku_bulanan_biaya = new TutupBukuBulananBiaya;
+                    $tutup_buku_bulanan_biaya->id_tutup_buku_bulanan_biaya = $id;
+                    $tutup_buku_bulanan_biaya->id_semester_mulai = $id_semester_mulai;
+                    $tutup_buku_bulanan_biaya->id_semester_selesai = $id_semester_selesai;
+                    $tutup_buku_bulanan_biaya->id_bulan = $id_bulan;
+                    $tutup_buku_bulanan_biaya->tingkat = $data->tingkat;
+                    $tutup_buku_bulanan_biaya->jml_siswa = $data->jml_siswa;
 
                     $tagihan = collect($list_data_tagihan)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_tagihan_biaya    = (!empty($tagihan) ? $tagihan->jml_tagihan_biaya : 0);
+                    $tutup_buku_bulanan_biaya->jml_tagihan_biaya = (!empty($tagihan) ? $tagihan->jml_tagihan_biaya : 0);
 
                     $pembayaran = collect($list_data_pembayaran)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya    = (!empty($pembayaran) ? $pembayaran->jml_pembayaran_biaya : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya = (!empty($pembayaran) ? $pembayaran->jml_pembayaran_biaya : 0);
 
-                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya    = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
+                    $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = $tutup_buku_bulanan_biaya->jml_tagihan_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya;
 
                     if ($id_bulan == 7) {
-                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = 0;
+                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu = 0;
                     } else {
                         $pembayaran_old_month = collect($list_data_pembayaran_old_month)->firstWhere('tingkat', $data->tingkat);
-                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu    = (!empty($pembayaran_old_month) ? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
+                        $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu = (!empty($pembayaran_old_month) ? $pembayaran_old_month->jml_pembayaran_biaya_bulan_lalu : 0);
                     }
 
                     $pembayaran_old_years = collect($list_data_pembayaran_old_years)->firstWhere('tingkat', $data->tingkat);
-                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu    = (!empty($pembayaran_old_years) ? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
+                    $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu = (!empty($pembayaran_old_years) ? $pembayaran_old_years->jml_pembayaran_biaya_tahun_lalu : 0);
 
-                    $tutup_buku_bulanan_biaya->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $tutup_buku_bulanan_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
                     $tutup_buku_bulanan_biaya->save();
                 }
             }
@@ -505,7 +504,7 @@ class SppController extends BaseController
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
-                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() . '' . $e->getLine() : 'Operation error. Error ' . $e->getLine()
+                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() . '' . $e->getLine() : 'Operation error. Error ' . $e->getLine(),
             ]);
         }
 
@@ -514,29 +513,29 @@ class SppController extends BaseController
             $data_tutup_buku_bulanan_biaya = TutupBukuBulananBiaya::where([
                 'id_semester_mulai' => $id_semester_mulai,
                 'id_semester_selesai' => $id_semester_selesai,
-                'id_bulan' => $id_bulan
+                'id_bulan' => $id_bulan,
             ])->get();
 
             /* INSERT TUTUP BUKU TAHUNAN BIAYA */
             $pembayaran_tunggakan_tahun_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_tahun_lalu');
 
-            $tahun_lalu      = $tahun - 1;
+            $tahun_lalu = $tahun - 1;
             $id_semester_mulai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu . '1')->first()->id_semester;
             $id_semester_selesai_tahun_lalu = Semester::where('kode_semester', $tahun_lalu . '2')->first()->id_semester;
 
             $tutup_buku_tahunan_biaya_old = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai_tahun_lalu, 'id_semester_selesai' => $id_semester_selesai_tahun_lalu])->first();
 
             if ($tutup_buku_tahunan_biaya_now = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first()) {
-                $tutup_buku_tahunan_biaya_now->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_tahunan_biaya_now->updated_by = $input->auth_data->pengguna->id_pengguna;
             } else {
                 $tutup_buku_tahunan_biaya_now = new TutupBukuTahunanBiaya;
-                $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya  = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $tutup_buku_tahunan_biaya_now->id_semester_mulai            = $id_semester_mulai;
-                $tutup_buku_tahunan_biaya_now->id_semester_selesai          = $id_semester_selesai;
-                $tutup_buku_tahunan_biaya_now->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_tahunan_biaya_now->id_tutup_buku_tahunan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $tutup_buku_tahunan_biaya_now->id_semester_mulai = $id_semester_mulai;
+                $tutup_buku_tahunan_biaya_now->id_semester_selesai = $id_semester_selesai;
+                $tutup_buku_tahunan_biaya_now->created_by = $input->auth_data->pengguna->id_pengguna;
             }
 
-            $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya          = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
+            $tutup_buku_tahunan_biaya_now->jml_tunggakan_biaya = $tutup_buku_tahunan_biaya_old->jml_tunggakan_biaya - $pembayaran_tunggakan_tahun_lalu;
             $tutup_buku_tahunan_biaya_now->save();
             /* END INSERT TUTUP BUKU TAHUNAN BIAYA */
 
@@ -545,7 +544,7 @@ class SppController extends BaseController
             $pembayaran_tunggakan_bulan_lalu = $data_tutup_buku_bulanan_biaya->sum('jml_pembayaran_biaya_bulan_lalu');
 
             $data_realisasi = Realisasi::selectRaw('
-                                        nm_kategori_rapb, 
+                                        nm_kategori_rapb,
                                         kode_subkategori_rapb,
                                         nm_subkategori_rapb,
                                         tipe_kategori_rapb,
@@ -568,29 +567,28 @@ class SppController extends BaseController
                 ->get();
 
             if ($tutup_buku_bulanan_kas_now = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first()) {
-                $tutup_buku_bulanan_kas_now->updated_by                   = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_kas_now->updated_by = $input->auth_data->pengguna->id_pengguna;
             } else {
                 $tutup_buku_bulanan_kas_now = new TutupBukuBulananKas;
-                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $tutup_buku_bulanan_kas_now->id_semester_mulai            = $id_semester_mulai;
-                $tutup_buku_bulanan_kas_now->id_semester_selesai          = $id_semester_selesai;
-                $tutup_buku_bulanan_kas_now->id_bulan                     = $id_bulan;
-                $tutup_buku_bulanan_kas_now->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $tutup_buku_bulanan_kas_now->id_tutup_buku_bulanan_kas = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $tutup_buku_bulanan_kas_now->id_semester_mulai = $id_semester_mulai;
+                $tutup_buku_bulanan_kas_now->id_semester_selesai = $id_semester_selesai;
+                $tutup_buku_bulanan_kas_now->id_bulan = $id_bulan;
+                $tutup_buku_bulanan_kas_now->created_by = $input->auth_data->pengguna->id_pengguna;
             }
-            $tutup_buku_bulanan_kas_now->kas_spp                = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu;
-            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan    = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
-            $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran   = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
-            $tutup_buku_bulanan_kas_now->kas_akhir_bulan        = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
+            $tutup_buku_bulanan_kas_now->kas_spp = $pembayaran_tunggakan_bulan_ini + $pembayaran_tunggakan_bulan_lalu + $pembayaran_tunggakan_tahun_lalu;
+            $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan = $data_realisasi->where('tipe_kategori_rapb', 1)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_rapb_pengeluaran = $data_realisasi->where('tipe_kategori_rapb', 2)->sum('total_realisasi');
+            $tutup_buku_bulanan_kas_now->kas_akhir_bulan = $tutup_buku_bulanan_kas_now->kas_spp + $tutup_buku_bulanan_kas_now->kas_rapb_penerimaan + $tutup_buku_bulanan_kas_old->kas_akhir_bulan;
             $tutup_buku_bulanan_kas_now->save();
             /* END INSERT TUTUP BUKU BULANAN KAS */
 
             DB::commit();
 
-
             return response()->json([
                 'status_code' => 200,
                 'status_text' => 'Success',
-                'message' => 'Success'
+                'message' => 'Success',
             ]);
         } catch (\Exception $e) {
             DB::rollback();
@@ -598,7 +596,7 @@ class SppController extends BaseController
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
-                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() . '' . $e->getLine() : 'Operation error. Error ' . $e->getLine()
+                'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() . '' . $e->getLine() : 'Operation error. Error ' . $e->getLine(),
             ]);
         }
     }
@@ -608,8 +606,8 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tahun      = $input->tahun_akademik_semester;
-        $kelas      = $input->kelas;
+        $tahun = $input->tahun_akademik_semester;
+        $kelas = $input->kelas;
 
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -785,16 +783,16 @@ class SppController extends BaseController
         $start_month = Carbon::create($tahun_akademik_semester, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
         $end_month = Carbon::create($tahun_akademik_semester, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
 
-        $dates = CarbonPeriod::create($start_month, $end_month);
+        $start_date = $start_month->format('Y-m-d');
+        $end_date = $end_month->format('Y-m-d');
+
+        $data_laporan = LibCetakKeuangan::fetchLaporanPembayaranPerTingkat($auth_data, $start_date, $end_date);
 
         $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
 
         $data_bulan = Bulan::orderBy('id_bulan')->get();
 
-        $data_pemasukan_bulan_ini = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.kelas')->whereBetween('tgl_pembayaran', [$start_month, $end_month])->get();
-        $is_ypm = Setting::where('key_Setting', 'is_ypm')->first()->value;
-
-        return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_semester', 'data_bulan', 'dates', 'tahun_akademik_semester', 'id_bulan', 'data_pemasukan_bulan_ini', 'is_ypm'));
+        return view('keuangan/sim/spp/view-menu-pemasukan', compact('auth_data', 'data_laporan', 'start_date', 'end_date', 'data_semester', 'tahun_akademik_semester', 'data_bulan', 'id_bulan'));
     }
 
     public function viewMenuPenerimaan(Request $request, $tahun_akademik_semester = null)
@@ -821,10 +819,67 @@ class SppController extends BaseController
 
         $data_realisasi = Realisasi::select('*')->addSelect(DB::raw('MONTH(realisasi.tgl_realisasi) month'))
             ->with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function ($q) {
-                $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
-            })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])->get();
+            $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
+        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])->get();
 
         return view('keuangan/sim/spp/view-menu-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'data_bulan', 'data_realisasi'));
+    }
+
+    public function viewMenuDetailPenerimaan(Request $request, $tahun_akademik_semester = null)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataTahunAjaranSemester($auth_data);
+
+        if (empty($tahun_akademik_semester)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $tahun_akademik_semester = $semester_aktif->thn_akademik_semester;
+        }
+
+        if (empty($tgl_awal)) {
+            $tgl_awal = Carbon::now()->firstOfMonth()->format('Y-m-d');
+        }
+
+        if (empty($tgl_akhir)) {
+            $tgl_akhir = Carbon::now()->endOfMonth()->format('Y-m-d');
+        }
+
+        return view('keuangan/sim/spp/view-menu-detail-penerimaan', compact('auth_data', 'data_semester', 'tgl_awal', 'tgl_akhir', 'tahun_akademik_semester'));
+    }
+
+    public function datatablesMenuDetailPenerimaan(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $tahun = $input->tahun;
+        $tgl_awal = $input->tgl_awal;
+        $tgl_akhir = $input->tgl_akhir;
+        $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
+        $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
+
+        $list_data = Realisasi::with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function ($q) {
+            $q->where('tipe_kategori_rapb', 1);
+        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
+            ->whereDate('tgl_realisasi', '>=', $tgl_awal)
+            ->whereDate('tgl_realisasi', '<=', $tgl_akhir);
+        // ->isInputByPengguna($auth_data->pengguna->id_pengguna);
+
+        return Datatables::of($list_data)
+            ->editColumn('tgl_realisasi', function ($item) {
+                return date_format(date_create($item->tgl_realisasi), "d M Y");
+            })
+            ->editColumn('dana_realisasi', function ($item) {
+                return 'Rp' . number_format($item->dana_realisasi);
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_realisasi,
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function viewMenuTunggakan(Request $request, $tahun_akademik_semester = null)
@@ -880,7 +935,7 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tahun      = $input->tahun_akademik_semester;
+        $tahun = $input->tahun_akademik_semester;
 
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -938,7 +993,7 @@ class SppController extends BaseController
 
                 $data = array(
                     'id' => $item->id_kelas,
-                    'status' => $status
+                    'status' => $status,
                 );
                 return $data;
             })
@@ -965,7 +1020,7 @@ class SppController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $tahun      = $input->tahun_akademik_semester;
+        $tahun = $input->tahun_akademik_semester;
 
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -1007,7 +1062,7 @@ class SppController extends BaseController
 
         return $dt->addColumn('action', function ($item) {
             $data = array(
-                'id' => $item->id_kelas
+                'id' => $item->id_kelas,
             );
             return $data;
         })
@@ -1045,7 +1100,7 @@ class SppController extends BaseController
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_tutup_buku_tahunan_biaya
+                    'id' => $item->id_tutup_buku_tahunan_biaya,
                 );
                 return $data;
             })
@@ -1089,13 +1144,13 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'jml_tunggakan_biaya' => 'required'
+            'jml_tunggakan_biaya' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
 
@@ -1124,7 +1179,7 @@ class SppController extends BaseController
                 if ($cek) {
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Data pada semester ini sudah dimasukkan'
+                        'message' => 'Data pada semester ini sudah dimasukkan',
                     ];
                 }
 
@@ -1148,7 +1203,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-tunggakan-tahun-lalu',
-                    'message' => 'Save Gedung Successfully'
+                    'message' => 'Save Gedung Successfully',
                 ];
             } elseif ($mode == 'edit') {
                 $data = TutupBukuTahunanBiaya::find($id);
@@ -1166,12 +1221,11 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-tunggakan-tahun-lalu',
-                    'message' => 'Save Gedung Successfully'
+                    'message' => 'Save Gedung Successfully',
                 ];
             }
         }
     }
-
 
     public function viewMenuSettingSaldoKasAwalTahun(Request $request)
     {
@@ -1204,7 +1258,7 @@ class SppController extends BaseController
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_tutup_buku_bulanan_kas
+                    'id' => $item->id_tutup_buku_bulanan_kas,
                 );
                 return $data;
             })
@@ -1248,13 +1302,13 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'kas_akhir_bulan' => 'required'
+            'kas_akhir_bulan' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
 
@@ -1278,7 +1332,7 @@ class SppController extends BaseController
                 if ($cek) {
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Data pada semester ini sudah dimasukkan'
+                        'message' => 'Data pada semester ini sudah dimasukkan',
                     ];
                 }
 
@@ -1296,7 +1350,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save Successfully'
+                    'message' => 'Save Successfully',
                 ];
             } elseif ($mode == 'edit') {
 
@@ -1308,7 +1362,7 @@ class SppController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'sim/spp/setting-saldo-kas-awal-tahun',
-                    'message' => 'Save Successfully'
+                    'message' => 'Save Successfully',
                 ];
             }
         }
@@ -1320,26 +1374,26 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'tahun_akademik_semester'               => 'required',
-            'id_kelas'                              => 'required',
-            'nominal_spp_juli'                      => 'required',
-            'nominal_spp_non_juli'                  => 'required',
-            'id_kelompok_biaya'                     => 'required',
-            'id_kelompok_biaya_internal_juli'       => 'required',
-            'id_kelompok_biaya_internal_non_juli'   => 'required'
+            'tahun_akademik_semester' => 'required',
+            'id_kelas' => 'required',
+            'nominal_spp_juli' => 'required',
+            'nominal_spp_non_juli' => 'required',
+            'id_kelompok_biaya' => 'required',
+            'id_kelompok_biaya_internal_juli' => 'required',
+            'id_kelompok_biaya_internal_non_juli' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
             $now = Carbon::now();
 
-            $tahun      = $input->tahun_akademik_semester;
+            $tahun = $input->tahun_akademik_semester;
             $data_siswa = Siswa::where('id_kelas', $input->id_kelas)->get();
-            $kelas      = Kelas::find($input->id_kelas);
+            $kelas = Kelas::find($input->id_kelas);
 
             $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
             $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -1363,14 +1417,14 @@ class SppController extends BaseController
                         $id_semester = $semester_mulai->id_semester;
                     }
 
-                    if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) { } else {
+                    if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) {} else {
                         $biaya_sekolah = new BiayaSekolah;
-                        $biaya_sekolah->id_biaya_sekolah                = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                        $biaya_sekolah->id_kelompok_biaya               = $input->id_kelompok_biaya;
-                        $biaya_sekolah->id_semester                     = $id_semester;
-                        $biaya_sekolah->besar_biaya_sekolah             = (1 * $input->nominal_spp_juli) + (11 * $input->nominal_spp_non_juli);
-                        $biaya_sekolah->validasi_biaya_sekolah          = 1;
-                        $biaya_sekolah->keterangan_biaya_sekolah        = 'SPP ' . $kelompok_biaya->nm_kelompok_biaya;
+                        $biaya_sekolah->id_biaya_sekolah = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $biaya_sekolah->id_kelompok_biaya = $input->id_kelompok_biaya;
+                        $biaya_sekolah->id_semester = $id_semester;
+                        $biaya_sekolah->besar_biaya_sekolah = (1 * $input->nominal_spp_juli) + (11 * $input->nominal_spp_non_juli);
+                        $biaya_sekolah->validasi_biaya_sekolah = 1;
+                        $biaya_sekolah->keterangan_biaya_sekolah = 'SPP ' . $kelompok_biaya->nm_kelompok_biaya;
                         $biaya_sekolah->save();
                     }
 
@@ -1384,42 +1438,42 @@ class SppController extends BaseController
 
                     if ($item = DetailBiaya::where(
                         [
-                            'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
-                            'id_biaya'                      => $biaya->id_biaya,
-                            'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
-                            'id_jenis_detail_biaya'         => 4,
-                            'id_bulan'                      => $bulan->id_bulan
+                            'id_biaya_sekolah' => $biaya_sekolah->id_biaya_sekolah,
+                            'id_biaya' => $biaya->id_biaya,
+                            'id_kelompok_biaya_internal' => $id_kelompok_biaya_internal,
+                            'id_jenis_detail_biaya' => 4,
+                            'id_bulan' => $bulan->id_bulan,
                         ]
                     )->first()) {
                         $id_detail_biaya = $item->id_detail_biaya;
                     } else {
                         $detail_biaya[] = array(
-                            'id_detail_biaya'               => $id_detail_biaya,
-                            'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
-                            'id_biaya'                      => $biaya->id_biaya,
-                            'id_kelompok_biaya_internal'    => $id_kelompok_biaya_internal,
-                            'validasi_biaya'                => 1,
-                            'besar_biaya'                   => $besar_biaya,
-                            'id_jenis_detail_biaya'         => 4,
-                            'id_bulan'                      => $bulan->id_bulan,
-                            'created_at'                    => $now,
-                            'created_by'                    => $input->auth_data->pengguna->id_pengguna,
-                            'updated_at'                    => $now,
+                            'id_detail_biaya' => $id_detail_biaya,
+                            'id_biaya_sekolah' => $biaya_sekolah->id_biaya_sekolah,
+                            'id_biaya' => $biaya->id_biaya,
+                            'id_kelompok_biaya_internal' => $id_kelompok_biaya_internal,
+                            'validasi_biaya' => 1,
+                            'besar_biaya' => $besar_biaya,
+                            'id_jenis_detail_biaya' => 4,
+                            'id_bulan' => $bulan->id_bulan,
+                            'created_at' => $now,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'updated_at' => $now,
                         );
                     }
 
                     foreach ($data_siswa as $siswa) {
                         $tagihan[] = array(
-                            'id_tagihan_biaya'  => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
-                            'id_siswa'          => $siswa->id_siswa,
-                            'id_kelas'          => $siswa->id_kelas,
-                            'id_detail_biaya'   => $id_detail_biaya,
-                            'besar_biaya'       => $besar_biaya,
-                            'denda_biaya'       => 0,
-                            'is_tagih'          => 1,
-                            'created_at'        => $now,
-                            'created_by'        => $input->auth_data->pengguna->id_pengguna,
-                            'updated_at'        => $now,
+                            'id_tagihan_biaya' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                            'id_siswa' => $siswa->id_siswa,
+                            'id_kelas' => $siswa->id_kelas,
+                            'id_detail_biaya' => $id_detail_biaya,
+                            'besar_biaya' => $besar_biaya,
+                            'denda_biaya' => 0,
+                            'is_tagih' => 1,
+                            'created_at' => $now,
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            'updated_at' => $now,
                         );
                     }
 
@@ -1432,14 +1486,13 @@ class SppController extends BaseController
                     }
                 }
 
-
                 DB::commit();
 
                 return response()->json([
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/spp/setting',
-                    'message' => 'Success'
+                    'message' => 'Success',
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -1447,7 +1500,7 @@ class SppController extends BaseController
                 return response()->json([
                     'status_code' => 300,
                     'status_text' => 'Failed',
-                    'message' => 'Failed ' . $e->getMessage() . ' in line ' . $e->getLine()
+                    'message' => 'Failed ' . $e->getMessage() . ' in line ' . $e->getLine(),
                 ]);
             }
         }
@@ -1459,27 +1512,27 @@ class SppController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'tahun_akademik_semester'       => 'required',
-            'semester'                      => 'required',
-            'id_jenis_detail_biaya'         => 'required',
-            'id_kelas'                      => 'required',
-            'id_biaya'                      => 'required',
-            'besar_biaya'                   => 'required',
-            'id_kelompok_biaya'             => 'required',
-            'id_kelompok_biaya_internal'    => 'required'
+            'tahun_akademik_semester' => 'required',
+            'semester' => 'required',
+            'id_jenis_detail_biaya' => 'required',
+            'id_kelas' => 'required',
+            'id_biaya' => 'required',
+            'besar_biaya' => 'required',
+            'id_kelompok_biaya' => 'required',
+            'id_kelompok_biaya_internal' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
             $now = Carbon::now();
 
-            $tahun      = $input->tahun_akademik_semester;
+            $tahun = $input->tahun_akademik_semester;
             $data_siswa = Siswa::where('id_kelas', $input->id_kelas)->get();
-            $kelas      = Kelas::find($input->id_kelas);
+            $kelas = Kelas::find($input->id_kelas);
 
             $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
             $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
@@ -1493,16 +1546,16 @@ class SppController extends BaseController
             }
 
             if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) {
-                $biaya_sekolah->besar_biaya_sekolah             = $biaya_sekolah->besar_biaya_sekolah + $input->besar_biaya;
+                $biaya_sekolah->besar_biaya_sekolah = $biaya_sekolah->besar_biaya_sekolah + $input->besar_biaya;
                 $biaya_sekolah->save();
             } else {
                 $biaya_sekolah = new BiayaSekolah;
-                $biaya_sekolah->id_biaya_sekolah                = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $biaya_sekolah->id_kelompok_biaya               = $input->id_kelompok_biaya;
-                $biaya_sekolah->id_semester                     = $id_semester;
-                $biaya_sekolah->besar_biaya_sekolah             = $input->besar_biaya;
-                $biaya_sekolah->validasi_biaya_sekolah          = 1;
-                $biaya_sekolah->keterangan_biaya_sekolah        = 'SPP Kelas ' . $kelas->nm_kelas;
+                $biaya_sekolah->id_biaya_sekolah = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $biaya_sekolah->id_kelompok_biaya = $input->id_kelompok_biaya;
+                $biaya_sekolah->id_semester = $id_semester;
+                $biaya_sekolah->besar_biaya_sekolah = $input->besar_biaya;
+                $biaya_sekolah->validasi_biaya_sekolah = 1;
+                $biaya_sekolah->keterangan_biaya_sekolah = 'SPP Kelas ' . $kelas->nm_kelas;
                 $biaya_sekolah->save();
             }
 
@@ -1512,33 +1565,33 @@ class SppController extends BaseController
                 $tagihan = array();
 
                 foreach ($data_siswa as $siswa) {
-                    $id_detail_biaya    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $besar_biaya        = $input->besar_biaya;
+                    $id_detail_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                    $besar_biaya = $input->besar_biaya;
 
                     $detail_biaya[] = array(
-                        'id_detail_biaya'               => $id_detail_biaya,
-                        'id_biaya_sekolah'              => $biaya_sekolah->id_biaya_sekolah,
-                        'id_biaya'                      => $input->id_biaya,
-                        'id_kelompok_biaya_internal'    => $input->id_kelompok_biaya_internal,
-                        'validasi_biaya'                => 1,
-                        'besar_biaya'                   => $besar_biaya,
-                        'id_jenis_detail_biaya'         => $input->id_jenis_detail_biaya,
-                        'created_at'                    => $now,
-                        'created_by'                    => $input->auth_data->pengguna->id_pengguna,
-                        'updated_at'                    => $now,
+                        'id_detail_biaya' => $id_detail_biaya,
+                        'id_biaya_sekolah' => $biaya_sekolah->id_biaya_sekolah,
+                        'id_biaya' => $input->id_biaya,
+                        'id_kelompok_biaya_internal' => $input->id_kelompok_biaya_internal,
+                        'validasi_biaya' => 1,
+                        'besar_biaya' => $besar_biaya,
+                        'id_jenis_detail_biaya' => $input->id_jenis_detail_biaya,
+                        'created_at' => $now,
+                        'created_by' => $input->auth_data->pengguna->id_pengguna,
+                        'updated_at' => $now,
                     );
 
                     $tagihan[] = array(
-                        'id_tagihan_biaya'  => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
-                        'id_siswa'          => $siswa->id_siswa,
-                        'id_kelas'          => $siswa->id_kelas,
-                        'id_detail_biaya'   => $id_detail_biaya,
-                        'besar_biaya'       => $besar_biaya,
-                        'denda_biaya'       => 0,
-                        'is_tagih'          => 1,
-                        'created_at'        => $now,
-                        'created_by'        => $input->auth_data->pengguna->id_pengguna,
-                        'updated_at'        => $now,
+                        'id_tagihan_biaya' => $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid(),
+                        'id_siswa' => $siswa->id_siswa,
+                        'id_kelas' => $siswa->id_kelas,
+                        'id_detail_biaya' => $id_detail_biaya,
+                        'besar_biaya' => $besar_biaya,
+                        'denda_biaya' => 0,
+                        'is_tagih' => 1,
+                        'created_at' => $now,
+                        'created_by' => $input->auth_data->pengguna->id_pengguna,
+                        'updated_at' => $now,
                     );
                 }
 
@@ -1551,7 +1604,7 @@ class SppController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/spp/setting-non-spp',
-                    'message' => 'Success'
+                    'message' => 'Success',
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -1559,7 +1612,7 @@ class SppController extends BaseController
                 return response()->json([
                     'status_code' => 300,
                     'status_text' => 'Failed',
-                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+                    'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
                 ]);
             }
         }
@@ -1581,7 +1634,7 @@ class SppController extends BaseController
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
             $now = Carbon::today();
@@ -1603,22 +1656,22 @@ class SppController extends BaseController
             try {
                 $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester])->first();
 
-                if ($rapb) { } else {
+                if ($rapb) {} else {
                     $rapb = new Rapb;
                     $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $rapb->id_semester_mulai            = $semester_mulai->id_semester;
-                    $rapb->id_semester_selesai          = $semester_selesai->id_semester;
-                    $rapb->id_subkategori_rapb          = $input->id_subkategori_rapb;
-                    $rapb->tgl_rapb                     = $now->format('Y-m-d');
-                    $rapb->prioritas_rapb               = 3;
-                    $rapb->dana_perkiraan_rapb          = 0;
-                    $rapb->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                    $rapb->id_semester_mulai = $semester_mulai->id_semester;
+                    $rapb->id_semester_selesai = $semester_selesai->id_semester;
+                    $rapb->id_subkategori_rapb = $input->id_subkategori_rapb;
+                    $rapb->tgl_rapb = $now->format('Y-m-d');
+                    $rapb->prioritas_rapb = 3;
+                    $rapb->dana_perkiraan_rapb = 0;
+                    $rapb->created_by = $input->auth_data->pengguna->id_pengguna;
 
                     if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
-                        $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                        $rapb->id_unit_kerja = $actor->id_unit_kerja;
                     } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
-                        $rapb->id_unit_kerja                = $actor->id_unit_kerja;
+                        $rapb->id_unit_kerja = $actor->id_unit_kerja;
                     }
 
                     if ($kepala_unit_keuangan = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
@@ -1626,35 +1679,39 @@ class SppController extends BaseController
                         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first()
                     ) {
-                        $rapb->id_pengguna_kepala_unit      = $kepala_unit_keuangan->id_pengguna;
+                        $rapb->id_pengguna_kepala_unit = $kepala_unit_keuangan->id_pengguna;
                     } else if ($kepala_unit_keuangan = Staff::join('pengguna', 'pengguna.id_pengguna', '=', 'staff.id_pengguna')
                         ->where('staff.jenis_jabatan', '=', 2)
                         ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
                         ->first()
                     ) {
-                        $rapb->id_pengguna_kepala_keuangan  = $kepala_unit_keuangan->id_pengguna;;
+                        $rapb->id_pengguna_kepala_keuangan = $kepala_unit_keuangan->id_pengguna;
                     }
                     $rapb->save();
                 }
 
+                if (isset($input->id_realisasi)) {
+                    $realisasi = Realisasi::find($input->id_realisasi);
+                } else {
+                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                $realisasi                               = new Realisasi;
-                $realisasi->id_realisasi                 = $id;
-                $realisasi->id_semester_realisasi        = $id_semester;
-                $realisasi->id_rapb                      = $rapb->id_rapb;
-                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
-                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
-                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
-                    $realisasi->id_unit_kerja                = $actor->id_unit_kerja;
+                    $realisasi = new Realisasi;
+                    $realisasi->id_realisasi = $id;
+                    $realisasi->id_semester_realisasi = $id_semester;
+                    $realisasi->id_rapb = $rapb->id_rapb;
+                    $realisasi->created_by = $input->auth_data->pengguna->id_pengguna;
+                    $realisasi->termin_dana_realisasi = 1;
+                    $realisasi->is_hutang_realisasi = 0;
                 }
-                $realisasi->nm_realisasi                 = $input->nm_realisasi;
-                $realisasi->termin_dana_realisasi        = 1;
-                $realisasi->is_hutang_realisasi          = 0;
-                $realisasi->dana_realisasi               = $input->dana_realisasi;
-                $realisasi->tgl_realisasi                = date_format(date_create($input->tgl_realisasi), "Y-m-d");
-                $realisasi->created_by                   = $input->auth_data->pengguna->id_pengguna;
+
+                if ($actor = Staff::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    $realisasi->id_unit_kerja = $actor->id_unit_kerja;
+                } else if ($actor = Guru::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first()) {
+                    $realisasi->id_unit_kerja = $actor->id_unit_kerja;
+                }
+                $realisasi->nm_realisasi = $input->nm_realisasi;
+                $realisasi->dana_realisasi = $input->dana_realisasi;
+                $realisasi->tgl_realisasi = date_format(date_create($input->tgl_realisasi), "Y-m-d");
                 $realisasi->save();
 
                 DB::commit();
@@ -1663,7 +1720,7 @@ class SppController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/spp/penerimaan',
-                    'message' => 'Success'
+                    'message' => 'Success',
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -1671,10 +1728,26 @@ class SppController extends BaseController
                 return response()->json([
                     'status' => 300,
                     'status_text' => 'Failed',
-                    'message' => 'Failed'
+                    'message' => 'Failed',
                 ]);
             }
         }
+    }
+
+    public function actionDeletePenerimaan(Request $request)
+    {
+        $input = (object) $request->input();
+
+        $pengeluaran = Realisasi::find($id);
+        $pengeluaran->deleted_by = $input->auth_data->pengguna->id_pengguna;
+        $pengeluaran->save();
+
+        $pengeluaran->delete();
+
+        return [
+            'status' => 203,
+            'message' => "Berhasil dihapus",
+        ];
     }
 
     public function actionSaveInputTunggakan(Request $request)
@@ -1692,7 +1765,7 @@ class SppController extends BaseController
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
             $now = Carbon::today();
@@ -1705,14 +1778,14 @@ class SppController extends BaseController
             try {
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                $pembayaran_tunggakan                               = new PembayaranTunggakan;
-                $pembayaran_tunggakan->id_pembayaran_tunggakan      = $id;
-                $pembayaran_tunggakan->id_semester_mulai            = $semester_mulai->id_semester;
-                $pembayaran_tunggakan->id_semester_selesai          = $semester_selesai->id_semester;
-                $pembayaran_tunggakan->besar_pembayaran             = $input->besar_pembayaran;
-                $pembayaran_tunggakan->tgl_pembayaran               = date_format(date_create($input->tgl_pembayaran), "Y-m-d");
-                $pembayaran_tunggakan->keterangan                   = $input->keterangan;
-                $pembayaran_tunggakan->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $pembayaran_tunggakan = new PembayaranTunggakan;
+                $pembayaran_tunggakan->id_pembayaran_tunggakan = $id;
+                $pembayaran_tunggakan->id_semester_mulai = $semester_mulai->id_semester;
+                $pembayaran_tunggakan->id_semester_selesai = $semester_selesai->id_semester;
+                $pembayaran_tunggakan->besar_pembayaran = $input->besar_pembayaran;
+                $pembayaran_tunggakan->tgl_pembayaran = date_format(date_create($input->tgl_pembayaran), "Y-m-d");
+                $pembayaran_tunggakan->keterangan = $input->keterangan;
+                $pembayaran_tunggakan->created_by = $input->auth_data->pengguna->id_pengguna;
                 $pembayaran_tunggakan->save();
 
                 DB::commit();
@@ -1721,7 +1794,7 @@ class SppController extends BaseController
                     'status' => 202,
                     'status_text' => 'Success',
                     'path' => 'sim/spp/tunggakan/' . $tahun_akademik_semester,
-                    'message' => 'Success'
+                    'message' => 'Success',
                 ]);
             } catch (\Exception $e) {
                 DB::rollback();
@@ -1729,7 +1802,7 @@ class SppController extends BaseController
                 return response()->json([
                     'status' => 300,
                     'status_text' => 'Failed',
-                    'message' => 'Failed'
+                    'message' => 'Failed',
                 ]);
             }
         }
