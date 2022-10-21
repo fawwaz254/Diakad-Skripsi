@@ -17,6 +17,9 @@
                                         <th>No</th>
                                         <th>Nama Jurusan</th>
                                         <th>Kode Jurusan</th>
+                                        <th>Bidang Keahlian</th>
+                                        <th>Program Keahlian</th>
+                                        <th>Kompetensi Keahlian</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -29,7 +32,7 @@
     </div>
 </div>
 <script>
-    // var modul_url = location.hash.replace('#','').split('/')[0];
+    {{-- // var modul_url = location.hash.replace('#','').split('/')[0]; --}}
     var modul_url       = 'data-akademik';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'jurusan/datatables';
     var edit_url        = role_url + '#' + modul_url + '/' + 'jurusan/edit';
@@ -47,6 +50,9 @@ responsive: true,
             { data: null, searchable: false, orderable: false },
             { data: 'nm_jurusan', name: 'nm_jurusan' },
             { data: 'kode_jurusan', name: 'kode_jurusan' },
+            { data: 'bidang_keahlian', name: 'bidang_keahlian' },
+            { data: 'program_keahlian', name: 'program_keahlian' },
+            { data: 'kompetensi_keahlian', name: 'kompetensi_keahlian' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id +'">'+

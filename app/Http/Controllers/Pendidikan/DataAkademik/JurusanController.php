@@ -95,6 +95,9 @@ class JurusanController extends BaseController{
                 $jurusan->id_jurusan      = $id;
                 $jurusan->nm_jurusan      = $input->nm_jurusan;
                 $jurusan->kode_jurusan    = $input->kode_jurusan;
+                $jurusan->bidang_keahlian = $input->bidang_keahlian;
+                $jurusan->program_keahlian = $input->program_keahlian;
+                $jurusan->kompetensi_keahlian  =  $input->kompetensi_keahlian;
                 $jurusan->id_sekolah      = $input->auth_data->pengguna->id_sekolah;
                 $jurusan->created_by      = $input->auth_data->pengguna->id_pengguna;
                 $jurusan->save();
@@ -110,6 +113,9 @@ class JurusanController extends BaseController{
                 $jurusan                  = Jurusan::find($id);
                 $jurusan->nm_jurusan      = $input->nm_jurusan;
                 $jurusan->kode_jurusan    = $input->kode_jurusan;
+                $jurusan->bidang_keahlian = $input->bidang_keahlian;
+                $jurusan->program_keahlian = $input->program_keahlian;
+                $jurusan->kompetensi_keahlian  =  $input->kompetensi_keahlian;
                 $jurusan->updated_by      = $input->auth_data->pengguna->id_pengguna;
                 $jurusan->updated_at      = $now;
                 $jurusan->save();

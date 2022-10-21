@@ -77,12 +77,12 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
 
                 <tr>
-                    <td width="84">
+                    <td width="20%">
                         <img id="logo"
                             src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
                             height="140">
                     </td>
-                    <td width="1000">
+                    <td width="80%">
                         <span align="center" style="margin-top: 1px; font-family: 'Brush Script MT'; font-size:30px">
                             {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
                         </span>
@@ -90,7 +90,7 @@
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }} <br> --}}
                             {{-- TAHUN AJARAN {{$semester_aktif->tahun_ajaran}}
                             </h3> --}}
-                            <hr>
+                           
                     </td>
                 </tr>
 
