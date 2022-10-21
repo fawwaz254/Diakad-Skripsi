@@ -20,7 +20,7 @@
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Nilai Siswa Terisi Lengkap</th>
+                                    {{-- <th>Nilai Siswa Terisi Lengkap</th> --}}
                                     <th>Semester</th>
                                     {{-- <th>Nilai</th> --}}
                                     <th>Action</th>
@@ -68,16 +68,16 @@
                 name: 'kelas.nm_kelas',
                 className: 'align-center'
             },
-            {
-                data: 'jumlah',
-                name: 'jumlah',
-                className: 'align-center',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
-                }},
+            // {
+            //     data: 'jumlah',
+            //     name: 'jumlah',
+            //     className: 'align-center',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
+            //     }},
                 {
                 data: 'semester',
                 name: 'semester',
