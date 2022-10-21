@@ -77,21 +77,39 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
 
                 <tr>
-                    <td width="84">
+                    <td width="15%" align="center" style="margin-right: 10px">
                         <img id="logo"
                             src="https://diakad.sgp1.digitaloceanspaces.com/{{ $auth_data->sekolah_data->nm_singkat_sekolah }}/global/logo-sekolah"
-                            height="140">
+                            height="150">
                     </td>
-                    <td width="1000">
-                        <span align="center" style="margin-top: 1px; font-family: 'Brush Script MT'; font-size:30px">
+                    <td width="85%">
+                        <span  style="margin-top: -10px; font-family: 'Brush Script MT'; font-size:35px">
                             {{ $auth_data->sekolah_data->nm_yayasan_sekolah }}
+                        </span>
+                        <br>
+                        <span  style="margin-top: -10px; font-family: 'Impact'; font-size:50px">
+                            {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}
+                        </span>
+                        <br>
+                        <span  style="margin-top: -10px; font-family: 'Impact'; font-size:25px">
+                            {{ $auth_data->sekolah_data->akreditasi }}
+                        </span>
+                        <br>
+                        <span  style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
+                            {{ 'NSS : '.$auth_data->sekolah_data->nss_sekolah.',       ' }}
+                        </span>
+                        <span  style="margin-top: -10px; font-family: 'Tahoma'; font-size:15px">
+                            {{ 'NPSN : '.$auth_data->sekolah_data->npsn_sekolah }}
                         </span>
                         {{-- <h3>PRESENSI KELAS <br>
                             {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }} <br> --}}
                             {{-- TAHUN AJARAN {{$semester_aktif->tahun_ajaran}}
                             </h3> --}}
-                            <hr>
+                           
                     </td>
+                </tr>
+                <tr style="background-color: black;color:white">
+                    <td >alamat</td>
                 </tr>
 
                 <tr>

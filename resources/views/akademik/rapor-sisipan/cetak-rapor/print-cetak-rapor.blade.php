@@ -102,8 +102,8 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;font-weight: bold;">BIDANG KEAHLIAN
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold; font-size:11px"> :
-                        {{ $kelas->jurusan->nm_jurusan }}
+                    <td style="border-style : hidden;width: 25%;font-weight: bold; "> :
+                        {{ $kelas->jurusan->bidang_keahlian }}
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
@@ -113,8 +113,8 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;font-weight: bold;">PROGRAM KEAHLIAN
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;font-size:11px"> :
-                        {{ $kelas->jurusan->nm_jurusan }}
+                    <td style="border-style : hidden;width: 25%;font-weight: bold;"> :
+                        {{ $kelas->jurusan->program_keahlian }}
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
@@ -124,8 +124,8 @@
                     </td>
                     <td style="border-style : hidden;width: 25%;font-weight: bold;">KOMPETENSI KEAHLIAN
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;font-size:11px"> :
-                        {{ $kelas->jurusan->nm_jurusan }}
+                    <td style="border-style : hidden;width: 25%;font-weight: bold;"> :
+                        {{ $kelas->jurusan->kompetensi_keahlian }}
                     </td>
                 </tr>
             </table>

@@ -863,8 +863,8 @@ class SppController extends BaseController
             $q->where('tipe_kategori_rapb', 1);
         })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])
             ->whereDate('tgl_realisasi', '>=', $tgl_awal)
-            ->whereDate('tgl_realisasi', '<=', $tgl_akhir);
-        // ->isInputByPengguna($auth_data->pengguna->id_pengguna);
+            ->whereDate('tgl_realisasi', '<=', $tgl_akhir)
+            ->isInputByPengguna($auth_data->pengguna->id_pengguna);
 
         return Datatables::of($list_data)
             ->editColumn('tgl_realisasi', function ($item) {

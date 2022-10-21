@@ -29,6 +29,30 @@
                                 <input type="text" class="form-control" name="kode_jurusan" required="" aria-required="true" aria-invalid="true">
                             </div>
                         </div>
+                        <h2 class="card-inside-title">
+                            Bidang Keahlian
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="bidang_keahlian"  aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Program Keahlian
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="program_keahlian"  aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">
+                            Kompetensi Keahlian
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <input type="text" class="form-control" name="kompetensi_keahlian"  aria-required="true" aria-invalid="true">
+                            </div>
+                        </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
