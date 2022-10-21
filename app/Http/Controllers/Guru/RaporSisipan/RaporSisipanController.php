@@ -18,6 +18,7 @@ use App\Models\NilaiRaporSisipan;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
 use App\Imports\UploadRaporSisipanSTS;
+use App\Models\Jurusan;
 use Auth;
 use DB;
 use Session;
@@ -41,6 +42,7 @@ class RaporSisipanController extends Controller
         $data['list_mapel'] = MataPelajaran::all();
         // $data['list_jurusan'] = Jurusan::all();
         $data['list_kelas'] = Kelas::all();
+        $data['list_jurusan'] = Jurusan::all();
 
         return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data'), $data);
     }
@@ -153,11 +155,16 @@ class RaporSisipanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
+        // $jurusan = Jurusan::all();
 
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
+            // ->addColumn('jurusan', function ($item) use($jurusan){
+            //     $j = $jurusan->firstWhere('id_jurusan', $item->mata_pelajaran->id_jurusan);
+            //     return $j->nm_jurusan;
+            // })
             ->addColumn('jumlah', function ($item) use($auth_data) {
                 //semua siswa
                 $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
@@ -297,6 +304,18 @@ class RaporSisipanController extends Controller
 		// // alihkan halaman kembali
 		// return redirect('/siswa');
 	}
+
+
+    public function getDataFromJurusan(Request $request){
+        // $test =  Jurusan::all();
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data['mapel'] = MataPelajaran::where('id_jurusan',$input->jurusan )->get();
+        $data['kelas'] = Kelas::where('id_jurusan', $input->jurusan)->get();
+
+        return $data;
+
+    }
 
     public function pdfDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     {
