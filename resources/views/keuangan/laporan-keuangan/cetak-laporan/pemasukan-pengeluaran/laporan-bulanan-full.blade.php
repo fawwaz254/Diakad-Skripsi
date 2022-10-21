@@ -274,12 +274,12 @@
                 <tr style="vertical-align: top;">
                     <td>
                         Kepala Sekolah
-                        <br><br><br>
+                        <br><br><br><br>
                         <b><u>{{ $auth_data->sekolah_data->nm_kepala_sekolah }}</u></b>
                     </td>
                     <td>
                         Keuangan
-                        <br><br><br> 
+                        <br><br><br> <br><br>
                         <b><u>{{ $auth_data->pengguna->nm_pengguna }}</u></b>
                     </td>
                 </tr>
