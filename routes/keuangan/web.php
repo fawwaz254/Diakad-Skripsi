@@ -376,7 +376,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail-penerimaan', [SppController::class, 'viewMenuDetailPenerimaan']);
                 Route::post('detail-penerimaan/datatables', [SppController::class, 'datatablesMenuDetailPenerimaan']);
                 Route::get('detail-penerimaan/edit/{id}', [SppController::class, 'viewMenuInput']);
-                Route::post('detail-penerimaan/delete', [SppController::class, 'actionDeletePenerimaan']);
+                Route::post('detail-penerimaan/delete/{id}', [SppController::class, 'actionDeletePenerimaan']);
 
                 Route::get('penerimaan', [SppController::class, 'viewMenuPenerimaan']);
                 Route::get('tunggakan', [SppController::class, 'viewMenuTunggakan']);

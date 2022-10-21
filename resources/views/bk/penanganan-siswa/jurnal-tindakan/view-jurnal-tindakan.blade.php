@@ -25,7 +25,7 @@
                         Kelas
                     </h2>
                     <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
                             <select class="form-control show-tick" name="id_kelas" onchange="changeKelas(this)">
                                 <option value="" disabled selected >-- Pilih Kelas --</option>
                                 @foreach($data_kelas as $kelas)

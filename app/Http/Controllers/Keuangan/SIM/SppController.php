@@ -1734,7 +1734,7 @@ class SppController extends BaseController
         }
     }
 
-    public function actionDeletePenerimaan(Request $request)
+    public function actionDeletePenerimaan(Request $request, $id)
     {
         $input = (object) $request->input();
 

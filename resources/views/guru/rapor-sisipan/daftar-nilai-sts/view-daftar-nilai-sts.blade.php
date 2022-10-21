@@ -23,6 +23,7 @@
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
+                                    {{-- <th>Jurusan</th> --}}
                                     <th>Nilai Siswa Terisi Lengkap</th>
                                     <th>Semester</th>
                                     <th>Input Nilai</th>
@@ -71,6 +72,11 @@
                 name: 'kelas.nm_kelas',
                 className: 'align-center'
             },
+            // {
+            //     data: 'jurusan',
+            //     name: 'jurusan',
+            //     className: 'align-center'
+            // },
             {
                 data: 'jumlah',
                 name: 'jumlah',
