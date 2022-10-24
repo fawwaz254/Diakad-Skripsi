@@ -112,7 +112,7 @@
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
                     <td align="center" style="border-style : hidden">Alamat :
-                        {{ $auth_data->sekolah_data->alamat_jalan .', ' .$auth_data->sekolah_data->alamat_kelurahan .', ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) .substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) .' - ' .substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) .' ' .$auth_data->sekolah_data->alamat_kecamatan .' ' .App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() .' ' .$auth_data->sekolah_data->alamat_kodepos .' ' .App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
+                        {{ $auth_data->sekolah_data->alamat_jalan .', ' .$auth_data->sekolah_data->alamat_kelurahan .', ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) .' '.substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) .' - ' .substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) .' ' .$auth_data->sekolah_data->alamat_kecamatan .' - ' .App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() .' ' .$auth_data->sekolah_data->alamat_kodepos .' ' .App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
                     </td>
                 </tr>
             </table>
@@ -413,8 +413,10 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td align="center" style="border-style : hidden;">Mengetahui<br>Kepala Sekolah,
-                        <br><br><br><br><br><br><br>
+                    <td align="center" style="border-style : hidden; position: relative;">Mengetahui<br>Kepala Sekolah,
+                        <img style="position: absolute; margin-left:-140px " src="{{ asset('media/ttd/smpypm1.png') }}"
+                                alt="TTD" width="160px" height="160px" class="ttd">
+                                <br><br><br><br><br>
                         {{-- <p style="width: 250px;
                         border-bottom: 1px solid   black;"> --}}
                         <u><b>
