@@ -111,7 +111,7 @@
             </table>
             <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
                 <tr width="90%" style="background-color: black;color:white">
-                    <td align="center"  style="border-style : hidden">Alamat :
+                    <td align="center" style="border-style : hidden">Alamat :
                         {{ $auth_data->sekolah_data->alamat_jalan .', ' .$auth_data->sekolah_data->alamat_kelurahan .', ' .substr($auth_data->sekolah_data->nomor_telp_sekolah, 0, 3) .substr($auth_data->sekolah_data->nomor_telp_sekolah, 3, 7) .' - ' .substr($auth_data->sekolah_data->nomor_fax_sekolah, 3, 7) .' ' .$auth_data->sekolah_data->alamat_kecamatan .' ' .App\Models\Kota::where('id_kota', $auth_data->sekolah_data->alamat_kota)->pluck('nm_kota')->first() .' ' .$auth_data->sekolah_data->alamat_kodepos .' ' .App\Models\Provinsi::where('id_provinsi', $auth_data->sekolah_data->alamat_provinsi)->pluck('nm_provinsi')->first() }}
                     </td>
                 </tr>
@@ -120,56 +120,56 @@
                 <tr>
                     <td colspan="10" style="border-style : hidden">
                         <br>
-                        <h2 align="center" style="margin-top: 3px">
+                        <h2 align="center" style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px">
                             PENCAPAIAN KOMPETENSI PESERTA DIDIKR<br>
                             {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                             TENGAH SEMESTER GASAL<br>
                            
                         </h2>
                         {{-- <hr> --}}
-                        <br>
+                            
                     </td>
                 <tr>
 
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;font-weight: bold;">Nama Sekolah
+                    <td style="border-style : hidden;width: 15%;">Nama Sekolah
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;"> :
-                        {{ $auth_data->sekolah_data->nm_singkat_sekolah }}
+                    <td style="border-style : hidden;width: 35%;"> :
+                        {{ $auth_data->sekolah_data->nm_sekolah }}
 
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">Kelas
+                    <td style="border-style : hidden;width: 25%;">Kelas
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold; "> :
+                    <td style="border-style : hidden;width: 25%; "> :
                         {{ $kelas->nm_kelas }}
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;font-weight: bold;">Nama Pst. Didik
+                    <td style="border-style : hidden;width: 15%;">Nama Pst. Didik
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;"> :
+                    <td style="border-style : hidden;width: 35%;"> :
                         {{ $siswa->pengguna->nm_pengguna }}
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">Semester
+                    <td style="border-style : hidden;width: 25%;">Semester
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;"> : I
-                      
+                    <td style="border-style : hidden;width: 25%;"> : I
+
 
                     </td>
                 </tr>
                 <tr style="border-style : hidden">
-                    <td style="border-style : hidden;width: 15%;font-weight: bold;">No. Induk/NISN
+                    <td style="border-style : hidden;width: 15%;">No. Induk/NISN
                     </td>
-                    <td style="border-style : hidden;width: 35%;font-weight: bold;"> : {{ $siswa->nis_siswa }}
+                    <td style="border-style : hidden;width: 35%;"> : {{ $siswa->nis_siswa }}
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">Tahun Ajaran
+                    <td style="border-style : hidden;width: 25%;">Tahun Ajaran
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;"> :
+                    <td style="border-style : hidden;width: 25%;"> :
                         @php
-                        $nama = $list_nilai->first();
-                        // dd($nama->rapor_sisipan->semester->tahun_ajaran);
-                        echo  $nama->rapor_sisipan->semester->tahun_ajaran ?? '';
-                    @endphp 
+                            $nama = $list_nilai->first();
+                            // dd($nama->rapor_sisipan->semester->tahun_ajaran);
+                            echo $nama->rapor_sisipan->semester->tahun_ajaran ?? '';
+                        @endphp
                     </td>
                 </tr>
             </table>
@@ -221,7 +221,9 @@
                                 @foreach ($list_komponen as $komponen)
                                     @if ($komponen->type != 'uts')
                                         <td style="text-align: center;">
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                            @if(isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0' )
+                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]}}
+                                            @endif
                                         </td>
                                     @endif
                                 @endforeach
@@ -273,7 +275,9 @@
                                 @foreach ($list_komponen as $komponen)
                                     @if ($komponen->type != 'uts')
                                         <td style="text-align: center;">
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                            @if(isset($nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) && $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != "0")
+                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]  }}
+                                            @endif
                                         </td>
                                     @endif
                                 @endforeach
@@ -317,7 +321,9 @@
                                 @foreach ($list_komponen as $komponen)
                                     @if ($komponen->type != 'uts')
                                         <td style="text-align: center;">
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
+                                            @if(isset( $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran]) &&  $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] != '0')
+                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] }}
+                                            @endif
                                         </td>
                                     @endif
                                 @endforeach
@@ -345,121 +351,76 @@
                             </tr>
                         @endif
                     @endforeach
-                    {{-- @php
-                        $no = 1;
-                    @endphp
-                    @foreach ($k->mapel as $m)
-                        @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'D')
-                            <tr>
-                                <td>{{ $no++ }}</td>
-                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
-                                @foreach ($list_komponen as $komponen)
-                                    @if ($komponen->type != 'uts')
-                                        <td style="text-align: center;">
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
-                                        </td>
-                                    @endif
-                                @endforeach
-
-                                <td style="text-align: center;">
-                                    {{ isset(round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2']) / 2)) ? round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2']) / 2) : '' }}
-                                </td>
-                                @foreach ($list_komponen as $komponen)
-                                    @if ($komponen->type == 'uts')
-                                        <td style="text-align: center;">
-                                            {{ $nilai_siswa[$komponen->id_komponen_nilai . $siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran] ?? '' }}
-                                        </td>
-                                    @endif
-                                @endforeach
-                                <td style="text-align: center;">
-                                    {{ isset(round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'uts']) / 3)) ? round(($nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . $m->mata_pelajaran->id_mata_pelajaran . 'uts']) / 3) : '' }}
-                                </td>
-                        @endif
-                    @endforeach --}}
-
-
-
-
-                    {{--    <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
-                        <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
-                        <td style="text-align: center;">{{ $rapor_sisipan->kkm }}</td>
-                        <td style="text-align: center;">{{ $nilai_siswa[ $siswa->id_siswa . $id_rapor_sisipan] }}</td> --}}
-                    {{-- @foreach ($list_data as $nilai)
-                        @if (in_array($nilai->urutan, [1, 2]))
-                            <td style="text-align: center;">
-                                
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-                            </td>
-                        @endif
-                    @endforeach --}}
-                    {{-- <td></td>
-                    <td></td> --}}
-                    {{-- @foreach ($list_data as $nilai)
-                        @if (in_array($nilai->urutan, [5, 6]))
-                            <td style="text-align: center;">
-                               
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-                            </td>
-                        @endif
-                    @endforeach --}}
-                    {{-- <td></td>
-                    <td></td> --}}
-                    {{-- @foreach ($list_data as $nilai)
-                        @if ($nilai->urutan == 9)
-                            <td style="text-align: center;">
-                           
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-                            </td>
-                        @endif
-                    @endforeach
-                        <td style="text-align: center;">
-
-                            {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
-                        </td>
-                        <td style="text-align: center;">
-
-                            {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}
-
-                        </td> --}}
                     </tr>
 
                 </tbody>
 
             </table>
-            {{-- <table style="width: 30%; margin-left:10%; margin-top:20px">
-             <tr>
-                <td colspan="4">
-                    <p align="center" style="display: inline">
-                        RAPOR =
-                    </p>
-                    <p align="center" style="display: inline" class="under-below">
-                        {(2 x RT2 SMT)+(STS)}
-                    </p>
-                </td>
-            </tr> 
-        </table> --}}
-            <br><br>
-            <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
-                <tr>
-                    <td style=" border-style : hidden; width:25%; vertical-align: text-top; padding:0" align="center">
-                        Mengetahui,
-                        <br>
-                        Kepala Sekolah
-                        <br><br><br><br><br><br><br>
-                        {{ $auth_data->sekolah_data->nm_kepala_sekolah }}
+            <table style="width: 90%; margin-left:10%; margin-top:20px">
+                <tr style="font-weight:bold;border-style : hidden;">
+                    <td width="20%" style="border-style : hidden;">
+                        KETIDAKHADIRAN
                     </td>
-                    <td style="width:50%; border-style : hidden"></td>
+                    <td width="15%" style="border-style : hidden;"></td>
+                    <td style="border-style : hidden;">CATATAN
+                    </td>
+                </tr>
+                <tr style="border-style : hidden;">
+                    <td style="border-style : hidden;">
+                        Sakit
+                        <br>
+                        Izin
+                        <br>
+                        Tanpa Keterangan
+                    </td>
+                    <td>: ..... hari<br>
+                        : ..... hari<br>
+                        : ..... hari</td>
+                    <td style="border-style : hidden;"><br>
+                        <p style="width: 300px;
+                    border-bottom: 2px dotted  black;"></p><br>
+                        <p style="width: 300px;
+                        border-bottom: 2px dotted  black;"></p>
+                    </td>
+                </tr>
+            </table>
+            <br><br>
+            <table cellspacing="0" cellpadding="10" style="width: 90%; margin-left:10%; border-style : hidden">
+                <tr>
+                    <td style=" border-style : hidden; width:15%; vertical-align: text-top; padding:0">
+                        <br>
+                        Orang Tua/Wali,
+                        <br><br><br><br><br><br><br>
+                        <p style="width: 250px;
+                    border-bottom: 1px solid   black;"></p>
+                    </td>
+                    <td style="width:40%; border-style : hidden"></td>
 
-                    <td style="width:25%" align="center">Sidoarjo,
+                    <td style="width:25%;border-style : hidden;">Sidoarjo,
                         {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
                         <br>
+
                         Wali Kelas
                         <br><br><br><br><br><br><br>
-                        {{ $wali_kelas->guru->pengguna->gelar_depan }} {{ $wali_kelas->guru->pengguna->nm_pengguna }}
-                        {{ $wali_kelas->guru->pengguna->gelar_belakang }}
-                        {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
+                        {{-- <p style="width: 250px;
+                        border-bottom: 1px solid   black;"> --}}
+                        <u><b>
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}</b></u>
                     </td>
 
+                </tr>
+                <tr>
+                    <td></td>
+                    <td align="center" style="border-style : hidden;">Mengetahui<br>Kepala Sekolah,
+                        <br><br><br><br><br><br><br>
+                        {{-- <p style="width: 250px;
+                        border-bottom: 1px solid   black;"> --}}
+                        <u><b>
+                            {{ $auth_data->sekolah_data->nm_kepala_sekolah }}</b></u>
+                    </td>
+                    <td></td>
                 </tr>
 
             </table>
