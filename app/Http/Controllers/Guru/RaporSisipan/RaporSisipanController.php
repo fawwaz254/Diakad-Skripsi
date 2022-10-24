@@ -113,7 +113,14 @@ class RaporSisipanController extends Controller
                     $rapor_sisipan->created_by          = $input->auth_data->pengguna->id_pengguna;
                     $rapor_sisipan->save();
 
-                    $siswa = Siswa::where('id_kelas', $input->id_kelas)->get();
+                    $siswa = Siswa::where('id_kelas', $input->id_kelas)->with('pengguna.status_pengguna')
+                    ->whereHas('pengguna.status_pengguna', function ($query) {
+                        $query->where('nm_status_pengguna', '=', 'AKTIF');
+                    })
+                    ->get();
+
+                    // ->where('pengguna.status_pengguna.aktif_status_pengguna','=',1)->get();
+                    dd($siswa);
                     $komponen_nilai = KomponenNilaiRaporSisipan::where('status',1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_nilai as $komponen) {
