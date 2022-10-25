@@ -33,7 +33,7 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
         foreach ($rows as $row) {
             foreach ($list_komponen as $komponen) {
                 // dd( str_replace(" ","_",strtolower($komponen->nm_nilai)));
-                if ($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))]) {
+                if ($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))] ) {
                     $nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $row['id'])
                         ->with('siswa', 'komponen_nilai')
                         ->whereHas('siswa', function ($query) use ($row) {
@@ -43,11 +43,12 @@ class UploadRaporSisipanSTS implements ToCollection, WithHeadingRow
                             $query->where('nm_nilai', $komponen->nm_nilai);
                         })
                         ->first();
-
-                        $nilai->nilai = $row[str_replace(" ", "_", strtolower($komponen->nm_nilai))];
-                        $nilai->updated_by             = $id_pengguna;
-                        $nilai->updated_at           = $now;
-                        $nilai->save();
+                        if(is_numeric($row[str_replace(" ", "_", strtolower($komponen->nm_nilai))])){
+                            $nilai->nilai =   $row[str_replace(" ", "_", strtolower($komponen->nm_nilai))] ;
+                            $nilai->updated_by             = $id_pengguna;
+                            $nilai->updated_at           = $now;
+                            $nilai->save();
+                        }
                 }
             }
         }
