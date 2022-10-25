@@ -163,6 +163,11 @@ class RaporSisipanController extends Controller
         $auth_data = $input->auth_data;
         $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
         // $jurusan = Jurusan::all();
+        $siswa = Siswa::with('pengguna.status_pengguna')
+        ->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->get();
+        $NilaiRaporSisipan = NilaiRaporSisipan::where('created_by',$auth_data->pengguna->id_pengguna)->with('siswa.kelas');
 
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
@@ -172,39 +177,40 @@ class RaporSisipanController extends Controller
             //     $j = $jurusan->firstWhere('id_jurusan', $item->mata_pelajaran->id_jurusan);
             //     return $j->nm_jurusan;
             // })
-            ->addColumn('jumlah', function ($item) use($auth_data) {
+            ->addColumn('jumlah', function ($item) use($auth_data, $siswa, $NilaiRaporSisipan) {
                 //semua siswa
-                // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
+                $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
 
                 // //cari siswa yang ada nilai 0 nya
-                // $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
-                //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                // })->groupBy('id_siswa')
-                //     ->selectRaw('count(*) as total, id_siswa')
-                //     ->get()->toArray();
+                $belumTerisi = $NilaiRaporSisipan->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)
+                ->whereHas('siswa.kelas', function ($query) use ($item) {
+                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                })->groupBy('id_siswa')
+                    ->selectRaw('count(*) as total, id_siswa')
+                    ->get()->toArray();
 
                 // //hitung ada berapa nilai kosongnya
-                // $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+                $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
 
                 // //loop dan cari nilai kosong yang diatas 5
-                // if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
-                //     $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
-                // }else{
-                //     $nilaiSiswaYangKosong = 0;
-                //     for ($i = 6; $i <= 10; $i++) {
-                //         if (isset($arrayJumlahBelumTerisi[$i])) {
-                //             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
-                //         }
-                //     }
-                // }
+                if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
+                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
+                }else{
+                    $nilaiSiswaYangKosong = 0;
+                    for ($i = 6; $i <= 10; $i++) {
+                        if (isset($arrayJumlahBelumTerisi[$i])) {
+                            $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                        }
+                    }
+                }
 
-                // $data = array(
-                //     'jumlah_siswa' => $allSiswa,
-                //     'terisi_siswa' => $allSiswa - $nilaiSiswaYangKosong,
-                // );
-                // // dd($data['terisi_siswa']);
-                // return $data;
-                   return 'Fitur ini belum berjalan';
+                $data = array(
+                    'jumlah_siswa' => $allSiswa,
+                    'terisi_siswa' => $allSiswa - $nilaiSiswaYangKosong,
+                );
+                // dd($data['terisi_siswa']);
+                return $data;
+                //    return 'Fitur ini belum berjalan';
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
