@@ -1,19 +1,20 @@
 <?php
 
-use App\Http\Controllers\BK\DataPelanggaran\KategoriPelanggaranController;
-use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
-use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
-use App\Http\Controllers\BK\PenangananSiswa\InputPelanggaranController;
-use App\Http\Controllers\BK\PenangananSiswa\JenisTindakanController;
-use App\Http\Controllers\BK\PenangananSiswa\JurnalTindakanController;
-use App\Http\Controllers\BK\PenangananSiswa\TindakanPelanggaranController;
 use App\Http\Controllers\BK\WelcomeController;
-use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
-use App\Http\Controllers\Keuangan\LaporanKeuangan\TagihanSiswaController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\BK\PenangananSiswa\JenisTindakanController;
+use App\Http\Controllers\BK\PenangananSiswa\JurnalTindakanController;
+use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
+use App\Http\Controllers\BK\PenangananSiswa\InputPelanggaranController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
+use App\Http\Controllers\Keuangan\LaporanKeuangan\TagihanSiswaController;
+use App\Http\Controllers\BK\DataPelanggaran\KategoriPelanggaranController;
+use App\Http\Controllers\BK\PenangananSiswa\TindakanPelanggaranController;
+use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
+use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('bimbingan-konseling')->group(function () {
@@ -43,6 +44,23 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
                 Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
+            });
+        });
+
+        // MENU ABSENSI SISWA
+        Route::prefix('absensi')->group(function () {
+            Route::prefix('histori-absensi-siswa')->group(function () {
+                Route::get('/', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensiSiswa']);
+                // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class,'getKelas']);
+                Route::post('/', [HistoriAbsensiSiswaController::class, 'actionDetailHistoriAbsensiSiswa']);
+                Route::get('/detail/{kelas}/{date}/{status}', [HistoriAbsensiSiswaController::class, 'viewDetailHistoriAbsensiSiswa']);
+                // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaController::class,'viewDetailsHistoriAbsensiSiswa']);
+                Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_mount']);
+                Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_week']);
+                Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_day']);
+                //buat izin / sakit
+                Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'createHistoriAbsensi']);
+                Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'storeHistoriAbsensi']);
             });
         });
 
