@@ -1,11 +1,13 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <button type="button" onclick="viewGuru()" class="btn btn-default">
-            Data Histori Absensi Guru dan Pegawai
-        </button>
-        <button type="button" class="btn btn-primary">
-            Data Histori Absensi Siswa
-        </button>
+        @if(Request::segment(1) == 'humas')
+            <button type="button" onclick="viewGuru()" class="btn btn-default">
+                Data Histori Absensi Guru dan Pegawai
+            </button>
+            <button type="button" class="btn btn-primary">
+                Data Histori Absensi Siswa
+            </button>
+        @endif
         <div class="card" style="margin-top: 10px">
             <div class="header">
                 <h2>
@@ -103,15 +105,15 @@
     </div>
 </div>
 <br>
-<a href="humas/absensi/histori-absensi-siswa/export-laravel/{{ $id_kelas }}/{{ $date }}" target="_blank"
+<a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel/'.$id_kelas.'/'.$date)}}" target="_blank"
     class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
 
-    <a href="humas/absensi/histori-absensi-siswa/export-laravel-week/{{ $id_kelas }}/{{ $date }}"
+    <a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel-week/'.$id_kelas.'/'.$date)}}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
 
-<a href="humas/absensi/histori-absensi-siswa/export-laravel-mount/{{ $id_kelas }}/{{ $date }}"
+<a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel-mount/'.$id_kelas.'/'.$date)}}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
 <br>
@@ -136,7 +138,9 @@
                                 <th>Check In</th>
                                 {{-- <th>Check Out</th> --}}
                                 <th>Status</th>
+                                @if(Request::segment(1) == 'humas')
                                 <th style="text-align: center;">Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -159,6 +163,7 @@
                                         @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
                                         {{ $r['status'] }}</td>
 
+                                    @if(Request::segment(1) == 'humas')
                                     <td style="text-align: center;display:flex;justify-content:center">
                                         @if ($r['id_presensi_pengguna'] == '')
                                             <button type="button" class="btn bg-teal waves-effect"
@@ -176,6 +181,7 @@
                                             </button>
                                         @endif
                                     </td>
+                                    @endif
                                     </tr>
                                     @endif
                                 @else
