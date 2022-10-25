@@ -121,7 +121,7 @@
                     <td colspan="10" style="border-style : hidden">
                         <br>
                         <h2 align="center" style="margin-top: 3px; font-family:'Times New Roman', Times, serif; font-size:30px">
-                            PENCAPAIAN KOMPETENSI PESERTA DIDIKR<br>
+                            PENCAPAIAN KOMPETENSI PESERTA DIDIK<br>
                             {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br>
                             TENGAH SEMESTER GASAL<br>
                            
