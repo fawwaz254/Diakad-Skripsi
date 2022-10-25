@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
 use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
@@ -28,6 +27,7 @@ use App\Http\Controllers\Guru\Sarpras\KomplainSarprasController;
 use App\Http\Controllers\Guru\KelasDaring\LaporanAbsenController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
+use App\Http\Controllers\Guru\Jadwal\SetJadwalKelasGuruController;
 use App\Http\Controllers\Guru\RaporSisipan\RaporSisipanController;
 use App\Http\Controllers\Guru\WaliKelas\InventarisKelasController;
 use App\Http\Controllers\Guru\KelasDaring\MengajarDaringController;
@@ -38,6 +38,7 @@ use App\Http\Controllers\Guru\RewardSiswa\InputRewardSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\RekapKeuanganKelasController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Guru\ELearning\ManajemenMateriAjarController;
+use App\Http\Controllers\Guru\JurnalPimpinan\JurnalPimpinanController;
 use App\Http\Controllers\Guru\KelasDaring\SettingKelasDaringController;
 use App\Http\Controllers\Guru\PembinaEkskul\InputNilaiEkskulController;
 use App\Http\Controllers\Guru\PembinaEkskul\RekapNilaiEkskulController;
@@ -50,18 +51,18 @@ use App\Http\Controllers\Guru\WaliKelas\RekapPelanggaranKelasController;
 use App\Http\Controllers\Guru\WaliKelas\TracerAlumniWaliKelasController;
 use App\Http\Controllers\Guru\PembinaEkskul\InputAbsensiEkskulController;
 use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController;
+use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Guru\PelanggaranSiswa\InputPelanggaranController;
 use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
+use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
 use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRekapKesehatanController;
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
-use App\Http\Controllers\Guru\Jadwal\SetJadwalKelasGuruController;
-use App\Http\Controllers\Guru\RaporSisipan\RaporTengahSemesterController;
 
 // ROLE GURU
 

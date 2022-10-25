@@ -507,7 +507,7 @@ class TracerAlumniController extends BaseController
     {
         $input = (object) $request->input();
         $alumni = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->with('smp', 'calon_siswa', 'kelas')->get();
-        return Excel::download(new ExportAlumni($alumni), 'download_harian.xlsx');
+        return Excel::download(new ExportAlumni($alumni), 'download_alumni.xlsx');
     }
 
 
@@ -520,7 +520,7 @@ class TracerAlumniController extends BaseController
         $alumni['alumni_wirausaha'] = Alumni::where('id_kelas', $id_kelas)->where('tahun_lulus', $tahun_lulus)->where('status', 'usaha')->with('calon_siswa', 'kelas', 'usaha')->get();
         // $alumni = $data;
         // dd($alumni);
-        return Excel::download(new ExportAlumni2($alumni), 'download_harian.xlsx');
+        return Excel::download(new ExportAlumni2($alumni), 'download_alumni.xlsx');
     }
 
 
