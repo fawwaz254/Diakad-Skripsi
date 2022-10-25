@@ -476,7 +476,7 @@ class HistoriAbsensiSiswaController extends Controller
         // dd($hasil);
         $products = $hasil;
         // dd($products);
-        return Excel::download(new HistoriAbsensiMount($products), 'download_bulanan.xlsx');
+        return Excel::download(new HistoriAbsensiMount($products), 'download_mingguan.xlsx');
     }
 
     public function export_excel_day(Request $request, $id_kelas = null, $date = null)

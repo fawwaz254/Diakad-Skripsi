@@ -8,7 +8,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
         </div>
         <div class="body">
             <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <a href="{{ route('report.pimpinan') }}">
                         <div class="card">
                             <div class="body bg-red" style="text-align: -webkit-center;">
@@ -21,7 +21,7 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                             </div>
                         </div>
                     </a>
-                </div>
+                </div> --}}
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}">
                         <div class="card">

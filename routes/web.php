@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\Sekolah;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SignInController;
 use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\ForgetPasswordController;
