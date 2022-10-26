@@ -117,6 +117,10 @@ class MonitoringKelasController extends BaseController
             })
             ->addColumn('jml_siswa', function ($item) {
                 return $item->kelas_mp->pengambilan_mp->count();
+            })->editColumn('ruangan.nm_ruangan', function($item){
+                return $item->ruangan->nm_ruangan ?? '';
+            })->editColumn('ruangan.kapasitas_ruangan', function($item){
+                return $item->ruangan->kapasitas_ruangan ?? '';
             })
             ->addColumn('action', function ($item) {
                 $data = array(

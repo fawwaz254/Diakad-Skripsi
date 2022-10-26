@@ -127,12 +127,10 @@ class SetJadwalKelasController extends Controller
         }
 
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
-        $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
-
+        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
         $mapel      = MataPelajaran::all();
-        $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
-
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'ruangan'));
+        // $ruangan    = Ruangan::find( $id_kelas);
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'allruangan'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
@@ -144,15 +142,7 @@ class SetJadwalKelasController extends Controller
         // dd($input);
 
 
-        $validator = Validator::make($request->all(), [
-            'jamMasuk' => 'required',
-            'jamSelesai' => 'required',
-            // 'mapel' => 'required',
-            'guru' => 'required',
-            'id_hari' => 'required',
-            'id_semester' => 'required',
-            'id_kelas'          => 'required'
-        ]);
+        
 
         //validasi waktu
         if ($mode != 'delete') {
@@ -165,6 +155,15 @@ class SetJadwalKelasController extends Controller
                 ];
             }
 
+            $validator = Validator::make($request->all(), [
+                'jamMasuk'          => 'required',
+                'jamSelesai'        => 'required',
+                'ruangan'           => 'required',
+                'guru'               => 'required',
+                'id_hari'           => 'required',
+                'id_semester'       => 'required',
+                'id_kelas'          => 'required'
+            ]);
 
             $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->guru, '-', $input->id_hari, $input->jamMasuk, $input->jamSelesai);
 
@@ -183,7 +182,7 @@ class SetJadwalKelasController extends Controller
             }
         }
 
-        if ($validator->fails() && $mode != 'delete') {
+        if ( $mode != 'delete' && $validator->fails()) {
             return [
                 'status_code' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -208,12 +207,12 @@ class SetJadwalKelasController extends Controller
                 $kelas_mp->id_mata_pelajaran        = $input->mapel;
                 $kelas_mp->nm_kelas_mp              = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
                 $kelas_mp->jml_pertemuan_kelas_mp   = '0';
-                $kelas_mp->created_by               = 'syahrul';
+                $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $kelas_mp->created_at               = $now;
                 $kelas_mp->save();
 
 
-                $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
+                // $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
 
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $jadwal_kelas_mp                        = new JadwalKelasMp;
@@ -222,9 +221,9 @@ class SetJadwalKelasController extends Controller
                 $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
                 $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
                 $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
-                $jadwal_kelas_mp->id_ruangan            = $ruang->id_ruangan ?? '-';
+                $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
                 $jadwal_kelas_mp->created_at            = $now;
-                $jadwal_kelas_mp->created_by            = 'syahrul';
+                $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                 $jadwal_kelas_mp->save();
 
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -265,14 +264,14 @@ class SetJadwalKelasController extends Controller
                         'message' => 'Delete Jadwal Mata Ajar Successfully'
                     ];
                 }
-            }elseif ($mode = 'edit') {
+            } elseif ($mode = 'edit') {
                 $jadwal_kelas_mp                        = JadwalKelasMp::find($id);
                 // $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
                 // $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
                 $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
                 $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
                 $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
-                // $jadwal_kelas_mp->id_ruangan            = $ruang->id_ruangan ?? '-';
+                $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
                 $jadwal_kelas_mp->updated_at            = $now;
                 $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                 $jadwal_kelas_mp->save();
@@ -293,7 +292,7 @@ class SetJadwalKelasController extends Controller
                     'path' => 'aktivitas-semester/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
                     'message' => 'Save Successfully'
                 ];
-            } 
+            }
         }
     }
 }
