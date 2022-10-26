@@ -16,10 +16,12 @@ class StatusPengguna extends Model
 
     protected $primaryKey = 'id_status_pengguna';
 
-	public $timestamps = true;
+    protected $keyType = 'string';
+
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'status_join_table',
         'nm_status_pengguna',
@@ -28,14 +30,9 @@ class StatusPengguna extends Model
         'id_sekolah',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
     ];
 
     protected $guarded = [];
-
-
-
-
-
 
 }
