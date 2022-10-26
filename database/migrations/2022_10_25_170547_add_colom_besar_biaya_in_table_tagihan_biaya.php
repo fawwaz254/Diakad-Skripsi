@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class AddColomBesarBiayaInTableTagihanBiaya extends Migration
@@ -13,8 +12,8 @@ class AddColomBesarBiayaInTableTagihanBiaya extends Migration
      */
     public function up()
     {
-        Schema::table('tagihan_biaya', function($table) {
-            $table->integer('besar_pembayaran')->nullable()->after('potongan_biaya');
+        Schema::table('tagihan_biaya', function ($table) {
+            $table->integer('besar_pembayaran')->nullable()->after('besar_biaya');
         });
     }
 
@@ -25,6 +24,6 @@ class AddColomBesarBiayaInTableTagihanBiaya extends Migration
      */
     public function down()
     {
-       
+
     }
 }
