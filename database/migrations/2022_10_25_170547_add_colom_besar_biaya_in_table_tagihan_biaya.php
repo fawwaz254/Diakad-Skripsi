@@ -13,7 +13,7 @@ class AddColomBesarBiayaInTableTagihanBiaya extends Migration
     public function up()
     {
         Schema::table('tagihan_biaya', function ($table) {
-            $table->integer('besar_pembayaran')->nullable()->after('besar_biaya');
+            $table->integer('besar_pembayaran')->after('besar_biaya');
         });
     }
 

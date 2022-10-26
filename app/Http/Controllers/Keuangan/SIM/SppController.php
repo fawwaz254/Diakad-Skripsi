@@ -189,6 +189,7 @@ class SppController extends BaseController
                                     $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
                                     $pembayaran_biaya->save();
 
+                                    $tagihan_siswa->besar_pembayaran = $tagihan_siswa->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
                                     $tagihan_siswa->is_tagih = 0;
                                     $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
                                     $tagihan_siswa->save();
