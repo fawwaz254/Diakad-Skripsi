@@ -250,6 +250,22 @@
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Ruangan :</label>
+                        <select class="form-control show-tick" name="ruangan">
+                            @if($ruangan = $allruangan->where('id_kelas',$kelas->id_kelas)->first())
+                            <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
+                            </option>
+                            @else
+                            <option  disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras</option>
+                            @foreach($allruangan as $ruangan)
+                            <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }}  </option>
+                            @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -328,6 +344,23 @@
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="Goal Score">Ruangan :</label>
+                        <select class="form-control show-tick" name="ruanganEdit">
+                            @if($ruangan = $allruangan->where('id_kelas',$kelas->id_kelas)->first())
+                            <option value="{{ $ruangan->id_ruangan }}" selected>{{ $ruangan->nm_ruangan }}
+                            </option>
+                            @else
+                            <option  disabled selected>Otomatis terpilih jika sudah set ruang kelas di role Sarpras</option>
+                            @foreach($allruangan as $ruangan)
+                            <option value="{{ $ruangan->id_ruangan }}">{{ $ruangan->nm_ruangan }}  </option>
+                            @endforeach
+                            @endif
+                        </select>
+                    </div>
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-success  waves-effect" onclick="saveEdit()">Submit</button>
@@ -491,6 +524,7 @@
                 jamSelesai: $('select[name=jamSelesai]').val(),
                 mapel: $('select[name=mapel]').val(),
                 guru: $('select[name=guru]').val(),
+                ruangan:  $('select[name=ruangan]').val(),
                 // penangungJawab: $('select[name=penangungJawab]').val(),
                 // pjma1: $('select[name=pjma1]').val(),
                 // pjma2: $('select[name=pjma2]').val(),
@@ -544,6 +578,7 @@
                 jamSelesai: $('select[name=jamSelesaiEdit]').val(),
                 // mapel: $('select[name=mapelEdit]').val(),
                 guru: $('select[name=guruEdit]').val(),
+                ruangan:  $('select[name=ruanganEdit]').val(),
                 // penangungJawab: $('select[name=penangungJawab]').val(),
                 // pjma1: $('select[name=pjma1]').val(),
                 // pjma2: $('select[name=pjma2]').val(),

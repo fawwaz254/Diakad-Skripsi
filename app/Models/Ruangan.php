@@ -24,6 +24,7 @@ class Ruangan extends Model
         'id_jenis_ruangan',
         'id_pemilik_sarpras',
         'id_gedung',
+        'id_kelas',
         'nm_ruangan',
         'panjang_ruangan',
         'lebar_ruangan',

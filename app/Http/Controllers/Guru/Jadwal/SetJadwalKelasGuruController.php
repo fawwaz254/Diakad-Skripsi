@@ -127,12 +127,12 @@ class SetJadwalKelasGuruController extends Controller
         }
 
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
-        $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
-
+        // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
+        $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
         $mapel      = MataPelajaran::all();
-        $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
-
-        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'ruangan'));
+        // $ruangan    = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_ruangan', 'asc')->get();
+        // $ruangan    = Ruangan::where('id_kelas', $id_kelas)->first();
+        return view('guru/jadwal/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'allruangan', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam'));
     }
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
@@ -147,7 +147,7 @@ class SetJadwalKelasGuruController extends Controller
         $validator = Validator::make($request->all(), [
             'jamMasuk' => 'required',
             'jamSelesai' => 'required',
-            // 'mapel' => 'required',
+            'ruangan' => 'required',
             'guru' => 'required',
             'id_hari' => 'required',
             'id_semester' => 'required',
@@ -180,7 +180,7 @@ class SetJadwalKelasGuruController extends Controller
             }
         }
 
-        if ($validator->fails() && $mode != 'delete') {
+        if ($mode != 'delete' &&$validator->fails() ) {
             return [
                 'status_code' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -205,12 +205,12 @@ class SetJadwalKelasGuruController extends Controller
                 $kelas_mp->id_mata_pelajaran        = $input->mapel;
                 $kelas_mp->nm_kelas_mp              = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
                 $kelas_mp->jml_pertemuan_kelas_mp   = '0';
-                $kelas_mp->created_by               = 'syahrul';
+                $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
                 $kelas_mp->created_at               = $now;
                 $kelas_mp->save();
 
 
-                $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
+                // $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
 
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                 $jadwal_kelas_mp                        = new JadwalKelasMp;
@@ -219,9 +219,9 @@ class SetJadwalKelasGuruController extends Controller
                 $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
                 $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
                 $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
-                $jadwal_kelas_mp->id_ruangan            = $ruang->id_ruangan ?? '-';
+                $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
                 $jadwal_kelas_mp->created_at            = $now;
-                $jadwal_kelas_mp->created_by            = 'syahrul';
+                $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
                 $jadwal_kelas_mp->save();
 
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
@@ -269,7 +269,7 @@ class SetJadwalKelasGuruController extends Controller
                 $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
                 $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
                 $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
-                // $jadwal_kelas_mp->id_ruangan            = $ruang->id_ruangan ?? '-';
+                $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
                 $jadwal_kelas_mp->updated_at            = $now;
                 $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
                 $jadwal_kelas_mp->save();
