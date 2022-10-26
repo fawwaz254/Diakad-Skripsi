@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Schema;
 
-class AddColomBesarBiayaInTableTagihanBiaya extends Migration
+class AddColumnTglPelunasanTableTagihan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class AddColomBesarBiayaInTableTagihanBiaya extends Migration
     public function up()
     {
         Schema::table('tagihan_biaya', function ($table) {
-            $table->integer('besar_pembayaran')->after('besar_biaya');
+            $table->dateTime('tgl_pelunasan')->nullable()->after('is_request');
         });
     }
 
@@ -24,6 +24,6 @@ class AddColomBesarBiayaInTableTagihanBiaya extends Migration
      */
     public function down()
     {
-
+        //
     }
 }

@@ -2,34 +2,30 @@
 
 namespace App\Http\Controllers\Keuangan\Utility;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-
-use App\Libraries\LibGlobal;
-use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Keuangan\LibDataKeuangan;
-
-use App\Models\Siswa as Siswa;
-use App\Models\Staff as Staff;
+use App\Libraries\LibGlobal;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\Pendidikan\LibSiswa;
 use App\Models\Bank as Bank;
 use App\Models\BankVia as BankVia;
 use App\Models\DetailBiayaInternal;
 use App\Models\DetailPotonganBiaya;
-use App\Models\TagihanBiaya as TagihanBiaya;
 use App\Models\PembayaranBiaya as PembayaranBiaya;
 use App\Models\Pengguna;
 use App\Models\PotonganBiaya;
-use App\Models\WaliMurid;
 use App\Models\Semester;
-
+use App\Models\Siswa as Siswa;
+use App\Models\Staff as Staff;
+use App\Models\TagihanBiaya as TagihanBiaya;
+use App\Models\WaliMurid;
+use Carbon\Carbon;
 use DateTime;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\Datatables\Datatables;
 
 class PembayaranSiswaController extends BaseController
 {
@@ -169,8 +165,6 @@ class PembayaranSiswaController extends BaseController
             $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
         }
 
-
-
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         # printing purpose..
@@ -245,9 +239,9 @@ class PembayaranSiswaController extends BaseController
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
         $cek_status = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna')->first();
-        if($cek_status->status_pengguna->nm_status_pengguna == "LULUS"){
+        if ($cek_status->status_pengguna->nm_status_pengguna == "LULUS") {
             $siswa = LibSiswa::fetchDataSiswaByPenggunaTanpaKelas($auth_data, $id_pengguna);
-        }else{
+        } else {
             $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
         }
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
@@ -344,9 +338,9 @@ class PembayaranSiswaController extends BaseController
             ->reject(function ($item) {
                 return $item->total_pembayaran >= $item->besar_biaya;
             })->map(function ($item) {
-                $item->besar_pembayaran = $item->besar_biaya - ($item->total_pembayaran ?? 0);
-                return $item;
-            });
+            $item->besar_pembayaran = $item->besar_biaya - ($item->total_pembayaran ?? 0);
+            return $item;
+        });
 
         return view('keuangan/utility/pembayaran-siswa/print-belum-terbayar-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'list_data'));
     }
@@ -358,18 +352,18 @@ class PembayaranSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'nis_nama_siswa' => 'required'
+            'nis_nama_siswa' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'utility/pembayaran-siswa/view-detail/' . $input->nis_nama_siswa
+                'path' => 'utility/pembayaran-siswa/view-detail/' . $input->nis_nama_siswa,
             ];
         }
     }
@@ -413,7 +407,7 @@ class PembayaranSiswaController extends BaseController
             ->addColumn('action', function ($item) use ($nis_nama_siswa) {
                 $data = array(
                     'id' => $item->nis_siswa,
-                    'id_asli' => $nis_nama_siswa
+                    'id_asli' => $nis_nama_siswa,
                 );
                 return $data;
             })
@@ -515,7 +509,7 @@ class PembayaranSiswaController extends BaseController
             ->addColumn('checkbox', function ($item) {
                 $data = array(
                     'id_tagihan' => $item->id_tagihan_biaya,
-                    'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan
+                    'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan,
                 );
                 return $data;
             })
@@ -524,7 +518,7 @@ class PembayaranSiswaController extends BaseController
                     'id' => $item->id_tagihan_biaya,
                     'id_asli' => $nis_nama_siswa,
                     'besar_pembayaran' => $item->besar_pembayaran,
-                    'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan
+                    'sisa_tagihan' => $item->besar_biaya + $item->denda_biaya - $item->besar_pembayaran - $item->total_potongan,
                 );
                 return $data;
             })
@@ -604,7 +598,7 @@ class PembayaranSiswaController extends BaseController
                 $data = array(
                     'id' => $item->id_pembayaran_biaya,
                     'id_pengguna' => $id_pengguna,
-                    'tgl_pembayaran' => date_format(new DateTime($item->tgl_pembayaran), "Y-m-d")
+                    'tgl_pembayaran' => date_format(new DateTime($item->tgl_pembayaran), "Y-m-d"),
                 );
                 return $data;
             })
@@ -643,8 +637,8 @@ class PembayaranSiswaController extends BaseController
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
-        $bank       = Bank::all();
-        $bank_via   = BankVia::all();
+        $bank = Bank::all();
+        $bank_via = BankVia::all();
 
         return view('keuangan/utility/pembayaran-siswa/view-detail-tagihan-pembayaran-siswa', compact('auth_data', 'nis_siswa', 'nis_nama_siswa_asli', 'tagihan', 'jenis_biaya', 'siswa', 'data_semester', 'bank', 'bank_via'));
     }
@@ -725,26 +719,26 @@ class PembayaranSiswaController extends BaseController
         $input = (object) $request->input();
 
         $validator = Validator::make($request->all(), [
-            'id_tagihan_biaya'      => 'required',
-            'id_semester_bayar'     => 'required',
-            'besar_pembayaran'      => 'required',
+            'id_tagihan_biaya' => 'required',
+            'id_semester_bayar' => 'required',
+            'besar_pembayaran' => 'required',
             'besar_pembayaran_lama' => 'required',
-            'tgl_pembayaran'        => 'required',
+            'tgl_pembayaran' => 'required',
             /*'id_bank'             => 'required',
             'id_bank_via'           => 'required',
             'nomor_transaksi'       => 'required',
             'is_tarik'              => 'required',*/
-            'keterangan'            => 'required'
+            'keterangan' => 'required',
 
             /* kebutuhan return success
-            'nis_siswa'             => 'required',
-            'nis_nama_siswa_asli'   => 'required'*/
+        'nis_siswa'             => 'required',
+        'nis_nama_siswa_asli'   => 'required'*/
         ]);
 
-        if ($validator->fails() && $mode != 'delete' && $mode != 'lunas' && $mode != 'diskon') {
+        if ($validator->fails() && $mode != 'delete' && $mode != 'delete-by-tagihan' && $mode != 'lunas' && $mode != 'diskon') {
             return [
                 'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'message' => $validator->errors()->first(),
             ];
         } else {
             // mengambil waktu sekarang
@@ -752,7 +746,7 @@ class PembayaranSiswaController extends BaseController
 
             if ($mode == 'add') {
 
-                $tagihanBiaya       = TagihanBiaya::with('potongan')->find($input->id_tagihan_biaya);
+                $tagihanBiaya = TagihanBiaya::with('potongan')->find($input->id_tagihan_biaya);
 
                 $besar_biaya = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
 
@@ -768,7 +762,7 @@ class PembayaranSiswaController extends BaseController
                 if ($besar_pembayaran > $besar_biaya) {
                     return [
                         'status' => 300,
-                        'message' => 'Besar Pembayaran Lebih Besar Dari Sisa Tagihan, Sisa Tagihan adalah ' . number_format($sisa_tagihan)
+                        'message' => 'Besar Pembayaran Lebih Besar Dari Sisa Tagihan, Sisa Tagihan adalah ' . number_format($sisa_tagihan),
                     ];
                 }
 
@@ -785,37 +779,39 @@ class PembayaranSiswaController extends BaseController
                     $id_staff_bayar = null;
                 }
 
-                $pembayaranBiaya                            = new PembayaranBiaya;
-                $pembayaranBiaya->id_pembayaran_biaya       = $id;
-                $pembayaranBiaya->id_tagihan_biaya          = $input->id_tagihan_biaya;
-                $pembayaranBiaya->id_staff_bayar            = $id_staff_bayar;
-                $pembayaranBiaya->id_semester_bayar         = $input->id_semester_bayar;
-                $pembayaranBiaya->besar_pembayaran          = $input->besar_pembayaran;
+                $pembayaranBiaya = new PembayaranBiaya;
+                $pembayaranBiaya->id_pembayaran_biaya = $id;
+                $pembayaranBiaya->id_tagihan_biaya = $input->id_tagihan_biaya;
+                $pembayaranBiaya->id_staff_bayar = $id_staff_bayar;
+                $pembayaranBiaya->id_semester_bayar = $input->id_semester_bayar;
+                $pembayaranBiaya->besar_pembayaran = $input->besar_pembayaran;
                 // convert format date
-                $pembayaranBiaya->tgl_pembayaran            = date_format(date_create($input->tgl_pembayaran), "Y-m-d H:i:s");
+                $pembayaranBiaya->tgl_pembayaran = date_format(date_create($input->tgl_pembayaran), "Y-m-d H:i:s");
                 if (!empty($input->id_bank)) {
-                    $pembayaranBiaya->id_bank                   = $input->id_bank;
+                    $pembayaranBiaya->id_bank = $input->id_bank;
                 }
                 if (!empty($input->id_bank_via)) {
-                    $pembayaranBiaya->id_bank_via               = $input->id_bank_via;
+                    $pembayaranBiaya->id_bank_via = $input->id_bank_via;
                 }
                 if (!empty($input->nomor_transaksi)) {
-                    $pembayaranBiaya->nomor_transaksi           = $input->nomor_transaksi;
+                    $pembayaranBiaya->nomor_transaksi = $input->nomor_transaksi;
                 }
-                $pembayaranBiaya->keterangan                = $input->keterangan;
+                $pembayaranBiaya->keterangan = $input->keterangan;
                 if (!empty($input->is_tarik)) {
-                    $pembayaranBiaya->is_tarik                  = $input->is_tarik;
+                    $pembayaranBiaya->is_tarik = $input->is_tarik;
                 }
-                $pembayaranBiaya->created_by                = $input->auth_data->pengguna->id_pengguna;
+                $pembayaranBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                 $pembayaranBiaya->save();
 
                 // update is_tagih di tabel tagihan_biaya
                 if ($besar_pembayaran == $besar_biaya) {
-                    $tagihanBiaya->is_tagih     = 0;
-                    $tagihanBiaya->updated_by   = $input->auth_data->pengguna->id_pengguna;
-                    $tagihanBiaya->updated_at   = $now;
-                    $tagihanBiaya->save();
+                    $tagihanBiaya->tgl_pelunasan = $pembayaranBiaya->tgl_pembayaran;
+                    $tagihanBiaya->is_tagih = 0;
+                    $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                    $tagihanBiaya->updated_at = $now;
                 }
+                $tagihanBiaya->besar_pembayaran = $tagihanBiaya->besar_pembayaran + $pembayaranBiaya->besar_pembayaran;
+                $tagihanBiaya->save();
 
                 $id_siswa = $tagihanBiaya->id_siswa;
 
@@ -828,7 +824,7 @@ class PembayaranSiswaController extends BaseController
                             'body' => $message,
                             'priority' => 'high',
                             'screen1' => '',
-                            'screen2' => ''
+                            'screen2' => '',
                         );
 
                         $notifikasi = array(
@@ -836,7 +832,7 @@ class PembayaranSiswaController extends BaseController
                             'id_pengguna' => $siswa->pengguna->id_pengguna,
                             'id_sekolah' => $siswa->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
                         );
 
                         LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
@@ -853,7 +849,7 @@ class PembayaranSiswaController extends BaseController
                                 'body' => $message,
                                 'priority' => 'high',
                                 'screen1' => '',
-                                'screen2' => ''
+                                'screen2' => '',
                             );
 
                             $notifikasi = array(
@@ -861,7 +857,7 @@ class PembayaranSiswaController extends BaseController
                                 'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                 'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                 'isi_notifikasi' => $message,
-                                'created_by' => $input->auth_data->pengguna->id_pengguna
+                                'created_by' => $input->auth_data->pengguna->id_pengguna,
                             );
 
                             LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -872,18 +868,17 @@ class PembayaranSiswaController extends BaseController
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
                     'path' => 'utility/pembayaran-siswa/view-detail-siswa/' . $input->nis_siswa . '/' . $input->nis_nama_siswa_asli,
-                    'message' => 'Save Pembayaran Successfully'
+                    'message' => 'Save Pembayaran Successfully',
                 ];
             } elseif ($mode == 'lunas') {
 
-                $tagihanBiaya   = TagihanBiaya::with('potongan')->find($id);
+                $tagihanBiaya = TagihanBiaya::with('potongan')->find($id);
 
                 if ($tagihanBiaya->potongan) {
-                    $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya - $tagihanBiaya->potongan->total_potongan;
+                    $besar_biaya = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya - $tagihanBiaya->potongan->total_potongan;
                 } else {
-                    $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
+                    $besar_biaya = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
                 }
-
 
                 $besar_pembayaran_lama = PembayaranBiaya::where('id_tagihan_biaya', '=', $id)
                     ->sum('besar_pembayaran');
@@ -903,21 +898,23 @@ class PembayaranSiswaController extends BaseController
 
                 $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($input->auth_data);
 
-                $pembayaranBiaya                        = new PembayaranBiaya;
-                $pembayaranBiaya->id_pembayaran_biaya   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $pembayaranBiaya->id_tagihan_biaya      = $id;
-                $pembayaranBiaya->id_staff_bayar        = $id_staff_bayar;
-                $pembayaranBiaya->id_semester_bayar     = $semester_aktif->id_semester;
-                $pembayaranBiaya->besar_pembayaran      = $besar_pelunasan;
+                $pembayaranBiaya = new PembayaranBiaya;
+                $pembayaranBiaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $pembayaranBiaya->id_tagihan_biaya = $id;
+                $pembayaranBiaya->id_staff_bayar = $id_staff_bayar;
+                $pembayaranBiaya->id_semester_bayar = $semester_aktif->id_semester;
+                $pembayaranBiaya->besar_pembayaran = $besar_pelunasan;
                 // convert format date
-                $pembayaranBiaya->tgl_pembayaran        = (!empty($input->tgl_pembayaran)) ? $input->tgl_pembayaran : $now;
-                $pembayaranBiaya->keterangan            = "Langsung Lunas";
-                $pembayaranBiaya->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $pembayaranBiaya->tgl_pembayaran = (!empty($input->tgl_pembayaran)) ? $input->tgl_pembayaran : $now;
+                $pembayaranBiaya->keterangan = "Langsung Lunas";
+                $pembayaranBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                 $pembayaranBiaya->save();
 
-                $tagihanBiaya->is_tagih     = 0;
-                $tagihanBiaya->updated_by   = $input->auth_data->pengguna->id_pengguna;
-                $tagihanBiaya->updated_at   = $now;
+                $tagihanBiaya->besar_pembayaran = $tagihanBiaya->besar_pembayaran + $pembayaranBiaya->besar_pembayaran;
+                $tagihanBiaya->tgl_pelunasan = $pembayaranBiaya->tgl_pembayaran;
+                $tagihanBiaya->is_tagih = 0;
+                $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tagihanBiaya->updated_at = $now;
                 $tagihanBiaya->save();
 
                 $id_siswa = $tagihanBiaya->id_siswa;
@@ -931,7 +928,7 @@ class PembayaranSiswaController extends BaseController
                             'body' => $message,
                             'priority' => 'high',
                             'screen1' => '',
-                            'screen2' => ''
+                            'screen2' => '',
                         );
 
                         $notifikasi = array(
@@ -939,7 +936,7 @@ class PembayaranSiswaController extends BaseController
                             'id_pengguna' => $siswa->pengguna->id_pengguna,
                             'id_sekolah' => $siswa->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
                         );
 
                         LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
@@ -956,7 +953,7 @@ class PembayaranSiswaController extends BaseController
                                     'body' => $message,
                                     'priority' => 'high',
                                     'screen1' => '',
-                                    'screen2' => ''
+                                    'screen2' => '',
                                 );
 
                                 $notifikasi = array(
@@ -964,7 +961,7 @@ class PembayaranSiswaController extends BaseController
                                     'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                                     'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                                     'isi_notifikasi' => $message,
-                                    'created_by' => $input->auth_data->pengguna->id_pengguna
+                                    'created_by' => $input->auth_data->pengguna->id_pengguna,
                                 );
 
                                 LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -979,25 +976,25 @@ class PembayaranSiswaController extends BaseController
                     'data' => [
                         'id' => $pembayaranBiaya->id_pembayaran_biaya,
                         'date' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'd/m'),
-                        'month' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'n')
-                    ]
+                        'month' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'n'),
+                    ],
                 ];
             } else if ($mode == 'diskon') {
                 // dd($request->all());
                 $data = array_merge($request->all(), ['id_tagihan_biaya' => $id]);
 
                 $validator = Validator::make($data, [
-                    'id_tagihan_biaya'      => 'required|exists:tagihan_biaya,id_tagihan_biaya',
-                    'besar_potongan'        => 'required|numeric',
-                    'tgl_potongan'          => 'required|date',
-                    'potongan_internal'     => 'nullable',
-                    'potongan_internal.'    => 'nullable|exists:detail_biaya_internal,id_detail_biaya_internal',
-                    'potongan_internal.*'   => 'nullable|numeric',
+                    'id_tagihan_biaya' => 'required|exists:tagihan_biaya,id_tagihan_biaya',
+                    'besar_potongan' => 'required|numeric',
+                    'tgl_potongan' => 'required|date',
+                    'potongan_internal' => 'nullable',
+                    'potongan_internal.' => 'nullable|exists:detail_biaya_internal,id_detail_biaya_internal',
+                    'potongan_internal.*' => 'nullable|numeric',
                 ]);
                 if ($validator->fails()) {
                     return [
                         'status' => 300, // FAILED
-                        'message' => $validator->errors()->first()
+                        'message' => $validator->errors()->first(),
                     ];
                 }
 
@@ -1008,7 +1005,7 @@ class PembayaranSiswaController extends BaseController
                 if ($input->besar_potongan > ($tagihanBiaya->besar_biaya - $pembayaranBiaya->sum('besar_pembayaran'))) {
                     return [
                         'status' => 300, // FAILED
-                        'message' => 'Potongan melebihi besar tagihan!'
+                        'message' => 'Potongan melebihi besar tagihan!',
                     ];
                 }
 
@@ -1017,7 +1014,7 @@ class PembayaranSiswaController extends BaseController
                     if ($input->besar_potongan != collect($input->potongan_internal)->sum()) {
                         return [
                             'status' => 300, // FAILED
-                            'message' => 'Potongan detail biaya tidak sesuai dengan besar potongan!'
+                            'message' => 'Potongan detail biaya tidak sesuai dengan besar potongan!',
                         ];
                     }
 
@@ -1026,7 +1023,7 @@ class PembayaranSiswaController extends BaseController
                         if ($potonganInternal > $bInternal->besar_biaya) {
                             return [
                                 'status' => 300, // FAILED
-                                'message' => 'Potongan detail biaya melebihi nominal Detail Biaya Internal!'
+                                'message' => 'Potongan detail biaya melebihi nominal Detail Biaya Internal!',
                             ];
                         }
                     }
@@ -1040,32 +1037,32 @@ class PembayaranSiswaController extends BaseController
                     // check if id_potongan_biaya exist
                     if ($tagihanBiaya->id_potongan_biaya) {
                         $potongan = PotonganBiaya::find($tagihanBiaya->id_potongan_biaya);
-                        $potongan->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                        $potongan->updated_by = $input->auth_data->pengguna->id_pengguna;
                     } else {
                         $potongan = new PotonganBiaya();
                         $potongan->id_potongan_biaya = $uuid;
-                        $potongan->created_by  = $input->auth_data->pengguna->id_pengguna;
+                        $potongan->created_by = $input->auth_data->pengguna->id_pengguna;
                     }
-                    $potongan->total_potongan       = $input->besar_potongan;
-                    $potongan->tanggal_potongan     = date_format(date_create($input->tgl_potongan), 'Y-m-d H:i:s');
+                    $potongan->total_potongan = $input->besar_potongan;
+                    $potongan->tanggal_potongan = date_format(date_create($input->tgl_potongan), 'Y-m-d H:i:s');
                     $potongan->save();
 
                     if (!empty($input->potongan_internal)) {
-                        $detailPotonganBiaya     = DetailPotonganBiaya::where('id_potongan_biaya', $potongan->id_potongan_biaya)->get();
+                        $detailPotonganBiaya = DetailPotonganBiaya::where('id_potongan_biaya', $potongan->id_potongan_biaya)->get();
 
                         foreach ($input->potongan_internal as $idBiayaInternal => $disc) {
                             if ($detailPotonganBiaya->isNotEmpty()) {
                                 $detailPotongan = $detailPotonganBiaya->shift();
-                                $detailPotongan->updated_by  = $input->auth_data->pengguna->id_pengguna;
+                                $detailPotongan->updated_by = $input->auth_data->pengguna->id_pengguna;
                             } else {
                                 $detailPotongan = new DetailPotonganBiaya();
-                                $detailPotongan->id_detail_potongan_biaya   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                $detailPotongan->id_potongan_biaya          = $potongan->id_potongan_biaya;
-                                $detailPotongan->created_by                 = $input->auth_data->pengguna->id_pengguna;
+                                $detailPotongan->id_detail_potongan_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                $detailPotongan->id_potongan_biaya = $potongan->id_potongan_biaya;
+                                $detailPotongan->created_by = $input->auth_data->pengguna->id_pengguna;
                             }
 
-                            $detailPotongan->id_detail_biaya_internal   = $idBiayaInternal;
-                            $detailPotongan->potongan_biaya             = $disc;
+                            $detailPotongan->id_detail_biaya_internal = $idBiayaInternal;
+                            $detailPotongan->potongan_biaya = $disc;
                             $detailPotongan->save();
                         }
 
@@ -1076,39 +1073,55 @@ class PembayaranSiswaController extends BaseController
                         }
                     }
 
-                    $tagihanBiaya->id_potongan_biaya    = $potongan->id_potongan_biaya;
-                    $tagihanBiaya->updated_by           = $input->auth_data->pengguna->id_pengguna;
+                    $tagihanBiaya->id_potongan_biaya = $potongan->id_potongan_biaya;
+                    $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
                     $tagihanBiaya->save();
                     DB::commit();
 
                     return [
                         'status' => 202, // SUCCESS AND LOAD CONTENT
                         'path' => 'utility/pembayaran-siswa/view-detail-siswa/' . $input->nis_siswa . '/' . $input->nis_nama_siswa_asli,
-                        'message' => 'Save Discount Successfully'
+                        'message' => 'Save Discount Successfully',
                     ];
                 } catch (Exception $e) {
                     DB::rollback();
                     // something went wrong
                     return [
-                        'status'     => 300, // GAGAL
-                        'message'    => 'Save Discount Failed ' . (env('APP_DEBUG', false) ? $e->getMessage() : null)
+                        'status' => 300, // GAGAL
+                        'message' => 'Save Discount Failed ' . (env('APP_DEBUG', false) ? $e->getMessage() : null),
                     ];
                 }
             } elseif ($mode == 'delete') {
                 // make object to find id
-                $pembayaranBiaya                = PembayaranBiaya::find($id);
+                $pembayaranBiaya = PembayaranBiaya::find($id);
 
-                $tagihanBiaya                   = TagihanBiaya::find($pembayaranBiaya->id_tagihan_biaya);
-                $tagihanBiaya->is_tagih         = 1;
-                $tagihanBiaya->updated_by       = $input->auth_data->pengguna->id_pengguna;
-                $tagihanBiaya->updated_at       = $now;
+                $tagihanBiaya = TagihanBiaya::find($pembayaranBiaya->id_tagihan_biaya);
+                $tagihanBiaya->besar_pembayaran = 0;
+                $tagihanBiaya->is_tagih = 1;
+                $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tagihanBiaya->updated_at = $now;
                 $tagihanBiaya->save();
 
                 $pembayaranBiaya->forceDelete();
 
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Pembayaran Siswa Successfully'
+                    'message' => 'Delete Pembayaran Siswa Successfully',
+                ];
+            } elseif ($mode == 'delete-by-tagihan') {
+                $tagihanBiaya = TagihanBiaya::find($id);
+
+                $tagihanBiaya->besar_pembayaran = 0;
+                $tagihanBiaya->is_tagih = 1;
+                $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tagihanBiaya->updated_at = $now;
+                $tagihanBiaya->save();
+
+                PembayaranBiaya::where('id_tagihan_biaya', $tagihanBiaya->id_tagihan_biaya)->forceDelete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Pembayaran Siswa Successfully',
                 ];
             }
         }
@@ -1118,9 +1131,9 @@ class PembayaranSiswaController extends BaseController
     {
         $input = (object) $request->input();
         // make object to find id
-        if ($tagihanBiaya                   = TagihanBiaya::find($id)) {
-            $tagihanBiaya->is_tagih         = 0;
-            $tagihanBiaya->deleted_by       = $input->auth_data->pengguna->id_pengguna;
+        if ($tagihanBiaya = TagihanBiaya::find($id)) {
+            $tagihanBiaya->is_tagih = 0;
+            $tagihanBiaya->deleted_by = $input->auth_data->pengguna->id_pengguna;
             $tagihanBiaya->save();
 
             $tagihanBiaya->delete();
@@ -1128,7 +1141,7 @@ class PembayaranSiswaController extends BaseController
 
         return [
             'status' => 203, // SUCCESS AND LOAD TABLE
-            'message' => 'Delete Tagihan Siswa Successfully'
+            'message' => 'Delete Tagihan Siswa Successfully',
         ];
     }
 
@@ -1143,14 +1156,14 @@ class PembayaranSiswaController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'data_pembayaran' => 'required',
-            'data_pembayaran.*.id'      => 'required',
-            'data_pembayaran.*.nilai'      => 'required',
+            'data_pembayaran.*.id' => 'required',
+            'data_pembayaran.*.nilai' => 'required',
         ]);
 
         if ($validator->fails()) {
             return [
                 'status' => 300, // FAILED
-                'message' => "Harap pilih tagihan yang ingin dibayar"
+                'message' => "Harap pilih tagihan yang ingin dibayar",
             ];
         } else {
             // mengambil waktu sekarang
@@ -1161,9 +1174,9 @@ class PembayaranSiswaController extends BaseController
             // looping save
             $id_siswa = '-';
             foreach ($dataPembayaran as $bayar) {
-                $tagihanBiaya   = TagihanBiaya::find($bayar['id']);
+                $tagihanBiaya = TagihanBiaya::find($bayar['id']);
 
-                $besar_biaya    = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
+                $besar_biaya = $tagihanBiaya->besar_biaya + $tagihanBiaya->denda_biaya;
 
                 $besar_pembayaran_lama = PembayaranBiaya::where('id_tagihan_biaya', '=', $bayar['id'])
                     ->sum('besar_pembayaran');
@@ -1183,21 +1196,23 @@ class PembayaranSiswaController extends BaseController
 
                 $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($input->auth_data);
 
-                $pembayaranBiaya                        = new PembayaranBiaya;
-                $pembayaranBiaya->id_pembayaran_biaya   = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $pembayaranBiaya->id_tagihan_biaya      = $bayar['id'];
-                $pembayaranBiaya->id_staff_bayar        = $id_staff_bayar;
-                $pembayaranBiaya->id_semester_bayar     = $semester_aktif->id_semester;
-                $pembayaranBiaya->besar_pembayaran      = $besar_pelunasan;
+                $pembayaranBiaya = new PembayaranBiaya;
+                $pembayaranBiaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $pembayaranBiaya->id_tagihan_biaya = $bayar['id'];
+                $pembayaranBiaya->id_staff_bayar = $id_staff_bayar;
+                $pembayaranBiaya->id_semester_bayar = $semester_aktif->id_semester;
+                $pembayaranBiaya->besar_pembayaran = $besar_pelunasan;
                 // convert format date
-                $pembayaranBiaya->tgl_pembayaran        = (!empty($input->tgl_pembayaran)) ? $input->tgl_pembayaran : $now;
-                $pembayaranBiaya->keterangan            = "Langsung Lunas (Pembayaran Massal)";
-                $pembayaranBiaya->created_by            = $input->auth_data->pengguna->id_pengguna;
+                $pembayaranBiaya->tgl_pembayaran = (!empty($input->tgl_pembayaran)) ? $input->tgl_pembayaran : $now;
+                $pembayaranBiaya->keterangan = "Langsung Lunas (Pembayaran Massal)";
+                $pembayaranBiaya->created_by = $input->auth_data->pengguna->id_pengguna;
                 $pembayaranBiaya->save();
 
-                $tagihanBiaya->is_tagih     = 0;
-                $tagihanBiaya->updated_by   = $input->auth_data->pengguna->id_pengguna;
-                $tagihanBiaya->updated_at   = $now;
+                $tagihanBiaya->besar_pembayaran = $tagihanBiaya->besar_pembayaran + $pembayaranBiaya->besar_pembayaran;
+                $tagihanBiaya->tgl_pelunasan = $pembayaranBiaya->tgl_pembayaran;
+                $tagihanBiaya->is_tagih = 0;
+                $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tagihanBiaya->updated_at = $now;
                 $tagihanBiaya->save();
 
                 $id_siswa = $tagihanBiaya->id_siswa;
@@ -1212,7 +1227,7 @@ class PembayaranSiswaController extends BaseController
                         'body' => $message,
                         'priority' => 'high',
                         'screen1' => '',
-                        'screen2' => ''
+                        'screen2' => '',
                     );
 
                     $notifikasi = array(
@@ -1220,7 +1235,7 @@ class PembayaranSiswaController extends BaseController
                         'id_pengguna' => $siswa->pengguna->id_pengguna,
                         'id_sekolah' => $siswa->pengguna->id_sekolah,
                         'isi_notifikasi' => $message,
-                        'created_by' => $input->auth_data->pengguna->id_pengguna
+                        'created_by' => $input->auth_data->pengguna->id_pengguna,
                     );
 
                     LibGlobal::sendNotification($token_siswa, $send_data, $notifikasi);
@@ -1237,7 +1252,7 @@ class PembayaranSiswaController extends BaseController
                             'body' => $message,
                             'priority' => 'high',
                             'screen1' => '',
-                            'screen2' => ''
+                            'screen2' => '',
                         );
 
                         $notifikasi = array(
@@ -1245,7 +1260,7 @@ class PembayaranSiswaController extends BaseController
                             'id_pengguna' => $wali_murid->pengguna->id_pengguna,
                             'id_sekolah' => $wali_murid->pengguna->id_sekolah,
                             'isi_notifikasi' => $message,
-                            'created_by' => $input->auth_data->pengguna->id_pengguna
+                            'created_by' => $input->auth_data->pengguna->id_pengguna,
                         );
 
                         LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
@@ -1255,7 +1270,7 @@ class PembayaranSiswaController extends BaseController
 
             return [
                 'status' => 203, // SUCCESS AND LOAD TABLE
-                'message' => 'Pembayaran Siswa Successfully'
+                'message' => 'Pembayaran Siswa Successfully',
             ];
         }
     }

@@ -17,6 +17,8 @@ class Siswa extends Model
 
     protected $primaryKey = 'id_siswa';
 
+    protected $keyType = 'string';
+
     public $timestamps = true;
 
     public $incrementing = false;

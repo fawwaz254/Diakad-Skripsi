@@ -22,6 +22,8 @@ class Pengguna extends Authenticatable
 
     protected $primaryKey = 'id_pengguna';
 
+    protected $keyType = 'string';
+
     public $timestamps = true;
 
     public $incrementing = false;
@@ -41,11 +43,10 @@ class Pengguna extends Authenticatable
         'api_key',
         'created_by',
         'updated_by',
-        'deleted_by'
+        'deleted_by',
     ];
 
     protected $guarded = [];
-
 
     // protected static function boot()
     // {
@@ -62,9 +63,6 @@ class Pengguna extends Authenticatable
     {
         return $this->hasMany(CategoriFileGuru::class, 'category_file_mgmp_id', 'category_file_mgmp_id');
     }
-
-
-
 
     public function getIsPegawaiAttribute()
     {
@@ -116,12 +114,12 @@ class Pengguna extends Authenticatable
 
     public function guru()
     {
-        return $this->belongsTo('App\Models\Guru', 'id_pengguna','id_pengguna');
+        return $this->belongsTo('App\Models\Guru', 'id_pengguna', 'id_pengguna');
     }
 
     public function staff()
     {
-        return $this->belongsTo('App\Models\Staff', 'id_pengguna','id_pengguna');
+        return $this->belongsTo('App\Models\Staff', 'id_pengguna', 'id_pengguna');
     }
 
     public function status_pengguna()
@@ -131,9 +129,8 @@ class Pengguna extends Authenticatable
 
     public function siswa()
     {
-        return $this->belongsTo('App\Models\Siswa', 'id_pengguna','id_pengguna');
+        return $this->belongsTo('App\Models\Siswa', 'id_pengguna', 'id_pengguna');
     }
-
 
     public function pengisian_kegiatan_harian()
     {
@@ -144,9 +141,6 @@ class Pengguna extends Authenticatable
     {
         return $this->hasMany(FilePengguna::class, 'pengguna_id', 'id_pengguna');
     }
-
-
-
 
     public function status_join_to_text()
     {
