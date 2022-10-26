@@ -33,14 +33,14 @@
 
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        {{-- @if(Request::segment(1) == 'humas' || Request::segment(1) == 'guru') --}}
+        @if(Request::segment(1) == 'humas')
             <button type="button" onclick="viewGuru()" class="btn btn-default">
                 Data Histori Absensi Guru dan Pegawai
             </button>
             <button type="button" class="btn btn-primary">
                 Data Histori Absensi Siswa
             </button>
-        {{-- @endif --}}
+        @endif
 
             <div class="card" style="margin-top: 10px">
                 <div class="header">
