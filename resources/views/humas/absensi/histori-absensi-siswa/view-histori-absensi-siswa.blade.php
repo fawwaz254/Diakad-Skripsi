@@ -33,7 +33,7 @@
 
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        @if(Request::segment(1) == 'humas')
+        @if(Request::segment(1) == 'humas' || Request::segment(1) == 'guru')
             <button type="button" onclick="viewGuru()" class="btn btn-default">
                 Data Histori Absensi Guru dan Pegawai
             </button>
