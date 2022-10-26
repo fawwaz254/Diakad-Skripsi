@@ -221,6 +221,7 @@ class UploadTagihanSiswa implements ToCollection, WithHeadingRow
         $pembayaran_biaya->save();
 
         $tagihan_biaya->besar_pembayaran = $tagihan_biaya->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
+        $tagihan_biaya->tgl_pelunasan = $pembayaran_biaya->tgl_pembayaran;
         $tagihan_biaya->is_tagih = 0;
         $tagihan_biaya->save();
     }

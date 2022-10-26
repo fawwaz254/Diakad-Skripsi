@@ -341,6 +341,7 @@ class PembayaranOnlineController extends BaseController
                     foreach ($data_transaksi_detail as $transaksi_detail) {
                         $tagihan_biaya = TagihanBiaya::find($transaksi_detail->id_tagihan_biaya);
                         $tagihan_biaya->is_tagih = 0;
+                        $tagihan_biaya->tgl_pelunasan = $transaksi->tgl_pembayaran;
                         $tagihan_biaya->besar_pembayaran = $tagihan_biaya->besar_pembayaran + $transaksi->besar_pembayaran;
                         $tagihan_biaya->save();
 

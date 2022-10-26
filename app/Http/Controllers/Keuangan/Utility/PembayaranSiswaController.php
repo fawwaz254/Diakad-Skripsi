@@ -735,7 +735,7 @@ class PembayaranSiswaController extends BaseController
         'nis_nama_siswa_asli'   => 'required'*/
         ]);
 
-        if ($validator->fails() && $mode != 'delete' && $mode != 'lunas' && $mode != 'diskon') {
+        if ($validator->fails() && $mode != 'delete' && $mode != 'delete-by-tagihan' && $mode != 'lunas' && $mode != 'diskon') {
             return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first(),
@@ -805,6 +805,7 @@ class PembayaranSiswaController extends BaseController
 
                 // update is_tagih di tabel tagihan_biaya
                 if ($besar_pembayaran == $besar_biaya) {
+                    $tagihanBiaya->tgl_pelunasan = $pembayaranBiaya->tgl_pembayaran;
                     $tagihanBiaya->is_tagih = 0;
                     $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
                     $tagihanBiaya->updated_at = $now;
@@ -910,6 +911,7 @@ class PembayaranSiswaController extends BaseController
                 $pembayaranBiaya->save();
 
                 $tagihanBiaya->besar_pembayaran = $tagihanBiaya->besar_pembayaran + $pembayaranBiaya->besar_pembayaran;
+                $tagihanBiaya->tgl_pelunasan = $pembayaranBiaya->tgl_pembayaran;
                 $tagihanBiaya->is_tagih = 0;
                 $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $tagihanBiaya->updated_at = $now;
@@ -1106,6 +1108,21 @@ class PembayaranSiswaController extends BaseController
                     'status' => 203, // SUCCESS AND LOAD TABLE
                     'message' => 'Delete Pembayaran Siswa Successfully',
                 ];
+            } elseif ($mode == 'delete-by-tagihan') {
+                $tagihanBiaya = TagihanBiaya::find($id);
+
+                $tagihanBiaya->besar_pembayaran = 0;
+                $tagihanBiaya->is_tagih = 1;
+                $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $tagihanBiaya->updated_at = $now;
+                $tagihanBiaya->save();
+
+                PembayaranBiaya::where('id_tagihan_biaya', $tagihanBiaya->id_tagihan_biaya)->forceDelete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Pembayaran Siswa Successfully',
+                ];
             }
         }
     }
@@ -1192,6 +1209,7 @@ class PembayaranSiswaController extends BaseController
                 $pembayaranBiaya->save();
 
                 $tagihanBiaya->besar_pembayaran = $tagihanBiaya->besar_pembayaran + $pembayaranBiaya->besar_pembayaran;
+                $tagihanBiaya->tgl_pelunasan = $pembayaranBiaya->tgl_pembayaran;
                 $tagihanBiaya->is_tagih = 0;
                 $tagihanBiaya->updated_by = $input->auth_data->pengguna->id_pengguna;
                 $tagihanBiaya->updated_at = $now;
