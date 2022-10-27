@@ -81,7 +81,9 @@ class CetakRaporController extends Controller
         // $rapor_sisipan = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->get();
 
         $list_komponen = KomponenNilaiRaporSisipan::where('status',1)->where('type','!=','uas')->get();
-        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
+        $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai', 'rapor_sisipan.semester', 'rapor_sisipan.mata_pelajaran')
             ->whereHas('siswa', function ($query) use ($id_kelas) {
