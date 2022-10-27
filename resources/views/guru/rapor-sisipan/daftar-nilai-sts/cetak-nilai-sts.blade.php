@@ -30,10 +30,11 @@
             border: 5px double;
         }
 
-        td{
+        td {
             /* font-size: 10px; */
             padding: 2px;
         }
+
         .page {
             width: 1200px;
         }
@@ -136,42 +137,52 @@
                         <td style="text-align: center;">{{ $siswa->nis_siswa }}</td>
                         <td>{{ strtoupper($siswa->pengguna->nm_pengguna) }}</td>
                         @foreach ($list_data as $nilai)
-                        @if (in_array($nilai->urutan, [1, 2]))
-                            <td style="text-align: center;">
-                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-                            </td>
-                        @endif
-                    @endforeach
-                    <td></td>
-                    <td></td>
-                    @foreach ($list_data as $nilai)
-                        @if (in_array($nilai->urutan, [5, 6]))
-                            <td style="text-align: center;">
-                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-                            </td>
-                        @endif
-                    @endforeach
-                    <td></td>
-                    <td></td>
-                    <td style="text-align: center;">
-
-                        {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
-                    </td>
-                    @foreach ($list_data as $nilai)
-                        @if ($nilai->urutan == 9)
-                            <td style="text-align: center;">
-                                {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
-                                {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
-                            </td>
-                        @endif
-                    @endforeach
-                       
+                            @if (in_array($nilai->urutan, [1, 2]))
+                                <td style="text-align: center;">
+                                    {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
+                                        {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                                    {{-- @endif --}}
+                                </td>
+                            @endif
+                        @endforeach
+                        <td></td>
+                        <td></td>
+                        @foreach ($list_data as $nilai)
+                            @if (in_array($nilai->urutan, [5, 6]))
+                                <td style="text-align: center;">
+                                    {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
+                                        {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] ?? '' }}
+                                    {{-- @endif --}}
+                                </td>
+                            @endif
+                        @endforeach
+                        <td></td>
+                        <td></td>
                         <td style="text-align: center;">
+                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) &&
+                                isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
+                                {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
+                            {{-- @endif --}}
+                        </td>
+                        @foreach ($list_data as $nilai)
+                            @if ($nilai->urutan == 9)
+                                <td style="text-align: center;">
+                                    {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
+                                    {{-- @if(isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                                    {{-- @endif --}}
+                                </td>
+                            @endif
+                        @endforeach
 
-                            {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}
-
+                        <td style="text-align: center;">
+                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) &&
+                                isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) &&
+                                isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
+                                {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}
+                            {{-- @endif --}}
                         </td>
                     </tr>
                 @endforeach
@@ -194,18 +205,19 @@
         <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto; border-style : hidden">
             <tr>
                 <td style=" border-style : hidden; width:65%; vertical-align: text-top; padding:0">
-                   <p style="margin-left: 10%;">
+                    <p style="margin-left: 10%;">
                         SMT = Sumatif
-                    <br>
+                        <br>
                         STS = Sumatif Tengah Semester
                     </p>
                 </td>
 
                 <td style="width:25%">Sidoarjo, {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
-                   <br>
-                    Guru Bidang Study 
+                    <br>
+                    Guru Bidang Study
                     <br><br><br><br><br><br><br>
-                    {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }}
+                    {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }}
+                    {{ $rapor_sisipan->pengguna->gelar_belakang }}
                 </td>
 
             </tr>

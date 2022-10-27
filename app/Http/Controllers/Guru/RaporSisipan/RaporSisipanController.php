@@ -120,7 +120,7 @@ class RaporSisipanController extends Controller
                     ->get();
 
                     // ->where('pengguna.status_pengguna.aktif_status_pengguna','=',1)->get();
-                    dd($siswa);
+                    // dd($siswa);
                     $komponen_nilai = KomponenNilaiRaporSisipan::where('status',1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_nilai as $komponen) {
@@ -234,7 +234,9 @@ class RaporSisipanController extends Controller
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
 
         $list_data = KomponenNilaiRaporSisipan::where('status',1)->get();
-        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->orderBy('nis_siswa')->get();
 
         // $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
         //     ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
@@ -340,7 +342,9 @@ class RaporSisipanController extends Controller
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->first();
 
         $list_data = KomponenNilaiRaporSisipan::where('status',1)->where('type','!=','uas')->get();
-        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('nm_status_pengguna', '=', 'AKTIF');
+        })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
             ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
