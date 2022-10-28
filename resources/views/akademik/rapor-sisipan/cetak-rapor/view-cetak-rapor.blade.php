@@ -1,9 +1,9 @@
 <div class="container-fluid">
-    {{-- <div class="block-header">
+    <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
-                    class="material-icons">add</i><span>Tambah Nilai</span></a></h2>
-    </div> --}}
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/addSetting') }}"><i
+                    class="material-icons">add</i><span>Setting Urutan</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -21,7 +21,7 @@
                                     <th>Kelas</th>
                                     <th>Jurusan</th>
                                     <th>Wali Kelas</th>
-                                    <th>Kurikulum</th>
+                                    <th>Jumlah Mapel yang sudah terisi</th>
                                     {{-- <th>Semester</th> --}}
                                     <th>Action</th>
                                 </tr>
@@ -71,8 +71,8 @@
                 name: 'wali_kelas'
             },
             {
-                data: 'kurikulum',
-                name: 'kurikulum',
+                data: 'rapor_sisipan',
+                name: 'rapor_sisipan',
                 className: 'align-center'
             },
             // {
