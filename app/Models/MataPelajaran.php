@@ -54,4 +54,9 @@ class MataPelajaran extends Model
     {
         return $this->belongsTo('App\Models\Jurusan', 'id_jurusan');
     }
+
+    public function urutan_rapor_sisipan()
+    {
+        return $this->belongsTo('App\Models\UrutanRaporSisipan', 'id_mata_pelajaran','id_mata_pelajaran');
+    }
 }

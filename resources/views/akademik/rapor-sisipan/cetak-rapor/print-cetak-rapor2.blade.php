@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak Nilai Rapor Tengaah Semester</title>
+    <title>Cetak Nilai Rapor Tengah Semester</title>
 
 
     <style>
@@ -211,7 +211,7 @@
                         $no = 1;
                     @endphp
 
-                    @foreach ($k->mapel as $m)
+                    @foreach ($k as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A')
                             <tr>
                                 <td style="text-align: center;">{{ $no++ }}</td>
@@ -265,7 +265,7 @@
                     @php
                         $no = 1;
                     @endphp
-                    @foreach ($k->mapel as $m)
+                    @foreach ($k as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'B')
                             <tr>
                                 <td style="text-align: center;">{{ $no++ }}</td>
@@ -313,7 +313,7 @@
                     @php
                         $no = 1;
                     @endphp
-                    @foreach ($k->mapel as $m)
+                    @foreach ($k as $m)
                         @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'C')
                             <tr>
                                 <td style="text-align: center;">{{ $no++ }}</td>

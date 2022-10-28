@@ -369,6 +369,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables',[CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+                Route::get('viewSetting',[CetakRaporController::class, 'viewSetting']);
+                Route::get('datatablesViewSetting',[CetakRaporController::class, 'datatablesViewSetting']);
+                Route::get('addSetting/{mata_pelajaran}',[CetakRaporController::class, 'addSetting']);
+                Route::post('postSetting/{mata_pelajaran}',[CetakRaporController::class, 'postSetting']);
+
             });
         });
 
