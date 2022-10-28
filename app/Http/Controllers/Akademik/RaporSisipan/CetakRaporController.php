@@ -16,6 +16,7 @@ use App\Models\KomponenNilaiRaporSisipan;
 use App\Models\NilaiRaporSisipan;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\SumberDaya\LibGuru;
 use App\Models\Kurikulum;
 use App\Models\Siswa;
 use App\Models\WaliKelas;
@@ -33,6 +34,18 @@ class CetakRaporController extends Controller
         $auth_data = $input->auth_data;
 
         return view('akademik/rapor-sisipan/cetak-rapor/view-cetak-rapor', compact('auth_data'));
+    }
+
+    public function viewCetakRaporWaliKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
+        $wali_kelas = WaliKelas::where('is_aktif', 1)->where('id_guru', $guru->id_guru)->first();
+        $data_wali_kelas = LibGuru::fetchDataWaliKelas($auth_data, $wali_kelas->id_kelas)->where('is_aktif', 1)->first();
+
+        return view('guru/wali-kelas/cetak-rapor/view-cetak-rapor', compact('wali_kelas', 'data_wali_kelas'));
     }
 
     public function datatablesCetakRapor(Request $request)

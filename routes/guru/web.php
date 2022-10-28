@@ -57,6 +57,7 @@ use App\Http\Controllers\Guru\PembinaEkskul\KomponenNilaiEkskulController;
 use App\Http\Controllers\Guru\WaliKelas\RekapAbsensiKelasDaringController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\AktivitasSemester\SetJadwalKelasController;
+use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Guru\RaporSisipan\InputNilaiRaporSisipanAkhirController;
 use App\Http\Controllers\Guru\LaporanKerjaHarianMGMP\LaporanKerjaHarianController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRekapKesehatanController;
@@ -571,6 +572,11 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('rekap-nomor-hp', [RekapNomorHpController::class, 'viewRekapNomorHp']);
             Route::get('rekap-nomor-hp/datatables', [RekapNomorHpController::class, 'datatablesRekapNomorHp']);
+
+            Route::prefix('cetak-rapor-siswa')->group(function () {
+                Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
+                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+            });
         });
 
         // Modul Rapor Sisipan
