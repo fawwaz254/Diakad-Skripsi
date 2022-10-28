@@ -72,12 +72,6 @@ class LibCetakKeuangan
             $where_personal = "";
         }
 
-        // if ($print_setting2 == 'self') {
-        //     $where_personal = " AND kelas.created_by = '" . $auth_data->pengguna->id_pengguna . "'";
-        // } else {
-        //     $where_personal = "";
-        // }
-
         $list_data_jml_siswa = DB::select(
             'SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
                             FROM siswa
@@ -97,6 +91,26 @@ class LibCetakKeuangan
                             ORDER BY kelas.tingkat',
             [$id_semester]
         );
+
+        // REVISI JML SISWA
+        // $list_data_jml_siswa = DB::select(
+        //     'SELECT kelas.tingkat, COUNT(tagihan_biaya.id_tagihan_biaya) AS jml_siswa
+        //                     FROM tagihan_biaya
+        //                     JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
+        //                         AND kelas.deleted_at IS NULL
+        //                     JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
+        //                         AND detail_biaya.id_jenis_detail_biaya = 4
+        //                         AND detail_biaya.id_bulan = ?
+        //                         AND detail_biaya.deleted_at IS NULL
+        //                     JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
+        //                         AND biaya_sekolah.id_semester = ?
+        //                         AND biaya_sekolah.deleted_at IS NULL
+        //                     WHERE tagihan_biaya.deleted_at IS NULL
+        //                     ' . $where_personal . '
+        //                     GROUP BY kelas.tingkat
+        //                     ORDER BY kelas.tingkat',
+        //     [$id_bulan, $id_semester]
+        // );
 
         $list_data_tagihan = DB::select(
             'SELECT kelas.tingkat, SUM(tagihan_biaya.besar_biaya) AS jml_tagihan_biaya
@@ -1360,13 +1374,13 @@ class LibCetakKeuangan
         }
 
         $pembayaran = PembayaranBiaya::with('tagihan_biaya.siswa.pengguna', 'tagihan_biaya.potongan', 'tagihan_biaya.siswa.kelas', 'tagihan_biaya.detail_biaya.biaya', 'tagihan_biaya.detail_biaya.bulan', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.detail_biaya.kelompok_biaya_internal.detail_biaya_internal')
-        ->whereHas('tagihan_biaya.detail_biaya', function ($query) use ($print_setting2) {
-            if ($print_setting2 == 'spp') {
-                return $query->where('id_jenis_detail_biaya', '=', 4);
-            } elseif ($print_setting2 == 'lain') {
-                return $query->where('id_jenis_detail_biaya', '!=', 4);
-            }
-        });
+            ->whereHas('tagihan_biaya.detail_biaya', function ($query) use ($print_setting2) {
+                if ($print_setting2 == 'spp') {
+                    return $query->where('id_jenis_detail_biaya', '=', 4);
+                } elseif ($print_setting2 == 'lain') {
+                    return $query->where('id_jenis_detail_biaya', '!=', 4);
+                }
+            });
 
         if (!empty($start_date) && !empty($end_date)) {
             $pembayaran = $pembayaran->whereBetween('tgl_pembayaran', [$start_date . ' 00:00:00', $end_date . ' 23:59:59']);
