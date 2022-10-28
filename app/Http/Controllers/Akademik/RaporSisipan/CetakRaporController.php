@@ -19,6 +19,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\Kurikulum;
 use App\Models\Siswa;
+use App\Models\UrutanRaporSisipan;
 use App\Models\WaliKelas;
 use Auth;
 use DB;
@@ -79,21 +80,81 @@ class CetakRaporController extends Controller
     }
 
 
-    public function addSetting(Request $request){
+    public function viewSetting(Request $request){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $rapor_sisipan = RaporSisipan::get()->unique('id_mata_pelajaran');
+        // $rapor_sisipan = RaporSisipan::get()->unique('id_mata_pelajaran');
         // dd($rapor_sisipan);
-        $mapel = MataPelajaran::all();
+   
         // foreach($rapor_sisipan as $r){
         //     $m =  $mapel->firstWhere('id_mata_pelajaran', $r->id_mata_pelajaran);
         // dd($m->nm_mata_pelajaran);
         // }
-        dd($rapor_sisipan);
+        // dd($mapel);
 
-        return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'rapor_sisipan'));
+        return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data'));
     }
+
+    public function addSetting(Request $request, $mata_pelajaran){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($mata_pelajaran);
+        $mapel = MataPelajaran::where('id_mata_pelajaran', $mata_pelajaran)->with('urutan_rapor_sisipan')->first();
+
+        return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel'));
+
+    }
+
+    public function postSetting(Request $request, $mata_pelajaran){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($mata_pelajaran);
+
+
+        if($urutan_rapor_sisipan = UrutanRaporSisipan::find($mata_pelajaran)){
+            $urutan_rapor_sisipan->urutan               = $input->urutan;
+            $urutan_rapor_sisipan->updated_by          = $input->auth_data->pengguna->id_pengguna;
+            $urutan_rapor_sisipan->save();
+        }else{
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $urutan_rapor_sisipan               = new UrutanRaporSisipan;
+            $urutan_rapor_sisipan->id_urutan_rapor_sisipan    = $id;
+            $urutan_rapor_sisipan->urutan               = $input->urutan;
+            $urutan_rapor_sisipan->id_mata_pelajaran   = $mata_pelajaran;
+            $urutan_rapor_sisipan->created_by          = $input->auth_data->pengguna->id_pengguna;
+            $urutan_rapor_sisipan->save();
+        }
+
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'rapor-sisipan/cetak-rapor/viewSetting',
+            'message' => 'Save Successfully'
+        ];
+    }
+
+    public function datatablesViewSetting(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $mapel = MataPelajaran::with('urutan_rapor_sisipan')->get()->sortBy('urutan_rapor_sisipan.urutan');
+        return Datatables::of($mapel)
+            ->addColumn('urutan', function ($item) {
+                return $item->urutan_rapor_sisipan->urutan ?? 'Urutan belum di Set';
+            })
+            ->addColumn('action', function ($item) {
+                // $k = $kurikulum->firstWhere('id_jurusan', $item->id_jurusan );
+                $data = array(
+                    'id_mata_pelajaran'     => $item->id_mata_pelajaran
+                );
+                return $data;
+            })
+            ->make(true);
+
+    }
+
+
 
 
     public function printCetakRapor(Request $request, $id_kelas)
@@ -106,7 +167,9 @@ class CetakRaporController extends Controller
         // $list_siswa = Siswa::where('id_kelas', $id_kelas)->get();
         // $kurikulum = Kurikulum::where('is_aktif',1)->orderBy('tahun_kurikulum', 'DESC')->with('mapel.mata_pelajaran.jenis_mata_pelajaran')->get();
         // $k = $kurikulum->firstWhere('id_jurusan', $kelas->jurusan->id_jurusan);
-        $k = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran')->get();
+        $k = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan')->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
+
+        // dd($k);
 
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
 
