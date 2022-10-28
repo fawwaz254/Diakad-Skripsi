@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting') }}"><i
-                    class="material-icons">add</i><span>Setting Urutan</span></a></h2>
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/addSub') }}"><i
+                    class="material-icons">add</i><span>Tambah Sub</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -18,10 +18,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kelas</th>
-                                    <th>Jurusan</th>
-                                    <th>Wali Kelas</th>
-                                    <th>Jumlah Mapel yang sudah terisi</th>
+                                    <th>Mata Pelajaran</th>
+                                    <th>Kode Mata Pelajaran</th>
+                                    <th>Urutan</th>
+                                    {{-- <th>Jumlah Mapel yang sudah terisi</th> --}}
                                     {{-- <th>Semester</th> --}}
                                     <th>Action</th>
                                 </tr>
@@ -36,12 +36,12 @@
 
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatablesViewSetting';
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
-    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print';
+    var add = base_url + '/' + role_url + '#' + modul_url + '/' + 'cetak-rapor/addSetting';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -58,22 +58,18 @@
                 className: 'align-center'
             },
             {
-                data: 'nm_kelas',
-                name: 'nm_kelas',
+                data: 'nm_mata_pelajaran',
+                name: 'nm_mata_pelajaran',
                 className: 'align-center'
             },
             {
-                data: 'jurusan.nm_jurusan',
-                name: 'jurusan.nm_jurusan',
-            },
-            {
-                data: 'wali_kelas',
-                name: 'wali_kelas'
-            },
-            {
-                data: 'rapor_sisipan',
-                name: 'rapor_sisipan',
+                data: 'kd_mata_pelajaran',
+                name: 'kd_mata_pelajaran',
                 className: 'align-center'
+            },
+            {
+                data: 'urutan',
+                name: 'urutan'
             },
             // {
             //     data: 'jumlah',
@@ -98,8 +94,8 @@
                 className: 'align-center',
                 render: function(data) {
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    pdf_url + '/' + data.id_kelas  + '"  target="_blank">' +
-                        '    <i class="material-icons">picture_as_pdf</i>' +
+                    add + '/' + data.id_mata_pelajaran  + '" >' +
+                        '    <i class="material-icons">edit</i>' +
                         '</a> ';
                 }
             }
