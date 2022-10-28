@@ -20,4 +20,9 @@ class UrutanRaporSisipan extends Model
     public $incrementing = false;
     protected $guarded = [];
 
+    public function sub_rapor_sisipan_mp()
+    {
+        return $this->belongsTo(SubRaporSisipanMP::class, 'id_mata_pelajaran', 'id_mata_pelajaran');
+    }
+
 }
