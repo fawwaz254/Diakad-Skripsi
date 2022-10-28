@@ -138,9 +138,9 @@
                                 <th>Check In</th>
                                 {{-- <th>Check Out</th> --}}
                                 <th>Status</th>
-                                @if(Request::segment(1) == 'humas')
+                                {{-- @if(Request::segment(1) == 'humas') --}}
                                 <th style="text-align: center;">Action</th>
-                                @endif
+                                {{-- @endif --}}
                             </tr>
                         </thead>
                         <tbody>
@@ -163,7 +163,7 @@
                                         @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
                                         {{ $r['status'] }}</td>
 
-                                    @if(Request::segment(1) == 'humas')
+                                    {{-- @if(Request::segment(1) == 'humas') --}}
                                     <td style="text-align: center;display:flex;justify-content:center">
                                         @if ($r['id_presensi_pengguna'] == '')
                                             <button type="button" class="btn bg-teal waves-effect"
@@ -181,7 +181,7 @@
                                             </button>
                                         @endif
                                     </td>
-                                    @endif
+                                    {{-- @endif --}}
                                     </tr>
                                     @endif
                                 @else
