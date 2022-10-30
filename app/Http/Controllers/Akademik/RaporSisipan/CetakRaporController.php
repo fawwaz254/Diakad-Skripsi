@@ -186,7 +186,7 @@ class CetakRaporController extends Controller
         })
         ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
         ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
-        
+
         $raporSisipanC = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp','mata_pelajaran.jenis_mata_pelajaran' )
         ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
             $query->where('kode_jenis_mata_pelajaran', '=', 'C');
@@ -226,8 +226,8 @@ class CetakRaporController extends Controller
                     foreach ($nilaiRapor as $a) {
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
 
-                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan',1);
-                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan',2);
+                            $nilai_sumatif1 = $list_komponen->firstWhere('urutan',5);
+                            $nilai_sumatif2 = $list_komponen->firstWhere('urutan',6);
                             $sts = $list_komponen->where('type','uts')->where('urutan',9)->first();
                             if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
