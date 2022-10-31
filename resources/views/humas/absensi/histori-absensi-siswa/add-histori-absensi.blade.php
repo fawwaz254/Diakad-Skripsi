@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="/humas#absensi/histori-absensi-siswa/detail/{{ $kelas }}/{{$date}}"><i
+                href="{{url(Request::segment(1). '#' . Request::segment(2) . '/histori-absensi-siswa/detail/' . $kelas . '/' . $date . '/0')}}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
