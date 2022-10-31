@@ -52,8 +52,11 @@
                                 value="{{ $now }}" name="date" aria-required="true" aria-invalid="true">
                         </div>
 
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                             <div>
+                                <h2 class="card-inside-title" style="visibility: hidden;">
+                                    1
+                                </h2>
                                 <button class="btn btn-block bg-red waves-effect" type="submit"
                                     onclick="filterAction()"><i
                                         class="material-icons">save</i><span>Tampilkan</span></button>
@@ -74,7 +77,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Histori Absensi </h2>
+                    <h2>List Siswa Terlambat ({{ $now  }})</h2>
                 </div>
 
                 <div class="body">
@@ -86,7 +89,8 @@
                                     <th style="text-align: center;">Nama</th>
                                     <th>Kelas</th>
                                     <th>Check In</th>
-                                    <th style="text-align: center;">Jarak Telat</th>
+                                    <th>Jarak Telat</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,7 +102,7 @@
                                         <tr>
                                     @endif
 
-                                    <th style="text-align: center;">#</th>
+                                    <th style="text-align: center;">{{  $loop->iteration }}</th>
                                     <th>{{ $r->pengguna->nm_pengguna }}</th>
                                     <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
                                     <th>{{ $r->check_in }}</th>
@@ -124,6 +128,7 @@
     </div>
 </div>
 <script type="text/javascript">
+//  alert('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '');
     $("input").on("change", function() {
         this.setAttribute(
             "data-date",
@@ -135,7 +140,7 @@
 
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
-            'select[name=unit_kerja]').val() + '/' + $('select[name=status]').val());
+       
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val());
     }
 </script>
