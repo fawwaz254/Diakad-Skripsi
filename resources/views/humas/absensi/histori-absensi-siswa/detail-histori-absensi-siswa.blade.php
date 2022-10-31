@@ -197,24 +197,25 @@
 
 @include('scriptjs')
 <script type="text/javascript">
+    var role = window.location.pathname;
+
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
     }
 
     function addAbsensi(id_pengguna) {
-        window.location = '/humas#absensi/histori-absensi-siswa/' + id_pengguna + '/' + $('input[name=id_kelas]')
-        .val() + '/' + $('input[name=date]').val() + '/add'
+        window.location = `${role}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
     }
 
     function editAbsensi(currUser) {
-        window.location = '/humas#absensi/histori-absensi-siswa/' + currUser + '/' + $('input[name=id_kelas]').val() +
-            '/' + $('input[name=date]').val() + '/edit'
+        window.location = `${role}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
     }
 
 
     $(".delete-record").click(function() {
         var token = $("meta[name='csrf-token']").attr("content");
         var id = $(this).data("id");
+
         swal({
                 title: "Are you sure?",
                 showCancelButton: true
@@ -224,7 +225,7 @@
                     $('.delete-record').attr("disabled", true);
                     //swall
                     $.ajax({
-                        url: ` /humas/absensi/histori-absensi-siswa/${id}/delete`,
+                        url: `${role}/absensi/histori-absensi-siswa/${id}/delete`,
                         type: "post",
 
                         data: {
