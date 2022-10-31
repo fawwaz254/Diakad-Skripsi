@@ -86,6 +86,8 @@
                             <thead style="background:#9C27B0;color:white">
                                 <tr>
                                     <th style="text-align: center;">#</th>
+                                    <th> <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
+                                        <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label></th>
                                     <th style="text-align: center;">Nama</th>
                                     <th>Kelas</th>
                                     <th>Check In</th>
@@ -103,6 +105,8 @@
                                     @endif
 
                                     <th style="text-align: center;">{{  $loop->iteration }}</th>
+                                    <th><input id="checkbox-' + data.id + '" type="checkbox" name="id_tagihan_biaya[]" class="filled-in" value="' + data.id + '">
+                                        <label for="checkbox-' + data.id + '"></label></th>
                                     <th>{{ $r->pengguna->nm_pengguna }}</th>
                                     <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
                                     <th>{{ $r->check_in }}</th>
@@ -143,4 +147,14 @@
        
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val());
     }
+
+    $(document).ready(function() {        
+        /* Select All Checkbox */
+        $('#checkbox_select_all_primary_table').change(function() {
+            var select_all_checked = this.checked;
+            var rows = primary_table.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+    });
 </script>
