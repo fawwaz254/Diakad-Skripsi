@@ -28,6 +28,9 @@ class PresensiPengguna extends Model
     //     return $this->belongsTo(ShiftMaster::class, 'code', 'id_shift_master' );
     // }
 
+    public function pengguna(){
+        return  $this->belongsTo(Pengguna::class,'id_pengguna');
+    }
 
 
 

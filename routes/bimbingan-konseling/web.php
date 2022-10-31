@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BK\Absensi\HistoriSiswaTerlambatController;
 use App\Http\Controllers\BK\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\BK\DataPelanggaran\KategoriPelanggaranController;
 use App\Http\Controllers\BK\PenangananSiswa\TindakanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
+use App\Providers\RouteServiceProvider;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('bimbingan-konseling')->group(function () {
@@ -64,6 +66,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'editHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'updateHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
+            });
+
+            Route::prefix('catat-siswa-terlambat')->group(function (){
+                Route::get('/', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
             });
         });
 
