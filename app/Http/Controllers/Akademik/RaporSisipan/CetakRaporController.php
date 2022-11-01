@@ -232,8 +232,8 @@ class CetakRaporController extends Controller
                 $nilai = $list_nilai->toArray();
                 foreach ($nilai as $nilaiRapor) {
                     foreach ($nilaiRapor as $a) {
-                        $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
-
+                        if(isset($nilaiRapor['id_komponen_nilai']) && isset($nilaiRapor['id_siswa']) && isset($nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'])){
+                            $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran']] = $nilaiRapor['nilai'];
                             $nilai_sumatif1 = $list_komponen->firstWhere('urutan',5);
                             $nilai_sumatif2 = $list_komponen->firstWhere('urutan',6);
                             $sts = $list_komponen->where('type','uts')->where('urutan',9)->first();
@@ -246,6 +246,7 @@ class CetakRaporController extends Controller
                             if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
                                 $nilai_komponen[$nilaiRapor['id_siswa'] . $nilaiRapor['rapor_sisipan']['mata_pelajaran']['id_mata_pelajaran'] . 'uts'] =  $nilaiRapor['nilai'];
                             }
+                        }
                     }
                 }
             }
