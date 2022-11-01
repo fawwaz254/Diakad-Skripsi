@@ -45,7 +45,7 @@ class AbsensiHarianSiswaController extends BaseController
         if (!empty($id_semester)) {
             $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
         }
-        
+
         $selected_kelas = null;
         $data_kelas = LibKelas::fetchDataKelas($auth_data);
         if (!empty($id_kelas)) {
@@ -66,7 +66,7 @@ class AbsensiHarianSiswaController extends BaseController
         $auth_data->menu_url = $this->menu_url;
 
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
-        
+
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
 
         $presensi_harian = null;
@@ -89,13 +89,13 @@ class AbsensiHarianSiswaController extends BaseController
 
         
         $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
-        
+
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
-        
+
         $data_siswa = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'all');
 
         $bulan = Bulan::find($id_bulan);
-        
+
         $start_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
 
         $end_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta')->endOfMonth();
@@ -120,7 +120,7 @@ class AbsensiHarianSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $bulan = Bulan::get();
-                
+
         $list_data = PresensiHarian::selectRaw('COUNT(*) as jml_record, YEAR(tgl_entry) tahun, MONTH(tgl_entry) bulan')
                                     ->where('id_semester', $id_semester)
                                     ->where('id_kelas', $id_kelas)
@@ -145,8 +145,8 @@ class AbsensiHarianSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'all');
-        
+        $list_data = LibSiswa::fetchDataSiswa($auth_data, $id_kelas, null, 'only-aktif');
+
         if (!empty($id)) {
             $presensi_harian = PresensiHarian::find($id);
             $presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->get();
@@ -154,6 +154,7 @@ class AbsensiHarianSiswaController extends BaseController
             $presensi_harian = null;
             $presensi_harian_siswa = null;
         }
+
         return Datatables::of($list_data)
             ->editColumn('nis_siswa', function ($item) {
                 $data = array(
@@ -208,7 +209,7 @@ class AbsensiHarianSiswaController extends BaseController
         } else {
             // mengambil waktu sekarang
             $now = Carbon::now(env('APP_TIMEZONE', ''));
-            
+
             // ACTION ADD
             if ($mode == 'manage') {
                 DB::beginTransaction();
@@ -230,7 +231,7 @@ class AbsensiHarianSiswaController extends BaseController
 
                     $total_siswa = 0;
                     $total_siswa_masuk = 0;
-                    
+
                     // presensi_harian_siswa
                     foreach (array_combine($input->id_siswa, $input->alasan) as $id_siswa => $alasan) {
                         if (! empty($alasan)) {
@@ -238,7 +239,7 @@ class AbsensiHarianSiswaController extends BaseController
                         } else {
                             $kehadiran = 1;
                         }
-                        
+
                         if ($presensi_harian_siswa = PresensiHarianSiswa::where('id_presensi_harian', '=', $presensi_harian->id_presensi_harian)->where('id_siswa', '=', $id_siswa)->first()) {
                             $presensi_harian_siswa->updated_by                = $input->auth_data->pengguna->id_pengguna;
                         } else {
@@ -264,7 +265,7 @@ class AbsensiHarianSiswaController extends BaseController
                                         case 4:
                                             $status = 'Alpa'; break;
                                     }
-                                    
+
                                     if($wali_murid){
                                         $token_wali_murid = $wali_murid->pengguna->api_token;
                                         if(!empty($token_wali_murid)){
@@ -284,11 +285,10 @@ class AbsensiHarianSiswaController extends BaseController
                                                 'isi_notifikasi' => $message,
                                                 'created_by' => $input->auth_data->pengguna->id_pengguna
                                             );
-                                            
+
                                             LibGlobal::sendNotification($token_wali_murid, $send_data, $notifikasi);
                                         }   
                                     }
-
                                 }
                             }
                         }
