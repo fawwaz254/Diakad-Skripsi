@@ -19,7 +19,7 @@
                                         <th>Kode Jurusan</th>
                                         <th>Bidang Keahlian</th>
                                         <th>Program Keahlian</th>
-                                        <th>Kompetensi Keahlian</th>
+                                        <th>Kompetensi/Konsentrasi Keahlian</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
