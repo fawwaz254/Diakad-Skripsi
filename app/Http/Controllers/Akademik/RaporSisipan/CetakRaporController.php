@@ -194,6 +194,13 @@ class CetakRaporController extends Controller
         ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
         ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
+        $raporSisipanD = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp','mata_pelajaran.jenis_mata_pelajaran' )
+        ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
+            $query->where('kode_jenis_mata_pelajaran', '=', 'D');
+        })
+        ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
+        ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
+
         $sub = SubRaporSisipan::with('sub_rapor_sisipan_mp','jenis_mata_pelajaran')->get();
 
         // dd($k);
@@ -216,7 +223,8 @@ class CetakRaporController extends Controller
             })->get();
             // dd($list_nilai);
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data', 'kelas', 'list_siswa', 'k', 'list_nilai', 'wali_kelas'));
+            // dd($raporSisipanA);
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data', 'kelas', 'list_siswa', 'k','raporSisipanA','raporSisipanB','raporSisipanC' , 'raporSisipanD', 'list_nilai', 'wali_kelas'));
         } else {
            $nilai_siswa = [];
             $nilai_komponen = [];

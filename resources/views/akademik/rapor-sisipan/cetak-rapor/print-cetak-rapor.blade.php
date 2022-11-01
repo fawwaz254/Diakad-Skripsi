@@ -147,14 +147,17 @@
                     {{-- @php
                         $no = 0;
                     @endphp --}}
-
+                    @if(isset($raporSisipanA))
                     <tr>
                         <td style="text-align: center;">A</td>
                         <td>
-                            @php
-                                $nama = $k->mapel->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'A');
+                            {{-- @php
+                                $nama = $k->mata_pelajaran->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'A');
                                 echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran;
-                            @endphp
+                            @endphp --}}
+                            @if(isset( $raporSisipanA))
+                            {{ $raporSisipanA[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran  }}
+                            @endif
                         </td>
                         <td style="text-align: center;"></td>
                         <td style="text-align: center;"></td>
@@ -163,8 +166,8 @@
                         $no = 1;
                     @endphp
 
-                    @foreach ($k->mapel as $m)
-                        @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A')
+                    @foreach ($raporSisipanA as $m)
+                        {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A') --}}
                             <tr>
                                 <td></td>
                                 <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
@@ -180,7 +183,7 @@
                                     @endphp
                                 </td>
                             </tr>
-                        @endif
+                        {{-- @endif --}}
                     @endforeach
                     <tr>
                         <td><br></td>
@@ -188,12 +191,18 @@
                         <td><br></td>
                         <td><br></td>
                     </tr>
+                    @endif
+                   
+                    @if(isset($raporSisipanB[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran))
                     <tr>
                         <td style="text-align: center;">B</td>
-                        <td> @php
-                            $nama = $k->mapel->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'B');
+                        <td> 
+                            {{-- @php
+                            $nama = $k->mata_pelajaran->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'B');
                             echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran;
-                        @endphp</td>
+                        @endphp --}}
+                        {{ $raporSisipanB[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
+                        </td>
                         <td style="text-align: center;"></td>
                         <td style="text-align: center;">
                         </td>
@@ -201,8 +210,8 @@
                     @php
                     $no = 1;
                 @endphp
-                    @foreach ($k->mapel as $m)
-                        @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'B')
+                    @foreach ($raporSisipanB as $m)
+                        {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'B') --}}
                             <tr>
                                 <td></td>
                                 <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
@@ -218,7 +227,7 @@
                                     @endphp
                                 </td>
                             </tr>
-                        @endif
+                        {{-- @endif --}}
                     @endforeach
                     <tr>
                         <td><br></td>
@@ -226,13 +235,17 @@
                         <td><br></td>
                         <td><br></td>
                     </tr>
+                    @endif
+                
+                    @if(isset($raporSisipanC[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran))
                     <tr>
                         <td style="text-align: center;">C</td>
                         <td>
-                            @php
-                                $nama = $k->mapel->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'C');
+                            {{-- @php
+                                $nama = $k->mata_pelajaran->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'C');
                                 echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? 'MUATAN PEMINATAN KEJURUAN';
-                            @endphp
+                            @endphp --}}
+                            {{ $raporSisipanC[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran  ?? ''}}
                         </td>
                         <td></td>
                         <td style="text-align: center;"></td>
@@ -240,8 +253,8 @@
                     @php
                     $no = 1;
                 @endphp
-                    @foreach ($k->mapel as $m)
-                        @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'C')
+                    @foreach ($raporSisipanC as $m)
+                        {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'C') --}}
                             <tr>
                                 <td></td>
                                 <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
@@ -257,7 +270,7 @@
                                     @endphp
                                 </td>
                             </tr>
-                        @endif
+                        {{-- @endif --}}
                     @endforeach
                     <tr>
                         <td><br></td>
@@ -265,20 +278,21 @@
                         <td><br></td>
                         <td><br></td>
                     </tr>
+                    @endif
+                    @if(isset($raporSisipanD[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran))
                     <tr>
                         <td style="text-align: center;">D</td>
-                        <td> @php
-                            $nama = $k->mapel->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'D');
-                            echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran;
-                        @endphp</td>
+                        <td>
+                         
+                    {{ $raporSisipanD[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? ''}}    
+                    </td>
                         <td></td>
                         <td style="text-align: center;"></td>
                     </tr>
                     @php
                     $no = 1;
                 @endphp
-                    @foreach ($k->mapel as $m)
-                        @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'D')
+                    @foreach ($raporSisipanD as $m)
                             <tr>
                                 <td></td>
                                 <td>{{ $no++ . '.    ' .  $m->mata_pelajaran->nm_mata_pelajaran }}</td>
@@ -290,13 +304,14 @@
                                             ->where('siswa.id_siswa', $siswa->id_siswa)
                                             ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
                                             ->first();
-                                        // dd($nama);
+                                 
                                         echo $nama->nilai ?? 'Belum Diset';
                                     @endphp
                                 </td>
                             </tr>
-                        @endif
+                 
                     @endforeach
+                    @endif
 
 
 
