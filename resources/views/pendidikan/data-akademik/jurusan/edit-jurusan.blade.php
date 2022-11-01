@@ -49,9 +49,15 @@
                                 value="{{$data_jurusan->program_keahlian}}">
                             </div>
                         </div>
+                        @if($selected_jurusan->tingkat == '1')
+                        <h2 class="card-inside-title">
+                            Konsentrasi Keahlian
+                        </h2>
+                        @else
                         <h2 class="card-inside-title">
                             Kompetensi Keahlian
                         </h2>
+                        @endif
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <input type="text" class="form-control" name="kompetensi_keahlian"  aria-required="true" aria-invalid="true"
