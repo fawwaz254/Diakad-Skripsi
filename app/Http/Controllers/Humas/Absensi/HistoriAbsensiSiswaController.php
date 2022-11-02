@@ -318,7 +318,12 @@ class HistoriAbsensiSiswaController extends Controller
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                     }
-                    //
+
+                    if ($attendance->check_in) {
+                        $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
+                        $hasil[$key1][$key2]['status'] = "Masuk";
+                    }
+
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
                         $hasil[$key1][$key2]['status'] = "Telat";
@@ -422,7 +427,7 @@ class HistoriAbsensiSiswaController extends Controller
 
                 $hasil[$key1][$key2]['status'] = '';
                 $shiftPengguna = $allShiftPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
-                $attendance =  $allPresensiPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();;
+                $attendance =  $allPresensiPengguna->where('id_pengguna', '=', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
                 // $attendance = PresensiPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
                 // $shiftPengguna = ShiftPengguna::where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
@@ -433,7 +438,12 @@ class HistoriAbsensiSiswaController extends Controller
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                     }
-                    //
+
+                    if ($attendance->check_in) {
+                        $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
+                        $hasil[$key1][$key2]['status'] = "Masuk";
+                    }
+
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
                         $hasil[$key1][$key2]['status'] = "Telat";
@@ -541,7 +551,9 @@ class HistoriAbsensiSiswaController extends Controller
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['status'] = "Masuk";
                 }
+
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 

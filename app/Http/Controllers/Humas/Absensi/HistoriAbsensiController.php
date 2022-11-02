@@ -77,6 +77,12 @@ class HistoriAbsensiController extends BaseController
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                     }
+
+                    if ($attendance->check_in) {
+                        $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
+                        $hasil[$key1][$key2]['status'] = "Masuk";
+                    }
+
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
@@ -186,6 +192,13 @@ class HistoriAbsensiController extends BaseController
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                     }
+
+                    if ($attendance->check_in) {
+                        $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
+                        $hasil[$key1][$key2]['status'] = "Masuk";
+                    }
+
+
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
@@ -288,7 +301,9 @@ class HistoriAbsensiController extends BaseController
 
                 if ($attendance->check_in) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
+                    $hasil[$key]['status'] = "Masuk";
                 }
+
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
 
