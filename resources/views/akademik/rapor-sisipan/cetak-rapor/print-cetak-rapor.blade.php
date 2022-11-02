@@ -122,7 +122,7 @@
                     </td>
                     <td style="border-style : hidden;width: 35%;font-weight: bold;"> : {{ $kelas->nm_kelas }}
                     </td>
-                    <td style="border-style : hidden;width: 25%;font-weight: bold;">@if($kelas->tingkat = '1') KONSENTRASI KEAHLIAN @else KOMPETENSI KEAHLIAN  @endif
+                    <td style="border-style : hidden;width: 25%;font-weight: bold;">@if($kelas->tingkat == '1') KONSENTRASI KEAHLIAN @else KOMPETENSI KEAHLIAN  @endif
                     </td>
                     <td style="border-style : hidden;width: 25%;font-weight: bold;"> :
                         {{ $kelas->jurusan->kompetensi_keahlian }}
