@@ -21,31 +21,31 @@ class FingerprintController extends BaseController
         return view('administrator/device/fingerprint/view-data-fingerprint', compact('auth_data'));
     }
 
-    public function commonList(Request $request)
-    {
-        $list_data = FPDevice::query();
+    // public function commonList(Request $request)
+    // {
+    //     $list_data = FPDevice::query();
 
-        $now = Carbon::now('Asia/Jakarta');
-        return Datatables::of($list_data)
-            ->addColumn('status', function ($item) use ($now) {
-                if (Carbon::parse($item->updated_at)->diffInMinutes($now) > 2) {
-                    return 'OFFLINE';
-                } else {
-                    return 'ONLINE';
-                }
-            })
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id' => $item->fp_device_id,
-                    'sn' => $item->sn,
-                );
-                return $data;
-            })
-            ->editColumn('updated_at', function ($item) use ($now) {
-                return Carbon::parse($item->updated_at)->diffForHumans($now);
-            })
-            ->make(true);
-    }
+    //     $now = Carbon::now('Asia/Jakarta');
+    //     return Datatables::of($list_data)
+    //         ->addColumn('status', function ($item) use ($now) {
+    //             if (Carbon::parse($item->updated_at)->diffInMinutes($now) > 2) {
+    //                 return 'OFFLINE';
+    //             } else {
+    //                 return 'ONLINE';
+    //             }
+    //         })
+    //         ->addColumn('action', function ($item) {
+    //             $data = array(
+    //                 'id' => $item->fp_device_id,
+    //                 'sn' => $item->sn,
+    //             );
+    //             return $data;
+    //         })
+    //         ->editColumn('updated_at', function ($item) use ($now) {
+    //             return Carbon::parse($item->updated_at)->diffForHumans($now);
+    //         })
+    //         ->make(true);
+    // }
 
     public function actionCheck(Request $request)
     {
