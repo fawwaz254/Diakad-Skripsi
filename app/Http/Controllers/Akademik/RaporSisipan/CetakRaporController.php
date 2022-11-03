@@ -189,7 +189,7 @@ class CetakRaporController extends Controller
 
         $raporSisipanC = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp','mata_pelajaran.jenis_mata_pelajaran' )
         ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
-            $query->where('kode_jenis_mata_pelajaran', '=', 'C');
+            $query->where('kode_jenis_mata_pelajaran', '=', 'C')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.1')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.2')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.3');
         })
         ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
         ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
