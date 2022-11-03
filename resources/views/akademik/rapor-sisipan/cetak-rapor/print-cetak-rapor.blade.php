@@ -390,7 +390,12 @@
                         <br>
                         Wali Kelas
                         <br><br><br><br><br><br><br>
+                        @if(isset($wali_kelas->guru->pengguna->nm_pengguna))
                         {{ $wali_kelas->guru->pengguna->gelar_depan }} {{ $wali_kelas->guru->pengguna->nm_pengguna }}  {{ $wali_kelas->guru->pengguna->gelar_belakang }}
+                        @else
+                        <p style="width: 250px;
+                        border-bottom: 1px solid   black;"></p>
+                        @endif
                         {{-- {{ $rapor_sisipan->pengguna->gelar_depan }} {{ $rapor_sisipan->pengguna->nm_pengguna }} {{ $rapor_sisipan->pengguna->gelar_belakang }} --}}
                     </td>
 
