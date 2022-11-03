@@ -11,6 +11,7 @@
                     <h2>
                         IMPORT EXCEL REKANAN MAGANG
                     </h2>
+                   
                 </div>
                 <div class="body">
 
@@ -20,7 +21,12 @@
                     <div class="row clearfix">
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <a class="btn btn-success" target="_blank" href="{{asset('data-rekanan-magang.xlsx')}}">Download Template Excel</a>
+                            <br>
+                            <p>
+                                *Catatan Untuk Kolom input Tanggal dan Nomor Hp, harap dikasih ' (petik atas) diawal.
+                            </p>
                         </div>
+                        
                     </div>
 
                     <div class="row clearfix">
