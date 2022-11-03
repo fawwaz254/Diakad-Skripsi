@@ -77,8 +77,10 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>List Siswa Terlambat ({{ $now  }})  <br><br>
-                <button class="btn  bg-blue waves-effect" onclick="resetPasswordCollect()"><i class="material-icons">add</i><span>Kirim ke Pelanggaran</span></button></h2>
+                    <h2>List Siswa Terlambat ({{ $now }}) <br><br>
+                        <button class="btn  bg-blue waves-effect" onclick="sendSiswaTerlambat()"><i
+                                class="material-icons">add</i><span>Kirim ke Pelanggaran</span></button>
+                    </h2>
                 </div>
 
                 <div class="body">
@@ -87,8 +89,11 @@
                             <thead style="background:#9C27B0;color:white">
                                 <tr>
                                     <th style="text-align: center;">#</th>
-                                    <th style="text-align: center;"> <input id="checkbox_select_all_primary_table" type="checkbox" name="select_all" class="filled-in">
-                                        <label for="checkbox_select_all_primary_table" style="margin-bottom: -10px;"></label></th>
+                                    <th style="text-align: center;"> <input id="checkbox_select_all_primary_table"
+                                            type="checkbox" name="select_all" class="filled-in">
+                                        <label for="checkbox_select_all_primary_table"
+                                            style="margin-bottom: -10px;"></label>
+                                    </th>
                                     <th style="text-align: center;">Nama</th>
                                     <th>Kelas</th>
                                     <th>Check In</th>
@@ -99,30 +104,46 @@
                             <tbody>
 
                                 @foreach ($terlambat as $key => $r)
-                                    @if ($key % 2 == 1)
+                                    @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                        <tr style="background: #01ff4d">
+                                        @else
+                                            @if ($key % 2 == 1)
                                         <tr style="background: #DDA0DD">
                                         @else
                                         <tr>
                                     @endif
+                                @endif
 
-                                    <th style="text-align: center;">{{  $loop->iteration }}</th>
-                                    <th style="text-align: center;"><input id="checkbox-{{ $r->id_pengguna }}" type="checkbox" name="id_tagihan_biaya[]" class="filled-in" value="{{ $r->id_pengguna }}">
-                                        <label for="checkbox-{{ $r->id_pengguna }}"></label></th>
-                                    <th>{{ $r->pengguna->nm_pengguna }}</th>
-                                    <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
-                                    <th>{{ $r->check_in }}</th>
-                                    @php
-                                        $options = [
-                                            'join' => ', ',
-                                            'parts' => 2,
-                                            'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE,
-                                        ];
-                                    @endphp
-                                    <th>
-                                        {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }}
-                                    </th>
-                                    <th>Belum diLaporkan</th>
-                                    </tr>
+
+                                <th style="text-align: center;">{{ $loop->iteration }}</th>
+                                <th style="text-align: center;">
+                                    @if (!$sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                        <input id="checkbox-{{ $r->id_pengguna }}" type="checkbox" name="id_pengguna"
+                                            class="filled-in" value="{{ $r->id_pengguna }}">
+                                        <label for="checkbox-{{ $r->id_pengguna }}"></label>
+                                    @endif
+                                </th>
+                                <th>{{ $r->pengguna->nm_pengguna }}</th>
+                                <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
+                                <th>{{ $r->check_in }}</th>
+                                @php
+                                    $options = [
+                                        'join' => ', ',
+                                        'parts' => 2,
+                                        'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE,
+                                    ];
+                                @endphp
+                                <th>
+                                    {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }}
+                                </th>
+                                <th>
+                                    @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                        Sudah Dilaporkan
+                                    @else
+                                        Belum Dilaporkan
+                                    @endif
+                                </th>
+                                </tr>
                                 @endforeach
 
                             </tbody>
@@ -134,7 +155,7 @@
     </div>
 </div>
 <script type="text/javascript">
-//  alert('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '');
+    //  alert('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '');
     $("input").on("change", function() {
         this.setAttribute(
             "data-date",
@@ -157,34 +178,40 @@
     });
 
 
-    function resetPasswordCollect(){
+    function sendSiswaTerlambat() {
         $('button').attr('disabled', 'disabled');
         var pengguna = [];
-        $("input:checkbox[name=id_pengguna]:checked").each(function(){
+        $("input:checkbox[name=id_pengguna]:checked").each(function() {
             pengguna.push($(this).val());
         });
 
+        // alert(base_url + '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/reset-some-password');
         $.ajax({
-            url: base_url + '/{{Request::segment(1)}}/{{Request::segment(2)}}/reset-some-password',
+            url: base_url +
+                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/post-siswa-terlambat',
             type: 'POST',
             data: {
-                data_pengguna: pengguna
+                data_siswa: pengguna,
+                tanggal: '{{ $now }}'
             },
             success: function(response) {
-                if(response.status_code == 200){
+                if (response.status_code == 200) {
                     vex.dialog.alert(response.message);
-                }else if(response.status_code == 201){
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                } else if (response.status_code == 201) {
                     vex.dialog.alert(response.message);
                     window.location.href = response.link;
-                }else if(response.status_code == 202){
+                } else if (response.status_code == 202) {
                     vex.dialog.alert(response.message);
                     loadURI(response.path);
-                }else if(response.status_code == 203){
+                } else if (response.status_code == 203) {
                     vex.dialog.alert(response.message);
                     primary_table.ajax.reload(null, false);
-                }else if(response.status_code == 204){
+                } else if (response.status_code == 204) {
                     loadURI(response.path);
-                }else if(response.status_code == 300){
+                } else if (response.status_code == 300) {
                     vex.dialog.alert(response.message);
                 }
             },
