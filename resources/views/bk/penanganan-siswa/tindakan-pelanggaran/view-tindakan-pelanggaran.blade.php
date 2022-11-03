@@ -137,19 +137,27 @@
             },
             {
                 data: 'nm_siswa',
-                name: 'pengguna.nm_pengguna'
+                name: 'pengguna.nm_pengguna',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'nm_kelas',
-                name: 'kelas.nm_kelas'
+                name: 'kelas.nm_kelas',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
+                name: 'nm_subkategori_pelanggaran',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'tgl_pelanggaran',
-                name: 'pelanggaran_siswa.tgl_pelanggaran'
+                name: 'pelanggaran_siswa.tgl_pelanggaran',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'nm_input',
@@ -211,23 +219,33 @@
             },
             {
                 data: 'nm_siswa',
-                name: 'pengguna.nm_pengguna'
+                name: 'pengguna.nm_pengguna',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'nm_kelas',
-                name: 'kelas.nm_kelas'
+                name: 'kelas.nm_kelas',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'nm_mapel',
-                name: 'mata_pelajaran.nm_mata_pelajaran'
+                name: 'mata_pelajaran.nm_mata_pelajaran',
+                searchable: false,
+                orderable: false,
             },
             {
                 data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
+                name: 'nm_subkategori_pelanggaran',
+                searchable: false,
+                orderable: false,
             },
             {
                 data: 'tgl_pelanggaran',
-                name: 'presensi_mp_pelanggaran.created_at'
+                name: 'presensi_mp_pelanggaran.created_at',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'nm_input',
@@ -295,7 +313,9 @@
             },
             {
                 data: 'nm_subkategori_pelanggaran',
-                name: 'nm_subkategori_pelanggaran'
+                name: 'nm_subkategori_pelanggaran',
+                searchable: false,
+                orderable: false
             },
             {
                 data: 'tgl_pelanggaran',
@@ -311,7 +331,9 @@
             },
             {
                 data: 'nm_input_tindakan',
-                name: 'p_tindakan.nm_pengguna'
+                name: 'p_tindakan.nm_pengguna',
+                searchable: false,
+                orderable: false
             },
             // { data: 'catatan_tindakan_pelanggaran', name: 'tindakan_pelanggaran.catatan_tindakan_pelanggaran' },
             // { data: 'catatan_tindakan_pelanggaran_khusus', name: 'catatan_tindakan_pelanggaran_khusus', searchable: false, orderable: false },
