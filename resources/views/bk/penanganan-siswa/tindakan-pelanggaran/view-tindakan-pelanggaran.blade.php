@@ -121,6 +121,7 @@
     var primary_table_belum_nonkbm = $('#primary_table_belum_nonkbm').DataTable({
         processing: true,
         serverSide: true,
+        "bFilter": false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -194,6 +195,7 @@
     var primary_table_belum_kbm = $('#primary_table_belum_kbm').DataTable({
         processing: true,
         serverSide: true,
+        "bFilter": false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
@@ -267,6 +269,7 @@
     var primary_table_sudah = $('#primary_table_sudah').DataTable({
         processing: true,
         serverSide: true,
+        "bFilter": false,
         dom: 'Bfrtip',
         lengthMenu: dtLengButton,
         buttons: dtButtonConfig,
