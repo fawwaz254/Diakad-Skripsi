@@ -18,4 +18,15 @@ class SubRaporSisipan extends Model
 
     public $incrementing = false;
     protected $guarded = [];
+
+    public function sub_rapor_sisipan_mp()
+    {
+        return $this->hasMany(SubRaporSisipanMP::class, 'id_sub_rapor_sisipan');
+    }
+
+    public function jenis_mata_pelajaran()
+    {
+        return $this->belongsTo(JenisMataPelajaran::class, 'id_jenis_mata_pelajaran');
+    }
+ 
 }

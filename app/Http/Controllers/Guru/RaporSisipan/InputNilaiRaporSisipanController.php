@@ -29,7 +29,7 @@ class InputNilaiRaporSisipanController extends Controller
         // dd($rapor_sisipan);
         $list_data = KomponenNilaiRaporSisipan::where('status',1)->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
-            $query->where('nm_status_pengguna', '=', 'AKTIF');
+            $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
@@ -83,7 +83,7 @@ class InputNilaiRaporSisipanController extends Controller
 
             $rapor_sisipan = RaporSisipan::find($id_rapor_sisipan);
             $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
+                $query->where('aktif_status_pengguna', '=', '1');
             })->get();
 
             $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
