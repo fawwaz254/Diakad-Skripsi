@@ -72,45 +72,45 @@ class LibCetakKeuangan
             $where_personal = "";
         }
 
-        $list_data_jml_siswa = DB::select(
-            'SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
-                            FROM siswa
-                            JOIN kelas ON kelas.id_kelas = siswa.id_kelas
-                                AND kelas.deleted_at IS NULL
-                            JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
-                                AND pengguna.deleted_at IS NULL
-                            -- JOIN admisi ON admisi.id_siswa = siswa.id_siswa
-                            --     AND admisi.id_semester = ?
-                            --     AND admisi.deleted_at IS NULL
-                            JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna
-                                AND status_pengguna.aktif_status_pengguna = 1
-                                AND status_pengguna.deleted_at IS NULL
-                            WHERE siswa.deleted_at IS NULL
-                            ' . $where_personal . '
-                            GROUP BY kelas.tingkat
-                            ORDER BY kelas.tingkat',
-            [$id_semester]
-        );
-
-        // REVISI JML SISWA
         // $list_data_jml_siswa = DB::select(
-        //     'SELECT kelas.tingkat, COUNT(tagihan_biaya.id_tagihan_biaya) AS jml_siswa
-        //                     FROM tagihan_biaya
-        //                     JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
+        //     'SELECT kelas.tingkat, COUNT(siswa.id_siswa) AS jml_siswa
+        //                     FROM siswa
+        //                     JOIN kelas ON kelas.id_kelas = siswa.id_kelas
         //                         AND kelas.deleted_at IS NULL
-        //                     JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
-        //                         AND detail_biaya.id_jenis_detail_biaya = 4
-        //                         AND detail_biaya.id_bulan = ?
-        //                         AND detail_biaya.deleted_at IS NULL
-        //                     JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
-        //                         AND biaya_sekolah.id_semester = ?
-        //                         AND biaya_sekolah.deleted_at IS NULL
-        //                     WHERE tagihan_biaya.deleted_at IS NULL
+        //                     JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
+        //                         AND pengguna.deleted_at IS NULL
+        //                     -- JOIN admisi ON admisi.id_siswa = siswa.id_siswa
+        //                     --     AND admisi.id_semester = ?
+        //                     --     AND admisi.deleted_at IS NULL
+        //                     JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna
+        //                         AND status_pengguna.aktif_status_pengguna = 1
+        //                         AND status_pengguna.deleted_at IS NULL
+        //                     WHERE siswa.deleted_at IS NULL
         //                     ' . $where_personal . '
         //                     GROUP BY kelas.tingkat
         //                     ORDER BY kelas.tingkat',
-        //     [$id_bulan, $id_semester]
+        //     [$id_semester]
         // );
+
+        // REVISI JML SISWA
+        $list_data_jml_siswa = DB::select(
+            'SELECT kelas.tingkat, COUNT(tagihan_biaya.id_tagihan_biaya) AS jml_siswa
+                            FROM tagihan_biaya
+                            JOIN kelas ON kelas.id_kelas = tagihan_biaya.id_kelas
+                                AND kelas.deleted_at IS NULL
+                            JOIN detail_biaya ON detail_biaya.id_detail_biaya = tagihan_biaya.id_detail_biaya
+                                AND detail_biaya.id_jenis_detail_biaya = 4
+                                AND detail_biaya.id_bulan = ?
+                                AND detail_biaya.deleted_at IS NULL
+                            JOIN biaya_sekolah ON biaya_sekolah.id_biaya_sekolah = detail_biaya.id_biaya_sekolah
+                                AND biaya_sekolah.id_semester = ?
+                                AND biaya_sekolah.deleted_at IS NULL
+                            WHERE tagihan_biaya.deleted_at IS NULL
+                            ' . $where_personal . '
+                            GROUP BY kelas.tingkat
+                            ORDER BY kelas.tingkat',
+            [$id_bulan, $id_semester]
+        );
 
         $list_data_tagihan = DB::select(
             'SELECT kelas.tingkat, SUM(tagihan_biaya.besar_biaya) AS jml_tagihan_biaya
