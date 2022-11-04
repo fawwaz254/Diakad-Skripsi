@@ -64,6 +64,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 
 // ROLE GURU
 
@@ -668,6 +669,17 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
                 Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
+            });
+
+            Route::prefix('form-lainnya')->group(function () {
+                Route::get('/',[FormLainnyaController::class, 'viewListFormLainnya']);
+                Route::post('datatables', [FormLainnyaController::class, 'datatablesListFormLainnya']);
+
+                Route::get('/form/{id_form}',[FormLainnyaController::class, 'viewFormLainnya']);
+                Route::post('/form/datatables/{id_form}',[FormLainnyaController::class, 'datatablesFormLainnya']);
+
+                Route::get('/form/{id_form}/isi',[FormLainnyaController::class, 'isiFormLainnya']);
+                Route::post('/form/{id_form}/isi',[FormLainnyaController::class, 'postIsiFormLainnya']);
             });
         });
 
