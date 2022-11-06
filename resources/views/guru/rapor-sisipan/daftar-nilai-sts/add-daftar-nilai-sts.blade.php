@@ -20,7 +20,7 @@
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <label>Jurusan</label>
-                                <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)">
+                                <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)" required>
                                     <option selected disabled>-- Pilih Jurusan --</option>
                                     @foreach ($list_jurusan as $jurusan)
                                         <option value="{{ $jurusan->id_jurusan}}">{{ $jurusan->nm_jurusan }}
@@ -30,7 +30,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Mata Pelajaran</label>
-                                <select class="form-control show-tick" name="id_mata_pelajaran">
+                                <select class="form-control show-tick" name="id_mata_pelajaran" required>
                                     {{-- <option selected disabled>-- Pilih Mata Pelajaran --</option> --}}
                                     {{-- @foreach ($list_mapel as $r)
                                         <option value="{{ $r->id_mata_pelajaran }}">{{ $r->nm_mata_pelajaran }} ({{ $r->kd_mata_pelajaran }})
@@ -41,7 +41,7 @@
 
                             <div class="col-md-4">
                                 <label>Kelas</label>
-                                <select class="form-control show-tick" name="id_kelas">
+                                <select class="form-control show-tick" name="id_kelas" required>
                                     {{-- <option selected disabled>-- Pilih Kelas --</option> --}}
                                     {{-- @foreach ($list_kelas as $r)
                                     <option value="{{ $r->id_kelas }}">{{ $r->nm_kelas }}
