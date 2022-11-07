@@ -733,6 +733,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiEkskul']);
+            Route::get('rekap-absensi-ekskul/print-detail/{id_semester}/{id_ekskul}/{id_siswa}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiKehadiranEkskul']);
 
             // Menu Komponen Nilai Ekskul
             Route::get('komponen-nilai-ekskul', [KomponenNilaiEkskulController::class, 'viewKomponenNilaiEkskul']);
