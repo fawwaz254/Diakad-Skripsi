@@ -1,13 +1,11 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                @if($is_disabled)
-                disabled=""
-                @else
-                href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}"
-                @endif
-                >
-                <i class="material-icons">note_add</i><span>Isi FORM</span></a> @if($is_disabled)<p class="font-bold col-pink">*Pengisian hanya bisa dilakukan pada jam {{$start_monkes}} hingga jam {{$end_monkes}}</p>@endif</h2>
+        <h2>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3))}}">
+                <i class="material-icons">backspace</i><span>Kembali</span></a>
+            <a class="btn bg-green waves-effect target-link"href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}">
+                <i class="material-icons">note_add</i><span>Isi FORM</span></a></h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -36,21 +34,21 @@
         </div>
     </div>
 </div>
-{{-- <script>
+<script>
     var modul_url       = '{{Request::segment(2)}}';
     var menu_url       = '{{Request::segment(3)}}';
 
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/datatables';
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/form/datatables';
     var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/detail';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
-
+alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: datatable_url,
             data: function(params){
-                params.status = $('select[name=status]').val();
+                params.status = '{{ $id_form }}';
             },
             type: 'POST'
         },
@@ -134,4 +132,4 @@
     function filterAction(){
         primary_table.ajax.reload(null, false);
     }
-</script> --}}
+</script>
