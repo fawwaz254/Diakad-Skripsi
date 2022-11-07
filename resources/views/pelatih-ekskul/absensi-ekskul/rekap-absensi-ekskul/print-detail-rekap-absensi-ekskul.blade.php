@@ -163,14 +163,6 @@
                     <td style="text-align: center;">Alpha</td>
                     <td style="text-align: center;">{{$alpha}} x</td>
                     <td>
-                        {{-- @foreach($data_presensi as $presensi_ekskul)
-                        @php
-                            $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa)
-                        @endphp
-                        @if($presensi_ekskul_peserta->kehadiran == 4)
-                            Pertemuan ke-{{$presensi_ekskul->pertemuan_ke}}: {{date_format(date_create($presensi_ekskul->tgl_entry), 'l, d/m/Y')}} <br>
-                        @endif
-                        @endforeach --}}
                         @foreach($data_presensi as $presensi_ekskul)
                         @php
                             $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa)
@@ -180,6 +172,10 @@
                         @endif
                         @endforeach
                     </td>
+                </tr>
+                <tr>
+                    <th colspan="3">Persentase Kehadiran</th>
+                    <td align="center" colspan="1">{{$hadir / count($data_presensi) * 100}}%</td>
                 </tr>
             </tbody>
         </table>
