@@ -66,7 +66,7 @@
                                     <th>Sudah Diplotting</th>
                                     <th>Jumlah Siswa</th>
                                     <th>Action</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                         </table>
@@ -102,22 +102,22 @@
             { data: 'jml_siswa', name: 'jml_siswa' },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn bg-blue waves-effect" href="'+ detail_url +'/' + data.id + '">Manual Plotting</a>'
-                    +'      <a class="target-link btn bg-red waves-effect" href="'+ auto_ploting +'/' + data.id + '">Auto Plotting</a>';
+                    return '<a class="target-link btn bg-blue waves-effect" href="'+ detail_url +'/' + data.id + '">Manual Plotting</a>';
+                    // +'      <a class="target-link btn bg-red waves-effect" href="'+ auto_ploting +'/' + data.id + '">Auto Plotting</a>';
                 }
             },
-            {data: 'auto', searchable: false, orderable:false,
-            render: function(data) {
-                var role_text = '';
-                    data.forEach((d, i) => {
+            // {data: 'auto', searchable: false, orderable:false,
+            // render: function(data) {
+            //     var role_text = '';
+            //         data.forEach((d, i) => {
 
-                role_text += '<a class="target-link btn bg-red waves-effect" style="margin: 0px 5px 5px 5px" href="'+  d.id_kelas +' ">Auto Plotting Kelas '+ d.nm_kelas +' </a> '
-                if(i%2 === 1){
-                    role_text += '<br>'
-                }
-                        });
-                return role_text
-            }}
+            //     role_text += '<a class="target-link btn bg-red waves-effect" style="margin: 0px 5px 5px 5px" href="'+  d.id_kelas +' ">Auto Plotting Kelas '+ d.nm_kelas +' </a> '
+            //     if(i%2 === 1){
+            //         role_text += '<br>'
+            //     }
+            //             });
+            //     return role_text
+            // }}
         ]})
 
     primary_table.on( 'draw', function () {
