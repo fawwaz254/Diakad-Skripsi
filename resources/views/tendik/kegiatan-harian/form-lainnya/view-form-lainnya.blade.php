@@ -11,7 +11,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>DATA PENGISIAN FORM KESEHATAN</h2>
+                    <h2>DATA PENGISIAN FORM </h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -23,7 +23,7 @@
                                     <th>No</th>
                                     <th>Disubmit oleh</th>
                                     <th>Tanggal Mengisi</th>
-                                    <th>Status</th>
+                                    {{-- <th>Status</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -37,33 +37,33 @@
 <script>
     var modul_url       = '{{Request::segment(2)}}';
     var menu_url       = '{{Request::segment(3)}}';
-
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/form/datatables';
-    var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/detail';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
-// alert(datatable_url);
+    var id = '{{ $id_form }}'
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/form/datatables/' + id;
+    var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/form' ;
+    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/form/action/';
+// alert(delete_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
             url: datatable_url,
-            data: function(params){
-                params.status = '{{ $id_form }}';
-            },
+            // data: function(params){
+            //     params.status = '{{ $id_form }}';
+            // },
             type: 'POST'
         },
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'pengguna_pengisi.nm_pengguna' },
             { data: 'tgl_pengisian' },
-            { data: 'status', searchable: false, orderable: false,
-                render: function(data){
-                    return '<h4><span class="label" style="background-color: #'+data.warna_keadaan+';">'+data.status+'</span></h4>';
-                }
-            },
+            // { data: 'status', searchable: false, orderable: false,
+            //     render: function(data){
+            //         return '<h4><span class="label" style="background-color: #'+data.warna_keadaan+';">'+data.status+'</span></h4>';
+            //     }
+            // },
             { data: 'action', name: 'action', searchable: false, orderable: false,
                 render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id +'">'+
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ detail_url + '/' + data.id + '/detail' + '">'+
                     '    <i class="material-icons">remove_red_eye</i>'+
                     '</a> '+
                     '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteItemAction(\''+ delete_url +'\', this)" data-id="'+  data.id +'">'+
@@ -99,10 +99,10 @@
             if (result) {
                 $.ajax({
                     type: "POST",
-                    url: delete_url,
-                    data: {
-                        id_pengisian_kegiatan_harian : item.attr('data-id')
-                    },
+                    url: delete_url + item.attr('data-id') +'/delete',
+                    // data: {
+                    //     id_pengisian_kegiatan_harian : item.attr('data-id')
+                    // },
                     success: function (response) {
                         if(response.status == 200){
                             vex.dialog.alert(response.message);
