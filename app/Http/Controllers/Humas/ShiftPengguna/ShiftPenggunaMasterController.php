@@ -59,4 +59,29 @@ class ShiftPenggunaMasterController extends Controller
 
         return view('humas/absensi/shift-pengguna/management-shift-master', compact('shifts'));
     }
+
+    public function editShiftMaster(Request $request, $id){
+        $shift = ShiftMaster::find($id);
+        return view('humas/absensi/shift-pengguna/edit-management-shift-master', compact('shift'));
+    }
+
+    
+    public function storeEditShiftMaster(Request $request, $id){
+        // dd($id);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $shift = ShiftMaster::where('id_shift_master', $id)->first();
+        $shift->start_time = $input->check_in ;
+        $shift->end_time = $input->check_out; 
+        $shift->save();
+        return [
+            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'path' => 'absensi/shift_pengguna/managementShift',
+            'message' => 'Save Shift Successfully'
+        ];
+    
+        // $shift = ShiftMaster::find($id);
+        // return view('humas/absensi/shift-pengguna/edit-management-shift-master', compact('shift'));
+    }
 }

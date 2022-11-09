@@ -4,7 +4,7 @@
             <a class="btn bg-blue waves-effect target-link"
                 href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3))}}">
                 <i class="material-icons">backspace</i><span>Kembali</span></a>
-            <a class="btn bg-green waves-effect target-link"href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/add')}}">
+            <a class="btn bg-green waves-effect target-link"href="{{url(Request::segment(1).'#'.Request::segment(2).'/'.Request::segment(3).'/form/'.   $id_form  .'/isi')}}">
                 <i class="material-icons">note_add</i><span>Isi FORM</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -41,7 +41,7 @@
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/form/datatables';
     var detail_url      = role_url + '#' + modul_url + '/' + menu_url + '/detail';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + menu_url + '/action/delete';
-alert(datatable_url);
+// alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tendik\KegiatanHarian;
 
 use App\Http\Controllers\Controller;
 use App\Models\KegiatanHarian;
+use App\Models\PengisianJawaban;
 use App\Models\PengisianKegiatanHarian;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
@@ -51,6 +52,15 @@ class FormLainnyaController extends Controller
         })
         ->make(true);
 
+    }
+
+    public function isiFormLainnya(Request $request, $id_form ){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $kegiatan_harian = KegiatanHarian::with('kategori_pertanyaan', 'kategori_pertanyaan.pertanyaan', 'kategori_pertanyaan.pertanyaan.jawaban')->where('is_aktif', 1)->where('id_kegiatan_harian',$id_form)->first();
+        $data_kegiatan_harian_kategori = $kegiatan_harian->kategori_pertanyaan;
+        return view('tendik/kegiatan-harian/form-lainnya/view-add-form-lainnya', compact('auth_data', 'kegiatan_harian', 'data_kegiatan_harian_kategori'));
     }
 
     public function viewFormLainnya(Request $request, $id_form){
