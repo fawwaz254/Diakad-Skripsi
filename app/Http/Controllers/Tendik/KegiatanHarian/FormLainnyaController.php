@@ -81,8 +81,9 @@ class FormLainnyaController extends Controller
         // dd($id_form);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+        $kegiatan_harian  = KegiatanHarian::find($id_form);
 
-        return view('tendik/kegiatan-harian/form-lainnya/view-form-lainnya', compact('auth_data', 'id_form'));
+        return view('tendik/kegiatan-harian/form-lainnya/view-form-lainnya', compact('auth_data', 'id_form','kegiatan_harian'));
 
 
         // dd($id_form);

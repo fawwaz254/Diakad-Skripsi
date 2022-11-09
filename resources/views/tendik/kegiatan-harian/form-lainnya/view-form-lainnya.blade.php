@@ -11,7 +11,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>DATA PENGISIAN FORM </h2>
+                    <h2>DATA PENGISIAN FORM {{ $kegiatan_harian->nm_kegiatan_harian }} </h2>
                 </div>
                 <div class="body">
                     <div class="table-responsive">

@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        DETAIL ISIAN FORM KESEHATAN {{$pengisian_kegiatan_harian->pengguna_pengisi->fullname()}} pada {{date_format(date_create($pengisian_kegiatan_harian->created_at), 'd M Y H:i')}}
+                        DETAIL ISIAN FORM  {{$pengisian_kegiatan_harian->pengguna_pengisi->fullname()}} pada {{date_format(date_create($pengisian_kegiatan_harian->created_at), 'd M Y H:i')}}
                     </h2>
                 </div>
                 <div class="body">
