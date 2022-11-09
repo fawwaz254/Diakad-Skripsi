@@ -169,6 +169,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/managementShift', [ShiftPenggunaMasterController::class, 'viewShiftPenggunaManagement']);
                 Route::post('/addShiftMaster', [ShiftPenggunaMasterController::class, 'storeShiftMaster']);
                 Route::post('/managementShift/{id}/delete', [ShiftPenggunaMasterController::class, 'destroyShiftMaster']);
+                Route::get('/editManagementShift/{id}', [ShiftPenggunaMasterController::class, 'editShiftMaster']);
+                Route::post('/editManagementShift/{id}', [ShiftPenggunaMasterController::class, 'storeEditShiftMaster']);
 
                 Route::get('/', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/add', [ShiftPenggunaController::class, 'addShiftPengguna']);
