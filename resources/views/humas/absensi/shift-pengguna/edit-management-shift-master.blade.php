@@ -13,25 +13,25 @@
         <div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="header">
-                    <h2>Management Shift Master</h2>
+                    <h2>Edit Management Shift Master</h2>
 
                 </div>
                 <div class="body">
                     <div class="col-sm-6">
                         <h4>Tambah Shift Baru</h4>
-                        <form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/addShiftMaster">
+                        <form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/editManagementShift/{{ $shift->id_shift_master }}">
                             {{ csrf_field() }}
-
+                            {{-- /humas/absensi/shift_pengguna/addShiftMaster/{{ $shift->id_shift_master }} --}}
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Nama Shift</h2>
-                                <input type="text" name="name" class="form-control">
+                                <input type="text" name="name" class="form-control" value="{{ $shift->code }}" disabled>
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Jam masuk</h2>
 
                                 <input type="text" class="timepicker form-control" name="check_in" required="" aria-required="true"
-                                aria-invalid="true" >
+                                aria-invalid="true" value="{{ $shift->start_time }}" >
 
                                 {{-- <input type="time" name="check_in" class="form-control"> --}}
                             </div>
@@ -39,7 +39,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Jam keluar</h2>
                                 <input type="text" class="timepicker form-control" name="check_out" required="" aria-required="true"
-                                aria-invalid="true" >
+                                aria-invalid="true" value="{{ $shift->end_time }}" >
                                 {{-- <input type="time" name="check_out" class="form-control"> --}}
                             </div>
 
@@ -50,7 +50,7 @@
 
                         </form>
 
-                        <br>
+                        {{-- <br>
                         <table class="table table-bordered">
                             <tr>
                                 <h4>List Shift :</h4>
@@ -82,7 +82,7 @@
                                     </td>
                                 </tr>
                             @endforeach
-                        </table>
+                        </table> --}}
 
                         {{-- <button class="btn btn-block bg-green waves-effect" id="btn-submit"><i class="material-icons">save</i><span>Save</span></button>
                                         </div>
@@ -101,86 +101,8 @@
 
 @include('scriptjs')
 <script>
-    // $( "#add-form" ).submit(function() {
-    //     $('#btn-submit').attr("disabled", true);
-    //     $('#btn-submit i').text('autorenew')
-    //     $('#btn-submit span').text('Loading')
-    // });
-
     function back() {
-        window.location = '/humas#absensi/shift_pengguna'
+        window.location = '/humas#absensi/shift_pengguna/managementShift'
     }
 
-
-    // $("#button").click(function () {
-    //     const token = $("meta[name='csrf-token']").attr("content");
-    //     const id= $(this).data("id");
-    //     swal(
-    //     { title: "Are you sure?", showCancelButton: true},
-    //     function (isConfirm) {
-    //         if (isConfirm) {
-    //             $('.delete-record').attr("disabled", true);
-    //             //swall
-    //             $.ajax({
-    //                 url: ` /humas/absensi/ShiftPengguna/managementShift/${id}/delete`,
-    //                 type: "post",
-
-    //                 data: {
-    //                     _token: token,
-    //                 },
-
-    //                 success: function () {
-    //                     swal({
-    //                         title: "Delete Success",
-    //                         text: "data berhasil dihapus",
-    //                         icon: "success",
-    //                     });
-    //                     loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}');
-    //                 },
-    //             });
-    //         }
-    //         return;
-    //     }
-    // );
-
-
-    $(".edit-record").click(function() {
-        const id = $(this).data("id");
-        window.location = '/humas#absensi/shift_pengguna/editManagementShift/' + id
-        // alert(id);
-    });
-
-    $(".delete-record").click(function() {
-        const token = $("meta[name='csrf-token']").attr("content");
-        const id = $(this).data("id");
-        swal({
-                title: "Are you sure?",
-                showCancelButton: true
-            },
-            function(isConfirm) {
-                if (isConfirm) {
-                    $('.delete-record').attr("disabled", true);
-                    //swall
-                    $.ajax({
-                        url: ` /humas/absensi/shift_pengguna/managementShift/${id}/delete`,
-                        type: "post",
-
-                        data: {
-                            _token: token,
-                        },
-
-                        success: function() {
-                            swal({
-                                title: "Delete Success",
-                                text: "data berhasil dihapus",
-                                icon: "success",
-                            });
-                            loadURI('absensi/shift_pengguna/managementShift');
-                        },
-                    });
-                }
-                return;
-            }
-        );
-    });
 </script>
