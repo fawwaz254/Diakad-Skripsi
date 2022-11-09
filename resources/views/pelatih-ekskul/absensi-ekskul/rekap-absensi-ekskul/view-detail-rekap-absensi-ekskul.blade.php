@@ -30,6 +30,7 @@
                                     <th rowspan="2">Nama</th>
                                     <th rowspan="2">Kelas</th>
                                     <th colspan="{{$data_presensi->count()}}">Tanggal</th>
+                                    <th rowspan="2">Action</th>
                                 </tr>
                                 <tr>
                                     @foreach($data_presensi as $presensi_ekskul)
@@ -69,6 +70,12 @@
                                             <td></td>
                                         @endif
                                     @endforeach
+                                        <td class="is-center">
+                                            <a class=" btn btn-success btn-circle waves-effect waves-circle waves-float justify-content-center align-items-center" href="{{url(Request::segment(1).'/'. $auth_data->modul_url .'/'.  $auth_data->menu_url. '/print-detail/'.$id_semester.'/'.$id_ekskul.'/'. $siswa->id_siswa)}}" target="_blank">
+                                                <i class="material-icons">picture_as_pdf</i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                 </tr>
                                 @endforeach
                                 <tr>
