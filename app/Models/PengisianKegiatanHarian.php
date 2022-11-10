@@ -27,6 +27,11 @@ class PengisianKegiatanHarian extends Model
         return $this->belongsTo(Pengguna::class, 'id_pengguna_pengisi', 'id_pengguna');
     }
 
+    public  function kegiatan_harian()
+    {
+        return $this->belongsTo(KegiatanHarian::class, 'id_kegiatan_harian');
+    }
+
     public function status_to_text()
     {
         switch($this->status_pengisian){

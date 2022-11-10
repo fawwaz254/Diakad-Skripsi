@@ -30,6 +30,7 @@ use App\Http\Controllers\Siswa\Akademik\KalenderAkademikController;
 use App\Http\Controllers\Siswa\Akademik\JadwalKelasDaringController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Siswa\Pelanggaran\RiwayatPelanggaranController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('siswa')->group(function () {
@@ -243,6 +244,18 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
                 Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
+            });
+
+            Route::prefix('form-lainnya')->group(function () {
+                Route::get('/',[FormLainnyaController::class, 'viewListFormLainnya']);
+                Route::post('datatables', [FormLainnyaController::class, 'datatablesListFormLainnya']);
+
+                Route::get('/form/{id_form}',[FormLainnyaController::class, 'viewFormLainnya']);
+                Route::post('/form/datatables/{id_form}',[FormLainnyaController::class, 'datatablesFormLainnya']);
+
+                Route::get('/form/{id_form}/isi',[FormLainnyaController::class, 'isiFormLainnya']);
+                Route::get('/form/{id_form}/detail',[FormLainnyaController::class, 'viewDetailFormLainnya']);
+                Route::post('/form/action/{id_form}/{mode}',[FormLainnyaController::class, 'postIsiFormLainnya']);
             });
         });
 

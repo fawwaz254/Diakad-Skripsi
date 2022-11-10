@@ -17,8 +17,7 @@
                         <b>{{$kegiatan_harian->nm_kegiatan_harian}}</b>
                     </h2>
                     <form id="form-validation" method="POST"
-                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action/add')}}">
-                        {{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/action/add')}}
+                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/form/action/'.$kegiatan_harian->id_kegiatan_harian.'/add')}}">
                         {{csrf_field()}}
                         @foreach($data_kegiatan_harian_kategori as $kegiatan_harian_kategori)
                         <div class="box">
