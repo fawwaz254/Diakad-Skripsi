@@ -679,7 +679,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/form/datatables/{id_form}',[FormLainnyaController::class, 'datatablesFormLainnya']);
 
                 Route::get('/form/{id_form}/isi',[FormLainnyaController::class, 'isiFormLainnya']);
-                Route::post('/form/{id_form}/isi',[FormLainnyaController::class, 'postIsiFormLainnya']);
+                Route::get('/form/{id_form}/detail',[FormLainnyaController::class, 'viewDetailFormLainnya']);
+                Route::post('/form/action/{id_form}/{mode}',[FormLainnyaController::class, 'postIsiFormLainnya']);
             });
         });
 

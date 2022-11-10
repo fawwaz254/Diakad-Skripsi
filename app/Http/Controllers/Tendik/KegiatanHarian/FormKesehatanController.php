@@ -127,6 +127,7 @@ class FormKesehatanController extends BaseController
             $list_data = $list_data->select(
                 'pengisian_kegiatan_harian.id_pengisian_kegiatan_harian',
                 'pengisian_kegiatan_harian.id_pengguna_pengisi',
+                'pengisian_kegiatan_harian.id_kegiatan_harian',
                 'pengisian_kegiatan_harian.status_join_table',
                 'pengisian_kegiatan_harian.tgl_pengisian',
                 'pengisian_kegiatan_harian.status_pengisian',
@@ -138,13 +139,14 @@ class FormKesehatanController extends BaseController
                     ->whereNull('siswa.deleted_at');
             })
                 ->where('pengisian_kegiatan_harian.status_join_table', 3)
+                ->whereNull('pengisian_kegiatan_harian.id_kegiatan_harian')
                 ->where('id_kelas', $input->id_kelas);
         } else if (!empty($input->is_tendik_guru)) {
-            $list_data = $list_data->whereIn('status_join_table', [1, 2]);
+            $list_data = $list_data->whereIn('status_join_table', [1, 2])->whereNull('id_kegiatan_harian');
         } else if (!empty($input->pengguna)) {
-            $list_data = $list_data->where('id_pengguna_pengisi', $input->pengguna);
+            $list_data = $list_data->where('id_pengguna_pengisi', $input->pengguna)->whereNull('id_kegiatan_harian');
         } else {
-            $list_data = $list_data->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna);
+            $list_data = $list_data->where('id_pengguna_pengisi', $auth_data->pengguna->id_pengguna)->whereNull('id_kegiatan_harian');
         }
 
         if (!empty($input->status)) {
