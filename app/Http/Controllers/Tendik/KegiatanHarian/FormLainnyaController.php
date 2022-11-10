@@ -242,9 +242,7 @@ class FormLainnyaController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        // dd($id_form);
-        $list_data = PengisianKegiatanHarian::where('id_kegiatan_harian', $id_form)->with('pengguna_pengisi')->get();
-// dd($list_data);
+        $list_data = PengisianKegiatanHarian::where('id_kegiatan_harian', $id_form)->where('id_pengguna_pengisi', $input->auth_data->pengguna->id_pengguna)->with('pengguna_pengisi')->get();
         return Datatables::of($list_data)
             // ->editColumn('pengguna_pengisi.nm_pengguna', function ($item) {
             //     return $item->pengguna_pengisi->fullname();

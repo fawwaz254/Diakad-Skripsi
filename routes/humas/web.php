@@ -40,6 +40,7 @@ use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
+use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
 
 Route::middleware(['token_staff'])->group(function () {
 
@@ -289,6 +290,16 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
             Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
+
+            Route::prefix('rekap-lainnya')->group(function () {
+                Route::get('/', [RekapLainnyaController::class, 'viewListKegiatan']);
+                Route::post('datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
+
+                Route::get('/rekap-guru-tendik/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
+                Route::get('/rekap-siswa/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
+                // Route::post('/gurutendik/datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
+
+            });
         });
 
         Route::prefix('magang-siswa')->group(function () {
