@@ -278,7 +278,7 @@
         window.location = '/humas#absensi/histori-absensi-siswa'
     }
 
-    function viewSiswa() {
+    function viewSiswaPondok() {
         window.location = '/humas#absensi/histori-absensi-siswa-pondok'
     }
 

@@ -37,6 +37,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as WaliKelasRekapKesehatanController;
 use App\Http\Controllers\Humas\Absensi\DetailAbsensiController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
+use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
@@ -211,23 +212,23 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('histori-absensi-siswa-pondok')->group(function () {
-                Route::get('/', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensiSiswa']);
+                Route::get('/', [HistoriAbsensiSiswaPondokController::class, 'viewHistoriAbsensiSiswa']);
                 // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class,'getKelas']);
-                Route::post('/', [HistoriAbsensiSiswaController::class, 'actionDetailHistoriAbsensiSiswa']);
-                Route::get('/detail/{kelas}/{date}/{status}', [HistoriAbsensiSiswaController::class, 'viewDetailHistoriAbsensiSiswa']);
-                // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaController::class,'viewDetailsHistoriAbsensiSiswa']);
-                Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_mount']);
-                Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_week']);
-                Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_day']);
+                Route::post('/', [HistoriAbsensiSiswaPondokController::class, 'actionDetailHistoriAbsensiSiswa']);
+                Route::get('/detail/{kelas}/{date}/{status}', [HistoriAbsensiSiswaPondokController::class, 'viewDetailHistoriAbsensiSiswa']);
+                // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class,'viewDetailsHistoriAbsensiSiswa']);
+                Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_mount']);
+                Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_week']);
+                Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_day']);
                 //buat izin / sakit
-                Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'createHistoriAbsensi']);
-                Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'storeHistoriAbsensi']);
-                Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'editHistoriAbsensi']);
-                Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'updateHistoriAbsensi']);
-                Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
+                Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaPondokController::class, 'createHistoriAbsensi']);
+                Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaPondokController::class, 'storeHistoriAbsensi']);
+                Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaPondokController::class, 'editHistoriAbsensi']);
+                Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaPondokController::class, 'updateHistoriAbsensi']);
+                Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaPondokController::class, 'destroyHistoriAbsensi']);
 
                 //buat generate shift siswa
-                Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
+                Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaPondokController::class, 'storeShiftPengguna']);
             });
 
 
