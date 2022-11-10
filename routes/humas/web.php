@@ -210,6 +210,27 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
             });
 
+            Route::prefix('histori-absensi-siswa-pondok')->group(function () {
+                Route::get('/', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensiSiswa']);
+                // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class,'getKelas']);
+                Route::post('/', [HistoriAbsensiSiswaController::class, 'actionDetailHistoriAbsensiSiswa']);
+                Route::get('/detail/{kelas}/{date}/{status}', [HistoriAbsensiSiswaController::class, 'viewDetailHistoriAbsensiSiswa']);
+                // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaController::class,'viewDetailsHistoriAbsensiSiswa']);
+                Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_mount']);
+                Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_week']);
+                Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_day']);
+                //buat izin / sakit
+                Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'createHistoriAbsensi']);
+                Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'storeHistoriAbsensi']);
+                Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'editHistoriAbsensi']);
+                Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'updateHistoriAbsensi']);
+                Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
+
+                //buat generate shift siswa
+                Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
+            });
+
+
             Route::prefix('detail-absensi')->group(function () {
                 Route::get('/', [DetailAbsensiController::class, 'selectHistoriAbsensi']);
                 Route::post('post-get-penguna', [DetailAbsensiController::class, 'actionGetPengguna']);

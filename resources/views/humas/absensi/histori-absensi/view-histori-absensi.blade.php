@@ -47,6 +47,11 @@
             <button type="button" onclick="viewSiswa()" class="btn btn-default">
                 Data Histori Absensi Siswa
             </button>
+            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+            <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
+                Data Histori Absensi Siswa Pondok
+            </button>
+            @endif
             <div class="card" style="margin-top: 10px">
                 <div class="header">
                     <h2>Filter Data</h2>
@@ -273,6 +278,9 @@
         window.location = '/humas#absensi/histori-absensi-siswa'
     }
 
+    function viewSiswa() {
+        window.location = '/humas#absensi/histori-absensi-siswa-pondok'
+    }
 
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
@@ -286,9 +294,6 @@
     function editAbsensi(currUser) {
         window.location = '/humas#absensi/histori-absensi/' + currUser + '/' + $('input[name=date]').val() + '/edit'
     }
-
-
-
 
     $(".delete-record").click(function() {
         var token = $("meta[name='csrf-token']").attr("content");

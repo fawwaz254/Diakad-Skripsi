@@ -10,7 +10,7 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        FILTER BULAN
+                        FILTER BULAN dan KELAS
                     </h2>
                 </div>
                 <div class="body">
@@ -39,6 +39,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label>Kelas</label>
+                                    <select class="form-control show-tick" name="kelas">
+                                        @foreach($allKelas as $k)
+                                        <option {{($k->id_kelas == $kelas->id_kelas)? 'selected' : ''}} value="{{$k->id_kelas}}">{{$k->nm_kelas}}</option>
+                                        @endforeach
+                                        {{-- @for($i=2015; $i<=2025; $i++)
+                                            <option {{($tahun == $i)? 'selected' : ''}} value="{{$i}}">{{$i}}</option>
+                                        @endfor --}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <button class="btn btn-block bg-btn-submit waves-effect" onclick="filterAction()"><i class="material-icons">save</i><span>Filter</span></button>
                         </div>
@@ -55,7 +70,7 @@
                 <div class="header">
                     <h2>
                         {{-- {{ $data_pengisian->kegiatan_harian->nm_kegiatan_harian }} --}}
-                        REKAP MONITORING  GURU/TENDIK BULAN {{$bulan->nm_bulan}}
+                        REKAP MONITORING SISWA {{$bulan->nm_bulan}}
                         <a target="_blank" href="{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/'.$bulan->id_bulan.'/'.$tahun.'/download')}}" class="btn btn-success waves-effect"><i class="material-icons">print</i><span>Download Excel</span></a>
                     </h2>
                 </div>
