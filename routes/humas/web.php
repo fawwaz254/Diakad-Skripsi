@@ -292,7 +292,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [InputPertanyaanController::class, 'viewAddEditInputPertanyaan']);
 
                 Route::post('datatables', [InputPertanyaanController::class, 'showDatatablesInputPertanyaan']);
-                Route::post('action/{mode}', [InputPertanyaanController::class, 'actionInputPertanyaan']);
+                Route::post('action/{mode}/{id}', [InputPertanyaanController::class, 'actionInputPertanyaan']);
 
                 Route::prefix('jawaban')->group(function () {
                     Route::get('detail/{id1}', [InputPertanyaanController::class, 'viewInputJawaban']);

@@ -109,7 +109,7 @@ class InputPertanyaanController extends BaseController{
     public function actionInputPertanyaan(Request $request, $mode,$id){
         $input = (object) $request->input();
 
-
+// dd($mode);
 
         $validator = Validator::make($request->all(), [
             'id_kegiatan_harian_kategori'           => 'required',
