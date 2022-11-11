@@ -55,7 +55,7 @@ class RekapLainnyaController extends Controller
     }
 
 
-    public function viewRekapKegiatanGuruTendik(Request $request, $id_kegiatan_harian){
+    public function viewRekapKegiatanGuruTendik(Request $request, $id_kegiatan_harian, $id_bulan = null , $tahun = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -79,7 +79,7 @@ class RekapLainnyaController extends Controller
             $q->where('aktif_status_pengguna', 1);
         })->whereIn('status_join_table', [1, 2])->orderBy('nm_pengguna')->get();
         $data_pengisian = PengisianKegiatanHarian::where('id_kegiatan_harian',$id_kegiatan_harian)->whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
-        return view('humas/kegiatan-harian/rekap-lainnya/view-rekap-lainnya-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun'));
+        return view('humas/kegiatan-harian/rekap-lainnya/view-rekap-lainnya-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun','id_kegiatan_harian'));
     }
 
     public function viewRekapKegiatanSiswa(Request $request, $id_kegiatan_harian, $bulan = null , $tahun = null ,$kelas = null){

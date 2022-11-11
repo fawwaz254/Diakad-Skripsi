@@ -150,9 +150,9 @@
 
 <script>
 function filterAction(){
-    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
+    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/{{Request::segment(4)}}/' + '{{ $id_kegiatan_harian }}'  + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
 }
-
+// alert('{{Request::segment(2)}}/{{Request::segment(3)}}/{{Request::segment(4)}}/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
 var primary_table = $('#primary_table').DataTable({
     ordering: false,
     scrollX: true,

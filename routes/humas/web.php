@@ -318,11 +318,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
 
                 Route::get('/rekap-guru-tendik/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
+                Route::get('/rekap-guru-tendik/{id_kegiatan_harian}/{id_bulan}/{tahun}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
+
                 Route::get('/rekap-siswa/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
-
                 Route::get('/rekap-siswa/{id_kegiatan_harian}/{bulan}/{tahun}/{kelas}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
-                // Route::post('/gurutendik/datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
-
             });
         });
 
