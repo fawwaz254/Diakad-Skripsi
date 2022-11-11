@@ -83,18 +83,19 @@ class HistoriAbsensiSiswaPondokController extends Controller
             foreach ($dates as $value) {
                 $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user->pengguna->id_pengguna)
                     ->where('date', $value->format('Y-m-d'))
+                    ->where('id_shift_master', 'Pondok')
                     ->first();
                 //validasi apakah sudah ada apa belum datanya
                 if ($shiftPenggunaId) {
-                    $dataUpdate['id_shift_master'] = 'Siswa';
-                    $shiftPenggunaId->update($dataUpdate);
+                    // $dataUpdate['id_shift_master'] = 'Pondok';
+                    // $shiftPenggunaId->update($dataUpdate);
                 } else {
                     $now = Carbon::now(env('APP_TIMEZONE', ''));
                     $html = '';
                     $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
                     $list_data['id_pengguna'] = $user->pengguna->id_pengguna;
                     $list_data['date'] =  $value->format('Y-m-d');
-                    $list_data['id_shift_master'] = 'Siswa';
+                    $list_data['id_shift_master'] = 'Pondok';
 
                     ShiftPengguna::create($list_data);
                 }
