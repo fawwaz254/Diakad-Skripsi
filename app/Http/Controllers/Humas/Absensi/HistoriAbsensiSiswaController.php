@@ -158,7 +158,7 @@ class HistoriAbsensiSiswaController extends Controller
                 })->orderBy('nm_pengguna', 'asc')->get();
         }
 
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
+        $allShiftPengguna = ShiftPengguna::where('id_shift_master','Pondok')->where('date', $date)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
