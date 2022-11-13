@@ -55,7 +55,7 @@ class RekapLainnyaController extends Controller
     }
 
 
-    public function viewRekapKegiatanGuruTendik(Request $request, $id_kegiatan_harian){
+    public function viewRekapKegiatanGuruTendik(Request $request, $id_kegiatan_harian, $id_bulan = null , $tahun = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -79,29 +79,34 @@ class RekapLainnyaController extends Controller
             $q->where('aktif_status_pengguna', 1);
         })->whereIn('status_join_table', [1, 2])->orderBy('nm_pengguna')->get();
         $data_pengisian = PengisianKegiatanHarian::where('id_kegiatan_harian',$id_kegiatan_harian)->whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
-        return view('humas/kegiatan-harian/rekap-lainnya/view-rekap-lainnya-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun'));
+        return view('humas/kegiatan-harian/rekap-lainnya/view-rekap-lainnya-guru-tendik', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun','id_kegiatan_harian'));
     }
 
-    public function viewRekapKegiatanSiswa(Request $request, $id_kegiatan_harian){
+    public function viewRekapKegiatanSiswa(Request $request, $id_kegiatan_harian, $bulan = null , $tahun = null ,$kelas = null){
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $now = Carbon::today();
-        if (empty($id_bulan)) {
-            $id_bulan = $now->month;
+        if (empty($bulan)) {
+            $bulan = $now->month;
         }
 
         if (empty($tahun)) {
             $tahun = $now->year;
         }
 
-        $start_month = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
-        $end_month = Carbon::create($tahun, $id_bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
+        if (empty($kelas)) {
+            $getKelas = Kelas::first();
+            $kelas = $getKelas->id_kelas;
+        }
+
+        $start_month = Carbon::create($tahun, $bulan, 1, 0, 0, 0, 'Asia/Jakarta');
+        $end_month = Carbon::create($tahun, $bulan, 1, 23, 59, 0, 'Asia/Jakarta')->endOfMonth();
         $dates = CarbonPeriod::create($start_month, $end_month);
 
-        $bulan = Bulan::find($id_bulan);
+        $bulan = Bulan::find($bulan);
         $data_bulan = Bulan::orderBy('id_bulan')->get();
-        $kelas = Kelas::first();
+
         $allKelas = Kelas::all();
         // dd($kelas);
 
@@ -109,11 +114,11 @@ class RekapLainnyaController extends Controller
             $q->where('aktif_status_pengguna', 1);
         })->
         whereHas('siswa', function ($q) use($kelas) {
-            $q->where('id_kelas', $kelas->id_kelas);
+            $q->where('id_kelas', $kelas);
         })->orderBy('nm_pengguna')->get();
         // dd($data_pengguna);
-        $data_pengisian = PengisianKegiatanHarian::where('id_kegiatan_harian',$id_kegiatan_harian)->whereMonth('tgl_pengisian', $id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
-        return view('humas/kegiatan-harian/rekap-lainnya/view-rekap-lainnya-siswa', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun','allKelas','kelas'));
+        $data_pengisian = PengisianKegiatanHarian::where('id_kegiatan_harian',$id_kegiatan_harian)->whereMonth('tgl_pengisian', $bulan->id_bulan)->whereYear('tgl_pengisian', $tahun)->whereIn('id_pengguna_pengisi', $data_pengguna->pluck('id_pengguna'))->get();
+        return view('humas/kegiatan-harian/rekap-lainnya/view-rekap-lainnya-siswa', compact('auth_data', 'dates', 'data_bulan', 'bulan', 'data_pengguna', 'data_pengisian', 'tahun','allKelas','kelas','id_kegiatan_harian'));
     }
 
 }

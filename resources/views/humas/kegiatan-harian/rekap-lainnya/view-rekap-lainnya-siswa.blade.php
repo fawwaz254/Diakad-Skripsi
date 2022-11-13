@@ -45,7 +45,7 @@
                                     <label>Kelas</label>
                                     <select class="form-control show-tick" name="kelas">
                                         @foreach($allKelas as $k)
-                                        <option {{($k->id_kelas == $kelas->id_kelas)? 'selected' : ''}} value="{{$k->id_kelas}}">{{$k->nm_kelas}}</option>
+                                        <option {{($k->id_kelas == $kelas)? 'selected' : ''}} value="{{$k->id_kelas}}">{{$k->nm_kelas}}</option>
                                         @endforeach
                                         {{-- @for($i=2015; $i<=2025; $i++)
                                             <option {{($tahun == $i)? 'selected' : ''}} value="{{$i}}">{{$i}}</option>
@@ -165,7 +165,7 @@
 
 <script>
 function filterAction(){
-    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val());
+    loadURI('{{Request::segment(2)}}/{{Request::segment(3)}}/{{Request::segment(4)}}/'  + '{{ $id_kegiatan_harian }}' + '/' + $('select[name=id_bulan]').val() + '/' + $('select[name=tahun]').val()  + '/' + $('select[name=kelas]').val());
 }
 
 var primary_table = $('#primary_table').DataTable({
