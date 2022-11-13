@@ -292,7 +292,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [InputPertanyaanController::class, 'viewAddEditInputPertanyaan']);
 
                 Route::post('datatables', [InputPertanyaanController::class, 'showDatatablesInputPertanyaan']);
-                Route::post('action/{mode}', [InputPertanyaanController::class, 'actionInputPertanyaan']);
+                Route::post('action/{mode}/{id}', [InputPertanyaanController::class, 'actionInputPertanyaan']);
 
                 Route::prefix('jawaban')->group(function () {
                     Route::get('detail/{id1}', [InputPertanyaanController::class, 'viewInputJawaban']);
@@ -318,9 +318,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
 
                 Route::get('/rekap-guru-tendik/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
-                Route::get('/rekap-siswa/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
-                // Route::post('/gurutendik/datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
+                Route::get('/rekap-guru-tendik/{id_kegiatan_harian}/{id_bulan}/{tahun}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
 
+                Route::get('/rekap-siswa/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
+                Route::get('/rekap-siswa/{id_kegiatan_harian}/{bulan}/{tahun}/{kelas}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
             });
         });
 
