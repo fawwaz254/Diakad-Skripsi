@@ -290,7 +290,7 @@ class SettingPesertaEkskulController extends BaseController
                 if ($pelatih = NilaiEkskul::where('id_pengambilan_ekskul', '=', $pengambilan_ekskul->id_pengambilan_ekskul)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Failed To Delete Peserta'
+                        'message' => 'Tidak bisa dihapus karna siswa sudah diberi nilai ekskul'
                     ];
                 } else {
                     // make object to find id

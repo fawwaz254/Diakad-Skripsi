@@ -37,7 +37,7 @@
             <button type="button" onclick="viewGuru()" class="btn btn-default">
                 Data Histori Absensi Guru dan Pegawai
             </button>
-            <button type="button" class="btn btn-default">
+            <button type="button"  onclick="viewSiswa()" class="btn btn-default">
                 Data Histori Absensi Siswa
             </button>
             <button type="button" class="btn btn-primary">
@@ -153,6 +153,10 @@
 
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
+    }
+
+    function viewSiswa() {
+        window.location = '/humas#absensi/histori-absensi-siswa'
     }
 </script>
 {{-- <script type="text/javascript">

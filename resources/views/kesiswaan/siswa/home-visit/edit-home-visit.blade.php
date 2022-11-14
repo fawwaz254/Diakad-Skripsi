@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            EDIT Data HOME VISIT
+                            Edit Data Home Visit
                         </h2>
                     </div>
                     <div class="body">

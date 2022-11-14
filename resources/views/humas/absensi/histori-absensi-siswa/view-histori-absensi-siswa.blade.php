@@ -40,6 +40,11 @@
             <button type="button" class="btn btn-primary">
                 Data Histori Absensi Siswa
             </button>
+            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+            <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
+                Data Histori Absensi Siswa Pondok
+            </button>
+            @endif
         @endif
 
             <div class="card" style="margin-top: 10px">
@@ -150,6 +155,9 @@
 
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
+    }
+    function viewSiswaPondok() {
+        window.location = '/humas#absensi/histori-absensi-siswa-pondok'
     }
 </script>
 {{-- <script type="text/javascript">
