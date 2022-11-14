@@ -62,7 +62,7 @@
                                 <tr>
                                     <th rowspan="2">No.</th>
                                     <th rowspan="2">Nama</th>
-                                    <th rowspan="2">Total Kehadiran</th>
+                                    <th rowspan="2">Total Presensi</th>
                                     <th colspan="{{ $dates->count() }}">Tanggal</th>
                                 </tr>
                                 <tr>

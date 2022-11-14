@@ -51,7 +51,7 @@ class PrintRaporController extends BaseController
         $id_siswa = $input->id_siswa;
         $id_kelas = $input->id_kelas;
         $id_semester = $input->id_semester;
-        $keputusan = $input->keputusan;
+        // $keputusan = $input->keputusan;
         $catatan = $input->deskripsi_catatan_wali_kelas;
         $now = Carbon::now(env('APP_TIMEZONE', ''));        
 
@@ -78,6 +78,7 @@ class PrintRaporController extends BaseController
                             $join->whereNull('jenis_mata_pelajaran.deleted_at');
                         })
                         ->get();
+        // dd($pengambilanMpAll);
 
         $presensiMpSiswa = PresensiMpSiswa::join('presensi_mp', function($join){
                                                 $join->on('presensi_mp.id_presensi_mp', '=', 'presensi_mp_siswa.id_presensi_mp');
@@ -119,7 +120,7 @@ class PrintRaporController extends BaseController
         $standar_nilai = StandarNilai::get();
         $all_ekskul = Ekskul::get();
 
-        $text_keputusan = RaporDeskripsi::KEPUTUSAN[$keputusan];
+        // $text_keputusan = RaporDeskripsi::KEPUTUSAN[$keputusan];
 
         DB::beginTransaction();
         try{
@@ -148,7 +149,7 @@ class PrintRaporController extends BaseController
                 $rapor_deskripsi->id_rapor_subkelompok_mp   = !empty($rapor_subkelompok_mp) ? $rapor_subkelompok_mp->id_rapor_subkelompok_mp : null;
                 $rapor_deskripsi->id_ekstrakurikuler        = null;
                 $rapor_deskripsi->predikat_rapor_deskripsi  = $mp->nilai_huruf;
-                $rapor_deskripsi->deskripsi_rapor           = $text_keputusan; // ini akan diisi kenaikan kelas (rapor smt GENAP)
+                // $rapor_deskripsi->deskripsi_rapor           = $text_keputusan; // ini akan diisi kenaikan kelas (rapor smt GENAP)
                 if(empty($rapor_deskripsi->created_by)){
                     $rapor_deskripsi->created_by            = $input->auth_data->pengguna->id_pengguna;
                 } else {
@@ -291,7 +292,7 @@ class PrintRaporController extends BaseController
                 $join->on('rapor_deskripsi.id_rapor_subkategori', 'rapor_subkategori.id_rapor_subkategori');
                 $join->whereNull('rapor_subkategori.deleted_at');
             })
-            ->join('rapor_kelompok_mp', function($join) {
+            ->leftJoin('rapor_kelompok_mp', function($join) {
                 $join->on('rapor_deskripsi.id_rapor_kelompok_mp', 'rapor_kelompok_mp.id_rapor_kelompok_mp');
                 $join->whereNull('rapor_kelompok_mp.deleted_at');
             })
@@ -309,7 +310,7 @@ class PrintRaporController extends BaseController
                 'id_kelas' => $id_kelas,
                 'rapor_siswa.id_semester' => $id_semester
             ])->get();
-        
+        // dd($new_data_rapor);
         // get all data detail rapor based on new rapor_siswa
         $data_detail_rapor = [];
         $j = 20;
@@ -322,7 +323,7 @@ class PrintRaporController extends BaseController
             }
 
             // get all nilai from nilai_mp based on komponen_nilai
-            $idPengambilanMp = $pengambilanMpAll->where('id_mata_pelajaran', $rapor->id_mata_pelajaran)->first()->id_pengambilan_mp;
+            $idPengambilanMp = $pengambilanMpAll->where('id_mata_pelajaran', $rapor->id_mata_pelajaran)->first()->id_pengambilan_mp ?? '';
             
             $allNilai = NilaiMp::where('id_pengambilan_mp', $idPengambilanMp)
                             ->join('komponen_mp', function($join){
