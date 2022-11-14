@@ -25,7 +25,8 @@
                                     <th rowspan="2">NIS</th>
                                     <th rowspan="2">NISN</th>
                                     <th rowspan="2">Nama</th>
-                                    <th colspan="25">Tanggal</th>
+                                    <th colspan="{{$data_presensi->count()}}">Tanggal</th>
+                                    <th rowspan="2">Rekap</th>
                                 </tr>
                                 <tr>
                                     @foreach($data_presensi as $presensi_harian)
@@ -65,6 +66,11 @@
                                             <td></td>
                                         @endif
                                     @endforeach
+                                        <td class="is-center">
+                                            <a class=" btn btn-success btn-circle waves-effect waves-circle waves-float justify-content-center align-items-center" href="{{url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/print-detail/' . $semester_aktif->id_semester . '/' . $data_kelas->id_kelas . '/' . $siswa->id_pengguna . '/' .  $id_bulan . '/' . $tahun)}}" target="_blank">
+                                                <i class="material-icons">picture_as_pdf</i>
+                                            </a>
+                                        </td>
                                 </tr>
                                 @endforeach
                                 <tr>
