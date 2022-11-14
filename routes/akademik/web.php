@@ -206,7 +206,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
 
             //test automatik ploting
-            Route::get('plotting-mapel-siswa/action-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/view-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
+            Route::post('plotting-mapel-siswa/action-auto-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
 
             //MENU Hapus Plotting Mapel Siswa
             Route::get('hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'viewHapusPlottingMapelSiswa']);
