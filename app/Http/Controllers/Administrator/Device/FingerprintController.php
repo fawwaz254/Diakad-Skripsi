@@ -156,7 +156,7 @@ class FingerprintController extends BaseController
         }
 
         try {
-            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereIn('username', $data_username_pengguna)->whereNull('unit')->get();
+            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereNull('unit')->whereIn('username', $data_username_pengguna)->get();
             $collection = $data_fingerprint->groupBy('username')->all();
 
             foreach ($collection as $username => $group_of_data) {
@@ -208,7 +208,7 @@ class FingerprintController extends BaseController
                 }
             }
             //---------ambil data pondok-------------//
-            $data_fingerprint2 = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereIn('username', $data_username_pengguna)->where('unit', 'Pondok')->get();
+            $data_fingerprint2 = FPAttendance::where('tanggal', $now->format('Y-m-d'))->where('unit', 'Pondok')->whereIn('username', $data_username_pengguna)->get();
             $collection2 = $data_fingerprint2->groupBy('username')->all();
 
             foreach ($collection2 as $username => $group_of_data) {
