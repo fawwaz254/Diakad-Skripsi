@@ -156,7 +156,7 @@ class FingerprintController extends BaseController
         }
 
         try {
-            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereIn('username', $data_username_pengguna)->whereNull('unit')->get();
+            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereNull('unit')->whereIn('username', $data_username_pengguna)->get();
             $collection = $data_fingerprint->groupBy('username')->all();
 
             foreach ($collection as $username => $group_of_data) {
@@ -208,20 +208,20 @@ class FingerprintController extends BaseController
                 }
             }
             //---------ambil data pondok-------------//
-            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereIn('username', $data_username_pengguna)->where('unit', 'Pondok')->get();
-            $collection = $data_fingerprint->groupBy('username')->all();
+            $data_fingerprint2 = FPAttendance::where('tanggal', $now->format('Y-m-d'))->where('unit', 'Pondok')->whereIn('username', $data_username_pengguna)->get();
+            $collection2 = $data_fingerprint2->groupBy('username')->all();
 
-            foreach ($collection as $username => $group_of_data) {
+            foreach ($collection2 as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
                     if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                        ->where('status_join_table', 4)
+                        ->where('status_join_table', '4')
                         ->first()
                     ) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
-                        $presensi->status_join_table = 4;
+                        $presensi->status_join_table = '4';
                         $presensi->date = $first_time_finger->tanggal;
                     }
 
@@ -332,15 +332,15 @@ class FingerprintController extends BaseController
             }
 
             //--------------------------finger pondok-----------------------------//
-            $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
-            $collection = $data_fingerprint->groupBy('username')->all();
+            $data_fingerprint2 = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
+            $collection2 = $data_fingerprint2->groupBy('username')->all();
 
-            foreach ($collection as $username => $group_of_data) {
+            foreach ($collection2 as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
                     if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                    ->where('status_join_table',4)
+                    ->where('status_join_table','4')
                     ->first()) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
