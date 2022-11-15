@@ -422,6 +422,57 @@ class PlottingMapelSiswaController extends BaseController
     }
 
 
+    public function datatablesAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = Kelas::with('jurusan')
+        ->whereHas('jurusan', function ($query) use($id_jurusan) {
+            $query->where('id_jurusan', '=', $id_jurusan);
+        })->get();
+
+        $jumlah_siswa = Siswa::with('kelas')->
+        whereHas('pengguna.status_pengguna', function ($query) use($id_jurusan) {
+            $query->where('aktif_status_pengguna', '=', 1);
+        })->get();
+
+        $jml_siswa_terploting = PengambilanMp::where('id_semester', $id_semester)->with('kelas_mp')->get();
+
+
+        // $list_data = Kelas::select(
+        //     'jurusan.id_jurusan',
+        //     'jurusan.nm_jurusan',
+        //     DB::raw("(SELECT COUNT(*) FROM siswa 
+        //     JOIN kelas ON kelas.id_kelas = siswa.id_kelas
+        //     JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
+        //     JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna 
+        //     WHERE status_pengguna.aktif_status_pengguna = '1'
+        //     AND kelas.id_jurusan = jurusan.id_jurusan 
+        //     AND siswa.deleted_at IS NULL 
+        //     ) AS jml_siswa")
+        // )
+        // ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
+        //     JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp
+        //     JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
+        //     WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL AND pengambilan_mp.id_semester = ?) AS jml_siswa_krs", [$id])
+        // ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+        // ->get();
+
+
+
+        return Datatables::of($list_data)
+        ->addColumn('jml_siswa_krs', function ($item) use($jml_siswa_terploting) {
+            $data = $jml_siswa_terploting->where('kelas_mp.id_kelas', $item->id_kelas);
+            //     'id_siswa' => $item->id_siswa
+            // );
+            return $data->unique('id_siswa')->count();
+        })
+        ->addColumn('jml_siswa', function ($item) use($jumlah_siswa) {
+            return $jumlah_siswa->where('kelas.id_kelas', $item->id_kelas)->count();
+        })
+        ->make(true);
+    }
+
+
     public function actionAutoPlottingMapelSiswa(Request $request){
         set_time_limit(9800);
    # code...
@@ -464,13 +515,14 @@ class PlottingMapelSiswaController extends BaseController
                 ->whereNull('calon_siswa_baru.deleted_at');
         })
         ->where('siswa.id_kelas', '=', $input->id_kelas)->get();
-// dd($list_siswa);
 
+        // $pengambilan_mp = PengambilanMp::where('id_semester',$input->id_semester);
         foreach ($list_mapel as $id_kelas_mp) {
-            // dd($id_kelas_mp);
+            // $pengambilan_kelas_mp = $pengambilan_mp->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp);
             $now = Carbon::now(env('APP_TIMEZONE', ''));
             $pengambilan_mp_insert = array();
             foreach ($list_siswa as $id_siswa) {
+                // $cekSiswa = $pengambilan_kelas_mp->where('id_siswa', '=', $id_siswa->id_siswa)->first();
                 $cekSiswa = PengambilanMp::where('id_siswa', '=', $id_siswa->id_siswa)->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp)
                 ->where('id_semester', '=', $input->id_semester)->first();
                 if ($cekSiswa) {
@@ -503,16 +555,16 @@ class PlottingMapelSiswaController extends BaseController
         // plotting-mapel-siswa/view-kelas-plotting/
         // return redirect("akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/$id_semester/$angkatan");
         return [
-                'status' => 202, // SUCCESS AND LOAD CONTENT
+                'status' => 203, // SUCCESS AND LOAD CONTENT
                 'message' => 'AUTO PLOTING BERHASIL',
-                'path' => 'aktivitas-semester/plotting-mapel-siswa/view-auto-plotting-mapel-siswa/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
+                // 'path' => 'aktivitas-semester/plotting-mapel-siswa/view-auto-plotting-mapel-siswa/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
         ];
     } catch (\Exception $e) {
         DB::rollback();
         return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
+            'status' => 203, // SUCCESS AND LOAD CONTENT
             'message' => 'AUTO PLOTING GAGAL',
-            'path' => 'aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
+            // 'path' => 'aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
     ];
         // something went wrong
         //   return redirect()->back();
@@ -525,4 +577,7 @@ class PlottingMapelSiswaController extends BaseController
     }
 
 }
+
+
+
 }
