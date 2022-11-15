@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        DATA HOME VISIT
+                        Data Home Visit
                     </h2>
                 </div>
                 <div class="body">
