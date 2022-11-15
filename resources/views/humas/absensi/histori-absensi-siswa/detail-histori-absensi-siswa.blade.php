@@ -197,18 +197,17 @@
 
 @include('scriptjs')
 <script type="text/javascript">
-    var role = window.location.pathname;
 
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
     }
 
     function addAbsensi(id_pengguna) {
-        window.location = `${role}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
+        window.location = `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
     }
 
     function editAbsensi(currUser) {
-        window.location = `${role}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
+        window.location = `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
     }
 
 
@@ -225,7 +224,7 @@
                     $('.delete-record').attr("disabled", true);
                     //swall
                     $.ajax({
-                        url: `${role}/absensi/histori-absensi-siswa/${id}/delete`,
+                        url: `/{{ Request::segment(1) }}/absensi/histori-absensi-siswa/${id}/delete`,
                         type: "post",
 
                         data: {
