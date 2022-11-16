@@ -21,8 +21,9 @@
                             </label>
                             <select class="form-control show-tick" name="kelas" >
                                 <option>Pilih kelas</option>
+                                <option value="0" @if($id_kelas == "0") selected @endif>Semua</option>
                                 @foreach ($kelas as $lk)
-                                    <option value="{{ $lk->id_kelas }} @if($id_kelas == $lk->id_kelas) selected @endif" >{{ $lk->nm_kelas }}</option>
+                                    <option value="{{ $lk->id_kelas }}" @if($id_kelas == $lk->id_kelas) selected @endif >{{ $lk->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -39,6 +40,62 @@
 
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="row clearfix">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Shift Siswa</h2>
+                </div>
+                <div class="body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead style="background:#9C27B0;color:white">
+                                <tr>
+                                    <th style="text-align: center;">#</th>
+                                    <th style="text-align: center;">Nama</th>
+                                    <th style="text-align: center;">Kelas</th>
+                                    <th style="text-align: center;">Shift</th>
+                                    <th style="text-align: center;">Time</th>
+                                    {{-- <th style="text-align: center;">Action</th> --}}
+                                </tr>
+                            </thead>
+                            @php
+                            $no = 1;   
+                           @endphp
+                            @foreach ($hasil as $key => $r)
+                                @if ($no % 2 == 1)
+                                    <tr style="background: #DDA0DD">
+                                    @else
+                                    <tr>
+                                @endif
+
+                             
+                                  
+                                    <td style="text-align: center;">{{ $no++ }}</td>
+                                    <td>{{ $r['nm_pengguna'] }}</td>
+                                    <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                    <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
+                                    <td style="text-align: center;">{{ $r['time'] }}</td>
+                                    {{-- <td style="text-align: center;display:flex;justify-content:center">
+                                        @if ($r['id_shift_master'] == '-')
+                                            -
+                                        @else
+                                            <button type="button" class="btn bg-teal  waves-effect"
+                                                onclick="editAbsensi('{{ $r['id_shift_pengguna'] }}')">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        @endif --}}
+                                        </tr>
+                            @endforeach
+                            
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

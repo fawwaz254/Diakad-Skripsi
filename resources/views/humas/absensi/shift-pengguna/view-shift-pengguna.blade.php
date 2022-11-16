@@ -113,8 +113,6 @@
                                     @else
                                     <tr>
                                 @endif
-
-                                <tbody>
                                     <td style="text-align: center;">{{ $key + 1 }}</td>
                                     <td>{{ $r['nm_pengguna'] }}</td>
                                     <td style="text-align: center;">{{ $r['unit_kerja'] }}</td>
@@ -133,7 +131,6 @@
                                         @endif
                                         </tr>
                             @endforeach
-                            </tbody>
                         </table>
                     </div>
                 </div>
