@@ -177,7 +177,7 @@ class RaporSisipanController extends Controller
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman' ||$auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2' ) {
             $nilai_siswa = [];
             // $nilai_komponen = [];
             if ($list_siswa) {
