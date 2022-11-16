@@ -64,6 +64,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 
 // ROLE GURU
 
@@ -434,6 +435,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}', [AbsensiHarianSiswaController::class, 'viewManageAbsensiHarianSiswa']);
             Route::get('absensi-harian-siswa/manage/{id_semester}/{id_kelas}/{id_presensi_harian}', [AbsensiHarianSiswaController::class, 'viewManageAbsensiHarianSiswa']);
             Route::get('absensi-harian-siswa/detail/{id_semester}/{id_kelas}/{tahun}/{id_bulan}', [AbsensiHarianSiswaController::class, 'viewDetailAbsensiHarianSiswa']);
+            Route::get('absensi-harian-siswa/print-detail/{id_semester}/{id_kelas}/{id_pengguna}/{id_bulan}/{tahun}', [AbsensiHarianSiswaController::class, 'printDetailAbsensiHarianSiswa']);
 
             Route::post('absensi-harian-siswa/datatables/{id_semester}/{id_kelas}', [AbsensiHarianSiswaController::class, 'datatablesAbsensiHarianSiswa']);
             Route::post('absensi-harian-siswa/datatables-detail/{id_semester}/{id_kelas}/{id_presensi_harian}', [AbsensiHarianSiswaController::class, 'datatablesKelasAbsensiHariSiswa']);
@@ -669,6 +671,18 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
                 Route::post('datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
             });
+
+            Route::prefix('form-lainnya')->group(function () {
+                Route::get('/',[FormLainnyaController::class, 'viewListFormLainnya']);
+                Route::post('datatables', [FormLainnyaController::class, 'datatablesListFormLainnya']);
+
+                Route::get('/form/{id_form}',[FormLainnyaController::class, 'viewFormLainnya']);
+                Route::post('/form/datatables/{id_form}',[FormLainnyaController::class, 'datatablesFormLainnya']);
+
+                Route::get('/form/{id_form}/isi',[FormLainnyaController::class, 'isiFormLainnya']);
+                Route::get('/form/{id_form}/detail',[FormLainnyaController::class, 'viewDetailFormLainnya']);
+                Route::post('/form/action/{id_form}/{mode}',[FormLainnyaController::class, 'postIsiFormLainnya']);
+            });
         });
 
         Route::prefix('kesekretariatan')->group(function () {
@@ -721,6 +735,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiEkskul']);
+            Route::get('rekap-absensi-ekskul/print-detail/{id_semester}/{id_ekskul}/{id_siswa}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiKehadiranEkskul']);
 
             // Menu Komponen Nilai Ekskul
             Route::get('komponen-nilai-ekskul', [KomponenNilaiEkskulController::class, 'viewKomponenNilaiEkskul']);

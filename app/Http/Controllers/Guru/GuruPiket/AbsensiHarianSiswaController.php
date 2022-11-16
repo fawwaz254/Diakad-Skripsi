@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers\Guru\GuruPiket;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\App;
-
-use App\Models\Siswa;
-use App\Models\WaliMurid;
-use App\Models\Bulan;
-use App\Models\Guru;
-use App\Models\PresensiHarian;
-use App\Models\PresensiHarianSiswa;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Pendidikan\LibKelas;
-use App\Libraries\SumberDaya\LibGuru;
-use App\Libraries\SaranaPrasarana\LibDataSarpras;
-use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\LibGlobal;
-
-use Auth;
 use DB;
+use Auth;
+
 use Session;
 use Validator;
+use Carbon\Carbon;
+
+use App\Models\Guru;
+use App\Models\Bulan;
+use App\Models\Siswa;
+use App\Models\WaliKelas;
+use App\Models\WaliMurid;
+use App\Libraries\LibGlobal;
+
+use Illuminate\Http\Request;
+use App\Models\PresensiHarian;
+use Yajra\Datatables\Datatables;
+use App\Models\PresensiHarianSiswa;
+use Illuminate\Support\Facades\App;
+use App\Libraries\SumberDaya\LibGuru;
+
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\SaranaPrasarana\LibDataSarpras;
+use Illuminate\Routing\Controller as BaseController;
 
 class AbsensiHarianSiswaController extends BaseController
 {
@@ -87,7 +88,7 @@ class AbsensiHarianSiswaController extends BaseController
         $auth_data->modul_url = $this->modul_url;
         $auth_data->menu_url = $this->menu_url;
 
-        
+
         $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
 
         $data_kelas = LibKelas::fetchDataKelas($auth_data, $id_kelas);
@@ -101,17 +102,42 @@ class AbsensiHarianSiswaController extends BaseController
         $end_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta')->endOfMonth();
 
         $data_presensi = PresensiHarian::with('jadwal_hari', 'presensi_harian_siswa')
-                                    ->where('id_semester', $id_semester)
-                                    ->where('id_kelas', $id_kelas)
-                                    ->whereBetween('tgl_entry', [$start_date, $end_date])
-                                    ->orderBy('tgl_entry', 'asc')
-                                    ->get();
-        // dd($start_date);
+            ->where('id_semester', $id_semester)
+            ->where('id_kelas', $id_kelas)
+            ->whereBetween('tgl_entry', [$start_date, $end_date])
+            ->orderBy('tgl_entry', 'asc')
+            ->get();
 
         return view(
             'guru/guru-piket/absensi-harian-siswa/view-detail-absensi-harian-siswa',
-            compact('auth_data', 'bulan', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'tahun')
+            compact('auth_data', 'bulan', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi', 'tahun', 'id_bulan')
         );
+    }
+    public function printDetailAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas, $id_pengguna, $id_bulan, $tahun)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester_aktif = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
+
+        $siswa = LibSiswa::fetchDataSiswaByPengguna($auth_data, $id_pengguna);
+
+        $start_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta');
+
+        $end_date = Carbon::create($tahun, $id_bulan, 1, 0, 0, 0, 'Asia/Jakarta')->endOfMonth();
+
+        $data_presensi = PresensiHarian::with('jadwal_hari', 'presensi_harian_siswa')
+            ->where('id_semester', $id_semester)
+            ->where('id_kelas', $id_kelas)
+            ->whereBetween('tgl_entry', [$start_date, $end_date])
+            ->orderBy('tgl_entry', 'asc')
+            ->get();
+
+        $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
+
+        // dd($wali_kelas);
+
+        return view('guru/guru-piket/absensi-harian-siswa/print-detail-absensi-harian-siswa', compact('auth_data', 'semester_aktif', 'siswa', 'data_presensi', 'wali_kelas'));
     }
 
     public function datatablesAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas)

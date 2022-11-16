@@ -127,16 +127,27 @@ class FingerprintController extends BaseController
 
             foreach ($data_fp as $data) {
                 $data_username_pengguna[] = $data['username'];
-                if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->first()) {
-
+                if ($serial_number == 'BWXP222860373' || $serial_number == 'BWXP222860377' || $serial_number == 'BWXP222860378') {
+                    if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
+                        $item = new FPAttendance;
+                        $item->id_fp_device = $device->id_fp_device;
+                        $item->username = $data['username'];
+                        $item->status = $data['status'];
+                        $item->tanggal = $data['tanggal'];
+                        $item->fp_date = $data['tanggal'];
+                        $item->unit = 'Pondok';
+                        $item->save();
+                    }
                 } else {
-                    $item = new FPAttendance;
-                    $item->id_fp_device = $device->id_fp_device;
-                    $item->username = $data['username'];
-                    $item->status = $data['status'];
-                    $item->tanggal = $data['tanggal'];
-                    $item->fp_date = $data['tanggal'];
-                    $item->save();
+                    if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->whereNull('unit')->first()) { } else {
+                        $item = new FPAttendance;
+                        $item->id_fp_device = $device->id_fp_device;
+                        $item->username = $data['username'];
+                        $item->status = $data['status'];
+                        $item->tanggal = $data['tanggal'];
+                        $item->fp_date = $data['tanggal'];
+                        $item->save();
+                    }
                 }
             }
             echo 'SUCCESS Tarik Data -> ';
@@ -145,16 +156,16 @@ class FingerprintController extends BaseController
         }
 
         try {
-            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereIn('username', $data_username_pengguna)->get();
+            $data_fingerprint = FPAttendance::where('tanggal', $now->format('Y-m-d'))->whereNull('unit')->whereIn('username', $data_username_pengguna)->get();
             $collection = $data_fingerprint->groupBy('username')->all();
 
             foreach ($collection as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)->first()) {
-
-                    } else {
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                        ->where('status_join_table', $pengguna->status_join_table)->first()
+                    ) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
@@ -196,6 +207,60 @@ class FingerprintController extends BaseController
                     $presensi->save();
                 }
             }
+            //---------ambil data pondok-------------//
+            $data_fingerprint2 = FPAttendance::where('tanggal', $now->format('Y-m-d'))->where('unit', 'Pondok')->whereIn('username', $data_username_pengguna)->get();
+            $collection2 = $data_fingerprint2->groupBy('username')->all();
+
+            foreach ($collection2 as $username => $group_of_data) {
+                if ($pengguna = Pengguna::where('username', $username)->first()) {
+                    $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
+
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                        ->where('status_join_table', '4')
+                        ->first()
+                    ) { } else {
+                        $presensi = new PresensiPengguna;
+                        $presensi->id_pengguna = $pengguna->id_pengguna;
+                        $presensi->status_join_table = '4';
+                        $presensi->date = $first_time_finger->tanggal;
+                    }
+
+                    if ($first_time_finger->status == 255) {
+                        if (count($group_of_data) > 1) { // FINGER MORE THAN 1
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                            if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                                $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                            }
+                        } else { // ONLY CHECK-IN
+                            // if (empty($presensi->check_in)) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            // }
+                        }
+                    } else {
+                        if ($first_time_finger->status == 0) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        }
+
+                        if ($first_time_finger->status == 1) {
+                            $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        }
+                    }
+
+                    if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
+                        if ($presensi->check_out < $presensi->check_in) {
+                            $temp_clock = $presensi->check_in;
+
+                            $presensi->check_in = $presensi->check_out;
+                            $presensi->check_out = $temp_clock;
+                        }
+                    }
+                    $presensi->status = null;
+                    $presensi->notes = null;
+                    $presensi->save();
+                }
+            }
+
             echo 'SUCCESS Merge Data. >>> END';
         } catch (Exception $e) {
             return $e;
@@ -214,16 +279,16 @@ class FingerprintController extends BaseController
         }
 
         try {
-            $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->get();
+            $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
             $collection = $data_fingerprint->groupBy('username')->all();
 
             foreach ($collection as $username => $group_of_data) {
                 if ($pengguna = Pengguna::where('username', $username)->first()) {
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)->first()) {
-
-                    } else {
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                    ->where('status_join_table', $pengguna->status_join_table)
+                    ->first()) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
@@ -265,13 +330,67 @@ class FingerprintController extends BaseController
                     $presensi->save();
                 }
             }
+
+            //--------------------------finger pondok-----------------------------//
+            $data_fingerprint2 = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
+            $collection2 = $data_fingerprint2->groupBy('username')->all();
+
+            foreach ($collection2 as $username => $group_of_data) {
+                if ($pengguna = Pengguna::where('username', $username)->first()) {
+                    $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
+
+                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                    ->where('status_join_table','4')
+                    ->first()) { } else {
+                        $presensi = new PresensiPengguna;
+                        $presensi->id_pengguna = $pengguna->id_pengguna;
+                        $presensi->status_join_table = 4;
+                        $presensi->date = $first_time_finger->tanggal;
+                    }
+
+                    if ($first_time_finger->status == 255) {
+                        if (count($group_of_data) > 1) { // FINGER MORE THAN 1
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                            if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                                $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                            }
+                        } else { // ONLY CHECK-IN
+                            // if (empty($presensi->check_in)) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            // }
+                        }
+                    } else {
+                        if ($first_time_finger->status == 0) {
+                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        }
+
+                        if ($first_time_finger->status == 1) {
+                            $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        }
+                    }
+
+                    if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
+                        if ($presensi->check_out < $presensi->check_in) {
+                            $temp_clock = $presensi->check_in;
+
+                            $presensi->check_in = $presensi->check_out;
+                            $presensi->check_out = $temp_clock;
+                        }
+                    }
+                    $presensi->status = null;
+                    $presensi->notes = null;
+                    $presensi->save();
+                }
+            }
+
             return 'OK';
         } catch (Exception $e) {
             return $e;
         }
     }
 
-//     public function syncDataFinger(Request $request){
+    //     public function syncDataFinger(Request $request){
     //         set_time_limit(9800);
     //         $input = (object) $request->input();
     //         $now = Carbon::now('Asia/Jakarta');
@@ -281,7 +400,7 @@ class FingerprintController extends BaseController
     //         //     $serial_number = $input->SN;
     //         // }
 
-//         // if ($device = FPDevice::where('sn', $serial_number)->first()) {
+    //         // if ($device = FPDevice::where('sn', $serial_number)->first()) {
     //         //     // $device->ip_address_wan = $request->ip();
     //         //     // $device->updated_at = Carbon::now('Asia/Jakarta');
     //         //     // $device->save();
@@ -289,13 +408,13 @@ class FingerprintController extends BaseController
     //         //     return 'FAILED';
     //         // }
 
-//         $allDevice = FPDevice::all();
+    //         $allDevice = FPDevice::all();
 
-//         foreach($allDevice as $device){
+    //         foreach($allDevice as $device){
     // // dd($device);
     //         $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
 
-//         if (!empty($device->port)) {
+    //         if (!empty($device->port)) {
     //             $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
     //         } else {
     //             $fingerprint_url = $device->ip_address_wan . '/iWsService';
@@ -310,16 +429,16 @@ class FingerprintController extends BaseController
     //                 'body' => $soap_request,
     //             ]);
 
-//             $buffer = $response->getBody()->getContents();
+    //             $buffer = $response->getBody()->getContents();
 
-//             $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+    //             $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
     //             $buffer = explode("\r\n", $buffer);
     //             $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
 
-//             foreach ($data_fp as $data) {
+    //             foreach ($data_fp as $data) {
     //                 if ($item = FPAttendance::where('username', $data['username'])->where('fp_date',  $data['tanggal'])->first()) {
 
-//                 } else {
+    //                 } else {
     //                     $item = new FPAttendance;
     //                     $item->id_fp_device = $device->id_fp_device;
     //                     $item->username = $data['username'];
@@ -329,12 +448,12 @@ class FingerprintController extends BaseController
     //                     $item->save();
     //                 }
 
-//                 $prefix = Sekolah::first()->prefix;
+    //                 $prefix = Sekolah::first()->prefix;
     //                 $now = Carbon::now('Asia/Jakarta');
     //                 if ($pengguna = Pengguna::where('username', $item->username)->first()) {
     //                     if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $data['tanggal'])->first()) {
 
-//                     } else {
+    //                     } else {
     //                         $presensi = new PresensiPengguna;
     //                         $presensi->id_presensi_pengguna = $prefix . strtotime($now) . uniqid();
     //                         $presensi->id_pengguna = $pengguna->id_pengguna;
@@ -342,7 +461,7 @@ class FingerprintController extends BaseController
     //                         $presensi->date = $item->tanggal;
     //                     }
 
-//                     if ($item->status == 255) {
+    //                     if ($item->status == 255) {
     //                         if (empty($presensi->check_in)) {
     //                             $presensi->check_in = $item->fp_date;
     //                         } else {
@@ -355,7 +474,7 @@ class FingerprintController extends BaseController
     //                             $presensi->check_in = $item->fp_date;
     //                         }
 
-//                         if ($item->status == 1) {
+    //                         if ($item->status == 1) {
     //                             $presensi->check_out = $item->fp_date;
     //                         }
     //                     }
@@ -364,7 +483,7 @@ class FingerprintController extends BaseController
     //                     $presensi->save();
     //                 }}
 
-//             return 'OK';
+    //             return 'OK';
     //         } catch (Exception $e) {
     //             return $e;
     //         }}

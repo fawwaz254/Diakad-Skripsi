@@ -158,8 +158,8 @@ class HistoriAbsensiSiswaController extends Controller
                 })->orderBy('nm_pengguna', 'asc')->get();
         }
 
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
+        $allShiftPengguna = ShiftPengguna::where('id_shift_master','Siswa')->where('date', $date)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table',3)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -270,10 +270,18 @@ class HistoriAbsensiSiswaController extends Controller
                     $query->whereIn('tingkat',  [10, 11, 12]);
                 })->orderBy('nm_pengguna', 'asc')->get();
         } elseif ($id_kelas == "0") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->orderBy('nm_pengguna', 'asc')->get();
+            // $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
+            //     ->whereHas('status_pengguna', function ($query) {
+            //         $query->where('nm_status_pengguna', '=', 'AKTIF');
+            //     })->orderBy('nm_pengguna', 'asc')->get();
+
+            $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+                ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                ->where('nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('nm_pengguna', 'asc')
+                ->get();
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -387,10 +395,18 @@ class HistoriAbsensiSiswaController extends Controller
                     $query->whereIn('tingkat',  [10, 11, 12]);
                 })->orderBy('nm_pengguna', 'asc')->get();
         } elseif ($id_kelas == "0") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->orderBy('nm_pengguna', 'asc')->get();
+            // $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
+            //     ->whereHas('status_pengguna', function ($query) {
+            //         $query->where('nm_status_pengguna', '=', 'AKTIF');
+            //     })->orderBy('nm_pengguna', 'asc')->get();
+
+            $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+                ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                ->where('nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('nm_pengguna', 'asc')
+                ->get();
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -506,10 +522,18 @@ class HistoriAbsensiSiswaController extends Controller
                     $query->whereIn('tingkat',  [10, 11, 12]);
                 })->orderBy('nm_pengguna', 'asc')->get();
         } elseif ($id_kelas == "0") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->orderBy('nm_pengguna', 'asc')->get();
+            // $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
+            //     ->whereHas('status_pengguna', function ($query) {
+            //         $query->where('nm_status_pengguna', '=', 'AKTIF');
+            //     })->orderBy('nm_pengguna', 'asc')->get();
+
+            $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+                ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                ->where('nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('nm_pengguna', 'asc')
+                ->get();
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -630,15 +654,10 @@ class HistoriAbsensiSiswaController extends Controller
         $input = $request->input();
         $status = $input['status'];
         $notes = $input['notes'];
-        PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
-        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date . "/0");
+        PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 3, 'date' => $date, 'status' => $status, 'notes' => $notes]);
+        return redirect("/{{Request::segment(1)}}#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date . "/0");
     }
 
-    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
-    {
-        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
-        return $id_presensi_pengguna;
-    }
 
     public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $id_kelas = null, $date = null)
     {
@@ -656,6 +675,12 @@ class HistoriAbsensiSiswaController extends Controller
         //     'path' => 'absensi/histori-absensi/',
         //     'message' => 'Data Absensi Berhasil Di Update'
         // ];
-        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $id_kelas . '/' . $date . '/0');
+        return redirect("/{{Request::segment(1)}}#absensi/histori-absensi-siswa/detail/" . $id_kelas . '/' . $date . '/0');
+    }
+
+    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
+    {
+        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
+        return $id_presensi_pengguna;
     }
 }

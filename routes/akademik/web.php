@@ -16,6 +16,7 @@ use App\Http\Controllers\Akademik\KelasDaring\SettingPengampuController;
 use App\Http\Controllers\Akademik\KelasDaring\SettingToleransiController;
 use App\Http\Controllers\Akademik\MGMP\DataKategoriMGMPController;
 use App\Http\Controllers\Akademik\MGMP\JenisMGMPcontroller;
+use App\Http\Controllers\Akademik\Monitoring\MonitoringPresensiGuruController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiKBMController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUASController;
 use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
@@ -23,7 +24,7 @@ use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
-use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController ;
+use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
 use App\Http\Controllers\Akademik\Ujian\UjianUASController;
 use App\Http\Controllers\Akademik\Ujian\UjianUTSController;
@@ -205,7 +206,10 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
 
             //test automatik ploting
-            Route::get('plotting-mapel-siswa/action-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/view-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}',[PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
+            Route::post('plotting-mapel-siswa/action-auto-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
+
 
             //MENU Hapus Plotting Mapel Siswa
             Route::get('hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'viewHapusPlottingMapelSiswa']);
@@ -353,7 +357,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
                 Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesDaftarNilaiSTS']);
                 Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
-
             });
 
             Route::prefix('komponen-nilai')->group(function () {
@@ -367,17 +370,21 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('cetak-rapor')->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
-                Route::get('datatables',[CetakRaporController::class, 'datatablesCetakRapor']);
+                Route::get('datatables', [CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
-                Route::get('viewSetting',[CetakRaporController::class, 'viewSetting']);
-                Route::get('datatablesViewSetting',[CetakRaporController::class, 'datatablesViewSetting']);
-                Route::get('addSetting/{mata_pelajaran}',[CetakRaporController::class, 'addSetting']);
-                Route::post('postSetting/{mata_pelajaran}',[CetakRaporController::class, 'postSetting']);
-
+                Route::get('viewSetting', [CetakRaporController::class, 'viewSetting']);
+                Route::get('datatablesViewSetting', [CetakRaporController::class, 'datatablesViewSetting']);
+                Route::get('addSetting/{mata_pelajaran}', [CetakRaporController::class, 'addSetting']);
+                Route::post('postSetting/{mata_pelajaran}', [CetakRaporController::class, 'postSetting']);
             });
         });
 
         Route::prefix('monitoring')->group(function () {
+            Route::get('status-entri-nilai', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
+            Route::get('monitoring-presensi-guru', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
+            Route::get('monitoring-presensi-guru/{bulan}/{tahun}', [MonitoringPresensiGuruController::class, 'viewMonitoringPresensiGuru']);
+            Route::get('monitoring-presensi-guru/{day}/{bulan}/{tahun}/{id_pengguna}', [MonitoringPresensiGuruController::class, 'viewDetailPresensiGuru']);
+            Route::get('monitoring-presensi', [AbsensiHarianSiswaController::class, 'viewAbsensiHarianSiswa']);
             Route::get('monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewMonitoringKelasKosong']);
             Route::get('rekap-monitoring-kelas-kosong', [MonitoringKelasKosongController::class, 'viewRekapMonitoringKelasKosong']);
         });

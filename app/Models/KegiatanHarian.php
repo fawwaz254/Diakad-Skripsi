@@ -27,6 +27,11 @@ class KegiatanHarian extends Model
         return $this->hasMany(KegiatanHarianKategori::class, 'id_kegiatan_harian');
     }
 
+    public function pengisisan_kegiatan_harian(){
+        return $this->hasMany(PengisianKegiatanHarian::class, 'id_kegiatan_harian');
+
+    }
+
     public function is_aktif_to_text()
     {
         switch($this->is_aktif){

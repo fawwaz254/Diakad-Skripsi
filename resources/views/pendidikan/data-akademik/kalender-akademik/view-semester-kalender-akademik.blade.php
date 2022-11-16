@@ -54,7 +54,7 @@ responsive: true,
         columns: [
             { data: null, searchable: false, orderable: false },
             { data: 'nm_kegiatan', name: 'nm_kegiatan' },
-            { data: 'deskripsi_kegiatan', name: 'deskripsi_kegiatan' },
+            { data: 'deskripsi', name: 'deskripsi' },
             { data: 'semester', name: 'semester'},
             { data: 'tgl_mulai', name: 'tgl_mulai'},
             { data: 'tgl_selesai', name: 'tgl_selesai'},

@@ -37,9 +37,11 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as WaliKelasRekapKesehatanController;
 use App\Http\Controllers\Humas\Absensi\DetailAbsensiController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
+use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaPondokController;
 use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
+use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
 
 Route::middleware(['token_staff'])->group(function () {
 
@@ -169,6 +171,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/managementShift', [ShiftPenggunaMasterController::class, 'viewShiftPenggunaManagement']);
                 Route::post('/addShiftMaster', [ShiftPenggunaMasterController::class, 'storeShiftMaster']);
                 Route::post('/managementShift/{id}/delete', [ShiftPenggunaMasterController::class, 'destroyShiftMaster']);
+                Route::get('/editManagementShift/{id}', [ShiftPenggunaMasterController::class, 'editShiftMaster']);
+                Route::post('/editManagementShift/{id}', [ShiftPenggunaMasterController::class, 'storeEditShiftMaster']);
 
                 Route::get('/', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/add', [ShiftPenggunaController::class, 'addShiftPengguna']);
@@ -206,6 +210,27 @@ Route::middleware(['token_staff'])->group(function () {
                 //buat generate shift siswa
                 Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
             });
+
+            Route::prefix('histori-absensi-siswa-pondok')->group(function () {
+                Route::get('/', [HistoriAbsensiSiswaPondokController::class, 'viewHistoriAbsensiSiswa']);
+                // Route::get('get-kelas/{id_jurusan}', [HistoriAbsensiSiswaController::class,'getKelas']);
+                Route::post('/', [HistoriAbsensiSiswaPondokController::class, 'actionDetailHistoriAbsensiSiswa']);
+                Route::get('/detail/{kelas}/{date}/{status}', [HistoriAbsensiSiswaPondokController::class, 'viewDetailHistoriAbsensiSiswa']);
+                // Route::get('/details/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class,'viewDetailsHistoriAbsensiSiswa']);
+                Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_mount']);
+                Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_week']);
+                Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaPondokController::class, 'export_excel_day']);
+                //buat izin / sakit
+                Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaPondokController::class, 'createHistoriAbsensi']);
+                Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaPondokController::class, 'storeHistoriAbsensi']);
+                Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaPondokController::class, 'editHistoriAbsensi']);
+                Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaPondokController::class, 'updateHistoriAbsensi']);
+                Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaPondokController::class, 'destroyHistoriAbsensi']);
+
+                //buat generate shift siswa
+                Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaPondokController::class, 'storeShiftPengguna']);
+            });
+
 
             Route::prefix('detail-absensi')->group(function () {
                 Route::get('/', [DetailAbsensiController::class, 'selectHistoriAbsensi']);
@@ -267,7 +292,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [InputPertanyaanController::class, 'viewAddEditInputPertanyaan']);
 
                 Route::post('datatables', [InputPertanyaanController::class, 'showDatatablesInputPertanyaan']);
-                Route::post('action/{mode}', [InputPertanyaanController::class, 'actionInputPertanyaan']);
+                Route::post('action/{mode}/{id}', [InputPertanyaanController::class, 'actionInputPertanyaan']);
 
                 Route::prefix('jawaban')->group(function () {
                     Route::get('detail/{id1}', [InputPertanyaanController::class, 'viewInputJawaban']);
@@ -287,6 +312,17 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::post('rekap-kesehatan/action/{mode}', [FormKesehatanController::class, 'actionFormKesehatan']);
             Route::post('rekap-kesehatan/datatables', [FormKesehatanController::class, 'showDatatablesFormKesehatan']);
+
+            Route::prefix('rekap-lainnya')->group(function () {
+                Route::get('/', [RekapLainnyaController::class, 'viewListKegiatan']);
+                Route::post('datatables', [RekapLainnyaController::class, 'datatablesListKegiatan']);
+
+                Route::get('/rekap-guru-tendik/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
+                Route::get('/rekap-guru-tendik/{id_kegiatan_harian}/{id_bulan}/{tahun}', [RekapLainnyaController::class, 'viewRekapKegiatanGuruTendik']);
+
+                Route::get('/rekap-siswa/{id_kegiatan_harian}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
+                Route::get('/rekap-siswa/{id_kegiatan_harian}/{bulan}/{tahun}/{kelas}', [RekapLainnyaController::class, 'viewRekapKegiatanSiswa']);
+            });
         });
 
         Route::prefix('magang-siswa')->group(function () {

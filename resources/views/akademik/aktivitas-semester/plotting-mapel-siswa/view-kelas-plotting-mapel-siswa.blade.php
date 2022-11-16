@@ -66,7 +66,7 @@
                                     <th>Sudah Diplotting</th>
                                     <th>Jumlah Siswa</th>
                                     <th>Action</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                         </table>
@@ -85,7 +85,7 @@
     var modul_url       = 'aktivitas-semester';
     var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'plotting-mapel-siswa/datatables/' + id_semester + '/' + angkatan;
     var detail_url        = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-mapel-plotting/'+ id_semester + '/' + angkatan;
-    var auto_ploting      = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/action-auto-plotting-mapel-siswa/'+ id_semester + '/' + angkatan;
+    var auto_ploting      = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-auto-plotting-mapel-siswa/'+ id_semester + '/' + angkatan;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -106,18 +106,18 @@
                     +'      <a class="target-link btn bg-red waves-effect" href="'+ auto_ploting +'/' + data.id + '">Auto Plotting</a>';
                 }
             },
-            {data: 'auto', searchable: false, orderable:false,
-            render: function(data) {
-                var role_text = '';
-                    data.forEach((d, i) => {
+            // {data: 'auto', searchable: false, orderable:false,
+            // render: function(data) {
+            //     var role_text = '';
+            //         data.forEach((d, i) => {
 
-                role_text += '<a class="target-link btn bg-red waves-effect" style="margin: 0px 5px 5px 5px" href="'+  d.id_kelas +' ">Auto Plotting Kelas '+ d.nm_kelas +' </a> '
-                if(i%2 === 1){
-                    role_text += '<br>'
-                }
-                        });
-                return role_text
-            }}
+            //     role_text += '<a class="target-link btn bg-red waves-effect" style="margin: 0px 5px 5px 5px" href="'+  d.id_kelas +' ">Auto Plotting Kelas '+ d.nm_kelas +' </a> '
+            //     if(i%2 === 1){
+            //         role_text += '<br>'
+            //     }
+            //             });
+            //     return role_text
+            // }}
         ]})
 
     primary_table.on( 'draw', function () {

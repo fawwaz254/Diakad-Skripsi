@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        DATA HOME VISIT
+                        Data Home Visit
                     </h2>
                 </div>
                 <div class="body">
@@ -24,7 +24,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="belum_lengkap">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum_lengkap">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_belum_lengkap">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -48,7 +48,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah_lengkap">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah_lengkap">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_sudah_lengkap">
                                         <thead>
                                             <tr>
                                                 <th>No</th>

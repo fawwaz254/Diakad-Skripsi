@@ -72,6 +72,10 @@
                                     <td>{{ $shift['end_time'] }}</td>
                                     <td>
                                         <button id="button" data-id={{ $shift['id_shift_master'] }}
+                                            style="margin-left:3px;" class="btn bg-blue waves-effect edit-record">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                        <button id="button" data-id={{ $shift['id_shift_master'] }}
                                             style="margin-left:3px;" class="btn bg-red waves-effect delete-record">
                                             <i class="material-icons">delete</i>
                                         </button>
@@ -138,6 +142,13 @@
     //         return;
     //     }
     // );
+
+
+    $(".edit-record").click(function() {
+        const id = $(this).data("id");
+        window.location = '/humas#absensi/shift_pengguna/editManagementShift/' + id
+        // alert(id);
+    });
 
     $(".delete-record").click(function() {
         const token = $("meta[name='csrf-token']").attr("content");
