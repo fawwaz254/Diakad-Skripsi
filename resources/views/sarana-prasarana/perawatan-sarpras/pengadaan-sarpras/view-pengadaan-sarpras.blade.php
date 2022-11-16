@@ -31,7 +31,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="tinggi">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_tinggi">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_tinggi">
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
@@ -57,7 +57,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sedang">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sedang">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_sedang">
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
@@ -83,7 +83,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="rendah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_rendah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_rendah">
                                         <thead>
                                             <tr>
                                                 <th>No. </th>
