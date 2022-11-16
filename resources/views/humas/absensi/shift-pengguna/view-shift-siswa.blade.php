@@ -74,8 +74,6 @@
                                     <tr>
                                 @endif
 
-                             
-                                  
                                     <td style="text-align: center;">{{ $no++ }}</td>
                                     <td>{{ $r['nm_pengguna'] }}</td>
                                     <td style="text-align: center;">{{ $r['kelas'] }}</td>

@@ -164,7 +164,7 @@
         window.location = '/humas#absensi/shift_pengguna/add'
     }
     function addAbsensiSiswa(){
-        window.location = '/humas#absensi/shift_siswa/add'
+        window.location = '/humas#absensi/shift_siswa'
     }
 
     function viewShiftSiswa(){
