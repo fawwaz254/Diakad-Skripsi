@@ -654,15 +654,10 @@ class HistoriAbsensiSiswaController extends Controller
         $input = $request->input();
         $status = $input['status'];
         $notes = $input['notes'];
-        PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 2, 'date' => $date, 'status' => $status, 'notes' => $notes]);
-        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date . "/0");
+        PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 3, 'date' => $date, 'status' => $status, 'notes' => $notes]);
+        return redirect("/{{Request::segment(1)}}#absensi/histori-absensi-siswa/detail/" . $kelas . "/"  . $date . "/0");
     }
 
-    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
-    {
-        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
-        return $id_presensi_pengguna;
-    }
 
     public function editHistoriAbsensi(Request $request, $id_presensi_pengguna = null, $id_kelas = null, $date = null)
     {
@@ -680,6 +675,12 @@ class HistoriAbsensiSiswaController extends Controller
         //     'path' => 'absensi/histori-absensi/',
         //     'message' => 'Data Absensi Berhasil Di Update'
         // ];
-        return redirect("/humas#absensi/histori-absensi-siswa/detail/" . $id_kelas . '/' . $date . '/0');
+        return redirect("/{{Request::segment(1)}}#absensi/histori-absensi-siswa/detail/" . $id_kelas . '/' . $date . '/0');
+    }
+
+    public function destroyHistoriAbsensi(Request $request, $id_presensi_pengguna = null)
+    {
+        PresensiPengguna::where('id_presensi_pengguna', $id_presensi_pengguna)->delete();
+        return $id_presensi_pengguna;
     }
 }
