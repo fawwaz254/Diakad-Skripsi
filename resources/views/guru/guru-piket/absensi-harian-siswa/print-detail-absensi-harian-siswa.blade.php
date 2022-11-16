@@ -152,7 +152,8 @@
                 </tr>
             </tbody>
         </table>
-        <table cellspacing="0" cellpadding="10" style="width: 90%; margin-left:10%; border-style : hidden">
+        <br><br>
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin-left:10%; border-style : hidden;">
             <tr>
                 <td style=" border-style : hidden; width:15%; vertical-align: text-top; padding:0">
                     {{-- <br>
