@@ -222,7 +222,7 @@ class CetakRaporController extends Controller
                 $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
             // dd($list_nilai);
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman' ||$auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2' ) {
             // dd($raporSisipanA);
             return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data', 'kelas', 'list_siswa', 'k','raporSisipanA','raporSisipanB','raporSisipanC' , 'raporSisipanD', 'list_nilai', 'wali_kelas'));
         } else {
