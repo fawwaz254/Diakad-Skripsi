@@ -193,7 +193,7 @@ class RaporSisipanController extends Controller
                 $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
 
                 // //loop dan cari nilai kosong yang diatas 5
-                if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
+                if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman' ||$auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2' ){
                     $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
                 }else{
                     $nilaiSiswaYangKosong = 0;
@@ -353,7 +353,7 @@ class RaporSisipanController extends Controller
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status',1)->where('type','!=','uas');
             })->get();
-            if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman'){
+            if($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm2'){
                 $nilai_siswa = [];
                 // $nilai_komponen = [];
                 if ($list_siswa) {
