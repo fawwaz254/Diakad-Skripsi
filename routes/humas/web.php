@@ -42,6 +42,7 @@ use App\Http\Controllers\Humas\Absensi\RekapAbsensiController;
 use App\Http\Controllers\Humas\JurnalHarian\DataKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\JurnalHarian\JenisKategoriJurnalHarianController;
 use App\Http\Controllers\Humas\KegiatanHarian\RekapLainnyaController;
+use App\Http\Controllers\Humas\ShiftPengguna\ShiftSiswaController;
 
 Route::middleware(['token_staff'])->group(function () {
 
@@ -176,6 +177,10 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('/', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/add', [ShiftPenggunaController::class, 'addShiftPengguna']);
+
+                Route::get('/view-select-kelas-shift-siswa', [ShiftSiswaController::class, 'selectKelas']);
+                Route::get('/view-kelas-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'viewShiftSiswa']);
+
 
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);

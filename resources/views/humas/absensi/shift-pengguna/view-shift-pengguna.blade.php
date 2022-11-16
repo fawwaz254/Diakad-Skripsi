@@ -32,7 +32,13 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div class="card">
+            <button type="button"  class="btn btn-primary">
+                Data Shift Guru dan Pegawai
+            </button>
+            <button type="button"  class="btn btn-default"  onclick="viewShiftSiswa()" >
+                Data Shift Siswa
+            </button>
+            <div class="card"  style="margin-top: 10px" >
                 <div class="header">
                     <h2>Filter Data</h2>
                 </div>
@@ -60,6 +66,10 @@
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
             <button class="btn btn-block bg-red waves-effect" onclick=addAbsensi()><i
                     class="material-icons">add</i><span>Add Shift Pengguna</span></button>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
+            <button class="btn btn-block bg-red waves-effect" onclick=addAbsensiSiswa()><i
+                    class="material-icons">add</i><span>Add Shift Siswa</span></button>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
             <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i
@@ -156,7 +166,13 @@
     function addAbsensi() {
         window.location = '/humas#absensi/shift_pengguna/add'
     }
+    function addAbsensiSiswa(){
+        window.location = '/humas#absensi/shift_siswa/add'
+    }
 
+    function viewShiftSiswa(){
+        window.location = 'humas#absensi/shift_pengguna/view-select-kelas-shift-siswa'
+    }
     function downloadShift(val) {
         // alert(val);
         var $time = "{{ $date }}";
