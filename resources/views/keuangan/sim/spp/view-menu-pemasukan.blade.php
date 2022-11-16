@@ -69,15 +69,38 @@
                             </thead>
                             <tbody>
                                 @foreach($data_laporan['dates'] as $date)
+                                @php
+                                    $id_bulan = $date->format('n');
+                                    $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
+
+                                    if ($id_bulan < 7) {
+                                        $index_splice = $id_bulan + 5;
+                                        $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                                        $index_periode_bulan_ini->all();
+
+                                        $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                                        $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                                    } else if ($id_bulan == 7) {
+                                        $where_bayar_bulan_ini_dan_kedepannya = [7];
+                                        $where_bayar_bulan_lalu_dan_belakangnya = [];
+                                    } else {
+                                        $index_splice = $id_bulan - 7;
+                                        $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                                        $index_periode_bulan_ini->all();
+
+                                        $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                                        $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                                    }
+                                @endphp
                                 <tr>
                                     <td>{{$date->format('Y-m-d')}}</td>
                                     @foreach($data_laporan['tingkat'] as $tingkat)
-                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $date->format('n'))->filter(function ($item) use ($date) {
+                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran')) }}</td>
                                     @endforeach
                                     @foreach($data_laporan['tingkat'] as $tingkat)
-                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.detail_biaya.id_bulan', '<', $date->format('n'))->filter(function ($item) use ($date) {
+                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->filter(function ($item) use ($date) {
                                             return false !== stristr($item->tgl_pembayaran, $date->format('Y-m-d'));
                                         })->sum('besar_pembayaran')) }}</td>
                                     @endforeach
@@ -94,13 +117,36 @@
                                         ) }}</td>
                                 </tr>
                                 @endforeach
+                                @php
+                                    $id_bulan = $date->format('n');
+                                    $periode_bulan_sekolah = collect([7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6]);
+
+                                    if ($id_bulan < 7) {
+                                        $index_splice = $id_bulan + 5;
+                                        $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                                        $index_periode_bulan_ini->all();
+
+                                        $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                                        $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                                    } else if ($id_bulan == 7) {
+                                        $where_bayar_bulan_ini_dan_kedepannya = [7];
+                                        $where_bayar_bulan_lalu_dan_belakangnya = [];
+                                    } else {
+                                        $index_splice = $id_bulan - 7;
+                                        $index_periode_bulan_ini = $periode_bulan_sekolah->splice($index_splice);
+                                        $index_periode_bulan_ini->all();
+
+                                        $where_bayar_bulan_ini_dan_kedepannya = $index_periode_bulan_ini;
+                                        $where_bayar_bulan_lalu_dan_belakangnya = $periode_bulan_sekolah;
+                                    }
+                                @endphp
                                 <tr>
                                     <td>TOTAL</td>
                                     @foreach($data_laporan['tingkat'] as $tingkat)
-                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.id_bulan', '>=', $date->format('n'))->sum('besar_pembayaran')) }}</td>
+                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_ini_dan_kedepannya)->sum('besar_pembayaran')) }}</td>
                                     @endforeach
                                     @foreach($data_laporan['tingkat'] as $tingkat)
-                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->where('tagihan_biaya.detail_biaya.id_bulan', '<', $date->format('n'))->sum('besar_pembayaran')) }}</td>
+                                    <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->where('tagihan_biaya.kelas.tingkat', $tingkat)->whereIn('tagihan_biaya.detail_biaya.id_bulan', $where_bayar_bulan_lalu_dan_belakangnya)->sum('besar_pembayaran')) }}</td>
                                     @endforeach
                                     <td>Rp {{ number_format($data_laporan['data']->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', $data_laporan['semester_aktif']->tahun_ajaran)->sum('besar_pembayaran')) }}</td>
                                     <td>Rp {{ number_format(
