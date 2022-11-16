@@ -26,7 +26,7 @@
                         <div role="tabpanel" class="tab-pane fade active in" id="belum">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_belum">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_belum">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -45,7 +45,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="sudah">
                             <div class="body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable display" id="primary_table_sudah">
+                                    <table class="table table-bordered table-striped table-hover dataTable display" style="width:100% !important;" id="primary_table_sudah">
                                         <thead>
                                             <tr>
                                                 <th>No</th>

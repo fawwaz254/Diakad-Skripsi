@@ -152,6 +152,29 @@
                 </tr>
             </tbody>
         </table>
+        <table cellspacing="0" cellpadding="10" style="width: 90%; margin-left:10%; border-style : hidden">
+            <tr>
+                <td style=" border-style : hidden; width:15%; vertical-align: text-top; padding:0">
+                    {{-- <br>
+                    Orang Tua/Wali,
+                    <br><br><br><br><br><br><br>
+                    <p style="width: 250px;
+                    border-bottom: 1px solid   black;"></p> --}}
+                </td>
+                <td style="width:40%; border-style : hidden"></td>
+
+                <td style="width:25%;border-style : hidden;">Sidoarjo,
+                    {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
+                    <br>
+                    Wali Kelas
+                    <br><br><br><br><br><br><br>
+                    <u><b>
+                            {{ $wali_kelas->guru->pengguna->gelar_depan }}
+                            {{ $wali_kelas->guru->pengguna->nm_pengguna }}
+                            {{ $wali_kelas->guru->pengguna->gelar_belakang }}</b></u>
+                </td>
+            </tr>
+        </table>
 </body>
 <script>
     window.print();

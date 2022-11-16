@@ -11,6 +11,10 @@
 
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="block-header">
+                <h2><a class="btn bg-blue waves-effect target-link" href="{{url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i class="material-icons">backspace</i><span>Kembali</span></a>
+            </div>
+
             <div class="card">
                     <div class="header">
                         <h2>Data File Kategori {{$category->category_file_name}}</h2>

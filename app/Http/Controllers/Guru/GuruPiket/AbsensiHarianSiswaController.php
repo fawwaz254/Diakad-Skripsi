@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers\Guru\GuruPiket;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
-
-use Carbon\Carbon;
-use Yajra\Datatables\Datatables;
-use Illuminate\Support\Facades\App;
-
-use App\Models\Siswa;
-use App\Models\WaliMurid;
-use App\Models\Bulan;
-use App\Models\Guru;
-use App\Models\PresensiHarian;
-use App\Models\PresensiHarianSiswa;
-
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Libraries\Pendidikan\LibKelas;
-use App\Libraries\SumberDaya\LibGuru;
-use App\Libraries\SaranaPrasarana\LibDataSarpras;
-use App\Libraries\Pendidikan\LibSiswa;
-use App\Libraries\LibGlobal;
-
-use Auth;
 use DB;
+use Auth;
+
 use Session;
 use Validator;
+use Carbon\Carbon;
+
+use App\Models\Guru;
+use App\Models\Bulan;
+use App\Models\Siswa;
+use App\Models\WaliKelas;
+use App\Models\WaliMurid;
+use App\Libraries\LibGlobal;
+
+use Illuminate\Http\Request;
+use App\Models\PresensiHarian;
+use Yajra\Datatables\Datatables;
+use App\Models\PresensiHarianSiswa;
+use Illuminate\Support\Facades\App;
+use App\Libraries\SumberDaya\LibGuru;
+
+use App\Libraries\Pendidikan\LibKelas;
+use App\Libraries\Pendidikan\LibSiswa;
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\SaranaPrasarana\LibDataSarpras;
+use Illuminate\Routing\Controller as BaseController;
 
 class AbsensiHarianSiswaController extends BaseController
 {
@@ -132,7 +133,11 @@ class AbsensiHarianSiswaController extends BaseController
             ->orderBy('tgl_entry', 'asc')
             ->get();
 
-        return view('guru/guru-piket/absensi-harian-siswa/print-detail-absensi-harian-siswa', compact('auth_data', 'semester_aktif', 'siswa', 'data_presensi'));
+        $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $id_kelas)->first();
+
+        // dd($wali_kelas);
+
+        return view('guru/guru-piket/absensi-harian-siswa/print-detail-absensi-harian-siswa', compact('auth_data', 'semester_aktif', 'siswa', 'data_presensi', 'wali_kelas'));
     }
 
     public function datatablesAbsensiHarianSiswa(Request $request, $id_semester, $id_kelas)
