@@ -98,10 +98,11 @@ class HistoriAbsensiController extends BaseController
                     $jumlah_pulangcepat++;
                     $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
                 }
-
+                if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
                 if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                     $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 }
+            }
                 if ($attendance->check_out) {
                     $hasil[$key]['check_out'] = $attendance->check_out;
                 }
