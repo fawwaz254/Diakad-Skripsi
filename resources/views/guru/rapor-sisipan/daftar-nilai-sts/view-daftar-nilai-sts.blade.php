@@ -52,6 +52,8 @@
         processing: true,
         serverSide: true,
         responsive: true,
+        pageLength : 5,
+    lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']],
         ajax: {
             url: datatable_url,
             type: 'GET'

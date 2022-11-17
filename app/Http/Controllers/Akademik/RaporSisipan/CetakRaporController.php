@@ -68,12 +68,13 @@ class CetakRaporController extends Controller
             })
             ->addColumn('rapor_sisipan', function ($item) use ($list_rapor_sisipan) {
                 // $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();
-                return $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();;
+                return $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();
             })
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item)  use ($list_rapor_sisipan) {
                 // $k = $kurikulum->firstWhere('id_jurusan', $item->id_jurusan );
                 $data = array(
-                    'id_kelas'     => $item->id_kelas
+                    'id_kelas'     => $item->id_kelas,
+                    'jumlah'        => $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count()
                 );
                 return $data;
             })
