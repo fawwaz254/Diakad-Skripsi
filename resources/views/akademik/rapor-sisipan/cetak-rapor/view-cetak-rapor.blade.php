@@ -97,10 +97,17 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
+                    if(data.jumlah != '0'){
                         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                     pdf_url + '/' + data.id_kelas  + '"  target="_blank">' +
                         '    <i class="material-icons">picture_as_pdf</i>' +
                         '</a> ';
+                    }else{
+                        return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
+                        '    <i class="material-icons">picture_as_pdf</i>' +
+                        '</a> ';
+                    }
+                      
                 }
             }
             // {
