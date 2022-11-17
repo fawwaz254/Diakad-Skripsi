@@ -167,7 +167,7 @@ class HistoriAbsensiSiswaController extends Controller
             $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
             $hasil[$key]['nis'] = $value->username;
             $hasil[$key]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
-            // $hasil[$key]['check_out'] = '-';
+            $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';
 
             $hasil[$key]['id_presensi_pengguna'] = "";
@@ -211,9 +211,9 @@ class HistoriAbsensiSiswaController extends Controller
                 //         $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                 //     }
                 // }
-                // if ($attendance->check_out) {
-                //     $hasil[$key]['check_out'] = $attendance->check_out;
-                // }
+                if ($attendance->check_out) {
+                    $hasil[$key]['check_out'] = $attendance->check_out;
+                }
                 // if (isset($shiftMaster['start_time'])) {
                 //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
