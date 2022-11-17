@@ -28,6 +28,7 @@ use App\Http\Controllers\Siswa\Alumni\TracerAlumniSiswaController;
 use App\Http\Controllers\Siswa\ELearningSoal\NilaiUjianController;
 use App\Http\Controllers\Siswa\Akademik\KalenderAkademikController;
 use App\Http\Controllers\Siswa\Akademik\JadwalKelasDaringController;
+use App\Http\Controllers\Siswa\Absensi\HistoriAbsensiSiswaController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 use App\Http\Controllers\Siswa\Pelanggaran\RiwayatPelanggaranController;
 
@@ -253,6 +254,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('detail/{id}', [DokumenController::class, 'viewDetailDokumen']);
 
                 Route::post('datatables', [DokumenController::class, 'datatablesDokumen']);
+            });
+        });
+
+        Route::prefix('absensi')->group(function () {
+            Route::prefix('histori-absensi')->group(function () {
+                Route::get('/', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensi']);
+                Route::get('/{start_date}/{end_date}', [HistoriAbsensiSiswaController::class, 'viewHistoriAbsensi']);
             });
         });
     });
