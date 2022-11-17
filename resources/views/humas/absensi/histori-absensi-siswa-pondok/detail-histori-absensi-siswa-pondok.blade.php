@@ -20,7 +20,7 @@
             </div>
             <div class="body">
                 <form id="form-validation" method="POST"
-                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa') }}">
+                    action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/histori-absensi-siswa-pondok') }}">
                     {{ csrf_field() }}
                     <div class="row clearfix">
                         <div class="col-md-4 col-sm-12 col-xs-12">
@@ -140,7 +140,7 @@
                                 <th style="text-align: center;">Nama</th>
 
                                 <th>Check In</th>
-                                {{-- <th>Check Out</th> --}}
+                                <th>Check Out</th>
                                 <th>Status</th>
                                 {{-- @if(Request::segment(1) == 'humas') --}}
                                 <th style="text-align: center;">Action</th>
@@ -162,7 +162,7 @@
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
 
                                     <td>{{ $r['check_in'] }}</td>
-                                    {{-- <td>{{ $r['check_out'] }}</td> --}}
+                                    <td>{{ $r['check_out'] }}</td>
                                     <td
                                         @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
                                         {{ $r['status'] }}</td>
