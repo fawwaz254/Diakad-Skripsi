@@ -162,7 +162,7 @@ class RaporSisipanController extends Controller
         set_time_limit(9800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc')->get();
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc');
         // $jurusan = Jurusan::all();
         $siswa = Siswa::with('pengguna.status_pengguna')
         ->whereHas('pengguna.status_pengguna', function ($query) {
