@@ -83,6 +83,7 @@ class ShiftPenggunaController extends Controller
 
     public function storeShiftPengguna(Request $request)
     {
+        set_time_limit(1800);
         $v = Validator::make($request->all(), [
 
             'pengguna' => 'required',

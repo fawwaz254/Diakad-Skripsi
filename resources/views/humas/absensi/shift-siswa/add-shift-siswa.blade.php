@@ -30,18 +30,21 @@
             <div class="card" style="margin-top: 10px">
                 <div class="row clearfix">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        
                         <form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/add">
                             {{ csrf_field() }}
                             <div class="header">
                                 <h2>Tambah Shift Siswa</h2>
                             </div>
-        
                             <div class="body">
                                 <div class="col-sm-6">
                                     <table class="table table-bordered">
                                         <tr>
-                                            <h4>Pilih Siswa :</h4>
+                                            <h4>
+                                                <input id="checkbox_select_all_{{$id_kelas}}" type="checkbox" name="select_all" data-jurusan="{{$id_kelas}}" class="filled-in">
+                                                <label for="checkbox_select_all_{{$id_kelas}}" style="margin-bottom: -10px;"></label>
+                                                <label><b>Pilih Semua Siswa</b></label>
+
+                                            </h4>
                                         </tr>
                                         <tr>
                                             <td style="text-align: center;">No</td>
@@ -60,7 +63,7 @@
                                                 <td>{{ $pengguna->siswa->kelas->nm_kelas}}</td>
                                                 <td><input type="checkbox" name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
                                                         value="{{ $pengguna['id_pengguna'] }}"
-                                                        id="{{ $pengguna['id_pengguna'] }}"> <label
+                                                        id="{{ $pengguna['id_pengguna'] }}" data-jurusan="{{$id_kelas}}" > <label
                                                         for="{{ $pengguna['id_pengguna'] }}">{{ $pengguna['nm_pengguna'] }}
                                                     </label></td>
                                                 @foreach ($shiftsPengguna as $shift)
@@ -114,10 +117,8 @@
                                                 </select>
                                             </td>
                                         </tr>
-        
                                     </table>
                                     <br>
-        
                                     <h4>Pilih Shift :</h4>
                                     <table class="table">
                                         <tr>
@@ -249,7 +250,19 @@ function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + 
             $('select[name=kelas]').val());
     }
-    </script>
+
+    $(document).ready(function() {        
+        /* Select All Checkbox */
+        $('input[name="select_all"]').change(function() {
+            var select_all_checked = this.checked;
+            var data_jurusan = $(this).attr('data-jurusan');
+
+            // console.log(data_jurusan);
+            $('input[data-jurusan="'+ data_jurusan +'"]').prop('checked', this.checked);
+        });
+    });
+
+</script>
 
 
 

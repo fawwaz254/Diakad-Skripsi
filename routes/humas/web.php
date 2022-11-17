@@ -191,6 +191,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('shift_siswa')->group(function () {
                 Route::get('/', [ShiftSiswaController::class, 'selectKelasShiftSiswa']);
                 Route::get('{id_kelas}', [ShiftSiswaController::class, 'addShiftSiswa']);
+                // Route::post('add',  [ShiftSiswaController::class, 'storeShiftSiswa']);
             });
 
             Route::prefix('manajemen-hari-libur')->group(function () {
