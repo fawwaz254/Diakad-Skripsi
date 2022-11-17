@@ -181,13 +181,18 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/view-select-kelas-shift-siswa', [ShiftSiswaController::class, 'selectKelas']);
                 Route::get('/view-kelas-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'viewShiftSiswa']);
 
-
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
                 Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
                 // Route::get('/addShift', [ShiftPenggunaMasterController::class, 'addShiftMaster']);
             });
+
+            Route::prefix('shift_siswa')->group(function () {
+                Route::get('/', [ShiftSiswaController::class, 'selectKelasShiftSiswa']);
+                Route::get('{id_kelas}', [ShiftSiswaController::class, 'addShiftSiswa']);
+            });
+
             Route::prefix('manajemen-hari-libur')->group(function () {
                 Route::get('/', [ManajemenHariLiburController::class, 'viewManajemenHariLibur']);
                 Route::get('/{id}/edit', [ManajemenHariLiburController::class, 'editManajemenHariLibur']);
