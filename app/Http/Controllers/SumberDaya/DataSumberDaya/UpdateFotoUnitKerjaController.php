@@ -228,7 +228,7 @@ class UpdateFotoUnitKerjaController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'message' => 'Succes Upload foto', // SUCCESS AND LOAD CONTENT
+                    'message' => 'Sukses Mengunggah Foto', // SUCCESS AND LOAD CONTENT
                     'path' => 'data-sumber-daya/update-foto/upload/'.$id
                 ];
             }
