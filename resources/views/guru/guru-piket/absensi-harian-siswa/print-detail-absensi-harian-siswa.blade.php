@@ -166,7 +166,7 @@
 
                 <td style="width:25%;border-style : hidden;">Sidoarjo,
                     {{ indonesiaDate(\Carbon\Carbon::now()->format('Y-m-d')) }}
-                    <br>
+                    <br><br>
                     Wali Kelas
                     <br><br><br><br><br><br><br>
                     <u><b>
