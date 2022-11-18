@@ -42,11 +42,11 @@ if ($role_aktif == 2) {
             style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{ auth_data()->sekolah_data->nm_singkat_sekolah }}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
                 @if (!empty(auth_data()->pengguna->path_foto_pengguna))
-                    <img src="{{ Storage::disk('spaces')->url(auth_data()->pengguna->path_foto_pengguna) }}"
-                        height="50" />
+                   <a href="{{ url(Request::segment(1) . '#biodata') }}"> <img src="{{ Storage::disk('spaces')->url(auth_data()->pengguna->path_foto_pengguna) }}"
+                        height="50" /></a>
                 @else
-                    <img src="https://ui-avatars.com/api/?size=100&name={{ auth_data()->pengguna->nm_pengguna }}"
-                        height="50" />
+                <a href="{{ url(Request::segment(1) . '#biodata') }}"> <img src="https://ui-avatars.com/api/?size=100&name={{ auth_data()->pengguna->nm_pengguna }}"
+                        height="50" /></a>
                 @endif
             </div>
             <div class="info-container">
