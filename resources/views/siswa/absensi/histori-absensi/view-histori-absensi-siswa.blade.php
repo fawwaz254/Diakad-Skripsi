@@ -35,6 +35,7 @@
             <div class="card" style="background: #009efa">
                 <div class="body">
                     <div class="font-bold m-b--35" style="color: white">SUMMARY</div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <ul class="dashboard-stat-list">
