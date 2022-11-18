@@ -214,13 +214,14 @@
             $no = 1;
         @endphp
         @foreach($data_realisasi_pengeluaran as $realisasi)
+
         @if($subkategori_non_kbm['status'] && $realisasi->kode_subkategori_rapb == 'K.5.3' && $realisasi->nm_subkategori_rapb == 'Beban Pembelajaran Non KBM')
         <tr valign=top>
             <td>{{$no++}}.</td>
             <td>Lainnya :</td>
             <td>K.5.3 Beban Pembelajaran Non KBM</td>
             <td class="text-right">{{number_format($realisasi->dana_perkiraan_rapb)}}</td>
-            <td class="text-right">{{number_format($subkategori_non_kbm['total_bayar'])}}</td>
+            <td class="text-right">{{number_format($subkategori_non_kbm['total_bayar'] +  $realisasi->total_realisasi) }} </td>
             @if($realisasi->dana_perkiraan_rapb == 0)
             <td class="text-right">0%</td>
             @else

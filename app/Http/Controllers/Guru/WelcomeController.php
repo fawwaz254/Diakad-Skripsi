@@ -37,4 +37,11 @@ class WelcomeController extends BaseController{
         return view('guru/welcome', compact('auth_data', 'role_dashboard', 'start_monkes', 'end_monkes')); //folder akademik/nama file welcome.blade
     }
 
+    public function viewBiodata(Request $request){
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+
+    }
+
 }
