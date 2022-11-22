@@ -79,7 +79,6 @@
     $tutup_buku_bulanan_biaya = $data_laporan['tutup_buku_bulanan_biaya'];
     $subkategori = $data_laporan['subkategori'];
     $total_bayar_non_kbm = $data_laporan['total_bayar_non_kbm'];
-
     $subkategori_in = $subkategori->where('kategori.tipe_kategori_rapb', 1)->values();
     $subkategori_out = $subkategori->where('kategori.tipe_kategori_rapb', 2)->values();
 
@@ -233,15 +232,16 @@
                 <td class="text-bold">Tunggakan SPP Tahun Lalu yang masuk</td>
                 @foreach ($subkategori_in as $data_subkategori)
                 @if($data_subkategori->deskripsi_subkategori_rapb == 'Lain-Lain')
-                <td class="text-bold text-right">{{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}</td>
+                <td class="text-bold text-right">{{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu + $data_laporan['spp_tahun_lalu']) }}</td>
                     @php
                         $total_all[$data_subkategori->id_subkategori_rapb] += $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu;
+                        $total_all[$data_subkategori->id_subkategori_rapb] += $data_laporan['spp_tahun_lalu'];
                     @endphp
                 @else
                 <td></td>
                 @endif
                 @endforeach
-                <td class="text-bold text-right">{{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu) }}</td>
+                <td class="text-bold text-right">{{ number_format($tutup_buku_bulanan_biaya->jml_pembayaran_biaya_tahun_lalu + $data_laporan['spp_tahun_lalu']) }}</td>
                 @foreach ($subkategori_out as $data_subkategori)
                 <td></td>
                 @endforeach
