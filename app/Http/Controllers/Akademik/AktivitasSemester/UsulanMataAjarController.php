@@ -986,7 +986,7 @@ class UsulanMataAjarController extends BaseController
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, Hapus Ploting Mapel Siswa terlebi dahulu'
                     ];
                 } else {
                     // make object to find id

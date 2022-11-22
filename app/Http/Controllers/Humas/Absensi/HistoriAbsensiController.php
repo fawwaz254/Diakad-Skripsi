@@ -44,13 +44,14 @@ class HistoriAbsensiController extends BaseController
                 ->get();
         }
 
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
 
         $now = new Carbon($date);
         $start_date = $now->startOfWeek()->format('Y-m-d');
         $end_date = $now->endOfWeek()->format('Y-m-d');
 
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->get();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->whereIn('id_pengguna', $list_pengguna)->get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
 
@@ -162,9 +163,9 @@ class HistoriAbsensiController extends BaseController
 
         $start_date = new Carbon('first day of' . $mount . $year);
         $end_date =  new Carbon('last day of' . $mount . $year);
-
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->get();
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->whereIn('id_pengguna', $list_pengguna)->get();
         // dd( $allPresensiPengguna);
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
@@ -277,8 +278,9 @@ class HistoriAbsensiController extends BaseController
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->get();
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
@@ -424,10 +426,10 @@ class HistoriAbsensiController extends BaseController
         $jumlah_alpha = 0;
         $tidak_checkout = 0;
         $belum_absent = 0;
-
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->get();
 
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
