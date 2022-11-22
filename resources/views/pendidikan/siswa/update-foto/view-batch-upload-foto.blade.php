@@ -1,7 +1,9 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#siswa/update-foto/') }}"><i
-                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+        <h2>
+            <a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#siswa/update-foto/') }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a>
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -28,9 +30,9 @@
     </div>
 </div>
 <script>
-    $(function(){
-        var myDropzone = new Dropzone("div#frmFileUpload", { 
-            url: "{{url(Request::segment(1).'/'.Request::segment(2).'/action-batch-upload-foto')}}",
+    $(function() {
+        var myDropzone = new Dropzone("div#frmFileUpload", {
+            url: "{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-batch-upload-foto') }}",
             maxFilesize: 3,
             acceptedFiles: "image/*",
             headers: {
