@@ -100,12 +100,12 @@ class HistoriAbsensiController extends BaseController
                         $jumlah_telat++;
                         $hasil[$key]['status'] = "Masuk | Telat";
                     }
-                   
+
                     if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
                         $jumlah_pulangcepat++;
                         $hasil[$key]['status'] = "Masuk | Pulang lebih awal";
                     }
-                    if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
+
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
                         $hasil[$key]['status'] = "Masuk | Telat dan Pulang lebih awal";
                     }
@@ -147,5 +147,4 @@ class HistoriAbsensiController extends BaseController
 
         return view('guru/absensi/histori-absensi/view-histori-absensi', compact('auth_data', 'presences', 'start_date', 'end_date', 'dates', 'hasil', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_pulangcepat', 'jumlah_alpha', 'tidak_checkout', 'cek_libur'));
     }
-}
 }
