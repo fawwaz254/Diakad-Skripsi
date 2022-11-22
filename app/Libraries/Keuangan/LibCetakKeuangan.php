@@ -538,6 +538,7 @@ class LibCetakKeuangan
             ->first();
 
         $pembayaran_spp = PembayaranBiaya::query()
+            ->with('tagihan_biaya.detail_biaya.biaya_sekolah.semester')
             ->whereMonth('tgl_pembayaran', $id_bulan)
             ->whereYear('tgl_pembayaran', $tahun)
             ->whereHas('tagihan_biaya.detail_biaya', function ($q) {
@@ -547,6 +548,9 @@ class LibCetakKeuangan
                 $q->where('created_by', $auth_data->pengguna->id_pengguna);
             })
             ->get();
+
+            $semester_aktif = Semester::where('is_aktif_semester','1')->first();
+            $spp_tahun_lalu = $pembayaran_spp->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', '!=', $semester_aktif->tahun_ajaran)->sum('besar_pembayaran');
 
         $realisasi_all = Realisasi::query()
             ->with('rapb', 'rapb.subkategori', 'rapb.subkategori.kategori')
@@ -651,6 +655,7 @@ class LibCetakKeuangan
             }
 
             $data['out'] = $data_out;
+            // $data['spp_tahun_lalu'] = $spp_tahun_lalu;
 
             $no++;
 
@@ -702,6 +707,7 @@ class LibCetakKeuangan
             'report' => $data_laporan,
             'subkategori' => SubkategoriRapb::with('kategori')->orderBy('kode_subkategori_rapb')->get(),
             'tutup_buku_bulanan_biaya' => $tutup_buku_bulanan_biaya,
+            'spp_tahun_lalu' => $spp_tahun_lalu,
             'total_bayar_non_kbm' => $total_bayar_non_kbm,
         ];
     }
