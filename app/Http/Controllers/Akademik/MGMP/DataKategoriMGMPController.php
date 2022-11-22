@@ -98,7 +98,7 @@ class DataKategoriMGMPController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $mata_pelajaran = MataPelajaran::all();
-        $name = CategoriFileMGMP::find($category_file_id)->first();
+        $name = CategoriFileMGMP::where('category_file_mgmp_id', $category_file_id)->first();
         $data_kategori = CategoriFileGuru::where('category_file_mgmp_id', $category_file_id)->first();
         // $allowed_role = CategoryFileRole::where('category_file_id', $data_kategori->category_file_mgmp_id)->pluck('id_role');
         // $pengguna = Pengguna::where('status_join_table', 2)->get();
@@ -218,7 +218,7 @@ class DataKategoriMGMPController extends BaseController
 
 
                     $dataguru = CategoriFileGuru::where('category_file_mgmp_id', $id)->get();
-                    
+
                     foreach ($dataguru as $guru) {
                         $data =    CategoriFileGuru::where('category_file_guru_id', $guru->category_file_guru_id)->first();
                         $data->delete();
