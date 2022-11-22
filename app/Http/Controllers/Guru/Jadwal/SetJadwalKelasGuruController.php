@@ -245,7 +245,7 @@ class SetJadwalKelasGuruController extends Controller
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status_code' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, Hapus Ploting Mapel Siswa terlebi dahulu'
                     ];
                 } else {
                     // dd($id);
