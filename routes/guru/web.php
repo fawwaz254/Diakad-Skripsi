@@ -64,6 +64,7 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 
 // ROLE GURU
@@ -674,15 +675,15 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('form-lainnya')->group(function () {
-                Route::get('/',[FormLainnyaController::class, 'viewListFormLainnya']);
+                Route::get('/', [FormLainnyaController::class, 'viewListFormLainnya']);
                 Route::post('datatables', [FormLainnyaController::class, 'datatablesListFormLainnya']);
 
-                Route::get('/form/{id_form}',[FormLainnyaController::class, 'viewFormLainnya']);
-                Route::post('/form/datatables/{id_form}',[FormLainnyaController::class, 'datatablesFormLainnya']);
+                Route::get('/form/{id_form}', [FormLainnyaController::class, 'viewFormLainnya']);
+                Route::post('/form/datatables/{id_form}', [FormLainnyaController::class, 'datatablesFormLainnya']);
 
-                Route::get('/form/{id_form}/isi',[FormLainnyaController::class, 'isiFormLainnya']);
-                Route::get('/form/{id_form}/detail',[FormLainnyaController::class, 'viewDetailFormLainnya']);
-                Route::post('/form/action/{id_form}/{mode}',[FormLainnyaController::class, 'postIsiFormLainnya']);
+                Route::get('/form/{id_form}/isi', [FormLainnyaController::class, 'isiFormLainnya']);
+                Route::get('/form/{id_form}/detail', [FormLainnyaController::class, 'viewDetailFormLainnya']);
+                Route::post('/form/action/{id_form}/{mode}', [FormLainnyaController::class, 'postIsiFormLainnya']);
             });
         });
 
@@ -715,6 +716,15 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [KerjaHarianController::class, 'editKerjaHarian']);
                 Route::get('preview-file/{id}', [KerjaHarianController::class, 'previewFile']);
                 Route::post('action-kerja-harian/{mode}/{id}', [KerjaHarianController::class, 'actionKerjaHarian']);
+            });
+        });
+        Route::prefix('manajemen-tanda-tangan')->group(function () {
+
+            Route::prefix('approve-tanda-tangan-digital')->group(function () {
+                Route::get('/', [ApproveTandaTanganDigital::class, 'viewApproveTandaTanganDigital']);
+                Route::get('preview/{id}', [ApproveTandaTanganDigital::class, 'previewDocument']);
+                Route::get('datatables', [ApproveTandaTanganDigital::class, 'datatablesApproveTandaTanganDigital']);
+                Route::post('approve/{id}', [ApproveTandaTanganDigital::class, 'actionApproveTandaTanganDigital']);
             });
         });
 

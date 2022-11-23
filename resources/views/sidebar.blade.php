@@ -1,38 +1,39 @@
 @php
-$theme_name = Request::segment(1);
-$route_modul = Request::segment(2);
-$route_menu = Request::segment(3);
-$path = Request::fullUrl();
-$role_aktif = auth_data()->role_aktif->id_role;
-$id_pengguna = auth_data()->pengguna->id_pengguna;
-
-$detail_kelas = get_keterangan_kelas($id_pengguna);
-$detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
-$category_file_role = category_file_role($role_aktif);
-
-$nm_kelas = null;
-
-// if siswa
-if ($role_aktif == 3) {
-    $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
-    $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
-    $nm_kelas = $kelas->nm_kelas;
-}
-
-// if guru
-if ($role_aktif == 2) {
-    $guru = App\Models\Guru::where('id_pengguna', $id_pengguna)->first();
-    $wali_kelas = App\Models\WaliKelas::where('id_guru', $guru->id_guru)
-        ->where('is_aktif', 1)
-        ->first();
-
-    if (!empty($wali_kelas)) {
-        $kelas = App\Models\Kelas::where('id_kelas', $wali_kelas->id_kelas)->first();
-        if (!empty($kelas)) {
-            $nm_kelas = $kelas->nm_kelas;
+    $theme_name = Request::segment(1);
+    $route_modul = Request::segment(2);
+    $route_menu = Request::segment(3);
+    $path = Request::fullUrl();
+    $role_aktif = auth_data()->role_aktif->id_role;
+    $id_pengguna = auth_data()->pengguna->id_pengguna;
+    
+    $detail_kelas = get_keterangan_kelas($id_pengguna);
+    $detail_wali_kelas = get_keterangan_wali_kelas($id_pengguna);
+    $category_file_role = category_file_role($role_aktif);
+    
+    $nm_kelas = null;
+    // if siswa
+    if ($role_aktif == 3) {
+        $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
+        $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
+        $nm_kelas = $kelas->nm_kelas;
+    }
+    
+    // if guru
+    if ($role_aktif == 2) {
+        $guru = App\Models\Guru::with('unit_kerja')
+            ->where('id_pengguna', $id_pengguna)
+            ->first();
+        $wali_kelas = App\Models\WaliKelas::where('id_guru', $guru->id_guru)
+            ->where('is_aktif', 1)
+            ->first();
+    
+        if (!empty($wali_kelas)) {
+            $kelas = App\Models\Kelas::where('id_kelas', $wali_kelas->id_kelas)->first();
+            if (!empty($kelas)) {
+                $nm_kelas = $kelas->nm_kelas;
+            }
         }
     }
-}
 @endphp
 <section>
     <!-- Left Sidebar -->
@@ -42,11 +43,13 @@ if ($role_aktif == 2) {
             style="background: url('https://diakad.sgp1.digitaloceanspaces.com/{{ auth_data()->sekolah_data->nm_singkat_sekolah }}/global/user-img-background') no-repeat no-repeat;">
             <div class="image">
                 @if (!empty(auth_data()->pengguna->path_foto_pengguna))
-                   <a href="{{ url(Request::segment(1) . '#biodata') }}"> <img src="{{ Storage::disk('spaces')->url(auth_data()->pengguna->path_foto_pengguna) }}"
-                        height="50" /></a>
+                    <a href="{{ url(Request::segment(1) . '#biodata') }}"> <img
+                            src="{{ Storage::disk('spaces')->url(auth_data()->pengguna->path_foto_pengguna) }}"
+                            height="50" /></a>
                 @else
-                <a href="{{ url(Request::segment(1) . '#biodata') }}"> <img src="https://ui-avatars.com/api/?size=100&name={{ auth_data()->pengguna->nm_pengguna }}"
-                        height="50" /></a>
+                    <a href="{{ url(Request::segment(1) . '#biodata') }}"> <img
+                            src="https://ui-avatars.com/api/?size=100&name={{ auth_data()->pengguna->nm_pengguna }}"
+                            height="50" /></a>
                 @endif
             </div>
             <div class="info-container">
@@ -107,8 +110,7 @@ if ($role_aktif == 2) {
                                 @foreach ($modul->menus as $menu)
                                     @if ($menu->nm_menu == 'Tracer Alumni' && $detail_wali_kelas == null && $role_aktif !== 19 && $role_aktif !== 12)
                                     @else
-                                        <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}"
-                                            class="menu-item">
+                                        <li id="menu-item-{{ $modul->route }}-{{ $menu->page }}" class="menu-item">
                                             @if (!empty($menu->page))
                                                 <a class="target-link"
                                                     href="{{ url(Request::segment(1) . '#' . $modul->route . '/' . $menu->page) }}"
@@ -146,6 +148,23 @@ if ($role_aktif == 2) {
                                 <a href="{{ url(Request::segment(1) . '#tracer-alumni') }}"
                                     class="target-link waves-effect waves-block">
                                     Tracer Alumni
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
+                {{-- Tracer Alumni --}}
+
+                @if ($role_aktif == 2 && $guru->unit_kerja->nm_unit_kerja == 'Pimpinan')
+                    <li id="modul-item-manajemen-tanda-tangan" class="modul-item">
+                        <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">
+                            <span>Manajemen Tanda Tangan</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li class="menu-item" id="menu-item-data-sub-kategori">
+                                <a href="{{ url(Request::segment(1) . '#manajemen-tanda-tangan/approve-tanda-tangan-digital') }}"
+                                    class="target-link waves-effect waves-block">
+                                    Approve Tanda Tangan Digital
                                 </a>
                             </li>
                         </ul>
@@ -199,10 +218,12 @@ if ($role_aktif == 2) {
         <!-- Footer -->
         <div class="legal">
             <div class="copyright">
-                Copyright &copy;{{now()->format('Y')}}
+                Copyright &copy;{{ now()->format('Y') }}
             </div>
             <div class="version">
-                Made with <span style="color: #e25555;">&hearts;</span> by <a href="https://solusimaster.co.id">@Digital Solusi Master</a>
+                Made with <span style="color: #e25555;">&hearts;</span> by <a
+                    href="https://solusimaster.co.id">@Digital
+                    Solusi Master</a>
             </div>
         </div>
         <!-- #Footer -->
