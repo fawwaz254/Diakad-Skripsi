@@ -19,6 +19,7 @@ use App\Http\Controllers\Tendik\JurnalHarian\JurnalHarianTendikController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('tendik')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 

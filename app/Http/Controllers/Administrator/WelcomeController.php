@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Administrator;
 
+use App\Models\Guru;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Semester;
-
+use App\Models\Siswa;
+use App\Models\Staff;
 use Yajra\Datatables\Datatables;
 
 use Auth;
@@ -18,6 +20,22 @@ class WelcomeController extends BaseController{
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         return view('administrator/welcome', compact('auth_data','semester_aktif'));
+    }
+    public function viewBiodata(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        if ($auth_data->pengguna->status_join_table == '1') { //tendik
+            $pengguna = Staff::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
+            return view('view-biodata', compact('auth_data', 'pengguna'));
+        } elseif ($auth_data->pengguna->status_join_table == '2') { //guru
+            $pengguna = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
+            return view('view-biodata', compact('auth_data', 'pengguna'));
+        } elseif ($auth_data->pengguna->status_join_table == '3') { //siswa
+            $pengguna = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
+            return view('view-biodata', compact('auth_data', 'pengguna'));
+        } else { }
+
     }
 
 }

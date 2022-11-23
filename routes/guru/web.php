@@ -71,7 +71,7 @@ use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('guru')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('mgmp')->group(function () {
 
