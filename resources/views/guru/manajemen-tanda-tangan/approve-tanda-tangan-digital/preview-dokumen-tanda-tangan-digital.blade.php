@@ -8,12 +8,31 @@
     <title>{{ $dokumen_tanda_tangan_digital->perihal_dokumen }}</title>
     <link href="{{ asset('plugins/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
 </head>
+{{-- @dd($auth_data->sekolah_data->kota->nm_kota) --}}
 
 <body>
     @php
         $tanggal_surat = \Carbon\Carbon::create($dokumen_tanda_tangan_digital->created_at)->locale('id_ID');
     @endphp
     <div class="container">
+        <div style="display: flex;justify-content: space-between;align-items:center">
+            <img style="width: 150px;height:150px;object-fit:cover"
+                src="{{ asset('media/logo-sidoarjo-hitam-putih.jpg') }}" alt="">
+            <div style="text-align: center">
+                <h3>PEMERINTAHAN KABUPATEN SIDOARJO</h3>
+                <h3>DINAS PENDIDIKAN DAN KEBUDAYAAN</h3>
+                <div>
+                    <p>{{ $auth_data->sekolah_data->alamat_jalan }} {{ $auth_data->sekolah_data->kota->nm_kota }}
+                        Telepon {{ $auth_data->sekolah_data->nomor_telp_sekolah }}</p>
+                    <span> <i>Email :</i> <span
+                            style="color: rgb(41, 41, 242)"><u>{{ $auth_data->sekolah_data->email_sekolah }}</u></span>
+                        <i>Website:</i> <span
+                            style="color: rgb(41, 41, 242)"><u>{{ $auth_data->sekolah_data->website_sekolah }}</u></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <hr>
         <table style="width: 100%;">
             <tr>
             <tr>
