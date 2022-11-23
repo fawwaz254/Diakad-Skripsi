@@ -7,6 +7,7 @@ use App\Http\Controllers\RaporBukuInduk\WelcomeController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('rapor-buku-induk')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('rapor')->group(function () {
             // Menu Cari Siswa

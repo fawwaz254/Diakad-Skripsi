@@ -36,6 +36,7 @@ use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('siswa')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('tracer-alumni')->group(function () {
             Route::get('/', [TracerAlumniSiswaController::class, 'viewTracerAlumni']);

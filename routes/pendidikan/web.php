@@ -36,6 +36,7 @@ Route::middleware(['token_staff'])->group(function () {
     // url: /pendidikan
     Route::prefix('pendidikan')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         /** ==== MODUL MANAJEMEN FILE ==== **/
         // url: /pendidikan/manajemen-file

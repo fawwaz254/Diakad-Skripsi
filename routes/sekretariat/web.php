@@ -16,6 +16,7 @@ use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('sekretariat')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('data-sekretariat')->group(function () {
             // MENU Data Loker Almari
