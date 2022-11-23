@@ -287,8 +287,9 @@ class FingerprintController extends BaseController
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
                     if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                    ->where('status_join_table', $pengguna->status_join_table)
-                    ->first()) { } else {
+                        ->where('status_join_table', $pengguna->status_join_table)
+                        ->first()
+                    ) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
@@ -340,8 +341,9 @@ class FingerprintController extends BaseController
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
                     if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                    ->where('status_join_table','4')
-                    ->first()) { } else {
+                        ->where('status_join_table', '4')
+                        ->first()
+                    ) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = 4;
