@@ -89,8 +89,8 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         //Jurnal pimpinan
-        Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
-            Route::group(array('prefix' => 'tambah-jurnal-pimpinan'), function () {
+        Route::prefix('jurnal-pimpinan')->group(function () {
+            Route::prefix('tambah-jurnal-pimpinan')->group(function () {
                 Route::get('/', [JurnalPimpinanController::class, 'viewSettingJurnalPimpinan']);
                 Route::get('datatables', [JurnalPimpinanController::class, 'datatablesSettingJurnalPimpinan']);
                 Route::get('add', [JurnalPimpinanController::class, 'addSettingJurnalPimpinan']);
@@ -99,21 +99,19 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::post('action-setting-jurnal-pimpinan/{mode}/{id}', [JurnalPimpinanController::class, 'actionSettingJurnalPimpinan']);
             });
-
-            Route::group(array('prefix' => 'jenis-jurnal-pimpinan'), function () {
+            Route::prefix('jenis-jurnal-pimpinan')->group(function () {
                 Route::get('/', [JenisKategoriJurnalPimpinanController::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisKategoriJurnalPimpinanController::class, 'datatablesjenis']);
                 // Route::get('/add', [JenisKategoriJurnalPimpinanController::class, 'addDataJenis']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisKategoriJurnalPimpinanController::class, 'actionDataJenis']);
             });
-
-			Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
-				Route::get('/', [JurnalPimpinanController::class, 'viewLaporanAllJurnalPimpinan']);
-				Route::get('/datatables', [JurnalPimpinanController::class, 'datatablesLaporanJurnalPimpinan']);
+            Route::prefix('laporan-jurnal-pimpinan')->group(function () {
+                Route::get('/', [JurnalPimpinanController::class, 'viewLaporanAllJurnalPimpinan']);
+                Route::get('/datatables', [JurnalPimpinanController::class, 'datatablesLaporanJurnalPimpinan']);
                 Route::get('preview-file/{id}', [JurnalPimpinanController::class, 'previewFile']);
-				Route::get('download-file/{id}', [JurnalPimpinanController::class, 'downloadFile']);				
-			});
-		});
+                Route::get('download-file/{id}', [JurnalPimpinanController::class, 'downloadFile']);
+            });
+        });
 
         Route::prefix('manajemen-menu')->group(function () {
             // MENU Setting Dashboard

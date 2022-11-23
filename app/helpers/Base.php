@@ -35,8 +35,8 @@ if (!function_exists('getIdSemesterByTanggal')) {
 
         return (object) [
             'date_carbon' => $source_carbon,
-            'ganjil' => Semester::where('kode_semester', $tahun_akademik_semester.'1')->first(),
-            'genap' => Semester::where('kode_semester', $tahun_akademik_semester.'2')->first()
+            'ganjil' => Semester::where('kode_semester', $tahun_akademik_semester . '1')->first(),
+            'genap' => Semester::where('kode_semester', $tahun_akademik_semester . '2')->first()
         ];
     }
 }
@@ -75,7 +75,7 @@ if (!function_exists('get_keterangan_kelas')) {
 
         $siswa = Siswa::where('id_pengguna', $id_pengguna)->first();
         if ($siswa) {
-            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->where('tingkat',9)->first();
+            $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->where('tingkat', 9)->first();
         } else {
             $kelas = null;
         }
@@ -279,5 +279,27 @@ if (!function_exists('api_response')) {
             $headers,
             JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
         );
+    }
+}
+
+if (!function_exists('numberToRomanRepresentation')) {
+    /**
+     * Convert number to Roman
+     * @return String 
+     */
+    function numberToRomanRepresentation($number)
+    {
+        $map = array('M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1);
+        $returnValue = '';
+        while ($number > 0) {
+            foreach ($map as $roman => $int) {
+                if ($number >= $int) {
+                    $number -= $int;
+                    $returnValue .= $roman;
+                    break;
+                }
+            }
+        }
+        return $returnValue;
     }
 }
