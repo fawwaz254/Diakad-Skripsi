@@ -139,11 +139,6 @@ class SetJadwalKelasController extends Controller
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        // dd($input);
-
-
-        
-
         //validasi waktu
         if ($mode != 'delete') {
             $jam_masuk = JadwalJam::find($input->jamMasuk);
@@ -182,7 +177,7 @@ class SetJadwalKelasController extends Controller
             }
         }
 
-        if ( $mode != 'delete' && $validator->fails()) {
+        if ($mode != 'delete' && $validator->fails()) {
             return [
                 'status_code' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -247,7 +242,7 @@ class SetJadwalKelasController extends Controller
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status_code' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, Hapus Ploting Mapel Siswa terlebi dahului'
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
                     ];
                 } else {
                     // dd($id);
