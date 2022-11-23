@@ -180,7 +180,7 @@ class SetJadwalKelasGuruController extends Controller
             }
         }
 
-        if ($mode != 'delete' &&$validator->fails() ) {
+        if ($mode != 'delete' && $validator->fails()) {
             return [
                 'status_code' => 300, // FAILED
                 'message' => $validator->errors()->first()
@@ -240,12 +240,12 @@ class SetJadwalKelasGuruController extends Controller
                     'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
                     'message' => 'Save Successfully'
                 ];
-            }elseif ($mode == 'delete') {
+            } elseif ($mode == 'delete') {
                 // dd($id);
                 if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status_code' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini'
+                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
                     ];
                 } else {
                     // dd($id);
@@ -290,7 +290,7 @@ class SetJadwalKelasGuruController extends Controller
                     'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
                     'message' => 'Save Successfully'
                 ];
-            } 
+            }
         }
     }
 }

@@ -157,9 +157,9 @@ class HistoriAbsensiSiswaController extends Controller
                     $query->where('id_kelas', '=', $id_kelas);
                 })->orderBy('nm_pengguna', 'asc')->get();
         }
-
-        $allShiftPengguna = ShiftPengguna::where('id_shift_master','Siswa')->where('date', $date)->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table',3)->get();
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::where('id_shift_master','Siswa')->where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table',3)->whereIn('id_pengguna', $list_pengguna)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;
@@ -300,11 +300,11 @@ class HistoriAbsensiSiswaController extends Controller
         $end_date =  new Carbon('last day of' . $mount . $year);
 
 
-
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::get();
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->get();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->whereIn('id_pengguna', $list_pengguna)->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
@@ -428,11 +428,11 @@ class HistoriAbsensiSiswaController extends Controller
         $start_date = $now->startOfWeek()->format('Y-m-d');
         $end_date = $now->endOfWeek()->format('Y-m-d');
 
-
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::get();
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->get();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->whereIn('id_pengguna', $list_pengguna)->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['status_join_table'] = $value->status_join_table;
@@ -546,10 +546,10 @@ class HistoriAbsensiSiswaController extends Controller
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
-
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-        $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['id_pengguna'] = $value->id_pengguna;

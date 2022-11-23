@@ -148,15 +148,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($hasil as $key => $r)
-                                @if ($key % 2 == 1)
+                            @php
+                            $no = 1;
+                            @endphp
+                            @foreach ($hasil as $r)
+                                @if ($no % 2 == 0)
                                     <tr style="background: #DDA0DD">
                                     @else
                                     <tr>
                                 @endif
                                 @if ($r['shift'])
                                 @if($r['status'] == $status || $status == '0')
-                                    <td style="text-align: center;">{{ $loop->iteration }}</td>
+                                    <td style="text-align: center;">{{ $no++ }}</td>
                                     <td style="text-align: center;">{{ $r['kelas'] }}</td>
                                     <td style="text-align: center;">{{ $r['nis'] }}</td>
                                     <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>

@@ -78,8 +78,11 @@ class RekapAbsensiController extends Controller
         $jumlah_alpha = 0;
         $tidak_checkout = 0;
 
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->get();
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        // dd($list_pengguna);
+
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->whereIn('id_pengguna', $list_pengguna)->get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
 
@@ -247,9 +250,9 @@ class RekapAbsensiController extends Controller
         // $jumlah_pulangcepat = 0;
         $jumlah_alpha = 0;
         // $tidak_checkout = 0;
-
-        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', 'Siswa')->with('shift_master')->get();
-        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->get();
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
 
@@ -368,8 +371,8 @@ public function cetakRekapAbsensi(Request $request, $id_pengguna, $start_date, $
 
     $pengguna = Pengguna::where('id_pengguna',$id_pengguna)->with('status_pengguna', 'guru.unit_kerja')->first();
 
-    $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->get();
-    $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->get();
+    $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_pengguna',$id_pengguna)->with('shift_master')->get();
+    $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('id_pengguna',$id_pengguna)->get();
     $dates = CarbonPeriod::create($start_date, $end_date);
     $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
     $hasil = [];
@@ -516,8 +519,8 @@ public function cetakRekapAbsensiSiswa(Request $request, $id_pengguna, $start_da
 
     $pengguna = Pengguna::where('id_pengguna',$id_pengguna)->with('status_pengguna', 'siswa.kelas')->first();
 
-    $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->get();
-    $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->get();
+    $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_pengguna',$id_pengguna)->with('shift_master')->get();
+    $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('id_pengguna',$id_pengguna)->get();
     $dates = CarbonPeriod::create($start_date, $end_date);
     $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
     $hasil = [];
