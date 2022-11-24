@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Guru\WaliKelas;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Yajra\Datatables\Datatables;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
@@ -30,8 +30,9 @@ class WaliMuridController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->whereHas('wali_murid')->with('wali_murid')->get();
+        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->whereHas('wali_murid')->with('wali_murid', 'pengguna', 'kelas')->get();
 
-        dd($list_siswa);
+        // dd($list_siswa);
+        return Datatables::of($list_siswa)->make(true);
     }
 }

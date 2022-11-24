@@ -65,7 +65,7 @@ class HistoriAbsensiController extends BaseController
 
         foreach ($dates as $key => $value) {
 
-            $hasil[$key]['tanggal'] = $value->format('d');
+            $hasil[$key]['tanggal'] = $value->format('Y-m-d');
             $hasil[$key]['hari'] = $hariIndo[$value->dayOfWeek];
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['check_out'] = '-';
@@ -73,6 +73,7 @@ class HistoriAbsensiController extends BaseController
             $hasil[$key]['shift'] = '';
             $hasil[$key]['start'] = '';
             $hasil[$key]['end'] = '';
+            $shiftMaster = null;
 
             $cek_libur = ManajemenHariLibur::where('date', $value->format('Y-m-d'))->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('date', $value->format('Y-m-d'))->first();
