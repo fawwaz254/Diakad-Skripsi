@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Pendidikan\Siswa\CariSiswaController;
 use App\Http\Controllers\Guru\WelcomeController;
 use App\Http\Controllers\Guru\Tutorial\VideoController;
 use App\Http\Controllers\Guru\Jadwal\JadwalKBMController;
@@ -593,6 +594,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('wali-murid')->group(function () {
                 Route::get('/', [WaliMuridController::class, 'viewWaliMurid']);
                 Route::get('datatables', [WaliMuridController::class, 'datatablesWaliMurid']);
+                Route::post('reset-password', [CariSiswaController::class, 'resetPasswordSiswa']);
             });
         });
 
