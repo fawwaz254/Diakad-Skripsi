@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        CARI DATA PENGGUNA
+                        Data Wali Murid
                     </h2>
                 </div>
                 <div class="body">
@@ -21,7 +21,7 @@
                                         <th>Siswa</th>
                                         <th>Kelas</th>
                                         {{-- <th>Multi Role</th> --}}
-                                        <th>Action</th>
+                                        {{-- <th>Action</th> --}}
                                     </tr>
                                 </thead>
                             </table>
@@ -54,33 +54,34 @@
                     orderable: false
                 },
                 {
-                    data: 'username',
-                    name: 'username'
+                    data: 'wali_murid.nomor_hp_wali_murid',
+                    name: 'wali_murid.nomor_hp_wali_murid'
                 },
                 {
-                    data: 'nm_pengguna',
-                    name: 'nm_pengguna'
+                    data: 'wali_murid.nm_wali_murid',
+                    name: 'wali_murid.nm_wali_murid'
                 },
                 {
-                    data: 'status_join_table',
-                    name: 'status_join_table'
+                    data: 'pengguna.nm_pengguna',
+                    name: 'pengguna._nm_pengguna'
                 },
                 {
-                    data: 'nm_role',
-                    name: 'nm_role'
-                },
-                {
-                    data: 'action',
-                    name: 'action',
-                    searchable: false,
-                    orderable: false,
-                    render: function(data) {
-                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                            detail_url + '/' + data.id + '/' + data.id_cari + '">' +
-                            '    <i class="material-icons">edit</i>' +
-                            '</a>';
-                    }
+                    data: 'kelas.nm_kelas',
+                    name: 'kellas.nm_kelas'
                 }
+                // ,
+                // {
+                //     data: 'action',
+                //     name: 'action',
+                //     searchable: false,
+                //     orderable: false,
+                //     render: function(data) {
+                //         return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                //             detail_url + '/' + data.id + '/' + data.id_cari + '">' +
+                //             '    <i class="material-icons">edit</i>' +
+                //             '</a>';
+                //     }
+                // }
             ]
         });
 
