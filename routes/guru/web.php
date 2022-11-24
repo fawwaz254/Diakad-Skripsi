@@ -65,6 +65,7 @@ use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketI
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
+use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
 
