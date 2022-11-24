@@ -1,33 +1,35 @@
 <div class="container-fluid">
     <div class="block-header">
-      <h2><a class="btn bg-blue waves-effect target-link " href="{{url(Request::segment(1))}}"><i class="material-icons">backspace</i><span>Kembali</span></a>
-         {{--  <a href="{{url(Request::segment(1).'/siswa/insert-update-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
+        <h2><a class="btn bg-blue waves-effect target-link " href="{{ url(Request::segment(1)) }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a>
+            {{--  <a href="{{url(Request::segment(1).'/siswa/insert-update-siswa/view-print-siswa/'.$siswa->nis_siswa)}}" target="_blank" class="btn bg-red waves-effect">
             <i class="material-icons">print</i>
             <span>Print Data Siswa</span>
         </a></h2> --}}
     </div>
-    <div class="row clearfix">
+    {{-- <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card is-gap">
                 {{csrf_field()}}
                 <div class="header">
-                    <h2>
-                        {{-- BIODATA SISWA NIS/NISN : {{$nis_siswa}} --}}
-                    </h2>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <h2> --}}
+    {{-- BIODATA SISWA NIS/NISN : {{$nis_siswa}} --}}
+    </h2>
+    {{-- </div>
+</div>
+</div> --}}
+    {{-- </div> --}}
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
             <div class="card is-gap">
                 <div class="body">
                     <center>
                         <h4>Biodata</h4>
-                        @if(!empty($pengguna->pengguna->path_foto_pengguna))
-                        <img src="{{Storage::disk('spaces')->url($pengguna->pengguna->path_foto_pengguna)}}" style="height: 270px; width: 180px">
+                        @if (!empty($pengguna->pengguna->path_foto_pengguna))
+                            <img src="{{ Storage::disk('spaces')->url($pengguna->pengguna->path_foto_pengguna) }}"
+                                style="height: 270px; width: 180px">
                         @else
-                        <img src="{{asset('media/blank-user.png')}}" style="height: 270px; width: 180px">
+                            <img src="{{ asset('media/blank-user.png') }}" style="height: 270px; width: 180px">
                         @endif
                     </center>
                     <br>
@@ -123,8 +125,8 @@
             {{-- <div class="card">
                 <div class="body">
                     <div class="table-responsive">
-                        @foreach($grup_semester_kelas as $tahun_ajaran => $grup_kelas)
-                            @foreach($grup_kelas as $nm_semester => $datapergrup)
+                        @foreach ($grup_semester_kelas as $tahun_ajaran => $grup_kelas)
+                            @foreach ($grup_kelas as $nm_semester => $datapergrup)
                             <h2 class="card-inside-title">Mapel yang Diambil Semester {{$nm_semester}} ({{$tahun_ajaran}})</h2>
                             <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap">
                                 <tr>
@@ -136,7 +138,7 @@
                                     <th>Nilai<br> Angka</th>
                                     <th>Nilai <br>Huruf</th>
                                 </tr>
-                                @foreach($datapergrup as $key => $data)
+                                @foreach ($datapergrup as $key => $data)
                                 <tr>
                                     <td>{{$key + 1}}</td>
                                     <td>{{$data->kd_mata_pelajaran}}</td>
@@ -165,7 +167,7 @@
                                 <th>Semester</th>
                                 <th>Status Siswa</th>
                             </tr>
-                            @foreach($aktivitas as $aktivitas)
+                            @foreach ($aktivitas as $aktivitas)
                             <tr>
                                 <td>{{$aktivitas->nm_semester}} {{$aktivitas->tahun_ajaran}}</td>
                                 <td>{{$aktivitas->nm_status_pengguna}}</td>
@@ -257,7 +259,7 @@
         </div>
     </div> --}}
 
-    </div>
+</div>
 
 </div>
 @include('scriptjs')

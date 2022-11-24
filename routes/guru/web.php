@@ -66,13 +66,14 @@ use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasI
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
+use App\Models\WaliMurid;
 
 // ROLE GURU
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('guru')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('mgmp')->group(function () {
 
@@ -581,6 +582,16 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('cetak-rapor-siswa')->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
                 Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+            });
+
+            Route::prefix('cetak-rapor-siswa')->group(function () {
+                Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
+                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+            });
+
+            Route::prefix('wali-murid')->group(function () {
+                Route::get('/', [WaliMuridController::class, 'viewWaliMurid']);
+                Route::get('datatables', [WaliMuridController::class, 'datatablesWaliMurid']);
             });
         });
 
