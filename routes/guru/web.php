@@ -64,14 +64,16 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
+use App\Models\WaliMurid;
 
 // ROLE GURU
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('guru')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('mgmp')->group(function () {
 
@@ -581,6 +583,16 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
                 Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
             });
+
+            Route::prefix('cetak-rapor-siswa')->group(function () {
+                Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
+                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+            });
+
+            Route::prefix('wali-murid')->group(function () {
+                Route::get('/', [WaliMuridController::class, 'viewWaliMurid']);
+                Route::get('datatables', [WaliMuridController::class, 'datatablesWaliMurid']);
+            });
         });
 
         // Modul Rapor Sisipan
@@ -674,15 +686,15 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('form-lainnya')->group(function () {
-                Route::get('/',[FormLainnyaController::class, 'viewListFormLainnya']);
+                Route::get('/', [FormLainnyaController::class, 'viewListFormLainnya']);
                 Route::post('datatables', [FormLainnyaController::class, 'datatablesListFormLainnya']);
 
-                Route::get('/form/{id_form}',[FormLainnyaController::class, 'viewFormLainnya']);
-                Route::post('/form/datatables/{id_form}',[FormLainnyaController::class, 'datatablesFormLainnya']);
+                Route::get('/form/{id_form}', [FormLainnyaController::class, 'viewFormLainnya']);
+                Route::post('/form/datatables/{id_form}', [FormLainnyaController::class, 'datatablesFormLainnya']);
 
-                Route::get('/form/{id_form}/isi',[FormLainnyaController::class, 'isiFormLainnya']);
-                Route::get('/form/{id_form}/detail',[FormLainnyaController::class, 'viewDetailFormLainnya']);
-                Route::post('/form/action/{id_form}/{mode}',[FormLainnyaController::class, 'postIsiFormLainnya']);
+                Route::get('/form/{id_form}/isi', [FormLainnyaController::class, 'isiFormLainnya']);
+                Route::get('/form/{id_form}/detail', [FormLainnyaController::class, 'viewDetailFormLainnya']);
+                Route::post('/form/action/{id_form}/{mode}', [FormLainnyaController::class, 'postIsiFormLainnya']);
             });
         });
 
