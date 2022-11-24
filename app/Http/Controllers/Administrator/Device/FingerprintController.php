@@ -68,7 +68,7 @@ class FingerprintController extends BaseController
 
     public function actionGetFinger(Request $request)
     {
-        set_time_limit(9800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $now = Carbon::now('Asia/Jakarta');
 
@@ -343,7 +343,7 @@ class FingerprintController extends BaseController
 
             //--------------------------finger pondok-----------------------------//
             $data_fingerprint2 = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
-            if (!empty($data_fingerprint)) {
+            if (!empty($data_fingerprint2)) {
                 $collection2 = $data_fingerprint2->groupBy('username')->all();
 
                 foreach ($collection2 as $username => $group_of_data) {
