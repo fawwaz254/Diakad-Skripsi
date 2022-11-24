@@ -211,60 +211,63 @@ class FingerprintController extends BaseController
             }
             //---------ambil data pondok-------------//
             $data_fingerprint2 = FPAttendance::where('tanggal', $now->format('Y-m-d'))->where('unit', 'Pondok')->whereIn('username', $data_username_pengguna)->get();
-            $collection2 = $data_fingerprint2->groupBy('username')->all();
+            if (!empty($data_fingerprint2)) {
+                $collection2 = $data_fingerprint2->groupBy('username')->all();
 
-            foreach ($collection2 as $username => $group_of_data) {
-                if ($pengguna = Pengguna::where('username', $username)->first()) {
-                    $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
+                foreach ($collection2 as $username => $group_of_data) {
+                    if ($pengguna = Pengguna::where('username', $username)->first()) {
+                        $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                        // ->whereNull('unit')
-                        // ->where('status_join_table', '4')
-                        ->where('unit', 'Pondok')
-                        ->first()
-                    ) { } else {
-                        $presensi = new PresensiPengguna;
-                        $presensi->id_pengguna = $pengguna->id_pengguna;
-                        $presensi->status_join_table = $pengguna->status_join_table;
-                        $presensi->date = $first_time_finger->tanggal;
-                        $presensi->unit = "Pondok";
-                    }
+                        if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                            // ->whereNull('unit')
+                            // ->where('status_join_table', '4')
+                            ->where('unit', 'Pondok')
+                            ->first()
+                        ) { } else {
+                            $presensi = new PresensiPengguna;
+                            $presensi->id_pengguna = $pengguna->id_pengguna;
+                            $presensi->status_join_table = $pengguna->status_join_table;
+                            $presensi->date = $first_time_finger->tanggal;
+                            $presensi->unit = "Pondok";
+                        }
 
-                    if ($first_time_finger->status == 255) {
-                        if (count($group_of_data) > 1) { // FINGER MORE THAN 1
-                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
-                            $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
-                            if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
-                                $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                        if ($first_time_finger->status == 255) {
+                            if (count($group_of_data) > 1) { // FINGER MORE THAN 1
+                                $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                                $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                                if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                                    $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                                }
+                            } else { // ONLY CHECK-IN
+                                // if (empty($presensi->check_in)) {
+                                $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                                // }
                             }
-                        } else { // ONLY CHECK-IN
-                            // if (empty($presensi->check_in)) {
-                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
-                            // }
-                        }
-                    } else {
-                        if ($first_time_finger->status == 0) {
-                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        } else {
+                            if ($first_time_finger->status == 0) {
+                                $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            }
+
+                            if ($first_time_finger->status == 1) {
+                                $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            }
                         }
 
-                        if ($first_time_finger->status == 1) {
-                            $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
+                            if ($presensi->check_out < $presensi->check_in) {
+                                $temp_clock = $presensi->check_in;
+
+                                $presensi->check_in = $presensi->check_out;
+                                $presensi->check_out = $temp_clock;
+                            }
                         }
+                        $presensi->status = null;
+                        $presensi->notes = null;
+                        $presensi->save();
                     }
-
-                    if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
-                        if ($presensi->check_out < $presensi->check_in) {
-                            $temp_clock = $presensi->check_in;
-
-                            $presensi->check_in = $presensi->check_out;
-                            $presensi->check_out = $temp_clock;
-                        }
-                    }
-                    $presensi->status = null;
-                    $presensi->notes = null;
-                    $presensi->save();
                 }
             }
+
 
             echo 'SUCCESS Merge Data. >>> END';
         } catch (Exception $e) {
@@ -340,59 +343,62 @@ class FingerprintController extends BaseController
 
             //--------------------------finger pondok-----------------------------//
             $data_fingerprint2 = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
-            $collection2 = $data_fingerprint2->groupBy('username')->all();
+            if (!empty($data_fingerprint)) {
+                $collection2 = $data_fingerprint2->groupBy('username')->all();
 
-            foreach ($collection2 as $username => $group_of_data) {
-                if ($pengguna = Pengguna::where('username', $username)->first()) {
-                    $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
+                foreach ($collection2 as $username => $group_of_data) {
+                    if ($pengguna = Pengguna::where('username', $username)->first()) {
+                        $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                        // ->where('status_join_table', '4')
-                        ->where('unit', 'Pondok')
-                        ->first()
-                    ) { } else {
-                        $presensi = new PresensiPengguna;
-                        $presensi->id_pengguna = $pengguna->id_pengguna;
-                        $presensi->status_join_table =  $pengguna->status_join_table;
-                        $presensi->date = $first_time_finger->tanggal;
-                        $presensi->unit = "Pondok";
-                    }
+                        if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                            // ->where('status_join_table', '4')
+                            ->where('unit', 'Pondok')
+                            ->first()
+                        ) { } else {
+                            $presensi = new PresensiPengguna;
+                            $presensi->id_pengguna = $pengguna->id_pengguna;
+                            $presensi->status_join_table =  $pengguna->status_join_table;
+                            $presensi->date = $first_time_finger->tanggal;
+                            $presensi->unit = "Pondok";
+                        }
 
-                    if ($first_time_finger->status == 255) {
-                        if (count($group_of_data) > 1) { // FINGER MORE THAN 1
-                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
-                            $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
-                            if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
-                                $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                        if ($first_time_finger->status == 255) {
+                            if (count($group_of_data) > 1) { // FINGER MORE THAN 1
+                                $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                                $last_time_finger = $group_of_data->sortByDesc('fp_date')->values()[0];
+                                if (Carbon::parse($first_time_finger->fp_date)->diffInMinutes($last_time_finger->fp_date) > 100) {
+                                    $presensi->check_out = date_format(date_create($last_time_finger->fp_date), 'H:i:s');
+                                }
+                            } else { // ONLY CHECK-IN
+                                // if (empty($presensi->check_in)) {
+                                $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                                // }
                             }
-                        } else { // ONLY CHECK-IN
-                            // if (empty($presensi->check_in)) {
-                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
-                            // }
-                        }
-                    } else {
-                        if ($first_time_finger->status == 0) {
-                            $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        } else {
+                            if ($first_time_finger->status == 0) {
+                                $presensi->check_in = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            }
+
+                            if ($first_time_finger->status == 1) {
+                                $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                            }
                         }
 
-                        if ($first_time_finger->status == 1) {
-                            $presensi->check_out = date_format(date_create($first_time_finger->fp_date), 'H:i:s');
+                        if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
+                            if ($presensi->check_out < $presensi->check_in) {
+                                $temp_clock = $presensi->check_in;
+
+                                $presensi->check_in = $presensi->check_out;
+                                $presensi->check_out = $temp_clock;
+                            }
                         }
+                        $presensi->status = null;
+                        $presensi->notes = null;
+                        $presensi->save();
                     }
-
-                    if (!empty($presensi->check_in) && !empty($presensi->check_out)) {
-                        if ($presensi->check_out < $presensi->check_in) {
-                            $temp_clock = $presensi->check_in;
-
-                            $presensi->check_in = $presensi->check_out;
-                            $presensi->check_out = $temp_clock;
-                        }
-                    }
-                    $presensi->status = null;
-                    $presensi->notes = null;
-                    $presensi->save();
                 }
             }
+
 
             return 'OK';
         } catch (Exception $e) {
