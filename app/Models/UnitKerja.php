@@ -16,10 +16,10 @@ class UnitKerja extends Model
 
     protected $primaryKey = 'id_unit_kerja';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'nm_unit_kerja',
         'deskripsi_unit_kerja',
@@ -34,9 +34,8 @@ class UnitKerja extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function guru()
+    {
+        return $this->hasMany(Guru::class, 'id_unit_kerja', 'id_unit_kerja');
+    }
 }

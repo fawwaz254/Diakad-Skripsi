@@ -64,7 +64,11 @@ use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController as GuruPiketRek
 use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketInputPelanggaranController;
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
+<<<<<<< HEAD
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
+=======
+use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
+>>>>>>> 19f3162c360ea995cd42c0e8494c06196f454fb4
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
 
@@ -727,6 +731,15 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [KerjaHarianController::class, 'editKerjaHarian']);
                 Route::get('preview-file/{id}', [KerjaHarianController::class, 'previewFile']);
                 Route::post('action-kerja-harian/{mode}/{id}', [KerjaHarianController::class, 'actionKerjaHarian']);
+            });
+        });
+        Route::prefix('manajemen-tanda-tangan')->group(function () {
+
+            Route::prefix('approve-tanda-tangan-digital')->group(function () {
+                Route::get('/', [ApproveTandaTanganDigital::class, 'viewApproveTandaTanganDigital']);
+                Route::get('preview/{id}', [ApproveTandaTanganDigital::class, 'previewDocument']);
+                Route::get('datatables', [ApproveTandaTanganDigital::class, 'datatablesApproveTandaTanganDigital']);
+                Route::post('approve/{id}', [ApproveTandaTanganDigital::class, 'actionApproveTandaTanganDigital']);
             });
         });
 
