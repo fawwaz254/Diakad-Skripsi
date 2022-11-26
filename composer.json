@@ -21,6 +21,7 @@
         "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^2.59",
         "sentry/sentry-laravel": "^2.14",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "unisharp/laravel-filemanager": "^2.5",
         "yajra/laravel-datatables-oracle": "^9.21"
     },

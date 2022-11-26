@@ -22,6 +22,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('wali-murid')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 
