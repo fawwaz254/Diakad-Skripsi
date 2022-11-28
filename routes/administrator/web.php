@@ -105,8 +105,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/datatables', [JenisKategoriJurnalPimpinanController::class, 'datatablesjenis']);
                 // Route::get('/add', [JenisKategoriJurnalPimpinanController::class, 'addDataJenis']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisKategoriJurnalPimpinanController::class, 'actionDataJenis']);
+                Route::get('/import-excel', [JenisKategoriJurnalPimpinanController::class, 'importExcel']);
+                Route::post('/import-excel', [JenisKategoriJurnalPimpinanController::class, 'importExcelAction']);
             });
-            Route::prefix('laporan-jurnal-pimpinan')->group(function () {
+
+            Route::group(array('prefix' => 'laporan-jurnal-pimpinan'), function () {
                 Route::get('/', [JurnalPimpinanController::class, 'viewLaporanAllJurnalPimpinan']);
                 Route::get('/datatables', [JurnalPimpinanController::class, 'datatablesLaporanJurnalPimpinan']);
                 Route::get('preview-file/{id}', [JurnalPimpinanController::class, 'previewFile']);
