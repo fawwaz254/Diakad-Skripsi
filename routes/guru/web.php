@@ -391,6 +391,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', [GuruPiketInputPelanggaranController::class, 'ajaxGetSiswaByKelas']);
+            Route::post('siswa-pelanggaran', [\App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
         });
 
         Route::prefix('reward-siswa')->group(function () {
