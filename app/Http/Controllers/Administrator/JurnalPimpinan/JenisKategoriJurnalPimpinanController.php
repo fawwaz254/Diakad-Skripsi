@@ -38,7 +38,6 @@ class JenisKategoriJurnalPimpinanController extends Controller
 
     public function addDataJenis(Request $request)
     {
-        # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -63,28 +62,28 @@ class JenisKategoriJurnalPimpinanController extends Controller
             $now = Carbon::now(env('APP_TIMEZONE', ''));
 
             if ($mode == 'add') {
-                    $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                    $data_jenis                               = new JenisJurnalPimpinan();
-                    $data_jenis->id_jenis_jurpin             = $id;
-                    $data_jenis->jenis_jurpin                = $input->jenis_jurpin;
-                    $data_jenis->created_by                   = $input->auth_data->pengguna->id_pengguna;
-                    $data_jenis->save();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $data_jenis                               = new JenisJurnalPimpinan();
+                $data_jenis->id_jenis_jurpin             = $id;
+                $data_jenis->jenis_jurpin                = $input->jenis_jurpin;
+                $data_jenis->created_by                   = $input->auth_data->pengguna->id_pengguna;
+                $data_jenis->save();
 
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'jurnal-pimpinan/jenis-jurnal-pimpinan',
-                        'message' => 'Save Data Jenis Succesfully'
-                    ];
-                } elseif ($mode == 'delete') {
-                    // make object to find id 
-                    $data_jenis                       = JenisJurnalPimpinan::where('id_jenis_jurpin', $id)->first();
-                    $data_jenis->deleted_by           = $input->auth_data->pengguna->id_pengguna;
-                    $data_jenis->save();
-                    $data_jenis->delete();
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'jurnal-pimpinan/jenis-jurnal-pimpinan',
+                    'message' => 'Save Data Jenis Succesfully'
+                ];
+            } elseif ($mode == 'delete') {
+                // make object to find id 
+                $data_jenis                       = JenisJurnalPimpinan::where('id_jenis_jurpin', $id)->first();
+                $data_jenis->deleted_by           = $input->auth_data->pengguna->id_pengguna;
+                $data_jenis->save();
+                $data_jenis->delete();
 
-                    return [
-                        'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Jenis succesfully'
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Data Jenis succesfully'
 
                 ];
             }
