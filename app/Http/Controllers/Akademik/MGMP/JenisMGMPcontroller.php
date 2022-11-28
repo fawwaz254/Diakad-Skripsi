@@ -38,6 +38,7 @@ class JenisMGMPcontroller extends Controller
                 return $data;
             })->make(true);
     }
+    
     public function addDataJenis(Request $request)
     {
         # code...
@@ -130,7 +131,7 @@ class JenisMGMPcontroller extends Controller
                             if (empty($value->nama_jenis_jurnal_harian)) {
                                 return [
                                     'status'    => 203, // GAGAL
-                                    'message'   => 'Upload Gagal, Terdapat Data Yang Masih Kosong'
+                                    'message'   => 'Upload Gagal, Kolom Nama Jenis Jurnal Harian Masih Kosong'
                                 ];
                             }
 

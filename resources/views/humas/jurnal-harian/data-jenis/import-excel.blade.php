@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        IMPORT JENIS JURNAL HARIAN GURU
+                        IMPORT JENIS JURNAL HARIAN TENDIK
                     </h2>
                 </div>
                 <div class="body">
