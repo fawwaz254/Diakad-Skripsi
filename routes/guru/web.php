@@ -458,6 +458,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', [GuruPiketInputPelanggaranController::class, 'ajaxGetSiswaByKelas']);
+            Route::post('siswa-pelanggaran', [\App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
 
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', [GuruPiketRekapKesehatanController::class, 'viewRekapKesehatan']);
