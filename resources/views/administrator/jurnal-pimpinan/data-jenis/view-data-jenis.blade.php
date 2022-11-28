@@ -16,22 +16,25 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{url(Request::segment(1).'/'.Request::segment(2).'/jenis-jurnal-pimpinan/action-data-kategori/add/0')}}">
-                        {{csrf_field()}}
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/jenis-jurnal-pimpinan/action-data-kategori/add/0') }}">
+                        {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Jenis Jurnal Pimpinan
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="jenis_jurpin" required=""
-                                aria-required="true" aria-invalid="true" value="">
+                                <input type="text" class="form-control" name="jenis_jurpin" required="" aria-required="true" aria-invalid="true" value="">
 
                             </div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
-                                        class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <a class="btn btn-block bg-green waves-effect"
+                                    href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/import-excel') }}"><i
+                                        class="material-icons">attach_file</i><span>Import From Excel</span></a>
                             </div>
                         </div>
                     </form>
@@ -49,9 +52,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
-                            id="primary_table">
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap" id="primary_table">
                             <thead>
                                 <tr>
                                     <th>No</th>
