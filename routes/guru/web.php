@@ -522,6 +522,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', [WaliKelasInputPelanggaranController::class, 'ajaxGetSubkategoriByKategori']);
+            Route::post('siswa-pelanggaran', [\App\Http\Controllers\Kesiswaan\PenangananSiswa\InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
 
             // MENU PEMBAYARAN ONLINE
             Route::prefix('pembayaran-online')->group(function () {
