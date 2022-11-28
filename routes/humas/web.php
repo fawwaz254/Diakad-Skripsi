@@ -48,6 +48,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('humas')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
             // MENU Data Kategori
@@ -142,6 +143,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [JenisKategoriJurnalHarianController::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisKategoriJurnalHarianController::class, 'datatablesjenis']);
                 Route::get('/add', [JenisKategoriJurnalHarianController::class, 'addDataJenis']);
+                Route::get('/add/import-excel', [JenisKategoriJurnalHarianController::class, 'importExcel']);
+                Route::post('/add/import-excel', [JenisKategoriJurnalHarianController::class, 'importExcelAction']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisKategoriJurnalHarianController::class, 'actionDataJenis']);
             });
             Route::prefix('laporan-jurnal-harian')->group(function () {

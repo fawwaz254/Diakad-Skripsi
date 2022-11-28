@@ -52,6 +52,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
                 Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
+                Route::get('/add/import-excel', [JenisMGMPcontroller::class, 'importExcel']);
+                Route::post('/add/import-excel', [JenisMGMPcontroller::class, 'importExcelAction']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
             });
             Route::prefix('data-kategori-mapel')->group(function () {
@@ -62,12 +64,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('action-data-kategori/{mode}/{id}', [DataKategoriMGMPController::class, 'actionDataKategori']);
             });
 
-            Route::prefix('jenis-mgmp')->group(function () {
-                Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
-                Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
-                Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
-                Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
-            });
+            // Route::prefix('jenis-mgmp')->group(function () {
+            //     Route::get('/', [JenisMGMPcontroller::class, 'viewDataJenis']);
+            //     Route::get('/datatables', [JenisMGMPcontroller::class, 'datatablesjenis']);
+            //     Route::get('/add', [JenisMGMPcontroller::class, 'addDataJenis']);
+            //     Route::post('action-data-kategori/{mode}/{id}', [JenisMGMPcontroller::class, 'actionDataJenis']);
+            // });
 
             Route::prefix('laporan-mgmp')->group(function () {
                 Route::get('/', [DataKategoriMGMPController::class, 'viewLaporanAllMGMP']);
@@ -207,7 +209,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             //test automatik ploting
             Route::get('plotting-mapel-siswa/view-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}',[PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
+            Route::get('plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
             Route::post('plotting-mapel-siswa/action-auto-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
 
 

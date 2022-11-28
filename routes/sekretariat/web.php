@@ -9,12 +9,14 @@ use App\Http\Controllers\Sekretariat\DataSekretariat\DataSubKategoriController;
 use App\Http\Controllers\Sekretariat\Laporan\WaliKelasController;
 use App\Http\Controllers\Sekretariat\ManajemenFile\DataFileController;
 use App\Http\Controllers\Sekretariat\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\Sekretariat\ManajemenTandaTangan\TandaTanganDigitalController;
 use App\Http\Controllers\Sekretariat\WelcomeController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormKesehatanController;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('sekretariat')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('data-sekretariat')->group(function () {
             // MENU Data Loker Almari
@@ -123,6 +125,17 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('datatables', [WaliKelasController::class, 'datatablesWaliKelas']);
                 Route::get('detail/{id}', [WaliKelasController::class, 'detailWaliKelas']);
                 Route::get('detail-datatable/{id}', [WaliKelasController::class, 'detailDataTable']);
+            });
+        });
+
+        Route::prefix('manajemen-tanda-tangan')->group(function () {
+            Route::prefix('tanda-tangan-digital')->group(function () {
+                Route::get('/', [TandaTanganDigitalController::class, 'viewTandaTanganDigital']);
+                Route::get('add', [TandaTanganDigitalController::class, 'addTandaTanganDigital']);
+                Route::get('edit/{id}', [TandaTanganDigitalController::class, 'editTandaTanganDigital']);
+                Route::get('preview/{id}', [TandaTanganDigitalController::class, 'previewDocument']);
+                Route::get('datatables', [TandaTanganDigitalController::class, 'datatablesTandaTanganDigital']);
+                Route::post('action-tanda-tangan-digital/{mode}/{id}', [TandaTanganDigitalController::class, 'actionTandaTanganDigital']);
             });
         });
     });

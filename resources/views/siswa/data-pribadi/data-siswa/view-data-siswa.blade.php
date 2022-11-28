@@ -33,12 +33,12 @@
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
-                                    Nama Lengkap <span class="is-required">*</span>
+                                    Nama Lengkap
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_pengguna" required=""
-                                    aria-required="true" aria-invalid="true" value="{{ $siswa->nm_pengguna }}" required>
+                                <input type="text" class="form-control" name="nm_pengguna" aria-required="true"
+                                    aria-invalid="true" value="{{ $siswa->nm_pengguna }}" disabled>
                                 <input type="hidden" class="form-control" name="id_c_siswa" aria-required="true"
                                     aria-invalid="true" value="{{ $siswa->id_c_siswa }}">
                                 <input type="hidden" class="form-control" name="id_siswa" aria-required="true"

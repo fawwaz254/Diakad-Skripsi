@@ -17,6 +17,7 @@ use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpina
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
+        Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
 
@@ -89,8 +90,8 @@ Route::middleware(['token_staff'])->group(function () {
         });
 
         //Jurnal pimpinan
-        Route::group(array('prefix' => 'jurnal-pimpinan'), function () {
-            Route::group(array('prefix' => 'tambah-jurnal-pimpinan'), function () {
+        Route::prefix('jurnal-pimpinan')->group(function () {
+            Route::prefix('tambah-jurnal-pimpinan')->group(function () {
                 Route::get('/', [JurnalPimpinanController::class, 'viewSettingJurnalPimpinan']);
                 Route::get('datatables', [JurnalPimpinanController::class, 'datatablesSettingJurnalPimpinan']);
                 Route::get('add', [JurnalPimpinanController::class, 'addSettingJurnalPimpinan']);
@@ -99,8 +100,7 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::post('action-setting-jurnal-pimpinan/{mode}/{id}', [JurnalPimpinanController::class, 'actionSettingJurnalPimpinan']);
             });
-
-            Route::group(array('prefix' => 'jenis-jurnal-pimpinan'), function () {
+            Route::prefix('jenis-jurnal-pimpinan')->group(function () {
                 Route::get('/', [JenisKategoriJurnalPimpinanController::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisKategoriJurnalPimpinanController::class, 'datatablesjenis']);
                 // Route::get('/add', [JenisKategoriJurnalPimpinanController::class, 'addDataJenis']);
