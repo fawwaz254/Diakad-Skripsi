@@ -14,8 +14,6 @@ use App\Http\Controllers\Controller;
 
 class JenisMGMPcontroller extends Controller
 {
-
-
     public function viewDataJenis(Request $request)
     {
         # code...
