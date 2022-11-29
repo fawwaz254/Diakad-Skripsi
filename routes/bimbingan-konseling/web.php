@@ -68,7 +68,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
             });
 
-            Route::prefix('catat-siswa-terlambat')->group(function (){
+            Route::prefix('catat-siswa-terlambat')->group(function () {
                 Route::get('/', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
                 Route::get('/{date}', [HistoriSiswaTerlambatController::class, 'viewSiswaTerlambat']);
                 Route::post('/post-siswa-terlambat', [HistoriSiswaTerlambatController::class, 'postSiswaTerlambat']);
@@ -179,6 +179,8 @@ Route::middleware(['token_staff'])->group(function () {
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', [InputPelanggaranController::class, 'ajaxGetSiswaByKelas']);
 
+            //AJAX GET PELANGGARAN SISWA
+            Route::post('siswa-pelanggaran', [InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', [InputPelanggaranController::class, 'ajaxGetSubkategoriByKategori']);
