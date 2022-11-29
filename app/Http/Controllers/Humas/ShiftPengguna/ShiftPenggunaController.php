@@ -29,10 +29,10 @@ class ShiftPenggunaController extends Controller
         }
 
         $pengguna = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna','guru.unit_kerja')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
+            ->with('status_pengguna', 'guru.unit_kerja')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
         $hasil = [];
         $allShiftMater = ShiftMaster::get();
         $allShiftPengguna = ShiftPengguna::where('date', $date)->get();
@@ -51,7 +51,10 @@ class ShiftPenggunaController extends Controller
                 if ($attendance->id_shift_master) {
                     $hasil[$key]['id_shift_master'] = $attendance->id_shift_master;
                     $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
-                    $hasil[$key]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
+
+                    if (isset($shiftM)) {
+                        $hasil[$key]['time'] = minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
+                    }
                 } else {
                     $hasil[$key]['id_shift_master'] = "-";
                 }
@@ -61,7 +64,7 @@ class ShiftPenggunaController extends Controller
             }
         }
         $unit_kerja = UnitKerja::all();
-        return view('humas/absensi/shift-pengguna/view-shift-pengguna', compact('date', 'hasil','unit_kerja'));
+        return view('humas/absensi/shift-pengguna/view-shift-pengguna', compact('date', 'hasil', 'unit_kerja'));
     }
 
     public function addShiftPengguna(Request $request)
@@ -69,10 +72,10 @@ class ShiftPenggunaController extends Controller
 
         $shifts = ShiftMaster::all();
         $penggunas = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-        ->with('status_pengguna','guru.unit_kerja')
-        ->whereHas('status_pengguna', function($query) {
-        $query->where('nm_status_pengguna','=','AKTIF');
-        })->get();
+            ->with('status_pengguna', 'guru.unit_kerja')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('nm_status_pengguna', '=', 'AKTIF');
+            })->get();
 
         // foreach($penggunas as $pengguna){}
         $date =  Carbon::now()->format('Y-m-d');
@@ -174,31 +177,31 @@ class ShiftPenggunaController extends Controller
         return redirect("/humas#absensi/shift_pengguna/" . $date);
     }
 
-    public function export_shift(Request $request,$date = null,$val = null){
+    public function export_shift(Request $request, $date = null, $val = null)
+    {
 
         // dd($val);
         set_time_limit(9800);
 
-        if($val == "0"){
-        $pengguna = pengguna::where('status_join_table', 1)->where('username', '!=', 'admin')
-        ->with('status_pengguna')
-        ->whereHas('status_pengguna', function ($query) {
-            $query->where('nm_status_pengguna', '=', 'AKTIF');
-        })->get();
-        }else{
+        if ($val == "0") {
+            $pengguna = pengguna::where('status_join_table', 1)->where('username', '!=', 'admin')
+                ->with('status_pengguna')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->get();
+        } else {
             $pengguna = pengguna::where('status_join_table', 2)->where('username', '!=', 'admin')
-            ->with('status_pengguna', 'guru.unit_kerja')
-            ->whereHas('guru.unit_kerja', function ($query) use($val) {
-                $query->where('id_unit_kerja', '=', $val);
-            })
-            ->whereHas('status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
-    
+                ->with('status_pengguna', 'guru.unit_kerja')
+                ->whereHas('guru.unit_kerja', function ($query) use ($val) {
+                    $query->where('id_unit_kerja', '=', $val);
+                })
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->get();
         }
-    //   dd($pengguna);
+        //   dd($pengguna);
 
-  
+
         $year = Carbon::parse($date)->format('Y');
         $mount = Carbon::parse($date)->format('M');
 
@@ -225,14 +228,13 @@ class ShiftPenggunaController extends Controller
                     if ($attendance->id_shift_master) {
                         $hasil[$key1][$key2]['id_shift_master'] = $attendance->id_shift_master;
                         $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
-                        $hasil[$key1][$key2]['time'] =minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
+                        $hasil[$key1][$key2]['time'] = minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
                     }
+                }
             }
         }
+        // dd($hasil);
+        $products = $hasil;
+        return Excel::download(new ShiftMount($products), 'shift_bulanan.xlsx');
     }
-    // dd($hasil);
-    $products = $hasil;
-    return Excel::download(new ShiftMount($products), 'shift_bulanan.xlsx');
-
-}
 }
