@@ -158,7 +158,7 @@
                     @if (Auth::user()->must_change_password == 1)
                         url: base_url + '/' + role_url + '/' + 'must-change-password',
                     @elseif (Auth::user()->status_join_table == 3 && check_biodata(Auth::user()->id_pengguna))
-                        url: base_url + '/' + role_url + '/' + 'biodata',
+                        url: base_url + '/' + role_url + '/' + 'must-update-biodata',
                     @else
                         url: base_url + '/' + role_url + '/' + target_url,
                     @endif

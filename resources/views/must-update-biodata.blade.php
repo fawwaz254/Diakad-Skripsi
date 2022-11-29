@@ -17,7 +17,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/data-siswa/' . $siswa->nis_siswa) }}">
+                        action="{{ url(Request::segment(1) . '/must-update-biodata/' . $siswa->nis_siswa) }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -27,7 +27,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                                 <h2 class="card-inside-title">
-                                    Nomor HP ORANG TUA<span class="is-required">*</span><br>
+                                    NOMOR HP ORANG TUA<span class="is-required">*</span><br>
                                     <small>Diisi nomor telepon selular (milik orangtua, atau wali) tanpa tanda
                                         baca, contoh: 0815555555555</small>
                                 </h2>

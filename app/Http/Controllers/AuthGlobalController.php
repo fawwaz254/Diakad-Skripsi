@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengguna;
 use App\Models\Role;
 use App\Models\RolePengguna;
 use App\Models\Siswa;
+use App\Models\WaliMurid;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -35,9 +37,63 @@ class AuthGlobalController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        // dd($input);
         $siswa =  Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna', 'wali_murid')->first();
-        return view('biodata', compact('auth_data', 'siswa'));
+        return view('must-update-biodata', compact('auth_data', 'siswa'));
+    }
+
+    public function actionMustAddBiodata(Request $request, $nis_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $siswa = Siswa::where('nis_siswa', '=', $nis_siswa)->first();
+        $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid ?? null)->first();
+        if ($wali_murid != null) { } else {
+            // if siswa doesnt have wali murid
+            $now1 = Carbon::now(env('APP_TIMEZONE', ''));
+            $wali_murid = new WaliMurid;
+            $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
+            $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $wali_murid->nm_wali_murid = strtoupper($input->nomor_hp_ortu);
+            $wali_murid->is_aktif = 1;
+            $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
+            $wali_murid->updated_at = $now;
+            $wali_murid->save();
+
+            $pengguna = new Pengguna;
+            $pengguna->id_pengguna = $wali_murid->id_pengguna;
+            $pengguna->nm_pengguna = strtoupper($input->nomor_hp_ortu);
+            $pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
+            $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
+            $pengguna->username = $input->nomor_hp_ortu;
+            $pengguna->password = Hash::make($input->nomor_hp_ortu);
+            $pengguna->status_join_table = 4;
+            $pengguna->save();
+            $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+            $role_wali_murid = new RolePengguna;
+            // $role_wali_murid->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $role_wali_murid->id_role = 4;
+            $role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
+            $role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
+            $role_wali_murid->is_aktif = 1;
+            $role_wali_murid->save();
+
+            $siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
+            $siswa1->id_wali_murid = $wali_murid->id_wali_murid;
+            $siswa1->save();
+
+            $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
+            $pengguna1->email_pengguna = $input->email_pengguna;
+            $pengguna1->save();
+        }
+
+
+        return [
+            'status' => 201,
+            'link' =>  url('/'),
+            'message' => 'Update Data Siswa Berhasil'
+        ];
     }
 
     public function indexProfile(Request $request)
