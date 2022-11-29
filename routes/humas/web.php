@@ -143,6 +143,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [JenisKategoriJurnalHarianController::class, 'viewDataJenis']);
                 Route::get('/datatables', [JenisKategoriJurnalHarianController::class, 'datatablesjenis']);
                 Route::get('/add', [JenisKategoriJurnalHarianController::class, 'addDataJenis']);
+                Route::get('/add/import-excel', [JenisKategoriJurnalHarianController::class, 'importExcel']);
+                Route::post('/add/import-excel', [JenisKategoriJurnalHarianController::class, 'importExcelAction']);
                 Route::post('action-data-kategori/{mode}/{id}', [JenisKategoriJurnalHarianController::class, 'actionDataJenis']);
             });
             Route::prefix('laporan-jurnal-harian')->group(function () {
