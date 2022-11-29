@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Alumni\BursaKerja\BKKController;
-use App\Http\Controllers\Alumni\TracerAlumni\TracerAlumniController;
 use App\Http\Controllers\Alumni\WelcomeController;
+use App\Http\Controllers\Alumni\BursaKerja\BKKController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\Siswa\Alumni\TracerAlumniSiswaController;
+use App\Http\Controllers\Alumni\TracerAlumni\TracerAlumniController;
+use App\Http\Controllers\Humas\Alumni\TracerAlumniController as TracerAlumniHumas;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('alumni')->group(function () {
@@ -20,8 +21,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('datatables', [TracerAlumniSiswaController::class, 'datatablesTracerAlumni']);
                 Route::get('add', [TracerAlumniController::class, 'addTracerAlumni']);
                 Route::get('edit/{id}', [TracerAlumniSiswaController::class, 'editTracerAlumni']);
-                //action arahkan ke humas
-                Route::post('action/{mode}/{id}', [TracerAlumniController::class, 'actionTracerAlumni']);
+                //action arahkan ke tracer alumni humas
+                Route::post('action/{mode}/{id}', [TracerAlumniHumas::class, 'actionTracerAlumni']);
             });
         });
 
