@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\RolePengguna;
+use App\Models\Siswa;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Hash;
 use Session;
+
 use Symfony\Component\Process\Process;
 use Validator;
 
@@ -27,6 +29,15 @@ class AuthGlobalController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         return view('must-change-password', compact('auth_data'));
+    }
+
+    public function indexMustAddBiodata(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        // dd($input);
+        $siswa =  Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna', 'wali_murid')->first();
+        return view('biodata', compact('auth_data', 'siswa'));
     }
 
     public function indexProfile(Request $request)
