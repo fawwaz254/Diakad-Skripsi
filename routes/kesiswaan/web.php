@@ -51,7 +51,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('kesiswaan')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
             Route::prefix('data-kategori')->group(function () {
@@ -229,6 +229,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             // AJAX GET SISWA BY KELAS
             Route::post('siswa-bykelas', [InputPelanggaranController::class, 'ajaxGetSiswaByKelas']);
+            Route::post('siswa-pelanggaran', [InputPelanggaranController::class, 'ajaxGetPelanggaranSiswa']);
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', [InputPelanggaranController::class, 'ajaxGetSubkategoriByKategori']);
