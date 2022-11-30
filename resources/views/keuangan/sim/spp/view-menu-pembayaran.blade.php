@@ -46,6 +46,7 @@
     .tdbg-12 {
         background: #a0c1b8;
     }
+
     .tdbg-13 {
         background: #ffffff;
 
@@ -137,11 +138,12 @@
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="radio" name="action" id="lunas" class="filled-in with-gap" checked=""
-                                    value="1">
+                                <input type="radio" name="action" id="lunas" class="filled-in with-gap"
+                                    checked="" value="1">
                                 <label for="lunas">Langsung Lunas</label>
 
-                                <input type="radio" name="action" id="cicilan" class="filled-in with-gap" value="2">
+                                <input type="radio" name="action" id="cicilan" class="filled-in with-gap"
+                                    value="2">
                                 <label for="cicilan" class="m-l-20">Cicilan</label>
                             </div>
                         </div>
@@ -162,8 +164,9 @@
                                         @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                    <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->title_biaya  }}</td>
-                                @endforeach
+                                        <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->title_biaya }}
+                                        </td>
+                                    @endforeach
                                 </tr>
                             </thead>
                             @php
@@ -230,51 +233,51 @@
                                         @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                    @php
-                                        $tagihan = $data_tagihan_non_bulanan
-                                            ->where('id_siswa', $siswa->id_siswa)
-                                            ->where('id_bulan', $ket->id_bulan)
-                                            ->first();
-                                    @endphp
-                                    @if (!empty($tagihan) > 0)
-                                        @if ($tagihan->is_tagih == 1)
-                                            @php
-                                                $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
-                                            @endphp
-                                            <td>
-                                                @if ($tagihan->is_request == 0)
-                                                    <button class="btn btn-block bg-black waves-effect"
-                                                        onclick="takeAction(this)"
-                                                        data-id="{{ $tagihan->id_tagihan_biaya }}"
-                                                        data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
-                                                @else
-                                                    Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
-                                                @endif
-                                            </td>
-                                        @elseif($tagihan->is_tagih == 0)
-                                            <td
-                                                class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
-                                                <a target="_blank"
-                                                    href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
-                                                        style="color: #4caf50;">Print
-                                                        {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
-                                                @if ($tagihan->is_request == 0)
-                                                    <br>
-                                                    <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
-                                                        onclick="deleteActionKhusus(this)"
-                                                        data-id="{{ $tagihan->id_tagihan_biaya }}">
-                                                        Batal
-                                                    </a>
-                                                @endif
-                                                @if ($tagihan->is_request == 1)
-                                                    <br> <b>Online</b>
-                                                @endif
-                                            </td>
+                                        @php
+                                            $tagihan = $data_tagihan_non_bulanan
+                                                ->where('id_siswa', $siswa->id_siswa)
+                                                ->where('id_bulan', $ket->id_bulan)
+                                                ->first();
+                                        @endphp
+                                        @if (!empty($tagihan) > 0)
+                                            @if ($tagihan->is_tagih == 1)
+                                                @php
+                                                    $tagihan_bulanan = $tagihan->besar_biaya + $tagihan->denda_biaya - $tagihan->besar_pembayaran;
+                                                @endphp
+                                                <td>
+                                                    @if ($tagihan->is_request == 0)
+                                                        <button class="btn btn-block bg-black waves-effect"
+                                                            onclick="takeAction(this)"
+                                                            data-id="{{ $tagihan->id_tagihan_biaya }}"
+                                                            data-nis="{{ $tagihan->nis_siswa }}">Rp{{ number_format($tagihan_bulanan) }}</button>
+                                                    @else
+                                                        Rp{{ number_format($tagihan_bulanan) }}<br><b>Online</b>
+                                                    @endif
+                                                </td>
+                                            @elseif($tagihan->is_tagih == 0)
+                                                <td
+                                                    class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
+                                                    <a target="_blank"
+                                                        href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
+                                                            style="color: #4caf50;">Print
+                                                            {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
+                                                    @if ($tagihan->is_request == 0)
+                                                        <br>
+                                                        <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
+                                                            onclick="deleteActionKhusus(this)"
+                                                            data-id="{{ $tagihan->id_tagihan_biaya }}">
+                                                            Batal
+                                                        </a>
+                                                    @endif
+                                                    @if ($tagihan->is_request == 1)
+                                                        <br> <b>Online</b>
+                                                    @endif
+                                                </td>
+                                            @endif
+                                        @else
+                                            <td></td>
                                         @endif
-                                    @else
-                                        <td></td>
-                                    @endif
-                                @endforeach
+                                    @endforeach
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -292,7 +295,8 @@
     var lunas_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/lunas';
     var detail_tagihan_siswa_url = base_url + '/' + role_url + '#' + modul_url + '/' +
         'pembayaran-siswa/view-detail-tagihan-siswa';
-    var delete_pembayaran_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-pembayaran-siswa/delete-by-tagihan';
+    var delete_pembayaran_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'action-pembayaran-siswa/delete-by-tagihan';
 
     function takeAction(element) {
         var item = $(element);
@@ -332,9 +336,19 @@
             type: "POST",
             url: delete_pembayaran_url + '/' + item.attr('data-id'),
             success: function(response) {
-                loadContent(
-                    'sim/spp/pembayaran/{{ $tahun_akademik_semester }}/{{ $id_kelas }}/{{ $waktu }}'
+                item.parent('td').replaceWith(
+                    '<td>' +
+                    '<button class="btn btn-block bg-black waves-effect"' +
+                    'onclick="takeAction(this)"' +
+                    'data-id="' + response.data.id + '"' +
+                    'data-nis="' + response.data.nis_siswa + '">Rp' + response.data.tagihan_bulanan +
+                    '</button>' +
+                    '</td>'
                 );
+
+                // loadContent(
+                //     'sim/spp/pembayaran/{{ $tahun_akademik_semester }}/{{ $id_kelas }}/{{ $waktu }}'
+                // );
             },
             complete: function() {
                 $('button').removeAttr('disabled', 'disabled');

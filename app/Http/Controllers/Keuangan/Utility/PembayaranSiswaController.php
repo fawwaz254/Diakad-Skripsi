@@ -338,9 +338,9 @@ class PembayaranSiswaController extends BaseController
             ->reject(function ($item) {
                 return $item->total_pembayaran >= $item->besar_biaya;
             })->map(function ($item) {
-            $item->besar_pembayaran = $item->besar_biaya - ($item->total_pembayaran ?? 0);
-            return $item;
-        });
+                $item->besar_pembayaran = $item->besar_biaya - ($item->total_pembayaran ?? 0);
+                return $item;
+            });
 
         return view('keuangan/utility/pembayaran-siswa/print-belum-terbayar-pembayaran-siswa', compact('auth_data', 'siswa', 'semester_aktif', 'list_data'));
     }
@@ -384,7 +384,7 @@ class PembayaranSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur', DB::raw("(SELECT SUM(besar_biaya) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_tagihan"), DB::raw("(SELECT SUM(denda_biaya) FROM tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_denda"), DB::raw("(SELECT SUM(besar_pembayaran) FROM tagihan_biaya  WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL) AS total_pembayaran"))
-        // , DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL AND pembayaran_biaya.deleted_at IS NULL) AS total_pembayaran")
+            // , DB::raw("(SELECT SUM(besar_pembayaran) FROM pembayaran_biaya JOIN tagihan_biaya ON tagihan_biaya.id_tagihan_biaya = pembayaran_biaya.id_tagihan_biaya WHERE tagihan_biaya.id_siswa = siswa.id_siswa AND tagihan_biaya.is_tagih = 1 AND tagihan_biaya.deleted_at IS NULL AND pembayaran_biaya.deleted_at IS NULL) AS total_pembayaran")
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->leftJoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
             ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
@@ -400,7 +400,7 @@ class PembayaranSiswaController extends BaseController
             })
             ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->get();
-            // dd($siswa);
+        // dd($siswa);
 
         return Datatables::of($siswa)
             ->addColumn('total_tagihan', function ($item) {
@@ -976,7 +976,7 @@ class PembayaranSiswaController extends BaseController
                     'status' => 203, // SUCCESS AND LOAD CONTENT
                     'message' => 'Save Pelunasan Successfully',
                     'data' => [
-                        'id' => $pembayaranBiaya->id_pembayaran_biaya,
+                        'id' => $id,
                         'date' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'd/m'),
                         'month' => date_format(date_create($pembayaranBiaya->tgl_pembayaran), 'n'),
                     ],
@@ -1121,9 +1121,21 @@ class PembayaranSiswaController extends BaseController
 
                 PembayaranBiaya::where('id_tagihan_biaya', $tagihanBiaya->id_tagihan_biaya)->forceDelete();
 
+                $data_tagihan = TagihanBiaya::select('siswa.nis_siswa', 'tagihan_biaya.id_tagihan_biaya', 'tagihan_biaya.besar_biaya', 'tagihan_biaya.denda_biaya', 'tagihan_biaya.besar_pembayaran')
+                    ->join('siswa', function ($q) {
+                        $q->on('tagihan_biaya.id_siswa', '=', 'siswa.id_siswa')
+                            ->whereNull('siswa.deleted_at');
+                    })
+                    ->where('tagihan_biaya.id_tagihan_biaya', $id)
+                    ->first();
                 return [
                     'status' => 203, // SUCCESS AND LOAD TABLE
                     'message' => 'Delete Pembayaran Siswa Successfully',
+                    'data' => [
+                        'id' => $data_tagihan->id_tagihan_biaya,
+                        'tagihan_bulanan' => $data_tagihan->besar_biaya + $data_tagihan->denda_biaya - $data_tagihan->besar_pembayaran,
+                        'nis_siswa' => $data_tagihan->nis_siswa,
+                    ],
                 ];
             }
         }
