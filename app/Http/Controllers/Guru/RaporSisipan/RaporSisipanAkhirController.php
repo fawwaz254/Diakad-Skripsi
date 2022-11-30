@@ -44,7 +44,12 @@ class RaporSisipanAkhirController extends Controller
             })
             ->addColumn('jumlah', function ($item) {
                 //semua siswa
-                $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
+                // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
+                $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->with('pengguna.status_pengguna')
+                    ->whereHas('pengguna.status_pengguna', function ($query) {
+                        $query->where('aktif_status_pengguna', '=', '1');
+                    })
+                    ->count();
 
                 //cari siswa yang ada nilai 0 nya
                 $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
@@ -60,11 +65,11 @@ class RaporSisipanAkhirController extends Controller
                 $nilaiSiswaYangKosong = 0;
                 $nilaiSiswaYangKosong2 = 0;
                 for ($i = 1; $i <= 10; $i++) {
-                    if($i >= 6 && $i <= 10){
+                    if ($i >= 6 && $i <= 10) {
                         if (isset($arrayJumlahBelumTerisi[$i])) {
                             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
                         }
-                    }else{
+                    } else {
                         if (isset($arrayJumlahBelumTerisi[$i])) {
                             $nilaiSiswaYangKosong2 += $arrayJumlahBelumTerisi[$i];
                         }
@@ -155,10 +160,16 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->first();
+        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester', 'pengguna')->first();
 
         $list_data = KomponenNilaiRaporSisipan::all();
-        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
+        // $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')
+            ->whereHas('pengguna.status_pengguna', function ($query) {
+                $query->where('aktif_status_pengguna', '=', '1');
+            })
+            ->orderBy('nis_siswa')
+            ->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
             ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
@@ -201,8 +212,6 @@ class RaporSisipanAkhirController extends Controller
                         $nilai_komponen[$nilaiRapor['id_siswa'] . 'sas'] =  $nilaiRapor['nilai'];
                     }
                 }
-
-
             }
         }
         return view('guru/rapor-sisipan/daftar-nilai-sas/cetak-nilai-sas', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'nilai_komponen', 'rapor_sisipan'));
