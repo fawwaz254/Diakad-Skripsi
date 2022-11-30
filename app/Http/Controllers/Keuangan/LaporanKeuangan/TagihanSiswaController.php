@@ -185,8 +185,10 @@ class TagihanSiswaController extends BaseController
 
             foreach ($data->tagihan_tertagih as $tagihan_siswa) {
 
+
                 if ($x = $data_detail_biaya->firstWhere('id_detail_biaya', $tagihan_siswa->id_detail_biaya)) {
-                    $nominal = $x->besar_biaya - $tagihan_siswa->pembayaran->sum('besar_pembayaran') - ($tagihan_siswa->potongan->total_potongan ?? 0);
+
+                    $nominal = $tagihan_siswa->besar_biaya - $tagihan_siswa->pembayaran->sum('besar_pembayaran') - ($tagihan_siswa->potongan->total_potongan ?? 0);
 
                     $tagihan_bulan['id_bulan'] = 13;
                     $tagihan_bulan['jenis_tagihan'] = $x->biaya->nm_biaya;
