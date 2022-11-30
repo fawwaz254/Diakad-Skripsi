@@ -10,6 +10,7 @@ use \Validator;
 use App\Http\Controllers\Controller;
 use App\Models\ShiftMaster;
 use App\Models\ShiftPengguna;
+use App\Jobs\JobShiftPengguna;
 use App\Models\Pengguna;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
@@ -86,7 +87,7 @@ class ShiftPenggunaController extends Controller
 
     public function storeShiftPengguna(Request $request)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $v = Validator::make($request->all(), [
 
             'pengguna' => 'required',
@@ -124,36 +125,42 @@ class ShiftPenggunaController extends Controller
             ];
         }
 
-
         $dates = CarbonPeriod::create($startDate, $endDate);
+        $allShiftPengguna = ShiftPengguna::whereIn('id_pengguna', $pengguna)->whereBetween('date', [$startDate, $endDate])->get();
         foreach ($pengguna as $user) {
             foreach ($dates as $value) {
-                $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user)
+                $shiftPenggunaId = $allShiftPengguna->where('id_pengguna', $user)
                     ->where('date', $value->format('Y-m-d'))
                     ->first();
-                //validasi apakah sudah ada apa belum datanya
                 if ($shiftPenggunaId) {
                     $dataUpdate['id_shift_master'] = $input->dayName[$value->format('l')];
                     $shiftPenggunaId->update($dataUpdate);
                 } else {
                     $now = Carbon::now(env('APP_TIMEZONE', ''));
                     $html = '';
-                    $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
-                    $list_data['id_pengguna'] = $user;
-                    $list_data['date'] =  $value->format('Y-m-d');
-                    $list_data['id_shift_master'] = $input->dayName[$value->format('l')];
-
-                    ShiftPengguna::create($list_data);
+                    $list_data[] = [
+                        'id_shift_pengguna' =>  $html .= $prefix . strtotime($now) . uniqid(),
+                        'id_pengguna' => $user,
+                        'date' => $value->format('Y-m-d'),
+                        'id_shift_master' => $input->dayName[$value->format('l')],
+                    ];
                 }
             }
         }
 
+        if (!empty($list_data)) {
+            JobShiftPengguna::dispatch($list_data);
+        }
         return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'link' => '/humas#absensi/shift_pengguna',
-            'message' => 'Tambah data Shift berhasil '
-
+            'status' => 300,
+            'message' => 'Tambah data Shift berhasil'
         ];
+        // return [
+        //     'status' => 202, // SUCCESS AND LOAD CONTENT
+        //     'link' => '/humas#absensi/shift_pengguna',
+        //     'message' => 'Tambah data Shift berhasil '
+
+        // ];
 
         // return redirect("/humas#absensi/shift_pengguna");
     }
