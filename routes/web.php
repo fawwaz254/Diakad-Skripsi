@@ -193,6 +193,9 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('must-change-password', [AuthGlobalController::class, 'indexMustChangePassword']);
         Route::post('must-change-password', [AuthGlobalController::class, 'actionMustChangePassword']);
         Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
+        Route::get('must-update-biodata', [AuthGlobalController::class, 'indexMustAddBiodata']);
+        Route::post('must-update-biodata/{nis_siswa}', [AuthGlobalController::class, 'actionMustAddBiodata']);
+
 
         Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
         Route::get('search', [AuthGlobalController::class, 'indexSearch']);
