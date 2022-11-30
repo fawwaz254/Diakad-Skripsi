@@ -47,7 +47,7 @@ class DataSubKategoriController extends BaseController
         $arsip 	= ArsipSubKategori::where('id_arsip_subkategori','=',$id)->first();
         $kategori = ArsipKategori::where('id_sekolah','=',$auth_data->pengguna->id_sekolah)->get();
 
-        return view('sekretariat/data-sekretariat/data-sub-kategori/edit-data-sub-kategori',compact('auth_data','unit','arsip','kategori'));
+        return view('sekretariat/data-sekretariat/data-sub-kategori/edit-data-sub-kategori',compact('auth_data','arsip','kategori'));
     }
 
     public function datatablesDataSubKategori(Request $request){
