@@ -83,6 +83,19 @@ if (!function_exists('get_keterangan_kelas')) {
     }
 }
 
+if (!function_exists('check_biodata')) {
+    function check_biodata($id_pengguna)
+    {
+        $status = false;
+        $siswa = Siswa::where('id_pengguna', $id_pengguna)->with('pengguna')->first();
+        if ($siswa) {
+            if (empty($siswa->pengguna->email_pengguna) || empty($siswa->id_wali_murid))
+                $status = true;
+        }
+        return $status;
+    }
+}
+
 
 if (!function_exists('get_keterangan_wali_kelas')) {
 
