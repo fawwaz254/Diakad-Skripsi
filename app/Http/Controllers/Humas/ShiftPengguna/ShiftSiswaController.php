@@ -31,9 +31,15 @@ class ShiftSiswaController extends Controller
             ->whereHas('status_pengguna', function ($query) {
                 $query->where('aktif_status_pengguna', '=', '1');
             })
-            ->whereHas('siswa', function ($query) use ($id_kelas) {
-                if ($id_kelas != "0") {
-                    $query->where('id_kelas', '=', $id_kelas);
+            ->whereHas('siswa.kelas', function ($query) use ($id_kelas) {
+                if ($id_kelas == "1") {
+                    $query->whereIn('tingkat', [10, 7, 1]);
+                } elseif ($id_kelas == "2") {
+                    $query->whereIn('tingkat', [11, 8, 2]);
+                } elseif ($id_kelas == "3") {
+                    $query->whereIn('tingkat', [12, 9, 3]);
+                } else {
+                    $query->where('id_kelas', $id_kelas);
                 }
             })
             ->get()->sortBy('siswa.kelas.nm_kelas');
@@ -69,30 +75,38 @@ class ShiftSiswaController extends Controller
         return view('humas/absensi/shift-pengguna/view-shift-siswa', compact('date', 'kelas', 'id_kelas', 'hasil'));
     }
 
-    public function selectKelasShiftSiswa(Request $request){
+    public function selectKelasShiftSiswa(Request $request)
+    {
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
-        return view('humas/absensi/shift-siswa/select-kelas-siswa', compact( 'kelas'));
+        return view('humas/absensi/shift-siswa/select-kelas-siswa', compact('kelas'));
     }
 
-    public function addShiftSiswa(Request $request, $id_kelas){
+    public function addShiftSiswa(Request $request, $id_kelas)
+    {
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
 
         $shifts = ShiftMaster::all();
         $penggunas = Pengguna::where('status_join_table', 3)
-        ->with('status_pengguna', 'siswa.kelas')
-        ->whereHas('status_pengguna', function ($query) {
-            $query->where('aktif_status_pengguna', '=', '1');
-        })
-        ->whereHas('siswa', function ($query) use ($id_kelas) {
-            if ($id_kelas != "0") {
-                $query->where('id_kelas', '=', $id_kelas);
-            }
-        })
-        ->get()->sortBy('siswa.kelas.nm_kelas');
+            ->with('status_pengguna', 'siswa.kelas')
+            ->whereHas('status_pengguna', function ($query) {
+                $query->where('aktif_status_pengguna', '=', '1');
+            })
+            ->whereHas('siswa.kelas', function ($query) use ($id_kelas) {
+                if ($id_kelas == "1") {
+                    $query->whereIn('tingkat', [10, 7, 1]);
+                } elseif ($id_kelas == "2") {
+                    $query->whereIn('tingkat', [11, 8, 2]);
+                } elseif ($id_kelas == "3") {
+                    $query->whereIn('tingkat', [12, 9, 3]);
+                } else {
+                    $query->where('id_kelas', $id_kelas);
+                }
+            })
+            ->get()->sortBy('siswa.kelas.nm_kelas');
 
         $date =  Carbon::now()->format('Y-m-d');
         $shiftsPengguna = ShiftPengguna::where('date', $date)->get();
-        return view('humas/absensi/shift-siswa/add-shift-siswa', compact( 'kelas', 'id_kelas','shifts', 'penggunas', 'shiftsPengguna'));
+        return view('humas/absensi/shift-siswa/add-shift-siswa', compact('kelas', 'id_kelas', 'shifts', 'penggunas', 'shiftsPengguna'));
     }
 
     // public function storeShiftSiswa(Request $request )
