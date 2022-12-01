@@ -133,8 +133,10 @@ class ShiftPenggunaController extends Controller
                     ->where('date', $value->format('Y-m-d'))
                     ->first();
                 if ($shiftPenggunaId) {
-                    $dataUpdate['id_shift_master'] = $input->dayName[$value->format('l')];
-                    $shiftPenggunaId->update($dataUpdate);
+                    if ($shiftPenggunaId->id_shift_master != $input->dayName[$value->format('l')]) {
+                        $dataUpdate['id_shift_master'] = $input->dayName[$value->format('l')];
+                        $shiftPenggunaId->update($dataUpdate);
+                    }
                 } else {
                     $now = Carbon::now(env('APP_TIMEZONE', ''));
                     $html = '';
@@ -146,11 +148,13 @@ class ShiftPenggunaController extends Controller
                     ];
                 }
             }
+            if (!empty($list_data)) {
+                JobShiftPengguna::dispatch($list_data);
+                unset($list_data);
+            }
         }
 
-        if (!empty($list_data)) {
-            JobShiftPengguna::dispatch($list_data);
-        }
+
         return [
             'status' => 300,
             'message' => 'Tambah data Shift berhasil'
