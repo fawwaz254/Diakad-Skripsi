@@ -3,7 +3,7 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
-                <div class="header" >
+                <div class="header">
                     <h2>Filter Data</h2>
                 </div>
                 <div class="body">
@@ -12,16 +12,23 @@
                             <label>
                                 Kelas
                             </label>
-                            <select class="form-control show-tick" name="kelas" >
+                            <select class="form-control show-tick" name="kelas">
                                 <option>Pilih kelas</option>
-                                <option value="0" @if($id_kelas == '0') selected @endif>Semua</option>
+                                <option value="1" @if ($id_kelas == '1') selected @endif>Tingkat 1
+                                </option>
+                                <option value="2" @if ($id_kelas == '2') selected @endif>Tingkat 2
+                                </option>
+                                <option value="3" @if ($id_kelas == '3') selected @endif>Tingkat 3
+                                </option>
                                 @foreach ($kelas as $lk)
-                                <option value="{{ $lk->id_kelas }}" @if($id_kelas == $lk->id_kelas) selected @endif>{{ $lk->nm_kelas }}</option>
+                                    <option value="{{ $lk->id_kelas }}"
+                                        @if ($id_kelas == $lk->id_kelas) selected @endif>{{ $lk->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-2 col-sm-12 col-xs-12">
-                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;" onclick="filterAction()">Lihat </button>
+                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
+                                onclick="filterAction()">Lihat </button>
                         </div>
                     </div>
                 </div>
@@ -40,8 +47,11 @@
                                     <table class="table table-bordered">
                                         <tr>
                                             <h4>
-                                                <input id="checkbox_select_all_{{$id_kelas}}" type="checkbox" name="select_all" data-jurusan="{{$id_kelas}}" class="filled-in">
-                                                <label for="checkbox_select_all_{{$id_kelas}}" style="margin-bottom: -10px;"></label>
+                                                <input id="checkbox_select_all_{{ $id_kelas }}" type="checkbox"
+                                                    name="select_all" data-jurusan="{{ $id_kelas }}"
+                                                    class="filled-in">
+                                                <label for="checkbox_select_all_{{ $id_kelas }}"
+                                                    style="margin-bottom: -10px;"></label>
                                                 <label><b>Pilih Semua Siswa</b></label>
 
                                             </h4>
@@ -55,15 +65,17 @@
                                             @endif
                                         </tr>
                                         @php
-                                        $no = 1;
+                                            $no = 1;
                                         @endphp
                                         <tr>
                                             @foreach ($penggunas as $key => $pengguna)
                                                 <td style="text-align: center;">{{ $no++ }}</td>
-                                                <td>{{ $pengguna->siswa->kelas->nm_kelas}}</td>
-                                                <td><input type="checkbox" name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
+                                                <td>{{ $pengguna->siswa->kelas->nm_kelas }}</td>
+                                                <td><input type="checkbox"
+                                                        name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
                                                         value="{{ $pengguna['id_pengguna'] }}"
-                                                        id="{{ $pengguna['id_pengguna'] }}" data-jurusan="{{$id_kelas}}" > <label
+                                                        id="{{ $pengguna['id_pengguna'] }}"
+                                                        data-jurusan="{{ $id_kelas }}"> <label
                                                         for="{{ $pengguna['id_pengguna'] }}">{{ $pengguna['nm_pengguna'] }}
                                                     </label></td>
                                                 @foreach ($shiftsPengguna as $shift)
@@ -75,7 +87,7 @@
                                         @endforeach
                                     </table>
                                 </div>
-        
+
                                 <div class="col-sm-4">
                                     <h4>Pilih Bulan :</h4>
                                     <table class="table">
@@ -97,7 +109,7 @@
                                                     <option value="December">Desember</option>
                                                 </select>
                                             <td>
-        
+
                                         </tr>
                                         <tr>
                                             <td> <label for="endMount"> Bulan Akhir :</label></td>
@@ -131,7 +143,8 @@
                                                     @foreach ($shifts as $shift)
                                                         <option value="{{ $shift['code'] }}">
                                                             ({{ minimalisTime($shift['start_time']) }} -
-                                                            {{ minimalisTime($shift['end_time']) }}) -
+                                                            {{ minimalisTime($shift['end_time']) }})
+                                                            -
                                                             {{ $shift['code'] }}</option>
                                                     @endforeach
                                                 </select>
@@ -147,7 +160,8 @@
                                                     @foreach ($shifts as $shift)
                                                         <option value="{{ $shift['code'] }}">
                                                             ({{ minimalisTime($shift['start_time']) }} -
-                                                            {{ minimalisTime($shift['end_time']) }}) -
+                                                            {{ minimalisTime($shift['end_time']) }})
+                                                            -
                                                             {{ $shift['code'] }}</option>
                                                     @endforeach
                                                 </select>
@@ -179,7 +193,8 @@
                                                     @foreach ($shifts as $shift)
                                                         <option value="{{ $shift['code'] }}">
                                                             ({{ minimalisTime($shift['start_time']) }} -
-                                                            {{ minimalisTime($shift['end_time']) }}) -
+                                                            {{ minimalisTime($shift['end_time']) }})
+                                                            -
                                                             {{ $shift['code'] }}</option>
                                                     @endforeach
                                                 </select>
@@ -195,7 +210,8 @@
                                                     @foreach ($shifts as $shift)
                                                         <option value="{{ $shift['code'] }}">
                                                             ({{ minimalisTime($shift['start_time']) }} -
-                                                            {{ minimalisTime($shift['end_time']) }}) -
+                                                            {{ minimalisTime($shift['end_time']) }})
+                                                            -
                                                             {{ $shift['code'] }}</option>
                                                     @endforeach
                                                 </select>
@@ -211,7 +227,8 @@
                                                     @foreach ($shifts as $shift)
                                                         <option value="{{ $shift['code'] }}">
                                                             ({{ minimalisTime($shift['start_time']) }} -
-                                                            {{ minimalisTime($shift['end_time']) }}) -
+                                                            {{ minimalisTime($shift['end_time']) }})
+                                                            -
                                                             {{ $shift['code'] }}</option>
                                                     @endforeach
                                                 </select>
@@ -219,7 +236,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <label for="dayName[Sunday]" >Ahad</label>
+                                                <label for="dayName[Sunday]">Ahad</label>
                                             </td>
                                             <td>
                                                 <select name="dayName[Sunday]" class="form-control form-control-lg">
@@ -227,7 +244,8 @@
                                                     @foreach ($shifts as $shift)
                                                         <option value="{{ $shift['code'] }}">
                                                             ({{ minimalisTime($shift['start_time']) }} -
-                                                            {{ minimalisTime($shift['end_time']) }}) -
+                                                            {{ minimalisTime($shift['end_time']) }})
+                                                            -
                                                             {{ $shift['code'] }}</option>
                                                     @endforeach
                                                 </select>
@@ -246,22 +264,21 @@
 </div>
 @include('scriptjs')
 <script>
-function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + 
+    function filterAction() {
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' +
             $('select[name=kelas]').val());
     }
 
-    $(document).ready(function() {        
+    $(document).ready(function() {
         /* Select All Checkbox */
         $('input[name="select_all"]').change(function() {
             var select_all_checked = this.checked;
             var data_jurusan = $(this).attr('data-jurusan');
 
             // console.log(data_jurusan);
-            $('input[data-jurusan="'+ data_jurusan +'"]').prop('checked', this.checked);
+            $('input[data-jurusan="' + data_jurusan + '"]').prop('checked', this.checked);
         });
     });
-
 </script>
 
 
