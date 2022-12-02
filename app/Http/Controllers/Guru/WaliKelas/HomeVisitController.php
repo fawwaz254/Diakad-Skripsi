@@ -257,7 +257,12 @@ class HomeVisitController extends BaseController
                     $homeVisit->rangkuman_home_visit            = $input->rangkuman_home_visit;
                     $homeVisit->updated_by                      = $input->auth_data->pengguna->id_pengguna;
                     $homeVisit->updated_at                      = $now;
+                    // add new image
                     if (!empty($request->file('image'))) {
+                        // delete old image first
+                        if (isset($homeVisit->dokumentasi_home_visit)) {
+                            $old = Storage::disk('spaces')->delete($homeVisit->dokumentasi_home_visit);
+                        }
                         $singkat_sekolah = $input->auth_data->sekolah_data->nm_singkat_sekolah;
                         $file = Storage::disk('spaces')->putFile($singkat_sekolah . '/guru/' . $id, $request->file('image'), 'public');
                         $homeVisit->dokumentasi_home_visit   = $file;
