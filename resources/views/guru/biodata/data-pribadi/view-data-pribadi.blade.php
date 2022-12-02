@@ -103,7 +103,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="alamat_rt" aria-invalid="true" value="{{$guru->alamat_rt}}">
+                                <input type="text" class="form-control" name="alamat_rt" aria-invalid="true" value="{{$guru->alamat_rt}}" maxlength= "4">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
@@ -111,7 +111,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="alamat_rw" aria-invalid="true" value="{{$guru->alamat_rw}}">
+                                <input type="text" class="form-control" name="alamat_rw" aria-invalid="true" value="{{$guru->alamat_rw}}" maxlength= "4">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
