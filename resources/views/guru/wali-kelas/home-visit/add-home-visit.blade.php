@@ -16,7 +16,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST"
+                    <form id="form-upload" method="POST"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/action-home-visit/add/' . $id_home_visit) }}">
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
