@@ -36,8 +36,7 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-          
-            <button type="button" onclick="viewGuru()" class="btn btn-default" >
+            <button type="button" onclick="viewGuru()" class="btn btn-default">
                 Data Histori Absensi Guru dan Pegawai
             </button>
             <button type="button" class="btn btn-primary">
@@ -54,7 +53,7 @@
 
                         <div class="col-md-4 col-sm-12 col-xs-12">
                             <label>
-                               Kelas
+                                Kelas
                             </label>
                             <select class="form-control show-tick" name="kelas">
                                 <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
@@ -68,13 +67,15 @@
                             </select>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Start Date</label>
-                            <input type="date" class="form-control" value="{{$start_date}}" name="start_date" aria-required="true" aria-invalid="true">
+                            <label>Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="start_date" value="{{ $start_date }}"
+                                name="start_date" aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>End Date</label>
-                            <input type="date" class="form-control" value="{{$end_date}}" name="end_date" aria-required="true" aria-invalid="true">
+                            <label>Tanggal Akhir</label>
+                            <input type="date" class="form-control" id="end_date" value="{{ $end_date }}"
+                                name="end_date" aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -224,15 +225,29 @@
     //     )
     // }).trigger("change")
 
+    $("#end_date").change(function() {
+        var startDate = document.getElementById("start_date").value;
+        var endDate = document.getElementById("end_date").value;
+
+        if ((Date.parse(endDate) < Date.parse(startDate))) {
+            swal({
+                title: "Tanggal Salah",
+                text: "Tanggal akhir tidak boleh kurang dari tanggal mulai",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                timer: 2000,
+            });
+            document.getElementById("end_date").value = startDate;
+        }
+    });
+
     function viewGuru() {
         window.location = '/humas#absensi/rekap-absensi'
     }
-
 
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() +
             '/' + $(
                 'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
     }
-
 </script>
