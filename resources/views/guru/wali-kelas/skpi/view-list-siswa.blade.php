@@ -18,7 +18,9 @@
                                         <th>No. </th>
                                         <th>Nama</th>
                                         <th>Kelas</th>
-                                        <th>Action</th>
+                                        <th>Kegiatan Siswa</th>
+                                        <th>Prestasi Siswa</th>
+                                        <th>Informasi Tambahan</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -36,8 +38,11 @@
         $(document).ready(function() {
             var modul_url = 'wali-kelas';
             var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-                'input-biodata-siswa/datatables';
-            var detail_url = role_url + '#' + modul_url + '/input-biodata-siswa/edit';
+                'input-skpi-siswa/datatables';
+            // var detail_url = role_url + '#' + modul_url + '/input-biodata-siswa/edit';
+            var kegiatan_siswa_url = role_url + '#' + modul_url + '/input-skpi-siswa/kegiatan_siswa';
+            var prestasi_siswa = role_url + '#' + modul_url + '/input-skpi-siswa/prestasi_siswa';
+            var informasi_tambahan = role_url + '#' + modul_url + '/input-skpi-siswa/informasi_tambahan';
 
             var primary_table = $('#primary_table').DataTable({
                 processing: true,
@@ -61,15 +66,39 @@
                         name: 'kelas.nm_kelas'
                     },
                     {
-                        data: 'action',
-                        name: 'action',
+                        data: 'kegiatan_siswa',
+                        name: 'kegiatan_siswa',
                         searchable: false,
                         orderable: false,
                         render: function(data) {
                             return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
-                                detail_url + '/' + data.id + '">' +
-                                '    <i class="material-icons">edit</i>' +
-                                '</a> '
+                                kegiatan_siswa_url + '/' + data.id + '">' +
+                                '    <i class="material-icons">remove_red_eye</i>' +
+                                '</a> ' + data.count + ' Data'
+                        }
+                    },
+                    {
+                        data: 'prestasi_siswa',
+                        name: 'prestasi_siswa',
+                        searchable: false,
+                        orderable: false,
+                        render: function(data) {
+                            return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                                prestasi_siswa + '/' + data.id + '">' +
+                                '    <i class="material-icons">remove_red_eye</i>' +
+                                '</a> ' + data.count + ' Data'
+                        }
+                    },
+                    {
+                        data: 'informasi_tambahan',
+                        name: 'informasi_tambahan',
+                        searchable: false,
+                        orderable: false,
+                        render: function(data) {
+                            return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                                informasi_tambahan + '/' + data.id + '">' +
+                                '    <i class="material-icons">remove_red_eye</i>' +
+                                '</a> ' + data.count + ' Data'
                         }
                     }
                 ]
@@ -87,50 +116,4 @@
 
 
         });
-
-        function resetPasswordSiswa(id, element) {
-
-            var item = $(element);
-            var id = item.attr('data-id');
-            swal({
-                    title: 'Apakah Yakin Untuk Reset Password?',
-                    showCancelButton: true
-                },
-                function(isConfirm) {
-                    if (isConfirm) {
-                        $('#btn-reset-password').attr("disabled", true);
-                        $.ajax({
-                            url: base_url +
-                                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/reset-password',
-                            type: 'POST',
-                            data: {
-                                id_pengguna: id,
-                            },
-                            success: function(response) {
-                                if (response.status_code == 200) {
-                                    vex.dialog.alert(response.message);
-                                } else if (response.status_code == 201) {
-                                    vex.dialog.alert(response.message);
-                                    window.location.href = response.link;
-                                } else if (response.status_code == 202) {
-                                    vex.dialog.alert(response.message);
-                                    loadURI(response.path);
-                                } else if (response.status_code == 203) {
-                                    vex.dialog.alert(response.message);
-                                    primary_table.ajax.reload(null, false);
-                                } else if (response.status_code == 204) {
-                                    loadURI(response.path);
-                                } else if (response.status_code == 300) {
-                                    vex.dialog.alert(response.message);
-                                }
-                            },
-                            complete: function() {
-                                $('#btn-reset-password').removeAttr('disabled', 'disabled');
-                            },
-                        });
-                    }
-                    return;
-                }
-            );
-        }
     </script>

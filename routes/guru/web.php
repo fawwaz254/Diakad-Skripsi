@@ -67,6 +67,7 @@ use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasI
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
+use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
@@ -607,6 +608,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('edit/{id}', [BiodataSiswaController::class, 'biodataSiswa']);
                 Route::post('edit/{id}', [BiodataSiswaController::class, 'postBiodataSiswa']);
                 Route::get('print/{nis_siswa}', [BiodataSiswaController::class, 'printBiodataSiswa']);
+            });
+
+            Route::prefix('input-skpi-siswa')->group(function () {
+                Route::get('/', [WaliKelasSKPIController::class, 'viewListSiswa']);
+                Route::get('datatables', [WaliKelasSKPIController::class, 'datatablesListSiswa']);
             });
         });
 

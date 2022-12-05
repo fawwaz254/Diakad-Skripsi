@@ -61,9 +61,11 @@ class BiodataSiswaController extends Controller
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-        $list_siswa = Pengguna::with('siswa.kelas')->whereHas('siswa', function ($query) use ($wali_kelas) {
-            $query->where('id_kelas', '=', $wali_kelas->id_kelas);
-        })->get();
+        // $list_siswa = Pengguna::with('siswa.kelas')->whereHas('siswa', function ($query) use ($wali_kelas) {
+        //     $query->where('id_kelas', '=', $wali_kelas->id_kelas);
+        // });
+
+        $list_siswa = Siswa::where('id_kelas', $wali_kelas->id_kelas)->with('kelas', 'pengguna');
 
         return Datatables::of($list_siswa)->addColumn('action', function ($item) {
             $data = array(
