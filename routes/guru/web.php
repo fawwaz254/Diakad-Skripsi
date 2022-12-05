@@ -613,6 +613,14 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('input-skpi-siswa')->group(function () {
                 Route::get('/', [WaliKelasSKPIController::class, 'viewListSiswa']);
                 Route::get('datatables', [WaliKelasSKPIController::class, 'datatablesListSiswa']);
+                //kegiatan-siswa
+                Route::get('kegiatan_siswa/datatables', [WaliKelasSKPIController::class, 'datatablesKegiatanSiswa']);
+                Route::get('kegiatan_siswa/add/{id_siswa}', [WaliKelasSKPIController::class, 'addKegiatanSiswa']);
+                Route::get('kegiatan_siswa/edit/{id}', [WaliKelasSKPIController::class, 'datatablesKegiatanSiswa']);
+                // Route::get('kegiatan_siswa/add', [WaliKelasSKPIController::class, 'datatablesKegiatanSiswa']);
+                Route::post('kegiatan_siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataKegiatanSiswa']);
+                //sudah bisa
+                Route::get('kegiatan_siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewKegiatanSiswa']);
             });
         });
 
