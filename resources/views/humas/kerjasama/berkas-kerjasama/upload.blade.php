@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link" href="{{ url(Request::segment(1) . '#kerjasama/berkas/') }}"><i
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#kerjasama/berkas/') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -116,7 +117,7 @@
                                         @if (in_array(pathinfo($berkas->nama_file, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'bmp', 'png']))
                                             <img style="height:7rem; width:auto;" src="{{ $berkas->path }}">
                                         @else
-                                            {{ str_limit($berkas->nama_file, $limit = 50, $end = '...') . pathinfo($berkas->nama_file, PATHINFO_EXTENSION) }}
+                                            {{ \Illuminate\Support\Str::limit($berkas->nama_file, $limit = 50, $end = '...') . pathinfo($berkas->nama_file, PATHINFO_EXTENSION) }}
                                         @endif
                                     </a>
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
