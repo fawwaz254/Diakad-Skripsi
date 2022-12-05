@@ -133,7 +133,7 @@ class WaliKelasSKPIController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
-        $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
+
         // dd($id_kelas);
         $validator = Validator::make($request->all(), [
             'nm_kegiatan_siswa' => 'required',
@@ -152,7 +152,7 @@ class WaliKelasSKPIController extends Controller
         } else {
 
             if ($mode == 'add') {
-
+                $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
                 $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                 $kegiatan = new KegiatanSiswa;
@@ -175,6 +175,7 @@ class WaliKelasSKPIController extends Controller
                     'message' => 'Save Kegiatan Successfully'
                 ];
             } elseif ($mode == 'edit') {
+                $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
                 $kegiatan = KegiatanSiswa::find($id);
                 $kegiatan->id_siswa = $input->id_siswa;
                 $kegiatan->id_kelas = $id_kelas;

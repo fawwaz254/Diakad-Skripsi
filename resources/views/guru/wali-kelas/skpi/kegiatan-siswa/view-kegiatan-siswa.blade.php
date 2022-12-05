@@ -50,8 +50,9 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'input-skpi-siswa/kegiatan_siswa/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'data-kegiatan-siswa/edit';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'data-kegiatan-siswa/action/delete';
-    // alert(datatable_url);
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+    'input-skpi-siswa/kegiatan_siswa/action/delete';
+    // alert(delete_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         // serverSide: true,

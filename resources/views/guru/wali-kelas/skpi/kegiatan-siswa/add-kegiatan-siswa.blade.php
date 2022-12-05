@@ -15,7 +15,6 @@
                 <div class="body">
                     <form id="form-validation" method="post"
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/' . Request::segment(4) . '/action/add/0') }}">
-                        {{-- {{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/' . Request::segment(4) . '/action/add/0') }} --}}
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Nama Kegiatan
