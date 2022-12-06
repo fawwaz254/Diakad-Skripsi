@@ -29,20 +29,20 @@
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Start Date</label>
-                            <input type="date" class="form-control" value="{{ $start_date }}" name="start_date"
-                                aria-required="true" aria-invalid="true">
+                            <label>Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="start_date" value="{{ $start_date }}"
+                                name="start_date" aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>End Date</label>
-                            <input type="date" class="form-control" value="{{ $end_date }}" name="end_date"
-                                aria-required="true" aria-invalid="true">
+                            <label>Tanggal Akhir</label>
+                            <input type="date" class="form-control" id="end_date" value="{{ $end_date }}"
+                                name="end_date" aria-required="true" aria-invalid="true">
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
-                                onclick="filterAction()">Lihat </button>
+                                onclick="filterAction()">Tampilkan</button>
                         </div>
 
                     </div>
@@ -56,6 +56,22 @@
 </div>
 @include('scriptjs')
 <script>
+    $("#end_date").change(function() {
+        var startDate = document.getElementById("start_date").value;
+        var endDate = document.getElementById("end_date").value;
+
+        if ((Date.parse(endDate) < Date.parse(startDate))) {
+            swal({
+                title: "Tanggal Salah",
+                text: "Tanggal akhir tidak boleh kurang dari tanggal mulai",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                timer: 2000,
+            });
+            document.getElementById("end_date").value = startDate;
+        }
+    });
+
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() +
             '/' + $(
