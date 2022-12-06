@@ -112,7 +112,7 @@
                     </h2>
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <input type="text" class="form-control" name="jumlah_halaman" required="" aria-required="true"
+                            <input type="number" class="form-control" name="jumlah_halaman" required="" aria-required="true"
                             aria-invalid="true" value="{{$dokumen->jumlah_halaman}}" readonly>
                         </div>
                     </div>
