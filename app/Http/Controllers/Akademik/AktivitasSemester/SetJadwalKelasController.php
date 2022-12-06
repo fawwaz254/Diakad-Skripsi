@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\Akademik\AktivitasSemester;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Libraries\Pendidikan\LibKelas;
-use App\Libraries\Pendidikan\LibDataAkademik;
-use App\Models\Guru;
-use App\Models\JadwalHari;
-use App\Models\JadwalJam;
-use App\Models\JadwalKelasMp;
-use App\Models\Kelas;
-use App\Models\KelasMp;
-use App\Models\MataPelajaran;
-use App\Models\PengambilanMp;
-use App\Models\PengampuMp;
-use App\Models\Ruangan;
-use Carbon\Carbon;
-use Auth;
 use DB;
+use Auth;
 use Session;
 use Validator;
+use Carbon\Carbon;
+use App\Models\Guru;
+use App\Models\Kelas;
+use App\Models\KelasMp;
+use App\Models\Ruangan;
+use App\Models\JadwalJam;
+use App\Models\Kurikulum;
+use App\Models\JadwalHari;
+use App\Models\PengampuMp;
+use Illuminate\Http\Request;
+use App\Models\JadwalKelasMp;
+use App\Models\MataPelajaran;
+use App\Models\PengambilanMp;
+use App\Http\Controllers\Controller;
+use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Akademik\LibAkademik;
+use App\Libraries\Pendidikan\LibDataAkademik;
 
 class SetJadwalKelasController extends Controller
 {
@@ -129,9 +130,19 @@ class SetJadwalKelasController extends Controller
         $list_guru       = Guru::join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->orderBy('nm_pengguna', 'asc')->get();
         $allruangan    = Ruangan::orderBy('nm_ruangan', 'asc')->get();
         $mapel      = MataPelajaran::all();
+
+        //get kurikulum aktif di sekolah tersebut
+        $data_kurikulum = Kurikulum::with('jurusan', 'mapel', 'mapel.mata_pelajaran')
+            ->where('is_aktif', '=', 1)
+            ->whereHas('jurusan', function ($q) use ($auth_data) {
+                $q->where('id_sekolah', $auth_data->pengguna->id_sekolah);
+            })
+            ->get();
+
         // $ruangan    = Ruangan::find( $id_kelas);
-        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'allruangan'));
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'allruangan', 'data_kurikulum'));
     }
+
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
     {
