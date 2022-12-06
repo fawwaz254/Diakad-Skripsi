@@ -433,7 +433,7 @@
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="golongan_ptk" aria-invalid="true" value="{{$guru->golongan_ptk}}">
+                                <input type="text" class="form-control" name="golongan_ptk" aria-invalid="true" value="{{$guru->golongan_ptk}}" maxlength= "8">
                             </div>
                         </div>
                         <h2 class="card-inside-title">
