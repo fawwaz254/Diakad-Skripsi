@@ -66,6 +66,8 @@ use App\Http\Controllers\Guru\GuruPiket\InputPelanggaranController as GuruPiketI
 use App\Http\Controllers\Guru\WaliKelas\InputPelanggaranController as WaliKelasInputPelanggaranController;
 use App\Http\Controllers\Guru\GuruPiket\RekapAbsenTanpaJadwalController as GuruPiketRekapAbsenTanpaJadwalController;
 use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
+use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
+use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
@@ -598,6 +600,27 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [WaliMuridController::class, 'viewWaliMurid']);
                 Route::get('datatables', [WaliMuridController::class, 'datatablesWaliMurid']);
                 Route::post('reset-password', [CariSiswaController::class, 'resetPasswordSiswa']);
+            });
+
+            Route::prefix('input-biodata-siswa')->group(function () {
+                Route::get('/', [BiodataSiswaController::class, 'viewListSiswa']);
+                Route::get('datatables', [BiodataSiswaController::class, 'datatablesListSiswa']);
+                Route::get('edit/{id}', [BiodataSiswaController::class, 'biodataSiswa']);
+                Route::post('edit/{id}', [BiodataSiswaController::class, 'postBiodataSiswa']);
+                Route::get('print/{nis_siswa}', [BiodataSiswaController::class, 'printBiodataSiswa']);
+            });
+
+            Route::prefix('input-skpi-siswa')->group(function () {
+                Route::get('/', [WaliKelasSKPIController::class, 'viewListSiswa']);
+                Route::get('datatables', [WaliKelasSKPIController::class, 'datatablesListSiswa']);
+                //kegiatan-siswa
+                Route::get('kegiatan_siswa/datatables', [WaliKelasSKPIController::class, 'datatablesKegiatanSiswa']);
+                Route::get('kegiatan_siswa/add/{id_siswa}', [WaliKelasSKPIController::class, 'addKegiatanSiswa']);
+                Route::get('kegiatan_siswa/edit/{id}', [WaliKelasSKPIController::class, 'datatablesKegiatanSiswa']);
+                // Route::get('kegiatan_siswa/add', [WaliKelasSKPIController::class, 'datatablesKegiatanSiswa']);
+                Route::post('kegiatan_siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataKegiatanSiswa']);
+                //sudah bisa
+                Route::get('kegiatan_siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewKegiatanSiswa']);
             });
         });
 
