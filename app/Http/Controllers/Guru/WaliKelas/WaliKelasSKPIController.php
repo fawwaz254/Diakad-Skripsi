@@ -12,6 +12,7 @@ use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\KegiatanSiswa;
 use App\Models\PrestasiSiswa;
 use App\Models\Siswa;
+use App\Models\TingkatPrestasiSiswa;
 use Carbon\Carbon;
 
 
@@ -331,12 +332,155 @@ class WaliKelasSKPIController extends Controller
             })
             ->make(true);
     }
-    public function addPrestasiSiswa(Request $request)
-    { }
-    public function editPrestasiSiswa(Request $request)
-    { }
-    public function actionDataPrestasiSiswa(Request $request)
-    { }
+    public function addPrestasiSiswa(Request $request, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
+        // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
+        // $ekskul = Ekskul::where('id_sekolah',$auth_data->pengguna->id_sekolah)->get();
+        $guru = Guru::select(
+            'id_guru',
+            'p2.nm_pengguna as nm_guru_pendamping',
+            'p2.gelar_depan',
+            'p2.gelar_belakang'
+        )
+            ->Join('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->get();
+
+        return view('guru/wali-kelas/skpi/prestasi-siswa/add-prestasi-siswa', compact('auth_data', 'id_siswa', 'tingkat', 'guru'));
+    }
+    public function editPrestasiSiswa(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $tingkat = TingkatPrestasiSiswa::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
+        // $jenis_prestasi = [[1,'Sains'],[2,'Seni'],[3,'Olahraga'],[4,'Lain-lain']];
+        // $ekskul = Ekskul::where('id_sekolah', $auth_data->pengguna->id_sekolah)->get();
+        $guru = Guru::select(
+            'id_guru',
+            'p2.nm_pengguna as nm_guru_pendamping',
+            'p2.gelar_depan',
+            'p2.gelar_belakang'
+        )
+            ->Join('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->get();
+
+        $prestasi = PrestasiSiswa::findOrFail($id);
+        return view('guru/wali-kelas/skpi/prestasi-siswa/edit-prestasi-siswa', compact('auth_data', 'tingkat', 'guru', 'prestasi'));
+    }
+    public function actionDataPrestasiSiswa(Request $request, $mode, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+
+        $validator = Validator::make($request->all(), [
+            'nm_prestasi_siswa' => 'required',
+            'peringkat_prestasi_siswa' => 'required',
+            'lokasi_prestasi_siswa' => 'required',
+            'penyelenggara_prestasi_siswa' => 'required',
+            'jenis_lomba_siswa' => 'required',
+            'id_tingkat_prestasi_siswa' => 'required',
+            'tgl_prestasi_siswa' => 'required',
+            'link_sertifikat' => 'required'
+        ]);
+
+        if ($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+
+            if ($mode == 'add') {
+                $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
+                $prestasi = new PrestasiSiswa;
+                $prestasi->id_prestasi_siswa = $id;
+                $prestasi->id_siswa = $input->id_siswa;
+                $prestasi->id_kelas = $id_kelas;
+                $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
+                $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
+                // $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
+                $prestasi->jenis_lomba_siswa = $input->jenis_lomba_siswa;
+                $prestasi->nm_prestasi_siswa = $input->nm_prestasi_siswa;
+                $prestasi->lokasi_prestasi_siswa = $input->lokasi_prestasi_siswa;
+                $prestasi->penyelenggara_prestasi_siswa = $input->penyelenggara_prestasi_siswa;
+                $prestasi->peringkat_prestasi_siswa = $input->peringkat_prestasi_siswa;
+                $prestasi->tgl_prestasi_siswa = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
+                $prestasi->created_by = $input->auth_data->pengguna->id_pengguna;
+
+                if (!empty($input->id_guru_pendamping)) {
+                    $prestasi->id_guru_pendamping = $input->id_guru_pendamping;
+                }
+
+                if (!empty($input->id_ekskul)) {
+                    $prestasi->id_ekskul = $input->id_ekskul;
+                }
+
+                $prestasi->link_sertif_prestasi_siswa = $input->link_sertifikat;
+
+                $prestasi->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/input-skpi-siswa/prestasi-siswa/' . $input->id_siswa,
+                    'message' => 'Add Prestasi Successfully'
+                ];
+            } elseif ($mode == 'edit') {
+                $prestasi = PrestasiSiswa::findOrFail($id);
+                $id_kelas = Siswa::where('id_siswa', $input->id_siswa)->pluck('id_kelas')->first();
+                $prestasi->id_siswa = $input->id_siswa;
+                $prestasi->id_kelas = $id_kelas;
+                $prestasi->id_semester = LibDataAkademik::fetchDataSemesterAktif($auth_data)->id_semester;
+                $prestasi->id_tingkat_prestasi_siswa = $input->id_tingkat_prestasi_siswa;
+                //    $prestasi->jenis_prestasi_siswa = $input->jenis_prestasi_siswa;
+                $prestasi->jenis_lomba_siswa = $input->jenis_lomba_siswa;
+                $prestasi->nm_prestasi_siswa = $input->nm_prestasi_siswa;
+                $prestasi->lokasi_prestasi_siswa = $input->lokasi_prestasi_siswa;
+                $prestasi->penyelenggara_prestasi_siswa = $input->penyelenggara_prestasi_siswa;
+                $prestasi->peringkat_prestasi_siswa = $input->peringkat_prestasi_siswa;
+                $prestasi->tgl_prestasi_siswa = date("Y-m-d", strtotime($input->tgl_prestasi_siswa));
+                $prestasi->updated_at = $now;
+                $prestasi->updated_by = $input->auth_data->pengguna->id_pengguna;
+
+                if (!empty($input->id_guru_pendamping)) {
+                    $prestasi->id_guru_pendamping = $input->id_guru_pendamping;
+                }
+
+                if (!empty($input->id_ekskul)) {
+                    $prestasi->id_ekskul = $input->id_ekskul;
+                }
+
+                $prestasi->link_sertif_prestasi_siswa = $input->link_sertifikat;
+
+                $prestasi->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'wali-kelas/input-skpi-siswa/prestasi-siswa/' . $input->id_siswa,
+                    'message' => 'Edit Prestasi Successfully'
+                ];
+            } elseif ($mode == 'delete') {
+                $prestasi = PrestasiSiswa::findOrFail($id);
+                $prestasi->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $prestasi->deleted_at  = $now;
+                $prestasi->save();
+
+                $prestasi->delete();
+
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Prestasi Successfully'
+                ];
+            }
+        }
+    }
     public function viewPrestasiSiswa(Request $request, $id_siswa)
     {
         $input = (object) $request->input();

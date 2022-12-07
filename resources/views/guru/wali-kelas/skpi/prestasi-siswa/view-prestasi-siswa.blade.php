@@ -1,8 +1,10 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2>
+        <h2><a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a>
             <a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#skpi/data-prestasi-siswa/add') }}"><i
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3) . '/' . Request::segment(4) . '/add/' . $id_siswa) }}"><i
                     class="material-icons">note_add</i><span>Tambah Prestasi Siswa</span></a>
         </h2>
     </div>
