@@ -284,7 +284,7 @@ class SppController extends BaseController
 
         $tutup_buku_tahun_ini = TutupBukuTahunanBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai])->first();
         $tutup_buku_kas_bulan_ini = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan])->first();
-        if ($tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) {} else {
+        if ($tutup_buku_kas_bulan_lalu = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) { } else {
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
@@ -423,7 +423,7 @@ class SppController extends BaseController
 
         $now = Carbon::now(env('APP_TIMEZONE', 'Asia/Jakarta'));
 
-        if ($tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) {} else {
+        if ($tutup_buku_bulanan_kas_old = TutupBukuBulananKas::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan - 1])->first()) { } else {
             return response()->json([
                 'status_code' => 300,
                 'status_text' => 'Failed',
@@ -790,8 +790,8 @@ class SppController extends BaseController
 
         $data_realisasi = Realisasi::select('*')->addSelect(DB::raw('MONTH(realisasi.tgl_realisasi) month'))
             ->with('rapb', 'rapb.subkategori')->whereHas('rapb.subkategori.kategori', function ($q) {
-            $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
-        })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])->get();
+                $q->where('tipe_kategori_rapb', 1)->where('jenis_kategori_rapb', 0);
+            })->whereIn('id_semester_realisasi', [$semester_mulai->id_semester, $semester_selesai->id_semester])->get();
 
         return view('keuangan/sim/spp/view-menu-penerimaan', compact('auth_data', 'data_semester', 'tahun_akademik_semester', 'data_subkategori', 'data_bulan', 'data_realisasi'));
     }
@@ -1388,7 +1388,7 @@ class SppController extends BaseController
                         $id_semester = $semester_mulai->id_semester;
                     }
 
-                    if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) {} else {
+                    if ($biaya_sekolah = BiayaSekolah::where(['id_semester' => $id_semester, 'id_kelompok_biaya' => $input->id_kelompok_biaya])->first()) { } else {
                         $biaya_sekolah = new BiayaSekolah;
                         $biaya_sekolah->id_biaya_sekolah = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                         $biaya_sekolah->id_kelompok_biaya = $input->id_kelompok_biaya;
@@ -1627,7 +1627,7 @@ class SppController extends BaseController
             try {
                 $rapb = Rapb::where(['id_subkategori_rapb' => $input->id_subkategori_rapb, 'id_semester_mulai' => $semester_mulai->id_semester, 'id_semester_selesai' => $semester_selesai->id_semester])->first();
 
-                if ($rapb) {} else {
+                if ($rapb) { } else {
                     $rapb = new Rapb;
                     $rapb->id_rapb = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
@@ -1783,9 +1783,7 @@ class SppController extends BaseController
     {
         $auth_data = $request->auth_data;
 
-        if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->where('id_tagihan_biaya', $id)->first()) {
-
-        } else {
+        if ($pembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.siswa', 'tagihan_biaya.siswa.pengguna')->where('id_tagihan_biaya', $id)->first()) { } else {
             return abort(404);
         }
 
