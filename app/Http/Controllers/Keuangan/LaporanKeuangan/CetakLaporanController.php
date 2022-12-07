@@ -25,6 +25,10 @@ class CetakLaporanController extends BaseController
             session(['setting_print_keuangan' => 'all']);
         }
 
+        if (empty(session('setting_print_keuangan2'))) {
+            session(['setting_print_keuangan2' => 'semua']);
+        }
+
         return view('keuangan/laporan-keuangan/cetak-laporan/view-cetak-laporan', compact('auth_data', 'nis_nama_siswa', 'bulan'));
     }
 
@@ -255,6 +259,5 @@ class CetakLaporanController extends BaseController
             $data_laporan = LibCetakKeuangan::fetchLaporanBulananPerKategori($auth_data, $start_date, $end_date);
             return view('keuangan/laporan-keuangan/cetak-laporan/pemasukan-pengeluaran/laporan-bulanan-per-kategori', compact('auth_data', 'data_laporan', 'start_date', 'end_date'));
         }
-
     }
 }

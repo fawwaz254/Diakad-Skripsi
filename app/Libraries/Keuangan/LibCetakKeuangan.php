@@ -254,7 +254,7 @@ class LibCetakKeuangan
                     $tutup_buku_bulanan_biaya_old = TutupBukuBulananBiaya::where(['id_semester_mulai' => $id_semester_mulai, 'id_semester_selesai' => $id_semester_selesai, 'id_bulan' => $id_bulan_lalu, 'tingkat' => $data->tingkat, 'created_by' => $auth_data->pengguna->id_pengguna])->first();
                 }
 
-                if ($tutup_buku_bulanan_biaya) {} else {
+                if ($tutup_buku_bulanan_biaya) { } else {
                     $id = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
                     $tutup_buku_bulanan_biaya = new TutupBukuBulananBiaya;
@@ -285,7 +285,7 @@ class LibCetakKeuangan
 
                     if (!empty($tutup_buku_bulanan_biaya_old)) {
                         $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = $tutup_buku_bulanan_biaya_old->jml_tunggakan_biaya + $tutup_buku_bulanan_biaya_old->jml_tagihan_biaya
-                         - $tutup_buku_bulanan_biaya_old->jml_pembayaran_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
+                            - $tutup_buku_bulanan_biaya_old->jml_pembayaran_biaya - $tutup_buku_bulanan_biaya->jml_pembayaran_biaya_bulan_lalu;
                     } else {
                         $tutup_buku_bulanan_biaya->jml_tunggakan_biaya = 0;
                     }
@@ -549,8 +549,8 @@ class LibCetakKeuangan
             })
             ->get();
 
-            $semester_aktif = Semester::where('is_aktif_semester','1')->first();
-            $spp_tahun_lalu = $pembayaran_spp->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', '!=', $semester_aktif->tahun_ajaran)->sum('besar_pembayaran');
+        $semester_aktif = Semester::where('is_aktif_semester', '1')->first();
+        $spp_tahun_lalu = $pembayaran_spp->where('tagihan_biaya.detail_biaya.biaya_sekolah.semester.tahun_ajaran', '!=', $semester_aktif->tahun_ajaran)->sum('besar_pembayaran');
 
         $realisasi_all = Realisasi::query()
             ->with('rapb', 'rapb.subkategori', 'rapb.subkategori.kategori')
@@ -963,8 +963,8 @@ class LibCetakKeuangan
                             $tempDataLaporan[$keyTempData . $x->nm_detail_biaya_internal] = [
                                 'tanggal' => $date->format('Y-m-d'),
                                 'nominal' => ($sisa > ($x->besar_biaya - $potongan_biaya))
-                                ? ($x->besar_biaya - $potongan_biaya)
-                                : $x->besar_biaya + $sisa,
+                                    ? ($x->besar_biaya - $potongan_biaya)
+                                    : $x->besar_biaya + $sisa,
                                 'potongan' => $potongan_biaya,
                                 'frekuensi' => $count,
                                 'tipe' => 1,
@@ -1565,12 +1565,12 @@ class LibCetakKeuangan
         }
 
         if ($print_setting2 == 'spp') {
-            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
-                $query->where('id_jenis_detail_biaya', 4);
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya.biaya', function ($query) {
+                $query->where('nm_biaya', 'SPP');
             });
         } elseif ($print_setting2 == 'lain') {
-            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya', function ($query) {
-                $query->where('id_jenis_detail_biaya', '!=', 4);
+            $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas')->whereHas('tagihan_biaya.detail_biaya.biaya', function ($query) {
+                $query->where('nm_biaya', '!=', 'SPP');
             });
         } else {
             $allDataPembayaran = PembayaranBiaya::with('tagihan_biaya', 'tagihan_biaya.detail_biaya', 'tagihan_biaya.detail_biaya.biaya_sekolah', 'tagihan_biaya.detail_biaya.biaya_sekolah.semester', 'tagihan_biaya.kelas');
