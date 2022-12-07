@@ -57,7 +57,7 @@
                                 </h2>
                                 <input type="text" class="form-control" name="lokasi_prestasi_siswa" required=""
                                     aria-required="true" value="{{$prestasi->lokasi_prestasi_siswa}}"
-                                    aria-invalid="true">
+                                    aria-invalid="true" maxlength="64">
                             </div>
 
                             <div class="col-md-4">
