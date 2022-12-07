@@ -20,7 +20,7 @@
                                         <th>Kelas</th>
                                         <th>Kegiatan Siswa</th>
                                         <th>Prestasi Siswa</th>
-                                        <th>Informasi Tambahan</th>
+                                        {{-- <th>Informasi Tambahan</th> --}}
                                     </tr>
                                 </thead>
                             </table>
@@ -42,7 +42,7 @@
             // var detail_url = role_url + '#' + modul_url + '/input-biodata-siswa/edit';
             var kegiatan_siswa_url = role_url + '#' + modul_url + '/input-skpi-siswa/kegiatan-siswa';
             var prestasi_siswa = role_url + '#' + modul_url + '/input-skpi-siswa/prestasi-siswa';
-            var informasi_tambahan = role_url + '#' + modul_url + '/input-skpi-siswa/informasi-tambahan';
+            // var informasi_tambahan = role_url + '#' + modul_url + '/input-skpi-siswa/informasi-tambahan';
 
             var primary_table = $('#primary_table').DataTable({
                 processing: true,
@@ -88,19 +88,20 @@
                                 '    <i class="material-icons">remove_red_eye</i>' +
                                 '</a> ' + data.count + ' Data'
                         }
-                    },
-                    {
-                        data: 'informasi_tambahan',
-                        name: 'informasi_tambahan',
-                        searchable: false,
-                        orderable: false,
-                        render: function(data) {
-                            return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
-                                informasi_tambahan + '/' + data.id + '">' +
-                                '    <i class="material-icons">remove_red_eye</i>' +
-                                '</a> ' + data.count + ' Data'
-                        }
                     }
+                    // ,
+                    // {
+                    //     data: 'informasi_tambahan',
+                    //     name: 'informasi_tambahan',
+                    //     searchable: false,
+                    //     orderable: false,
+                    //     render: function(data) {
+                    //         return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float text-center" href="' +
+                    //             informasi_tambahan + '/' + data.id + '">' +
+                    //             '    <i class="material-icons">remove_red_eye</i>' +
+                    //             '</a> ' + data.count + ' Data'
+                    //     }
+                    // }
                 ]
             });
 

@@ -10,6 +10,7 @@ use App\Models\Pengguna;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\KegiatanSiswa;
+use App\Models\PrestasiSiswa;
 use App\Models\Siswa;
 use Carbon\Carbon;
 
@@ -54,13 +55,14 @@ class WaliKelasSKPIController extends Controller
                     'count' => $item->prestasi_siswa->count()
                 );
                 return $data;
-            })->addColumn('informasi_tambahan', function ($item) {
-                $data = array(
-                    'id' => $item->id_siswa,
-                    'count' => $item->informasi_tambahan->count()
-                );
-                return $data;
             })
+            // ->addColumn('informasi_tambahan', function ($item) {
+            //     $data = array(
+            //         'id' => $item->id_siswa,
+            //         'count' => $item->informasi_tambahan->count()
+            //     );
+            //     return $data;
+            // })
             ->make(true);
     }
 
@@ -219,5 +221,127 @@ class WaliKelasSKPIController extends Controller
                 ];
             }
         }
+    }
+    public function datatablesPrestasiSiswa(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $list_data = PrestasiSiswa::select(
+            'prestasi_siswa.nm_prestasi_siswa',
+            'prestasi_siswa.keterangan',
+            'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
+            // 'prestasi_siswa.jenis_prestasi_siswa',
+            'prestasi_siswa.peringkat_prestasi_siswa',
+            'prestasi_siswa.link_sertif_prestasi_siswa',
+            'prestasi_siswa.status',
+            'prestasi_siswa.jenis_lomba_siswa',
+            'p1.nm_pengguna as nm_siswa',
+            'siswa.nisn_siswa',
+            'siswa.nis_siswa',
+            'semester.nm_semester',
+            'semester.tahun_ajaran',
+            'kelas.nm_kelas',
+            'prestasi_siswa.lokasi_prestasi_siswa',
+            'prestasi_siswa.penyelenggara_prestasi_siswa',
+            'prestasi_siswa.tgl_prestasi_siswa',
+            // 'ekskul.nm_ekskul',
+            'prestasi_siswa.id_prestasi_siswa',
+            'prestasi_siswa.id_guru_pendamping',
+            'p2.nm_pengguna as nm_guru_pendamping',
+            'p2.gelar_depan',
+            'p2.gelar_belakang'
+        )
+            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'prestasi_siswa.id_tingkat_prestasi_siswa')
+            ->join('siswa', 'siswa.id_siswa', '=', 'prestasi_siswa.id_siswa')
+            ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('semester', 'semester.id_semester', '=', 'prestasi_siswa.id_semester')
+            ->join('kelas', 'kelas.id_kelas', '=', 'prestasi_siswa.id_kelas')
+            // ->leftJoin('ekskul', 'ekskul.id_ekskul', '=', 'prestasi_siswa.id_ekskul')
+            ->leftJoin('guru', 'guru.id_guru', '=', 'prestasi_siswa.id_guru_pendamping')
+            ->leftJoin('pengguna as p2', 'p2.id_pengguna', '=', 'guru.id_pengguna')
+            ->orderBy('prestasi_siswa.created_at', 'desc')
+            ->orderBy('semester.thn_akademik_semester', 'desc')
+            ->orderBy('semester.nm_semester', 'desc')
+            // ->where('p1.id_pengguna', '=', $auth_data->pengguna->id_pengguna)
+            // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            // ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('prestasi_siswa.id_siswa', $input->id_siswa)
+            ->get();
+
+        return Datatables::of($list_data)
+            ->addColumn('semester', function ($item) {
+                return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+            })
+            ->addColumn('keterangan_status', function ($item) {
+                if ($item->status == 0) {
+                    $status = 'Belum Diapprove';
+                    $color = 'pink';
+                } elseif ($item->status == 1) {
+                    $status = 'Sudah Diapprove';
+                    $color = 'teal';
+                } elseif ($item->status == 10) {
+                    $status = 'Ditolak';
+                    $color = 'red';
+                }
+                $data = array(
+                    'status' => $status,
+                    'color'  => $color
+                );
+                return $data;
+            })
+            ->addColumn('peringkat_prestasi_siswa', function ($item) {
+                if ($item->peringkat_prestasi_siswa == 1) {
+                    return "Peringkat 1";
+                } elseif ($item->peringkat_prestasi_siswa == 2) {
+                    return "Peringkat 2";
+                } elseif ($item->peringkat_prestasi_siswa == 3) {
+                    return "Peringkat 3";
+                } elseif ($item->peringkat_prestasi_siswa == 4) {
+                    return "Juara Harapan 1";
+                } elseif ($item->peringkat_prestasi_siswa == 5) {
+                    return "Juara Harapan 2";
+                } elseif ($item->peringkat_prestasi_siswa == 6) {
+                    return "Juara Harapan 3";
+                } elseif ($item->peringkat_prestasi_siswa == 7) {
+                    return "Peserta";
+                }
+            })
+            ->addColumn('tgl_prestasi_siswa', function ($item) {
+                return strftime("%d %B %Y", strtotime($item->tgl_prestasi_siswa));
+            })
+            ->addColumn('nm_guru_pendamping', function ($item) {
+                if (!empty($item->gelar_depan) && !empty($item->gelar_belakang)) {
+                    return $item->gelar_depan . " " . $item->nm_guru_pendamping . ", " . $item->gelar_belakang;
+                } elseif (!empty($item->gelar_depan)) {
+                    return $item->gelar_depan . " " . $item->nm_guru_pendamping;
+                } elseif (!empty($item->gelar_belakang)) {
+                    return $item->nm_guru_pendamping . ", " . $item->gelar_belakang;
+                } else {
+                    return $item->nm_guru_pendamping;
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_prestasi_siswa,
+                    'link_sertifikat' => $item->link_sertif_prestasi_siswa,
+                    'status' => $item->status
+                );
+                return $data;
+            })
+            ->make(true);
+    }
+    public function addPrestasiSiswa(Request $request)
+    { }
+    public function editPrestasiSiswa(Request $request)
+    { }
+    public function actionDataPrestasiSiswa(Request $request)
+    { }
+    public function viewPrestasiSiswa(Request $request, $id_siswa)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('guru/wali-kelas/skpi/prestasi-siswa/view-prestasi-siswa', compact('auth_data', 'id_siswa'));
     }
 }

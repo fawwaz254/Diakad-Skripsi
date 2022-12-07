@@ -45,14 +45,12 @@
 </div>
 @include('scriptjs')
 <script>
-    // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = '{{ Request::segment(2) }}';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'input-skpi-siswa/kegiatan-siswa/datatables';
     var edit_url = role_url + '#' + modul_url + '/' + 'input-skpi-siswa/kegiatan-siswa/edit';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'input-skpi-siswa/kegiatan-siswa/action/delete';
-    // alert(delete_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         // serverSide: true,

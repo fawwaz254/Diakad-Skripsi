@@ -620,8 +620,11 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('kegiatan-siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataKegiatanSiswa']);
                 Route::get('kegiatan-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewKegiatanSiswa']);
                 //prestasi-siswa
-                //informasi-tambahan
-
+                Route::get('prestasi-siswa/datatables', [WaliKelasSKPIController::class, 'datatablesPrestasiSiswa']);
+                Route::get('prestasi-siswa/add/{id_siswa}', [WaliKelasSKPIController::class, 'addPrestasiSiswa']);
+                Route::get('prestasi-siswa/edit/{id}', [WaliKelasSKPIController::class, 'editPrestasiSiswa']);
+                Route::post('prestasi-siswa/action/{mode}/{id}', [WaliKelasSKPIController::class, 'actionDataPrestasiSiswa']);
+                Route::get('prestasi-siswa/{id_siswa}', [WaliKelasSKPIController::class, 'viewPrestasiSiswa']);
             });
         });
 
