@@ -94,7 +94,7 @@
                             <div class="row clearfix">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <input type="text" class="form-control" name="lokasi_prestasi_siswa" required="" aria-required="true"
-                                    aria-invalid="true" value="{{$prestasi->lokasi_prestasi_siswa}}">
+                                    aria-invalid="true" value="{{$prestasi->lokasi_prestasi_siswa}}" maxlength="64">
                                 </div>
                             </div>
                             <h2 class="card-inside-title">
