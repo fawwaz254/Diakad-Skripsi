@@ -40,9 +40,9 @@
             var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
                 'input-skpi-siswa/datatables';
             // var detail_url = role_url + '#' + modul_url + '/input-biodata-siswa/edit';
-            var kegiatan_siswa_url = role_url + '#' + modul_url + '/input-skpi-siswa/kegiatan_siswa';
-            var prestasi_siswa = role_url + '#' + modul_url + '/input-skpi-siswa/prestasi_siswa';
-            var informasi_tambahan = role_url + '#' + modul_url + '/input-skpi-siswa/informasi_tambahan';
+            var kegiatan_siswa_url = role_url + '#' + modul_url + '/input-skpi-siswa/kegiatan-siswa';
+            var prestasi_siswa = role_url + '#' + modul_url + '/input-skpi-siswa/prestasi-siswa';
+            var informasi_tambahan = role_url + '#' + modul_url + '/input-skpi-siswa/informasi-tambahan';
 
             var primary_table = $('#primary_table').DataTable({
                 processing: true,

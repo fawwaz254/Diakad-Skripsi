@@ -127,6 +127,15 @@ class WaliKelasSKPIController extends Controller
         return view('guru/wali-kelas/skpi/kegiatan-siswa/add-kegiatan-siswa', compact('auth_data', 'id_siswa'));
     }
 
+    public function editKegiatanSiswa(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kegiatan_siswa = KegiatanSiswa::where('id_kegiatan_siswa', $id)->first();
+        // dd($kegiatan_siswa);
+        return view('guru/wali-kelas/skpi/kegiatan-siswa/edit-kegiatan-siswa', compact('auth_data', 'kegiatan_siswa'));
+    }
+
     public function actionDataKegiatanSiswa(Request $request, $mode, $id = null)
     {
 
@@ -171,7 +180,7 @@ class WaliKelasSKPIController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'wali-kelas/input-skpi-siswa/kegiatan_siswa/' . $input->id_siswa,
+                    'path' => 'wali-kelas/input-skpi-siswa/kegiatan-siswa/' . $input->id_siswa,
                     'message' => 'Save Kegiatan Successfully'
                 ];
             } elseif ($mode == 'edit') {
@@ -192,7 +201,7 @@ class WaliKelasSKPIController extends Controller
 
                 return [
                     'status' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'skpi/data-kegiatan-siswa',
+                    'path' => 'wali-kelas/input-skpi-siswa/kegiatan-siswa/' . $input->id_siswa,
                     'message' => 'Edit Kegiatan Successfully'
                 ];
             } elseif ($mode == 'delete') {
