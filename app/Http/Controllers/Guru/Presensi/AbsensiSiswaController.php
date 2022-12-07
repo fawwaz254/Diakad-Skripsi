@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\SumberDaya\LibGuru;
-
+use App\Models\Setting;
 use Auth;
 use DB;
 use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
@@ -32,7 +32,7 @@ class AbsensiSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $id_jadwal_hari = Carbon::now(env('APP_TIMEZONE', ''))->format('N');
+        $id_jadwal_hari = Carbon::now(env('APP_TIMEZONE', ''))->format('N');
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
@@ -42,8 +42,13 @@ class AbsensiSiswaController extends BaseController
 
         $data_uas = LibGuru::fetchDataJadwalUAS($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, 0);
 
-        // $grup_kbm_perhari = $data_kbm->where('id_jadwal_hari', $id_jadwal_hari)->groupBy('nm_jadwal_hari');
-        $grup_kbm_perhari = $data_kbm->groupBy('nm_jadwal_hari');
+        $setting =  Setting::where('key_setting', 'is_presensi_one_day')->pluck('value')->first();
+
+        if ($setting == '1') {
+            $grup_kbm_perhari = $data_kbm->where('id_jadwal_hari', $id_jadwal_hari)->groupBy('nm_jadwal_hari');
+        } else {
+            $grup_kbm_perhari = $data_kbm->groupBy('nm_jadwal_hari');
+        }
 
         return view('guru/presensi/absensi-siswa/view-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_uts', 'data_uas', 'grup_kbm_perhari'));
     }
