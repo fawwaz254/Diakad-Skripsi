@@ -71,6 +71,7 @@ class FingerprintController extends BaseController
         set_time_limit(-1);
         $input = (object) $request->input();
         $now = Carbon::now('Asia/Jakarta');
+        $client = new \GuzzleHttp\Client();
 
         $serial_number = '';
         $date_filter = null;
@@ -92,15 +93,20 @@ class FingerprintController extends BaseController
 
         $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
 
-        if (!empty($device->port)) {
-            $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
-        } else {
-            $fingerprint_url = $device->ip_address_wan . '/iWsService';
+        // Ping Fingerprint
+        try {
+            if (!empty($device->port)) {
+                $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+            } else {
+                $fingerprint_url = $device->ip_address_wan . '/iWsService';
+            }
+            $client->request('GET', $fingerprint_url);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return 'Failed';
         }
 
         $data_username_pengguna = array();
         try {
-            $client = new \GuzzleHttp\Client();
             $response = $client->post($fingerprint_url, [
                 'headers' => [
                     'Content-Type' => 'text/xml',
