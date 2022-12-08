@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        Cetak Alumni
+                        Tracer Alumni
                     </h2>
                 </div>
                 <div class="body">
@@ -99,7 +99,7 @@
     var edit_url = role_url + '#' + modul_url + '/tracer-alumni/edit';
     // var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
     // var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/action/delete';
-    // alert(datatable_url);
+    // alert(edit_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,

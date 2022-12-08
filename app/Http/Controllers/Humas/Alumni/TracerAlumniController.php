@@ -39,6 +39,7 @@ class TracerAlumniController extends BaseController
 
     const PATH = 'alumni/tracer-alumni';
     const PATH2 = 'tracer-alumni';
+    const PATHGURU = 'wali-kelas/tracer-alumni';
     const FETCH_WORK_ATTRIBUTE = ['nm_instansi', 'alamat_instansi', 'kontak_instansi', 'bidang_usaha_instansi', 'tahun_masuk_instansi', 'kapan_mulai_bekerja', 'lama_bekerja'];
     const FETCH_COLLEGE_ATTRIBUTE = ['nm_perguruan', 'alamat_perguruan', 'fakultas', 'prodi', 'jenjang', 'tahun_masuk_perguruan'];
     const FETCH_ENTERPRENEUR_ATTRIBUTE = ['nm_usaha', 'alamat_usaha', 'kontak_usaha', 'bidang_usaha', 'jumlah_karyawan', 'tahun_rintis'];
@@ -428,7 +429,6 @@ class TracerAlumniController extends BaseController
                 }
 
                 DB::commit();
-
                 if ($cek = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()) {
                     if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
                         return web_response(202, "Update Successfully", self::PATH);
@@ -436,6 +436,9 @@ class TracerAlumniController extends BaseController
                         return web_response(202, "Update Successfully", self::PATH2);
                     }
                 } else {
+                    if ($auth_data->pengguna->role_pengguna->where('is_aktif', 1)->first()->id_role == '2') {
+                        return web_response(202, "Update Successfully", self::PATHGURU);
+                    }
                     return web_response(202, "Update Successfully", self::PATH);
                 }
             } catch (\Exception $e) {

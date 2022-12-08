@@ -14,6 +14,7 @@ use App\Models\WaliKelas;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\Datatables\Datatables;
 use App\Libraries\Humas\LibAlumni;
+use App\Models\Jurusan;
 
 class TracerAlumniWaliKelasController extends BaseController
 {
@@ -32,7 +33,7 @@ class TracerAlumniWaliKelasController extends BaseController
         $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
         if ($find_kelas) {
             return view('guru.wali-kelas.tracer-alumni.export-tracer-alumni', compact('auth_data', 'find_kelas', 'id_kelas', 'tahun_lulus', 'data_kelas'));
-        } else { }
+        }
     }
 
     public function changeTracerAlumniWaliKelas(Request $request)
@@ -42,6 +43,24 @@ class TracerAlumniWaliKelasController extends BaseController
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'wali-kelas/tracer-alumni/' . $input->id_kelas . '/' . $input->tahun_lulus,
         ];
+    }
+
+    public function editTracerAlumniWaliKelas(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $data_jurusan = Jurusan::all();
+
+        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
+            $data_kelas = Kelas::where('tingkat', 9)->get();
+            $alumni = Alumni::where('id_alumni', $id)->with('smp', 'calon_siswa')->first();
+            // return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni-smp', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
+        } else {
+            $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
+            $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
+        }
+        return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
+        // return view('guru.wali-kelas.tracer-alumni.edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
     public function exportAlumnniWaliKelas(Request $request, $id_kelas, $tahun_lulus)
     {
