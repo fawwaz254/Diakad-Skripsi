@@ -1,6 +1,6 @@
 <div class="row clearfix">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        @if(Request::segment(1) == 'humas')
+        @if (Request::segment(1) == 'humas')
             <button type="button" onclick="viewGuru()" class="btn btn-default">
                 Data Histori Absensi Guru dan Pegawai
             </button>
@@ -8,9 +8,9 @@
                 Data Histori Absensi Siswa
             </button>
             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-            <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
-                Data Histori Absensi Siswa Pondok
-            </button>
+                <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
+                    Data Histori Absensi Siswa Pondok
+                </button>
             @endif
         @endif
         <div class="card" style="margin-top: 10px">
@@ -29,10 +29,13 @@
                                 Kelas
                             </h2>
                             <select class="form-control show-tick" name="kelas">
-                                <option @if ($id_kelas == "0") selected @endif value="0">-- Semua --</option>
+                                <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
+                                </option>
                                 @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-                                <option @if ($id_kelas == "1") selected @endif value="1">-- Madrasah Tsanawiyah (MTs) --</option>
-                                <option @if ($id_kelas == "2") selected @endif value="2">-- Madrasah Aliyah (MA) --</option>
+                                    <option @if ($id_kelas == '1') selected @endif value="1">-- Madrasah
+                                        Tsanawiyah (MTs) --</option>
+                                    <option @if ($id_kelas == '2') selected @endif value="2">-- Madrasah
+                                        Aliyah (MA) --</option>
                                 @endif
                                 @foreach ($kelas as $k)
                                     <option @if ($id_kelas == $k->id_kelas) selected @endif
@@ -45,15 +48,18 @@
                             <h2 class="card-inside-title">
                                 Status
                             </h2>
-                            <select class="form-control show-tick" name="status"> 
-                                
-                                <option @if ($status == "0") selected @endif value="0">-- Semua --</option>
-                                <option @if ($status == "Masuk") selected @endif value="Masuk">Masuk</option>
-                                <option @if ($status == "izin") selected @endif  value="izin">Izin</option>
-                                <option @if ($status == "sakit") selected @endif  value="sakit">Sakit</option>
-                                <option @if ($status == "Masuk | Telat") selected @endif  value="Masuk | Telat">Masuk | Telat</option>
-                                <option @if ($status == "Alpha") selected @endif  value="Alpha">Alpha</option>
-                                <option @if ($status == "Belum Absent") selected @endif  value="Belum Absent">Belum Absent</option>
+                            <select class="form-control show-tick" name="status">
+
+                                <option @if ($status == '0') selected @endif value="0">-- Semua --
+                                </option>
+                                <option @if ($status == 'Masuk') selected @endif value="Masuk">Masuk</option>
+                                <option @if ($status == 'izin') selected @endif value="izin">Izin</option>
+                                <option @if ($status == 'sakit') selected @endif value="sakit">Sakit</option>
+                                <option @if ($status == 'Masuk | Telat') selected @endif value="Masuk | Telat">Masuk |
+                                    Telat</option>
+                                <option @if ($status == 'Alpha') selected @endif value="Alpha">Alpha</option>
+                                <option @if ($status == 'Belum Absent') selected @endif value="Belum Absent">Belum
+                                    Absent</option>
                             </select>
                         </div>
 
@@ -110,15 +116,15 @@
     </div>
 </div>
 <br>
-<a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel/'.$id_kelas.'/'.$date)}}" target="_blank"
-    class="btn bg-purple waves-effect">
+<a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel/' . $id_kelas . '/' . $date) }}"
+    target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
 
-    <a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel-week/'.$id_kelas.'/'.$date)}}"
+<a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-week/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
 
-<a href="{{url(Request::segment(1).'/absensi/histori-absensi-siswa/export-laravel-mount/'.$id_kelas.'/'.$date)}}"
+<a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-mount/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
 <br>
@@ -143,58 +149,66 @@
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Status</th>
-                                {{-- @if(Request::segment(1) == 'humas') --}}
+                                {{-- @if (Request::segment(1) == 'humas') --}}
                                 <th style="text-align: center;">Action</th>
                                 {{-- @endif --}}
                             </tr>
                         </thead>
                         <tbody>
                             @php
-                            $no = 1;
+                                $no = 1;
                             @endphp
-                            @foreach ($hasil as  $r)
-                                @if ($no % 2 == 0)
-                                    <tr style="background: #DDA0DD">
-                                    @else
-                                    <tr>
-                                @endif
-                                @if ($r['shift'])
-                                @if($r['status'] == $status || $status == '0')
-                                    <td style="text-align: center;">{{ $no++}}</td>
-                                    <td style="text-align: center;">{{ $r['kelas'] }}</td>
-                                    <td style="text-align: center;">{{ $r['nis'] }}</td>
-                                    <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-
-                                    <td>{{ $r['check_in'] }}</td>
-                                    <td>{{ $r['check_out'] }}</td>
-                                    <td
-                                        @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
-                                        {{ $r['status'] }}</td>
-
-                                    {{-- @if(Request::segment(1) == 'humas') --}}
-                                    <td style="text-align: center;display:flex;justify-content:center">
-                                        @if ($r['id_presensi_pengguna'] == '')
-                                            <button type="button" class="btn bg-teal waves-effect"
-                                                onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
-                                                <i class="material-icons">edit</i>
-                                            </button>
+                            @if (!empty($hasil))
+                                @foreach ($hasil as $r)
+                                    @if ($no % 2 == 0)
+                                        <tr style="background: #DDA0DD">
                                         @else
-                                            <button type="button" class="btn bg-teal waves-effect"
-                                                onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                            <button data-id="{{ $r['id_presensi_pengguna'] }}" style="margin-left:3px;"
-                                                class="btn bg-red waves-effect delete-record">
-                                                <i class="material-icons">delete</i>
-                                            </button>
-                                        @endif
-                                    </td>
-                                    {{-- @endif --}}
-                                    </tr>
+                                        <tr>
                                     @endif
-                                @else
-                                @endif
-                            @endforeach
+                                    @if ($r['shift'])
+                                        @if ($r['status'] == $status || $status == '0')
+                                            <td style="text-align: center;">{{ $no++ }}</td>
+                                            <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                            <td style="text-align: center;">{{ $r['nis'] }}</td>
+                                            <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
+
+                                            <td>{{ $r['check_in'] }}</td>
+                                            <td>{{ $r['check_out'] }}</td>
+                                            <td
+                                                @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
+                                                {{ $r['status'] }}</td>
+
+                                            {{-- @if (Request::segment(1) == 'humas') --}}
+                                            <td style="text-align: center;display:flex;justify-content:center">
+                                                @if ($r['id_presensi_pengguna'] == '')
+                                                    <button type="button" class="btn bg-teal waves-effect"
+                                                        onclick="addAbsensi('{{ $r['id_pengguna'] }}')">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn bg-teal waves-effect"
+                                                        onclick="editAbsensi('{{ $r['id_presensi_pengguna'] }}')">
+                                                        <i class="material-icons">edit</i>
+                                                    </button>
+                                                    <button data-id="{{ $r['id_presensi_pengguna'] }}"
+                                                        style="margin-left:3px;"
+                                                        class="btn bg-red waves-effect delete-record">
+                                                        <i class="material-icons">delete</i>
+                                                    </button>
+                                                @endif
+                                            </td>
+                                            {{-- @endif --}}
+                                            </tr>
+                                        @endif
+                                    @else
+                                    @endif
+                                @endforeach
+                            @else
+                                {{-- untuk sekolah yang belum support fingerprint --}}
+                                <div class="alert alert-danger" role="alert">
+                                    Data Kosong!
+                                </div>
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -205,7 +219,6 @@
 
 @include('scriptjs')
 <script type="text/javascript">
-
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
     }
@@ -215,11 +228,13 @@
     }
 
     function addAbsensi(id_pengguna) {
-        window.location = `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
+        window.location =
+            `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${id_pengguna}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/add`
     }
 
     function editAbsensi(currUser) {
-        window.location = `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
+        window.location =
+            `/{{ Request::segment(1) }}#absensi/histori-absensi-siswa/${currUser}/${$('input[name=id_kelas]').val()}/${$('input[name=date]').val()}/edit`
     }
 
 
@@ -251,7 +266,7 @@
                             });
                             loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/{{ Request::segment(4) }}/' +
                                 $('input[name=id_kelas]').val() + '/' +
-                                $('input[name=date]').val() + '/0') ;
+                                $('input[name=date]').val() + '/0');
                         },
                     });
                 }
