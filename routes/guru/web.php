@@ -69,6 +69,7 @@ use App\Http\Controllers\Guru\ManajemenTandaTangan\ApproveTandaTanganDigital;
 use App\Http\Controllers\Guru\WaliKelas\BiodataSiswaController;
 use App\Http\Controllers\Guru\WaliKelas\WaliKelasSKPIController;
 use App\Http\Controllers\Guru\WaliKelas\WaliMuridController;
+use App\Http\Controllers\Humas\Alumni\TracerAlumniController;
 use App\Http\Controllers\Tendik\KegiatanHarian\FormLainnyaController;
 use App\Models\WaliMurid;
 
@@ -569,6 +570,8 @@ Route::middleware(['token_staff'])->group(function () {
             //Menu Tracer Alumni
             Route::get('tracer-alumni', [TracerAlumniWaliKelasController::class, 'cetakTracerAlumniWaliKelas']);
             Route::post('tracer-alumni', [TracerAlumniWaliKelasController::class, 'changeTracerAlumniWaliKelas']);
+            Route::post('tracer-alumni/action/{mode}/{id}', [TracerAlumniController::class, 'actionTracerAlumni']);
+            Route::get('tracer-alumni/edit/{id}', [TracerAlumniWaliKelasController::class, 'editTracerAlumniWaliKelas']);
             Route::get('tracer-alumni/{id_kelas}/{tahun_lulus}', [TracerAlumniWaliKelasController::class, 'cetakTracerAlumniWaliKelas']);
             Route::get('tracer-alumni/datatables/{id_kelas}/{tahun_lulus}', [TracerAlumniWaliKelasController::class, 'datatablesCetakTracerAlumniWaliKelas']);
             Route::get('tracer-alumni/export-alumni/{id_kelas}/{tahun_lulus}', [TracerAlumniWaliKelasController::class, 'exportAlumnniWaliKelas']);

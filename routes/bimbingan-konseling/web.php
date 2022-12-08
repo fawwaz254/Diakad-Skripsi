@@ -185,5 +185,14 @@ Route::middleware(['token_staff'])->group(function () {
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
             Route::post('subkategori-bykategori', [InputPelanggaranController::class, 'ajaxGetSubkategoriByKategori']);
         });
+
+        Route::prefix('laporan-keuangan')->group(function () {
+            Route::get('tagihan-siswa', [TagihanSiswaController::class, 'viewTagihanSiswa']);
+            Route::post('post-view-tagihan-siswa', [TagihanSiswaController::class, 'actionViewTagihanSiswa']);
+            Route::get('tagihan-siswa/view-detail-tagihan-siswa/{thn_masuk_siswa}/{id_semester}/{id_kelompok_biaya}/{id_jalur}/{is_insert_replace}', [TagihanSiswaController::class, 'viewDetailTagihanSiswa']);
+            Route::get('tagihan-siswa/datatables/{thn_masuk_siswa}/{id_semester}/{id_kelompok_biaya}/{id_jalur}/{is_insert_replace}', [TagihanSiswaController::class, 'datatablesTagihanSiswa']);
+
+            Route::post('action-tagihan-siswa/{mode}', [TagihanSiswaController::class, 'actionTagihanSiswa']);
+        });
     });
 });
