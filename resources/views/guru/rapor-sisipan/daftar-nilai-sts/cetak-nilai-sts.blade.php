@@ -141,7 +141,7 @@
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                        {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
                                     {{-- @endif --}}
                                 </td>
                             @endif
@@ -153,7 +153,7 @@
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                        {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] ?? '' }}
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] ?? '' }}
                                     {{-- @endif --}}
                                 </td>
                             @endif
@@ -161,16 +161,15 @@
                         <td></td>
                         <td></td>
                         <td style="text-align: center;">
-                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) &&
-                                isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
-                                {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}
+                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
+                            {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6']) / 2) }}
                             {{-- @endif --}}
                         </td>
                         @foreach ($list_data as $nilai)
                             @if ($nilai->urutan == 9)
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
-                                    {{-- @if(isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
+                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
                                     {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
                                     {{-- @endif --}}
                                 </td>
@@ -178,10 +177,8 @@
                         @endforeach
 
                         <td style="text-align: center;">
-                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) &&
-                                isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) &&
-                                isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
-                                {{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}
+                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) && isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
+                            {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9']) / 3) }}
                             {{-- @endif --}}
                         </td>
                     </tr>
