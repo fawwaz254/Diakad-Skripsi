@@ -251,7 +251,7 @@ class DokumenController extends BaseController
             'tgl_penyusunan'        => 'required',
             'contact_person'        => 'required',
             'is_publik'             => 'required',
-            'file'                  => 'file|nullable|max:500000|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
+            'file'                  => 'file|nullable|max:50000|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
         ]);
 
         if ($validator->fails() && $mode != 'delete' && $mode != 'upload' && $mode != 'delete-file') {
@@ -300,32 +300,26 @@ class DokumenController extends BaseController
                                 'message' => 'Anda harus mengisi status pengguna / unit kerja ketika anda memlih status akses dokumen terbatas'
                             ];
                         } else {
-
+                            $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                            $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
                             if (isset($input->status_pengguna)) {
                                 foreach ($input->status_pengguna as $status_pengguna) {
-                                    $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                                    $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                    $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                                    $arsip_dokumen_akses->status_join_table         = $status_pengguna;
-                                    $arsip_dokumen_akses->id_unit_kerja             = null;
-                                    $arsip_dokumen_akses->created_at                = $now;
-                                    $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                                    $arsip_dokumen_akses->save();
+                                    $arsip_dokumen_akses->status_join_table = $status_pengguna;
                                 }
+                            } else {
+                                $arsip_dokumen_akses->status_join_table = null;
                             }
-
                             if (isset($input->unit_kerja)) {
                                 foreach ($input->unit_kerja as $unit_kerja) {
-                                    $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                                    $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                    $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                                    $arsip_dokumen_akses->status_join_table         = null;
-                                    $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
-                                    $arsip_dokumen_akses->created_at                = $now;
-                                    $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                                    $arsip_dokumen_akses->save();
+                                    $arsip_dokumen_akses->id_unit_kerja  = $unit_kerja;
                                 }
+                            } else {
+                                $arsip_dokumen_akses->id_unit_kerja  = null;
                             }
+                            $arsip_dokumen_akses->created_at                = $now;
+                            $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                            $arsip_dokumen_akses->save();
                         }
                     }
 
@@ -390,29 +384,26 @@ class DokumenController extends BaseController
                         // delete status_pengguna & unit_kerja
                         $data_dokumen_akses = ArsipDokumenAkses::where('id_arsip_dokumen', '=', $id)->forceDelete();
 
-                        // insert new status_pengguna
-                        foreach ($input->status_pengguna as $status_pengguna) {
-                            $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                            $arsip_dokumen_akses->status_join_table         = $status_pengguna;
-                            $arsip_dokumen_akses->id_unit_kerja             = null;
-                            $arsip_dokumen_akses->created_at                = $now;
-                            $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                            $arsip_dokumen_akses->save();
+                        $arsip_dokumen_akses                            = new ArsipDokumenAkses;
+                        $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                        $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
+                        if (isset($input->status_pengguna)) {
+                            foreach ($input->status_pengguna as $status_pengguna) {
+                                $arsip_dokumen_akses->status_join_table = $status_pengguna;
+                            }
+                        } else {
+                            $arsip_dokumen_akses->status_join_table = null;
                         }
-
-                        // insert new unit_kerja
-                        foreach ($input->unit_kerja as $unit_kerja) {
-                            $arsip_dokumen_akses                            = new ArsipDokumenAkses;
-                            $arsip_dokumen_akses->id_arsip_dokumen_akses    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                            $arsip_dokumen_akses->id_arsip_dokumen          = $arsip->id_arsip_dokumen;
-                            $arsip_dokumen_akses->status_join_table         = null;
-                            $arsip_dokumen_akses->id_unit_kerja             = $unit_kerja;
-                            $arsip_dokumen_akses->created_at                = $now;
-                            $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
-                            $arsip_dokumen_akses->save();
+                        if (isset($input->unit_kerja)) {
+                            foreach ($input->unit_kerja as $unit_kerja) {
+                                $arsip_dokumen_akses->id_unit_kerja  = $unit_kerja;
+                            }
+                        } else {
+                            $arsip_dokumen_akses->id_unit_kerja  = null;
                         }
+                        $arsip_dokumen_akses->created_at                = $now;
+                        $arsip_dokumen_akses->created_by                = $input->auth_data->pengguna->id_pengguna;
+                        $arsip_dokumen_akses->save();
                     } else {
                         // delete status_pengguna & unit_kerja
                         $data_dokumen_akses = ArsipDokumenAkses::where('id_arsip_dokumen', '=', $id)->forceDelete();
@@ -436,7 +427,7 @@ class DokumenController extends BaseController
                 }
             } elseif ($mode == 'upload') {
                 $validator = Validator::make($request->all(), [
-                    'file' => 'file|required|max:2048|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
+                    'file' => 'file|required|max:50000|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,bmp,png'
                 ]);
 
                 if ($validator->fails()) {
@@ -463,7 +454,7 @@ class DokumenController extends BaseController
                 $arsip->created_by                     = $input->auth_data->pengguna->id_pengguna;
                 $arsip->save();
 
-                return redirect('tendik#kesekretariatan/upload-dokumen/upload/' . $id);
+                return redirect(Request::segment(1) . '#kesekretariatan/upload-dokumen/upload/' . $id);
             } elseif ($mode == 'delete-file') {
 
                 $arsipDokumenFile = ArsipDokumenFile::find($input->id_arsip_dokumen_file);
@@ -502,17 +493,17 @@ class DokumenController extends BaseController
                 //         'message' => 'Delete Dokumen gagal'
                 //     ];
                 // } else {
-                    $arsip  = ArsipDokumen::find($id);
-                    $arsip->deleted_by  = $input->auth_data->pengguna->id_pengguna;
-                    $arsip->deleted_at  = $now;
-                    $arsip->save();
+                $arsip  = ArsipDokumen::find($id);
+                $arsip->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                $arsip->deleted_at  = $now;
+                $arsip->save();
 
-                    $arsip->delete();
+                $arsip->delete();
 
-                    return [
-                        'status' => 203, // SUCCESS AND LOAD TABLE
-                        'message' => 'Delete Data Dokumen Successfully'
-                    ];
+                return [
+                    'status' => 203, // SUCCESS AND LOAD TABLE
+                    'message' => 'Delete Data Dokumen Successfully'
+                ];
                 // }
             }
         }
