@@ -89,7 +89,13 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             $auth_data = $input->auth_data;
 
             $rapor_sisipan = RaporSisipan::find($id_rapor_sisipan);
-            $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->get();
+            // $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->get();
+            $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')
+                ->whereHas('pengguna.status_pengguna', function ($query) {
+                    $query->where('aktif_status_pengguna', '=', '1');
+                })
+                ->orderBy('nis_siswa')
+                ->get();
 
             $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
                 ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
