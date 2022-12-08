@@ -77,15 +77,26 @@ class TracerAlumniWaliKelasController extends BaseController
         $auth_data = $input->auth_data;
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $alumnis    = LibAlumni::getAlumnisSearchSmp($id_kelas, $tahun_lulus);
+            return Datatables::of($alumnis)->adaColumn('status', function ($item) {
+                return $item->nm_sekolah;
+            })
+                ->addColumn('action', function ($item) {
+                    $data = array(
+                        'id' => $item->id_alumni
+                    );
+                    return $data;
+                })->make(true);
         } else {
             $alumnis    = LibAlumni::getAlumnis();
+            return Datatables::of($alumnis)->addColumn('status', function ($item) {
+                return $item->status;
+            })
+                ->addColumn('action', function ($item) {
+                    $data = array(
+                        'id' => $item->id_alumni
+                    );
+                    return $data;
+                })->make(true);
         }
-        return Datatables::of($alumnis)
-            ->addColumn('action', function ($item) {
-                $data = array(
-                    'id' => $item->id_alumni
-                );
-                return $data;
-            })->make(true);
     }
 }

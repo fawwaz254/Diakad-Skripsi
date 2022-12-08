@@ -72,7 +72,13 @@
                                                 <th>Nama</th>
                                                 <th>Kelas</th>
                                                 <th>Tahun Lulus</th>
-                                                <th>Nama Sekolah</th>
+                                                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
+                                                    $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                                                    <th> Nama Sekolah</th>
+                                                @else
+                                                    <th>Status</th>
+                                                @endif
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -126,8 +132,8 @@
                 data: 'tahun_lulus'
             },
             {
-                name: 'nm_sekolah',
-                data: 'nm_sekolah'
+                name: 'status',
+                data: 'status'
             },
             {
                 data: 'action',
