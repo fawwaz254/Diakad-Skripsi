@@ -26,7 +26,7 @@
                                     <th>Tahun Lulus</th>
                                     <th>Kompetensi Keahlian</th>
                                     <th>Status</th>
-                                    <th>Status Verifikasi</th>
+                                    {{-- <th>Status Verifikasi</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -74,15 +74,15 @@
             {
                 data: 'status'
             },
-            {
-                data: 'status_verifikasi',
-                name: 'status_verifikasi',
-                searchable: false,
-                orderable: false,
-                render: function(data) {
-                    return `<span class="badge bg-` + data.color + `">` + data.status + `</span>`
-                }
-            },
+            // {
+            //     data: 'status_verifikasi',
+            //     name: 'status_verifikasi',
+            //     searchable: false,
+            //     orderable: false,
+            //     render: function(data) {
+            //         return `<span class="badge bg-` + data.color + `">` + data.status + `</span>`
+            //     }
+            // },
             {
                 data: 'action',
                 name: 'action',
