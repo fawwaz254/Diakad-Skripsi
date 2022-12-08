@@ -103,48 +103,50 @@
                             </thead>
                             <tbody>
 
-                                @foreach ($terlambat as $key => $r)
-                                    @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
-                                        <tr style="background: #01ff4d">
-                                        @else
-                                            @if ($key % 2 == 1)
-                                        <tr style="background: #DDA0DD">
-                                        @else
-                                        <tr>
+                                @if (!empty($terlambat))
+                                    @foreach ($terlambat as $key => $r)
+                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                            <tr style="background: #01ff4d">
+                                            @else
+                                                @if ($key % 2 == 1)
+                                            <tr style="background: #DDA0DD">
+                                            @else
+                                            <tr>
+                                        @endif
                                     @endif
-                                @endif
 
 
-                                <th style="text-align: center;">{{ $loop->iteration }}</th>
-                                <th style="text-align: center;">
-                                    @if (!$sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
-                                        <input id="checkbox-{{ $r->id_pengguna }}" type="checkbox" name="id_pengguna"
-                                            class="filled-in" value="{{ $r->id_pengguna }}">
-                                        <label for="checkbox-{{ $r->id_pengguna }}"></label>
-                                    @endif
-                                </th>
-                                <th>{{ $r->pengguna->nm_pengguna }}</th>
-                                <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
-                                <th>{{ $r->check_in }}</th>
-                                @php
-                                    $options = [
-                                        'join' => ', ',
-                                        'parts' => 2,
-                                        'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE,
-                                    ];
-                                @endphp
-                                <th>
-                                    {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }}
-                                </th>
-                                <th>
-                                    @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
-                                        Sudah Dilaporkan
-                                    @else
-                                        Belum Dilaporkan
-                                    @endif
-                                </th>
-                                </tr>
+                                    <th style="text-align: center;">{{ $loop->iteration }}</th>
+                                    <th style="text-align: center;">
+                                        @if (!$sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                            <input id="checkbox-{{ $r->id_pengguna }}" type="checkbox"
+                                                name="id_pengguna" class="filled-in" value="{{ $r->id_pengguna }}">
+                                            <label for="checkbox-{{ $r->id_pengguna }}"></label>
+                                        @endif
+                                    </th>
+                                    <th>{{ $r->pengguna->nm_pengguna }}</th>
+                                    <th>{{ $r->pengguna->siswa->kelas->nm_kelas }}</th>
+                                    <th>{{ $r->check_in }}</th>
+                                    @php
+                                        $options = [
+                                            'join' => ', ',
+                                            'parts' => 2,
+                                            'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE,
+                                        ];
+                                    @endphp
+                                    <th>
+                                        {{ \Carbon\carbon::parse($r->check_in)->diffForHumans(\Carbon\carbon::parse($absensi_siswa->start_time), $options) }}
+                                    </th>
+                                    <th>
+                                        @if ($sudah_terkirim->firstWhere('id_siswa', $r->pengguna->siswa->id_siswa))
+                                            Sudah Dilaporkan
+                                        @else
+                                            Belum Dilaporkan
+                                        @endif
+                                    </th>
+                                    </tr>
                                 @endforeach
+                                @endif
 
                             </tbody>
                         </table>

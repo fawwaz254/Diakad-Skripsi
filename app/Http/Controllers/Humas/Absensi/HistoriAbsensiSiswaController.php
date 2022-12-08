@@ -248,8 +248,12 @@ class HistoriAbsensiSiswaController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-        // dd($hasil);
-        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas', 'status'));
+
+        if (isset($hasil)) {
+            return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'pengguna', 'id_kelas', 'status', 'hasil'));
+        }
+        // untuk sekolah yang belum support fingerprint
+        return view('humas/absensi/histori-absensi-siswa/detail-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'pengguna', 'id_kelas', 'status'));
     }
 
     public function export_excel_mount(Request $request, $id_kelas = null, $date = null)

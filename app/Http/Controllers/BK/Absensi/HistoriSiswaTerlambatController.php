@@ -29,11 +29,16 @@ class HistoriSiswaTerlambatController extends Controller
         $absensi_siswa = ShiftMaster::where('type', 'Siswa')->first();
         $now = Carbon::parse($date)->toDateString();
         // dd($now);
-        $terlambat = PresensiPengguna::with('pengguna.siswa.kelas')->where('date', $now)->where('status_join_table', 3)->whereTime('check_in','>=',$absensi_siswa->start_time )->get();
+        if (!empty($absensi_siswa->start_time)) {
+            $terlambat = PresensiPengguna::with('pengguna.siswa.kelas')->where('date', $now)->where('status_join_table', 3)->whereTime('check_in', '>=', $absensi_siswa->start_time)->get();
+        }
         $sudah_terkirim = PelanggaranSiswa::where('tgl_pelanggaran', $now)->get();
         // dd($sudah_terkirim);
 
-        return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'terlambat', 'now', 'absensi_siswa','sudah_terkirim'));
+        if (!empty($absensi_siswa->start_time)) {
+            return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'terlambat', 'now', 'absensi_siswa', 'sudah_terkirim'));
+        }
+        return view('bk/absensi/view-absensi-terlambat', compact('auth_data', 'now', 'absensi_siswa', 'sudah_terkirim'));
     }
 
     public function postSiswaTerlambat(Request $request){
@@ -100,5 +105,4 @@ class HistoriSiswaTerlambatController extends Controller
             ]);
         }
     }
-
 }
