@@ -63,40 +63,40 @@ class TracerAlumniController extends BaseController
         // if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1') {
         //     return view('humas.alumni.tracer-alumni.view-tracer-alumni-smp');
         // } else {
-            return view('humas.alumni.tracer-alumni.add-excel-tracer-alumni');
+        return view('humas.alumni.tracer-alumni.add-excel-tracer-alumni');
         // }
     }
 
     public function uploadFileExcel(Request $request)
-	{
-		$input = (object) $request->input();
-		$auth_data = $input->auth_data;
-		$now = Carbon::now(env('APP_TIMEZONE', ''));
-		if ($request->hasFile('file-excel')) {
-			// $path = $request->file('file-excel')->getRealPath();
-			// $data = Excel::load($path)->get();
-			Excel::import(new TracerAlumniImport($auth_data, $now), $request->file('file-excel'));
-			return [
-				'status' 	=> 200, // FAILED
-				'message' 	=> "Upload Sukses"
-			];;
-		} else {
-			return [
-				'status' 	=> 300, // FAILED
-				'message' 	=> "File Excel tidak ditemukan"
-			];
-		}
-	}
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        if ($request->hasFile('file-excel')) {
+            // $path = $request->file('file-excel')->getRealPath();
+            // $data = Excel::load($path)->get();
+            Excel::import(new TracerAlumniImport($auth_data, $now), $request->file('file-excel'));
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];;
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
+        }
+    }
 
-	public function downloadFileExcel()
-	{
-		$file = public_path() . "/excel/ContohFileExelUploadTracerAlumniSmp.xlsx";
-		$headers = [
-			'Content-Type' => 'application/xlsx',
-		];
+    public function downloadFileExcel()
+    {
+        $file = public_path() . "/excel/ContohFileExelUploadTracerAlumniSmp.xlsx";
+        $headers = [
+            'Content-Type' => 'application/xlsx',
+        ];
 
-		return response()->download($file, 'ContohFileExelUploadTracerAlumniSmp.xlsx', $headers);
-	}
+        return response()->download($file, 'ContohFileExelUploadTracerAlumniSmp.xlsx', $headers);
+    }
 
 
     public function datatablesTracerAlumni(Request $request)
@@ -153,12 +153,11 @@ class TracerAlumniController extends BaseController
         if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2') {
             $data_kelas = Kelas::where('tingkat', 9)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('smp', 'calon_siswa')->first();
+            // return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni-smp', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
         } else {
             $data_kelas = Kelas::where('tingkat', 12)->orWhere('tingkat', 3)->get();
             $alumni = Alumni::where('id_alumni', $id)->with('calon_siswa')->first();
         }
-
-
         return view('humas.alumni.tracer-alumni.add-edit-tracer-alumni', compact('auth_data', 'data_jurusan', 'alumni', 'data_kelas'));
     }
 
@@ -277,7 +276,7 @@ class TracerAlumniController extends BaseController
                 return error_response($e);
             }
         } elseif ($mode == 'add2') {
-         
+
             DB::beginTransaction();
 
             try {
@@ -357,12 +356,12 @@ class TracerAlumniController extends BaseController
             DB::beginTransaction();
 
             try {
-
-                $jurusan = CalonSiswaBaru::where('id_c_siswa',  $request->id_c_siswa)->first();
-                $jurusan->id_jurusan = $request->jurusan;
-                $jurusan->alamat_jalan = $request->alamat_siswa;
-                $jurusan->nomor_hp = $request->nomor_hp;
-                $jurusan->save();
+                // dd($request->id_c_siswa);
+                // $jurusan = CalonSiswaBaru::where('id_c_siswa',  $request->id_c_siswa)->first();
+                // $jurusan->id_jurusan = $request->jurusan;
+                // $jurusan->alamat_jalan = $request->alamat_siswa;
+                // $jurusan->nomor_hp = $request->nomor_hp;
+                // $jurusan->save();
 
                 $alumni =   Alumni::where('id_alumni', $request->id_alumni)->first();
                 $alumni->id_kelas  = $request->id_kelas;
@@ -401,24 +400,19 @@ class TracerAlumniController extends BaseController
                 $data5['created_by']             = $auth_data->pengguna->id_pengguna;
                 $data5['created_at']             = Carbon::now(env('APP_TIMEZONE', ''));
 
-
                 if ($request->old_status == 'bekerja') {
-                    $hapus_old_status = AlumniBekerja::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status = AlumniBekerja::where('id_alumni', $request->id_alumni)->first();
                     $hapus_old_status->delete();
                 } elseif ($request->old_status == 'usaha') {
-                    $hapus_old_status = AlumniWirausaha::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status = AlumniWirausaha::where('id_alumni', $request->id_alumni)->first();
                     $hapus_old_status->delete();
                 } elseif ($request->old_status == 'kuliah') {
-                    $hapus_old_status = AlumniKuliah::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status = AlumniKuliah::where('id_alumni', $request->id_alumni)->first();
                     $hapus_old_status->delete();
                 } elseif ($request->old_status == 'menunggu') {
-                    $hapus_old_status = AlumniMenunggu::where('id_alumni',$request->id_alumni)->first();
-                    $hapus_old_status->delete();
-                } elseif ($request->old_status == 'smp') {
-                    $hapus_old_status = AlumniSmp::where('id_alumni',$request->id_alumni)->first();
+                    $hapus_old_status = AlumniMenunggu::where('id_alumni', $request->id_alumni)->first();
                     $hapus_old_status->delete();
                 }
-
                 if ($request->status == 'bekerja') {
                     LibAlumni::storeWorkplace($data5);
                 } elseif ($request->status == 'usaha') {
@@ -428,22 +422,22 @@ class TracerAlumniController extends BaseController
                 } elseif ($request->status == 'menunggu') {
                     LibAlumni::storeIdleAlumni($data5);
                 } elseif ($request->status == 'smp') {
+                    $hapus_old_status = AlumniSmp::where('id_alumni', $request->id_alumni)->first();
+                    $hapus_old_status->delete();
                     LibAlumni::storeSMP($data5);
                 }
 
                 DB::commit();
-            
-                if($cek = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()){
+
+                if ($cek = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first()) {
                     if (Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->where('id_kelas', null)->first()) {
                         return web_response(202, "Update Successfully", self::PATH);
                     } else {
                         return web_response(202, "Update Successfully", self::PATH2);
                     }
-                }else{
+                } else {
                     return web_response(202, "Update Successfully", self::PATH);
                 }
-
-                
             } catch (\Exception $e) {
 
                 DB::rollback();
@@ -487,7 +481,6 @@ class TracerAlumniController extends BaseController
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'alumni/tracer-alumni/cetak/' . $input->id_kelas . '/' . $input->tahun_lulus,
         ];
-
     }
 
 
@@ -498,7 +491,6 @@ class TracerAlumniController extends BaseController
             'status' => 204, // SUCCESS AND LOAD CONTENT
             'path' => 'alumni/tracer-alumni/cetak2/' . $input->id_kelas . '/' . $input->tahun_lulus,
         ];
-
     }
 
 

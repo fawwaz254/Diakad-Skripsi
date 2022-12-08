@@ -31,9 +31,8 @@ class TracerAlumniWaliKelasController extends BaseController
         $data_kelas = Kelas::all();
         $find_kelas = $data_kelas->firstWhere('id_kelas', $wali_kelas->id_kelas);
         if ($find_kelas) {
-            return view('guru.wali-kelas.tracer-alumni.export-tracer-alumni', compact('auth_data', 'find_kelas', 'id_kelas', 'tahun_lulus','data_kelas'));
-        } else {
-        }
+            return view('guru.wali-kelas.tracer-alumni.export-tracer-alumni', compact('auth_data', 'find_kelas', 'id_kelas', 'tahun_lulus', 'data_kelas'));
+        } else { }
     }
 
     public function changeTracerAlumniWaliKelas(Request $request)
@@ -62,6 +61,12 @@ class TracerAlumniWaliKelasController extends BaseController
         } else {
             $alumnis    = LibAlumni::getAlumnis();
         }
-        return Datatables::of($alumnis)->make(true);
+        return Datatables::of($alumnis)
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_alumni
+                );
+                return $data;
+            })->make(true);
     }
 }

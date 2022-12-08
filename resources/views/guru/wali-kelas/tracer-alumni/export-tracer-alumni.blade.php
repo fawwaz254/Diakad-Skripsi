@@ -17,11 +17,12 @@
                                 <div class="form-line">
                                     <select class="form-control show-tick" name="id_kelas">
                                         @foreach ($data_kelas as $kelas)
-                                        <option value="{{ $kelas->id_kelas }}" @if($find_kelas->id_kelas ==  $kelas->id_kelas) selected @endif >
-                                            {{ $kelas->nm_kelas }}
-                                        </option>
+                                            <option value="{{ $kelas->id_kelas }}"
+                                                @if ($find_kelas->id_kelas == $kelas->id_kelas) selected @endif>
+                                                {{ $kelas->nm_kelas }}
+                                            </option>
                                         @endforeach
-                                            
+
                                     </select>
                                 </div>
                             </div>
@@ -30,7 +31,7 @@
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Tahun Lulus </h2>
                             <input type="number" class="form-control" name="tahun_lulus" required=""
-                                aria-required="true" aria-invalid="true" 
+                                aria-required="true" aria-invalid="true"
                                 value="{{ !empty($tahun_lulus) ? $tahun_lulus : '' }}">
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
@@ -46,8 +47,7 @@
                                     target="_blank" style="margin-top: 30px" class="btn bg-green waves-effect ">
                                     <i class="material-icons">local_printshop</i> Cetak</a>
                             @else
-                                <a href=""
-                                    target="_blank" style="margin-top: 30px; pointer-events: none;  "
+                                <a href="" target="_blank" style="margin-top: 30px; pointer-events: none;  "
                                     class="btn bg-grey waves-effect ">
                                     <i class="material-icons">local_printshop</i> Cetak</a>
                             @endif
@@ -73,6 +73,7 @@
                                                 <th>Kelas</th>
                                                 <th>Tahun Lulus</th>
                                                 <th>Nama Sekolah</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -89,15 +90,16 @@
 </div>
 @include('scriptjs')
 <script>
-    var modul_url         = '{{Request::segment(2)}}';
-    var menu_url           = '{{Request::segment(3)}}';
-    var id_kelas          = '{{ $id_kelas }}';
-    var tahun_lulus         = '{{ $tahun_lulus }}';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/datatables/' + id_kelas + '/' + tahun_lulus;
-    // var edit_url        = role_url + '#' + modul_url + '/tracer-alumni/edit';
+    var modul_url = '{{ Request::segment(2) }}';
+    var menu_url = '{{ Request::segment(3) }}';
+    var id_kelas = '{{ $id_kelas }}';
+    var tahun_lulus = '{{ $tahun_lulus }}';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/datatables/' + id_kelas + '/' +
+        tahun_lulus;
+    var edit_url = role_url + '#' + modul_url + '/tracer-alumni/edit';
     // var detail_url      = role_url + '#' + modul_url + '/kategori-pertanyaan/detail';
     // var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/tracer-alumni/action/delete';
-// alert(datatable_url);
+    // alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -106,20 +108,50 @@
             url: datatable_url,
             type: 'GET'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nm_c_siswa' },
-            { data: 'nm_kelas' },
-            { data: 'tahun_lulus' },
-            { data: 'nm_sekolah' },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                name: 'nm_c_siswa',
+                data: 'nm_c_siswa'
+            },
+            {
+                name: 'nm_kelas',
+                data: 'nm_kelas'
+            },
+            {
+                name: 'tahun_lulus',
+                data: 'tahun_lulus'
+            },
+            {
+                name: 'nm_sekolah',
+                data: 'nm_sekolah'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id + '">' +
+                        '    <i class="material-icons">create</i>' +
+                        '</a> ';
+                }
+            }
         ]
     });
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 </script>
-
