@@ -16,10 +16,10 @@ class Staff extends Model
 
     protected $primaryKey = 'id_staff';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_pengguna',
         'id_unit_kerja',
@@ -82,11 +82,12 @@ class Staff extends Model
 
     protected $guarded = [];
 
-    public function unit_kerja(){
+    public function unit_kerja()
+    {
         return $this->belongsTo(UnitKerja::class, 'id_unit_kerja');
     }
-
-
-
-
+    public function pengguna()
+    {
+        return $this->belongsTo(Pengguna::class, 'id_pengguna');
+    }
 }
