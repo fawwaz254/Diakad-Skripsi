@@ -1,5 +1,5 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    <h2 class="status-header"> Data Wirausaha </h2>
+    <h2 class="h4"> Data Wirausaha </h2>
     <h2 class="card-inside-title"> Nama Usaha </h2>
     <input type="text" class="form-control" name="nm_usaha" required="" aria-required="true" aria-invalid="true"
         value="{{ !empty($alumni->usaha) ? $alumni->usaha->nm_usaha : '' }}">
