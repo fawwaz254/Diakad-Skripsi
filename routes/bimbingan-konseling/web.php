@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\BK\Absensi\HistoriSiswaTerlambatController;
+use App\Providers\RouteServiceProvider;
 use App\Http\Controllers\BK\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
 use App\Http\Controllers\Guru\GuruPiket\RekapKesehatanController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
+use App\Http\Controllers\BK\Absensi\HistoriSiswaTerlambatController;
 use App\Http\Controllers\BK\PenangananSiswa\JenisTindakanController;
 use App\Http\Controllers\BK\PenangananSiswa\JurnalTindakanController;
 use App\Http\Controllers\Humas\Absensi\HistoriAbsensiSiswaController;
@@ -16,7 +17,7 @@ use App\Http\Controllers\BK\DataPelanggaran\KategoriPelanggaranController;
 use App\Http\Controllers\BK\PenangananSiswa\TindakanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\KesimpulanPelanggaranController;
 use App\Http\Controllers\BK\DataPelanggaran\SubkategoriPelanggaranController;
-use App\Providers\RouteServiceProvider;
+use App\Http\Controllers\Guru\WaliKelas\RekapKesehatanController as rekapKesehatanSiswa;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('bimbingan-konseling')->group(function () {
@@ -78,7 +79,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('monitoring-kesehatan')->group(function () {
             // MENU Rekap Kesehatan Siswa
             Route::get('rekap-kesehatan', [RekapKesehatanController::class, 'viewRekapKesehatan']);
-            Route::get('rekap-kesehatan/user/{id}/{date}', [RekapKesehatanController::class, 'viewRekapKesehatanSiswa']);
+            Route::get('rekap-kesehatan/user/{id}/{date}', [rekapKesehatanSiswa::class, 'viewRekapKesehatanSiswa']);
             Route::get('rekap-kesehatan/detail/form/{id}', [FormKesehatanController::class, 'viewDetailFormKesehatan']);
 
             Route::get('rekap-kesehatan/{id}', [RekapKesehatanController::class, 'viewDetailRekapKesehatan']);
