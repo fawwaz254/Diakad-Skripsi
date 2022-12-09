@@ -12,8 +12,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -41,7 +40,7 @@
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
-    // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
 
     var primary_table = $('#primary_table').DataTable({
@@ -78,7 +77,7 @@
             //     render: function(data) {
             //         return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
             //     }},
-                {
+            {
                 data: 'semester',
                 name: 'semester',
                 className: 'align-center'
@@ -90,8 +89,12 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    pdf_url + '/' + data.id + '"  target="_blank">' +
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        print_url + '/' + data.id + '"  target="_blank">' +
+                        '    <i class="material-icons">picture_in_picture</i>' +
+                        '</a> ' +
+                        '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        pdf_url + '/' + data.id + '"  target="_blank">' +
                         '    <i class="material-icons">picture_as_pdf</i>' +
                         '</a> ';
                 }
@@ -113,4 +116,4 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-</script> 
+</script>

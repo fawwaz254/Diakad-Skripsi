@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Akademik\RaporSisipan;
 
+use App\Exports\RaporSisipanSTS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
@@ -118,7 +119,7 @@ class RaporSisipanController extends Controller
                 $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
             })
             ->whereHas('komponen_nilai', function ($query) {
-                $query->whereIn('urutan', [1, 2, 5, 6, 9]);
+                $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
 
         $nilai_siswa = [];
@@ -214,17 +215,17 @@ class RaporSisipanController extends Controller
                     foreach ($nilaiRapor as $a) {
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
 
-                        $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
-                        $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
-                        $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
+                        $nilai_sumatif1 = $list_data->firstWhere('urutan', '=', '5');
+                        $nilai_sumatif2 = $list_data->firstWhere('urutan', '=', '6');
+                        $sts = $list_data->firstWhere('urutan', '=', '9');
                         if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                            $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '5'] =  $nilaiRapor['nilai'];
                         }
                         if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                            $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '6'] =  $nilaiRapor['nilai'];
                         }
                         if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                            $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '9'] =  $nilaiRapor['nilai'];
                         }
                     }
                 }
