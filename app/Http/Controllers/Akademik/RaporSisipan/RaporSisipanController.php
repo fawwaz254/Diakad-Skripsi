@@ -131,18 +131,18 @@ class RaporSisipanController extends Controller
                 foreach ($nilaiRapor as $a) {
                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
 
-                    $nilai_sumatif1 = $list_data->firstWhere('urutaan', '=', '5');
-                    $nilai_sumatif2 = $list_data->firstWhere('urutaan', '=', '6');
-                    $sts = $list_data->firstWhere('urutaan', '=', '9');
-                    if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                        $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-                    }
-                    if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                        $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-                    }
-                    if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                        $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-                    }
+                    // $nilai_sumatif1 = $list_data->firstWhere('urutaan', '=', '5');
+                    // $nilai_sumatif2 = $list_data->firstWhere('urutaan', '=', '6');
+                    // $sts = $list_data->firstWhere('urutaan', '=', '9');
+                    // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
+                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
+                    // }
+                    // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
+                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
+                    // }
+                    // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
+                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
+                    // }
                 }
             }
         }
