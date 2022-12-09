@@ -89,9 +89,9 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                    return '<a class=" btn btn-success " href="' +
                         print_url + '/' + data.id + '"  target="_blank">' +
-                        '    <i class="material-icons">picture_in_picture</i>' +
+                        '    Excel' +
                         '</a> ' +
                         '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         pdf_url + '/' + data.id + '"  target="_blank">' +
