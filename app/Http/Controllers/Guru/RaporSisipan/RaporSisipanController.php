@@ -18,6 +18,7 @@ use App\Models\NilaiRaporSisipan;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
 use App\Imports\UploadRaporSisipanSTS;
+use App\Jobs\CreateRaporSisipan;
 use App\Models\Jurusan;
 use App\Models\Setting;
 use Auth;
@@ -126,18 +127,29 @@ class RaporSisipanController extends Controller
                     $komponen_nilai = KomponenNilaiRaporSisipan::where('status', 1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_nilai as $komponen) {
-                            usleep(1);
+                            // usleep(1);
                             $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
-                            $nilai_rapor_sisipan                                    = new NilaiRaporSisipan;
-                            $nilai_rapor_sisipan->id_nilai_rapor_sisipan            = $id;
-                            $nilai_rapor_sisipan->id_rapor_sisipan                  = $rapor_sisipan->id_rapor_sisipan;
-                            $nilai_rapor_sisipan->id_komponen_nilai                 = $komponen->id_komponen_nilai;
-                            $nilai_rapor_sisipan->id_siswa                          = $s->id_siswa;
-                            $nilai_rapor_sisipan->nilai                             = 0;
-                            $nilai_rapor_sisipan->created_by                        = $input->auth_data->pengguna->id_pengguna;
-                            $nilai_rapor_sisipan->save();
+                            // $nilai_rapor_sisipan                                    = new NilaiRaporSisipan;
+                            // $nilai_rapor_sisipan->id_nilai_rapor_sisipan            = $id;
+                            // $nilai_rapor_sisipan->id_rapor_sisipan                  = $rapor_sisipan->id_rapor_sisipan;
+                            // $nilai_rapor_sisipan->id_komponen_nilai                 = $komponen->id_komponen_nilai;
+                            // $nilai_rapor_sisipan->id_siswa                          = $s->id_siswa;
+                            // $nilai_rapor_sisipan->nilai                             = 0;
+                            // $nilai_rapor_sisipan->created_by                        = $input->auth_data->pengguna->id_pengguna;
+                            // $nilai_rapor_sisipan->save();
+
+                            $list_data[] = [
+                                'id_nilai_rapor_sisipan' =>  $id,
+                                'id_rapor_sisipan' => $rapor_sisipan->id_rapor_sisipan,
+                                'id_komponen_nilai' => $komponen->id_komponen_nilai,
+                                'id_siswa' => $s->id_siswa,
+                                'nilai' => 0,
+                                'created_by' => $input->auth_data->pengguna->id_pengguna,
+                            ];
                         }
                     }
+                    CreateRaporSisipan::dispatch($list_data);
+
                     DB::Commit();
 
                     return [
