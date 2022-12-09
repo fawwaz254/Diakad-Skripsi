@@ -3,9 +3,10 @@
         <h2><a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
                     class="material-icons">add</i><span>Tambah Nilai</span></a>
-                   <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
-                        href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel') }}"><i
-                            class="material-icons">cloud_upload</i><span>  Import Excel</span></a></h2>
+            <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel') }}"><i
+                    class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -44,16 +45,20 @@
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
-    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/excel';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/pdf';
-
+    var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
         responsive: true,
-        pageLength : 5,
-    lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']],
+        pageLength: 5,
+        lengthMenu: [
+            [5, 10, 20, -1],
+            [5, 10, 20, 'All']
+        ],
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -87,9 +92,10 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
-                }},
-                {
+                    return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`;
+                }
+            },
+            {
                 data: 'semester',
                 name: 'semester',
                 className: 'align-center'
@@ -102,7 +108,7 @@
                 className: 'align-center',
                 render: function(data) {
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                    nilai_url + '/' + data.id + '">' +
+                        nilai_url + '/' + data.id + '">' +
                         '    <i class="material-icons">visibility</i>' +
                         '</a> ';
                 }
@@ -115,7 +121,7 @@
                 className: 'align-center',
                 render: function(data) {
                     return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    excel_url + '/' + data.id + '" target="_blank">' +
+                        excel_url + '/' + data.id + '" target="_blank">' +
                         '    <i class="material-icons">backup</i>' +
                         '</a> ';
                 }
@@ -127,14 +133,14 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    // return  '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    // print_url + '/' + data.id + '"  target="_blank">' +
-                    //     '    <i class="material-icons">picture_in_picture</i>' +
-                    //     '</a> '+
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    pdf_url + '/' + data.id + '"  target="_blank">' +
+                    return '<a class=" btn btn-success" href="' +
+                        print_url + '/' + data.id + '"  target="_blank">' +
+                        '    Eksel' +
+                        '</a> ' +
+                        '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        pdf_url + '/' + data.id + '"  target="_blank">' +
                         '    <i class="material-icons">picture_as_pdf</i>' +
-                        '</a> '+
+                        '</a> ' +
                         '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
                         delete_url + '\', this)" data-id="' + data.id + '">' +
                         '    <i class="material-icons">delete_forever</i>' +
@@ -153,4 +159,4 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-</script> 
+</script>

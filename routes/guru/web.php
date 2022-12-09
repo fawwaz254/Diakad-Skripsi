@@ -642,6 +642,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
                 Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 Route::post('jurusan', [RaporSisipanController::class, 'getDataFromJurusan']);
 
