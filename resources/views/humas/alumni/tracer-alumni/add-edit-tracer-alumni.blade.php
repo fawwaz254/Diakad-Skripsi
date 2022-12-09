@@ -5,7 +5,6 @@
         font-weight: normal;
         color: #111;
     }
-
 </style>
 
 <div class="container-fluid">
@@ -44,7 +43,7 @@
                                         <option value="" selected disabled> Pilih Jurusan </option>
                                         @foreach ($data_jurusan as $jurusan)
                                             <option value="{{ $jurusan->id_jurusan }}"
-                                                {{ isset($alumni) && $alumni->calon_siswa->jurusan->id_jurusan == $jurusan->id_jurusan ? 'selected' : '' }}>
+                                                {{ isset($alumni) && isset($alumni->calon_siswa->jurusan) && $alumni->calon_siswa->jurusan->id_jurusan == $jurusan->id_jurusan ? 'selected' : '' }}>
                                                 {{ $jurusan->nm_jurusan }}
                                             </option>
                                         @endforeach
@@ -79,88 +78,90 @@
 
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Nomor Telepon/HP/WA </h2>
-                            <input type="text" class="form-control" name="nomor_hp" required="" aria-required="true"
-                                aria-invalid="true"
+                            <input type="text" class="form-control" name="nomor_hp" required=""
+                                aria-required="true" aria-invalid="true"
                                 value="{{ !empty($alumni) ? $alumni->calon_siswa->nomor_hp : '' }}">
                         </div>
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Email </h2>
-                            <input type="text" class="form-control" name="email" required="" aria-required="true"
-                                aria-invalid="true" value="{{ !empty($alumni) ? $alumni->email : '' }}">
+                            <input type="text" class="form-control" name="email" required=""
+                                aria-required="true" aria-invalid="true"
+                                value="{{ !empty($alumni) ? $alumni->email : '' }}">
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title"> Alamat </h2>
-                            <textarea class="form-control" name="alamat_siswa" required="" aria-required="true"
-                                aria-invalid="true">{{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
+                            <textarea class="form-control" name="alamat_siswa" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->calon_siswa->alamat_jalan : '' }} </textarea>
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <h2 class="card-inside-title">Alamat URL Instagram / Facebook </h2>
-                            <input type="text"  class="form-control" name="url_medsos" required="" aria-required="true"
-                                aria-invalid="true" value="{{ !empty($alumni) ?  $alumni->url_medsos : ''  }}">  
+                            <input type="text" class="form-control" name="url_medsos" required=""
+                                aria-required="true" aria-invalid="true"
+                                value="{{ !empty($alumni) ? $alumni->url_medsos : '' }}">
                         </div>
 
-                        @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                        <input type="hidden"name="status" value="smp">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <hr>
-                            <h2 class="card-inside-title">Jenis Sekolah:</h2>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <select class="form-control show-tick" name="jenis_sekolah">
-                                        <option  disabled >Pilih Jenis</option>
-                                        <option @if(isset($alumni) && $alumni->jenis_sekolah == "sma")selected @endif value="sma">SMA (Sekolah Menengah Atas)</option>
-                                        <option  @if(isset($alumni) && $alumni->jenis_sekolah == "smk")selected @endif value="smk">SMK (Sekolah Menengah Kejuruan)</option>
-                                        <option   @if(isset($alumni) && $alumni->jenis_sekolah == "ma")selected @endif value="ma"> MA (Madrasah Aliyah)</option>
-                                    </select>
+                        @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
+                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
+                            $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                            <input type="hidden"name="status" value="smp">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <hr>
+                                <h2 class="card-inside-title">Jenis Sekolah:</h2>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select class="form-control show-tick" name="jenis_sekolah">
+                                            <option disabled>Pilih Jenis</option>
+                                            <option @if (isset($alumni) && $alumni->jenis_sekolah == 'sma') selected @endif value="sma">SMA
+                                                (Sekolah Menengah Atas)</option>
+                                            <option @if (isset($alumni) && $alumni->jenis_sekolah == 'smk') selected @endif value="smk">SMK
+                                                (Sekolah Menengah Kejuruan)</option>
+                                            <option @if (isset($alumni) && $alumni->jenis_sekolah == 'ma') selected @endif value="ma"> MA
+                                                (Madrasah Aliyah)</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title"> Nama Sekolah</h2>
+                                <textarea class="form-control" name="nm_sekolah" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->nm_sekolah : '' }} </textarea>
                             </div>
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<h2 class="card-inside-title"> Nama Sekolah</h2>
-							<textarea class="form-control" name="nm_sekolah" required="" aria-required="true"
-								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->nm_sekolah : ''}} </textarea>
-						</div>
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<h2 class="card-inside-title"> Alamat Sekolah</h2>
-							<textarea class="form-control" name="alamat_sekolah" required="" aria-required="true"
-								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->alamat_sekolah : ''}} </textarea>
-						</div>
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<h2 class="card-inside-title">Jurusan</h2>
-							<textarea class="form-control" name="jurusan" required="" aria-required="true"
-								aria-invalid="true">{{(!empty($alumni))? $alumni->smp->jurusan : ''}} </textarea>
-                        </div>
-						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							<h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title"> Alamat Sekolah</h2>
+                                <textarea class="form-control" name="alamat_sekolah" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->alamat_sekolah : '' }} </textarea>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">Jurusan</h2>
+                                <textarea class="form-control" name="jurusan" required="" aria-required="true" aria-invalid="true">{{ !empty($alumni) ? $alumni->smp->jurusan : '' }} </textarea>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title">Tahun Masuk Sekolah</h2>
 
                                 <input type="number" class="form-control" name="tahun_masuk_sekolah" required=""
                                     aria-required="true" aria-invalid="true"
                                     value="{{ !empty($alumni) ? $alumni->smp->tahun_masuk_sekolah : '' }}">
 
-							{{-- <textarea class="form-control" name="tahun_masuk_sekolah" required="" aria-required="true"
+                                {{-- <textarea class="form-control" name="tahun_masuk_sekolah" required="" aria-required="true"
 								aria-invalid="true"> {{(!empty($alumni))? $alumni->calon_siswa->alamat_jalan : ''}} </textarea> --}}
-						</div>
-						@else
-
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <h2 class="card-inside-title"> Status </h2>
-                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="status" value="bekerja" id="work_status" required="required"
-                                {{ isset($alumni) && $alumni->status == 'bekerja' ? 'checked' : '' }}>
-                            <label for="work_status"> Bekerja </label>
-                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="status" value="usaha" id="enterpreneur_status" required="required"
-                                {{ isset($alumni) && $alumni->status == 'usaha' ? 'checked' : '' }}>
-                            <label for="enterpreneur_status"> Wirausaha </label>
-                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="status" value="kuliah" id="college_status" required="required"
-                                {{ isset($alumni) && $alumni->status == 'kuliah' ? 'checked' : '' }}>
-                            <label for="college_status"> Kuliah </label>
-                            <input class="with-gap radio-col-light-green form-control validate" type="radio"
-                                name="status" value="menunggu" id="idle_status" required="required"
-                                {{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }}>
-                            <label for="idle_status"> Belum Bekerja </label>
-                        </div>
+                            </div>
+                        @else
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <h2 class="card-inside-title"> Status </h2>
+                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                    name="status" value="bekerja" id="work_status" required="required"
+                                    {{ isset($alumni) && $alumni->status == 'bekerja' ? 'checked' : '' }}>
+                                <label for="work_status"> Bekerja </label>
+                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                    name="status" value="usaha" id="enterpreneur_status" required="required"
+                                    {{ isset($alumni) && $alumni->status == 'usaha' ? 'checked' : '' }}>
+                                <label for="enterpreneur_status"> Wirausaha </label>
+                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                    name="status" value="kuliah" id="college_status" required="required"
+                                    {{ isset($alumni) && $alumni->status == 'kuliah' ? 'checked' : '' }}>
+                                <label for="college_status"> Kuliah </label>
+                                <input class="with-gap radio-col-light-green form-control validate" type="radio"
+                                    name="status" value="menunggu" id="idle_status" required="required"
+                                    {{ isset($alumni) && $alumni->status == 'menunggu' ? 'checked' : '' }}>
+                                <label for="idle_status"> Belum Bekerja </label>
+                            </div>
                         @endif
                         {{-- handle work data --}}
                         <div class="form_layout" id="work_state">
@@ -179,18 +180,21 @@
                             @include('./humas.alumni.forms.idle_state')
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            @if($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' || $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian'|| $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
-                            <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
-                                <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
-                                </span>
-                            </button>
+                            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm1' ||
+                                $auth_data->sekolah_data->nm_singkat_sekolah == 'smpmuh6krian' ||
+                                $auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
+                                <button id="submit" class="btn btn-block bg-red waves-effect" type="submit">
+                                    <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
+                                    </span>
+                                </button>
                             @else
-                            <button id="submit" disabled class="btn btn-block bg-red waves-effect" type="submit">
-                                <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
-                                </span>
-                            </button>
+                                <button id="submit" disabled class="btn btn-block bg-red waves-effect"
+                                    type="submit">
+                                    <i class="material-icons">save</i><span> {{ !empty($alumni) ? 'Update' : 'Save' }}
+                                    </span>
+                                </button>
                             @endif
-                           
+
                         </div>
                     </form>
                 </div>
