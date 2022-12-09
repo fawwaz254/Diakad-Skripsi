@@ -28,7 +28,7 @@
                 <td>{{ $siswa->pengguna->nm_pengguna }}</td>
                 @foreach ($data['list_data'] as $nilai)
                     <td style="text-align: center">
-                        {{ $data['nilai_siswa'][$nilai->id_komponen_nilai . $siswa->id_siswa . $data['id_rapor_sisipan']] }}
+                        {{ $data['nilai_siswa'][$nilai->id_komponen_nilai . $siswa->id_siswa . $data['id_rapor_sisipan']] ?? null }}
                     </td>
                 @endforeach
                 {{-- <td style="text-align: center;">
