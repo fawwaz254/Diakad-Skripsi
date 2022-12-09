@@ -345,7 +345,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 // Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
                 // Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
-                // Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
+                Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
 
                 // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
