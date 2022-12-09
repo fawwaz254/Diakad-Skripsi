@@ -159,7 +159,7 @@
                                         @if (in_array(pathinfo($file->nm_arsip_dokumen_file, PATHINFO_EXTENSION), ['jpg','jpeg','bmp','png']))
                                         <img style="height:7rem; width:auto;" src="{{ Storage::disk('spaces')->url($file->nm_arsip_dokumen_file) }}">
                                         @else
-                                        {{ str_limit($file->nm_arsip_dokumen_file, $limit = 50, $end = '...').pathinfo($file->nm_arsip_dokumen_file, PATHINFO_EXTENSION) }}
+                                        {{ \Illuminate\Support\Str::limit($file->nm_arsip_dokumen_file, $limit = 50, $end = '...').pathinfo($file->nm_arsip_dokumen_file, PATHINFO_EXTENSION) }}
                                         @endif
                                         </a>
                                         </li>
