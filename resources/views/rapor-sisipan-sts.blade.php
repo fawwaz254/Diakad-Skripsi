@@ -12,8 +12,8 @@
             @foreach ($data['list_data'] as $nilai)
                 <td style="text-align: center;font-weight: bold;">{{ $nilai->nm_nilai }}</td>
             @endforeach
-            <td style="text-align: center;font-weight: bold;">NAMA SISWA</td>
-            <td style="text-align: center;font-weight: bold;">NAMA SISWA</td>
+            {{-- <td style="text-align: center;font-weight: bold;">NAMA SISWA</td>
+            <td style="text-align: center;font-weight: bold;">NAMA SISWA</td> --}}
         </tr>
     </thead>
     <tbody>
