@@ -105,10 +105,10 @@
                 <tr>
                     <td colspan="2" style="text-align: center;font-weight: bold;">NOMOR</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">NAMA SISWA<br></td>
+                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI TUGAS</td>
                     <td colspan="4" style="text-align: center;font-weight: bold;">NILAI FORMATIF</td>
-                    <td colspan="4" style="text-align: center;font-weight: bold;">NILAI SUMATIF</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td>
-                    <td rowspan="2" style="text-align: center;font-weight: bold;">STS</td>
+                    {{-- <td rowspan="2" style="text-align: center;font-weight: bold;">RT2<br>SMT</td> --}}
+                    <td rowspan="2" style="text-align: center;font-weight: bold;">PTS</td>
                     <td rowspan="2" style="text-align: center;font-weight: bold;">RAPOR<br>SISIPAN</td>
                 </tr>
                 <tr>
@@ -160,11 +160,11 @@
                         @endforeach
                         <td></td>
                         <td></td>
-                        <td style="text-align: center;">
-                            {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6']) / 2) }}
-                            {{-- @endif --}}
-                        </td>
+                        {{-- <td style="text-align: center;"> --}}
+                        {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'])) --}}
+                        {{-- {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6']) / 2) }} --}}
+                        {{-- @endif --}}
+                        {{-- </td> --}}
                         @foreach ($list_data as $nilai)
                             @if ($nilai->urutan == 9)
                                 <td style="text-align: center;">
@@ -178,7 +178,7 @@
 
                         <td style="text-align: center;">
                             {{-- @if (isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1']) && isset($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) && isset($nilai_komponen[$siswa->id_siswa . 'sts'])) --}}
-                            {{ round(($nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9']) / 3) }}
+                            {{ round(($nilai_komponen[$siswa->id_siswa . '1'] + $nilai_komponen[$siswa->id_siswa . '5'] + $nilai_komponen[$siswa->id_siswa . '6'] + $nilai_komponen[$siswa->id_siswa . '9'] * 2) / 5) }}
                             {{-- @endif --}}
                         </td>
                     </tr>
@@ -193,8 +193,10 @@
                         RAPOR =
                     </p>
                     <p align="center" style="display: inline" class="under-below">
-                        {(2 x RT2 SMT)+(STS)}
+
+                        T + 2F + 2 PTS
                     </p>
+                    <p style="margin-left: 40%; margin-top:0px; padding-top:4px;">5</p>
 
                 </td>
             </tr>
@@ -204,9 +206,9 @@
             <tr>
                 <td style=" border-style : hidden; width:65%; vertical-align: text-top; padding:0">
                     <p style="margin-left: 10%;">
-                        SMT = Sumatif
+                        {{-- SMT = Sumatif
                         <br>
-                        STS = Sumatif Tengah Semester
+                        STS = Sumatif Tengah Semester --}}
                     </p>
                 </td>
 
