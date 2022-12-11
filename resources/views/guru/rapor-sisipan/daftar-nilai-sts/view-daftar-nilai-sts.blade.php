@@ -25,7 +25,7 @@
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
                                     {{-- <th>Jurusan</th> --}}
-                                    <th>Nilai Siswa Terisi Lengkap</th>
+                                    <th>Nilai Siswa Terisi</th>
                                     <th>Semester</th>
                                     <th>Input Nilai</th>
                                     <th>Template Excel</th>
@@ -54,11 +54,11 @@
         processing: true,
         serverSide: true,
         responsive: true,
-        pageLength: 5,
-        lengthMenu: [
-            [5, 10, 20, -1],
-            [5, 10, 20, 'All']
-        ],
+        // pageLength: 5,
+        // lengthMenu: [
+        //     [5, 10, 20, -1],
+        //     [5, 10, 20, 'All']
+        // ],
         ajax: {
             url: datatable_url,
             type: 'GET'

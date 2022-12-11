@@ -242,6 +242,8 @@ class RaporSisipanController extends Controller
         //  $NilaiRaporSisipan =;
         // $NilaiRaporSisipan = NilaiRaporSisipan::where('created_by',$auth_data->pengguna->id_pengguna)->with('siswa.kelas');
 
+        $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
@@ -250,34 +252,38 @@ class RaporSisipanController extends Controller
             //     $j = $jurusan->firstWhere('id_jurusan', $item->mata_pelajaran->id_jurusan);
             //     return $j->nm_jurusan;
             // })
-            ->addColumn('jumlah', function ($item) use ($auth_data, $siswa) {
+            ->addColumn('jumlah', function ($item) use ($auth_data, $siswa, $komponenUTS) {
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
-
+                $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->whereHas('siswa', function ($query) use ($item) {
+                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                })->count();
+                // dd($allSiswa);
+                // dd($nilaiSiswaKosong);
                 // //cari siswa yang ada nilai 0 nya
-                $belumTerisi = NilaiRaporSisipan::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '0')
-                    ->whereHas('siswa', function ($query) use ($item) {
-                        $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                    })->groupBy('id_siswa')
-                    ->selectRaw('count(*) as total, id_siswa')
-                    ->get()->toArray();
+                // $belumTerisi = NilaiRaporSisipan::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '0')
+                //     ->whereHas('siswa', function ($query) use ($item) {
+                //         $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                //     })->groupBy('id_siswa')
+                //     ->selectRaw('count(*) as total, id_siswa')
+                //     ->get()->toArray();
 
                 // //hitung ada berapa nilai kosongnya
-                $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+                // $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
                 // dd($arrayJumlahBelumTerisi);
 
                 // //loop dan cari nilai kosong yang diatas 5
-                if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
-                    $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
-                } else {
-                    $nilaiSiswaYangKosong = 0;
-                    for ($i = 6; $i <= 10; $i++) {
-                        if (isset($arrayJumlahBelumTerisi[$i])) {
-                            // dd($arrayJumlahBelumTerisi[$i]);
-                            $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
-                        }
-                    }
-                }
+                // if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+                //     $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
+                // } else {
+                //     $nilaiSiswaYangKosong = 0;
+                //     for ($i = 6; $i <= 10; $i++) {
+                //         if (isset($arrayJumlahBelumTerisi[$i])) {
+                //             // dd($arrayJumlahBelumTerisi[$i]);
+                //             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                //         }
+                //     }
+                // }
 
                 // if(empty($belumTerisi)){
                 //     $allSiswa = 0;
@@ -291,7 +297,7 @@ class RaporSisipanController extends Controller
 
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
-                    'terisi_siswa' => $allSiswa - $nilaiSiswaYangKosong,
+                    'terisi_siswa' => $nilaiSiswaKosong,
                 );
                 // dd($data['terisi_siswa']);
                 return $data;
