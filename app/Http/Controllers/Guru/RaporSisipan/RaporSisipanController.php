@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Guru\RaporSisipan;
 
 use App\Exports\RaporSisipanSTS;
+use App\Exports\RekapRaporSisipanSTS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
@@ -179,19 +180,18 @@ class RaporSisipanController extends Controller
             foreach ($nilai as $nilaiRapor) {
                 foreach ($nilaiRapor as $a) {
                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
-
-                    // $nilai_sumatif1 = $list_data->firstWhere('urutaan', '=', '5');
-                    // $nilai_sumatif2 = $list_data->firstWhere('urutaan', '=', '6');
-                    // $sts = $list_data->firstWhere('urutaan', '=', '9');
-                    // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-                    // }
-                    // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-                    // }
-                    // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-                    // }
+                    $nilai_sumatif1 = $list_data->firstWhere('urutan', '=', '5');
+                    $nilai_sumatif2 = $list_data->firstWhere('urutan', '=', '6');
+                    $sts = $list_data->firstWhere('urutan', '=', '9');
+                    if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
+                        $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
+                    }
+                    if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
+                        $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
+                    }
+                    if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
+                        $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
+                    }
                 }
             }
         }
@@ -203,7 +203,7 @@ class RaporSisipanController extends Controller
         $data['list_data'] = $list_data;
         $data['id_rapor_sisipan'] = $id_rapor_sisipan;
 
-        return Excel::download(new RaporSisipanSTS($data), 'Rapor Sisipan STS.xlsx');
+        return Excel::download(new RekapRaporSisipanSTS($data), 'Rekap Rapor Sisipan STS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
     }
 
     public function datatablesDaftarNilaiSTS(Request $request)
@@ -218,70 +218,23 @@ class RaporSisipanController extends Controller
                 $query->where('aktif_status_pengguna', '=', '1');
             })->get();
 
-
-        //  $NilaiRaporSisipan =;
-        // $NilaiRaporSisipan = NilaiRaporSisipan::where('created_by',$auth_data->pengguna->id_pengguna)->with('siswa.kelas');
-
         $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
 
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            // ->addColumn('jurusan', function ($item) use($jurusan){
-            //     $j = $jurusan->firstWhere('id_jurusan', $item->mata_pelajaran->id_jurusan);
-            //     return $j->nm_jurusan;
-            // })
             ->addColumn('jumlah', function ($item) use ($auth_data, $siswa, $komponenUTS) {
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
                     $query->where('id_kelas', '=', $item->kelas->id_kelas);
                 })->count();
-                // dd($allSiswa);
-                // dd($nilaiSiswaKosong);
-                // //cari siswa yang ada nilai 0 nya
-                // $belumTerisi = NilaiRaporSisipan::where('created_by', $auth_data->pengguna->id_pengguna)->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '0')
-                //     ->whereHas('siswa', function ($query) use ($item) {
-                //         $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                //     })->groupBy('id_siswa')
-                //     ->selectRaw('count(*) as total, id_siswa')
-                //     ->get()->toArray();
-
-                // //hitung ada berapa nilai kosongnya
-                // $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
-                // dd($arrayJumlahBelumTerisi);
-
-                // //loop dan cari nilai kosong yang diatas 5
-                // if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
-                //     $nilaiSiswaYangKosong = $arrayJumlahBelumTerisi[2] ?? 0;
-                // } else {
-                //     $nilaiSiswaYangKosong = 0;
-                //     for ($i = 6; $i <= 10; $i++) {
-                //         if (isset($arrayJumlahBelumTerisi[$i])) {
-                //             // dd($arrayJumlahBelumTerisi[$i]);
-                //             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
-                //         }
-                //     }
-                // }
-
-                // if(empty($belumTerisi)){
-                //     $allSiswa = 0;
-                //     $nilaiSiswaYangKosong = 0;
-                // }
-                // if($item->id_rapor_sisipan == 'B9hY716686531256375a045d12f2' ){
-                //     isset($belumTerisi);
-                //     dd($belumTerisi);
-                // //    dd( $NilaiRaporSisipan->where('id_rapor_sisipan', $item->id_rapor_sisipan)->get());
-                // }
-
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
                     'terisi_siswa' => $nilaiSiswaKosong,
                 );
-                // dd($data['terisi_siswa']);
                 return $data;
-                //    return 'Fitur ini belum berjalan';
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
@@ -361,7 +314,6 @@ class RaporSisipanController extends Controller
         }
     }
 
-
     public function getDataFromJurusan(Request $request)
     {
         $input = (object) $request->input();
@@ -395,26 +347,12 @@ class RaporSisipanController extends Controller
 
         if ($setting == '0') {
             $nilai_siswa = [];
-            // $nilai_komponen = [];
             if ($list_siswa) {
                 $nilai = $list_nilai->toArray();
                 foreach ($nilai as $nilaiRapor) {
                     foreach ($nilaiRapor as $a) {
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan'] . 'kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
-
-                        // $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
-                        // $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
-                        // $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
-                        // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                        //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-                        // }
-                        // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                        //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-                        // }
-                        // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                        //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-                        // }
                     }
                 }
             }

@@ -42,31 +42,14 @@ class InputNilaiRaporSisipanController extends Controller
             ->get();
 
         $nilai_siswa = [];
-        // $nilai_komponen = [];
         if ($list_siswa) {
             $nilai = $list_nilai->toArray();
             foreach ($nilai as $nilaiRapor) {
-                // dd($nilaiRapor);
                 foreach ($nilaiRapor as $a) {
                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
-
-                    // $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
-                    // $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
-                    // $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
-                    // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-                    // }
-                    // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-                    // }
-                    // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                    //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-                    // }
                 }
             }
         }
-        // dd($nilai_komponen);
-
         return view('guru/rapor-sisipan/daftar-nilai-sts/input-nilai-sts', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
     }
 

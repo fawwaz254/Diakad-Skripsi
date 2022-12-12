@@ -73,11 +73,6 @@
                 name: 'kelas.nm_kelas',
                 className: 'align-center'
             },
-            // {
-            //     data: 'jurusan',
-            //     name: 'jurusan',
-            //     className: 'align-center'
-            // },
             {
                 data: 'jumlah',
                 name: 'jumlah',
