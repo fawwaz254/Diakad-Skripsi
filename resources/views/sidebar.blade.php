@@ -59,8 +59,8 @@
                     {{ auth_data()->pengguna->nm_pengguna }}
                 </div>
                 <div class="email">{{ auth_data()->pengguna->username }}
-                    @if ($role_aktif == 3)
-                        {{ ' / ' }}({{ $nm_kelas }})
+                    @if ($role_aktif == 3 || $role_aktif == 12)
+                        {{ ' / ' }}({{ $nm_kelas ? $nm_kelas : 'Bukan Siswa Aktif' }})
                     @endif
                     @if ($role_aktif == 2 && !empty($wali_kelas) && !empty($kelas))
                         {{ ' / ' }}({{ $nm_kelas }})
