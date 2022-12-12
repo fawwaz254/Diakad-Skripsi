@@ -42,7 +42,6 @@ class RaporSisipanController extends Controller
         $auth_data = $input->auth_data;
 
         $data['list_mapel'] = MataPelajaran::all();
-        // $data['list_jurusan'] = Jurusan::all();
         $data['list_kelas'] = Kelas::all();
         $data['list_jurusan'] = Jurusan::all();
 
@@ -55,21 +54,15 @@ class RaporSisipanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        // dd($semester_aktif);
         if ($mode == 'delete') {
-
 
             $nilaiRaporSisipan = NilaiRaporSisipan::where('id_rapor_sisipan', $id)->get();
             foreach ($nilaiRaporSisipan as $id) {
                 $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
-                // $nilai->deleted_by = $input->auth_data->pengguna->id_pengguna;
-                // $nilai->save();
                 $nilai->delete();
             }
 
             $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
-            // $raporSisipan->deleted_by =  $input->auth_data->pengguna->id_pengguna;
-            // $raporSisipan->save();
             $raporSisipan->delete();
 
             return [
@@ -122,22 +115,10 @@ class RaporSisipanController extends Controller
                         })
                         ->get();
 
-                    // ->where('pengguna.status_pengguna.aktif_status_pengguna','=',1)->get();
-                    // dd($siswa);
                     $komponen_nilai = KomponenNilaiRaporSisipan::where('status', 1)->get();
                     foreach ($siswa as $s) {
                         foreach ($komponen_nilai as $komponen) {
-                            // usleep(1);
                             $id = $input->auth_data->sekolah_data->prefix . strtotime(Carbon::now(env('APP_TIMEZONE', ''))) . uniqid();
-                            // $nilai_rapor_sisipan                                    = new NilaiRaporSisipan;
-                            // $nilai_rapor_sisipan->id_nilai_rapor_sisipan            = $id;
-                            // $nilai_rapor_sisipan->id_rapor_sisipan                  = $rapor_sisipan->id_rapor_sisipan;
-                            // $nilai_rapor_sisipan->id_komponen_nilai                 = $komponen->id_komponen_nilai;
-                            // $nilai_rapor_sisipan->id_siswa                          = $s->id_siswa;
-                            // $nilai_rapor_sisipan->nilai                             = 0;
-                            // $nilai_rapor_sisipan->created_by                        = $input->auth_data->pengguna->id_pengguna;
-                            // $nilai_rapor_sisipan->save();
-
                             $list_data[] = [
                                 'id_nilai_rapor_sisipan' =>  $id,
                                 'id_rapor_sisipan' => $rapor_sisipan->id_rapor_sisipan,
@@ -196,7 +177,6 @@ class RaporSisipanController extends Controller
         if ($list_siswa) {
             $nilai = $list_nilai->toArray();
             foreach ($nilai as $nilaiRapor) {
-                // dd($nilaiRapor);
                 foreach ($nilaiRapor as $a) {
                     $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
 
@@ -324,46 +304,30 @@ class RaporSisipanController extends Controller
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
 
-        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->get();
+        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
 
-        // $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
-        //     ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
-        //         $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-        //     })
-        //     ->whereHas('komponen_nilai', function ($query) {
-        //         $query->whereIn('urutan', [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-        //     })->get();
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
+            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
+                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
+            })
+            ->whereHas('komponen_nilai', function ($query) {
+                $query->where('status', 1)->where('type', '!=', 'uas');
+            })->get();
 
-        // $nilai_siswa = [];
-        // $nilai_komponen = [];
-        // if ($list_siswa) {
-        //     $nilai = $list_nilai->toArray();
-        //     foreach ($nilai as $nilaiRapor) {
-        //         // dd($nilaiRapor);
-        //         foreach ($nilaiRapor as $a) {
-        //             $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+        $nilai_siswa = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+                }
+            }
+        }
 
-        //             // $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
-        //             // $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
-        //             // $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
-        //             // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-        //             //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-        //             // }
-        //             // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-        //             //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-        //             // }
-        //             // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-        //             //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-        //             // }
-        //         }
-        //     }
-        // }
-
-        // $data['nilai_siswa'] = $nilai_siswa;
-        // $data['nilai_komponen'] = $nilai_komponen;
+        $data['nilai_siswa'] = $nilai_siswa;
         $data['rapor_sisipan'] = $rapor_sisipan;
         $data['list_siswa'] = $list_siswa;;
         $data['list_data'] = $list_data;
@@ -383,14 +347,7 @@ class RaporSisipanController extends Controller
 
     public function uploadRaporSisipanSTS(Request $request)
     {
-
-
-        $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
-        // $now = Carbon::now(env('APP_TIMEZONE', ''));
         if ($request->hasFile('file-excel')) {
-            // $path = $request->file('file-excel')->getRealPath();
-            // $data = Excel::load($path)->get();
             Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
             return [
                 'status'     => 200, // FAILED
@@ -402,20 +359,11 @@ class RaporSisipanController extends Controller
                 'message'     => "File Excel tidak ditemukan"
             ];
         }
-
-        // import data
-
-
-        // notifikasi dengan session
-        // return back();
-        // // alihkan halaman kembali
-        // return redirect('/siswa');
     }
 
 
     public function getDataFromJurusan(Request $request)
     {
-        // $test =  Jurusan::all();
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data['mapel'] = MataPelajaran::where('id_jurusan', $input->jurusan)->get();
@@ -430,10 +378,8 @@ class RaporSisipanController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
-        // dd($setting);
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas', 'semester', 'pengguna')->first();
-
         $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');

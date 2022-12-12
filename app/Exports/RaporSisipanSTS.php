@@ -24,9 +24,4 @@ class RaporSisipanSTS implements FromView
             'data' => $this->data
         ]);
     }
-
-    // public function collection()
-    // {
-    //     return PresensiPengguna::all();
-    // }
 }

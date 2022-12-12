@@ -43,7 +43,6 @@
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
-    // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'daftar-nilai-sts/action-daftar-nilai-sts/delete';
@@ -54,11 +53,6 @@
         processing: true,
         serverSide: true,
         responsive: true,
-        // pageLength: 5,
-        // lengthMenu: [
-        //     [5, 10, 20, -1],
-        //     [5, 10, 20, 'All']
-        // ],
         ajax: {
             url: datatable_url,
             type: 'GET'
