@@ -21,13 +21,13 @@ class InputNilaiRaporSisipanController extends Controller
 
     public function viewKomponenInputNilai(Request $request, $id_rapor_sisipan)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
         // dd($rapor_sisipan);
-        $list_data = KomponenNilaiRaporSisipan::where('status',1)->get();
+        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
         })->orderBy('nis_siswa')->get();
@@ -37,7 +37,7 @@ class InputNilaiRaporSisipanController extends Controller
                 $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
             })
             ->whereHas('komponen_nilai', function ($query) {
-                $query->where('status', 1);
+                $query->where('status', 1)->where('type', '!=', 'uas');
             })
             ->get();
 
@@ -72,7 +72,7 @@ class InputNilaiRaporSisipanController extends Controller
 
     public function actionInputNilai(Request $request, $mode, $id_rapor_sisipan = null)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 

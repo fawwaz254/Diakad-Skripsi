@@ -133,9 +133,9 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class=" btn btn-success" href="' +
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         print_url + '/' + data.id + '"  target="_blank">' +
-                        '    Eksel' +
+                        '    <i class="material-icons">print</i>' +
                         '</a> ' +
                         '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         pdf_url + '/' + data.id + '"  target="_blank">' +

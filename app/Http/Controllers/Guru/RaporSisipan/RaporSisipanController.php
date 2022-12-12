@@ -255,7 +255,7 @@ class RaporSisipanController extends Controller
             ->addColumn('jumlah', function ($item) use ($auth_data, $siswa, $komponenUTS) {
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
-                $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->whereHas('siswa', function ($query) use ($item) {
+                $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
                     $query->where('id_kelas', '=', $item->kelas->id_kelas);
                 })->count();
                 // dd($allSiswa);
