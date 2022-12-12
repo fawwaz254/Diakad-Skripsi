@@ -15,7 +15,9 @@
     if ($role_aktif == 3) {
         $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
         $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
-        $nm_kelas = $kelas->nm_kelas;
+        if (!empty($kelas)) {
+            $nm_kelas = $kelas->nm_kelas;
+        }
     }
     
     // if guru
