@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\App;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Models\KomponenNilaiRaporSisipan;
 use App\Models\NilaiRaporSisipan;
+use App\Models\Setting;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Siswa;
 use Auth;
@@ -141,40 +142,27 @@ class RaporSisipanController extends Controller
             ->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
-        if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smkypm3taman') {
+
+        $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
+        if ($setting == '0') {
             $nilai_siswa = [];
-            // $nilai_komponen = [];
             if ($list_siswa) {
                 $nilai = $list_nilai->toArray();
                 foreach ($nilai as $nilaiRapor) {
                     foreach ($nilaiRapor as $a) {
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan'] . 'kkm'] = $rapor_sisipan->mata_pelajaran->nilai_kkm ?? 'kkm belum di set';
-
-                        // $nilai_sumatif1 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 1');
-                        // $nilai_sumatif2 = $list_data->firstWhere('nm_nilai', '=', 'NILAI SUMATIF 2');
-                        // $sts = $list_data->firstWhere('nm_nilai', '=', 'STS');
-                        // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
-                        //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi1'] =  $nilaiRapor['nilai'];
-                        // }
-                        // if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
-                        //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'nilai_sumasi2'] =  $nilaiRapor['nilai'];
-                        // }
-                        // if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
-                        //     $nilai_komponen[$nilaiRapor['id_siswa'] . 'sts'] =  $nilaiRapor['nilai'];
-                        // }
                     }
                 }
             }
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-with-kkm', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
-        } else {
+        } elseif ($setting == '1') {
 
             $nilai_siswa = [];
             $nilai_komponen = [];
             if ($list_siswa) {
                 $nilai = $list_nilai->toArray();
                 foreach ($nilai as $nilaiRapor) {
-                    // dd($nilaiRapor);
                     foreach ($nilaiRapor as $a) {
                         $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
 
@@ -195,6 +183,35 @@ class RaporSisipanController extends Controller
             }
 
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'nilai_komponen', 'rapor_sisipan'));
-        }
+        } elseif ($setting == '2') {
+            $nilai_siswa = [];
+            $nilai_komponen = [];
+            if ($list_siswa) {
+                $nilai = $list_nilai->toArray();
+                foreach ($nilai as $nilaiRapor) {
+                    foreach ($nilaiRapor as $a) {
+                        $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+
+                        $nilai_tugas1 = $list_data->firstWhere('urutan', '=', '1');
+                        $nilai_sumatif1 = $list_data->firstWhere('urutan', '=', '5');
+                        $nilai_sumatif2 = $list_data->firstWhere('urutan', '=', '6');
+                        $sts = $list_data->firstWhere('urutan', '=', '9');
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_tugas1->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '1'] =  $nilaiRapor['nilai'];
+                        }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif1->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '5'] =  $nilaiRapor['nilai'];
+                        }
+                        if ($nilaiRapor['id_komponen_nilai']  == $nilai_sumatif2->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '6'] =  $nilaiRapor['nilai'];
+                        }
+                        if ($nilaiRapor['id_komponen_nilai']  == $sts->id_komponen_nilai) {
+                            $nilai_komponen[$nilaiRapor['id_siswa'] . '9'] =  $nilaiRapor['nilai'];
+                        }
+                    }
+                }
+            }
+            return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts2', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'nilai_komponen', 'rapor_sisipan'));
+        } else { }
     }
 }
