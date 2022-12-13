@@ -187,6 +187,19 @@
             pengguna.push($(this).val());
         });
 
+        if (!pengguna.length) {
+            swal({
+                title: "Warning",
+                text: "Harap pilih siswa terlebih dahulu",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                timer: 2000,
+            });
+
+            $('button').removeAttr('disabled', 'disabled');
+            return;
+        }
+
         // alert(base_url + '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/reset-some-password');
         $.ajax({
             url: base_url +
