@@ -15,7 +15,9 @@
     if ($role_aktif == 3) {
         $siswa = App\Models\Siswa::where('id_pengguna', $id_pengguna)->first();
         $kelas = App\Models\Kelas::where('id_kelas', $siswa->id_kelas)->first();
-        $nm_kelas = $kelas->nm_kelas;
+        if (!empty($kelas)) {
+            $nm_kelas = $kelas->nm_kelas;
+        }
     }
     
     // if guru
@@ -57,8 +59,8 @@
                     {{ auth_data()->pengguna->nm_pengguna }}
                 </div>
                 <div class="email">{{ auth_data()->pengguna->username }}
-                    @if ($role_aktif == 3)
-                        {{ ' / ' }}({{ $nm_kelas }})
+                    @if ($role_aktif == 3 || $role_aktif == 12)
+                        {{ ' / ' }}({{ $nm_kelas ? $nm_kelas : 'Bukan Siswa Aktif' }})
                     @endif
                     @if ($role_aktif == 2 && !empty($wali_kelas) && !empty($kelas))
                         {{ ' / ' }}({{ $nm_kelas }})
