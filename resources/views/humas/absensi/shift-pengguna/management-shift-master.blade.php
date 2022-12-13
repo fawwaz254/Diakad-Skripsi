@@ -29,18 +29,14 @@
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Jam masuk</h2>
-
-                                <input type="text" class="timepicker form-control" name="check_in" required="" aria-required="true"
-                                aria-invalid="true" >
-
-                                {{-- <input type="time" name="check_in" class="form-control"> --}}
+                                <input type="time" class="timepicker form-control" name="check_in" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Jam keluar</h2>
-                                <input type="text" class="timepicker form-control" name="check_out" required="" aria-required="true"
-                                aria-invalid="true" >
-                                {{-- <input type="time" name="check_out" class="form-control"> --}}
+                                <input type="time" class="timepicker form-control" name="check_out" required=""
+                                    aria-required="true" aria-invalid="true">
                             </div>
 
                             <button id="btn-submit" class="btn btn-block bg-red waves-effect" style="display: inline;">
@@ -106,6 +102,14 @@
     //     $('#btn-submit i').text('autorenew')
     //     $('#btn-submit span').text('Loading')
     // });
+
+    $(function() {
+        $('.timepicker').bootstrapMaterialDatePicker({
+            format: 'HH:mm',
+            clearButton: true,
+            date: false
+        });
+    });
 
     function back() {
         window.location = '/humas#absensi/shift_pengguna'
