@@ -48,7 +48,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('humas')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
             // MENU Data Kategori
@@ -264,6 +264,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/siswa', [RekapAbsensiController::class, 'selectRekapAbsensiSiswa']);
                 Route::get('/detail/siswa/{kelas}/{start_date}/{end_date}', [RekapAbsensiController::class, 'viewRekapAbsensiSiswa']);
                 Route::get('/cetak/siswa/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'cetakRekapAbsensiSiswa']);
+                Route::get('/chart/siswa/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'chartRekapAbsensiSiswa']);
             });
         });
 
