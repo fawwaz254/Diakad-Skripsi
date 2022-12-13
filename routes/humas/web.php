@@ -260,6 +260,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RekapAbsensiController::class, 'selectRekapAbsensi']);
                 Route::get('/detail/{unit_kerja}/{start_date}/{end_date}', [RekapAbsensiController::class, 'viewRekapAbsensi']);
                 Route::get('/cetak/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'cetakRekapAbsensi']);
+                Route::get('/chart/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'chartRekapAbsensi']);
 
                 Route::get('/siswa', [RekapAbsensiController::class, 'selectRekapAbsensiSiswa']);
                 Route::get('/detail/siswa/{kelas}/{start_date}/{end_date}', [RekapAbsensiController::class, 'viewRekapAbsensiSiswa']);

@@ -84,19 +84,23 @@
         <tr style="border-style : hidden">
             <td style="border-style : hidden;width: 75%;font-weight: bold;">Nama :
                 {{ $pengguna->gelar_depan }} {{ $pengguna->nm_pengguna }} {{ $pengguna->gelar_belakang }}
-            <td style="border-style : hidden;width: 25%;font-weight: bold;">Kelas :
-                {{ $pengguna->siswa->kelas->nm_kelas }}
+            <td style="border-style : hidden;width: 25%;font-weight: bold;">Unit Kerja :
+                {{ isset($pengguna->guru->unit_kerja->nm_unit_kerja) ? $pengguna->guru->unit_kerja->nm_unit_kerja : 'Pegawai' }}
         </tr>
     </table>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
         <div id="piechart" class="center"></div>
         <thead class="head">
             <tr>
-                <td style="text-align: center;font-weight: bold;">Hadir</td>
+                <td style="text-align: center;font-weight: bold;">Tepat Waktu</td>
                 <td style="text-align: center;font-weight: bold;">Terlambat<br></td>
                 <td style="text-align: center;font-weight: bold;">Izin</td>
                 <td style="text-align: center;font-weight: bold;">Sakit</td>
                 <td style="text-align: center;font-weight: bold;">Alpha</td>
+                <td style="text-align: center;font-weight: bold;">Tidak Checkout</td>
+                <td style="text-align: center;font-weight: bold;">Terlambat, Tidak Checkout</td>
+                <td style="text-align: center;font-weight: bold;">Pulang, Lebih Awal</td>
+                <td style="text-align: center;font-weight: bold;">Terlambat, Pulang Lebih Awal</td>
                 {{-- <td style="text-align: center;font-weight: bold;">Check-out</td> --}}
             </tr>
         </thead>
@@ -107,6 +111,10 @@
                 <td style="text-align: center;">{{ $data['izin'] }}</td>
                 <td style="text-align: center;">{{ $data['sakit'] }}</td>
                 <td style="text-align: center;">{{ $data['alpha'] }}</td>
+                <td style="text-align: center;">{{ $data['tidakCheckout'] }}</td>
+                <td style="text-align: center;">{{ $data['Telat & Tidak Checkout'] }}</td>
+                <td style="text-align: center;">{{ $data['pulang'] }}</td>
+                <td style="text-align: center;">{{ $data['telatDanPulangLebihAwal'] }}</td>
             </tr>
         </tbody>
     </table>
@@ -128,14 +136,19 @@
             ['Sakit', {{ $data['sakit'] }}],
             ['Izin', {{ $data['izin'] }}],
             ['Telat', {{ $data['telat'] }}],
-            ['Alpha', {{ $data['alpha'] }}]
+            ['Alpha', {{ $data['alpha'] }}],
+            ['Tidak Checkout', {{ $data['tidakCheckout'] }}],
+            ['Telat dan Tidak Checkout', {{ $data['Telat & Tidak Checkout'] }}],
+            ['Pulang', {{ $data['pulang'] }}],
+            ['Telat dan Pulang Lebih Awal', {{ $data['telatDanPulangLebihAwal'] }}]
         ]);
 
-        // Optional; add a title and set the width and height of the chart
         var options = {
             'width': 550,
             'height': 400
         };
+        // Optional; add a title and set the width and height of the chart
+
         // Display the chart inside the <div> element with id="piechart"
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
         chart.draw(data, options);
