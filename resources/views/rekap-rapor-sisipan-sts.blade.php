@@ -1,12 +1,17 @@
 <table class="table table-bordered">
-
-
-
-
     <thead>
         <tr>
+            <td colspan='6'>
+                {{ 'Kelas : ' . $data['rapor_sisipan']['kelas']['nm_kelas'] }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan='6'>
+                {{ ' MAPEL : ' . $data['rapor_sisipan']['mata_pelajaran']['nm_mata_pelajaran'] }}
+            </td>
+        </tr>
+        <tr>
             <td style="text-align: center;font-weight: bold;">NOMOR</td>
-            <th style="text-align: center;font-weight: bold;">ID</th>
             <td style="text-align: center;font-weight: bold;">NIS</td>
             <td style="text-align: center;font-weight: bold;">NAMA SISWA</td>
             @foreach ($data['list_data'] as $nilai)
@@ -21,7 +26,6 @@
         @foreach ($data['list_siswa'] as $siswa)
             <tr>
                 <td style="text-align: center">{{ ++$no }}</td>
-                <td style="text-align: center">{{ $data['id_rapor_sisipan'] }} </td>
                 <td style="text-align: center">{{ $siswa->nis_siswa }}</td>
                 <td>{{ $siswa->pengguna->nm_pengguna }}</td>
                 @foreach ($data['list_data'] as $nilai)

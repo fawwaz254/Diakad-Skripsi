@@ -40,19 +40,10 @@
                                             vertical-align: middle;">
                                             NIS - Nama Siswa</th>
                                         @foreach ($list_data as $data)
-                                            {{-- @if ($data->nm_nilai == 'STS')
-                                                <th style="text-align: center; vertical-align: middle; width:60px">
-                                                @else --}}
-                                                <th style="text-align: center; vertical-align: middle;">
-                                        
-                                            {{ $data->nm_nilai }}
+                                            <th style="text-align: center; vertical-align: middle;">
+                                                {{ $data->nm_nilai }}
                                             </th>
                                         @endforeach
-                                        {{-- <th
-                                            style="text-align: center;
-                                            vertical-align: middle;">
-                                            RT2 SMT</th>
-                                        <th>RAPOR<br>SISIPAN</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,16 +62,6 @@
                                                         style="width: 80%; text-align:  center;">
                                                 </td>
                                             @endforeach
-                                            {{-- <td style="text-align: center;">
-                                                <input type="text" id="sts"
-                                                    value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}"
-                                                    style="width: 80%; text-align:  center;" disabled>
-                                            </td>
-                                            <td style="text-align: center;">
-                                                <input type="text" id="rt2smt"
-                                                    value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sts']) / 3) }}"
-                                                    style="width: 80%; text-align:  center;" disabled>
-                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>

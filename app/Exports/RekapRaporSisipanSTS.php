@@ -6,7 +6,7 @@ use Illuminate\Contracts\View\View;
 
 use Maatwebsite\Excel\Concerns\FromView;
 
-class RaporSisipanSTS implements FromView
+class RekapRaporSisipanSTS implements FromView
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -20,8 +20,13 @@ class RaporSisipanSTS implements FromView
     public function view(): View
     {
 
-        return view('rapor-sisipan-sts', [
+        return view('rekap-rapor-sisipan-sts', [
             'data' => $this->data
         ]);
     }
+
+    // public function collection()
+    // {
+    //     return PresensiPengguna::all();
+    // }
 }
