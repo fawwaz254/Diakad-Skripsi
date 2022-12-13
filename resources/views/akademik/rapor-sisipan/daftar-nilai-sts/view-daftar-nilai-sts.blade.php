@@ -1,9 +1,4 @@
 <div class="container-fluid">
-    {{-- <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
-                    class="material-icons">add</i><span>Tambah Nilai</span></a></h2>
-    </div> --}}
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -19,7 +14,7 @@
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    {{-- <th>Nilai Siswa Terisi Lengkap</th> --}}
+                                    <th>Nilai Siswa Terisi</th>
                                     <th>Semester</th>
                                     {{-- <th>Nilai</th> --}}
                                     <th>Action</th>
@@ -67,16 +62,17 @@
                 name: 'kelas.nm_kelas',
                 className: 'align-center'
             },
-            // {
-            //     data: 'jumlah',
-            //     name: 'jumlah',
-            //     className: 'align-center',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`  ;
-            //     }},
+            {
+                data: 'jumlah',
+                name: 'jumlah',
+                className: 'align-center',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return `<p>` + data.terisi_siswa + ' / ' + data.jumlah_siswa + `</p>`;
+                }
+            },
             {
                 data: 'semester',
                 name: 'semester',
@@ -89,9 +85,9 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class=" btn btn-success " href="' +
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float " href="' +
                         print_url + '/' + data.id + '"  target="_blank">' +
-                        '    Excel' +
+                        ' <i class="material-icons">print</i>' +
                         '</a> ' +
                         '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         pdf_url + '/' + data.id + '"  target="_blank">' +

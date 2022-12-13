@@ -141,7 +141,7 @@
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }}
                                     {{-- @endif --}}
                                 </td>
                             @endif
@@ -153,7 +153,7 @@
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] ?? '' }}
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }}
                                     {{-- @endif --}}
                                 </td>
                             @endif
@@ -170,7 +170,7 @@
                                 <td style="text-align: center;">
                                     {{-- {{  dd(in_array($nilai->urutan, [1, 2, 5, 6, 9])) }} --}}
                                     {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan])) --}}
-                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}
+                                    {{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0' ? $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] : null }}
                                     {{-- @endif --}}
                                 </td>
                             @endif
