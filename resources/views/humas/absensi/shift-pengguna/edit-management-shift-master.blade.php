@@ -19,27 +19,29 @@
                 <div class="body">
                     <div class="col-sm-6">
                         <h4>Tambah Shift Baru</h4>
-                        <form method="POST" id="form-validation" action="/humas/absensi/shift_pengguna/editManagementShift/{{ $shift->id_shift_master }}">
+                        <form method="POST" id="form-validation"
+                            action="/humas/absensi/shift_pengguna/editManagementShift/{{ $shift->id_shift_master }}">
                             {{ csrf_field() }}
                             {{-- /humas/absensi/shift_pengguna/addShiftMaster/{{ $shift->id_shift_master }} --}}
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Nama Shift</h2>
-                                <input type="text" name="name" class="form-control" value="{{ $shift->code }}" disabled>
+                                <input type="text" name="name" class="form-control" value="{{ $shift->code }}"
+                                    disabled>
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Jam masuk</h2>
 
-                                <input type="text" class="timepicker form-control" name="check_in" required="" aria-required="true"
-                                aria-invalid="true" value="{{ $shift->start_time }}" >
+                                <input type="time" class="timepicker form-control" name="check_in" required=""
+                                    aria-required="true" aria-invalid="true" value="{{ $shift->start_time }}">
 
                                 {{-- <input type="time" name="check_in" class="form-control"> --}}
                             </div>
 
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <h2 class="card-inside-title">Jam keluar</h2>
-                                <input type="text" class="timepicker form-control" name="check_out" required="" aria-required="true"
-                                aria-invalid="true" value="{{ $shift->end_time }}" >
+                                <input type="time" class="timepicker form-control" name="check_out" required=""
+                                    aria-required="true" aria-invalid="true" value="{{ $shift->end_time }}">
                                 {{-- <input type="time" name="check_out" class="form-control"> --}}
                             </div>
 
@@ -105,4 +107,11 @@
         window.location = '/humas#absensi/shift_pengguna/managementShift'
     }
 
+    $(function() {
+        $('.timepicker').bootstrapMaterialDatePicker({
+            format: 'HH:mm',
+            clearButton: true,
+            date: false
+        });
+    });
 </script>
