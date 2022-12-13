@@ -183,27 +183,40 @@
                                         @else
                                         <tr>
                                     @endif
-                                   
-                                            <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}</td>
-                                            <td style="text-align: center;" style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
-                                            <td style="text-align: center;">{{ $r['kelas'] }}</td>
-                                            <td style="text-align: center;">{{ $r['masuk'] }}</td>
-                                            <td @if($r['telat'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['telat'] }}</td>
-                                            <td @if($r['izin'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['izin'] }}</td>
-                                            <td @if($r['sakit'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['sakit'] }}</td>
-                                            <td @if($r['alpha'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['alpha'] }}</td>
-                                            {{-- <td @if($r['tidakCheckout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['tidakCheckout'] }}</td> --}}
-                                            {{-- <td @if($r['Telat & Tidak Checkout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['Telat & Tidak Checkout'] }}</td> --}}
-                                            {{-- <td @if($r['pulang'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['pulang'] }}</td> --}}
-                                            {{-- <td style="text-align: center;">{{ $r['tidakCheckout'] }}</td> --}}
-                                            {{-- <td @if($r['telatDanPulangLebihAwal'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['telatDanPulangLebihAwal'] }}</td> --}}
-                                            {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
+
+                                    <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}
+                                    </td>
+                                    <td style="text-align: center;" style="text-align: center;">{{ $r['nm_pengguna'] }}
+                                    </td>
+                                    <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                    <td style="text-align: center;">{{ $r['masuk'] }}</td>
+                                    <td
+                                        @if ($r['telat'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['telat'] }}</td>
+                                    <td
+                                        @if ($r['izin'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['izin'] }}</td>
+                                    <td
+                                        @if ($r['sakit'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['sakit'] }}</td>
+                                    <td
+                                        @if ($r['alpha'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                        {{ $r['alpha'] }}</td>
+                                    {{-- <td @if ($r['tidakCheckout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['tidakCheckout'] }}</td> --}}
+                                    {{-- <td @if ($r['Telat & Tidak Checkout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['Telat & Tidak Checkout'] }}</td> --}}
+                                    {{-- <td @if ($r['pulang'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['pulang'] }}</td> --}}
+                                    {{-- <td style="text-align: center;">{{ $r['tidakCheckout'] }}</td> --}}
+                                    {{-- <td @if ($r['telatDanPulangLebihAwal'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['telatDanPulangLebihAwal'] }}</td> --}}
+                                    {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
                                             <td style="text-align: center;">{{ $r['libur'] }}</td> --}}
-                                      
-                                            <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
-                                                href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/siswa/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
-                                                target="_blank"><i class="material-icons">picture_as_pdf</i></a> </td>
-                                        </tr>
+
+                                    <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
+                                            href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/siswa/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
+                                            target="_blank"><i class="material-icons">picture_as_pdf</i></a> <a
+                                            class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
+                                            href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/chart/siswa/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
+                                            target="_blank"><i class="material-icons">insert_chart</i></a></td>
+                                    </tr>
                                 @endforeach
 
                             </tbody>
