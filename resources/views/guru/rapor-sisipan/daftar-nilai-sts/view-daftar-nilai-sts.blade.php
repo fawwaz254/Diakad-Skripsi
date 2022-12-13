@@ -25,7 +25,7 @@
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
                                     {{-- <th>Jurusan</th> --}}
-                                    <th>Nilai Siswa Terisi Lengkap</th>
+                                    <th>Nilai Siswa Terisi</th>
                                     <th>Semester</th>
                                     <th>Input Nilai</th>
                                     <th>Template Excel</th>
@@ -43,7 +43,6 @@
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
-    // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'daftar-nilai-sts/action-daftar-nilai-sts/delete';
@@ -54,11 +53,6 @@
         processing: true,
         serverSide: true,
         responsive: true,
-        pageLength: 5,
-        lengthMenu: [
-            [5, 10, 20, -1],
-            [5, 10, 20, 'All']
-        ],
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -79,11 +73,6 @@
                 name: 'kelas.nm_kelas',
                 className: 'align-center'
             },
-            // {
-            //     data: 'jurusan',
-            //     name: 'jurusan',
-            //     className: 'align-center'
-            // },
             {
                 data: 'jumlah',
                 name: 'jumlah',
@@ -133,9 +122,9 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class=" btn btn-success" href="' +
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         print_url + '/' + data.id + '"  target="_blank">' +
-                        '    Eksel' +
+                        '    <i class="material-icons">print</i>' +
                         '</a> ' +
                         '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
                         pdf_url + '/' + data.id + '"  target="_blank">' +
