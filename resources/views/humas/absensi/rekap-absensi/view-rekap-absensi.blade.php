@@ -226,7 +226,7 @@
                                             href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
                                             target="_blank"><i class="material-icons">picture_as_pdf</i></a>
                                         <a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
-                                            href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
+                                            href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/chart/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
                                             target="_blank"><i class="material-icons">insert_chart</i></a>
                                     </td>
                                     </tr>
