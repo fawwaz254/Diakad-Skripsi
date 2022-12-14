@@ -144,7 +144,11 @@
             </div>
         </div>
     </div>
-
+    <br>
+    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
+        target="_blank" class="btn bg-purple waves-effect">
+        <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Data</a>
+    <br>
     <div class="row clearfix" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">

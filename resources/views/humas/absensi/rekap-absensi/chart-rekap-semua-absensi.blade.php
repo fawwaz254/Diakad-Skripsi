@@ -67,46 +67,42 @@
 
 <body>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;" style="border-style : hidden">
-
         <tr>
             <td colspan="10" style="border-style : hidden">
-
                 <h2 align="center" style="margin-top: 3px">
                     REKAP ABSENSI <br>
                     {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br> --}}
                     {{ \Carbon\Carbon::parse($start_date)->format('d F Y') }} <span style="font-weight:normal">-</span>
                     {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}
-
+                    <br>
+                    Unit Kerja :
+                    {{ $nm_unit_kerja }}
                 </h2>
             </td>
         <tr>
-
-        <tr style="border-style : hidden">
-            <td style="border-style : hidden;width: 75%;font-weight: bold;">Nama :
-                {{ $pengguna->gelar_depan }} {{ $pengguna->nm_pengguna }} {{ $pengguna->gelar_belakang }}
-            <td style="border-style : hidden;width: 25%;font-weight: bold;">Kelas :
-                {{ $pengguna->siswa->kelas->nm_kelas }}
-        </tr>
     </table>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
         <div id="piechart" class="center"></div>
         <thead class="head">
             <tr>
-                <td style="text-align: center;font-weight: bold;">Hadir</td>
+                <td style="text-align: center;font-weight: bold;">Tepat Waktu</td>
                 <td style="text-align: center;font-weight: bold;">Terlambat<br></td>
                 <td style="text-align: center;font-weight: bold;">Izin</td>
                 <td style="text-align: center;font-weight: bold;">Sakit</td>
                 <td style="text-align: center;font-weight: bold;">Alpha</td>
-                {{-- <td style="text-align: center;font-weight: bold;">Check-out</td> --}}
+                <td style="text-align: center;font-weight: bold;">Tidak Checkout</td>
+                <td style="text-align: center;font-weight: bold;">Pulang Lebih Cepat</td>
             </tr>
         </thead>
         <tbody class="body">
             <tr>
-                <td style="text-align: center;">{{ $data['masuk'] }}</td>
-                <td style="text-align: center;">{{ $data['telat'] }}</td>
-                <td style="text-align: center;">{{ $data['izin'] }}</td>
-                <td style="text-align: center;">{{ $data['sakit'] }}</td>
-                <td style="text-align: center;">{{ $data['alpha'] }}</td>
+                <td style="text-align: center;">{{ $jumlah_hadir }}</td>
+                <td style="text-align: center;">{{ $jumlah_telat }}</td>
+                <td style="text-align: center;">{{ $jumlah_izin }}</td>
+                <td style="text-align: center;">{{ $jumlah_sakit }}</td>
+                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
+                <td style="text-align: center;">{{ $tidak_checkout }}</td>
+                <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
             </tr>
         </tbody>
     </table>
@@ -124,21 +120,21 @@
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
-            ['Masuk', {{ $data['masuk'] }}],
-            ['Sakit', {{ $data['sakit'] }}],
-            ['Izin', {{ $data['izin'] }}],
-            ['Telat', {{ $data['telat'] }}],
-            ['Alpha', {{ $data['alpha'] }}]
+            ['Tepat Waktu', {{ $jumlah_hadir }}],
+            ['Sakit', {{ $jumlah_sakit }}],
+            ['Izin', {{ $jumlah_izin }}],
+            ['Telat', {{ $jumlah_telat }}],
+            ['Alpha', {{ $jumlah_alpha }}],
+            ['Tidak Checkout', {{ $tidak_checkout }}],
+            ['Pulang Lebih Cepat', {{ $jumlah_pulangcepat }}]
         ]);
 
-        // Optional; add a title and set the width and height of the chart
         var options = {
             'width': 550,
             'height': 400,
-            colors: ['#0da300', '#afb607', '#b66907', '#b63b07', '#b60707'],
+            colors: ['#0da300', '#afb607', '#b66907', '#b63b07', '#b60707', '#00b0bf', '#0050bf'],
             is3D: true
         };
-        // Display the chart inside the <div> element with id="piechart"
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
         chart.draw(data, options);
     }

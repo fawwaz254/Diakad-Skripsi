@@ -76,17 +76,19 @@
                     {{-- {{ strtoupper($auth_data->sekolah_data->nm_sekolah) }}<br> --}}
                     {{ \Carbon\Carbon::parse($start_date)->format('d F Y') }} <span style="font-weight:normal">-</span>
                     {{ \Carbon\Carbon::parse($end_date)->format('d F Y') }}
+                    <br>
+                    Kelas : {{ $nm_kelas }}
 
                 </h2>
             </td>
         <tr>
 
-        <tr style="border-style : hidden">
+            {{-- <tr style="border-style : hidden">
             <td style="border-style : hidden;width: 75%;font-weight: bold;">Nama :
                 {{ $pengguna->gelar_depan }} {{ $pengguna->nm_pengguna }} {{ $pengguna->gelar_belakang }}
             <td style="border-style : hidden;width: 25%;font-weight: bold;">Kelas :
                 {{ $pengguna->siswa->kelas->nm_kelas }}
-        </tr>
+        </tr> --}}
     </table>
     <table cellspacing="0" cellpadding="10" style="width: 90%; margin: 0 auto;">
         <div id="piechart" class="center"></div>
@@ -102,11 +104,11 @@
         </thead>
         <tbody class="body">
             <tr>
-                <td style="text-align: center;">{{ $data['masuk'] }}</td>
-                <td style="text-align: center;">{{ $data['telat'] }}</td>
-                <td style="text-align: center;">{{ $data['izin'] }}</td>
-                <td style="text-align: center;">{{ $data['sakit'] }}</td>
-                <td style="text-align: center;">{{ $data['alpha'] }}</td>
+                <td style="text-align: center;">{{ $jumlah_hadir }}</td>
+                <td style="text-align: center;">{{ $jumlah_telat }}</td>
+                <td style="text-align: center;">{{ $jumlah_izin }}</td>
+                <td style="text-align: center;">{{ $jumlah_sakit }}</td>
+                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
             </tr>
         </tbody>
     </table>
@@ -124,11 +126,11 @@
     function drawChart() {
         var data = google.visualization.arrayToDataTable([
             ['Task', 'Hours per Day'],
-            ['Masuk', {{ $data['masuk'] }}],
-            ['Sakit', {{ $data['sakit'] }}],
-            ['Izin', {{ $data['izin'] }}],
-            ['Telat', {{ $data['telat'] }}],
-            ['Alpha', {{ $data['alpha'] }}]
+            ['Masuk', {{ $jumlah_hadir }}],
+            ['Sakit', {{ $jumlah_sakit }}],
+            ['Izin', {{ $jumlah_izin }}],
+            ['Telat', {{ $jumlah_telat }}],
+            ['Alpha', {{ $jumlah_alpha }}]
         ]);
 
         // Optional; add a title and set the width and height of the chart
