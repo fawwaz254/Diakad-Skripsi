@@ -73,12 +73,12 @@
                                                         'NILAI SUMATIF 2',
                                                         'STS',
                                                     ]))
-                                                        <input type="text" id="sts"
+                                                        <input type="number" id="sts"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                             value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
                                                             style="width: 80%; text-align:  center;" disabled>
                                                     @else
-                                                        <input type="text"
+                                                        <input type="texnumbert"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                             value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
                                                             style="width: 80%; text-align:  center;">
@@ -86,12 +86,12 @@
                                                 </td>
                                             @endforeach
                                             <td style="text-align: center;">
-                                                <input type="text" id="sas"
+                                                <input type="number" id="sas"
                                                     value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}"
                                                     style="width: 80%; text-align:  center;" disabled>
                                             </td>
                                             <td style="text-align: center;">
-                                                <input type="text" id="rt2smt"
+                                                <input type="number" id="rt2smt"
                                                     value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sas']) / 3) }}"
                                                     style="width: 80%; text-align:  center;" disabled>
                                             </td>

@@ -56,7 +56,7 @@
                                             <td>{{ $siswa->nis_siswa }} - {{ $siswa->pengguna->nm_pengguna }}</td>
                                             @foreach ($list_data as $nilai)
                                                 <td style="text-align: center;">
-                                                    <input type="text"
+                                                    <input type="number"
                                                         name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                         value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
                                                         style="width: 80%; text-align:  center;">
