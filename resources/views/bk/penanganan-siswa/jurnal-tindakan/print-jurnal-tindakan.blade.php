@@ -57,7 +57,7 @@
                     </tr>
                     <tr>
                         <th scope="row">Jenis Kelamin</th>
-                        <td>: {{ $siswa->jenis_kelamin }}</td>
+                        <td>: {{ $jenis_kelamin }}</td>
                         <td style="font-weight: 700">Tahun Pelajaran</td>
                         <td>: {{ $semester->tahun_ajaran }}</td>
                     </tr>
@@ -118,11 +118,11 @@
                         </tr>
                         <tr>
                             <td style="width:10%">1</td>
-                            <td>{{ $deskripsi_perilaku_1 }}</td>
+                            <td align="left">{{ $deskripsi_perilaku_1 }}</td>
                         </tr>
                         <tr>
                             <td style="width:10%">2</td>
-                            <td>{{ $deskripsi_perilaku_2 }}</td>
+                            <td align="left">{{ $deskripsi_perilaku_2 }}</td>
                         </tr>
                     </table>
                 @else
@@ -141,19 +141,21 @@
                 </fieldset>
             </div>
 
-            <div class="col-md-4" style="margin-top:45px;">
+            <div class="col-md-4" style="margin-top:50px;">
                 Mengetahui <br> Kepala Sekolah,
-                <div style="margin-top:40px;">{{ $sekolah_data->nm_kepala_sekolah }}</div>
+                <div style="margin-top:100px;">{{ $sekolah_data->nm_kepala_sekolah }}</div>
             </div>
 
-            <div class="col-md-4" style="margin-top:65px;">
-                Orang Tua / Wali Peserta Dididk
-                <div style="margin-top:40px;">...........</div>
+            <div class="col-md-4" style="margin-top:75px;">
+                Orang Tua / Wali Peserta Didik,
+                <div style="margin-top:100px;">...........................</div>
             </div>
 
-            <div class="col-md-4" style="margin-top:65px;">
-                Sidoarjo, {{ now('Asia/Jakarta')->format('d M Y') }} <br> Wali Kelas
-                <div style="margin-top:40px;">...........</div>
+            <div class="col-md-4" style="margin-top:50px;">
+                Sidoarjo, {{ now('Asia/Jakarta')->format('d M Y') }} <br> Wali Kelas,
+                <div style="margin-top:100px;">
+                    {{ $wali_kelas->gelar_depan }} {{ $wali_kelas->nm_wali_kelas }} {{ $wali_kelas->gelar_belakang }}
+                </div>
             </div>
 
         </div>
