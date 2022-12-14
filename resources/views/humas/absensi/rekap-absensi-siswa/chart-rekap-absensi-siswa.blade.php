@@ -134,7 +134,9 @@
         // Optional; add a title and set the width and height of the chart
         var options = {
             'width': 550,
-            'height': 400
+            'height': 400,
+            colors: ['#0da300', '#afb607', '#b66907', '#b63b07', '#b60707'],
+            is3D: true
         };
         // Display the chart inside the <div> element with id="piechart"
         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
