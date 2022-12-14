@@ -261,11 +261,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/detail/{unit_kerja}/{start_date}/{end_date}', [RekapAbsensiController::class, 'viewRekapAbsensi']);
                 Route::get('/cetak/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'cetakRekapAbsensi']);
                 Route::get('/chart/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'chartRekapAbsensi']);
+                Route::get('/allDataChart/{unit_kerja}/{start_data}/{end_date}', [RekapAbsensiController::class, 'chartAllRekapAbsensi']);
 
                 Route::get('/siswa', [RekapAbsensiController::class, 'selectRekapAbsensiSiswa']);
                 Route::get('/detail/siswa/{kelas}/{start_date}/{end_date}', [RekapAbsensiController::class, 'viewRekapAbsensiSiswa']);
                 Route::get('/cetak/siswa/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'cetakRekapAbsensiSiswa']);
                 Route::get('/chart/siswa/{id_pengguna}/{start_date}/{end_date}', [RekapAbsensiController::class, 'chartRekapAbsensiSiswa']);
+                Route::get('/allDataChart/siswa/{id_kelas}/{start_data}/{end_date}', [RekapAbsensiController::class, 'chartAllRekapAbsensiSiswa']);
             });
         });
 
