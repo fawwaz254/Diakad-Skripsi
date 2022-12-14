@@ -20,7 +20,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
 {
     public function viewKomponenInputNilai(Request $request, $id_rapor_sisipan)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -79,7 +79,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
 
     public function actionInputNilai(Request $request, $mode, $id_rapor_sisipan = null)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -114,9 +114,11 @@ class InputNilaiRaporSisipanAkhirController extends Controller
                         $nilai = $input->nilai[$nilaiRapor['id_komponen_nilai'] . '-' . $nilaiRapor['id_siswa'] . '-' . $nilaiRapor['id_rapor_sisipan']];
                         $NilaiRaporSisipan                            = NilaiRaporSisipan::where('id_komponen_nilai', $nilaiRapor['id_komponen_nilai'])->where('id_siswa', $nilaiRapor['id_siswa'])->where('id_rapor_sisipan', $nilaiRapor['id_rapor_sisipan'])->first();
                         if ($NilaiRaporSisipan) {
-                            $NilaiRaporSisipan->nilai                 = $nilai;
-                            $NilaiRaporSisipan->updated_by            = $input->auth_data->pengguna->id_pengguna;
-                            $NilaiRaporSisipan->save();
+                            if (is_numeric($nilai)) {
+                                $NilaiRaporSisipan->nilai                 = $nilai;
+                                $NilaiRaporSisipan->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                                $NilaiRaporSisipan->save();
+                            }
                         }
                     }
                 }
