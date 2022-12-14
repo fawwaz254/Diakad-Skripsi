@@ -205,7 +205,7 @@ class RekapAbsensiController extends Controller
 
     public function viewRekapAbsensi(Request $request, $unit_kerja, $start_date, $end_date)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
