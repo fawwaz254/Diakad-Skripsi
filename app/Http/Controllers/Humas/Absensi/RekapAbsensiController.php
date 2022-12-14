@@ -34,7 +34,7 @@ class RekapAbsensiController extends Controller
 
     public function chartAllRekapAbsensi(Request $request, $unit_kerja, $start_date, $end_date)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -379,7 +379,7 @@ class RekapAbsensiController extends Controller
 
     public function chartAllRekapAbsensiSiswa(Request $request, $id_kelas, $start_date, $end_date)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -539,7 +539,7 @@ class RekapAbsensiController extends Controller
 
     public function viewRekapAbsensiSiswa(Request $request, $id_kelas, $start_date, $end_date)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -698,7 +698,7 @@ class RekapAbsensiController extends Controller
     public function cetakRekapAbsensi(Request $request, $id_pengguna, $start_date, $end_date)
     {
 
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -845,7 +845,7 @@ class RekapAbsensiController extends Controller
     public function chartRekapAbsensi(Request $request, $id_pengguna, $start_date, $end_date)
     {
 
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -991,7 +991,7 @@ class RekapAbsensiController extends Controller
 
     public function chartRekapAbsensiSiswa(Request $request, $id_pengguna, $start_date, $end_date)
     {
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -1137,7 +1137,7 @@ class RekapAbsensiController extends Controller
     public function cetakRekapAbsensiSiswa(Request $request, $id_pengguna, $start_date, $end_date)
     {
 
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
