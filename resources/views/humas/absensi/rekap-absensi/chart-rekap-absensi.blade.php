@@ -145,7 +145,11 @@
 
         var options = {
             'width': 550,
-            'height': 400
+            'height': 400,
+            colors: ['#0da300', '#afb607', '#b66907', '#b63b07', '#b60707', '#00b0bf', '#0059bf', '#7700bf',
+                '#bf00ae'
+            ],
+            is3D: true
         };
         // Optional; add a title and set the width and height of the chart
 

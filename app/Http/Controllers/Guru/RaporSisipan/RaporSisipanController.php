@@ -56,15 +56,22 @@ class RaporSisipanController extends Controller
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         if ($mode == 'delete') {
+            try {
+                $nilaiRaporSisipan = NilaiRaporSisipan::where('id_rapor_sisipan', $id)->get();
+                foreach ($nilaiRaporSisipan as $id) {
+                    $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
+                    $nilai->delete();
+                }
 
-            $nilaiRaporSisipan = NilaiRaporSisipan::where('id_rapor_sisipan', $id)->get();
-            foreach ($nilaiRaporSisipan as $id) {
-                $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
-                $nilai->delete();
+                $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
+                $raporSisipan->delete();
+            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                return [
+                    'status' => 202,
+                    'path' => 'rapor-sisipan/daftar-nilai-sts',
+                    'message' => 'Delete Rapor Sisipan Gagal, Silahkan coba lagi'
+                ];
             }
-
-            $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
-            $raporSisipan->delete();
 
             return [
                 'status' => 202,
