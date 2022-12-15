@@ -26,6 +26,8 @@
                         action="{{ url(Request::segment(1) . '/' . Request::segment(2)) }}/{{ !empty($alumni) ? 'tracer-alumni/action/edit/' . $alumni->id_alumni : 'tracer-alumni/action/add/0' }}">
                         {{ csrf_field() }}
                         <input type="hidden" name="id_alumni" value="{{ !empty($alumni) ? $alumni->id_alumni : '' }}">
+                        <input type="hidden" name="id_c_siswa"
+                            value="{{ !empty($alumni) ? $alumni->id_c_siswa : $siswa->id_c_siswa }}">
                         <div class="col-md-8">
                             <h2 class="card-inside-title"> Nama Siswa </h2>
                             <input type="text" class="form-control" name="nama_siswa" aria-required="true"
@@ -109,12 +111,13 @@
                                 <div class="form-group">
                                     <div class="form-line">
                                         <select class="form-control show-tick" name="jenis_sekolah">
-                                            <option disabled>Pilih Jenis</option>
-                                            <option @if (isset($alumni) && $alumni->jenis_sekolah == 'sma') selected @endif value="sma">SMA
+                                            <option @if (!isset($alumni)) selected @endif disabled>Pilih
+                                                Jenis</option>
+                                            <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'sma') selected @endif value="sma">SMA
                                                 (Sekolah Menengah Atas)</option>
-                                            <option @if (isset($alumni) && $alumni->jenis_sekolah == 'smk') selected @endif value="smk">SMK
+                                            <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'smk') selected @endif value="smk">SMK
                                                 (Sekolah Menengah Kejuruan)</option>
-                                            <option @if (isset($alumni) && $alumni->jenis_sekolah == 'ma') selected @endif value="ma"> MA
+                                            <option @if (isset($alumni) && $alumni->smp->jenis_sekolah == 'ma') selected @endif value="ma"> MA
                                                 (Madrasah Aliyah)</option>
                                         </select>
                                     </div>
@@ -194,7 +197,6 @@
                                     </span>
                                 </button>
                             @endif
-
                         </div>
                     </form>
                 </div>

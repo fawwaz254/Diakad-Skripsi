@@ -357,12 +357,11 @@ class TracerAlumniController extends BaseController
             DB::beginTransaction();
 
             try {
-                // dd($request->id_c_siswa);
-                // $jurusan = CalonSiswaBaru::where('id_c_siswa',  $request->id_c_siswa)->first();
-                // $jurusan->id_jurusan = $request->jurusan;
-                // $jurusan->alamat_jalan = $request->alamat_siswa;
-                // $jurusan->nomor_hp = $request->nomor_hp;
-                // $jurusan->save();
+                $jurusan = CalonSiswaBaru::where('id_c_siswa',  $request->id_c_siswa)->first();
+                $jurusan->id_jurusan = $request->jurusan;
+                $jurusan->alamat_jalan = $request->alamat_siswa;
+                $jurusan->nomor_hp = $request->nomor_hp;
+                $jurusan->save();
 
                 $alumni =   Alumni::where('id_alumni', $request->id_alumni)->first();
                 $alumni->id_kelas  = $request->id_kelas;
@@ -456,8 +455,9 @@ class TracerAlumniController extends BaseController
             $alumni->delete();
 
             return [
-                'status' => 203, // SUCCESS AND LOAD TABLE
-                'message' => 'Delete Alumni Successfully'
+                'status'    => 202, // SUCCESS AND LOAD TABLE
+                'path'      => $request->segment(1) . '#alumni/tracer-alumni',
+                'message'   => 'Delete Alumni Successfully'
             ];
         }
     }
