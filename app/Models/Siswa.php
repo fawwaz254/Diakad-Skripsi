@@ -91,6 +91,11 @@ class Siswa extends Model
         return $this->hasMany(LogKelasSiswa::class, 'id_siswa');
     }
 
+    public function nilai_rapor_sisipan()
+    {
+        return $this->hasMany(NilaiRaporSisipan::class, 'id_siswa');
+    }
+
     public function last_kelas_siswa()
     {
         return $this->hasOne(LogKelasSiswa::class, 'id_siswa')->orderBy('created_at', 'desc');
@@ -103,10 +108,12 @@ class Siswa extends Model
 
     public function all_tagihan()
     {
-        $tagihan = $this->tagihan_biaya()->isTagih()->with([
-            'detail_biaya' => function ($q) {
-                return $q->isValid()->with('bulan', 'biaya', 'biaya_sekolah.semester')->orderBy('created_at', 'desc');
-            }]
+        $tagihan = $this->tagihan_biaya()->isTagih()->with(
+            [
+                'detail_biaya' => function ($q) {
+                    return $q->isValid()->with('bulan', 'biaya', 'biaya_sekolah.semester')->orderBy('created_at', 'desc');
+                }
+            ]
         );
 
         $collection = collect();
