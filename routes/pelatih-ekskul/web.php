@@ -1,17 +1,18 @@
 <?php
 
-use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
+use App\Http\Controllers\PelatihEkskul\WelcomeController;
 use App\Http\Controllers\ManajemenFile\DataFileController;
 use App\Http\Controllers\ManajemenFile\DataKategoriController;
+use App\Http\Controllers\Guru\Kesekretariatan\DokumenController;
 use App\Http\Controllers\ManajemenFile\SubDataKategoriController;
 use App\Http\Controllers\PelatihEkskul\AbsensiEkskul\InputAbsensiEkskulController;
 use App\Http\Controllers\PelatihEkskul\AbsensiEkskul\RekapAbsensiEkskulController;
-use App\Http\Controllers\PelatihEkskul\WelcomeController;
+use App\Http\Controllers\Guru\PembinaEkskul\RekapAbsensiEkskulController as RekapAbsensiEkskulControllerFromGuru;
 
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('pelatih-ekskul')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 
@@ -56,6 +57,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('rekap-absensi-ekskul', [RekapAbsensiEkskulController::class, 'viewRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/detail/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'viewDetailRekapAbsensiEkskul']);
             Route::get('rekap-absensi-ekskul/print/{id_semester}/{id_ekskul}', [RekapAbsensiEkskulController::class, 'printRekapAbsensiEkskul']);
+            Route::get('rekap-absensi-ekskul/print-detail/{id_semester}/{id_ekskul}/{id_siswa}', [RekapAbsensiEkskulControllerFromGuru::class, 'printRekapAbsensiKehadiranEkskul']);
         });
 
         Route::prefix('kesekretariatan')->group(function () {
