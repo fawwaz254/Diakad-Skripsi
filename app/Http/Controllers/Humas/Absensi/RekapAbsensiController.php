@@ -399,8 +399,10 @@ class RekapAbsensiController extends Controller
             $input->pengguna = $pengguna;
             $input->start_date = $start_date;
             $input->end_date = $end_date;
+            $input->auth_data = $auth_data;
 
             RekapAbsensiSiswa::dispatch($input);
+            return false;
         } elseif ($id_kelas == "2") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -413,8 +415,10 @@ class RekapAbsensiController extends Controller
             $input->pengguna = $pengguna;
             $input->start_date = $start_date;
             $input->end_date = $end_date;
+            $input->auth_data = $auth_data;
 
             RekapAbsensiSiswa::dispatch($input);
+            return  false;
         } elseif ($id_kelas == "0") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -427,8 +431,10 @@ class RekapAbsensiController extends Controller
             $input->pengguna = $pengguna;
             $input->start_date = $start_date;
             $input->end_date = $end_date;
+            $input->auth_data = $auth_data;
 
             RekapAbsensiSiswa::dispatch($input);
+            return false;
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {

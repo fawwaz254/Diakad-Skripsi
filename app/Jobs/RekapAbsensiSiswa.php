@@ -47,6 +47,7 @@ class RekapAbsensiSiswa implements ShouldQueue
         $start_date = $this->input->start_date;
         $end_date = $this->input->end_date;
         $nm_kelas = $this->input->nm_kelas;
+        $auth_data = $this->input->auth_data;
 
         $hasil = [];
         $jumlah_hadir = 0;
@@ -164,6 +165,6 @@ class RekapAbsensiSiswa implements ShouldQueue
         // $start_date = Carbon::parse($start_date)->format('Y-m-d');
         // $end_date = Carbon::parse($end_date)->format('Y-m-d');
 
-        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas'));
+        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date'));
     }
 }
