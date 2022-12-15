@@ -137,24 +137,31 @@ class SetJadwalKelasGuruController extends Controller
 
     public function actionTambahJadwalKelas(Request $request, $mode, $id = null)
     {
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
-        // dd($mode);
-
-
-        $validator = Validator::make($request->all(), [
-            'jamMasuk' => 'required',
-            'jamSelesai' => 'required',
-            'ruangan' => 'required',
-            'guru' => 'required',
-            'id_hari' => 'required',
-            'id_semester' => 'required',
-            'id_kelas'          => 'required'
-        ]);
-
         //validasi waktu
+        if ($mode != 'delete') {
+            $validator = Validator::make($request->all(), [
+                'jamMasuk'          => 'required',
+                'jamSelesai'        => 'required',
+                'ruangan'           => 'required',
+                'guru'               => 'required',
+                'id_hari'           => 'required',
+                'id_semester'       => 'required',
+                'id_kelas'          => 'required'
+            ]);
+        }
+
+        if ($mode != 'delete' && $validator->fails()) {
+            return [
+                'status_code' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        }
+
         if ($mode != 'delete') {
             $jam_masuk = JadwalJam::find($input->jamMasuk);
             $jam_keluar = JadwalJam::find($input->jamSelesai);
@@ -165,132 +172,122 @@ class SetJadwalKelasGuruController extends Controller
                 ];
             }
             $cek_jadwal = LibAkademik::cekJadwalKelas($auth_data, $input->guru, '-', $input->id_hari, $input->jamMasuk, $input->jamSelesai);
-            if ($mode == 'add') {
-                if ($cek_jadwal['guru'] == 0) {
-                    return [
-                        'status_code' => 300, // FAILED
-                        'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas lain '
-                    ];
-                } elseif ($cek_jadwal['ruangan'] == 0) {
-                    return [
-                        'status_code' => 300, // FAILED
-                        'message' => 'Sudah Ada Jadwal yang Sama di Waktu dan Tempat yang sama'
-                    ];
-                }
+        }
+
+        if ($mode == 'add') {
+            if ($cek_jadwal['guru'] == 0) {
+                return [
+                    'status_code' => 300, // FAILED
+                    'message' => 'Guru yang bersangkutan sudah mengambil waktu ini di kelas lain '
+                ];
+            } elseif ($cek_jadwal['ruangan'] == 0) {
+                return [
+                    'status_code' => 300, // FAILED
+                    'message' => 'Sudah Ada Jadwal yang Sama di Waktu dan Tempat yang sama'
+                ];
             }
         }
 
-        if ($mode != 'delete' && $validator->fails()) {
+        // mengambil waktu sekarang
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        if ($mode == 'add') {
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $mapel = MataPelajaran::find($input->mapel);
+            $kelas = Kelas::find($input->id_kelas);
+
+            $kelas_mp                           = new KelasMp;
+            $kelas_mp->id_kelas_mp              = $id;
+            $kelas_mp->id_semester              = $input->id_semester;
+            $kelas_mp->id_kelas                 = $input->id_kelas;
+            $kelas_mp->id_mata_pelajaran        = $input->mapel;
+            $kelas_mp->nm_kelas_mp              = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
+            $kelas_mp->jml_pertemuan_kelas_mp   = '0';
+            $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
+            $kelas_mp->created_at               = $now;
+            $kelas_mp->save();
+
+
+            // $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
+
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $jadwal_kelas_mp                        = new JadwalKelasMp;
+            $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
+            $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
+            $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
+            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
+            $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
+            $jadwal_kelas_mp->created_at            = $now;
+            $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
+            $jadwal_kelas_mp->save();
+
+            $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pengampu_mp                    = new PengampuMp();
+            $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
+            $pengampu_mp->id_guru           = $input->guru;
+            $pengampu_mp->pjmp_pengampu_mp  = 1;
+            // $pengampu_mp->pjmp_uts          = 1;
+            // $pengampu_mp->pjmp_uas          = 1;
+            $pengampu_mp->created_at        = $now;
+            $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
+            $pengampu_mp->save();
             return [
-                'status_code' => 300, // FAILED
-                'message' => $validator->errors()->first()
+                'status_code' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                'message' => 'Save Successfully'
             ];
-        } else {
-            // mengambil waktu sekarang
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-
-
-            if ($mode == 'add') {
-
-
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-
-                $mapel = MataPelajaran::find($input->mapel);
-                $kelas = Kelas::find($input->id_kelas);
-
-                $kelas_mp                           = new KelasMp;
-                $kelas_mp->id_kelas_mp              = $id;
-                $kelas_mp->id_semester              = $input->id_semester;
-                $kelas_mp->id_kelas                 = $input->id_kelas;
-                $kelas_mp->id_mata_pelajaran        = $input->mapel;
-                $kelas_mp->nm_kelas_mp              = $mapel->nm_mata_pelajaran . '-' . $kelas->nm_kelas;
-                $kelas_mp->jml_pertemuan_kelas_mp   = '0';
-                $kelas_mp->created_by               = $input->auth_data->pengguna->id_pengguna;
-                $kelas_mp->created_at               = $now;
-                $kelas_mp->save();
-
-
-                // $ruang = Ruangan::where('id_kelas', $input->id_kelas)->first();
-
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $jadwal_kelas_mp                        = new JadwalKelasMp;
-                $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
-                $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
-                $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
-                $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
-                $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
-                $jadwal_kelas_mp->created_at            = $now;
-                $jadwal_kelas_mp->created_by            = $input->auth_data->pengguna->id_pengguna;
-                $jadwal_kelas_mp->save();
-
-                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $pengampu_mp                    = new PengampuMp();
-                $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
-                $pengampu_mp->id_guru           = $input->guru;
-                $pengampu_mp->pjmp_pengampu_mp  = 1;
-                // $pengampu_mp->pjmp_uts          = 1;
-                // $pengampu_mp->pjmp_uas          = 1;
-                $pengampu_mp->created_at        = $now;
-                $pengampu_mp->created_by        = $input->auth_data->pengguna->id_pengguna;
-                $pengampu_mp->save();
+        } elseif ($mode == 'delete') {
+            // dd($id);
+            if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                 return [
-                    'status_code' => 202, // SUCCESS AND LOAD CONTENT
-                    'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                    'message' => 'Save Successfully'
+                    'status_code' => 300, // SUCCESS AND LOAD TABLE
+                    'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
                 ];
-            } elseif ($mode == 'delete') {
+            } else {
                 // dd($id);
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
-                    return [
-                        'status_code' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
-                    ];
-                } else {
-                    // dd($id);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+                JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                    PengampuMp::where('id_kelas_mp', $id)->delete();
+                PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                PengampuMp::where('id_kelas_mp', $id)->delete();
 
 
-                    return [
-                        'status_code' => 202, // SUCCESS AND LOAD TABLE
-                        'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                        'message' => 'Delete Jadwal Mata Ajar Successfully'
-                    ];
-                }
-            } elseif ($mode = 'edit') {
-                $jadwal_kelas_mp                        = JadwalKelasMp::find($id);
-                // $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                // $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
-                $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
-                $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
-                $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
-                $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
-                $jadwal_kelas_mp->updated_at            = $now;
-                $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
-                $jadwal_kelas_mp->save();
-
-                // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp);
-                // $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-                // $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
-                $pengampu_mp->id_guru           = $input->guru;
-                // $pengampu_mp->pjmp_pengampu_mp  = 1;
-                // $pengampu_mp->pjmp_uts          = 1;
-                // $pengampu_mp->pjmp_uas          = 1;
-                $jadwal_kelas_mp->updated_at            = $now;
-                $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
-                $pengampu_mp->save();
                 return [
-                    'status_code' => 202, // SUCCESS AND LOAD CONTENT
+                    'status_code' => 202, // SUCCESS AND LOAD TABLE
                     'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                    'message' => 'Save Successfully'
+                    'message' => 'Delete Jadwal Mata Ajar Successfully'
                 ];
             }
+        } elseif ($mode = 'edit') {
+            $jadwal_kelas_mp                        = JadwalKelasMp::find($id);
+            // $jadwal_kelas_mp->id_jadwal_kelas_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            // $jadwal_kelas_mp->id_kelas_mp           = $kelas_mp->id_kelas_mp;
+            $jadwal_kelas_mp->id_jadwal_hari        = $input->id_hari;
+            $jadwal_kelas_mp->id_jadwal_jam         = $input->jamMasuk;
+            $jadwal_kelas_mp->id_jadwal_jam_selesai = $input->jamSelesai;
+            $jadwal_kelas_mp->id_ruangan            = $input->ruangan;
+            $jadwal_kelas_mp->updated_at            = $now;
+            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+            $jadwal_kelas_mp->save();
+
+            // $id = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            $pengampu_mp                    = PengampuMp::find($input->id_pengampu_mp);
+            // $pengampu_mp->id_pengampu_mp    = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            // $pengampu_mp->id_kelas_mp       = $kelas_mp->id_kelas_mp;
+            $pengampu_mp->id_guru           = $input->guru;
+            // $pengampu_mp->pjmp_pengampu_mp  = 1;
+            // $pengampu_mp->pjmp_uts          = 1;
+            // $pengampu_mp->pjmp_uas          = 1;
+            $jadwal_kelas_mp->updated_at            = $now;
+            $jadwal_kelas_mp->updated_by            = $input->auth_data->pengguna->id_pengguna;
+            $pengampu_mp->save();
+            return [
+                'status_code' => 202, // SUCCESS AND LOAD CONTENT
+                'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                'message' => 'Save Successfully'
+            ];
         }
     }
 }
