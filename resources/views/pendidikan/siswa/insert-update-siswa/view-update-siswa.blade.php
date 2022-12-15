@@ -34,14 +34,13 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="nm_pengguna" required=""
-                                    aria-required="true" aria-invalid="true" value="{{ $siswa->nm_pengguna }}"
-                                    disabled>
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->nm_pengguna }}">
                                 <input type="hidden" class="form-control" name="id_c_siswa" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->id_c_siswa }}" disabled>
+                                    aria-invalid="true" value="{{ $siswa->id_c_siswa }}">
                                 <input type="hidden" class="form-control" name="id_siswa" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->id_siswa }}" disabled>
+                                    aria-invalid="true" value="{{ $siswa->id_siswa }}">
                                 <input type="hidden" class="form-control" name="id_pengguna" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->id_pengguna }}" disabled>
+                                    aria-invalid="true" value="{{ $siswa->id_pengguna }}">
                             </div>
                         </div>
                         <br>
@@ -73,8 +72,7 @@
                                 <input type="hidden" class="form-control" name="nis_siswa" aria-required="true"
                                     aria-invalid="true" value="{{ $siswa->nis_siswa }}">
                                 <input type="hidden" class="form-control" name="id_status_pengguna"
-                                    aria-required="true" aria-invalid="true"
-                                    value="{{ $siswa->id_status_pengguna }}">
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->id_status_pengguna }}">
                             </div>
                         </div>
                         <br>
@@ -149,8 +147,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nomor_akta_lahir" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->nomor_akta_lahir }}">
+                                <input type="text" class="form-control" name="nomor_akta_lahir"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->nomor_akta_lahir }}">
                             </div>
                         </div>
                         <br>
@@ -213,8 +211,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_kewarganegaraan" aria-required="true"
-                                    aria-invalid="true"
+                                <input type="text" class="form-control" name="nm_kewarganegaraan"
+                                    aria-required="true" aria-invalid="true"
                                     value="{{ isset($siswa->nm_kewarganegaraan) ? $siswa->nm_kewarganegaraan : '' }}">
                             </div>
                         </div>
@@ -297,8 +295,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_kelurahan" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_kelurahan }}">
+                                <input type="text" class="form-control" name="alamat_kelurahan"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_kelurahan }}">
                             </div>
                         </div>
                         <br>
@@ -310,8 +308,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_kecamatan" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_kecamatan }}">
+                                <input type="text" class="form-control" name="alamat_kecamatan"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_kecamatan }}">
                             </div>
                         </div>
                         <br>
@@ -323,8 +321,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_kodepos" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_kodepos }}">
+                                <input type="text" class="form-control" name="alamat_kodepos"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_kodepos }}">
                             </div>
                         </div>
                         <br>
@@ -370,8 +368,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_latitude" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_latitude }}">
+                                <input type="text" class="form-control" name="alamat_latitude"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_latitude }}">
                             </div>
                         </div>
                         <br>
@@ -382,8 +380,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_longitude" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_longitude }}">
+                                <input type="text" class="form-control" name="alamat_longitude"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_longitude }}">
                             </div>
                         </div>
                         <br>
@@ -489,7 +487,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="is_punya_kip" id="is_punya_kip">
-                                    <option value="1" {{ $siswa->is_punya_kip == 1 ? 'selected' : '' }}>Ya</option>
+                                    <option value="1" {{ $siswa->is_punya_kip == 1 ? 'selected' : '' }}>Ya
+                                    </option>
                                     <option value="0" {{ $siswa->is_punya_kip == 0 ? 'selected' : '' }}>Tidak
                                     </option>
                                 </select>
@@ -517,8 +516,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nm_tertera_kip" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->nm_tertera_kip }}">
+                                <input type="text" class="form-control" name="nm_tertera_kip"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->nm_tertera_kip }}">
                             </div>
                         </div>
                         <br>
@@ -530,7 +529,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="is_layak_pip" id="is_layak_pip">
-                                    <option value="1" {{ $siswa->is_punya_pip == 1 ? 'selected' : '' }}>Ya</option>
+                                    <option value="1" {{ $siswa->is_punya_pip == 1 ? 'selected' : '' }}>Ya
+                                    </option>
                                     <option value="0" {{ $siswa->is_punya_pip == 0 ? 'selected' : '' }}>Tidak
                                     </option>
                                 </select>
@@ -585,9 +585,11 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="status_ayah" id="status_ayah">
-                                    <option value="1" {{ $siswa->status_ayah == 1 ? 'selected' : '' }}>Masih Hidup
+                                    <option value="1" {{ $siswa->status_ayah == 1 ? 'selected' : '' }}>Masih
+                                        Hidup
                                     </option>
-                                    <option value="2" {{ $siswa->status_ayah == 2 ? 'selected' : '' }}>Wafat</option>
+                                    <option value="2" {{ $siswa->status_ayah == 2 ? 'selected' : '' }}>Wafat
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -704,8 +706,9 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_jalan_ayah" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_jalan_ayah }}">
+                                <input type="text" class="form-control" name="alamat_jalan_ayah"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->alamat_jalan_ayah }}">
                             </div>
                         </div>
                         <br>
@@ -717,8 +720,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_rt_ayah" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->almat_rt_ayah }}">
+                                <input type="text" class="form-control" name="alamat_rt_ayah"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->almat_rt_ayah }}">
                             </div>
                         </div>
                         <br>
@@ -730,8 +733,8 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_rw_ayah" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_rw_ayah }}">
+                                <input type="text" class="form-control" name="alamat_rw_ayah"
+                                    aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_rw_ayah }}">
                             </div>
                         </div>
                         <br>
@@ -743,8 +746,9 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_dusun_ayah" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_dusun_ayah }}">
+                                <input type="text" class="form-control" name="alamat_dusun_ayah"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->alamat_dusun_ayah }}">
                             </div>
                         </div>
                         <br>
@@ -854,9 +858,11 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="status_ibu" id="status_ibu">
-                                    <option value="1" {{ $siswa->status_ibu == 1 ? 'selected' : '' }}>Masih Hidup
+                                    <option value="1" {{ $siswa->status_ibu == 1 ? 'selected' : '' }}>Masih
+                                        Hidup
                                     </option>
-                                    <option value="2" {{ $siswa->status_ibu == 2 ? 'selected' : '' }}>Wafat</option>
+                                    <option value="2" {{ $siswa->status_ibu == 2 ? 'selected' : '' }}>Wafat
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -973,8 +979,9 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_jalan_ibu" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_jalan_ibu }}">
+                                <input type="text" class="form-control" name="alamat_jalan_ibu"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->alamat_jalan_ibu }}">
                             </div>
                         </div>
                         <br>
@@ -1012,8 +1019,9 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="alamat_dusun_ibu" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_dusun_ibu }}">
+                                <input type="text" class="form-control" name="alamat_dusun_ibu"
+                                    aria-required="true" aria-invalid="true"
+                                    value="{{ $siswa->alamat_dusun_ibu }}">
                             </div>
                         </div>
                         <br>
@@ -1122,7 +1130,8 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <select class="form-control show-tick" name="status_wali" id="status_wali">
-                                    <option value="1" {{ $siswa->status_wali == 1 ? 'selected' : '' }}>Masih Hidup
+                                    <option value="1" {{ $siswa->status_wali == 1 ? 'selected' : '' }}>Masih
+                                        Hidup
                                     </option>
                                     <option value="2" {{ $siswa->status_wali == 2 ? 'selected' : '' }}>Wafat
                                     </option>

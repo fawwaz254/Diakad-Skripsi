@@ -78,7 +78,7 @@
             REKAP ABSENSI EKSTRAKURIKULER<br>
             Semester {{ $semester_aktif->tahun_ajaran }} ({{ $semester_aktif->nm_semester }})
         </h2>
-        
+
         <table style="border-style:hidden; width: 90%; margin: 0 auto;font-weight: bold; margin-top:5px;">
             <tbody>
                 <tr style="border-style:hidden;">
@@ -113,15 +113,16 @@
                 <tr>
                     <td style="text-align: center;">{{ ++$no }}</td>
                     <td style="text-align: center;">Hadir</td>
-                    <td style="text-align: center;">{{$hadir}} x</td>
+                    <td style="text-align: center;">{{ $hadir }} x</td>
                     <td>
-                        @foreach($data_presensi as $presensi_ekskul)
-                        @php
-                            $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa)
-                        @endphp
-                        @if($presensi_ekskul_peserta->kehadiran == 1)
-                            Pertemuan ke-{{$presensi_ekskul->pertemuan_ke}}: {{\Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y')}}<br>
-                        @endif
+                        @foreach ($data_presensi as $presensi_ekskul)
+                            @php
+                                $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa);
+                            @endphp
+                            @if ($presensi_ekskul_peserta->kehadiran == 1)
+                                Pertemuan ke-{{ $presensi_ekskul->pertemuan_ke }}:
+                                {{ \Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y') }}<br>
+                            @endif
                         @endforeach
                     </td>
                 </tr>
@@ -129,15 +130,16 @@
                 <tr>
                     <td style="text-align: center;">{{ ++$no }}</td>
                     <td style="text-align: center;">Izin</td>
-                    <td style="text-align: center;">{{$izin}} x</td>
+                    <td style="text-align: center;">{{ $izin }} x</td>
                     <td>
-                        @foreach($data_presensi as $presensi_ekskul)
-                        @php
-                            $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa)
-                        @endphp
-                        @if($presensi_ekskul_peserta->kehadiran == 3)
-                            Pertemuan ke-{{$presensi_ekskul->pertemuan_ke}}: {{\Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y')}}<br>
-                        @endif
+                        @foreach ($data_presensi as $presensi_ekskul)
+                            @php
+                                $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa);
+                            @endphp
+                            @if ($presensi_ekskul_peserta->kehadiran == 3)
+                                Pertemuan ke-{{ $presensi_ekskul->pertemuan_ke }}:
+                                {{ \Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y') }}<br>
+                            @endif
                         @endforeach
                     </td>
                 </tr>
@@ -145,15 +147,16 @@
                 <tr>
                     <td style="text-align: center;">{{ ++$no }}</td>
                     <td style="text-align: center;">Sakit</td>
-                    <td style="text-align: center;">{{$sakit}} x</td>
+                    <td style="text-align: center;">{{ $sakit }} x</td>
                     <td>
-                        @foreach($data_presensi as $presensi_ekskul)
-                        @php
-                            $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa)
-                        @endphp
-                        @if($presensi_ekskul_peserta->kehadiran == 2)
-                            Pertemuan ke-{{$presensi_ekskul->pertemuan_ke}}: {{\Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y')}}<br>
-                        @endif
+                        @foreach ($data_presensi as $presensi_ekskul)
+                            @php
+                                $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa);
+                            @endphp
+                            @if ($presensi_ekskul_peserta->kehadiran == 2)
+                                Pertemuan ke-{{ $presensi_ekskul->pertemuan_ke }}:
+                                {{ \Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y') }}<br>
+                            @endif
                         @endforeach
                     </td>
                 </tr>
@@ -161,21 +164,22 @@
                 <tr>
                     <td style="text-align: center;">{{ ++$no }}</td>
                     <td style="text-align: center;">Alpha</td>
-                    <td style="text-align: center;">{{$alpha}} x</td>
+                    <td style="text-align: center;">{{ $alpha }} x</td>
                     <td>
-                        @foreach($data_presensi as $presensi_ekskul)
-                        @php
-                            $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa)
-                        @endphp
-                        @if($presensi_ekskul_peserta->kehadiran == 4)
-                            Pertemuan ke-{{$presensi_ekskul->pertemuan_ke}}: {{\Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y')}}<br>
-                        @endif
+                        @foreach ($data_presensi as $presensi_ekskul)
+                            @php
+                                $presensi_ekskul_peserta = $presensi_ekskul->presensi_ekskul_peserta->firstWhere('id_siswa', $data_siswa->id_siswa);
+                            @endphp
+                            @if ($presensi_ekskul_peserta->kehadiran == 4)
+                                Pertemuan ke-{{ $presensi_ekskul->pertemuan_ke }}:
+                                {{ \Carbon\Carbon::create($presensi_ekskul->tgl_entry)->isoFormat('dddd, D MMMM Y') }}<br>
+                            @endif
                         @endforeach
                     </td>
                 </tr>
                 <tr>
                     <th colspan="3">Persentase Kehadiran</th>
-                    <td align="center" colspan="1">{{$hadir / count($data_presensi) * 100}}%</td>
+                    <td align="center" colspan="1">{{ round(($hadir / count($data_presensi)) * 100) }}%</td>
                 </tr>
             </tbody>
         </table>
@@ -186,4 +190,3 @@
 </script>
 
 </html>
-
