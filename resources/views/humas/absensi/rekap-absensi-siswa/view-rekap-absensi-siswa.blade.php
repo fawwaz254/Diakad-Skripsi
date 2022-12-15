@@ -56,10 +56,14 @@
                                 Kelas
                             </label>
                             <select class="form-control show-tick" name="kelas">
-                                <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
-                                </option>
+                                {{-- <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
+                                </option> --}}
                                 {{-- <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
                                 </option> --}}
+                                {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                                    <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                    <option value="2">-- Madrasah Aliyah (MA) --</option>
+                                @endif --}}
                                 @foreach ($list_kelas as $lk)
                                     <option @if ($id_kelas == $lk->id_kelas) selected @endif
                                         value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
@@ -147,7 +151,18 @@
     <br>
     <a href="humas/absensi/rekap-absensi/allDataChart/siswa/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
         target="_blank" class="btn bg-purple waves-effect">
-        <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Data</a>
+        <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas Ini</a>
+    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/1/{{ $start_date }}/{{ $end_date }}"
+            target="_blank" class="btn bg-purple waves-effect">
+            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Tsanawiyah (MTs)</a>
+        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/2/{{ $start_date }}/{{ $end_date }}"
+            target="_blank" class="btn bg-purple waves-effect">
+            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Aliyah (MA)</a>
+    @endif
+    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $start_date }}/{{ $end_date }}" target="_blank"
+        class="btn bg-purple waves-effect">
+        <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Kelas</a>
     <br>
     <div class="row clearfix" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -190,7 +205,8 @@
 
                                     <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}
                                     </td>
-                                    <td style="text-align: center;" style="text-align: center;">{{ $r['nm_pengguna'] }}
+                                    <td style="text-align: center;" style="text-align: center;">
+                                        {{ $r['nm_pengguna'] }}
                                     </td>
                                     <td style="text-align: center;">{{ $r['kelas'] }}</td>
                                     <td style="text-align: center;">{{ $r['masuk'] }}</td>
