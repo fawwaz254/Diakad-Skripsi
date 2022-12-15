@@ -392,6 +392,7 @@ class RekapAbsensiController extends Controller
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [7, 8, 9]);
                 })->get()->sortBy('siswa.kelas.nm_kelas');
+            $nm_kelas = 'Madrasah Tsanawiyah (MTs)';
         } elseif ($id_kelas == "2") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -399,6 +400,7 @@ class RekapAbsensiController extends Controller
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [10, 11, 12]);
                 })->get()->sortBy('siswa.kelas.nm_kelas');
+            $nm_kelas = 'Madrasah Aliyah (MA)';
         } elseif ($id_kelas == "0") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {

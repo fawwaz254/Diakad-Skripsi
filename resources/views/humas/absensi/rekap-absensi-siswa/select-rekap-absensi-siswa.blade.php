@@ -21,7 +21,11 @@
                             </label>
                             <select class="form-control show-tick" name="kelas">
                                 {{-- <option>Pilih unit kerja</option> --}}
-                                <option value="0">--Semua--</option>
+                                {{-- <option value="0">--Semua--</option> --}}
+                                {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                                    <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
+                                    <option value="2">-- Madrasah Aliyah (MA) --</option>
+                                @endif --}}
                                 @foreach ($list_kelas as $lk)
                                     <option value="{{ $lk->id_kelas }}">{{ $lk->nm_kelas }}</option>
                                 @endforeach
