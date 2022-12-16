@@ -42,7 +42,7 @@ class RekapAbsensiSiswa implements ShouldQueue
      */
     public function handle()
     {
-
+        set_time_limit(-1);
         $pengguna = $this->input->pengguna;
         $start_date = $this->input->start_date;
         $end_date = $this->input->end_date;
@@ -64,14 +64,14 @@ class RekapAbsensiSiswa implements ShouldQueue
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
 
         foreach ($pengguna as $key1 => $value) {
-            $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
-            $hasil[$key1]['nm_pengguna'] =  $value->nm_pengguna;
+            // $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
+            // $hasil[$key1]['nm_pengguna'] =  $value->nm_pengguna;
             // $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
-            $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
-            $hasil[$key1]['nis'] = $value->username;
+            // $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
+            // $hasil[$key1]['nis'] = $value->username;
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
-                $hasil[$key1][$key2]['status'] = '';
+                // $hasil[$key1][$key2]['status'] = '';
                 $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $attendance =  $allPresensiPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
@@ -79,7 +79,7 @@ class RekapAbsensiSiswa implements ShouldQueue
                 if ($attendance) {
 
                     if ($attendance->status) {
-                        $hasil[$key1][$key2]['status'] = $attendance->status;
+                        // $hasil[$key1][$key2]['status'] = $attendance->status;
                         if ($attendance->status == 'sakit') {
                             $jumlah_sakit++;
                         } elseif ($attendance->status == 'izin') {
@@ -88,14 +88,14 @@ class RekapAbsensiSiswa implements ShouldQueue
                     }
                     if ($attendance->check_in) {
                         // $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
-                        $hasil[$key1][$key2]['status'] = "Masuk";
+                        // $hasil[$key1][$key2]['status'] = "Masuk";
                         $jumlah_hadir++;
                     }
 
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                             $jumlah_telat++;
-                            $hasil[$key1][$key2]['status'] = "Telat";
+                            // $hasil[$key1][$key2]['status'] = "Telat";
                         }
                     }
 
@@ -126,7 +126,7 @@ class RekapAbsensiSiswa implements ShouldQueue
                     if ($shiftMaster) {
 
                         if ($date->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
-                            $hasil[$key1][$key2]['status'] = 'Alpha';
+                            // $hasil[$key1][$key2]['status'] = 'Alpha';
                             $jumlah_alpha++;
                         } else {
                             // $hasil[$key1][$key2]['status'] = '';
@@ -137,7 +137,7 @@ class RekapAbsensiSiswa implements ShouldQueue
                     }
                 }
                 if ($cek_libur) {
-                    $hasil[$key1][$key2]['status'] = 'Libur';
+                    // $hasil[$key1][$key2]['status'] = 'Libur';
                 }
 
                 // $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
