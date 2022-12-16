@@ -14,9 +14,14 @@
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <select class="form-control show-tick" name="id_semester">
-                                <option value="" disabled selected >-- Pilih Semester --</option>
-                                @foreach($data_semester as $semester)
-                                <option value="{{$semester->id_semester}}" @if($semester_aktif->id_semester == $semester->id_semester) selected @endif>{{$semester->tahun_ajaran}} {{$semester->nm_semester}} @if($semester_aktif->id_semester == $semester->id_semester) (Aktif) @endif</option>
+                                <option value="" disabled selected>-- Pilih Semester --</option>
+                                @foreach ($data_semester as $semester)
+                                    <option value="{{ $semester->id_semester }}"
+                                        @if ($semester_aktif->id_semester == $semester->id_semester) selected @endif>{{ $semester->tahun_ajaran }}
+                                        {{ $semester->nm_semester }} @if ($semester_aktif->id_semester == $semester->id_semester)
+                                            (Aktif)
+                                        @endif
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -25,11 +30,11 @@
                         Kelas
                     </h2>
                     <div class="row clearfix">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <select class="form-control show-tick" name="id_kelas" onchange="changeKelas(this)">
-                                <option value="" disabled selected >-- Pilih Kelas --</option>
-                                @foreach($data_kelas as $kelas)
-                                <option value="{{$kelas->id_kelas}}">{{$kelas->nm_kelas}}</option>
+                                <option value="" disabled selected>-- Pilih Kelas --</option>
+                                @foreach ($data_kelas as $kelas)
+                                    <option value="{{ $kelas->id_kelas }}">{{ $kelas->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -40,8 +45,8 @@
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <select class="form-control show-tick" name="id_siswa">
-                                <option value="" disabled selected >-- Pilih Siswa --</option>
-                                
+                                <option value="0" disabled selected>-- Pilih Siswa --</option>
+
                             </select>
                         </div>
                     </div>
@@ -51,7 +56,8 @@
                     </div>
                     <div class="row clearfix">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <button class="btn btn-block bg-red waves-effect" onclick="printJurnalTindakan()"><i class="material-icons">print</i><span>Cetak</span></button>
+                            <button class="btn btn-block bg-red waves-effect" onclick="printJurnalTindakan()"><i
+                                    class="material-icons">print</i><span>Cetak</span></button>
                         </div>
                     </div>
                 </div>
@@ -62,25 +68,38 @@
 @include('scriptjs')
 
 <script>
-    function changeKelas(el){
+    function changeKelas(el) {
         $.ajax({
-            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/siswa-bykelas')}}',
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/siswa-bykelas') }}',
             type: 'POST',
             data: {
                 kelas: $('select[name=id_kelas]').val()
             },
             success: function(result) {
                 $('select[name=id_siswa]').html('');
-                var html = '<option value="">-- Pilih Siswa --</option>';
-                $.each(result, function( key, item ) {
-                    html += '<option value="'+item.id_siswa+'">'+item.nm_pengguna+' ('+item.nis_siswa+')</option>'
+                var html = '<option value="0">-- Pilih Siswa --</option>';
+                $.each(result, function(key, item) {
+                    html += '<option value="' + item.id_siswa + '">' + item.nm_pengguna + ' (' +
+                        item.nis_siswa + ')</option>'
                 });
                 $('select[name=id_siswa]').html(html);
             }
         });
     }
 
-    function printJurnalTindakan(){
-        window.open(base_url + '/{{Request::segment(1)}}/penanganan-siswa/jurnal-tindakan/print/'+$('select[name=id_semester]').val()+'/'+$('select[name=id_kelas]').val()+'/'+$('select[name=id_siswa]').val(), '_blank');
+    function printJurnalTindakan() {
+        if ($('select[name=id_kelas]').val() == null || $('select[name=id_siswa]').val() == '0') {
+            swal({
+                title: "Input tidak boleh kossong",
+                text: "Pilih Dahulu",
+                icon: "error",
+            });
+        } else {
+            window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
+                'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
+                'select[name=id_siswa]').val(), '_blank');
+        }
+
+
     }
 </script>

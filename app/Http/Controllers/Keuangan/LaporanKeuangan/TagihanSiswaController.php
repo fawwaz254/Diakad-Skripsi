@@ -42,7 +42,7 @@ class TagihanSiswaController extends BaseController
         $kelas = $input->kelas;
         $jenis_tagihan = $input->jenis_tagihan;
         $status = $request->status;
-
+        // dd($jenis_tagihan);
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
 
@@ -143,6 +143,8 @@ class TagihanSiswaController extends BaseController
 
         $kelas_data = Kelas::find($id_kelas);
 
+        $jenis_tagihan_explode = explode(",", $jenis_tagihan);
+
         $semester_mulai = Semester::where('kode_semester', $tahun . '1')->first();
         $semester_selesai = Semester::where('kode_semester', $tahun . '2')->first();
 
@@ -155,14 +157,14 @@ class TagihanSiswaController extends BaseController
 
         $data_id_biaya_sekolah = BiayaSekolah::select('id_biaya_sekolah')->whereIn('id_semester', [$id_semester_mulai, $id_semester_selesai])->get()->pluck('id_biaya_sekolah');
 
-        $list_data = Siswa::with(['tagihan_tertagih' => function ($q) use ($data_id_biaya_sekolah, $jenis_tagihan) {
+        $list_data = Siswa::with(['tagihan_tertagih' => function ($q) use ($data_id_biaya_sekolah, $jenis_tagihan_explode) {
             $q->with('pembayaran', 'potongan')
-                ->whereHas('detail_biaya', function ($query) use ($data_id_biaya_sekolah, $jenis_tagihan) {
+                ->whereHas('detail_biaya', function ($query) use ($data_id_biaya_sekolah, $jenis_tagihan_explode) {
                     $query->whereIn('id_biaya_sekolah', $data_id_biaya_sekolah);
 
-                    if ($jenis_tagihan) {
-                        if (!in_array("0", $jenis_tagihan)) {
-                            $query->whereIn('id_detail_biaya', $jenis_tagihan);
+                    if ($jenis_tagihan_explode) {
+                        if (!in_array("0", $jenis_tagihan_explode)) {
+                            $query->whereIn('id_detail_biaya', $jenis_tagihan_explode);
                         }
                     }
                 });

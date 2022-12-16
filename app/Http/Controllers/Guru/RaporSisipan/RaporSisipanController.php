@@ -64,7 +64,9 @@ class RaporSisipanController extends Controller
                 }
 
                 $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
-                $raporSisipan->delete();
+                if ($raporSisipan) {
+                    $raporSisipan->delete();
+                }
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
                 return [
                     'status' => 202,
