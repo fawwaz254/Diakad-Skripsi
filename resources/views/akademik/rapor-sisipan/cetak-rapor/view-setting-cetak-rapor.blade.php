@@ -1,8 +1,16 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
+        <h2>
+
+            <a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a>
+            {{-- <a class="btn bg-blue waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/addSub') }}"><i
-                    class="material-icons">add</i><span>Tambah Sub</span></a></h2>
+                    class="material-icons">add</i><span>Tambah Sub</span></a> --}}
+            {{-- <a class="btn bg-blue waves-effect target-link" href=""><i class="material-icons">add</i><span>Tambah
+                    Sub</span></a> --}}
+        </h2>
     </div>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -93,8 +101,8 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                    add + '/' + data.id_mata_pelajaran  + '" >' +
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        add + '/' + data.id_mata_pelajaran + '" >' +
                         '    <i class="material-icons">edit</i>' +
                         '</a> ';
                 }
@@ -116,4 +124,4 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-</script> 
+</script>
