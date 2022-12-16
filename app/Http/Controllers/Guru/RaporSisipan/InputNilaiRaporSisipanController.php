@@ -75,8 +75,12 @@ class InputNilaiRaporSisipanController extends Controller
             $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
                 ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
                     $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-                })->whereHas('komponen_nilai', function ($query) {
-                    $query->whereIn('urutan', [1, 2, 5, 6, 9]);
+                })->whereHas('siswa.pengguna.status_pengguna', function ($query) {
+                    $query->where('aktif_status_pengguna', '=', '1');
+                })
+                ->whereHas('komponen_nilai', function ($query) {
+                    // $query->whereIn('urutan', [1, 2, 5, 6, 9]);
+                    $query->where('status', 1)->where('type', '!=', 'uas');
                 })->get();
 
             if ($list_siswa) {
