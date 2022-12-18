@@ -16,10 +16,10 @@ class Jurusan extends Model
 
     protected $primaryKey = 'id_jurusan';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'nm_jurusan',
         'kode_jurusan',
@@ -31,9 +31,8 @@ class Jurusan extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'id_jurusan');
+    }
 }

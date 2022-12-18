@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Exports\HistoriAbsensiDay;
 use App\Exports\HistoriAbsensiMount;
 use App\Jobs\RekapAbsensiSiswa;
+use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
@@ -378,7 +379,7 @@ class RekapAbsensiController extends Controller
         return view('humas/absensi/rekap-absensi-siswa/select-rekap-absensi-siswa', compact('auth_data', 'start_date', 'end_date', 'list_kelas'));
     }
 
-    public function chartAllRekapAbsensiSiswa(Request $request, $id_kelas, $start_date, $end_date)
+    public function chartAllRekapAbsensiSiswa(Request $request, $tingkat, $id_jurusan, $start_date, $end_date)
     {
         set_time_limit(-1);
         # code...
@@ -386,65 +387,28 @@ class RekapAbsensiController extends Controller
         $auth_data = $input->auth_data;
 
 
-        if ($id_kelas == "1") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->whereHas('siswa.kelas', function ($query) {
-                    $query->whereIn('tingkat',  [7, 8, 9]);
-                })->get()->sortBy('siswa.kelas.nm_kelas');
-            // $nm_kelas = 'Madrasah Tsanawiyah (MTs)';
-
-            $input->nm_kelas = 'Madrasah Tsanawiyah (MTs)';
-            $input->pengguna = $pengguna;
-            $input->start_date = $start_date;
-            $input->end_date = $end_date;
-            $input->auth_data = $auth_data;
-
-            RekapAbsensiSiswa::dispatch($input);
-            return false;
-        } elseif ($id_kelas == "2") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->whereHas('siswa.kelas', function ($query) {
-                    $query->whereIn('tingkat',  [10, 11, 12]);
-                })->get()->sortBy('siswa.kelas.nm_kelas');
-
-            $input->nm_kelas = 'Madrasah Aliyah (MA)';
-            $input->pengguna = $pengguna;
-            $input->start_date = $start_date;
-            $input->end_date = $end_date;
-            $input->auth_data = $auth_data;
-
-            RekapAbsensiSiswa::dispatch($input);
-            return  false;
-        } elseif ($id_kelas == "0") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->whereHas('siswa.kelas', function ($query) {
-                    $query->whereIn('tingkat',  [7, 8, 9, 10, 11, 12]);
-                })->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
-
-            $input->nm_kelas = 'Semua';
-            $input->pengguna = $pengguna;
-            $input->start_date = $start_date;
-            $input->end_date = $end_date;
-            $input->auth_data = $auth_data;
-
-            RekapAbsensiSiswa::dispatch($input);
-            return false;
-        } else {
+        if ($tingkat == '0') {
+            $id_kelas = $id_jurusan;
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
                     $query->where('nm_status_pengguna', '=', 'AKTIF');
                 })
                 ->whereHas('siswa', function ($query) use ($id_kelas) {
                     $query->where('id_kelas', '=', $id_kelas);
-                })->orderBy('nm_pengguna', 'asc')->get();
+                })->get();
             $nm_kelas = Kelas::where('id_kelas', $id_kelas)->first()->nm_kelas;
+        } else {
+            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->whereHas('siswa.kelas', function ($query) use ($tingkat, $id_jurusan) {
+                    $query->where('tingkat', $tingkat)->where('id_jurusan', $id_jurusan);
+                })->get();
+
+            $jurusan = Jurusan::where('id_jurusan', $id_jurusan)->first()->nm_jurusan;
+            $nm_kelas = $tingkat . ' ' . $jurusan;
         }
+
 
         $hasil = [];
         $jumlah_hadir = 0;
@@ -459,16 +423,18 @@ class RekapAbsensiController extends Controller
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
+        $carbon = Carbon::now()->format('Y-m-d');
 
         foreach ($pengguna as $key1 => $value) {
-            $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
-            $hasil[$key1]['nm_pengguna'] =  $value->nm_pengguna;
+            // $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
+            // $hasil[$key1]['nm_pengguna'] =  $value->nm_pengguna;
             // $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
-            $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
-            $hasil[$key1]['nis'] = $value->username;
+            // $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
+            // $hasil[$key1]['nis'] = $value->username;
+
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
-                $hasil[$key1][$key2]['status'] = '';
+                // $hasil[$key1][$key2]['status'] = '';
                 $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $attendance =  $allPresensiPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
@@ -476,7 +442,7 @@ class RekapAbsensiController extends Controller
                 if ($attendance) {
 
                     if ($attendance->status) {
-                        $hasil[$key1][$key2]['status'] = $attendance->status;
+                        // $hasil[$key1][$key2]['status'] = $attendance->status;
                         if ($attendance->status == 'sakit') {
                             $jumlah_sakit++;
                         } elseif ($attendance->status == 'izin') {
@@ -485,14 +451,14 @@ class RekapAbsensiController extends Controller
                     }
                     if ($attendance->check_in) {
                         // $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
-                        $hasil[$key1][$key2]['status'] = "Masuk";
+                        // $hasil[$key1][$key2]['status'] = "Masuk";
                         $jumlah_hadir++;
                     }
 
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                             $jumlah_telat++;
-                            $hasil[$key1][$key2]['status'] = "Telat";
+                            // $hasil[$key1][$key2]['status'] = "Telat";
                         }
                     }
 
@@ -522,19 +488,19 @@ class RekapAbsensiController extends Controller
                 } else {
                     if ($shiftMaster) {
 
-                        if ($date->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
-                            $hasil[$key1][$key2]['status'] = 'Alpha';
+                        if ($date->format('Y-m-d') < $carbon) {
+                            // $hasil[$key1][$key2]['status'] = 'Alpha';
                             $jumlah_alpha++;
                         } else {
                             // $hasil[$key1][$key2]['status'] = '';
                         }
-                        if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) {
+                        if ($date < $carbon && $cek_libur) {
                             $jumlah_alpha--;
                         }
                     }
                 }
                 if ($cek_libur) {
-                    $hasil[$key1][$key2]['status'] = 'Libur';
+                    // $hasil[$key1][$key2]['status'] = 'Libur';
                 }
 
                 // $hasil[$key1][$key2]['date'] = $date->format('d-m-Y');
@@ -719,7 +685,14 @@ class RekapAbsensiController extends Controller
         $start_date = Carbon::parse($start_date)->format('Y-m-d');
         $end_date = Carbon::parse($end_date)->format('Y-m-d');
 
-        return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas'));
+
+        $groupKelas =  Kelas::select('kelas.tingkat', 'jurusan.nm_jurusan', 'kelas.id_jurusan')
+            ->join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
+            ->groupBy('kelas.tingkat', 'jurusan.nm_jurusan', 'kelas.id_jurusan')
+            ->orderBy('kelas.tingkat', 'asc')
+            ->get();
+
+        return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'groupKelas', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas'));
     }
 
 
