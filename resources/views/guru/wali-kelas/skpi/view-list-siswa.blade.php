@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        Data Siswa
+                        Data Siswa {{ $wali_kelas->nm_kelas }}
                     </h2>
                 </div>
                 <div class="body">
@@ -17,7 +17,7 @@
                                     <tr>
                                         <th>No. </th>
                                         <th>Nama</th>
-                                        <th>Kelas</th>
+                                        {{-- <th>Kelas</th> --}}
                                         <th>Kegiatan Siswa</th>
                                         <th>Prestasi Siswa</th>
                                         {{-- <th>Informasi Tambahan</th> --}}
@@ -61,10 +61,12 @@
                         data: 'pengguna.nm_pengguna',
                         name: 'pengguna.nm_pengguna'
                     },
-                    {
-                        data: 'kelas.nm_kelas',
-                        name: 'kelas.nm_kelas'
-                    },
+                    // {
+                    //     data: 'kelas.nm_kelas',
+                    //     name: 'kelas.nm_kelas',
+                    //     searchable: false,
+                    //     orderable: false,
+                    // },
                     {
                         data: 'kegiatan_siswa',
                         name: 'kegiatan_siswa',
