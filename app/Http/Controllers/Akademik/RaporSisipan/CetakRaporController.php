@@ -217,8 +217,7 @@ class CetakRaporController extends Controller
         $list_nilai = NilaiRaporSisipan::with('siswa', 'komponen_nilai', 'rapor_sisipan.semester', 'rapor_sisipan.mata_pelajaran')
             ->whereHas('siswa', function ($query) use ($id_kelas) {
                 $query->where('id_kelas', '=', $id_kelas);
-            })
-            ->whereHas('komponen_nilai', function ($query) {
+            })->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
 

@@ -90,13 +90,14 @@ class RaporSisipanController extends Controller
         $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
+        })->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
+            $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
         })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
             ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
                 $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-            })
-            ->whereHas('komponen_nilai', function ($query) {
+            })->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
 
@@ -133,13 +134,14 @@ class RaporSisipanController extends Controller
         $list_data = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
             $query->where('aktif_status_pengguna', '=', '1');
+        })->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
+            $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
         })->orderBy('nis_siswa')->get();
 
         $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
             ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
                 $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-            })
-            ->whereHas('komponen_nilai', function ($query) {
+            })->whereHas('komponen_nilai', function ($query) {
                 $query->where('status', 1)->where('type', '!=', 'uas');
             })->get();
 

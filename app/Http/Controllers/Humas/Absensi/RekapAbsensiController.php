@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Exports\HistoriAbsensiDay;
 use App\Exports\HistoriAbsensiMount;
+use App\Jobs\RekapAbsensiSiswa;
 use App\Models\Kelas;
 use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
@@ -392,7 +393,16 @@ class RekapAbsensiController extends Controller
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [7, 8, 9]);
                 })->get()->sortBy('siswa.kelas.nm_kelas');
-            $nm_kelas = 'Madrasah Tsanawiyah (MTs)';
+            // $nm_kelas = 'Madrasah Tsanawiyah (MTs)';
+
+            $input->nm_kelas = 'Madrasah Tsanawiyah (MTs)';
+            $input->pengguna = $pengguna;
+            $input->start_date = $start_date;
+            $input->end_date = $end_date;
+            $input->auth_data = $auth_data;
+
+            RekapAbsensiSiswa::dispatch($input);
+            return false;
         } elseif ($id_kelas == "2") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -400,7 +410,15 @@ class RekapAbsensiController extends Controller
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [10, 11, 12]);
                 })->get()->sortBy('siswa.kelas.nm_kelas');
-            $nm_kelas = 'Madrasah Aliyah (MA)';
+
+            $input->nm_kelas = 'Madrasah Aliyah (MA)';
+            $input->pengguna = $pengguna;
+            $input->start_date = $start_date;
+            $input->end_date = $end_date;
+            $input->auth_data = $auth_data;
+
+            RekapAbsensiSiswa::dispatch($input);
+            return  false;
         } elseif ($id_kelas == "0") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -408,7 +426,15 @@ class RekapAbsensiController extends Controller
                 })->whereHas('siswa.kelas', function ($query) {
                     $query->whereIn('tingkat',  [7, 8, 9, 10, 11, 12]);
                 })->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
-            $nm_kelas = 'Semua';
+
+            $input->nm_kelas = 'Semua';
+            $input->pengguna = $pengguna;
+            $input->start_date = $start_date;
+            $input->end_date = $end_date;
+            $input->auth_data = $auth_data;
+
+            RekapAbsensiSiswa::dispatch($input);
+            return false;
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {

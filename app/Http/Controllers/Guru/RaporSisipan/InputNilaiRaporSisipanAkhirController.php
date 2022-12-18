@@ -100,8 +100,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
                 ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
                     $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
-                })
-                ->whereHas('komponen_nilai', function ($query) {
+                })->whereHas('komponen_nilai', function ($query) {
                     $query->whereIn('urutan', [3, 4, 7, 8, 10]);
                 })->get();
 
