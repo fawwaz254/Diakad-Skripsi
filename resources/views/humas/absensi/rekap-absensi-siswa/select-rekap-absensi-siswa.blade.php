@@ -20,7 +20,7 @@
                                 Kelas
                             </label>
                             <select class="form-control show-tick" name="kelas">
-                                {{-- <option>Pilih unit kerja</option> --}}
+                                <option selected disabled value="">Pilih Kelas</option>
                                 {{-- <option value="0">--Semua--</option> --}}
                                 {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
                                     <option value="1">-- Madrasah Tsanawiyah (MTs) --</option>
@@ -77,9 +77,21 @@
     });
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() +
-            '/' + $(
-                'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
+        var id_kelas = $('select[name="kelas"]').val();
+        if (!id_kelas) {
+            swal({
+                title: "Pilih Kelas dahulu",
+                text: "Kelas tidak boleh kosong",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                timer: 2000,
+            });
+        } else {
+            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]')
+                .val() +
+                '/' + $(
+                    'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
+        }
     }
 
     function viewGuru() {

@@ -51,35 +51,38 @@ class RaporSisipanController extends Controller
 
     public function actionDaftarNilaiSTS(Request $request, $mode, $id = null)
     {
-        set_time_limit(9800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
         if ($mode == 'delete') {
+            DB::beginTransaction();
             try {
-                $nilaiRaporSisipan = NilaiRaporSisipan::where('id_rapor_sisipan', $id)->get();
-                foreach ($nilaiRaporSisipan as $id) {
-                    $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
-                    $nilai->delete();
-                }
-
+                DB::table('nilai_rapor_sisipan')->where('id_rapor_sisipan', $id)->delete();
                 $raporSisipan = RaporSisipan::where('id_rapor_sisipan', $id)->first();
                 if ($raporSisipan) {
                     $raporSisipan->delete();
                 }
+
+                // foreach ($nilaiRaporSisipan as $id) {
+                //     $nilai = NilaiRaporSisipan::where('id_nilai_rapor_sisipan', $id->id_nilai_rapor_sisipan)->first();
+                //     $nilai->delete();
+                // }
+
+                DB::Commit();
+                return [
+                    'status' => 202,
+                    'path' => 'rapor-sisipan/daftar-nilai-sts',
+                    'message' => 'Delete Rapor Sisipan Successfully'
+                ];
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                DB::rollback();
                 return [
                     'status' => 202,
                     'path' => 'rapor-sisipan/daftar-nilai-sts',
                     'message' => 'Delete Rapor Sisipan Gagal, Silahkan coba lagi'
                 ];
             }
-
-            return [
-                'status' => 202,
-                'path' => 'rapor-sisipan/daftar-nilai-sts',
-                'message' => 'Delete Rapor Sisipan Successfully'
-            ];
         }
 
         if ($mode == 'add') {
@@ -153,8 +156,8 @@ class RaporSisipanController extends Controller
                     DB::rollback();
 
                     return [
-                        'status' => 203, // GAGAL
-                        'message' => $e->getMessage()
+                        'status' => 300, // GAGAL
+                        'message' => 'Siswa di kelas ini kosong'
                     ];
                 }
             }
