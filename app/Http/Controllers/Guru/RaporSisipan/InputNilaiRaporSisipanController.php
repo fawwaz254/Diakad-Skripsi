@@ -88,13 +88,14 @@ class InputNilaiRaporSisipanController extends Controller
                 foreach ($nilai as $nilaiRapor) {
 
                     foreach ($nilaiRapor as $a) {
-
-                        $nilai = $input->nilai[$nilaiRapor['id_komponen_nilai'] . '-' . $nilaiRapor['id_siswa'] . '-' . $nilaiRapor['id_rapor_sisipan']];
-                        $NilaiRaporSisipan                            = NilaiRaporSisipan::where('id_komponen_nilai', $nilaiRapor['id_komponen_nilai'])->where('id_siswa', $nilaiRapor['id_siswa'])->where('id_rapor_sisipan', $nilaiRapor['id_rapor_sisipan'])->first();
-                        if ($NilaiRaporSisipan) {
-                            $NilaiRaporSisipan->nilai                 = $nilai;
-                            $NilaiRaporSisipan->updated_by            = $input->auth_data->pengguna->id_pengguna;
-                            $NilaiRaporSisipan->save();
+                        if (isset($input->nilai[$nilaiRapor['id_komponen_nilai'] . '-' . $nilaiRapor['id_siswa'] . '-' . $nilaiRapor['id_rapor_sisipan']])) {
+                            $nilai = $input->nilai[$nilaiRapor['id_komponen_nilai'] . '-' . $nilaiRapor['id_siswa'] . '-' . $nilaiRapor['id_rapor_sisipan']];
+                            $NilaiRaporSisipan                            = NilaiRaporSisipan::where('id_komponen_nilai', $nilaiRapor['id_komponen_nilai'])->where('id_siswa', $nilaiRapor['id_siswa'])->where('id_rapor_sisipan', $nilaiRapor['id_rapor_sisipan'])->first();
+                            if ($NilaiRaporSisipan) {
+                                $NilaiRaporSisipan->nilai                 = $nilai;
+                                $NilaiRaporSisipan->updated_by            = $input->auth_data->pengguna->id_pengguna;
+                                $NilaiRaporSisipan->save();
+                            }
                         }
                     }
                 }
