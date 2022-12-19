@@ -36,13 +36,15 @@ class RaporSisipanAkhirController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc');
+        $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+        $komponenUAS = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
 
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            ->addColumn('jumlah', function ($item) {
+            ->addColumn('jumlah', function ($item) use ($komponenUTS, $komponenUAS) {
                 //semua siswa
                 // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
                 $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->with('pengguna.status_pengguna')
@@ -50,37 +52,43 @@ class RaporSisipanAkhirController extends Controller
                         $query->where('aktif_status_pengguna', '=', '1');
                     })
                     ->count();
-
-                //cari siswa yang ada nilai 0 nya
-                $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+                $nilaiUTSSiswa = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
                     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->groupBy('id_siswa')
-                    ->selectRaw('count(*) as total, id_siswa')
-                    ->get()->toArray();
+                })->count();
+                $nilaiUASSiswa = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUAS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
+                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                })->count();
 
-                //hitung ada berapa nilai kosongnya
-                $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+                // //cari siswa yang ada nilai 0 nya
+                // $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+                //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                // })->groupBy('id_siswa')
+                //     ->selectRaw('count(*) as total, id_siswa')
+                //     ->get()->toArray();
 
-                //loop dan cari nilai kosong yang diatas 5
-                $nilaiSiswaYangKosong = 0;
-                $nilaiSiswaYangKosong2 = 0;
-                for ($i = 1; $i <= 10; $i++) {
-                    if ($i >= 6 && $i <= 10) {
-                        if (isset($arrayJumlahBelumTerisi[$i])) {
-                            $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
-                        }
-                    } else {
-                        if (isset($arrayJumlahBelumTerisi[$i])) {
-                            $nilaiSiswaYangKosong2 += $arrayJumlahBelumTerisi[$i];
-                        }
-                    }
-                }
+                // //hitung ada berapa nilai kosongnya
+                // $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+
+                // //loop dan cari nilai kosong yang diatas 5
+                // $nilaiSiswaYangKosong = 0;
+                // $nilaiSiswaYangKosong2 = 0;
+                // for ($i = 1; $i <= 10; $i++) {
+                //     if ($i >= 6 && $i <= 10) {
+                //         if (isset($arrayJumlahBelumTerisi[$i])) {
+                //             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                //         }
+                //     } else {
+                //         if (isset($arrayJumlahBelumTerisi[$i])) {
+                //             $nilaiSiswaYangKosong2 += $arrayJumlahBelumTerisi[$i];
+                //         }
+                //     }
+                // }
 
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
-                    'terisi_siswa_sts' => $allSiswa - $nilaiSiswaYangKosong,
+                    'terisi_siswa_sts' => $nilaiUTSSiswa,
                     // 'jumlah_siswa_sas' => $allSiswa,
-                    'terisi_siswa_sas' => $allSiswa - $nilaiSiswaYangKosong2 - $nilaiSiswaYangKosong
+                    'terisi_siswa_sas' => $nilaiUASSiswa,
                 );
                 // dd($data['terisi_siswa']);
                 return $data;
