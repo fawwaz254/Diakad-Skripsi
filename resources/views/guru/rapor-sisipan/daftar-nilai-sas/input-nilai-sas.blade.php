@@ -1,7 +1,5 @@
 <style>
-    #sts,
-    #sas,
-    #rt2smt,
+    #disable,
     textarea {
         background-color: #d1d1d1;
     }
@@ -41,19 +39,14 @@
                                             vertical-align: middle;">
                                             NIS - Nama Siswa</th>
                                         @foreach ($list_data as $data)
-                                            @if ($data->nm_nilai == 'SAS')
+                                            {{-- @if ($data->nm_nilai == 'SAS')
                                                 <th style="text-align: center; vertical-align: middle; width:60px">
-                                                @else
-                                                <th style="text-align: center; vertical-align: middle;">
-                                            @endif
-                                            {{ $data->nm_nilai }}
+                                                @else --}}
+                                            <th style="text-align: center; vertical-align: middle;">
+                                                {{-- @endif --}}
+                                                {{ $data->nm_nilai }}
                                             </th>
                                         @endforeach
-                                        <th
-                                            style="text-align: center;
-                                            vertical-align: middle;">
-                                            RT2 SMT</th>
-                                        <th>RAPOR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,26 +59,20 @@
                                             <td>{{ $siswa->nis_siswa }} - {{ $siswa->pengguna->nm_pengguna }}</td>
                                             @foreach ($list_data as $nilai)
                                                 <td style="text-align: center;">
-                                                    @if (in_array($nilai->nm_nilai, [
-                                                        'NILAI FORMATIF 1',
-                                                        'NILAI FORMATIF 2',
-                                                        'NILAI SUMATIF 1',
-                                                        'NILAI SUMATIF 2',
-                                                        'STS',
-                                                    ]))
-                                                        <input type="number" id="sts"
+                                                    @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan]) &&
+                                                        $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
+                                                        <input type="number" id="disable"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                             value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
                                                             style="width: 80%; text-align:  center;" disabled>
                                                     @else
-                                                        <input type="texnumbert"
+                                                        <input type="number"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
-                                                            value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
-                                                            style="width: 80%; text-align:  center;">
+                                                            value="0" style="width: 80%; text-align:  center;">
                                                     @endif
                                                 </td>
                                             @endforeach
-                                            <td style="text-align: center;">
+                                            {{-- <td style="text-align: center;">
                                                 <input type="number" id="sas"
                                                     value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2']) / 2) }}"
                                                     style="width: 80%; text-align:  center;" disabled>
@@ -94,7 +81,7 @@
                                                 <input type="number" id="rt2smt"
                                                     value="{{ round(($nilai_komponen[$siswa->id_siswa . 'nilai_sumasi1'] + $nilai_komponen[$siswa->id_siswa . 'nilai_sumasi2'] + $nilai_komponen[$siswa->id_siswa . 'sas']) / 3) }}"
                                                     style="width: 80%; text-align:  center;" disabled>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>

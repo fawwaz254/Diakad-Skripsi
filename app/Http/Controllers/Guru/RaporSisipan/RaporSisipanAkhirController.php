@@ -37,6 +37,10 @@ class RaporSisipanAkhirController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc');
+        $siswa = Siswa::with('pengguna.status_pengguna')
+            ->whereHas('pengguna.status_pengguna', function ($query) {
+                $query->where('aktif_status_pengguna', '=', '1');
+            })->get();
         $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
         $komponenUAS = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
 
@@ -44,20 +48,22 @@ class RaporSisipanAkhirController extends Controller
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            ->addColumn('jumlah', function ($item) use ($komponenUTS, $komponenUAS) {
+            ->addColumn('jumlah', function ($item) use ($komponenUTS, $komponenUAS, $siswa) {
                 //semua siswa
+                $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
-                $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->with('pengguna.status_pengguna')
-                    ->whereHas('pengguna.status_pengguna', function ($query) {
-                        $query->where('aktif_status_pengguna', '=', '1');
-                    })
-                    ->count();
-                $nilaiUTSSiswa = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
+                // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->with('pengguna.status_pengguna')
+                //     ->whereHas('pengguna.status_pengguna', function ($query) {
+                //         $query->where('aktif_status_pengguna', '=', '1');
+                //     })
+                //     ->count();
+
+                $nilaiRaporSisipan =  NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereIn('id_komponen_nilai', [$komponenUTS, $komponenUAS])->whereHas('siswa', function ($query) use ($item) {
                     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->count();
-                $nilaiUASSiswa = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUAS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
-                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->count();
+                })->get();
+
+                $nilaiUTSSiswa = $nilaiRaporSisipan->where('id_komponen_nilai', $komponenUTS)->count();
+                $nilaiUASSiswa = $nilaiRaporSisipan->where('id_komponen_nilai', $komponenUAS)->count();
 
                 // //cari siswa yang ada nilai 0 nya
                 // $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
