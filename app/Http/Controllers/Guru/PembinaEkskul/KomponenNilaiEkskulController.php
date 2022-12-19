@@ -151,14 +151,14 @@ class KomponenNilaiEkskulController extends BaseController{
                                                         ->first();
             }
 
-            if($pengambilan_ekskul){
-                if($check_nilai_mp = $pengambilan_ekskul->nilai_ekskul->first()){
-                    return [
-                        'status' => 300, // FAILED
-                        'message' => 'Failed To Save Komponen Nilai Ekskul (Nilai ekskul sudah diinput)!'
-                    ];
-                }
-            }
+            // if($pengambilan_ekskul){
+            //     if($check_nilai_mp = $pengambilan_ekskul->nilai_ekskul->first()){
+            //         return [
+            //             'status' => 300, // FAILED
+            //             'message' => 'Failed To Save Komponen Nilai Ekskul (Nilai ekskul sudah diinput)!'
+            //         ];
+            //     }
+            // }
 
             // ADD action
             if($mode == 'add'){
