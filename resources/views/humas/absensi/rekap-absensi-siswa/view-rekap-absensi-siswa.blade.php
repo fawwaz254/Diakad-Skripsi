@@ -56,6 +56,7 @@
                                 Kelas
                             </label>
                             <select class="form-control show-tick" name="kelas">
+                                <option selected disabled value="">Pilih Kelas</option>
                                 {{-- <option @if ($id_kelas == '0') selected @endif value="0">-- Semua --
                                 </option> --}}
                                 {{-- <option @if ($unit_kerja == '1') selected @endif value="1">Pegawai
@@ -149,21 +150,28 @@
         </div>
     </div>
     <br>
-    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
+    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
         target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas Ini</a>
-    @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+    {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
         <a href="humas/absensi/rekap-absensi/allDataChart/siswa/1/{{ $start_date }}/{{ $end_date }}"
             target="_blank" class="btn bg-purple waves-effect">
             <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Tsanawiyah (MTs)</a>
         <a href="humas/absensi/rekap-absensi/allDataChart/siswa/2/{{ $start_date }}/{{ $end_date }}"
             target="_blank" class="btn bg-purple waves-effect">
             <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Aliyah (MA)</a>
-    @endif
-    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $start_date }}/{{ $end_date }}" target="_blank"
+    @endif --}}
+
+    @foreach ($groupKelas as $kelas)
+        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/{{ $kelas->tingkat }}/{{ $kelas->id_jurusan }}/{{ $start_date }}/{{ $end_date }}"
+            target="_blank" class="btn bg-purple waves-effect">
+            <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas
+            {{ '( ' . $kelas->tingkat . ' ' . $kelas->nm_jurusan . ' )' }}</a>
+    @endforeach
+    {{-- <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $start_date }}/{{ $end_date }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Kelas</a>
-    <br>
+    <br> --}}
     <div class="row clearfix" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -203,7 +211,8 @@
                                         <tr>
                                     @endif
 
-                                    <td style="text-align: center;" style="text-align: center;">{{ $loop->iteration }}
+                                    <td style="text-align: center;" style="text-align: center;">
+                                        {{ $loop->iteration }}
                                     </td>
                                     <td style="text-align: center;" style="text-align: center;">
                                         {{ $r['nm_pengguna'] }}
@@ -279,8 +288,20 @@
     }
 
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]').val() +
-            '/' + $(
-                'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
+        var id_kelas = $('select[name="kelas"]').val();
+        if (!id_kelas) {
+            swal({
+                title: "Pilih Kelas dahulu",
+                text: "Kelas tidak boleh kosong",
+                type: "warning",
+                confirmButtonColor: "#DD6B55",
+                timer: 2000,
+            });
+        } else {
+            loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/detail/siswa/' + $('select[name=kelas]')
+                .val() +
+                '/' + $(
+                    'input[name=start_date]').val() + '/' + $('input[name=end_date]').val());
+        }
     }
 </script>
