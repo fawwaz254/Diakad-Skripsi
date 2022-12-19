@@ -265,7 +265,7 @@ class RaporSisipanController extends Controller
     public function excelDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     {
 
-        set_time_limit(1800);
+        set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 

@@ -651,7 +651,10 @@ Route::middleware(['token_staff'])->group(function () {
             });
             Route::prefix('daftar-nilai-sas')->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
+                Route::get('importExcel', [RaporSisipanAkhirController::class, 'imporExcelSTS']);
+                Route::post('importExcel', [RaporSisipanAkhirController::class, 'uploadRaporSisipanSAS']);
                 Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                Route::get('/excel/{id}', [RaporSisipanAkhirController::class, 'excelDaftarNilaiSAS']);
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
                 Route::get('nilai/{id}', [InputNilaiRaporSisipanAkhirController::class, 'viewKomponenInputNilai']);
                 Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanAkhirController::class, 'actionInputNilai']);

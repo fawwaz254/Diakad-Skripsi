@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Guru\RaporSisipan;
 
+use App\Exports\RaporSisipanSAS;
+use App\Exports\RaporSisipanSTS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Imports\UploadRaporSisipanSAS;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\MataPelajaran;
@@ -111,6 +114,72 @@ class RaporSisipanAkhirController extends Controller
             ->make(true);
     }
 
+
+    public function imporExcelSTS(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-upload-nilai-sas', compact('auth_data'));
+    }
+
+    public function uploadRaporSisipanSAS(Request $request)
+    {
+        if ($request->hasFile('file-excel')) {
+            Excel::import(new UploadRaporSisipanSAS, $request->file('file-excel'));
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];;
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
+        }
+    }
+
+    public function excelDaftarNilaiSAS(Request $request, $id_rapor_sisipan)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
+
+        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })
+            ->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
+                $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
+            })
+            ->orderBy('nis_siswa')->get();
+
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
+            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
+                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
+            })->whereHas('komponen_nilai', function ($query) {
+                $query->where('status', 1);
+            })->get();
+
+        $nilai_siswa = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+                }
+            }
+        }
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['rapor_sisipan'] = $rapor_sisipan;
+        $data['list_siswa'] = $list_siswa;;
+        $data['list_data'] = $list_data;
+        $data['id_rapor_sisipan'] = $id_rapor_sisipan;
+
+        return Excel::download(new RaporSisipanSTS($data), 'Rapor Sisipan SAS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
+    }
 
     // public function printDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     // {
