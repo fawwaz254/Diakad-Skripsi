@@ -179,7 +179,11 @@
                 </tr>
                 <tr>
                     <th colspan="3">Persentase Kehadiran</th>
-                    <td align="center" colspan="1">{{ round(($hadir / count($data_presensi)) * 100) }}%</td>
+                    @if (!empty($data_presensi) && !empty($hadir))
+                        <td align="center" colspan="1">{{ round(($hadir / count($data_presensi)) * 100) }}%</td>
+                    @else
+                        <td align="center" colspan="1">0%</td>
+                    @endif
                 </tr>
             </tbody>
         </table>
