@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Guru\RaporSisipan;
 
+use App\Exports\RaporSisipanSAS;
+use App\Exports\RaporSisipanSTS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Imports\UploadRaporSisipanSAS;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\MataPelajaran;
@@ -36,51 +39,65 @@ class RaporSisipanAkhirController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->get();
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc');
+        $siswa = Siswa::with('pengguna.status_pengguna')
+            ->whereHas('pengguna.status_pengguna', function ($query) {
+                $query->where('aktif_status_pengguna', '=', '1');
+            })->get();
+        $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+        $komponenUAS = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
 
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            ->addColumn('jumlah', function ($item) {
+            ->addColumn('jumlah', function ($item) use ($komponenUTS, $komponenUAS, $siswa) {
                 //semua siswa
+                $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->count();
-                $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->with('pengguna.status_pengguna')
-                    ->whereHas('pengguna.status_pengguna', function ($query) {
-                        $query->where('aktif_status_pengguna', '=', '1');
-                    })
-                    ->count();
+                // $allSiswa =  Siswa::where('id_kelas', $item->kelas->id_kelas)->with('pengguna.status_pengguna')
+                //     ->whereHas('pengguna.status_pengguna', function ($query) {
+                //         $query->where('aktif_status_pengguna', '=', '1');
+                //     })
+                //     ->count();
 
-                //cari siswa yang ada nilai 0 nya
-                $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+                $nilaiRaporSisipan =  NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereIn('id_komponen_nilai', [$komponenUTS, $komponenUAS])->whereHas('siswa', function ($query) use ($item) {
                     $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->groupBy('id_siswa')
-                    ->selectRaw('count(*) as total, id_siswa')
-                    ->get()->toArray();
+                })->get();
 
-                //hitung ada berapa nilai kosongnya
-                $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+                $nilaiUTSSiswa = $nilaiRaporSisipan->where('id_komponen_nilai', $komponenUTS)->count();
+                $nilaiUASSiswa = $nilaiRaporSisipan->where('id_komponen_nilai', $komponenUAS)->count();
 
-                //loop dan cari nilai kosong yang diatas 5
-                $nilaiSiswaYangKosong = 0;
-                $nilaiSiswaYangKosong2 = 0;
-                for ($i = 1; $i <= 10; $i++) {
-                    if ($i >= 6 && $i <= 10) {
-                        if (isset($arrayJumlahBelumTerisi[$i])) {
-                            $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
-                        }
-                    } else {
-                        if (isset($arrayJumlahBelumTerisi[$i])) {
-                            $nilaiSiswaYangKosong2 += $arrayJumlahBelumTerisi[$i];
-                        }
-                    }
-                }
+                // //cari siswa yang ada nilai 0 nya
+                // $belumTerisi = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', 0)->with('siswa.kelas')->whereHas('siswa.kelas', function ($query) use ($item) {
+                //     $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                // })->groupBy('id_siswa')
+                //     ->selectRaw('count(*) as total, id_siswa')
+                //     ->get()->toArray();
+
+                // //hitung ada berapa nilai kosongnya
+                // $arrayJumlahBelumTerisi = array_count_values(array_column($belumTerisi, 'total'));
+
+                // //loop dan cari nilai kosong yang diatas 5
+                // $nilaiSiswaYangKosong = 0;
+                // $nilaiSiswaYangKosong2 = 0;
+                // for ($i = 1; $i <= 10; $i++) {
+                //     if ($i >= 6 && $i <= 10) {
+                //         if (isset($arrayJumlahBelumTerisi[$i])) {
+                //             $nilaiSiswaYangKosong += $arrayJumlahBelumTerisi[$i];
+                //         }
+                //     } else {
+                //         if (isset($arrayJumlahBelumTerisi[$i])) {
+                //             $nilaiSiswaYangKosong2 += $arrayJumlahBelumTerisi[$i];
+                //         }
+                //     }
+                // }
 
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
-                    'terisi_siswa_sts' => $allSiswa - $nilaiSiswaYangKosong,
+                    'terisi_siswa_sts' => $nilaiUTSSiswa,
                     // 'jumlah_siswa_sas' => $allSiswa,
-                    'terisi_siswa_sas' => $allSiswa - $nilaiSiswaYangKosong2 - $nilaiSiswaYangKosong
+                    'terisi_siswa_sas' => $nilaiUASSiswa,
                 );
                 // dd($data['terisi_siswa']);
                 return $data;
@@ -97,6 +114,72 @@ class RaporSisipanAkhirController extends Controller
             ->make(true);
     }
 
+
+    public function imporExcelSTS(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-upload-nilai-sas', compact('auth_data'));
+    }
+
+    public function uploadRaporSisipanSAS(Request $request)
+    {
+        if ($request->hasFile('file-excel')) {
+            Excel::import(new UploadRaporSisipanSAS, $request->file('file-excel'));
+            return [
+                'status'     => 200, // FAILED
+                'message'     => "Upload Sukses"
+            ];;
+        } else {
+            return [
+                'status'     => 300, // FAILED
+                'message'     => "File Excel tidak ditemukan"
+            ];
+        }
+    }
+
+    public function excelDaftarNilaiSAS(Request $request, $id_rapor_sisipan)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
+
+        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->get();
+        $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
+            $query->where('aktif_status_pengguna', '=', '1');
+        })
+            ->whereHas('nilai_rapor_sisipan', function ($query) use ($id_rapor_sisipan) {
+                $query->where('id_rapor_sisipan', '=', $id_rapor_sisipan);
+            })
+            ->orderBy('nis_siswa')->get();
+
+        $list_nilai = NilaiRaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('siswa', 'komponen_nilai')
+            ->whereHas('siswa', function ($query) use ($rapor_sisipan) {
+                $query->where('id_kelas', '=', $rapor_sisipan->id_kelas);
+            })->whereHas('komponen_nilai', function ($query) {
+                $query->where('status', 1);
+            })->get();
+
+        $nilai_siswa = [];
+        if ($list_siswa) {
+            $nilai = $list_nilai->toArray();
+            foreach ($nilai as $nilaiRapor) {
+                foreach ($nilaiRapor as $a) {
+                    $nilai_siswa[$nilaiRapor['id_komponen_nilai'] . $nilaiRapor['id_siswa'] . $nilaiRapor['id_rapor_sisipan']] = $nilaiRapor['nilai'];
+                }
+            }
+        }
+
+        $data['nilai_siswa'] = $nilai_siswa;
+        $data['rapor_sisipan'] = $rapor_sisipan;
+        $data['list_siswa'] = $list_siswa;;
+        $data['list_data'] = $list_data;
+        $data['id_rapor_sisipan'] = $id_rapor_sisipan;
+
+        return Excel::download(new RaporSisipanSTS($data), 'Rapor Sisipan SAS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
+    }
 
     // public function printDaftarNilaiSTS(Request $request, $id_rapor_sisipan)
     // {
