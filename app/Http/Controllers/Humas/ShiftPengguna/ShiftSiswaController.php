@@ -38,7 +38,7 @@ class ShiftSiswaController extends Controller
                     $query->whereIn('tingkat', [11, 8, 2]);
                 } elseif ($id_kelas == "3") {
                     $query->whereIn('tingkat', [12, 9, 3]);
-                } else {
+                } elseif ($id_kelas == "0") { } else {
                     $query->where('id_kelas', $id_kelas);
                 }
             })
