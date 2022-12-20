@@ -302,8 +302,8 @@ class RaporSisipanController extends Controller
         $data['list_siswa'] = $list_siswa;;
         $data['list_data'] = $list_data;
         $data['id_rapor_sisipan'] = $id_rapor_sisipan;
-
-        return Excel::download(new RaporSisipanSTS($data), 'Rapor Sisipan STS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
+        $nm_mata_pelajaran = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran);
+        return Excel::download(new RaporSisipanSTS($data), 'Rapor Sisipan STS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $nm_mata_pelajaran . ').xlsx');
     }
 
 
