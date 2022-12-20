@@ -89,7 +89,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Histori Absensi</h2>
+                    <h2>Histori Absensi {{ Request::segment(1) == 'wali-murid' ? $siswa->nm_pengguna : '' }}</h2>
                 </div>
 
                 <div class="body">

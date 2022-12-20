@@ -10,6 +10,7 @@ use App\Http\Controllers\WaliMurid\Akademik\JadwalUjianController;
 use App\Http\Controllers\WaliMurid\Akademik\KalenderAkademikController;
 use App\Http\Controllers\WaliMurid\Akademik\MagangController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiEkskulController;
+use App\Http\Controllers\WaliMurid\Kesiswaan\AbsensiKehadiranSiswaController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\BeasiswaController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\NilaiEkskulController;
 use App\Http\Controllers\WaliMurid\Kesiswaan\PrestasiController;
@@ -22,7 +23,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('wali-murid')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 
@@ -97,6 +98,10 @@ Route::middleware(['token_staff'])->group(function () {
             //MENU Beasiswa
             Route::get('beasiswa', [BeasiswaController::class, 'viewBeasiswa']);
             Route::get('beasiswa/datatables', [BeasiswaController::class, 'datatablesBeasiswa']);
+
+            // MENU ABSENSI KEHADIRAN
+            Route::get('/absensi-kehadiran', [AbsensiKehadiranSiswaController::class, 'viewAbsensiKehadiran']);
+            Route::get('/absensi-kehadiran/{start_date}/{end_date}', [AbsensiKehadiranSiswaController::class, 'viewAbsensiKehadiran']);
 
             Route::prefix('absensi-ekskul')->group(function () {
                 Route::get('/', [AbsensiEkskulController::class, 'viewAbsensiEkskul']);
