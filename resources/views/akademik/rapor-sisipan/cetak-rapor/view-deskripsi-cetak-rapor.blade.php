@@ -1,13 +1,15 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting') }}"><i
-                    class="material-icons">add</i><span>Setting Urutan</span></a>
-            @if ($auth_data->sekolah_data->nm_singkat_sekolah = 'smpypm2')
-                <a class="btn bg-blue waves-effect target-link"
-                    href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewDeskripsi') }}"><i
-                        class="material-icons">add</i><span>Deskripsi</span></a>
-            @endif
+        <h2>
+
+            <a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/' . Request::segment(3)) }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a>
+            {{-- <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/addSub') }}"><i
+                    class="material-icons">add</i><span>Tambah Sub</span></a> --}}
+            {{-- <a class="btn bg-blue waves-effect target-link" href=""><i class="material-icons">add</i><span>Tambah
+                    Sub</span></a> --}}
         </h2>
     </div>
     <div class="row clearfix">
@@ -24,12 +26,11 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kelas</th>
-                                    <th>Jurusan</th>
-                                    <th>Wali Kelas</th>
-                                    <th>Jumlah Mapel yang sudah terisi</th>
-                                    {{-- <th>Semester</th> --}}
-                                    <th>Action</th>
+                                    <th>Mata Pelajaran</th>
+                                    <th>Tingkat</th>
+                                    <th>Kode Deskripsi</th>
+                                    <th>Deskripsi 1</th>
+                                    <th>Deskripsi 2</th>
                                 </tr>
                             </thead>
                         </table>
@@ -42,12 +43,12 @@
 
 <script type="text/javascript">
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatablesViewDeskripsi';
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
-    var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print';
+    var add = base_url + '/' + role_url + '#' + modul_url + '/' + 'cetak-rapor/addSetting';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -64,23 +65,28 @@
                 className: 'align-center'
             },
             {
-                data: 'nm_kelas',
-                name: 'nm_kelas',
+                data: 'nm_mata_pelajaran',
+                name: 'nm_mata_pelajaran',
                 className: 'align-center'
             },
             {
-                data: 'jurusan.nm_jurusan',
-                name: 'jurusan.nm_jurusan',
-            },
-            {
-                data: 'wali_kelas',
-                name: 'wali_kelas'
-            },
-            {
-                data: 'rapor_sisipan',
-                name: 'rapor_sisipan',
+                data: 'tingkat',
+                name: 'tingkat',
                 className: 'align-center'
             },
+            {
+                data: 'kd_deskripsi',
+                name: 'kd_deskripsi'
+            },
+            {
+                data: 'deskripsi1',
+                name: 'deskripsi1'
+            },
+
+            {
+                data: 'deskripsi2',
+                name: 'deskripsi2'
+            }
             // {
             //     data: 'jumlah',
             //     name: 'jumlah',
@@ -96,32 +102,25 @@
             //     name: 'semester',
             //     className: 'align-center'
             // },
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                    if (data.jumlah != '0') {
-                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                            pdf_url + '/' + data.id_kelas + '"  target="_blank">' +
-                            '    <i class="material-icons">picture_as_pdf</i>' +
-                            '</a> ';
-                    } else {
-                        return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
-                            '    <i class="material-icons">picture_as_pdf</i>' +
-                            '</a> ';
-                    }
-
-                }
-            }
             // {
-            //     data: 'pengguna.nm_pengguna',
-            //     name: 'pengguna.nm_pengguna',
-            //     className: 'align-center'
-            // },
-        ]
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+            //             add + '/' + data.id_mata_pelajaran + '" >' +
+            //             '    <i class="material-icons">edit</i>' +
+            //             '</a> ';
+            //     }
+        }
+        // {
+        //     data: 'pengguna.nm_pengguna',
+        //     name: 'pengguna.nm_pengguna',
+        //     className: 'align-center'
+        // },
+    ]
     });
 
     primary_table.on('draw', function() {
