@@ -89,7 +89,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Histori Absensi</h2>
+                    <h2>Histori Absensi {{ Request::segment(1) == 'wali-murid' ? $siswa->nm_pengguna : '' }}</h2>
                 </div>
 
                 <div class="body">
@@ -97,8 +97,8 @@
                         <table class="table table-bordered table-striped">
                             <thead style="background:#009efa; color:white">
                                 <tr>
-                                    <th width="5%">Tanggal</th>
-                                    <th>Hari</th>
+                                    <th width="5%" style="text-align:center !important">No.</th>
+                                    <th>Hari dan Tanggal</th>
                                     <th>Check In</th>
                                     <th>Check Out</th>
                                     <th>Status</th>
@@ -111,8 +111,8 @@
                                         @else
                                         <tr>
                                     @endif
-                                    <td align="center">{{ $r['tanggal'] }}</td>
-                                    <td>{{ $r['hari'] }}</td>
+                                    <td align="center">{{ $loop->iteration }}</td>
+                                    <td>{{ \Carbon\Carbon::create($r['hari'])->isoFormat('dddd, D MMMM Y') }}</td>
                                     <td>{{ $r['check_in'] }}</td>
                                     <td>{{ $r['check_out'] }}</td>
                                     <td>{{ $r['status'] }}</td>
