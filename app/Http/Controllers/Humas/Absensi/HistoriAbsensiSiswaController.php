@@ -52,61 +52,61 @@ class HistoriAbsensiSiswaController extends Controller
         // }
     }
 
-    public function storeShiftPengguna(Request $request, $date1, $date2)
-    {
-        set_time_limit(9800);
-        // $input = (object) $request->input();
+    // public function storeShiftPengguna(Request $request, $date1, $date2)
+    // {
+    //     set_time_limit(9800);
+    //     // $input = (object) $request->input();
 
-        $startDate = new Carbon('first day of' .  $date1 . '2022');
+    //     $startDate = new Carbon('first day of' .  $date1 . '2022');
 
-        $endDate =  new Carbon('last day of' . $date2 . '2022');
+    //     $endDate =  new Carbon('last day of' . $date2 . '2022');
 
-        $prefix = Sekolah::first()->prefix;
+    //     $prefix = Sekolah::first()->prefix;
 
-        if ($startDate > $endDate) {
-            return [
-                'status' => 300, // fail
-                'message' => 'Bulan awal harus lebih kecil dari bulan akhir'
-            ];
-        }
+    //     if ($startDate > $endDate) {
+    //         return [
+    //             'status' => 300, // fail
+    //             'message' => 'Bulan awal harus lebih kecil dari bulan akhir'
+    //         ];
+    //     }
 
-        $pengguna = Siswa::with('pengguna', 'pengguna.status_pengguna')
-            ->whereHas('pengguna.status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
+    //     $pengguna = Siswa::with('pengguna', 'pengguna.status_pengguna')
+    //         ->whereHas('pengguna.status_pengguna', function ($query) {
+    //             $query->where('nm_status_pengguna', '=', 'AKTIF');
+    //         })->get();
 
-        $dates = CarbonPeriod::create($startDate, $endDate);
-        foreach ($pengguna as $user) {
-            foreach ($dates as $value) {
-                $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user->pengguna->id_pengguna)
-                    ->where('date', $value->format('Y-m-d'))
-                    ->first();
-                //validasi apakah sudah ada apa belum datanya
-                if ($shiftPenggunaId) {
-                    $dataUpdate['id_shift_master'] = 'Siswa';
-                    $shiftPenggunaId->update($dataUpdate);
-                } else {
-                    $now = Carbon::now(env('APP_TIMEZONE', ''));
-                    $html = '';
-                    $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
-                    $list_data['id_pengguna'] = $user->pengguna->id_pengguna;
-                    $list_data['date'] =  $value->format('Y-m-d');
-                    $list_data['id_shift_master'] = 'Siswa';
+    //     $dates = CarbonPeriod::create($startDate, $endDate);
+    //     foreach ($pengguna as $user) {
+    //         foreach ($dates as $value) {
+    //             $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user->pengguna->id_pengguna)
+    //                 ->where('date', $value->format('Y-m-d'))
+    //                 ->first();
+    //             //validasi apakah sudah ada apa belum datanya
+    //             if ($shiftPenggunaId) {
+    //                 $dataUpdate['id_shift_master'] = 'Siswa';
+    //                 $shiftPenggunaId->update($dataUpdate);
+    //             } else {
+    //                 $now = Carbon::now(env('APP_TIMEZONE', ''));
+    //                 $html = '';
+    //                 $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
+    //                 $list_data['id_pengguna'] = $user->pengguna->id_pengguna;
+    //                 $list_data['date'] =  $value->format('Y-m-d');
+    //                 $list_data['id_shift_master'] = 'Siswa';
 
-                    ShiftPengguna::create($list_data);
-                }
-            }
-        }
+    //                 ShiftPengguna::create($list_data);
+    //             }
+    //         }
+    //     }
 
-        return [
-            'status' => 202, // SUCCESS AND LOAD CONTENT
-            'link' => '/humas#',
-            'message' => 'Tambah data Shift berhasil '
+    //     return [
+    //         'status' => 202, // SUCCESS AND LOAD CONTENT
+    //         'link' => '/humas#',
+    //         'message' => 'Tambah data Shift berhasil '
 
-        ];
+    //     ];
 
-        // return redirect("/humas#absensi/shift_pengguna");
-    }
+    //     // return redirect("/humas#absensi/shift_pengguna");
+    // }
 
 
     public function viewDetailHistoriAbsensiSiswa(Request $request, $id_kelas, $date, $status)
@@ -158,7 +158,7 @@ class HistoriAbsensiSiswaController extends Controller
                 })->orderBy('nm_pengguna', 'asc')->get();
         }
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
-        $allShiftPengguna = ShiftPengguna::where('id_shift_master', 'Siswa')->where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         foreach ($pengguna as $key => $value) {
             $hasil[$key]['check_in'] = '-';

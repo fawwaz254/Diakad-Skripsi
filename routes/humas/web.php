@@ -222,7 +222,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
 
                 //buat generate shift siswa
-                Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
+                // Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
             });
 
             Route::prefix('histori-absensi-siswa-pondok')->group(function () {
