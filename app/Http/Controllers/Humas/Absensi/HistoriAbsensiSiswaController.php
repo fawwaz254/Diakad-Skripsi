@@ -146,7 +146,7 @@ class HistoriAbsensiSiswaController extends Controller
                 ->whereHas('status_pengguna', function ($query) {
                     $query->where('nm_status_pengguna', '=', 'AKTIF');
                 })->whereHas('siswa.kelas', function ($query) {
-                    $query->whereIn('tingkat',  [7, 8, 9, 10, 11, 12]);
+                    // $query->whereIn('tingkat',  [7, 8, 9, 10, 11, 12]);
                 })->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
