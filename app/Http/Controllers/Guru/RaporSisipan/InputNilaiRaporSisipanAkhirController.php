@@ -26,7 +26,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
         // dd($rapor_sisipan);
-        $list_data = KomponenNilaiRaporSisipan::all();
+        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->get();
         // $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {

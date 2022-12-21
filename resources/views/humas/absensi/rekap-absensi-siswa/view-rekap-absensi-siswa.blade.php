@@ -162,12 +162,15 @@
             <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Aliyah (MA)</a>
     @endif --}}
 
-    @foreach ($groupKelas as $kelas)
+
+    {{-- @foreach ($groupKelas as $kelas)
         <a href="humas/absensi/rekap-absensi/allDataChart/siswa/{{ $kelas->tingkat }}/{{ $kelas->id_jurusan }}/{{ $start_date }}/{{ $end_date }}"
             target="_blank" class="btn bg-purple waves-effect">
             <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas
             {{ '( ' . $kelas->tingkat . ' ' . $kelas->nm_jurusan . ' )' }}</a>
-    @endforeach
+    @endforeach --}}
+
+
     {{-- <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $start_date }}/{{ $end_date }}" target="_blank"
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Kelas</a>
