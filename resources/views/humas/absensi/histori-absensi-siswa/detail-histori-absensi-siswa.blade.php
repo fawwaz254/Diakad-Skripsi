@@ -124,9 +124,9 @@
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
 
-<a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-mount/' . $id_kelas . '/' . $date) }}"
+{{-- <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-mount/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">
-    <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a>
+    <i class="material-icons" style="font-size: 15px;">print</i> Print Bulan ini</a> --}}
 <br>
 <input type="hidden" value="{{ $id_kelas }}" name="id_kelas">
 <div class="row clearfix" style="margin-top: 10px">
