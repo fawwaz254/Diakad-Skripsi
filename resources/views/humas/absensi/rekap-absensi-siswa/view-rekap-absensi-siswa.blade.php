@@ -15,11 +15,11 @@
         color: black;
     }
 
-    input::-webkit-datetime-edit,
+    /* input::-webkit-datetime-edit,
     input::-webkit-inner-spin-button,
     input::-webkit-clear-button {
         display: none;
-    }
+    } */
 
     input::-webkit-calendar-picker-indicator {
         position: absolute;
@@ -108,7 +108,7 @@
             <div class="card">
 
                 <div class="header">
-                    <h2>Rekap Absensi Siswa</h2>
+                    <h2>Data Rekap Absensi Siswa Kelas {{ $nama_kelas->nm_kelas }}</h2>
                 </div>
                 <br>
                 <div class="body">
@@ -150,36 +150,49 @@
         </div>
     </div>
     <br>
-    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
-        target="_blank" class="btn bg-purple waves-effect">
-        <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas Ini</a>
-    {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/1/{{ $start_date }}/{{ $end_date }}"
-            target="_blank" class="btn bg-purple waves-effect">
-            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Tsanawiyah (MTs)</a>
-        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/2/{{ $start_date }}/{{ $end_date }}"
-            target="_blank" class="btn bg-purple waves-effect">
-            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Aliyah (MA)</a>
-    @endif --}}
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
 
+                <div class="header">
+                    <h2>Print Rekap Absensi Siswa Minggu Ini</h2>
+                </div>
+                <div class="body">
+                    @foreach ($groupKelas as $kelas)
+                        <a href="humas/absensi/rekap-absensi/print-mingguan/siswa/{{ $kelas->tingkat }}/{{ $kelas->id_jurusan }}"
+                            target="_blank" class="btn bg-purple waves-effect m-2" style=" margin: 5px !important">
+                            <i class="material-icons" style="font-size: 15px;">print</i> Seluruh Kelas
+                            {{ '( ' . $kelas->tingkat . ' ' . $kelas->nm_jurusan . ' )' }}</a>
+                    @endforeach
 
-    {{-- @foreach ($groupKelas as $kelas)
-        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/{{ $kelas->tingkat }}/{{ $kelas->id_jurusan }}/{{ $start_date }}/{{ $end_date }}"
-            target="_blank" class="btn bg-purple waves-effect">
-            <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas
-            {{ '( ' . $kelas->tingkat . ' ' . $kelas->nm_jurusan . ' )' }}</a>
-    @endforeach --}}
+                    {{-- <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $start_date }}/{{ $end_date }}" target="_blank"
+                    class="btn bg-purple waves-effect">
+                    <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Kelas</a>
+                    <br> --}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
 
-
-    {{-- <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $start_date }}/{{ $end_date }}" target="_blank"
-        class="btn bg-purple waves-effect">
-        <i class="material-icons" style="font-size: 15px;">print</i> Print Semua Kelas</a>
-    <br> --}}
     <div class="row clearfix" style="margin-top: 10px">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                 <div class="header">
-                    <h2>Histori Absensi </h2>
+                    <h2>Histori Absensi Siswa Kelas {{ $nama_kelas->nm_kelas }}</h2>
+
+                    <a href="humas/absensi/rekap-absensi/allDataChart/siswa/0/{{ $id_kelas }}/{{ $start_date }}/{{ $end_date }}"
+                        target="_blank" class="btn bg-blue waves-effect" style=" margin-top: 20px !important;">
+                        <i class="material-icons" style="font-size: 15px;">print</i> Print Kelas
+                        {{ $nama_kelas->nm_kelas }}</a>
+                    {{-- @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/1/{{ $start_date }}/{{ $end_date }}"
+                            target="_blank" class="btn bg-purple waves-effect">
+                            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Tsanawiyah (MTs)</a>
+                        <a href="humas/absensi/rekap-absensi/allDataChart/siswa/2/{{ $start_date }}/{{ $end_date }}"
+                            target="_blank" class="btn bg-purple waves-effect">
+                            <i class="material-icons" style="font-size: 15px;">print</i> Print Madrasah Aliyah (MA)</a>
+                    @endif --}}
                 </div>
 
                 <div class="body">

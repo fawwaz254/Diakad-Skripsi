@@ -528,7 +528,7 @@ class RekapAbsensiController extends Controller
         // $start_date = Carbon::parse($start_date)->format('Y-m-d');
         // $end_date = Carbon::parse($end_date)->format('Y-m-d');
 
-        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas'));
+        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date'));
     }
 
     public function viewRekapAbsensiSiswa(Request $request, $id_kelas, $start_date, $end_date)
@@ -537,6 +537,8 @@ class RekapAbsensiController extends Controller
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
+
+        $nama_kelas = Kelas::select('nm_kelas')->where('id_kelas', $id_kelas)->first();
 
         if ($id_kelas == "1") {
             $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
@@ -692,7 +694,7 @@ class RekapAbsensiController extends Controller
             ->orderBy('kelas.tingkat', 'asc')
             ->get();
 
-        return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'groupKelas', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas'));
+        return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'groupKelas', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas', 'nama_kelas'));
     }
 
 
@@ -1280,5 +1282,131 @@ class RekapAbsensiController extends Controller
 
         // dd($data);
         return view('humas/absensi/rekap-absensi-siswa/cetak-rekap-absensi-siswa', compact('auth_data', 'hasil', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat', 'jumlah_alpha',  'start_date', 'end_date', 'pengguna'));
+    }
+
+    public function printRekapMingguan(Request $request, $tingkat, $id_jurusan)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $start_date = $now->startOfWeek()->format('Y-m-d');
+        $end_date = $now->endOfWeek()->format('Y-m-d');
+
+
+        if ($tingkat == '0') {
+            $id_kelas = $id_jurusan;
+            $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })
+                ->whereHas('siswa', function ($query) use ($id_kelas) {
+                    $query->where('id_kelas', '=', $id_kelas);
+                })->get();
+            $nm_kelas = Kelas::where('id_kelas', $id_kelas)->first()->nm_kelas;
+        } else {
+            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->whereHas('siswa.kelas', function ($query) use ($tingkat, $id_jurusan) {
+                    $query->where('tingkat', $tingkat)->where('id_jurusan', $id_jurusan);
+                })->get();
+
+            $jurusan = Jurusan::where('id_jurusan', $id_jurusan)->first()->nm_jurusan;
+            $nm_kelas = $tingkat . ' ' . $jurusan;
+        }
+
+
+        $hasil = [];
+        $jumlah_hadir = 0;
+        $jumlah_sakit = 0;
+        $jumlah_izin = 0;
+        $jumlah_telat = 0;
+        // $jumlah_pulangcepat = 0;
+        $jumlah_alpha = 0;
+        // $tidak_checkout = 0;
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
+        $dates = CarbonPeriod::create($start_date, $end_date);
+        $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
+        $carbon = Carbon::now()->format('Y-m-d');
+
+        foreach ($pengguna as $key1 => $value) {
+
+            foreach ($dates as $key2 => $date) {
+                $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
+                // $hasil[$key1][$key2]['status'] = '';
+                $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
+                $attendance =  $allPresensiPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
+                $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
+
+                if ($attendance) {
+
+                    if ($attendance->status) {
+                        // $hasil[$key1][$key2]['status'] = $attendance->status;
+                        if ($attendance->status == 'sakit') {
+                            $jumlah_sakit++;
+                        } elseif ($attendance->status == 'izin') {
+                            $jumlah_izin++;
+                        }
+                    }
+                    if ($attendance->check_in) {
+                        // $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
+                        // $hasil[$key1][$key2]['status'] = "Masuk";
+                        $jumlah_hadir++;
+                    }
+
+                    if (isset($shiftMaster['start_time'])) {
+                        if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
+                            $jumlah_telat++;
+                            // $hasil[$key1][$key2]['status'] = "Telat";
+                        }
+                    }
+
+                    // if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
+                    //     if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                    //         // $jumlah_pulangcepat++;
+                    //         $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
+                    //     }
+                    // }
+
+                    // if (isset($shiftMaster['start_time'])) {
+                    //     if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                    //         $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
+                    //     }
+                    // // }
+
+                    // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                    //     $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
+                    //     // $tidak_checkout++;
+                    // }
+                    // if (isset($shiftMaster['start_time'])) {
+                    //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+
+                    //         $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                    //     }
+                    // }
+                } else {
+                    if ($shiftMaster) {
+
+                        if ($date->format('Y-m-d') < $carbon) {
+                            // $hasil[$key1][$key2]['status'] = 'Alpha';
+                            $jumlah_alpha++;
+                        } else {
+                            // $hasil[$key1][$key2]['status'] = '';
+                        }
+                        if ($date < $carbon && $cek_libur) {
+                            $jumlah_alpha--;
+                        }
+                    }
+                }
+                if ($cek_libur) {
+                    // $hasil[$key1][$key2]['status'] = 'Libur';
+                }
+            }
+        }
+        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date'));
     }
 }
