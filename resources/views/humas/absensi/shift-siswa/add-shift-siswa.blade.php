@@ -92,14 +92,14 @@
                                     <h4>Pilih Bulan :</h4>
                                     <table class="table">
                                         <tr>
-                                            <td><label for="startDate"> Bulan Awal :</label></td>
+                                            <td><label for="startDate">Tanggal Mulai :</label></td>
                                             <td>
                                                 <input type="date" name="startDate">
                                             <td>
 
                                         </tr>
                                         <tr>
-                                            <td> <label for="endDate"> Bulan Akhir :</label></td>
+                                            <td> <label for="endDate">Tanggal Akhir :</label></td>
                                             <td>
                                                 <input type="date" name="endDate">
                                             </td>
