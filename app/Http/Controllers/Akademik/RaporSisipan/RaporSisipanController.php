@@ -46,17 +46,29 @@ class RaporSisipanController extends Controller
             ->whereHas('pengguna.status_pengguna', function ($query) {
                 $query->where('aktif_status_pengguna', '=', '1');
             })->get();
-        $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+        $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first();
+        if ($setting->value == '3') {
+            $komponen = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
+        } else {
+            $komponen = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+        }
+
         return Datatables::of($list_data)
             ->addColumn('mata_pelajaran', function ($item) {
                 return $item->mata_pelajaran->nm_mata_pelajaran;
             })
-            ->addColumn('jumlah', function ($item) use ($komponenUTS, $siswa) {
+            ->addColumn('jumlah', function ($item) use ($komponen, $siswa, $setting) {
                 //semua siswa
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
-                $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponenUTS)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
-                    $query->where('id_kelas', '=', $item->kelas->id_kelas);
-                })->count();
+                if ($setting->value == '3') {
+                    $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponen)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
+                        $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                    })->count();
+                } else {
+                    $nilaiSiswaKosong = NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('id_komponen_nilai', $komponen)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
+                        $query->where('id_kelas', '=', $item->kelas->id_kelas);
+                    })->count();
+                }
 
                 $data = array(
                     'jumlah_siswa' => $allSiswa,
