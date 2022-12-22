@@ -138,7 +138,7 @@ class RaporSisipanController extends Controller
         $data['nilai_siswa'] = $nilai_siswa;
         // $data['nilai_komponen'] = $nilai_komponen;
         $data['rapor_sisipan'] = $rapor_sisipan;
-        $data['list_siswa'] = $list_siswa;;
+        $data['list_siswa'] = $list_siswa;
         $data['list_data'] = $list_kd_aktif;
         $data['id_rapor_sisipan'] = $id_rapor_sisipan;
 

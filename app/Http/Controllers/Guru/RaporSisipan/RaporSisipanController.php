@@ -209,12 +209,21 @@ class RaporSisipanController extends Controller
                 }
             }
         }
+        foreach ($list_data as $key => $data) {
+            $data1 = $list_nilai->where('id_komponen_nilai', $data->id_komponen_nilai)->where('nilai', '!=', 0)->first();
+            if (!empty($data1)) {
+                $list_kd_aktif[$key]['id_komponen_nilai'] =   $data->id_komponen_nilai;
+                $list_kd_aktif[$key]['nm_nilai'] =   $data->nm_nilai;
+            }
+        }
+
+
 
         $data['nilai_siswa'] = $nilai_siswa;
         // $data['nilai_komponen'] = $nilai_komponen;
         $data['rapor_sisipan'] = $rapor_sisipan;
         $data['list_siswa'] = $list_siswa;;
-        $data['list_data'] = $list_data;
+        $data['list_data'] = $list_kd_aktif;
         $data['id_rapor_sisipan'] = $id_rapor_sisipan;
 
         return Excel::download(new RekapRaporSisipanSTS($data), 'Rekap Rapor Sisipan STS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
