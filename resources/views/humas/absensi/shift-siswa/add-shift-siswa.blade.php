@@ -92,41 +92,16 @@
                                     <h4>Pilih Bulan :</h4>
                                     <table class="table">
                                         <tr>
-                                            <td><label for="firstMount"> Bulan Awal :</label></td>
+                                            <td><label for="startDate">Tanggal Mulai :</label></td>
                                             <td>
-                                                <select name="firstMount" class="form-control form-control-lg">
-                                                    <option value="January" selected>Januari</option>
-                                                    <option value="February">Februari</option>
-                                                    <option value="March">Maret</option>
-                                                    <option value="April">April</option>
-                                                    <option value="May">Mei</option>
-                                                    <option value="June">Juni</option>
-                                                    <option value="July">Juli</option>
-                                                    <option value="August">Agustus</option>
-                                                    <option value="September">September</option>
-                                                    <option value="October">Oktober</option>
-                                                    <option value="November">November</option>
-                                                    <option value="December">Desember</option>
-                                                </select>
+                                                <input type="date" name="startDate">
                                             <td>
 
                                         </tr>
                                         <tr>
-                                            <td> <label for="endMount"> Bulan Akhir :</label></td>
-                                            <td><select name="endMount" class="form-control form-control-lg">
-                                                    <option value="January" selected>Januari</option>
-                                                    <option value="February">Februari</option>
-                                                    <option value="March">Maret</option>
-                                                    <option value="April">April</option>
-                                                    <option value="May">Mei</option>
-                                                    <option value="June">Juni</option>
-                                                    <option value="July">Juli</option>
-                                                    <option value="August">Agustus</option>
-                                                    <option value="September">September</option>
-                                                    <option value="October">Oktober</option>
-                                                    <option value="November">November</option>
-                                                    <option value="December">Desember</option>
-                                                </select>
+                                            <td> <label for="endDate">Tanggal Akhir :</label></td>
+                                            <td>
+                                                <input type="date" name="endDate">
                                             </td>
                                         </tr>
                                     </table>

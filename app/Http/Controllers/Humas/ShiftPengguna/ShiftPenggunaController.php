@@ -112,8 +112,8 @@ class ShiftPenggunaController extends Controller
 
         $pengguna = $input->pengguna;
 
-        $startDate = new Carbon('first day of' . $input->firstMount . '2022');
-        $endDate =  new Carbon('last day of' . $input->endMount . '2022');
+        $startDate = $input->startDate;
+        $endDate =  $input->endDate;
         // $nameDay =  ;
 
         $prefix = Sekolah::first()->prefix;
