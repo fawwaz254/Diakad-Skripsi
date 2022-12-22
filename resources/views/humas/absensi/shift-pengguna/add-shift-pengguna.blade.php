@@ -33,7 +33,8 @@
                                 <tr>
                                     @foreach ($penggunas as $key => $pengguna)
                                         <td style="text-align: center;">{{ $key + 1 }}</td>
-                                        <td>{{ isset($pengguna->guru->unit_kerja)  ?  $pengguna->guru->unit_kerja->nm_unit_kerja : 'Pegawai'}}</td>
+                                        <td>{{ isset($pengguna->guru->unit_kerja) ? $pengguna->guru->unit_kerja->nm_unit_kerja : 'Pegawai' }}
+                                        </td>
                                         <td><input type="checkbox" name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
                                                 value="{{ $pengguna['id_pengguna'] }}"
                                                 id="{{ $pengguna['id_pengguna'] }}"> <label
@@ -53,41 +54,16 @@
                             <h4>Pilih Bulan :</h4>
                             <table class="table">
                                 <tr>
-                                    <td><label for="firstMount"> Bulan Awal :</label></td>
+                                    <td><label for="startDate"> Tanggal Mulai :</label></td>
                                     <td>
-                                        <select name="firstMount" class="form-control form-control-lg">
-                                            <option value="January" selected>Januari</option>
-                                            <option value="February">Februari</option>
-                                            <option value="March">Maret</option>
-                                            <option value="April">April</option>
-                                            <option value="May">Mei</option>
-                                            <option value="June">Juni</option>
-                                            <option value="July">Juli</option>
-                                            <option value="August">Agustus</option>
-                                            <option value="September">September</option>
-                                            <option value="October">Oktober</option>
-                                            <option value="November">November</option>
-                                            <option value="December">Desember</option>
-                                        </select>
+                                        <input type="date" name="startDate">
                                     <td>
 
                                 </tr>
                                 <tr>
-                                    <td> <label for="endMount"> Bulan Akhir :</label></td>
-                                    <td><select name="endMount" class="form-control form-control-lg">
-                                            <option value="January" selected>Januari</option>
-                                            <option value="February">Februari</option>
-                                            <option value="March">Maret</option>
-                                            <option value="April">April</option>
-                                            <option value="May">Mei</option>
-                                            <option value="June">Juni</option>
-                                            <option value="July">Juli</option>
-                                            <option value="August">Agustus</option>
-                                            <option value="September">September</option>
-                                            <option value="October">Oktober</option>
-                                            <option value="November">November</option>
-                                            <option value="December">Desember</option>
-                                        </select>
+                                    <td> <label for="endDate"> Tanggal Akhir :</label></td>
+                                    <td>
+                                        <input type="date" name="endDate">
                                     </td>
                                 </tr>
 
@@ -106,7 +82,8 @@
                                             @foreach ($shifts as $shift)
                                                 <option value="{{ $shift['code'] }}">
                                                     ({{ minimalisTime($shift['start_time']) }} -
-                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ minimalisTime($shift['end_time']) }})
+                                                    -
                                                     {{ $shift['code'] }}</option>
                                             @endforeach
                                         </select>
@@ -122,7 +99,8 @@
                                             @foreach ($shifts as $shift)
                                                 <option value="{{ $shift['code'] }}">
                                                     ({{ minimalisTime($shift['start_time']) }} -
-                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ minimalisTime($shift['end_time']) }})
+                                                    -
                                                     {{ $shift['code'] }}</option>
                                             @endforeach
                                         </select>
@@ -154,7 +132,8 @@
                                             @foreach ($shifts as $shift)
                                                 <option value="{{ $shift['code'] }}">
                                                     ({{ minimalisTime($shift['start_time']) }} -
-                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ minimalisTime($shift['end_time']) }})
+                                                    -
                                                     {{ $shift['code'] }}</option>
                                             @endforeach
                                         </select>
@@ -170,7 +149,8 @@
                                             @foreach ($shifts as $shift)
                                                 <option value="{{ $shift['code'] }}">
                                                     ({{ minimalisTime($shift['start_time']) }} -
-                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ minimalisTime($shift['end_time']) }})
+                                                    -
                                                     {{ $shift['code'] }}</option>
                                             @endforeach
                                         </select>
@@ -186,7 +166,8 @@
                                             @foreach ($shifts as $shift)
                                                 <option value="{{ $shift['code'] }}">
                                                     ({{ minimalisTime($shift['start_time']) }} -
-                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ minimalisTime($shift['end_time']) }})
+                                                    -
                                                     {{ $shift['code'] }}</option>
                                             @endforeach
                                         </select>
@@ -194,7 +175,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <label for="dayName[Sunday]" >Ahad</label>
+                                        <label for="dayName[Sunday]">Ahad</label>
                                     </td>
                                     <td>
                                         <select name="dayName[Sunday]" class="form-control form-control-lg">
@@ -202,7 +183,8 @@
                                             @foreach ($shifts as $shift)
                                                 <option value="{{ $shift['code'] }}">
                                                     ({{ minimalisTime($shift['start_time']) }} -
-                                                    {{ minimalisTime($shift['end_time']) }}) -
+                                                    {{ minimalisTime($shift['end_time']) }})
+                                                    -
                                                     {{ $shift['code'] }}</option>
                                             @endforeach
                                         </select>
