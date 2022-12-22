@@ -15,11 +15,11 @@
         color: black;
     }
 
-    input::-webkit-datetime-edit,
+    /* input::-webkit-datetime-edit,
     input::-webkit-inner-spin-button,
     input::-webkit-clear-button {
         display: none;
-    }
+    } */
 
     input::-webkit-calendar-picker-indicator {
         position: absolute;
