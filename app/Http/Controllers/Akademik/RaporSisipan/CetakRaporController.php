@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\Kurikulum;
+use App\Models\RaporSisipanDeskripsi;
 use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\SubRaporSisipan;
@@ -100,6 +101,13 @@ class CetakRaporController extends Controller
         return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data'));
     }
 
+    public function viewDeskripsi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        return view('akademik/rapor-sisipan/cetak-rapor/view-deskripsi-cetak-rapor', compact('auth_data'));
+    }
+
     public function addSetting(Request $request, $mata_pelajaran)
     {
         $input = (object) $request->input();
@@ -157,6 +165,15 @@ class CetakRaporController extends Controller
                 return $data;
             })
             ->make(true);
+    }
+
+    public function datatablesViewDeskripsi(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $deskripsi = RaporSisipanDeskripsi::get()->sortBy('tingkat');
+        return Datatables::of($deskripsi)->make(true);
     }
 
     public function printCetakRapor(Request $request, $id_kelas)
