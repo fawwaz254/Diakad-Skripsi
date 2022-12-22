@@ -449,7 +449,6 @@ class RaporSisipanController extends Controller
                 if (!empty($data1)) {
                     $list_kd_aktif[$key]['id_komponen_nilai'] =   $data->id_komponen_nilai;
                     $list_kd_aktif[$key]['nm_nilai'] =   $data->nm_nilai;
-                    // $list_kd_aktif[$key]['urutan'] =   $data->urutan;
                 }
             }
 

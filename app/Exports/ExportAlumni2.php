@@ -5,8 +5,9 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class ExportAlumni2 implements FromView
+class ExportAlumni2 implements FromView, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection
