@@ -89,7 +89,7 @@
                                 </div>
 
                                 <div class="col-sm-4">
-                                    <h4>Pilih Bulan :</h4>
+                                    <h4>Pilih Tanggal :</h4>
                                     <table class="table">
                                         <tr>
                                             <td><label for="startDate">Tanggal Mulai :</label></td>
@@ -99,7 +99,7 @@
 
                                         </tr>
                                         <tr>
-                                            <td> <label for="endDate">Tanggal Akhir :</label></td>
+                                            <td><label for="endDate">Tanggal Akhir :</label></td>
                                             <td>
                                                 <input type="date" name="endDate">
                                             </td>
