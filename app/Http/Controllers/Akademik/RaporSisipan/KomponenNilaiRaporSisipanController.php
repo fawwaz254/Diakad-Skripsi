@@ -43,8 +43,7 @@ class KomponenNilaiRaporSisipanController extends Controller
         // dd($komponen_nilai);
 
 
-        return view('akademik/rapor-sisipan/komponen-nilai/edit-komponen-nilai', compact('auth_data','komponen_nilai'));
-
+        return view('akademik/rapor-sisipan/komponen-nilai/edit-komponen-nilai', compact('auth_data', 'komponen_nilai'));
     }
 
     public function datatablesKomponenNilai(Request $request)
@@ -52,13 +51,13 @@ class KomponenNilaiRaporSisipanController extends Controller
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = KomponenNilaiRaporSisipan::all();
+        $list_data = KomponenNilaiRaporSisipan::orderBy('urutan', 'asc')->get();
 
         return Datatables::of($list_data)
-            ->editColumn('status',function($item){
-                if($item->status == '1'){
+            ->editColumn('status', function ($item) {
+                if ($item->status == '1') {
                     return 'Aktif';
-                }else{
+                } else {
                     return 'Tidak Aktif';
                 }
             })
@@ -71,24 +70,25 @@ class KomponenNilaiRaporSisipanController extends Controller
             ->make(true);
     }
 
-    public function actionEditKomponenNilai(Request $request, $id){
+    public function actionEditKomponenNilai(Request $request, $id)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'nm_nilai' =>'required',
+            'nm_nilai' => 'required',
             'type' => 'required',
             'status' => 'required'
 
         ]);
-        if($validator->fails()) {
-                return [
+        if ($validator->fails()) {
+            return [
                 'status' => 300, // FAILED
                 'message' => $validator->errors()->first()
             ];
         }
 
-        $komponen_nilai = KomponenNilaiRaporSisipan::where('id_komponen_nilai',$id)->first();
+        $komponen_nilai = KomponenNilaiRaporSisipan::where('id_komponen_nilai', $id)->first();
         $komponen_nilai->nm_nilai = $input->nm_nilai;
         $komponen_nilai->type = $input->type;
         $komponen_nilai->status = $input->status;
@@ -98,9 +98,6 @@ class KomponenNilaiRaporSisipanController extends Controller
             'status' => 202, // SUCCESS AND LOAD PAGE
             'message' => 'Edit Komponen Nilai Berhasil!',
             'path' => 'rapor-sisipan/komponen-nilai'
-    ];
-
+        ];
     }
-
-
 }

@@ -12,8 +12,7 @@
                 </div>
                 <div class="body">
                     <div class="table-responsive">
-                        <table
-                            class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
+                        <table class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
                             id="primary_table">
                             <thead>
                                 <tr>
@@ -22,7 +21,7 @@
                                     <th>Urutan</th>
                                     <th>Type</th>
                                     <th>Status</th>
-                                    <th>Action</th>
+                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                         </table>
@@ -75,27 +74,20 @@
                 data: 'status',
                 name: 'status',
                 className: 'align-center'
-            },
-
-
-            {
-                data: 'action',
-                name: 'action',
-                searchable: false,
-                orderable: false,
-                className: 'align-center',
-                render: function(data) {
-                        return '<a class=" btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        edit_url + '/' + data.id + '" >' +
-                        '    <i class="material-icons">edit</i>' +
-                        '</a> ';
-                }
             }
             // {
-            //     data: 'pengguna.nm_pengguna',
-            //     name: 'pengguna.nm_pengguna',
-            //     className: 'align-center'
-            // },
+            //     data: 'action',
+            //     name: 'action',
+            //     searchable: false,
+            //     orderable: false,
+            //     className: 'align-center',
+            //     render: function(data) {
+            //         return '<a class=" btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+            //             edit_url + '/' + data.id + '" >' +
+            //             '    <i class="material-icons">edit</i>' +
+            //             '</a> ';
+            //     }
+            // }
         ]
     });
 
@@ -108,4 +100,4 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
-</script> 
+</script>

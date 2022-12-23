@@ -5,8 +5,9 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class RaporSisipanSTS implements FromView
+class RaporSisipanSTS implements FromView, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection
