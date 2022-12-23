@@ -118,6 +118,70 @@ class CetakRaporController extends Controller
         return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel'));
     }
 
+    public function  editDeskripsi(Request $request, $id)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $rapor_sisipan_deskripsi = RaporSisipanDeskripsi::find($id);
+        $mata_pelajaran = MataPelajaran::select('nm_mata_pelajaran')->groupBy('nm_mata_pelajaran')->get();
+        return view('akademik/rapor-sisipan/cetak-rapor/edit-deskripsi-rapor-sisipan', compact('auth_data', 'rapor_sisipan_deskripsi', 'mata_pelajaran'));
+    }
+
+    public function actionDeskripsi(Request $request, $mode, $id)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+        $validator = Validator::make($request->all(), [
+            'nm_mata_pelajaran' => 'required',
+            'tingkat' => 'required',
+            'kd_deskripsi' => 'required',
+            'deskripsi1' => 'required',
+            'deskripsi2' => 'required'
+        ]);
+
+        if ($validator->fails() && $mode != 'delete') {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+
+            if ($mode == 'add') { } elseif ($mode == 'edit') {
+
+                $rapor_sisipan_deskripsi = RaporSisipanDeskripsi::find($id);
+                $rapor_sisipan_deskripsi->nm_mata_pelajaran = $input->nm_mata_pelajaran;
+                $rapor_sisipan_deskripsi->tingkat = $input->tingkat;
+                $rapor_sisipan_deskripsi->kd_deskripsi = $input->kd_deskripsi;
+                $rapor_sisipan_deskripsi->deskripsi1 = $input->deskripsi1;
+                $rapor_sisipan_deskripsi->deskripsi2 = $input->deskripsi2;
+                $rapor_sisipan_deskripsi->updated_at = $now;
+                // $rapor_sisipan_deskripsi->updated_by = $input->auth_data->pengguna->id_pengguna;
+                $rapor_sisipan_deskripsi->save();
+
+                return [
+                    'status' => 202, // SUCCESS AND LOAD CONTENT
+                    'path' => 'rapor-sisipan/cetak-rapor/viewDeskripsi',
+                    'message' => 'Edit Deskripsi Successfully'
+                ];
+            } elseif ($mode == 'delete') {
+
+                // $kegiatan = KegiatanGuru::find($id);
+                // $kegiatan->deleted_by  = $input->auth_data->pengguna->id_pengguna;
+                // $kegiatan->deleted_at  = $now;
+                // $kegiatan->save();
+
+                // $kegiatan->delete();
+
+                // return [
+                //     'status' => 203, // SUCCESS AND LOAD TABLE
+                //     'message' => 'Delete Kegiatan Successfully'
+                // ];
+            }
+        }
+    }
+
     public function postSetting(Request $request, $mata_pelajaran)
     {
         $input = (object) $request->input();
@@ -176,11 +240,24 @@ class CetakRaporController extends Controller
         // ->sortBy('kd_deskripsi')->sortBy('nm_mata_pelajaran');
         return Datatables::of($deskripsi)
             ->editColumn('deskripsi1', function ($item) {
-
-                return substr($item->deskripsi1, 0, 50) . '...';
+                if (strlen($item->deskripsi1) < 75) {
+                    return $item->deskripsi1;
+                } else {
+                    return substr($item->deskripsi1, 0, 75) . '...';
+                }
             })->editColumn('deskripsi2', function ($item) {
 
-                return substr($item->deskripsi2, 0, 50) . '...';
+                if (strlen($item->deskripsi2) < 75) {
+                    return $item->deskripsi2;
+                } else {
+                    return substr($item->deskripsi2, 0, 75) . '...';
+                }
+            })
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id_rapor_sisipan_deskripsi'     => $item->id_rapor_sisipan_deskripsi
+                );
+                return $data;
             })
             ->make(true);
     }
