@@ -355,11 +355,11 @@ Route::middleware(['token_staff'])->group(function () {
                 // });
             });
 
-            Route::prefix('nilai-rapor-tengah-semester')->group(function () {
-                Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
-                Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesDaftarNilaiSTS']);
-                Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
-            });
+            // Route::prefix('nilai-rapor-tengah-semester')->group(function () {
+            //     Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
+            //     Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesDaftarNilaiSTS']);
+            //     Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
+            // });
 
             Route::prefix('komponen-nilai')->group(function () {
                 Route::get('/', [KomponenNilaiRaporSisipanController::class, 'viewKomponenNilai']);

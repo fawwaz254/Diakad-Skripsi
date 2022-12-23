@@ -172,8 +172,17 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $deskripsi = RaporSisipanDeskripsi::get()->sortBy('tingkat');
-        return Datatables::of($deskripsi)->make(true);
+        $deskripsi = RaporSisipanDeskripsi::get()->sortBy(['nm_mata_pelajaran', 'kd_deskripsi']);
+        // ->sortBy('kd_deskripsi')->sortBy('nm_mata_pelajaran');
+        return Datatables::of($deskripsi)
+            ->editColumn('deskripsi1', function ($item) {
+
+                return substr($item->deskripsi1, 0, 50) . '...';
+            })->editColumn('deskripsi2', function ($item) {
+
+                return substr($item->deskripsi2, 0, 50) . '...';
+            })
+            ->make(true);
     }
 
     public function printCetakRapor(Request $request, $id_kelas)
