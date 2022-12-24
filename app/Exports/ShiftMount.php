@@ -5,8 +5,9 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 
 use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-class ShiftMount implements FromView
+class ShiftMount implements FromView, ShouldAutoSize
 {
     /**
      * @return \Illuminate\Support\Collection

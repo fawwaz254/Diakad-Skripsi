@@ -28,7 +28,7 @@
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Tingkat</th>
-                                    <th>Kode Deskripsi</th>
+                                    <th>KD</th>
                                     <th>Deskripsi 1</th>
                                     <th>Deskripsi 2</th>
                                 </tr>
@@ -76,7 +76,8 @@
             },
             {
                 data: 'kd_deskripsi',
-                name: 'kd_deskripsi'
+                name: 'kd_deskripsi',
+                className: 'align-center'
             },
             {
                 data: 'deskripsi1',
@@ -114,13 +115,13 @@
             //             '    <i class="material-icons">edit</i>' +
             //             '</a> ';
             //     }
-        }
-        // {
-        //     data: 'pengguna.nm_pengguna',
-        //     name: 'pengguna.nm_pengguna',
-        //     className: 'align-center'
-        // },
-    ]
+
+            // {
+            //     data: 'pengguna.nm_pengguna',
+            //     name: 'pengguna.nm_pengguna',
+            //     className: 'align-center'
+            // },
+        ]
     });
 
     primary_table.on('draw', function() {
