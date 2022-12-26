@@ -64,6 +64,16 @@ class UploadDataSiswaController extends BaseController
 		return response()->download($file, 'ContohFileExcelUploadDataSiswa.xls', $headers);
 	}
 
+	public function downloadFileExcelLite()
+	{
+		$file = public_path() . "/excel/ContohFileExcelUploadDataSiswaLite.xls";
+		$headers = [
+			'Content-Type' => 'application/xls',
+		];
+
+		return response()->download($file, 'ContohFileExcelUploadDataSiswaLite.xls', $headers);
+	}
+
 	public function updateDataSiswa(Request $request)
 	{
 
@@ -132,7 +142,7 @@ class UploadDataSiswaController extends BaseController
 		// return redirect('/siswa');
 	}
 
-	
+
 	public function uploadFileExcel(Request $request)
 	{
 		$input = (object) $request->input();

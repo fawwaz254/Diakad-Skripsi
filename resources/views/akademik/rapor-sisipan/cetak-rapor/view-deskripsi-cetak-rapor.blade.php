@@ -31,6 +31,7 @@
                                     <th>KD</th>
                                     <th>Deskripsi 1</th>
                                     <th>Deskripsi 2</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                         </table>
@@ -49,6 +50,7 @@
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var add = base_url + '/' + role_url + '#' + modul_url + '/' + 'cetak-rapor/addSetting';
+    var edit_url = base_url + '/' + role_url + '#' + modul_url + '/' + 'cetak-rapor/editDeskripsi';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -87,7 +89,7 @@
             {
                 data: 'deskripsi2',
                 name: 'deskripsi2'
-            }
+            },
             // {
             //     data: 'jumlah',
             //     name: 'jumlah',
@@ -103,19 +105,19 @@
             //     name: 'semester',
             //     className: 'align-center'
             // },
-            // {
-            //     data: 'action',
-            //     name: 'action',
-            //     searchable: false,
-            //     orderable: false,
-            //     className: 'align-center',
-            //     render: function(data) {
-            //         return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-            //             add + '/' + data.id_mata_pelajaran + '" >' +
-            //             '    <i class="material-icons">edit</i>' +
-            //             '</a> ';
-            //     }
-
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id_rapor_sisipan_deskripsi + '" >' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a> ';
+                }
+            }
             // {
             //     data: 'pengguna.nm_pengguna',
             //     name: 'pengguna.nm_pengguna',
