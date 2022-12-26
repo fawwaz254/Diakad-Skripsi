@@ -165,7 +165,7 @@
                 @endif
             </div>
 
-            <!-- Deskripsi Perilaku Siswa -->
+            <!-- Deskripsi Catatan Sekolah -->
 
             <div class="col-md-12">
                 <h6 style="margin-top:15px;text-align: left;">C. Catatan Sekolah</h6>
@@ -193,7 +193,7 @@
         </div>
 
         <script>
-            // window.print();
+            window.print();
         </script>
 </body>
 
