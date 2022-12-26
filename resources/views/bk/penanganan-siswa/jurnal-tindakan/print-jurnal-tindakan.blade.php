@@ -11,9 +11,42 @@
         integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
     <title>Cetak Jurnal Tindakan</title>
+
+    <style>
+        td p {
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body>
+    @php
+        if ($list_data->count() > 0) {
+            $total_poin = $list_data->where('id_siswa', $siswa->id_siswa)->sum('jumlah_poin');
+        
+            $data = App\Models\KesimpulanPelanggaran::where('poin_bawah_kesimpulan_pelanggaran', '<=', $total_poin)
+                ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
+                ->first();
+        
+            if ($data) {
+                $kategori_pelanggaran = strip_tags($data->deskripsi_kesimpulan_pelanggaran_2);
+                $deskripsi_perilaku_1 = strip_tags($data->deskripsi_kesimpulan_pelanggaran_1);
+            }
+        
+            if ($data->nm_kesimpulan_pelanggaran) {
+                $kategori_pelanggaran = $data->nm_kesimpulan_pelanggaran;
+            }
+        
+            $total_pelanggaran_yang_dilakukan = $list_data->where('id_siswa', $siswa->id_siswa)->sum('frekuensi');
+            if ($total_pelanggaran_yang_dilakukan == 1) {
+                $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang lebih baik setelah ditangani sekolah.';
+            } elseif ($total_pelanggaran_yang_dilakukan == 2) {
+                $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang cukup baik setelah ditangani sekolah.';
+            } else {
+                $deskripsi_perilaku_2 = 'Belum ada perubahan perilaku siswa setelah ditangani sekolah.';
+            }
+        }
+    @endphp
 
     <div class="container text-center" style="margin-top:20px;">
         <div class="row">
@@ -69,7 +102,7 @@
                 <h6 style="text-align:left">A. Catatan Siswa</h6>
                 <table border="1" style="width:100%" cellspacing="0" cellpadding="10">
                     <tr>
-                        <th>No.</th>
+                        <th style="width:5%">No.</th>
                         <th>Jenis Pelanggaran</th>
                         <th>Pelanggaran Tingkat</th>
                         <th>Poin</th>
@@ -82,8 +115,8 @@
                     @endphp
                     @foreach ($list_data as $data)
                         <tr>
-                            <td>{{ $no++ }}.</td>
-                            <td>{!! $data->nm_subkategori_pelanggaran !!}</td>
+                            <td style="width:5%">{{ $no++ }}.</td>
+                            <td align="left">{!! $data->nm_subkategori_pelanggaran !!}</td>
                             <td>{{ $data->nm_kategori_pelanggaran }}</td>
                             <td>{{ $data->poin_subkategori_pelanggaran }}</td>
                             <td>{{ $data->frekuensi }} x</td>
@@ -113,15 +146,15 @@
                 @if ($setting_bk)
                     <table border="1" style="width:100%" cellspacing="0" cellpadding="10">
                         <tr>
-                            <th style="width:10%">No.</th>
+                            <th style="width:5%">No.</th>
                             <th>Deskripsi</th>
                         </tr>
                         <tr>
-                            <td style="width:10%">1</td>
+                            <td style="width:5%">1</td>
                             <td align="left">{{ $deskripsi_perilaku_1 }}</td>
                         </tr>
                         <tr>
-                            <td style="width:10%">2</td>
+                            <td style="width:5%">2</td>
                             <td align="left">{{ $deskripsi_perilaku_2 }}</td>
                         </tr>
                     </table>
@@ -136,8 +169,8 @@
 
             <div class="col-md-12">
                 <h6 style="margin-top:15px;text-align: left;">C. Catatan Sekolah</h6>
-                <fieldset style="height: 100px;border:1px solid">
-                    <p align="left" class="mx-2">{{ $catatan_sekolah }}</p>
+                <fieldset style="height: 100px;border:1px solid;text-align:left;padding:0 5px">
+                    <p>{{ $catatan_sekolah }}</p>
                 </fieldset>
             </div>
 
@@ -160,7 +193,7 @@
         </div>
 
         <script>
-            window.print();
+            // window.print();
         </script>
 </body>
 
