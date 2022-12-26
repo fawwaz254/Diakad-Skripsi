@@ -13,10 +13,13 @@
                             <h2 class="card-inside-title">
                                 Upload File Excel
                             </h2>
-                            <form id="form-upload" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-file-excel')}}" method="post" enctype="multipart/form-data">
-                                {{csrf_field()}}
+                            <form id="form-upload"
+                                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-file-excel') }}"
+                                method="post" enctype="multipart/form-data">
+                                {{ csrf_field() }}
                                 Pilih File Excel
-                                <input type="file" name="file-excel" id="file-excel" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls">
+                                <input type="file" name="file-excel" id="file-excel"
+                                    accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls">
                                 <br>
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <button class="btn btn-block bg-red waves-effect" type="submit">
@@ -26,14 +29,17 @@
                                 </div>
                             </form>
 
-<br><br><br>
+                            <br><br><br>
                             <h2 class="card-inside-title">
                                 Upload Email Siswa
                             </h2>
-                            <form id="form-upload" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-file-excel-email')}}" method="post" enctype="multipart/form-data">
-                                {{csrf_field()}}
+                            <form id="form-upload"
+                                action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-file-excel-email') }}"
+                                method="post" enctype="multipart/form-data">
+                                {{ csrf_field() }}
                                 Pilih File Excel
-                                <input type="file" name="file-excel" id="file-excel" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls">
+                                <input type="file" name="file-excel" id="file-excel"
+                                    accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, .xls">
                                 <br>
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <button class="btn btn-block bg-red waves-effect" type="submit">
@@ -62,30 +68,47 @@
                                     Nama Lengkap : Nama Lengkap Siswa
                                 </li>
                                 <li>
-                                    Jenis Kelamin : Jenis Kelamin Siswa. 
-                                    <br>Keterangan : Isi Dengan  (<b>L</b> atau <b>P</b>)
+                                    Jenis Kelamin : Jenis Kelamin Siswa.
+                                    <br>Keterangan : Isi Dengan (<b>L</b> atau <b>P</b>)
                                 </li>
                                 <li>
-                                    Status Siswa : Status Siswa, pastikan format penulisan benar sesuai dengan Nama Status. Contoh : Aktif. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Status Siswa
+                                    Status Siswa : Status Siswa, pastikan format penulisan benar sesuai dengan Nama
+                                    Status. Contoh : Aktif. <br> <strong>Pastikan Sudah Dibuat</strong> data master
+                                    melalui menu Data Akademik -> Data Status Siswa
                                 </li>
                                 <li>
-                                    Kelas : Kelas Siswa, pastikan format penulisan benar sesuai dengan Nama Kelas. Contoh : 7-AK-1. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Setting Kelas -> Data Kelas
+                                    Kelas : Kelas Siswa, pastikan format penulisan benar sesuai dengan Nama Kelas.
+                                    Contoh : 7-AK-1. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui
+                                    menu Setting Kelas -> Data Kelas
                                 </li>
                                 <li>
-                                    Tahun Masuk : tahun angkatan masuk 4 digit. Contoh : 2018. <br> <strong>Pastikan Sudah Dibuat</strong> Data Penerimaan dengan Jenis Penerimaan "Siswa Lama" pada Tahun tersebut melalui menu Pendaftaran -> Data Penerimaan.
+                                    Tahun Masuk : tahun angkatan masuk 4 digit. Contoh : 2018. <br> <strong>Pastikan
+                                        Sudah Dibuat</strong> Data Penerimaan dengan Jenis Penerimaan "Siswa Lama" pada
+                                    Tahun tersebut melalui menu Pendaftaran -> Data Penerimaan.
                                 </li>
                                 <li>
-                                    Semester Masuk : semester ketika siswa masuk, pastikan format penulisan benar sesuai dengan Kode Semester. Contoh : 20151. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Nama Semester.
+                                    Semester Masuk : semester ketika siswa masuk, pastikan format penulisan benar sesuai
+                                    dengan Kode Semester. Contoh : 20151. <br> <strong>Pastikan Sudah Dibuat</strong>
+                                    data master melalui menu Data Akademik -> Data Nama Semester.
                                 </li>
                                 <li>
-                                    Jalur : Jalur Masuk Siswa, pastikan format penulisan benar sesuai dengan Nama Jalur. Contoh : Reguler. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui menu Data Akademik -> Data Jalur
+                                    Jalur : Jalur Masuk Siswa, pastikan format penulisan benar sesuai dengan Nama Jalur.
+                                    Contoh : Reguler. <br> <strong>Pastikan Sudah Dibuat</strong> data master melalui
+                                    menu Data Akademik -> Data Jalur
                                 </li>
                             </ul>
                             <a href="{{ route('siswa/download-file-excel') }}">
                                 <button class="btn btn-block bg-blue waves-effect" type="submit">
-                                        <i class="material-icons">cloud_upload</i>
-                                        <span>Download Template Excel</span>
-                                        
+                                    <i class="material-icons">cloud_upload</i>
+                                    <span>Download Template Excel</span>
+                                </button>
+                            </a>
+                            <br>
+                            <br>
+                            <a href="{{ route('siswa/download-file-excel-lite') }}">
+                                <button class="btn btn-block bg-green waves-effect" type="submit">
+                                    <i class="material-icons">cloud_upload</i>
+                                    <span>Download Template Excel Lite</span>
                                 </button>
                             </a>
                         </div>
@@ -100,18 +123,18 @@
     $('#form-upload').submit(function(e) {
         e.preventDefault();
     }).validate({
-        highlight: function (input) {
+        highlight: function(input) {
             $(input).addClass('is-danger');
         },
-        unhighlight: function (input) {
+        unhighlight: function(input) {
             $(input).removeClass('is-danger');
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             $(element).parents('.control').addClass('help').addClass('is-danger').append(error);
         },
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
-            
+
             setTimeout(() => {
                 $.ajax({
                     url: form.action,
@@ -122,20 +145,20 @@
                     contentType: false,
                     processData: false,
                     success: function(response) {
-                        if(response.status == 200){
+                        if (response.status == 200) {
                             vex.dialog.alert(response.message);
-                        }else if(response.status == 201){
+                        } else if (response.status == 201) {
                             vex.dialog.alert(response.message);
                             window.location.href = response.link;
-                        }else if(response.status == 202){
+                        } else if (response.status == 202) {
                             vex.dialog.alert(response.message);
                             loadURI(response.path);
-                        }else if(response.status == 203){
+                        } else if (response.status == 203) {
                             vex.dialog.alert(response.message);
                             primary_table.ajax.reload(null, false);
-                        }else if(response.status == 204){
+                        } else if (response.status == 204) {
                             loadURI(response.path);
-                        }else if(response.status == 300){
+                        } else if (response.status == 300) {
                             vex.dialog.alert(response.message);
                         }
                     },
@@ -143,7 +166,7 @@
                         $('button').removeAttr('disabled');
                     }
                 });
-                
+
             }, 1000);
         }
     });
