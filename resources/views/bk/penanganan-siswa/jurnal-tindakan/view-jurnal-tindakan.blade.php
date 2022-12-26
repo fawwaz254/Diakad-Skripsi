@@ -32,7 +32,7 @@
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <select class="form-control show-tick" name="id_kelas" onchange="changeKelas(this)">
-                                <option value="" disabled selected>-- Pilih Kelas --</option>
+                                <option disabled selected>-- Pilih Kelas --</option>
                                 @foreach ($data_kelas as $kelas)
                                     <option value="{{ $kelas->id_kelas }}">{{ $kelas->nm_kelas }}</option>
                                 @endforeach
@@ -45,8 +45,7 @@
                     <div class="row clearfix">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <select class="form-control show-tick" name="id_siswa">
-                                <option value="0" disabled selected>-- Pilih Siswa --</option>
-
+                                <option disabled selected>-- Pilih Siswa --</option>
                             </select>
                         </div>
                     </div>
@@ -77,7 +76,8 @@
             },
             success: function(result) {
                 $('select[name=id_siswa]').html('');
-                var html = '<option value="0">-- Pilih Siswa --</option>';
+                var html = `<option disabled selected>-- Pilih Siswa --</option>
+                            <option value="0" style="font-weight:bold">SEMUA SISWA KELAS</option>`;
                 $.each(result, function(key, item) {
                     html += '<option value="' + item.id_siswa + '">' + item.nm_pengguna + ' (' +
                         item.nis_siswa + ')</option>'
@@ -88,18 +88,8 @@
     }
 
     function printJurnalTindakan() {
-        if ($('select[name=id_kelas]').val() == null || $('select[name=id_siswa]').val() == '0') {
-            swal({
-                title: "Input tidak boleh kossong",
-                text: "Pilih Dahulu",
-                icon: "error",
-            });
-        } else {
-            window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
-                'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
-                'select[name=id_siswa]').val(), '_blank');
-        }
-
-
+        window.open(base_url + '/{{ Request::segment(1) }}/penanganan-siswa/jurnal-tindakan/print/' + $(
+            'select[name=id_semester]').val() + '/' + $('select[name=id_kelas]').val() + '/' + $(
+            'select[name=id_siswa]').val(), '_blank');
     }
 </script>
