@@ -119,7 +119,11 @@ class FingerprintController extends BaseController
                     ],
                     'body' => $soap_request,
                 ]);
+            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                return 'Failed';
+            }
 
+            try {
                 $buffer = $response->getBody()->getContents();
 
                 $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
