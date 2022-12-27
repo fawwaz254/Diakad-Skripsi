@@ -60,7 +60,7 @@
                                     <option value="0" selected >-- Semua --</option>
                                     @foreach($data_kelompok_biaya as $data)
                                         @if($data->status_kelompok_biaya == 1)
-                                            <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} (Reguler)</option>
+                                            <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}}</option>
                                         @else
                                             <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} (Khusus)</option>
                                         @endif
@@ -70,13 +70,13 @@
                                     @foreach($data_kelompok_biaya as $data)
                                         @if($data->id_kelompok_biaya == $id_kelompok_biaya)
                                             @if($data->status_kelompok_biaya == 1)
-                                                <option value="{{$data->id_kelompok_biaya}}" selected >{{$data->nm_kelompok_biaya}} (Reguler)</option>
+                                                <option value="{{$data->id_kelompok_biaya}}" selected >{{$data->nm_kelompok_biaya}}</option>
                                             @else
                                                 <option value="{{$data->id_kelompok_biaya}}" selected >{{$data->nm_kelompok_biaya}} (Khusus)</option>
                                             @endif
                                         @else
                                             @if($data->status_kelompok_biaya == 1)
-                                                <option value="{{$data->id_kelompok_biaya}}" >{{$data->nm_kelompok_biaya}} (Reguler)</option>
+                                                <option value="{{$data->id_kelompok_biaya}}" >{{$data->nm_kelompok_biaya}}</option>
                                             @else
                                                 <option value="{{$data->id_kelompok_biaya}}" >{{$data->nm_kelompok_biaya}} (Khusus)</option>
                                             @endif
