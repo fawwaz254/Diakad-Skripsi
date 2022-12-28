@@ -84,11 +84,8 @@ class JurnalTindakanController extends BaseController
 
         if ($id_siswa !== '0') {
             $gender_siswa = Siswa::select('calon_siswa_baru.jenis_kelamin')->join('calon_siswa_baru', 'calon_siswa_baru.id_c_siswa', 'siswa.id_c_siswa')->where('id_siswa', $id_siswa)->first();
-
-            if ($gender_siswa->jenis_kelamin == "1") {
-                $jenis_kelamin = "Laki-Laki";
-            } elseif ($gender_siswa->jenis_kelamin == "2") {
-                $jenis_kelamin = "Perempuan";
+            if (!empty($gender_siswa->jenis_kelamin)) {
+                $jenis_kelamin = $gender_siswa->jenis_kelamin == "1" ? "Laki-Laki" : "Perempuan";
             } else {
                 $jenis_kelamin = " ";
             }
@@ -97,29 +94,19 @@ class JurnalTindakanController extends BaseController
         $semester   = Semester::find($id_semester);
 
         // $list_data = LibSiswa::fetchPelanggaranNonKBM($auth_data, $siswa->id_pengguna);
+        $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
+            ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
+            ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
+            ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
+            ->leftJoin('tindakan_pelanggaran', 'tindakan_pelanggaran.id_pelanggaran_siswa', '=', 'pelanggaran_siswa.id_pelanggaran_siswa')
+            ->leftJoin('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', '=', 'tindakan_pelanggaran.id_jenis_tindakan')
+            ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran')
+            ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
         if ($id_siswa == '0') {
-            $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
-                ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
-                ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
-                ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
-                ->leftJoin('tindakan_pelanggaran', 'tindakan_pelanggaran.id_pelanggaran_siswa', '=', 'pelanggaran_siswa.id_pelanggaran_siswa')
-                ->leftJoin('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', '=', 'tindakan_pelanggaran.id_jenis_tindakan')
-                ->where('siswa.id_kelas', '=', $id_kelas)
-                ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran')
-                ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc')
-                ->get();
+            $list_data = $list_data->where('siswa.id_kelas', '=', $id_kelas)->get();
         } else {
-            $list_data = Siswa::select('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran', DB::raw('COUNT(subkategori_pelanggaran.id_subkategori_pelanggaran) as frekuensi'), DB::RAW('SUM(subkategori_pelanggaran.poin_subkategori_pelanggaran) as jumlah_poin'))
-                ->join('pelanggaran_siswa', 'pelanggaran_siswa.id_siswa', '=', 'siswa.id_siswa')
-                ->join('subkategori_pelanggaran', 'pelanggaran_siswa.id_subkategori_pelanggaran', '=', 'subkategori_pelanggaran.id_subkategori_pelanggaran')
-                ->join('kategori_pelanggaran', 'kategori_pelanggaran.id_kategori_pelanggaran', '=', 'subkategori_pelanggaran.id_kategori_pelanggaran')
-                ->leftJoin('tindakan_pelanggaran', 'tindakan_pelanggaran.id_pelanggaran_siswa', '=', 'pelanggaran_siswa.id_pelanggaran_siswa')
-                ->leftJoin('jenis_tindakan', 'jenis_tindakan.id_jenis_tindakan', '=', 'tindakan_pelanggaran.id_jenis_tindakan')
-                ->where('siswa.id_siswa', '=', $siswa->id_siswa)
-                ->groupBy('siswa.id_siswa', 'subkategori_pelanggaran.id_subkategori_pelanggaran', 'subkategori_pelanggaran.poin_subkategori_pelanggaran', 'subkategori_pelanggaran.nm_subkategori_pelanggaran', 'subkategori_pelanggaran.keterangan_subkategori_pelanggaran', 'kategori_pelanggaran.nm_kategori_pelanggaran')
-                ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc')
-                ->get();
+            $list_data = $list_data->where('siswa.id_siswa', '=', $siswa->id_siswa)->get();
         }
 
         $setting_bk = Setting::where('key_setting', 'is_master_kesimpulan_bk')->first()->value;
@@ -133,28 +120,6 @@ class JurnalTindakanController extends BaseController
             $kategori_pelanggaran = 'Tidak Ada';
             $deskripsi_perilaku_1 = 'Tidak ada permasalahan yang tercatat di BK';
             $deskripsi_perilaku_2 = '';
-            if ($list_data->count() > 0) {
-                $total_poin = $list_data->sum('jumlah_poin');
-                $data = KesimpulanPelanggaran::where('poin_bawah_kesimpulan_pelanggaran', '<=', $total_poin)
-                    ->where('poin_atas_kesimpulan_pelanggaran', '>=', $total_poin)
-                    ->first();
-                if ($data) {
-                    $kategori_pelanggaran = strip_tags($data->deskripsi_kesimpulan_pelanggaran_2);
-                    $deskripsi_perilaku_1 = strip_tags($data->deskripsi_kesimpulan_pelanggaran_1);
-                }
-                if ($data->nm_kesimpulan_pelanggaran) {
-                    $kategori_pelanggaran = $data->nm_kesimpulan_pelanggaran;
-                }
-
-                $total_pelanggaran_yang_dilakukan = $list_data->sum('frekuensi');
-                if ($total_pelanggaran_yang_dilakukan == 1) {
-                    $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang lebih baik setelah ditangani sekolah.';
-                } elseif ($total_pelanggaran_yang_dilakukan == 2) {
-                    $deskripsi_perilaku_2 = 'Ada perubahan perilaku siswa yang cukup baik setelah ditangani sekolah.';
-                } else {
-                    $deskripsi_perilaku_2 = 'Belum ada perubahan perilaku siswa setelah ditangani sekolah.';
-                }
-            }
         }
 
         if ($id_siswa == '0') {

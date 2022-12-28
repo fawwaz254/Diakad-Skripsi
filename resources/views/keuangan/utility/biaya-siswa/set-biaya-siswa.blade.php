@@ -54,7 +54,7 @@
                                     <option value="" disabled selected >-- Pilih Kelompok Biaya --</option>
                                     @foreach($data_kelompok_biaya as $data)
                                         @if($data->status_kelompok_biaya == 1)
-                                            <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} (Reguler)</option>
+                                            <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}}</option>
                                         @else
                                             <option value="{{$data->id_kelompok_biaya}}">{{$data->nm_kelompok_biaya}} (Khusus)</option>
                                         @endif
