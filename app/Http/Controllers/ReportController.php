@@ -495,4 +495,54 @@ class ReportController extends BaseController
 
         return response()->json($data);
     }
+
+
+    // Repor Wali kelas
+
+    public function viewReportWaliKelas(Request $request)
+    {
+        // dd('test');
+        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        $wali_kelas = WaliKelas::with('guru.pengguna', 'kelas')
+            ->where('is_aktif', 1)->whereHas('kelas', function ($query) {
+                $query->orderBy('tingkat')->orderBy('nm_kelas');
+            })
+            ->get();
+        // dd($wali_kelas[0]);
+        // $role = Role::whereNotIn('nm_role', ['Siswa', 'Wali Murid', 'Administrator', 'Dapodik', 'Alumni', 'Rapor & Buku Induk', 'Tenaga Pendidik'])->orderBy('nm_role', 'asc')->get();
+        $sekolah = Sekolah::orderBy('id_sekolah')->first();
+
+        $data = array();
+
+
+        foreach ($wali_kelas as $key => $w) {
+
+            $data[$key]['id_wali_kelas'] = $w->id_wali_kelas;
+            $data[$key]['nama'] = $w->guru->pengguna->nm_pengguna;
+            $data[$key]['kelas'] = $w->kelas->nm_kelas;
+            $data[$key]['data'][1] = 'Biodata Siswa';
+            $data[$key]['data'][2] = 'Pelanggaran Siswa';
+            $data[$key]['data'][3] = 'SKPI Siswa';
+            $data[$key]['data'][4] = 'Approve SKPI';
+            $data[$key]['data'][5] = 'Home Visit';
+            $data[$key]['data'][6] = 'Wali Murid';
+            $data[$key]['jumlahData'] = '';
+            $data[$key]['status'] = '';
+            $data[$key]['catatan'] = '';
+
+            // $temp = $this->checkDataWaliKelas($guru->id_kelas);
+            // $temp = $temp->original;
+            //     $data[$key]['status'] = $temp['status'];
+            //     $data[$key]['catatan'] = $temp['catatan'];
+            //     $data[$key]['progress'] = $temp['progress'];
+            //     $data[$key]['rowspan'] = count($temp['catatan']);
+        }
+
+        return view('reporting-dashboard.wali-kelas', compact('data', 'semester_aktif', 'sekolah'));
+    }
+
+    public function checkDataWaliKelas($id_kelas)
+    {
+        return $id_kelas;
+    }
 }
