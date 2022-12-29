@@ -511,8 +511,7 @@ class ReportController extends BaseController
                 $query->orderBy('tingkat')->orderBy('nm_kelas');
             })
             ->get();
-        // dd($wali_kelas[0]);
-        // $role = Role::whereNotIn('nm_role', ['Siswa', 'Wali Murid', 'Administrator', 'Dapodik', 'Alumni', 'Rapor & Buku Induk', 'Tenaga Pendidik'])->orderBy('nm_role', 'asc')->get();
+
         $sekolah = Sekolah::orderBy('id_sekolah')->first();
 
         $data = array();
@@ -531,7 +530,6 @@ class ReportController extends BaseController
             $data[$key]['data'][6] = 'Wali Murid';
             $data[$key]['jumlahData'] = '';
             $data[$key]['progress'] = '';
-            // $data[$key]['status'] = '';
             $data[$key]['catatan'] = '';
 
             $temp = $this->checkDataWaliKelas($w->id_kelas);
@@ -545,12 +543,6 @@ class ReportController extends BaseController
 
             // $data[$key]['catatan'] = $temp['catatan'];
             $data[$key]['progres'] = $temp['progres'];
-            // $data[$key]['progres'][2] = $temp['progres'][2];
-            // $data[$key]['progres'][3] = $temp['progres'][3];
-            // $data[$key]['progres'][4] = $temp['progres'][4];
-            // $data[$key]['progres'][5] = $temp['progres'][5];
-            // $data[$key]['progres'][6] = $temp['progres'][6];
-            // $data[$key]['rowspan'] = count($temp['catatan']);
         }
 
 
@@ -600,11 +592,6 @@ class ReportController extends BaseController
         $total_awal = $biodata_siswa + $pelanggaran_siswa + $kegiatan_siswa + $kegiatan_siswa_approve + $home_visit + $wali_murid;
 
         $param['progres'] = $total_awal / $total_semua * 100;
-        // $param['progres'][2] = $list_siswa / $contoh_total_siswa * 100;
-        // $param['progres'][3] = $list_siswa / $contoh_total_siswa * 100;
-        // $param['progres'][4] = $list_siswa / $contoh_total_siswa * 100;
-        // $param['progres'][5] = $list_siswa / $contoh_total_siswa * 100;
-        // $param['progres'][6] = $list_siswa / $contoh_total_siswa * 100;
 
         return response()->json($param);
     }
