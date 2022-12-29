@@ -36,12 +36,6 @@
 
                                     <hr>
 
-                                    <a href="/report-pimpinan-print" style="cursor:pointer;margin-bottom: 5px;"
-                                        target="_blank" class="btn bg-red waves-effect">
-                                        <i class="material-icons">print</i>
-                                        <span>Print Laporan</span>
-                                    </a>
-
                                     <div class="table-responsive">
                                         <table
                                             class="table table-bordered table-striped table-hover dataTable display responsive nowrap"
@@ -52,8 +46,7 @@
                                                     <th style="width:15%;">Nama</th>
                                                     <th style="width:15%;">Data</th>
                                                     <th style="text-align:center;width: 25%;">Jumlah Data</th>
-                                                    <th style="text-align:center;">Rekomendasi Kelengkapan Data</th>
-                                                    <th style="text-align:center;width: 15%;">Aksi</th>
+                                                    <th style="text-align:center;">Progress</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -67,42 +60,24 @@
                                                             @endforeach
                                                         </td>
                                                         <td style="text-align:center;">
-                                                            @if ($r['status'] == 'Belum Digunakan')
-                                                                @php $color ='danger'; @endphp
-                                                                <span
-                                                                    class="label bg-red detail-catatan">{{ $r['status'] }}</span>
+                                                            @foreach ($r['status'] as $data)
+                                                                {{ $data }} <br>
+                                                            @endforeach
+
                                                         </td>
-                                                    @elseif($r['status'] == 'Sudah digunakan namun belum maksimal')
-                                                        @php $color ='warning'; @endphp
-                                                        <span
-                                                            class="label bg-orange detail-catatan">{{ $r['status'] }}</span>
+                                                        <td style="text-align:center;">
+
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-red progress-bar-striped active"
+                                                                    role="progressbar" aria-valuenow="{{ $r['progres'] }}"
+                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                    style="width: {{ $r['progres'] }}%;">
+                                                                    {{ round($r['progres'], 0) }} %</div>
+                                                            </div>
+
                                                         </td>
-                                                    @else
-                                                        @php $color ='success'; @endphp
-                                                        <span
-                                                            class="label bg-green detail-catatan">{{ $r['status'] }}</span>
-                                                        </td>
-                                                @endif
-                                                <td style="text-align:center;vertical-align: middle;">
-                                                    @if ($r['status'])
-                                                        <div class="progress">
-                                                            <div class="progress-bar progress-bar-{{ $color }} progress-bar-striped active"
-                                                                role="progressbar" aria-valuenow="{{ $r['progress'] }}"
-                                                                aria-valuemin="0" aria-valuemax="100"
-                                                                style="width: {{ $r['progress'] }}%;vertical-align: middle;">
-                                                                {{ round($r['progress'], 0) }} %</div>
-                                                        </div>
-                                                    @endif
-                                                </td>
-                                                <td style="text-align:center;">
-                                                    <button type="button" style="cursor:pointer;"
-                                                        onclick="detail_catatan({{ $r['id_wali_kelas'] }})"
-                                                        class="btn bg-indigo waves-effect">
-                                                        <i class="material-icons">remove_red_eye</i>
-                                                        <span>Lihat Detail</span>
-                                                    </button>
-                                                </td>
-                                                </tr>
+
+                                                    </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
@@ -154,45 +129,4 @@
         </div>
     </div>
     <!-- Modal Catatan -->
-@endsection
-
-@section('js')
-    <script type="text/javascript">
-        function detail_catatan(id_wali_kelas) {
-
-            $.ajax({
-                url: base_url + '/reporting-dashboard/all-diakad/' + id_wali_kelas,
-                type: 'get',
-                dataType: 'json',
-                success: function(response) {
-                    $('#modalCatatanHeader').html('Catatan Untuk Role ' + response.nm_role);
-                    $('#isi_tabel').empty();
-                    $.each(response.catatan, function(i, value) {
-                        if (value.status == 1) {
-                            $('#isi_tabel').append(`
-                            <tr>
-                            <td>` + (i + 1) + `</td>
-                            <td>` + value.catatan + `</td>
-                            <td><i class="material-icons" style="color:green">check</i></td>
-                            </tr>
-                        `)
-                        } else {
-                            $('#isi_tabel').append(`
-                            <tr>
-                            <td>` + (i + 1) + `</td>
-                            <td>` + value.catatan + `</td>
-                            <td><i class="material-icons" style="color:red">clear</i></td>
-                            </tr>
-                        `)
-                        }
-                    })
-                    $('#modalCatatan').modal('show');
-                },
-                error: function() {
-                    alert('mohon maaf terjadi kesalahan, silahkan hubungi admin');
-                }
-            })
-
-        }
-    </script>
 @endsection
