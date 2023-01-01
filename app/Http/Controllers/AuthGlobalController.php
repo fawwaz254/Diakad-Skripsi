@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalonSiswaOrtu;
 use App\Models\Pengguna;
 use App\Models\Role;
 use App\Models\RolePengguna;
@@ -82,6 +83,11 @@ class AuthGlobalController extends BaseController
             $siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
             $siswa1->id_wali_murid = $wali_murid->id_wali_murid;
             $siswa1->save();
+
+            $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa1->id_c_siswa)->first();
+            $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
+            $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
+            $calon_siswa_ortu->save();
 
             $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
             $pengguna1->email_pengguna = $input->email_pengguna;

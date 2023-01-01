@@ -1,5 +1,5 @@
 @php
-$today = Carbon\Carbon::today('Asia/Jakarta');
+    $today = Carbon\Carbon::today('Asia/Jakarta');
 @endphp
 <div class="container-fluid">
     <div class="card">
@@ -26,11 +26,29 @@ $today = Carbon\Carbon::today('Asia/Jakarta');
                     <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}">
                         <div class="card">
                             <div class="body bg-green" style="text-align: -webkit-center;">
-                                <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}" width="64" height="64">
+                                <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}" width="64"
+                                    height="64">
                                 <h5>
                                     FingerPrint
                                 </h5>
                                 <small>Informasi alat Fingerprint</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="{{ route('report.walikelas') }}">
+                        <div class="card">
+                            <div class="body bg-red" style="text-align: -webkit-center;">
+                                <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
+                                    height="64">
+                                <h5>
+                                    Report Wali Kelas
+                                </h5>
+                                <small>Data Menu Wali Kelas
+                                    {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
                             </div>
                         </div>
                     </a>

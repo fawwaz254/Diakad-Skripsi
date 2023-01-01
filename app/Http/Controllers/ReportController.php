@@ -43,7 +43,10 @@ use Carbon\Carbon;
 use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
-
+use App\Models\HomeVisit;
+use App\Models\KegiatanSiswa;
+use App\Models\PrestasiSiswa;
+use App\Models\Siswa;
 use Auth;
 use DB;
 use Session;
@@ -494,5 +497,102 @@ class ReportController extends BaseController
         $data['progress'] = $jumlah_diisi / count($param) * 100;
 
         return response()->json($data);
+    }
+
+
+    // Repor Wali kelas
+
+    public function viewReportWaliKelas(Request $request)
+    {
+
+        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        $wali_kelas = WaliKelas::with('guru.pengguna', 'kelas')
+            ->where('is_aktif', 1)->whereHas('kelas', function ($query) {
+                $query->orderBy('tingkat')->orderBy('nm_kelas');
+            })
+            ->get();
+
+        $sekolah = Sekolah::orderBy('id_sekolah')->first();
+
+        $data = array();
+
+
+        foreach ($wali_kelas as $key => $w) {
+
+            $data[$key]['id_wali_kelas'] = $w->id_wali_kelas;
+            $data[$key]['nama'] = $w->guru->pengguna->nm_pengguna;
+            $data[$key]['kelas'] = $w->kelas->nm_kelas;
+            $data[$key]['data'][1] = 'Biodata Siswa';
+            $data[$key]['data'][2] = 'Pelanggaran Siswa';
+            $data[$key]['data'][3] = 'SKPI Siswa';
+            $data[$key]['data'][4] = 'Approve SKPI';
+            $data[$key]['data'][5] = 'Home Visit';
+            $data[$key]['data'][6] = 'Wali Murid';
+            $data[$key]['jumlahData'] = '';
+            $data[$key]['progress'] = '';
+            $data[$key]['catatan'] = '';
+
+            $temp = $this->checkDataWaliKelas($w->id_kelas);
+            $temp = $temp->original;
+            $data[$key]['status'][1] = $temp['status'][1];
+            $data[$key]['status'][2] = $temp['status'][2];
+            $data[$key]['status'][3] = $temp['status'][3];
+            $data[$key]['status'][4] = $temp['status'][4];
+            $data[$key]['status'][5] = $temp['status'][6];
+            $data[$key]['status'][6] = $temp['status'][6];
+
+            // $data[$key]['catatan'] = $temp['catatan'];
+            $data[$key]['progres'] = $temp['progres'];
+        }
+
+
+        return view('reporting-dashboard.wali-kelas', compact('data', 'semester_aktif', 'sekolah'));
+    }
+
+    public function checkDataWaliKelas($id_kelas)
+    {
+        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        $wali_kelas = WaliKelas::where('id_kelas', $id_kelas)->where('is_aktif', 1)->with('guru')->first();
+        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        // $list_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('wali_murid')->with('wali_murid.pengguna', 'pengguna', 'kelas')->count();
+        $semua_siswa = Siswa::where('id_kelas', $id_kelas)->count();
+        //biodata_siswa
+        $biodata_siswa = Siswa::where('id_kelas', $id_kelas)->whereHas('pengguna', function ($query) {
+            $query->whereNotNull('email_pengguna');
+        })->count();
+        //pelanggaran siswa
+        $pelanggaran_siswa = PelanggaranSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
+        //skpi
+        $kegiatan_siswa = KegiatanSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
+        $prestasi_siswa = PrestasiSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
+        //skpi approve
+        $kegiatan_siswa_approve = KegiatanSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->where('approved_by', $wali_kelas->guru->id_pengguna)->count();
+        $prestasi_siswa_approve = PrestasiSiswa::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->where('approved_by', $wali_kelas->guru->id_pengguna)->count();
+        //home visit
+        $home_visit = HomeVisit::where('id_kelas', $id_kelas)->where('id_semester', $semester_aktif->id_semester)->count();
+        $wali_murid = Siswa::where('id_kelas', $id_kelas)->whereHas('wali_murid', function ($query) {
+            $query->where('is_aktif', 1);
+        })->count();
+
+        //Biodata Siswa
+        $param['status'][1] = $biodata_siswa . ' / ' . $semua_siswa . ' Data';
+        // Pelanggaran Siswa
+        $param['status'][2] = $pelanggaran_siswa . ' Data';
+        // SKPI Siswa
+        $param['status'][3] = $kegiatan_siswa + $prestasi_siswa . ' Data';
+        // Approve SKPI
+        $param['status'][4] = $kegiatan_siswa_approve + $prestasi_siswa_approve . ' Data';
+        // Home Visit
+        $param['status'][5] = $home_visit . ' / ' . $semua_siswa . ' Data';
+        // Wali murid
+        $param['status'][6] = $wali_murid . ' / ' . $semua_siswa . ' Data';
+
+
+        $total_semua = $semua_siswa * 3;
+        $total_awal = $biodata_siswa + $pelanggaran_siswa + $kegiatan_siswa + $kegiatan_siswa_approve + $home_visit + $wali_murid;
+
+        $param['progres'] = $total_awal / $total_semua * 100;
+
+        return response()->json($param);
     }
 }
