@@ -116,17 +116,17 @@ class FingerprintController extends BaseController
             }
 
             $data_username_pengguna = array();
-            try {
-                $response = $client->post($fingerprint_url, [
-                    'headers' => [
-                        'Content-Type' => 'text/xml',
-                        'Content-Length' => strlen($soap_request),
-                    ],
-                    'body' => $soap_request,
-                ]);
-            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
-                return 'Failed';
-            }
+            // try {
+            $response = $client->post($fingerprint_url, [
+                'headers' => [
+                    'Content-Type' => 'text/xml',
+                    'Content-Length' => strlen($soap_request),
+                ],
+                'body' => $soap_request,
+            ]);
+            // } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            //     return 'Failed';
+            // }
 
             try {
                 $buffer = $response->getBody()->getContents();
