@@ -99,7 +99,8 @@ class FingerprintController extends BaseController
         }
 
         $now = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
-        if ($now > $last_time) {
+        // if ($now > $last_time) {
+        if (true) {
 
             $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
 
