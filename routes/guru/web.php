@@ -813,6 +813,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('input-nilai-ekskul', [InputNilaiEkskulController::class, 'viewInputNilaiEkskul']);
             Route::post('post-view-input-nilai', [InputNilaiEkskulController::class, 'postViewInputNilaiEkskul']);
             Route::get('input-nilai-ekskul/detail/{id_semester}/{id_ekskul}', [InputNilaiEkskulController::class, 'viewDetailInputNilaiEkskul']);
+            Route::get('/input-nilai-ekskul/excel/{id_semester}/{id_ekskul}', [InputNilaiEkskulController::class, 'viewImportNilaiExcel']);
+            Route::post('/input-nilai-ekskul/excel/{id_semester}/{id_ekskul}', [InputNilaiEkskulController::class, 'importExcelAction']);
+            Route::get('/input-nilai-ekskul/excel/{id_semester}/{id_ekskul}/template', [InputNilaiEkskulController::class, 'downloadTemplateExcel']);
 
             Route::post('input-nilai-ekskul/save', [InputNilaiEkskulController::class, 'saveInputNilaiEkskul']);
 
