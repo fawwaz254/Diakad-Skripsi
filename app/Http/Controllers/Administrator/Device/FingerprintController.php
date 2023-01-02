@@ -92,11 +92,11 @@ class FingerprintController extends BaseController
         }
 
         $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('fp_date', 'desc')->first();
-        if (isset($last_data->fp_date)) {
-            $last_time = Carbon::parse($last_data->fp_date)->addMinutes(5)->format('Y-m-d H:i:s');
-        } else {
-            $last_time = null;
-        }
+        // if (isset($last_data->fp_date)) {
+        //     $last_time = Carbon::parse($last_data->fp_date)->addMinutes(5)->format('Y-m-d H:i:s');
+        // } else {
+        //     $last_time = null;
+        // }
 
         $now = Carbon::now('Asia/Jakarta')->format('Y-m-d H:i:s');
         // if ($now > $last_time) {
