@@ -313,6 +313,7 @@ class InputNilaiEkskulController extends BaseController
             ->where('pengambilan_ekskul.id_semester', '=', $id_semester)
             ->get();
 
+        $data['id_ekskul'] = $id_ekskul;
         $data['list_komponen'] = $list_komponen;
         $data['list_siswa'] = $list_siswa;
         $nm_ekskul = str_replace(array("/", "\\", ":", "*", "?", "«", "<", ">", "|"), "-", $ekskul[0]->nm_ekskul);
@@ -371,6 +372,13 @@ class InputNilaiEkskulController extends BaseController
 
                         $dataExcel = [];
                         foreach ($data as $index => $item) {
+                            if ($input->id_ekskul !== $item["id_ekskul"]) {
+                                return [
+                                    'status'    => 300, // FAILED
+                                    'message'   => "Pastikan template excel sesuai dengan ekstrakurikuler yang dipilih."
+                                ];
+                            }
+
                             foreach ($list_komponen as $komponen) {
                                 $key = $index . $komponen["id_komponen_ekskul"] . '-' . $item['id_siswa'];
 
@@ -399,6 +407,12 @@ class InputNilaiEkskulController extends BaseController
 
                                 foreach ($list_komponen as $dataKomponen => $komponen) { // loop semua komponen ekskul
                                     $nameInput = $dataSiswa . $komponen->id_komponen_ekskul . '-' . $siswa->id_siswa;
+                                    if (!isset($excel->$nameInput)) {
+                                        return [
+                                            'status'    => 300, // FAILED
+                                            'message'   => "Pastikan siswa peserta ekstrakurikuler terdata dengan benar."
+                                        ];
+                                    }
                                     $nilaiCount = ($excel->$nameInput * ($komponen->persentase_komponen_ekskul / 100));
                                     $nilai_akhir_final['nilai_angka' . $siswa->id_siswa][$komponen->id_komponen_ekskul]['raw'] = $excel->$nameInput;
                                     $nilai_akhir_final['nilai_angka' . $siswa->id_siswa][$komponen->id_komponen_ekskul]['partial'] = $nilaiCount;
