@@ -184,6 +184,9 @@ Route::middleware(['token_staff'])->group(function () {
             Route::post('set-jadwal-kelas', [SetJadwalKelasController::class, 'actionSetJadwalKelas']);
             Route::get('set-jadwal-kelas/view-tambah-jadwal-kelas/{id_kelas}/{id_semester}', [SetJadwalKelasController::class, 'viewTambahJadwalKelas']);
             Route::post('action-set-jadwal-kelas/{mode}/{id}', [SetJadwalKelasController::class, 'actionTambahJadwalKelas']);
+            Route::get('copy-jadwal-kelas/view-copy-jadwal-kelas', [SetJadwalKelasController::class, 'viewCopyJadwalKelas']);
+            Route::post('action-copy-jadwal-kelas', [SetJadwalKelasController::class, 'copyTambahJadwalKelas']);
+
 
 
             // MENU Monitoring Kelas
