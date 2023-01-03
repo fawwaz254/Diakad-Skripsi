@@ -244,7 +244,10 @@ class RaporSisipanController extends Controller
         if ($setting->value == '3') {
             $komponen = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
         } else {
-            $komponen = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
+            $komponen = KomponenNilaiRaporSisipan::where('type', 'uts')->first();
+            if (!empty($komponen)) {
+                $komponen = $komponen->id_komponen_nilai;
+            }
         }
         // $komponenUTS = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
 
