@@ -27,15 +27,50 @@ use Validator;
 
 class RaporSisipanAkhirController extends Controller
 {
-    public function viewDaftarNilaiSAS(Request $request)
+    public function viewSemesterNilaiSAS(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data'));
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-semester-nilai-sas', compact('auth_data', 'data_semester', 'semester_aktif'));
     }
 
-    public function datatablesDaftarNilaiSAS(Request $request)
+    public function actionSemesterNilaiSAS(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        // $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'thn_akademik_semester' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'rapor-sisipan/daftar-nilai-sas/' . $input->thn_akademik_semester
+            ];
+        }
+    }
+
+
+    public function viewDaftarNilaiSAS(Request $request, $thn_akademik_semester)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data', 'thn_akademik_semester'));
+    }
+
+    public function datatablesDaftarNilaiSAS(Request $request, $thn_akademik_semester)
     {
 
         $input = (object) $request->input();
@@ -104,7 +139,7 @@ class RaporSisipanAkhirController extends Controller
                 return $data;
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
+                return $item->semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
@@ -116,11 +151,11 @@ class RaporSisipanAkhirController extends Controller
     }
 
 
-    public function imporExcelSTS(Request $request)
+    public function imporExcelSTS(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('guru/rapor-sisipan/daftar-nilai-sas/view-upload-nilai-sas', compact('auth_data'));
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-upload-nilai-sas', compact('auth_data', 'thn_akademik_semester'));
     }
 
     public function uploadRaporSisipanSAS(Request $request)

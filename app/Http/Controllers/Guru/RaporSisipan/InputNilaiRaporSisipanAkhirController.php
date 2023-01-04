@@ -18,7 +18,7 @@ use Validator;
 
 class InputNilaiRaporSisipanAkhirController extends Controller
 {
-    public function viewKomponenInputNilai(Request $request, $id_rapor_sisipan)
+    public function viewKomponenInputNilai(Request $request, $thn_akademik_semester, $id_rapor_sisipan)
     {
         set_time_limit(-1);
         $input = (object) $request->input();
@@ -76,7 +76,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             }
         }
 
-        return view('guru/rapor-sisipan/daftar-nilai-sas/input-nilai-sas', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+        return view('guru/rapor-sisipan/daftar-nilai-sas/input-nilai-sas', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'thn_akademik_semester'));
     }
 
     public function actionInputNilai(Request $request, $mode, $id_rapor_sisipan = null)
