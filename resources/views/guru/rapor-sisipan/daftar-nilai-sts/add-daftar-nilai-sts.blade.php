@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/' . $thn_akademik_semester) }}"><i
                     class="material-icons">keyboard_backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -20,10 +20,11 @@
                         <div class="row clearfix">
                             <div class="col-md-4">
                                 <label>Jurusan</label>
-                                <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)" required>
+                                <select class="form-control show-tick" name="id_jurusan" onchange="changeJurusan(this)"
+                                    required>
                                     <option selected disabled>-- Pilih Jurusan --</option>
                                     @foreach ($list_jurusan as $jurusan)
-                                        <option value="{{ $jurusan->id_jurusan}}">{{ $jurusan->nm_jurusan }}
+                                        <option value="{{ $jurusan->id_jurusan }}">{{ $jurusan->nm_jurusan }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -70,9 +71,9 @@
 @include('scriptjs')
 
 <script>
-    function changeJurusan(el){
+    function changeJurusan(el) {
         $.ajax({
-            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/'.Request::segment(3).'/jurusan')}}',
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/jurusan') }}',
             type: 'POST',
             data: {
                 jurusan: $('select[name=id_jurusan]').val()
@@ -81,19 +82,19 @@
                 // alert(result);
                 $('select[name=id_mata_pelajaran]').html('');
                 var html = '<option value="">-- Pilih Mata Pelajaran --</option>';
-                $.each(result['mapel'], function( key, item ) {
-                    html += '<option value="'+item.id_mata_pelajaran+'">'+item.nm_mata_pelajaran+' ('+item.kd_mata_pelajaran+')</option>'
+                $.each(result['mapel'], function(key, item) {
+                    html += '<option value="' + item.id_mata_pelajaran + '">' + item
+                        .nm_mata_pelajaran + ' (' + item.kd_mata_pelajaran + ')</option>'
                 });
                 $('select[name=id_mata_pelajaran]').html(html);
 
                 $('select[name=id_kelas]').html('');
                 var html = '<option value="">-- Pilih Kelas --</option>';
-                $.each(result['kelas'], function( key, item ) {
-                    html += '<option value="'+item.id_kelas+'">'+item.nm_kelas+'</option>'
+                $.each(result['kelas'], function(key, item) {
+                    html += '<option value="' + item.id_kelas + '">' + item.nm_kelas + '</option>'
                 });
                 $('select[name=id_kelas]').html(html);
             }
         });
     }
-
 </script>

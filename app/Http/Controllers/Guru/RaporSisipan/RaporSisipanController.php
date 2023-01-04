@@ -74,7 +74,7 @@ class RaporSisipanController extends Controller
         return view('guru/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'thn_akademik_semester', 'semester_aktif'));
     }
 
-    public function addDaftarNilaiSTS(Request $request)
+    public function addDaftarNilaiSTS(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -83,7 +83,7 @@ class RaporSisipanController extends Controller
         $data['list_kelas'] = Kelas::all();
         $data['list_jurusan'] = Jurusan::all();
 
-        return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data'), $data);
+        return view('guru/rapor-sisipan/daftar-nilai-sts/add-daftar-nilai-sts', compact('auth_data', 'thn_akademik_semester'), $data);
     }
 
     public function actionDaftarNilaiSTS(Request $request, $mode, $id = null)
@@ -123,7 +123,10 @@ class RaporSisipanController extends Controller
         }
 
         if ($mode == 'add') {
-            $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)->where('id_semester', $semester_aktif->id_semester)->first();
+            $cekDuplicate = RaporSisipan::where('id_kelas', $input->id_kelas)->where('id_mata_pelajaran', $input->id_mata_pelajaran)
+                ->whereHas('semester', function ($query) use ($semester_aktif) {
+                    $query->where('thn_akademik_semester', '=', $semester_aktif->thn_akademik_semester);
+                })->first();
             $validator = Validator::make($request->all(), [
                 'id_mata_pelajaran' => 'required',
                 'id_kelas'              => 'required'
@@ -225,6 +228,7 @@ class RaporSisipanController extends Controller
             })->get();
 
         $nilai_siswa = [];
+        $list_kd_aktif = [];
         // $nilai_komponen = [];
         if ($list_siswa) {
             $nilai = $list_nilai->toArray();
@@ -370,11 +374,11 @@ class RaporSisipanController extends Controller
     }
 
 
-    public function imporExcelSTS(Request $request)
+    public function imporExcelSTS(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('guru/rapor-sisipan/daftar-nilai-sts/view-upload-nilai-sts', compact('auth_data'));
+        return view('guru/rapor-sisipan/daftar-nilai-sts/view-upload-nilai-sts', compact('auth_data', 'thn_akademik_semester'));
     }
 
 
