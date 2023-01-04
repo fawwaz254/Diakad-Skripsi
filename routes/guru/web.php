@@ -634,8 +634,12 @@ Route::middleware(['token_staff'])->group(function () {
         // Modul Rapor Sisipan
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
-                Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
-                Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
+
+                Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
+                Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
+
+                Route::get('/{thn_akademik_semester}', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
+                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
                 Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
                 Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);

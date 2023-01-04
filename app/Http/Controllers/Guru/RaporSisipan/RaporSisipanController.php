@@ -29,12 +29,49 @@ use Validator;
 
 class RaporSisipanController extends Controller
 {
-    public function viewDaftarNilaiSTS(Request $request)
+
+    public function viewSemesterNilaiSTS(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('guru/rapor-sisipan/daftar-nilai-sts/view-semester-nilai-sts', compact('auth_data', 'data_semester', 'semester_aktif'));
+    }
+
+    public function actionSemesterNilaiSTS(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'thn_akademik_semester' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'rapor-sisipan/daftar-nilai-sts/' . $input->thn_akademik_semester
+            ];
+        }
+    }
+    public function viewDaftarNilaiSTS(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('guru/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data'));
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('guru/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'thn_akademik_semester', 'semester_aktif'));
     }
 
     public function addDaftarNilaiSTS(Request $request)
@@ -229,12 +266,15 @@ class RaporSisipanController extends Controller
         return Excel::download(new RekapRaporSisipanSTS($data), 'Rekap Rapor Sisipan STS (' . $rapor_sisipan->kelas->nm_kelas . ' - ' . $rapor_sisipan->mata_pelajaran->nm_mata_pelajaran . ').xlsx');
     }
 
-    public function datatablesDaftarNilaiSTS(Request $request)
+    public function datatablesDaftarNilaiSTS(Request $request, $thn_akademik_semester)
     {
         set_time_limit(9800);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->orderBy('created_at', 'desc');
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)
+            ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+            })->orderBy('created_at', 'desc');
         // $jurusan = Jurusan::all();
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
@@ -274,7 +314,7 @@ class RaporSisipanController extends Controller
                 return $data;
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
+                return $item->semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
