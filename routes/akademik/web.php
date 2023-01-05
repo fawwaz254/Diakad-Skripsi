@@ -377,15 +377,18 @@ Route::middleware(['token_staff'])->group(function () {
             });
 
             Route::prefix('cetak-rapor')->group(function () {
-                Route::get('/', [CetakRaporController::class, 'viewCetakRapor']);
-                Route::get('datatables', [CetakRaporController::class, 'datatablesCetakRapor']);
-                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
-                Route::get('viewSetting', [CetakRaporController::class, 'viewSetting']);
+                Route::get('/', [CetakRaporController::class, 'viewSemesterCetakRapor']);
+                Route::post('post-cetak-rapor', [CetakRaporController::class, 'actionSemesterCetakRapor']);
+
+                Route::get('/{thn_akademik_semester}', [CetakRaporController::class, 'viewCetakRapor']);
+                Route::get('datatables/{thn_akademik_semester}', [CetakRaporController::class, 'datatablesCetakRapor']);
+                Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+                Route::get('viewSetting/{thn_akademik_semester}', [CetakRaporController::class, 'viewSetting']);
                 Route::get('viewDeskripsi', [CetakRaporController::class, 'viewDeskripsi']);
 
-                Route::get('datatablesViewSetting', [CetakRaporController::class, 'datatablesViewSetting']);
+                Route::get('datatablesViewSetting/{thn_akademik_semester}', [CetakRaporController::class, 'datatablesViewSetting']);
                 Route::get('datatablesViewDeskripsi', [CetakRaporController::class, 'datatablesViewDeskripsi']);
-                Route::get('addSetting/{mata_pelajaran}', [CetakRaporController::class, 'addSetting']);
+                Route::get('addSetting/{thn_akademik_semester}/{mata_pelajaran}', [CetakRaporController::class, 'addSetting']);
                 Route::post('postSetting/{mata_pelajaran}', [CetakRaporController::class, 'postSetting']);
                 Route::get('editDeskripsi/{id}', [CetakRaporController::class, 'editDeskripsi']);
                 Route::post('actionDeskripsi/{mode}/{id}', [CetakRaporController::class, 'actionDeskripsi']);

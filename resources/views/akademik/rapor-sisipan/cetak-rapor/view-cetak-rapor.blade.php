@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting/' . $thn_akademik_semester) }}"><i
                     class="material-icons">add</i><span>Setting Urutan</span></a>
             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                 <a class="btn bg-blue waves-effect target-link"
@@ -27,6 +27,7 @@
                                     <th>Kelas</th>
                                     <th>Jurusan</th>
                                     <th>Wali Kelas</th>
+                                    <th>Semester</th>
                                     <th>Jumlah Mapel yang sudah terisi</th>
                                     {{-- <th>Semester</th> --}}
                                     <th>Action</th>
@@ -41,8 +42,10 @@
 </div>
 
 <script type="text/javascript">
+    var thn_akademik_semester = {!! json_encode($thn_akademik_semester) !!};
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/datatables/' +
+        thn_akademik_semester;
     // var edit_url = role_url + '#' + modul_url + '/' + 'manajemen-materi-ajar/edit';
     // var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
@@ -75,6 +78,10 @@
             {
                 data: 'wali_kelas',
                 name: 'wali_kelas'
+            },
+            {
+                data: 'semester',
+                name: 'semester'
             },
             {
                 data: 'rapor_sisipan',
