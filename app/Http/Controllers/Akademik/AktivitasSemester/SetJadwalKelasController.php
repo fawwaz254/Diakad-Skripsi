@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\Semester;
 
 class SetJadwalKelasController extends Controller
 {
@@ -141,6 +142,113 @@ class SetJadwalKelasController extends Controller
 
         // $ruangan    = Ruangan::find( $id_kelas);
         return view('akademik/aktivitas-semester/set-jadwal-kelas/tambah-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas', 'jadwal_jam', 'jadwal_hari', 'kelas', 'data_kelas_mp', 'semester', 'list_guru', 'mapel', 'jam', 'allruangan', 'data_kurikulum'));
+    }
+
+
+    public function viewCopyJadwalKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $semester   = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        $now = (int) $semester->thn_akademik_semester + 1;
+
+        $tahun_sebelum = (int) $semester->thn_akademik_semester - 2;
+
+        $data_semester = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->whereBetween('thn_akademik_semester', [$tahun_sebelum, $now])
+            ->orderBy('thn_akademik_semester', 'asc')
+            ->orderBy('nm_semester', 'asc')
+            ->get();
+        $data_kelas = LibKelas::fetchDataKelas($auth_data);
+
+
+        return view('akademik/aktivitas-semester/set-jadwal-kelas/copy-set-jadwal-kelas', compact('auth_data', 'data_semester', 'data_kelas'));
+    }
+
+    public function copyTambahJadwalKelas(Request $request)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        $validasi = KelasMp::where('id_semester', $input->id_semester_paste)->whereIn('id_kelas', $input->kelas)->first();
+
+        if ($validasi) {
+            return [
+                'status' => 300, // FAILED
+                'message' => 'Harap hapus data terlebih dahulu agar data tidak tertumpuk'
+            ];
+        }
+
+        $select_kelas_mp = KelasMp::where('id_semester', $input->id_semester_copy)->whereIn('id_kelas', $input->kelas)
+            ->with('jadwal_kelas_mp', 'pengampu_mp')
+            ->whereHas('jadwal_kelas_mp')
+            ->whereHas('pengampu_mp')
+            ->get();
+
+        //insert kelas mp
+        $batch_insert_kelas_mp = [];
+        $batch_insert_jadwal_kelas_mp = [];
+        $batch_insert_pengampu_mp = [];
+        foreach ($select_kelas_mp as $kelas_mp) {
+            $id_kelas_mp = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+            $batch_insert_kelas_mp[] = array(
+                'id_kelas_mp'              => $id_kelas_mp,
+                'id_semester'              => $input->id_semester_paste,
+                'id_kelas'                 => $kelas_mp->id_kelas,
+                'id_mata_pelajaran'        => $kelas_mp->id_mata_pelajaran,
+                'nm_kelas_mp'              => $kelas_mp->nm_kelas_mp,
+                'jml_pertemuan_kelas_mp'   => $kelas_mp->jml_pertemuan_kelas_mp,
+                'created_by'               => $input->auth_data->pengguna->id_pengguna,
+                'created_at'               => $now,
+                'updated_by'               => $input->auth_data->pengguna->id_pengguna,
+                'updated_at'               => $now,
+            );
+
+            foreach ($kelas_mp->jadwal_kelas_mp as $jadwal_kelas) {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $batch_insert_jadwal_kelas_mp[] = array(
+                    'id_jadwal_kelas_mp'        => $id,
+                    'id_kelas_mp'               => $id_kelas_mp,
+                    'id_ruangan'                => $jadwal_kelas->id_ruangan,
+                    'id_jadwal_hari'            => $jadwal_kelas->id_jadwal_hari,
+                    'id_jadwal_jam'             => $jadwal_kelas->id_jadwal_jam,
+                    'id_jadwal_jam_selesai'     => $jadwal_kelas->id_jadwal_jam_selesai,
+                    'created_by'                =>  $input->auth_data->pengguna->id_pengguna,
+                    'created_at'                =>  $now,
+                    'updated_by'                =>  $input->auth_data->pengguna->id_pengguna,
+                    'updated_at'                =>  $now,
+                );
+            }
+
+            foreach ($kelas_mp->pengampu_mp as $pengampu_mp) {
+                $id = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                $batch_insert_pengampu_mp[] = array(
+                    'id_pengampu_mp'            => $id,
+                    'id_kelas_mp'               => $id_kelas_mp,
+                    'id_guru'                   => $pengampu_mp->id_guru,
+                    'pjmp_pengampu_mp'          => $pengampu_mp->pjmp_pengampu_mp,
+                    'pjmp_uts'                  =>  $pengampu_mp->pjmp_uts,
+                    'pjmp_uas'                  =>  $pengampu_mp->pjmp_uas,
+                    'nomor_sk_mengajar'         => $pengampu_mp->nomor_sk_mengajar,
+                    'tgl_sk_mengajar'           => $pengampu_mp->tgl_sk_mengajar,
+                    'created_by'                =>  $input->auth_data->pengguna->id_pengguna,
+                    'created_at'                =>  $now,
+                    'updated_by'                =>  $input->auth_data->pengguna->id_pengguna,
+                    'updated_at'                =>  $now,
+                );
+            }
+        }
+
+
+        \App\Jobs\CopySetJadwalKelas::dispatch($batch_insert_kelas_mp, $batch_insert_jadwal_kelas_mp, $batch_insert_pengampu_mp);
+        return [
+            'status'    =>  202, // SUCCESS AND LOAD CONTENT
+            'message'   =>  'Copy Set Jadwal Kelas Successfully',
+            'path'      =>  'aktivitas-semester/copy-jadwal-kelas/view-copy-jadwal-kelas'
+        ];
     }
 
 
@@ -264,6 +372,9 @@ class SetJadwalKelasController extends Controller
 
                 PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                 PengampuMp::where('id_kelas_mp', $id)->delete();
+
+                KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                KelasMp::where('id_kelas_mp', $id)->delete();
 
 
                 return [

@@ -1,4 +1,9 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link "
+                href="{{ url(Request::segment(1) . '#' . Request::segment(2) . '/copy-jadwal-kelas/view-copy-jadwal-kelas') }}"><i
+                    class="material-icons">content_copy</i><span>Copy Data Dari Semester Sebelumnya</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card" style="margin-top: 10px">
