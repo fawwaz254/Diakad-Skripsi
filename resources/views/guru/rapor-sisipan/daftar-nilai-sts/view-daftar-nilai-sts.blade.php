@@ -1,13 +1,20 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add') }}"><i
-                    class="material-icons">add</i><span>Tambah Nilai</span></a>
-            <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel') }}"><i
-                    class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+        <h2>
+            <a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts') }}"><i
+                    class="material-icons">keyboard_backspace</i><span>Kembali</span></a>
+            @if ($semester_aktif->thn_akademik_semester == $thn_akademik_semester)
+                <a class="btn bg-blue waves-effect target-link" style="margin-left: 10px"
+                    href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add/' . $semester_aktif->thn_akademik_semester) }}"><i
+                        class="material-icons">add</i><span>Tambah Nilai</span></a>
+                <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
+                    href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel/' . $semester_aktif->thn_akademik_semester) }}"><i
+                        class="material-icons">cloud_upload</i><span> Import Excel</span></a>
+            @endif
         </h2>
     </div>
+
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
@@ -41,9 +48,11 @@
 </div>
 
 <script type="text/javascript">
+    var thn_akademik_semester = {!! json_encode($thn_akademik_semester) !!};
     var modul_url = 'rapor-sisipan';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables';
-    var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/datatables/' +
+        thn_akademik_semester;
+    var nilai_url = role_url + '#' + modul_url + '/' + 'daftar-nilai-sts/nilai/' + thn_akademik_semester;
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' +
         'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     var excel_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/excel';
