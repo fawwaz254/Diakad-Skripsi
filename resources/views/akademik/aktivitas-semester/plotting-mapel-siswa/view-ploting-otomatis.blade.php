@@ -77,12 +77,17 @@
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i
                                         class="material-icons">play_arrow</i><span>Ploting Otomatis</span></button>
                             </div>
-                            <p>*note
-                                <br>
-                                1. Kalau sudah ploting tapi angka tidak berubah jangan klick Ploting lagi,
-                                <br>
-                                2. Kalau Ploting Loadingnya cepat maka cek kembali ke Set Jadwal Kelas.
-                            </p>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <p>1. Pastikan sudah Set Jadwal kelas terlebih dahulu,
+                                    <br>
+                                    2. Kalau sudah ploting tapi angka tidak berubah jangan klick Ploting lagi,
+                                    <br>
+                                    3. Kalau Ploting Loadingnya cepat maka cek kembali ke Set Jadwal Kelas,
+                                    <br>
+                                    4. jumlah Kelas Mp Siswa tidak sama dengan jumlah kelas Mp maka perlu
+                                    Ploting lagi.
+                                </p>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -102,6 +107,8 @@
                                     <th>Kelas</th>
                                     <th>Sudah Diplotting</th>
                                     <th>Jumlah Siswa</th>
+                                    <th>Jumlah Kelas Mp Siswa</th>
+                                    <th>Jumlah Kelas Mp</th>
                                     {{-- <th>Action</th> --}}
                                     {{-- <th>Action</th> --}}
                                 </tr>
@@ -132,7 +139,7 @@
         processing: true,
         serverSide: true,
         responsive: true,
-        // "pageLength": 100,
+        "pageLength": 100,
         ajax: {
             url: datatable_url,
             type: 'GET'
@@ -157,6 +164,14 @@
             {
                 data: 'jml_siswa',
                 name: 'jml_siswa'
+            },
+            {
+                data: 'jml_kelas_mp_siswa',
+                name: 'jml_kelas_mp_siswa'
+            },
+            {
+                data: 'jml_kelas_mp',
+                name: 'jml_kelas_mp'
             },
             // { data: 'action', name: 'action', searchable: false, orderable: false,
             //     render: function(data){

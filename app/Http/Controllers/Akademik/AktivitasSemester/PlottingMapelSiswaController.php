@@ -51,20 +51,20 @@ class PlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_semester' =>'required',
-            'angkatan' 	=> 'required'
+            'id_semester' => 'required',
+            'angkatan'     => 'required'
         ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan
+            ];
         }
     }
 
@@ -75,21 +75,21 @@ class PlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_semester' =>'required',
+            'id_semester' => 'required',
             'angkatan'  => 'required',
             'id_kelas' => 'required'
         ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                        'status' => 204, // SUCCESS AND LOAD CONTENT
-                        'path' => 'aktivitas-semester/plotting-mapel-siswa/view-daftar-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_kelas
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'aktivitas-semester/plotting-mapel-siswa/view-daftar-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan . '/' . $input->id_kelas
+            ];
         }
     }
 
@@ -102,8 +102,8 @@ class PlottingMapelSiswaController extends BaseController
         $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
         $semester_aktif = Semester::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('is_aktif_semester', '=', '1')->first();
         $thn_masuk_siswa = Siswa::select('thn_masuk_siswa')->distinct()->orderBy('thn_masuk_siswa', 'ASC')->get();
-        
-        
+
+
         return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan'));
     }
 
@@ -126,7 +126,7 @@ class PlottingMapelSiswaController extends BaseController
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
             ->get();
-        
+
         return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-mapel-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas'));
     }
 
@@ -149,7 +149,7 @@ class PlottingMapelSiswaController extends BaseController
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
             ->get();
-        
+
         return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-daftar-plotting-mapel-siswa', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas', 'id_kelas'));
     }
 
@@ -169,38 +169,37 @@ class PlottingMapelSiswaController extends BaseController
             AND siswa.deleted_at IS NULL 
             ) AS jml_siswa")
         )
-        ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
+            ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
             JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp
             JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
             WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL AND pengambilan_mp.id_semester = ?) AS jml_siswa_krs", [$id])
-        ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        ->get();
+            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->get();
 
         return Datatables::of($list_data)
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->id_jurusan,
-                    );
-                    return $data;
-                })->addColumn('auto', function ($item) use($auth_data) {
-                    $semua_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $item->id_jurusan)->get();
-   
-                    // $data = array(
-                    //     'id' => $item->id_jurusan,
-                    // );
-                    // return $data;
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->id_jurusan,
+                );
+                return $data;
+            })->addColumn('auto', function ($item) use ($auth_data) {
+                $semua_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $item->id_jurusan)->get();
 
-                    $data = [];
-                  
-                        foreach ($semua_kelas as $key => $value) {
-                            $data[$key]['id_kelas'] = $value->id_kelas;
-                            $data[$key]['nm_kelas'] = $value->nm_kelas;
-                            // $data[$key]['status'] = $item->laporan_kerja_harian_tendik[$key]->status;
-                        }
-                    return $data;
+                // $data = array(
+                //     'id' => $item->id_jurusan,
+                // );
+                // return $data;
 
-                })
-                ->make(true);
+                $data = [];
+
+                foreach ($semua_kelas as $key => $value) {
+                    $data[$key]['id_kelas'] = $value->id_kelas;
+                    $data[$key]['nm_kelas'] = $value->nm_kelas;
+                    // $data[$key]['status'] = $item->laporan_kerja_harian_tendik[$key]->status;
+                }
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesMataPelajaran(Request $request, $id, $angkatan, $tingkat)
@@ -209,66 +208,66 @@ class PlottingMapelSiswaController extends BaseController
         $auth_data = $input->auth_data;
         if ($tingkat == "0") {
             $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
-            ->join('kelas_mp', function ($q) {
-                $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-                ->whereNull('kelas_mp.deleted_at');
-            })
-            ->leftjoin('pengampu_mp', function ($q) {
-                $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                ->whereNull('pengampu_mp.deleted_at');
-            })
-            ->leftjoin('guru', function ($q) {
-                $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
-                ->whereNull('guru.deleted_at');
-            })
-            ->leftjoin('pengguna', function ($q) {
-                $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                ->whereNull('pengguna.deleted_at');
-            })
-            ->join('kelas', function ($q) {
-                $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-                ->whereNull('kelas.deleted_at');
-            })
-            ->where('kelas_mp.id_semester', '=', $id)
-            ->get();
+                ->join('kelas_mp', function ($q) {
+                    $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                        ->whereNull('kelas_mp.deleted_at');
+                })
+                ->leftjoin('pengampu_mp', function ($q) {
+                    $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                        ->whereNull('pengampu_mp.deleted_at');
+                })
+                ->leftjoin('guru', function ($q) {
+                    $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
+                        ->whereNull('guru.deleted_at');
+                })
+                ->leftjoin('pengguna', function ($q) {
+                    $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                        ->whereNull('pengguna.deleted_at');
+                })
+                ->join('kelas', function ($q) {
+                    $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                        ->whereNull('kelas.deleted_at');
+                })
+                ->where('kelas_mp.id_semester', '=', $id)
+                ->get();
         } else {
             $list_data = MataPelajaran::select('mata_pelajaran.kd_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'pengguna.nm_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas.nm_kelas', 'kelas_mp.id_kelas_mp')
-            ->join('kelas_mp', function ($q) {
-                $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-                ->whereNull('kelas_mp.deleted_at');
-            })
-            ->leftjoin('pengampu_mp', function ($q) {
-                $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
-                ->whereNull('pengampu_mp.deleted_at');
-            })
-            ->leftjoin('guru', function ($q) {
-                $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
-                ->whereNull('guru.deleted_at');
-            })
-            ->leftjoin('pengguna', function ($q) {
-                $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
-                ->whereNull('pengguna.deleted_at');
-            })
-            ->join('kelas', function ($q) {
-                $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-                ->whereNull('kelas.deleted_at');
-            })
-            ->where('kelas_mp.id_semester', '=', $id)
-            ->where('kelas.id_kelas', '=', $tingkat)
-            ->get();
+                ->join('kelas_mp', function ($q) {
+                    $q->on('kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                        ->whereNull('kelas_mp.deleted_at');
+                })
+                ->leftjoin('pengampu_mp', function ($q) {
+                    $q->on('pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+                        ->whereNull('pengampu_mp.deleted_at');
+                })
+                ->leftjoin('guru', function ($q) {
+                    $q->on('pengampu_mp.id_guru', '=', 'guru.id_guru')
+                        ->whereNull('guru.deleted_at');
+                })
+                ->leftjoin('pengguna', function ($q) {
+                    $q->on('pengguna.id_pengguna', '=', 'guru.id_pengguna')
+                        ->whereNull('pengguna.deleted_at');
+                })
+                ->join('kelas', function ($q) {
+                    $q->on('kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                        ->whereNull('kelas.deleted_at');
+                })
+                ->where('kelas_mp.id_semester', '=', $id)
+                ->where('kelas.id_kelas', '=', $tingkat)
+                ->get();
         }
 
         return Datatables::of($list_data)
-                ->addColumn('pjma', function ($item) {
-                    return $item->gelar_depan." ".$item->nm_pengguna.", ".$item->gelar_belakang;
-                })
-                ->addColumn('checkbox', function ($item) {
-                    $data = array(
-                        'id_kelas_mp' => $item->id_kelas_mp
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('pjma', function ($item) {
+                return $item->gelar_depan . " " . $item->nm_pengguna . ", " . $item->gelar_belakang;
+            })
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id_kelas_mp' => $item->id_kelas_mp
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function datatablesSiswa(Request $request, $angkatan, $kelas)
@@ -276,42 +275,42 @@ class PlottingMapelSiswaController extends BaseController
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = Siswa::join('pengguna', function ($q) {
-                                $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                                    ->whereNull('pengguna.deleted_at');
-                            })
-                            ->join('status_pengguna', function ($q) use ($input) {
-                                $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                                    ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                                    ->where('status_pengguna.aktif_status_pengguna', '=', '1')
-                                    ->whereNull('status_pengguna.deleted_at');
-                            })
-                            ->join('kelas', function ($q) {
-                                $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
-                                    ->whereNull('kelas.deleted_at');
-                            })
-                            ->join('calon_siswa_baru', function ($q) {
-                                $q->on('siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                                    ->whereNull('calon_siswa_baru.deleted_at');
-                            })
-                            ->where('siswa.id_kelas', '=', $kelas)->get();
+            $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                ->whereNull('pengguna.deleted_at');
+        })
+            ->join('status_pengguna', function ($q) use ($input) {
+                $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                    ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('status_pengguna.aktif_status_pengguna', '=', '1')
+                    ->whereNull('status_pengguna.deleted_at');
+            })
+            ->join('kelas', function ($q) {
+                $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+                    ->whereNull('kelas.deleted_at');
+            })
+            ->join('calon_siswa_baru', function ($q) {
+                $q->on('siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                    ->whereNull('calon_siswa_baru.deleted_at');
+            })
+            ->where('siswa.id_kelas', '=', $kelas)->get();
 
         return Datatables::of($list_data)
-                ->addColumn('checkbox', function ($item) {
-                    $data = array(
-                        'id_siswa' => $item->id_siswa
-                    );
-                    return $data;
-                })
-                ->editColumn('jenis_kelamin', function ($item) {
-                    if($item->jenis_kelamin == 1){
-                        return 'Laki-Laki';
-                    }else if($item->jenis_kelamin == 2){
-                        return 'Perempuan';
-                    }else{
-                        return 'Belum diset';
-                    }
-                })
-                ->make(true);
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id_siswa' => $item->id_siswa
+                );
+                return $data;
+            })
+            ->editColumn('jenis_kelamin', function ($item) {
+                if ($item->jenis_kelamin == 1) {
+                    return 'Laki-Laki';
+                } else if ($item->jenis_kelamin == 2) {
+                    return 'Perempuan';
+                } else {
+                    return 'Belum diset';
+                }
+            })
+            ->make(true);
     }
 
     public function actionPlottingMapelSiswa(Request $request, $mode)
@@ -352,8 +351,8 @@ class PlottingMapelSiswaController extends BaseController
                                 //                 'message' => 'KRS Gagal Dilakukan'
                                 //             ];
                             } else {
-                                $id = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
-    
+                                $id = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+
                                 $pengambilan_mp_insert[] = [
                                     'id_pengambilan_mp' => $id,
                                     'id_kelas_mp' => $id_kelas_mp,
@@ -361,9 +360,9 @@ class PlottingMapelSiswaController extends BaseController
                                     'id_semester' => $input->id_semester,
                                     'status_apv_pengambilan_mp' => '1',
                                     'created_at' => $now,
-                                    'created_by' =>$auth_data->pengguna->id_pengguna,
+                                    'created_by' => $auth_data->pengguna->id_pengguna,
                                     'updated_at' => $now,
-                                    'updated_by' =>$auth_data->pengguna->id_pengguna,
+                                    'updated_by' => $auth_data->pengguna->id_pengguna,
                                 ];
                             }
                             // $pengambilan_mp						= new PengambilanMp;
@@ -382,24 +381,25 @@ class PlottingMapelSiswaController extends BaseController
 
                     DB::commit();
                     return [
-                            'status' => 202, // SUCCESS AND LOAD CONTENT
-                            'message' => 'KRS Manual Berhasil Dilakukan',
-                            'path' => 'aktivitas-semester/plotting-mapel-siswa/view-daftar-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_kelas
+                        'status' => 202, // SUCCESS AND LOAD CONTENT
+                        'message' => 'KRS Manual Berhasil Dilakukan',
+                        'path' => 'aktivitas-semester/plotting-mapel-siswa/view-daftar-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan . '/' . $input->id_kelas
                     ];
                 } catch (\Exception $e) {
                     DB::rollback();
                     // something went wrong
 
                     return [
-                                'status' => 203, // GAGAL
-                                'message' => 'KRS Gagal Dilakukan '
-                            ];
+                        'status' => 203, // GAGAL
+                        'message' => 'KRS Gagal Dilakukan '
+                    ];
                 }
             }
         }
     }
 
-    public function viewAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan){
+    public function viewAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
@@ -416,27 +416,44 @@ class PlottingMapelSiswaController extends BaseController
             ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
             ->where('kelas_mp.id_semester', '=', $id_semester)
             ->get();
-        
-        return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-ploting-otomatis', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas','id_jurusan'));
 
+        return view('akademik/aktivitas-semester/plotting-mapel-siswa/view-ploting-otomatis', compact('auth_data', 'data_semester', 'thn_masuk_siswa', 'semester_aktif', 'id_semester', 'angkatan', 'kelas', 'id_jurusan'));
     }
 
 
-    public function datatablesAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan){
+    public function datatablesAutoPlottingMapelSiswa(Request $request, $id_semester, $angkatan, $id_jurusan)
+    {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = Kelas::with('jurusan')
-        ->whereHas('jurusan', function ($query) use($id_jurusan) {
-            $query->where('id_jurusan', '=', $id_jurusan);
-        })->get();
+            ->whereHas('jurusan', function ($query) use ($id_jurusan) {
+                $query->where('id_jurusan', '=', $id_jurusan);
+            })->get();
 
-        $jumlah_siswa = Siswa::with('kelas')->
-        whereHas('pengguna.status_pengguna', function ($query) use($id_jurusan) {
+        $jumlah_siswa = Siswa::with('kelas')->whereHas('pengguna.status_pengguna', function ($query) use ($id_jurusan) {
             $query->where('aktif_status_pengguna', '=', 1);
         })->get();
 
         $jml_siswa_terploting = PengambilanMp::where('id_semester', $id_semester)->with('kelas_mp')->get();
+        // $jml_kelas_mp = KelasMp::where('')
 
+        $jml_kelas_mp = KelasMp::where('id_semester', $id_semester)->whereIn('id_kelas', $list_data->pluck('id_kelas'))
+            ->with('jadwal_kelas_mp', 'pengampu_mp')
+            ->whereHas('jadwal_kelas_mp')
+            ->whereHas('pengampu_mp')
+            ->get();
+
+        $jml_kelas_mp_siswa = PengambilanMp::select('id_kelas_mp')
+            ->with('kelas_mp')
+            ->whereHas('kelas_mp.jadwal_kelas_mp')
+            ->groupBy('id_kelas_mp')
+            ->where('id_semester', $id_semester)
+            // ->whereHas('kelas_mp', function ($query) use ($list_data) {
+            //     $query->whereIn('id_kelas', '=', $list_data->pluck('id_kelas'));
+            // })
+            ->get();
+
+        // dd($jml_kelas_mp_siswa);
 
         // $list_data = Kelas::select(
         //     'jurusan.id_jurusan',
@@ -460,124 +477,128 @@ class PlottingMapelSiswaController extends BaseController
 
 
         return Datatables::of($list_data)
-        ->addColumn('jml_siswa_krs', function ($item) use($jml_siswa_terploting) {
-            $data = $jml_siswa_terploting->where('kelas_mp.id_kelas', $item->id_kelas);
-            //     'id_siswa' => $item->id_siswa
-            // );
-            return $data->unique('id_siswa')->count();
-        })
-        ->addColumn('jml_siswa', function ($item) use($jumlah_siswa) {
-            return $jumlah_siswa->where('kelas.id_kelas', $item->id_kelas)->count();
-        })
-        ->make(true);
+            ->addColumn('jml_siswa_krs', function ($item) use ($jml_siswa_terploting) {
+                $data = $jml_siswa_terploting->where('kelas_mp.id_kelas', $item->id_kelas);
+                //     'id_siswa' => $item->id_siswa
+                // );
+                return $data->unique('id_siswa')->count();
+            })
+            ->addColumn('jml_siswa', function ($item) use ($jumlah_siswa) {
+                return $jumlah_siswa->where('kelas.id_kelas', $item->id_kelas)->count();
+            })
+            ->addColumn('jml_kelas_mp_siswa', function ($item) use ($jml_kelas_mp_siswa) {
+                return $jml_kelas_mp_siswa->where('kelas_mp.id_kelas', $item->id_kelas)->count();
+            })
+            ->addColumn('jml_kelas_mp', function ($item) use ($jml_kelas_mp) {
+                return $jml_kelas_mp->where('id_kelas', $item->id_kelas)->count();
+                // return $jumlah_siswa->where('kelas.id_kelas', $item->id_kelas)->count();
+            })
+            ->make(true);
     }
 
 
-    public function actionAutoPlottingMapelSiswa(Request $request){
+    public function actionAutoPlottingMapelSiswa(Request $request)
+    {
         set_time_limit(9800);
-   # code...
-   $input = (object) $request->input();
-   $auth_data = $input->auth_data;
-//    dd($input);
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        //    dd($input);
 
-   DB::beginTransaction();
-   try {
-    ////////////////sampaio sini
-    //    foreach($semua_kelas as $kelas){
-        //ambil data id_kelas_mp
-        $list_mapel = MataPelajaran::select( 'kelas_mp.id_kelas_mp')
-        ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
-        ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
-        ->where('kelas_mp.id_semester', '=', $input->id_semester)
-        ->where('kelas.id_kelas', '=', $input->id_kelas)
-        ->whereNull('kelas_mp.deleted_at')
-        ->get();
+        DB::beginTransaction();
+        try {
+            ////////////////sampaio sini
+            //    foreach($semua_kelas as $kelas){
+            //ambil data id_kelas_mp
+            $list_mapel = MataPelajaran::select('kelas_mp.id_kelas_mp')
+                ->join('kelas_mp', 'kelas_mp.id_mata_pelajaran', '=', 'mata_pelajaran.id_mata_pelajaran')
+                ->join('kelas', 'kelas.id_kelas', '=', 'kelas_mp.id_kelas')
+                ->where('kelas_mp.id_semester', '=', $input->id_semester)
+                ->where('kelas.id_kelas', '=', $input->id_kelas)
+                ->whereNull('kelas_mp.deleted_at')
+                ->get();
 
-        // dd($list_mapel);
+            // dd($list_mapel);
 
-        //ambil data siswaa
-        $list_siswa = Siswa::join('pengguna', function ($q) {
-            $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                ->whereNull('pengguna.deleted_at');
-        })
-        ->join('status_pengguna', function ($q) use ($input) {
-            $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                ->where('status_pengguna.aktif_status_pengguna', '=', '1')
-                ->whereNull('status_pengguna.deleted_at');
-        })
-        ->join('kelas', function ($q) {
-            $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
-                ->whereNull('kelas.deleted_at');
-        })
-        ->join('calon_siswa_baru', function ($q) {
-            $q->on('siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
-                ->whereNull('calon_siswa_baru.deleted_at');
-        })
-        ->where('siswa.id_kelas', '=', $input->id_kelas)->get();
+            //ambil data siswaa
+            $list_siswa = Siswa::join('pengguna', function ($q) {
+                $q->on('pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->whereNull('pengguna.deleted_at');
+            })
+                ->join('status_pengguna', function ($q) use ($input) {
+                    $q->on('status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                        ->where('status_pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                        ->where('status_pengguna.aktif_status_pengguna', '=', '1')
+                        ->whereNull('status_pengguna.deleted_at');
+                })
+                ->join('kelas', function ($q) {
+                    $q->on('kelas.id_kelas', '=', 'siswa.id_kelas')
+                        ->whereNull('kelas.deleted_at');
+                })
+                ->join('calon_siswa_baru', function ($q) {
+                    $q->on('siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                        ->whereNull('calon_siswa_baru.deleted_at');
+                })
+                ->where('siswa.id_kelas', '=', $input->id_kelas)->get();
 
-        // $pengambilan_mp = PengambilanMp::where('id_semester',$input->id_semester);
-        foreach ($list_mapel as $id_kelas_mp) {
-            // $pengambilan_kelas_mp = $pengambilan_mp->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp);
-            $now = Carbon::now(env('APP_TIMEZONE', ''));
-            $pengambilan_mp_insert = array();
-            foreach ($list_siswa as $id_siswa) {
-                // $cekSiswa = $pengambilan_kelas_mp->where('id_siswa', '=', $id_siswa->id_siswa)->first();
-                $cekSiswa = PengambilanMp::where('id_siswa', '=', $id_siswa->id_siswa)->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp)
-                ->where('id_semester', '=', $input->id_semester)->first();
-                if ($cekSiswa) {
-                    // dd($cekSiswa);
-                } else {
-                    $id = $auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+            // $pengambilan_mp = PengambilanMp::where('id_semester',$input->id_semester);
+            foreach ($list_mapel as $id_kelas_mp) {
+                // $pengambilan_kelas_mp = $pengambilan_mp->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp);
+                $now = Carbon::now(env('APP_TIMEZONE', ''));
+                $pengambilan_mp_insert = array();
+                foreach ($list_siswa as $id_siswa) {
+                    // $cekSiswa = $pengambilan_kelas_mp->where('id_siswa', '=', $id_siswa->id_siswa)->first();
+                    $cekSiswa = PengambilanMp::where('id_siswa', '=', $id_siswa->id_siswa)->where('id_kelas_mp', '=', $id_kelas_mp->id_kelas_mp)
+                        ->where('id_semester', '=', $input->id_semester)->first();
+                    if ($cekSiswa) {
+                        // dd($cekSiswa);
+                    } else {
+                        $id = $auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 
-                    $pengambilan_mp_insert[] = [
-                        'id_pengambilan_mp' => $id,
-                        'id_kelas_mp' => $id_kelas_mp->id_kelas_mp,
-                        'id_siswa' => $id_siswa->id_siswa,
-                        'id_semester' => $input->id_semester,
-                        'status_apv_pengambilan_mp' => '1',
-                        'created_at' => $now,
-                        'created_by' =>$auth_data->pengguna->id_pengguna,
-                        'updated_at' => $now,
-                        'updated_by' =>$auth_data->pengguna->id_pengguna,
-                    ];
+                        $pengambilan_mp_insert[] = [
+                            'id_pengambilan_mp' => $id,
+                            'id_kelas_mp' => $id_kelas_mp->id_kelas_mp,
+                            'id_siswa' => $id_siswa->id_siswa,
+                            'id_semester' => $input->id_semester,
+                            'status_apv_pengambilan_mp' => '1',
+                            'created_at' => $now,
+                            'created_by' => $auth_data->pengguna->id_pengguna,
+                            'updated_at' => $now,
+                            'updated_by' => $auth_data->pengguna->id_pengguna,
+                        ];
+                    }
+                }
+                // dd($pengambilan_mp_insert);
+                if (!empty($pengambilan_mp_insert)) {
+                    PlottingMapelSiswa::dispatch($pengambilan_mp_insert);
                 }
             }
-            // dd($pengambilan_mp_insert);
-            if (!empty($pengambilan_mp_insert)) {
-                PlottingMapelSiswa::dispatch($pengambilan_mp_insert);
-                }
-        }
 
-        DB::commit();
-        // return redirect('akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan);
-        //   return redirect()->back();
-        // plotting-mapel-siswa/view-kelas-plotting/
-        // return redirect("akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/$id_semester/$angkatan");
-        return [
+            DB::commit();
+            // return redirect('akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan);
+            //   return redirect()->back();
+            // plotting-mapel-siswa/view-kelas-plotting/
+            // return redirect("akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/$id_semester/$angkatan");
+            return [
                 'status' => 203, // SUCCESS AND LOAD CONTENT
                 'message' => 'AUTO PLOTING BERHASIL',
                 // 'path' => 'aktivitas-semester/plotting-mapel-siswa/view-auto-plotting-mapel-siswa/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
-        ];
-    } catch (\Exception $e) {
-        DB::rollback();
-        return [
-            'status' => 203, // SUCCESS AND LOAD CONTENT
-            'message' => 'AUTO PLOTING GAGAL',
-            // 'path' => 'aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
-    ];
-        // something went wrong
-        //   return redirect()->back();
-        //   return redirect('akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan);
-        // return redirect("akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/$id_semester/$angkatan");
-        // return [
-        //             'status' => 203, // GAGAL
-        //             'message' => 'KRS Gagal Dilakukan ' . $e
-        //         ];
+            ];
+        } catch (\Exception $e) {
+            DB::rollback();
+            return [
+                'status' => 203, // SUCCESS AND LOAD CONTENT
+                'message' => 'AUTO PLOTING GAGAL',
+                // 'path' => 'aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/'.$input->id_semester.'/'.$input->angkatan.'/'.$input->id_jurusan
+            ];
+            // something went wrong
+            //   return redirect()->back();
+            //   return redirect('akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/' . $input->id_semester . '/' . $input->angkatan);
+            // return redirect("akademik#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/$id_semester/$angkatan");
+            // return [
+            //             'status' => 203, // GAGAL
+            //             'message' => 'KRS Gagal Dilakukan ' . $e
+            //         ];
+        }
     }
-
-}
-
-
-
 }
