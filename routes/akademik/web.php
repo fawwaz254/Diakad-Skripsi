@@ -222,6 +222,8 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('hapus-plotting-mapel-siswa/view-semester-hapus-plotting-mapel-siswa/{id}', [HapusPlottingMapelSiswaController::class, 'viewSemesterHapusPlottingMapelSiswa']);
             Route::get('hapus-plotting-mapel-siswa/view-detail-hapus-plotting-mapel-siswa/{id}', [HapusPlottingMapelSiswaController::class, 'viewDetailHapusPlottingMapelSiswa']);
             Route::get('hapus-plotting-mapel-siswa/datatables/{id}', [HapusPlottingMapelSiswaController::class, 'datatablesHapusPlottingMapelSiswa']);
+            Route::get('hapus-plotting-mapel-siswa-otomatis', [HapusPlottingMapelSiswaController::class, 'viewHapusPlotingOtomatis']);
+            Route::post('action-hapus-plotting-mapel-siswa-otomatis', [HapusPlottingMapelSiswaController::class, 'actionHapusPlotingOtomatis']);
 
             Route::post('action-hapus-plotting-mapel-siswa', [HapusPlottingMapelSiswaController::class, 'actionHapusPlottingMapelSiswa']);
 
