@@ -250,7 +250,7 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_jalan" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_jalan }}" required>
+                                    aria-invalid="true" value="{{ $siswa->alamat_jalan }}" required maxlength="128">
                             </div>
                         </div>
                         <br>
@@ -263,7 +263,7 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_rt" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_rt }}" required>
+                                    aria-invalid="true" value="{{ $siswa->alamat_rt }}" required maxlength="4">
                             </div>
                         </div>
                         <br>
@@ -277,7 +277,8 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_rw" aria-required="true"
                                     aria-invalid="true"
-                                    value="{{ isset($siswa->alamat_rw) ? $siswa->alamat_rw : '' }}" required>
+                                    value="{{ isset($siswa->alamat_rw) ? $siswa->alamat_rw : '' }}" required
+                                    maxlength="4">
                             </div>
                         </div>
                         <br>
@@ -290,7 +291,7 @@
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_dusun" aria-required="true"
-                                    aria-invalid="true" value="{{ $siswa->alamat_dusun }}">
+                                    aria-invalid="true" value="{{ $siswa->alamat_dusun }}" maxlength="64">
                             </div>
                         </div>
                         <br>
@@ -304,7 +305,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_kelurahan"
                                     aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_kelurahan }}"
-                                    required>
+                                    required maxlength="64">
                             </div>
                         </div>
                         <br>
@@ -318,7 +319,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_kecamatan"
                                     aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_kecamatan }}"
-                                    required>
+                                    required maxlength="64">
                             </div>
                         </div>
                         <br>
@@ -332,7 +333,7 @@
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
                                 <input type="text" class="form-control" name="alamat_kodepos"
                                     aria-required="true" aria-invalid="true" value="{{ $siswa->alamat_kodepos }}"
-                                    required>
+                                    required maxlength="64">
                             </div>
                         </div>
                         <br>
