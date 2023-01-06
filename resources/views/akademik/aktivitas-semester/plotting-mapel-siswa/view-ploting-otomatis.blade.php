@@ -77,6 +77,12 @@
                                 <button class="btn btn-block bg-red waves-effect" type="submit"><i
                                         class="material-icons">play_arrow</i><span>Ploting Otomatis</span></button>
                             </div>
+                            <p>*note
+                                <br>
+                                1. Kalau sudah ploting tapi angka tidak berubah jangan klick Ploting lagi,
+                                <br>
+                                2. Kalau Ploting Loadingnya cepat maka cek kembali ke Set Jadwal Kelas.
+                            </p>
                         </div>
                     </form>
                 </div>
@@ -111,16 +117,17 @@
 </div>
 @include('scriptjs')
 <script>
-    var id_semester= {!! json_encode($id_semester) !!};
-    var angkatan= {!! json_encode($angkatan) !!};
+    var id_semester = {!! json_encode($id_semester) !!};
+    var angkatan = {!! json_encode($angkatan) !!};
     var id_jurusan = {!! json_encode($id_jurusan) !!}
 
     // var modul_url = location.hash.replace('#','').split('/')[0];
-    var modul_url       = 'aktivitas-semester';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/' + id_semester + '/' + angkatan + '/' + id_jurusan;
+    var modul_url = 'aktivitas-semester';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/' + id_semester + '/' + angkatan + '/' + id_jurusan;
     // var detail_url        = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-mapel-plotting/'+ id_semester + '/' + angkatan;
     // var auto_ploting      = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-auto-plotting-mapel-siswa/'+ id_semester + '/' + angkatan;
-// alert(datatable_url);
+    // alert(datatable_url);
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
@@ -130,12 +137,27 @@
             url: datatable_url,
             type: 'GET'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'jurusan.nm_jurusan', name: 'jurusan.nm_jurusan' },
-            { data: 'nm_kelas', name: 'nm_kelas' },
-            { data: 'jml_siswa_krs', name: 'jml_siswa_krs' },
-            { data: 'jml_siswa', name: 'jml_siswa' },
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'jurusan.nm_jurusan',
+                name: 'jurusan.nm_jurusan'
+            },
+            {
+                data: 'nm_kelas',
+                name: 'nm_kelas'
+            },
+            {
+                data: 'jml_siswa_krs',
+                name: 'jml_siswa_krs'
+            },
+            {
+                data: 'jml_siswa',
+                name: 'jml_siswa'
+            },
             // { data: 'action', name: 'action', searchable: false, orderable: false,
             //     render: function(data){
             //         return '<a class="target-link btn bg-blue waves-effect" href="'+ detail_url +'/' + data.id + '">Manual Plotting</a>'
@@ -154,12 +176,16 @@
             //             });
             //     return role_text
             // }}
-        ]})
+        ]
+    })
 
-    primary_table.on( 'draw', function () {
-        primary_table.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table.on('draw', function() {
+        primary_table.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 </script>
