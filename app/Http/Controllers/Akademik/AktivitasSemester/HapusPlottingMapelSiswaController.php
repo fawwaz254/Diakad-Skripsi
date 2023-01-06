@@ -310,7 +310,7 @@ class HapusPlottingMapelSiswaController extends BaseController
             ->whereDoesntHave('nilai_mp')
             ->orderBy('id_siswa')
             ->where('id_semester', $semester_aktif->id_semester)
-            ->take(10)
+            ->take(500)
             ->get();
 
 
