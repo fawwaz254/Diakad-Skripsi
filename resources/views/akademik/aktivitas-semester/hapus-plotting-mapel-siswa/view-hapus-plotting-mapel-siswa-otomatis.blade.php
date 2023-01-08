@@ -24,7 +24,7 @@
 
                                 </tr>
                                 <tr>
-                                    <th>Penghapusan Maximal 500 data per action</th>
+                                    <th>Penghapusan Maximal 100 data per action</th>
                                 </tr>
                             </thead>
                             {{-- <tbody>
