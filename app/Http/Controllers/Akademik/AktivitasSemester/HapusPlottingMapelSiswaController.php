@@ -310,17 +310,13 @@ class HapusPlottingMapelSiswaController extends BaseController
             ->whereDoesntHave('nilai_mp')
             ->orderBy('id_siswa')
             ->where('id_semester', $semester_aktif->id_semester)
-            ->take(500)
+            ->take(100)
             ->get();
 
-
-        // dd($data_siswa);
-        // $data_siswa->each->delete();
         foreach ($data_siswa as $siswa) {
             PengambilanMp::where('id_siswa', $siswa->id_siswa)->where('id_kelas_mp', $siswa->id_kelas_mp)->delete();
-            // $siswa->delete();
         }
-        // dd($data_siswa);
+
         return [
             'status'    =>  202, // SUCCESS AND LOAD CONTENT
             'message'   =>  'Delete Plotting Mapel Siswa Otomatis Successfully',
