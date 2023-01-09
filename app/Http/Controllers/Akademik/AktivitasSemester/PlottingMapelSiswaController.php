@@ -176,28 +176,35 @@ class PlottingMapelSiswaController extends BaseController
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->get();
 
+        $jml_kelas_mp = KelasMp::where('id_semester', $id)
+            ->with('jadwal_kelas_mp', 'pengampu_mp', 'kelas')
+            ->whereHas('jadwal_kelas_mp')
+            ->whereHas('pengampu_mp')
+            ->get();
+
+        $jml_kelas_mp_siswa = PengambilanMp::select('id_kelas_mp')
+            ->with('kelas_mp', 'kelas_mp.kelas')
+            ->whereHas('kelas_mp.jadwal_kelas_mp')
+            ->groupBy('id_kelas_mp')
+            ->where('id_semester', $id)
+            // ->whereHas('kelas_mp', function ($query) use ($list_data) {
+            //     $query->whereIn('id_kelas', '=', $list_data->pluck('id_kelas'));
+            // })
+            ->get();
+
+
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_jurusan,
                 );
                 return $data;
-            })->addColumn('auto', function ($item) use ($auth_data) {
-                $semua_kelas = Kelas::join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kelas.id_jurusan', $item->id_jurusan)->get();
-
-                // $data = array(
-                //     'id' => $item->id_jurusan,
-                // );
-                // return $data;
-
-                $data = [];
-
-                foreach ($semua_kelas as $key => $value) {
-                    $data[$key]['id_kelas'] = $value->id_kelas;
-                    $data[$key]['nm_kelas'] = $value->nm_kelas;
-                    // $data[$key]['status'] = $item->laporan_kerja_harian_tendik[$key]->status;
-                }
-                return $data;
+            })
+            ->addColumn('jml_kelas_mp_siswa', function ($item) use ($jml_kelas_mp_siswa) {
+                return $jml_kelas_mp_siswa->where('kelas_mp.kelas.id_jurusan', $item->id_jurusan)->count();
+            })
+            ->addColumn('jml_kelas_mp', function ($item) use ($jml_kelas_mp) {
+                return $jml_kelas_mp->where('kelas.id_jurusan', $item->id_jurusan)->count();
             })
             ->make(true);
     }
