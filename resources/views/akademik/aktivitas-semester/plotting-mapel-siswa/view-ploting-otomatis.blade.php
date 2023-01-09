@@ -107,10 +107,8 @@
                                     <th>Kelas</th>
                                     <th>Sudah Diplotting</th>
                                     <th>Jumlah Siswa</th>
-                                    <th>Jumlah Kelas Mp Siswa</th>
+                                    <th>Ploting Kelas Mp</th>
                                     <th>Jumlah Kelas Mp</th>
-                                    {{-- <th>Action</th> --}}
-                                    {{-- <th>Action</th> --}}
                                 </tr>
                             </thead>
                         </table>
