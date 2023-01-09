@@ -78,13 +78,10 @@
                                         class="material-icons">play_arrow</i><span>Ploting Otomatis</span></button>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <p>1. Pastikan sudah Set Jadwal kelas terlebih dahulu,
+                                <p>
+                                    1. Kalau sudah ploting tapi angka tidak berubah jangan klick Ploting lagi,
                                     <br>
-                                    2. Kalau sudah ploting tapi angka tidak berubah jangan klick Ploting lagi,
-                                    <br>
-                                    3. Kalau Ploting Loadingnya cepat maka cek kembali ke Set Jadwal Kelas,
-                                    <br>
-                                    4. jumlah Kelas Mp Siswa tidak sama dengan jumlah kelas Mp maka perlu
+                                    2. jumlah Kelas Mp Siswa tidak sama dengan jumlah kelas Mp maka perlu
                                     Ploting lagi.
                                 </p>
                             </div>
