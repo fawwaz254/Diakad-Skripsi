@@ -79,8 +79,6 @@
             <a href="humas/absensi/shift_pengguna/export-shift-pengguna/{{ $date }}" target="_blank"
                 class="btn btn-block bg-red waves-effect">
                 <i class="material-icons">print</i><span> Print Bulan ini</span></a>
-            {{-- <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i
-                    class="material-icons">print</i><span>Cetak Shift</span></button> --}}
         </div>
         {{-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
             <button class="btn btn-block bg-green waves-effect" onclick="downloadShift('0')"><i

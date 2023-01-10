@@ -594,11 +594,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
             });
 
-            Route::prefix('cetak-rapor-siswa')->group(function () {
-                Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
-                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
-            });
-
             Route::prefix('wali-murid')->group(function () {
                 Route::get('/', [WaliMuridController::class, 'viewWaliMurid']);
                 Route::get('datatables', [WaliMuridController::class, 'datatablesWaliMurid']);

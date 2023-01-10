@@ -185,6 +185,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/view-kelas-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'viewShiftSiswa']);
 
                 Route::get('export-shift-pengguna/{date}', [ShiftPenggunaController::class, 'exportShift']);
+                Route::get('export-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'exportShift']);
 
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
