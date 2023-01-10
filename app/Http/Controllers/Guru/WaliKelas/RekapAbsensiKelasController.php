@@ -65,13 +65,14 @@ class RekapAbsensiKelasController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'wali-kelas/rekap-absensi-kelas/rekap-absensi-kelas-siswa/'.$input->id_jadwal_kelas_mp
+                'path' => 'wali-kelas/rekap-absensi-kelas/rekap-absensi-kelas-siswa/' . $input->id_jadwal_kelas_mp
             ];
         }
     }
 
     public function viewRekapAbsensiKelasSiswa(Request $request, $id_jadwal_kelas_mp)
     {
+        set_time_limit(-1);
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -79,13 +80,12 @@ class RekapAbsensiKelasController extends BaseController
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
         $data_kelas = JadwalKelasMp::with(['kelas_mp', 'kelas_mp.mata_pelajaran', 'kelas_mp.kelas', 'ruangan', 'jadwal_hari'])
-                                        ->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
-                                        ->first();
+            ->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
+            ->first();
 
         $data_siswa = LibSiswa::fetchDataSiswaKelasMp($auth_data, $id_jadwal_kelas_mp);
 
         $data_presensi = PresensiMp::with('presensi_mp_siswa')->where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)->get();
-
         return view('guru/wali-kelas/rekap-absensi-kelas/view-rekap-absensi-kelas-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'data_siswa', 'data_presensi'));
     }
 }
