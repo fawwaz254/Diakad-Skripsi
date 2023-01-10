@@ -8,7 +8,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas/' . $thn_akademik_semester) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <form id="form-validation" method="POST"

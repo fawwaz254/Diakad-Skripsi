@@ -1,31 +1,36 @@
 <div class="container-fluid">
-    <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting/' . $thn_akademik_semester) }}"><i
-                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
-    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
                 <div class="header">
                     <h2>
-                        TAMBAH URUTAN MATA PELAJARAN
+                        PILIH SEMESTER
                     </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor/postSetting/' . $mapel->id_mata_pelajaran) }}">
-
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/post-cetak-rapor') }}">
                         {{ csrf_field() }}
+
                         <h2 class="card-inside-title">
-                            URUTAN
+                            Semester
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <input type="number" class="form-control" name="urutan" required=""
-                                    aria-required="true" aria-invalid="true"
-                                    value="{{ $mapel->urutan_rapor_sisipan->urutan ?? 0 }}">
-
+                                <select class="form-control show-tick" name="thn_akademik_semester">
+                                    @foreach ($data_semester as $data)
+                                        @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester)
+                                            <option value="{{ $data->thn_akademik_semester }}" selected>
+                                                {{ $data->tahun_ajaran }}
+                                                (Aktif)
+                                        @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             </div>
                         </div>
                         <div class="row clearfix">

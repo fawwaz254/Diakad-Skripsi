@@ -19,6 +19,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\Kurikulum;
 use App\Models\RaporSisipanDeskripsi;
+use App\Models\Semester;
 use App\Models\Setting;
 use App\Models\Siswa;
 use App\Models\SubRaporSisipan;
@@ -32,12 +33,48 @@ use Validator;
 
 class CetakRaporController extends Controller
 {
-    public function viewCetakRapor(Request $request)
+
+    public function viewSemesterCetakRapor(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('akademik/rapor-sisipan/cetak-rapor/view-cetak-rapor', compact('auth_data'));
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('akademik/rapor-sisipan/cetak-rapor/view-semester-cetak-rapor', compact('auth_data', 'data_semester', 'semester_aktif'));
+    }
+
+    public function actionSemesterCetakRapor(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'thn_akademik_semester' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'rapor-sisipan/cetak-rapor/' . $input->thn_akademik_semester
+            ];
+        }
+    }
+
+
+    public function viewCetakRapor(Request $request, $thn_akademik_semester)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        return view('akademik/rapor-sisipan/cetak-rapor/view-cetak-rapor', compact('auth_data', 'thn_akademik_semester'));
     }
 
     public function viewCetakRaporWaliKelas(Request $request)
@@ -52,7 +89,7 @@ class CetakRaporController extends Controller
         return view('guru/wali-kelas/cetak-rapor/view-cetak-rapor', compact('wali_kelas', 'data_wali_kelas'));
     }
 
-    public function datatablesCetakRapor(Request $request)
+    public function datatablesCetakRapor(Request $request, $thn_akademik_semester)
     {
         set_time_limit(1800);
         // ini_set('max_execution_time', 300);
@@ -62,6 +99,7 @@ class CetakRaporController extends Controller
         $list_rapor_sisipan = RaporSisipan::all();
         // $kurikulum = Kurikulum::where('is_aktif',1)->orderBy('tahun_kurikulum', 'DESC')->get();
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->get();
+        $semester = Semester::where('thn_akademik_semester', $thn_akademik_semester)->first();
 
         return Datatables::of($list_data)
             ->addColumn('wali_kelas', function ($item) use ($wali_kelas) {
@@ -71,6 +109,9 @@ class CetakRaporController extends Controller
             ->addColumn('rapor_sisipan', function ($item) use ($list_rapor_sisipan) {
                 // $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();
                 return $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();
+            })->addColumn('semester', function ($item) use ($semester) {
+                // $list_rapor_sisipan->where('id_kelas', $item->id_kelas)->count();
+                return  $semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item)  use ($list_rapor_sisipan) {
                 // $k = $kurikulum->firstWhere('id_jurusan', $item->id_jurusan );
@@ -84,7 +125,7 @@ class CetakRaporController extends Controller
     }
 
 
-    public function viewSetting(Request $request)
+    public function viewSetting(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -98,7 +139,7 @@ class CetakRaporController extends Controller
         // }
         // dd($mapel);
 
-        return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data'));
+        return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data', 'thn_akademik_semester'));
     }
 
     public function viewDeskripsi(Request $request)
@@ -108,14 +149,13 @@ class CetakRaporController extends Controller
         return view('akademik/rapor-sisipan/cetak-rapor/view-deskripsi-cetak-rapor', compact('auth_data'));
     }
 
-    public function addSetting(Request $request, $mata_pelajaran)
+    public function addSetting(Request $request, $thn_akademik_semester, $mata_pelajaran)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        // dd($mata_pelajaran);
         $mapel = MataPelajaran::where('id_mata_pelajaran', $mata_pelajaran)->with('urutan_rapor_sisipan')->first();
 
-        return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel'));
+        return view('akademik/rapor-sisipan/cetak-rapor/add-setting-cetak-rapor', compact('auth_data', 'mapel', 'thn_akademik_semester'));
     }
 
     public function  editDeskripsi(Request $request, $id)
@@ -211,12 +251,13 @@ class CetakRaporController extends Controller
         ];
     }
 
-    public function datatablesViewSetting(Request $request)
+    public function datatablesViewSetting(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
         $mapel = MataPelajaran::with('urutan_rapor_sisipan')->get()->sortBy('urutan_rapor_sisipan.urutan');
+
         return Datatables::of($mapel)
             ->addColumn('urutan', function ($item) {
                 return $item->urutan_rapor_sisipan->urutan ?? 'Urutan belum di Set';
@@ -262,7 +303,7 @@ class CetakRaporController extends Controller
             ->make(true);
     }
 
-    public function printCetakRapor(Request $request, $id_kelas)
+    public function printCetakRapor(Request $request, $thn_akademik_semester, $id_kelas)
     {
         set_time_limit(1800);
 
@@ -280,6 +321,8 @@ class CetakRaporController extends Controller
         $raporSisipanA = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'A');
+            })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
             ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
@@ -287,6 +330,8 @@ class CetakRaporController extends Controller
         $raporSisipanB = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'B');
+            })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
             ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
@@ -294,6 +339,8 @@ class CetakRaporController extends Controller
         $raporSisipanC = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'C')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.1')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.2')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.3');
+            })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
             ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
@@ -301,6 +348,8 @@ class CetakRaporController extends Controller
         $raporSisipanD = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'D');
+            })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
             ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
