@@ -32,13 +32,13 @@
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <button type="button"  class="btn btn-primary">
+            <button type="button" class="btn btn-primary">
                 Data Shift Guru dan Pegawai
             </button>
-            <button type="button"  class="btn btn-default"  onclick="viewShiftSiswa()" >
+            <button type="button" class="btn btn-default" onclick="viewShiftSiswa()">
                 Data Shift Siswa
             </button>
-            <div class="card"  style="margin-top: 10px" >
+            <div class="card" style="margin-top: 10px">
                 <div class="header">
                     <h2>Filter Data</h2>
                 </div>
@@ -74,6 +74,11 @@
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
             <button class="btn btn-block bg-red waves-effect" onclick=managementShift()><i
                     class="material-icons">settings</i><span>Management Shift</span></button>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
+            <a href="humas/absensi/shift_pengguna/export-shift-pengguna/{{ $date }}" target="_blank"
+                class="btn btn-block bg-red waves-effect">
+                <i class="material-icons">print</i><span> Print Bulan ini</span></a>
         </div>
         {{-- <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
             <button class="btn btn-block bg-green waves-effect" onclick="downloadShift('0')"><i
@@ -113,23 +118,23 @@
                                     @else
                                     <tr>
                                 @endif
-                                    <td style="text-align: center;">{{ $key + 1 }}</td>
-                                    <td>{{ $r['nm_pengguna'] }}</td>
-                                    <td style="text-align: center;">{{ $r['unit_kerja'] }}</td>
-                                    {{-- <td style="text-align: center;">
+                                <td style="text-align: center;">{{ $key + 1 }}</td>
+                                <td>{{ $r['nm_pengguna'] }}</td>
+                                <td style="text-align: center;">{{ $r['unit_kerja'] }}</td>
+                                {{-- <td style="text-align: center;">
                                         {{ $r['status_join_table'] == 1 ? 'Pegawai' : 'Guru' }}</td> --}}
-                                    <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
-                                    <td style="text-align: center;">{{ $r['time'] }}</td>
-                                    <td style="text-align: center;display:flex;justify-content:center">
-                                        @if ($r['id_shift_master'] == '-')
-                                            -
-                                        @else
-                                            <button type="button" class="btn bg-teal  waves-effect"
-                                                onclick="editAbsensi('{{ $r['id_shift_pengguna'] }}')">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                        @endif
-                                        </tr>
+                                <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
+                                <td style="text-align: center;">{{ $r['time'] }}</td>
+                                <td style="text-align: center;display:flex;justify-content:center">
+                                    @if ($r['id_shift_master'] == '-')
+                                        -
+                                    @else
+                                        <button type="button" class="btn bg-teal  waves-effect"
+                                            onclick="editAbsensi('{{ $r['id_shift_pengguna'] }}')">
+                                            <i class="material-icons">edit</i>
+                                        </button>
+                                    @endif
+                                    </tr>
                             @endforeach
                         </table>
                     </div>
@@ -163,17 +168,19 @@
     function addAbsensi() {
         window.location = '/humas#absensi/shift_pengguna/add'
     }
-    function addAbsensiSiswa(){
+
+    function addAbsensiSiswa() {
         window.location = '/humas#absensi/shift_siswa'
     }
 
-    function viewShiftSiswa(){
+    function viewShiftSiswa() {
         window.location = 'humas#absensi/shift_pengguna/view-select-kelas-shift-siswa'
     }
+
     function downloadShift(val) {
         // alert(val);
         var $time = "{{ $date }}";
         window.open('/humas/absensi/shift_pengguna/exportShift/' + $time + '/' + val);
-       
+
     }
 </script>

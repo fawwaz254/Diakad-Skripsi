@@ -2,14 +2,14 @@
 
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <button type="button" class="btn btn-default"  onclick="viewShiftPengguna()">
+            <button type="button" class="btn btn-default" onclick="viewShiftPengguna()">
                 Data Shift Guru dan Pegawai
             </button>
-            <button type="button" class="btn btn-primary"  >
+            <button type="button" class="btn btn-primary">
                 Data Shift Siswa
             </button>
             <div class="card" style="margin-top: 10px">
-                <div class="header" >
+                <div class="header">
                     <h2>Filter Data</h2>
                 </div>
                 <div class="body">
@@ -19,11 +19,12 @@
                             <label>
                                 Kelas
                             </label>
-                            <select class="form-control show-tick" name="kelas" >
+                            <select class="form-control show-tick" name="kelas">
                                 <option>Pilih kelas</option>
-                                <option value="0" @if($id_kelas == "0") selected @endif>Semua</option>
+                                <option value="0" @if ($id_kelas == '0') selected @endif>Semua</option>
                                 @foreach ($kelas as $lk)
-                                    <option value="{{ $lk->id_kelas }}" @if($id_kelas == $lk->id_kelas) selected @endif >{{ $lk->nm_kelas }}</option>
+                                    <option value="{{ $lk->id_kelas }}"
+                                        @if ($id_kelas == $lk->id_kelas) selected @endif>{{ $lk->nm_kelas }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -33,7 +34,8 @@
                                 value="{{ $date }}" name="date" aria-required="true" aria-invalid="true">
                         </div>
                         <div class="col-md-2 col-sm-12 col-xs-12">
-                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;" onclick="filterAction()">Lihat </button>  
+                            <button type="button" class="btn bg-purple waves-effect" style="margin-top:27px;"
+                                onclick="filterAction()">Lihat </button>
                         </div>
 
                     </div>
@@ -43,7 +45,13 @@
             </div>
         </div>
     </div>
-
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-top: 15px">
+            <a href="humas/absensi/shift_pengguna/export-shift-siswa/{{ $id_kelas }}/{{ $date }}"
+                target="_blank" class="btn btn-block bg-red waves-effect">
+                <i class="material-icons">print</i><span> Print Bulan ini</span></a>
+        </div>
+    </div>
     <br>
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -65,8 +73,8 @@
                                 </tr>
                             </thead>
                             @php
-                            $no = 1;   
-                           @endphp
+                                $no = 1;
+                            @endphp
                             @foreach ($hasil as $key => $r)
                                 @if ($no % 2 == 1)
                                     <tr style="background: #DDA0DD">
@@ -74,12 +82,12 @@
                                     <tr>
                                 @endif
 
-                                    <td style="text-align: center;">{{ $no++ }}</td>
-                                    <td>{{ $r['nm_pengguna'] }}</td>
-                                    <td style="text-align: center;">{{ $r['kelas'] }}</td>
-                                    <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
-                                    <td style="text-align: center;">{{ $r['time'] }}</td>
-                                    {{-- <td style="text-align: center;display:flex;justify-content:center">
+                                <td style="text-align: center;">{{ $no++ }}</td>
+                                <td>{{ $r['nm_pengguna'] }}</td>
+                                <td style="text-align: center;">{{ $r['kelas'] }}</td>
+                                <td style="text-align: center;">{{ $r['id_shift_master'] }}</td>
+                                <td style="text-align: center;">{{ $r['time'] }}</td>
+                                {{-- <td style="text-align: center;display:flex;justify-content:center">
                                         @if ($r['id_shift_master'] == '-')
                                             -
                                         @else
@@ -88,9 +96,9 @@
                                                 <i class="material-icons">edit</i>
                                             </button>
                                         @endif --}}
-                                        </tr>
+                                </tr>
                             @endforeach
-                            
+
                         </table>
                     </div>
                 </div>
@@ -102,11 +110,11 @@
 @include('scriptjs')
 <script>
     function filterAction() {
-        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/view-kelas-shift-siswa/' + 
-            $('select[name=kelas]').val() + '/' +  $('input[name=date]').val());
+        loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/view-kelas-shift-siswa/' +
+            $('select[name=kelas]').val() + '/' + $('input[name=date]').val());
     }
 
     function viewShiftPengguna() {
         window.location = '/humas#absensi/shift_pengguna'
     }
-    </script>
+</script>

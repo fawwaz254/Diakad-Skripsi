@@ -184,10 +184,15 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/view-select-kelas-shift-siswa', [ShiftSiswaController::class, 'selectKelas']);
                 Route::get('/view-kelas-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'viewShiftSiswa']);
 
+                Route::get('export-shift-pengguna/{date}', [ShiftPenggunaController::class, 'exportShift']);
+                Route::get('export-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'exportShift']);
+
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
                 Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
+
+
                 // Route::get('/addShift', [ShiftPenggunaMasterController::class, 'addShiftMaster']);
             });
 
@@ -249,8 +254,10 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('detail-absensi')->group(function () {
                 Route::get('/', [DetailAbsensiController::class, 'selectHistoriAbsensi']);
                 Route::post('post-get-penguna', [DetailAbsensiController::class, 'actionGetPengguna']);
+                Route::get('cetak/{id_pengguna}/{start_date}/{end_date}', [DetailAbsensiController::class, 'cetakDetailAbsensi']);
                 Route::get('{id_pengguna}/{start_date}/{end_date}', [DetailAbsensiController::class, 'viewHistoriAbsensi']);
-                ////////////siswa
+
+                //siswa
                 Route::get('/siswa', [DetailAbsensiController::class, 'selectHistoriAbsensiSiswa']);
                 Route::post('/siswa/post-get-penguna', [DetailAbsensiController::class, 'actionGetSiswa']);
                 Route::get('/siswa/{id_pengguna}/{start_date}/{end_date}', [DetailAbsensiController::class, 'viewHistoriAbsensiSiswa']);

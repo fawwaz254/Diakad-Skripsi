@@ -215,6 +215,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('histori-absensi')->group(function () {
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{start_date}/{end_date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
+                Route::get('cetak/{start_date}/{end_date}', [HistoriAbsensiController::class, 'cetakHistoriAbsensi']);
             });
 
             Route::prefix('histori-absensi-siswa')->group(function () {
@@ -588,11 +589,6 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::get('rekap-nomor-hp', [RekapNomorHpController::class, 'viewRekapNomorHp']);
             Route::get('rekap-nomor-hp/datatables', [RekapNomorHpController::class, 'datatablesRekapNomorHp']);
-
-            Route::prefix('cetak-rapor-siswa')->group(function () {
-                Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
-                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
-            });
 
             Route::prefix('cetak-rapor-siswa')->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
