@@ -71,8 +71,7 @@
                                         <optgroup label="{{ $kategori->nm_kategori_pelanggaran }}">
                                             @foreach ($kategori->subkategori_pelanggaran as $data)
                                                 <option value="{{ $data->id_subkategori_pelanggaran }}">
-                                                    {{ $kategori->tingkat_kategori_pelanggaran }}.{{ $data->tingkat_subkategori_pelanggaran }}
-                                                    {{ $data->keterangan_subkategori_pelanggaran }}</option>
+                                                    {!! $data->nm_subkategori_pelanggaran !!}</option>
                                             @endforeach
                                         </optgroup>
                                     @endforeach
