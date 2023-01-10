@@ -83,6 +83,13 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top: 15px">
+            <a href="guru/absensi/histori-absensi/cetak/{{ $start_date }}/{{ $end_date }}" target="_blank"
+                class="btn btn-block bg-red waves-effect">
+                <i class="material-icons">print</i><span> Print</span></a>
+        </div>
+    </div>
 
     <br>
 

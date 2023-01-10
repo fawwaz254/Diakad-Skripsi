@@ -215,6 +215,7 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('histori-absensi')->group(function () {
                 Route::get('/', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
                 Route::get('/{start_date}/{end_date}', [HistoriAbsensiController::class, 'viewHistoriAbsensi']);
+                Route::get('cetak/{start_date}/{end_date}', [HistoriAbsensiController::class, 'cetakHistoriAbsensi']);
             });
 
             Route::prefix('histori-absensi-siswa')->group(function () {
