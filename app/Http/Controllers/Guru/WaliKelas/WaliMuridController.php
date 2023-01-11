@@ -38,6 +38,12 @@ class WaliMuridController extends Controller
                 'id' => $item->wali_murid->pengguna->id_pengguna
             );
             return $data;
+        })->addColumn('nm_wali_murid', function ($item) {
+            if (isset($item->wali_murid->nm_wali_murid) && !is_numeric($item->wali_murid->nm_wali_murid)) {
+                return $item->wali_murid->nm_wali_murid;
+            } else {
+                return '';
+            }
         })->make(true);
     }
 }

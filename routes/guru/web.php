@@ -599,6 +599,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [WaliMuridController::class, 'viewWaliMurid']);
                 Route::get('datatables', [WaliMuridController::class, 'datatablesWaliMurid']);
                 Route::post('reset-password', [CariSiswaController::class, 'resetPasswordSiswa']);
+                Route::post('hapus-wali-murid', [CariSiswaController::class, 'hapusWaliMurid']);
             });
 
             Route::prefix('input-biodata-siswa')->group(function () {
