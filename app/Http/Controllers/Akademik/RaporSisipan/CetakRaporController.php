@@ -85,8 +85,8 @@ class CetakRaporController extends Controller
         $guru = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->first();
         $wali_kelas = WaliKelas::where('is_aktif', 1)->where('id_guru', $guru->id_guru)->first();
         $data_wali_kelas = LibGuru::fetchDataWaliKelas($auth_data, $wali_kelas->id_kelas)->where('is_aktif', 1)->first();
-
-        return view('guru/wali-kelas/cetak-rapor/view-cetak-rapor', compact('wali_kelas', 'data_wali_kelas'));
+        $semester_aktif = Semester::where('is_aktif_semester', '=', 1)->first();
+        return view('guru/wali-kelas/cetak-rapor/view-cetak-rapor', compact('wali_kelas', 'data_wali_kelas', 'semester_aktif'));
     }
 
     public function datatablesCetakRapor(Request $request, $thn_akademik_semester)
