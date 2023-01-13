@@ -295,7 +295,7 @@ class HistoriAbsensiController extends BaseController
             $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
-
+            $hasil[$key]['shift'] = $shiftMaster;
             if ($attendance) {
                 if ($attendance->id_presensi_pengguna) {
                     $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;

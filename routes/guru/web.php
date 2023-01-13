@@ -592,7 +592,7 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('cetak-rapor-siswa')->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewCetakRaporWaliKelas']);
-                Route::get('print/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
+                Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
             });
 
             Route::prefix('wali-murid')->group(function () {
