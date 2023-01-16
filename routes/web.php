@@ -114,12 +114,13 @@ Route::prefix('laravel-filemanager')->group(function () {
 
 Route::prefix('iclock')->group(function () {
     Route::get('getrequest', [FingerprintController::class, 'actionCheck']);
+
     Route::get('cdata', function () {
         return 'OK';
     });
     Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
-
     Route::get('manual-get-data', [FingerprintController::class, 'actionGetDataFinger']);
+    Route::get('manual-get-data-realtime', [FingerprintController::class, 'actionGetFinger']);
 });
 // END USING FOR FINGERPRINT
 
