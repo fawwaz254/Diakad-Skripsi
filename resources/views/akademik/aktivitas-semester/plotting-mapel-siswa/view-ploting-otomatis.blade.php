@@ -145,8 +145,8 @@
                 orderable: false
             },
             {
-                data: 'jurusan.nm_jurusan',
-                name: 'jurusan.nm_jurusan'
+                data: 'nm_jurusan',
+                name: 'nm_jurusan'
             },
             {
                 data: 'nm_kelas',

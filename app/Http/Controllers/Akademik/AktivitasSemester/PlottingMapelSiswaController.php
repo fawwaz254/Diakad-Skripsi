@@ -173,25 +173,17 @@ class PlottingMapelSiswaController extends BaseController
             JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp
             JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
             WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL AND pengambilan_mp.id_semester = ?) AS jml_siswa_krs", [$id])
-            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-            ->get();
-
-        $jml_kelas_mp = KelasMp::where('id_semester', $id)
-            ->with('jadwal_kelas_mp', 'pengampu_mp', 'kelas')
-            ->whereHas('jadwal_kelas_mp')
-            ->whereHas('pengampu_mp')
-            ->get();
-
-        $jml_kelas_mp_siswa = PengambilanMp::select('id_kelas_mp')
-            ->with('kelas_mp', 'kelas_mp.kelas')
-            ->whereHas('kelas_mp.jadwal_kelas_mp')
-            ->groupBy('id_kelas_mp')
-            ->where('id_semester', $id)
-            // ->whereHas('kelas_mp', function ($query) use ($list_data) {
-            //     $query->whereIn('id_kelas', '=', $list_data->pluck('id_kelas'));
-            // })
-            ->get();
-
+            ->selectRaw("(SELECT COUNT(*) FROM kelas_mp 
+            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp  
+            JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp 
+            JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
+            WHERE kelas.id_jurusan = jurusan.id_jurusan AND kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_kelas_mp", [$id])
+            ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_kelas_mp) FROM pengambilan_mp 
+            JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp 
+            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp
+            JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
+            WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL  AND kelas_mp.deleted_at IS NULL  AND jadwal_kelas_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND pengambilan_mp.id_semester = ? ) AS jml_kelas_mp_siswa", [$id])
+            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         return Datatables::of($list_data)
             ->addColumn('action', function ($item) {
@@ -199,12 +191,6 @@ class PlottingMapelSiswaController extends BaseController
                     'id' => $item->id_jurusan,
                 );
                 return $data;
-            })
-            ->addColumn('jml_kelas_mp_siswa', function ($item) use ($jml_kelas_mp_siswa) {
-                return $jml_kelas_mp_siswa->where('kelas_mp.kelas.id_jurusan', $item->id_jurusan)->count();
-            })
-            ->addColumn('jml_kelas_mp', function ($item) use ($jml_kelas_mp) {
-                return $jml_kelas_mp->where('kelas.id_jurusan', $item->id_jurusan)->count();
             })
             ->make(true);
     }
@@ -432,74 +418,35 @@ class PlottingMapelSiswaController extends BaseController
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = Kelas::with('jurusan')
-            ->whereHas('jurusan', function ($query) use ($id_jurusan) {
-                $query->where('id_jurusan', '=', $id_jurusan);
-            })->get();
 
-        $jumlah_siswa = Siswa::with('kelas')->whereHas('pengguna.status_pengguna', function ($query) use ($id_jurusan) {
-            $query->where('aktif_status_pengguna', '=', 1);
-        })->get();
-
-        $jml_siswa_terploting = PengambilanMp::where('id_semester', $id_semester)->with('kelas_mp')->get();
-        // $jml_kelas_mp = KelasMp::where('')
-
-        $jml_kelas_mp = KelasMp::where('id_semester', $id_semester)->whereIn('id_kelas', $list_data->pluck('id_kelas'))
-            ->with('jadwal_kelas_mp', 'pengampu_mp')
-            ->whereHas('jadwal_kelas_mp')
-            ->whereHas('pengampu_mp')
-            ->get();
-
-        $jml_kelas_mp_siswa = PengambilanMp::select('id_kelas_mp')
-            ->with('kelas_mp')
-            ->whereHas('kelas_mp.jadwal_kelas_mp')
-            ->groupBy('id_kelas_mp')
-            ->where('id_semester', $id_semester)
-            // ->whereHas('kelas_mp', function ($query) use ($list_data) {
-            //     $query->whereIn('id_kelas', '=', $list_data->pluck('id_kelas'));
-            // })
-            ->get();
-
-        // dd($jml_kelas_mp_siswa);
-
-        // $list_data = Kelas::select(
-        //     'jurusan.id_jurusan',
-        //     'jurusan.nm_jurusan',
-        //     DB::raw("(SELECT COUNT(*) FROM siswa 
-        //     JOIN kelas ON kelas.id_kelas = siswa.id_kelas
-        //     JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
-        //     JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna 
-        //     WHERE status_pengguna.aktif_status_pengguna = '1'
-        //     AND kelas.id_jurusan = jurusan.id_jurusan 
-        //     AND siswa.deleted_at IS NULL 
-        //     ) AS jml_siswa")
-        // )
-        // ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
-        //     JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp
-        //     JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas 
-        //     WHERE kelas.id_jurusan = jurusan.id_jurusan AND pengambilan_mp.deleted_at IS NULL AND pengambilan_mp.id_semester = ?) AS jml_siswa_krs", [$id])
-        // ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-        // ->get();
-
-
+        $list_data = Kelas::select(
+            'kelas.id_kelas',
+            'kelas.nm_kelas',
+            'jurusan.nm_jurusan',
+            DB::raw("(SELECT COUNT(*) FROM siswa 
+            JOIN pengguna ON pengguna.id_pengguna = siswa.id_pengguna
+            JOIN status_pengguna ON status_pengguna.id_status_pengguna = pengguna.id_status_pengguna 
+            WHERE status_pengguna.aktif_status_pengguna = '1'
+            AND siswa.id_kelas = kelas.id_kelas 
+            AND siswa.deleted_at IS NULL 
+            ) AS jml_siswa")
+        )
+            ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_siswa) FROM pengambilan_mp 
+            JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp
+            WHERE kelas_mp.id_kelas = kelas.id_kelas AND pengambilan_mp.deleted_at IS NULL AND pengambilan_mp.id_semester = ?) AS jml_siswa_krs", [$id_semester])
+            ->selectRaw("(SELECT COUNT(*) FROM kelas_mp 
+            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp  
+            JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp 
+            WHERE kelas_mp.id_kelas = kelas.id_kelas AND kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_kelas_mp", [$id_semester])
+            ->selectRaw("(SELECT COUNT(distinct pengambilan_mp.id_kelas_mp) FROM pengambilan_mp 
+            JOIN kelas_mp ON kelas_mp.id_kelas_mp = pengambilan_mp.id_kelas_mp 
+            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp
+            WHERE kelas_mp.id_kelas = kelas.id_kelas AND pengambilan_mp.deleted_at IS NULL  AND kelas_mp.deleted_at IS NULL  AND jadwal_kelas_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND pengambilan_mp.id_semester = ? ) AS jml_kelas_mp_siswa", [$id_semester])
+            ->join('jurusan', 'jurusan.id_jurusan', 'kelas.id_jurusan')
+            ->where('kelas.id_jurusan', '=', $id_jurusan)
+            ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         return Datatables::of($list_data)
-            ->addColumn('jml_siswa_krs', function ($item) use ($jml_siswa_terploting) {
-                $data = $jml_siswa_terploting->where('kelas_mp.id_kelas', $item->id_kelas);
-                //     'id_siswa' => $item->id_siswa
-                // );
-                return $data->unique('id_siswa')->count();
-            })
-            ->addColumn('jml_siswa', function ($item) use ($jumlah_siswa) {
-                return $jumlah_siswa->where('kelas.id_kelas', $item->id_kelas)->count();
-            })
-            ->addColumn('jml_kelas_mp_siswa', function ($item) use ($jml_kelas_mp_siswa) {
-                return $jml_kelas_mp_siswa->where('kelas_mp.id_kelas', $item->id_kelas)->count();
-            })
-            ->addColumn('jml_kelas_mp', function ($item) use ($jml_kelas_mp) {
-                return $jml_kelas_mp->where('id_kelas', $item->id_kelas)->count();
-                // return $jumlah_siswa->where('kelas.id_kelas', $item->id_kelas)->count();
-            })
             ->make(true);
     }
 
