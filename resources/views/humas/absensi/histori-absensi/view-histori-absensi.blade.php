@@ -150,23 +150,25 @@
                     padding: 10px; " > --}}
 
                                 <tr>
-                                    <th style="text-align: center;">Hadir</th>
-                                    <th style="text-align: center;">Hadir Terlambat</th>
+                                    <th style="text-align: center;">Check-in</th>
+                                    <th style="text-align: center;">Alpha</th>
                                     <th style="text-align: center;">Belum Hadir</th>
+                                    <th style="text-align: center;">Hadir Terlambat</th>
+
                                     <th style="text-align: center;">Izin</th>
                                     <th style="text-align: center;">Sakit</th>
-                                    <th style="text-align: center;">Alpha</th>
+
                                     <th style="text-align: center;">Tidak Checkout</th>
                                     <th style="text-align: center;">Hadir Pulang Lebih Awal</th>
                                 </tr>
                             </thead>
                             <tr>
                                 <td style="text-align: center;">{{ $jumlah_hadir }}</td>
-                                <td style="text-align: center;">{{ $jumlah_telat }}</td>
+                                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
                                 <td style="text-align: center;">{{ $belum_absent }}</td>
+                                <td style="text-align: center;">{{ $jumlah_telat }}</td>
                                 <td style="text-align: center;">{{ $jumlah_izin }}</td>
                                 <td style="text-align: center;">{{ $jumlah_sakit }}</td>
-                                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
                                 <td style="text-align: center;">{{ $tidak_checkout }}</td>
                                 <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
 

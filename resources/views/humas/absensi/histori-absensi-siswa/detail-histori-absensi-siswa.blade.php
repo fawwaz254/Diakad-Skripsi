@@ -94,7 +94,7 @@
                 padding: 10px; ">
                     <thead>
                         <tr>
-                            <th>Hadir</th>
+                            <th>Check-in</th>
                             <th>Hadir Terlambat</th>
                             <th>Belum Hadir</th>
                             <th>Izin</th>
