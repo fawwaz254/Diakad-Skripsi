@@ -25,16 +25,26 @@
                                 <tr>
                                     <td style="text-align: center;">No</td>
                                     <td>Unit kerja</td>
+                                    <th>NIP</th>
                                     <td>Name</td>
                                     @if ($shiftsPengguna)
                                         <td>Shift hari ini</td>
                                     @endif
                                 </tr>
-                                <tr>
-                                    @foreach ($penggunas as $key => $pengguna)
+
+                                @foreach ($penggunas as $key => $pengguna)
+                                    <tr>
                                         <td style="text-align: center;">{{ $key + 1 }}</td>
-                                        <td>{{ isset($pengguna->guru->unit_kerja) ? $pengguna->guru->unit_kerja->nm_unit_kerja : 'Pegawai' }}
-                                        </td>
+                                        @if (isset($pengguna->guru))
+                                            <td>{{ $pengguna->guru->unit_kerja->nm_unit_kerja }}</td>
+                                        @elseif(isset($pengguna->staff))
+                                            <td>{{ $pengguna->staff->unit_kerja->nm_unit_kerja }}</td>
+                                        @else
+                                            <td></td>
+                                        @endif
+
+                                        <td>{{ $pengguna->username }}</td>
+
                                         <td><input type="checkbox" name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
                                                 value="{{ $pengguna['id_pengguna'] }}"
                                                 id="{{ $pengguna['id_pengguna'] }}"> <label
@@ -45,7 +55,8 @@
                                                 <td>{{ $shift['id_shift_master'] }}</td>
                                             @endif
                                         @endforeach
-                                </tr>
+
+                                    </tr>
                                 @endforeach
                             </table>
                         </div>
