@@ -357,9 +357,9 @@ Route::middleware(['token_staff'])->group(function () {
 
             Route::prefix('daftar-nilai-sas')->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
-                Route::post('post-nilai-sts', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
+                Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
                 Route::get('/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
-                // Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesDaftarNilaiSTS']);
+                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
                 // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
             });
 
@@ -376,7 +376,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewSemesterCetakRapor']);
                 Route::post('post-cetak-rapor', [CetakRaporController::class, 'actionSemesterCetakRapor']);
 
-                Route::get('/{thn_akademik_semester}', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables/{thn_akademik_semester}', [CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
                 Route::get('viewSetting/{thn_akademik_semester}', [CetakRaporController::class, 'viewSetting']);
@@ -388,6 +387,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('postSetting/{mata_pelajaran}', [CetakRaporController::class, 'postSetting']);
                 Route::get('editDeskripsi/{id}', [CetakRaporController::class, 'editDeskripsi']);
                 Route::post('actionDeskripsi/{mode}/{id}', [CetakRaporController::class, 'actionDeskripsi']);
+                Route::get('/{thn_akademik_semester}', [CetakRaporController::class, 'viewCetakRapor']);
             });
         });
 

@@ -142,12 +142,14 @@ class HistoriAbsensiSiswaController extends Controller
                     $query->whereIn('tingkat',  [10, 11, 12]);
                 })->get()->sortBy('siswa.kelas.nm_kelas');
         } elseif ($id_kelas == "0") {
-            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
-                ->whereHas('status_pengguna', function ($query) {
-                    $query->where('nm_status_pengguna', '=', 'AKTIF');
-                })->whereHas('siswa.kelas', function ($query) {
-                    // $query->whereIn('tingkat',  [7, 8, 9, 10, 11, 12]);
-                })->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');
+            $pengguna = Pengguna::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                ->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('kelas.tingkat')
+                ->orderBy('kelas.nm_kelas')
+                ->orderBy('siswa.nis_siswa')
+                ->get();
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -155,7 +157,7 @@ class HistoriAbsensiSiswaController extends Controller
                 })
                 ->whereHas('siswa', function ($query) use ($id_kelas) {
                     $query->where('id_kelas', '=', $id_kelas);
-                })->orderBy('nm_pengguna', 'asc')->get();
+                })->get()->sortBy('siswa.nis_siswa');
         }
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
@@ -403,13 +405,22 @@ class HistoriAbsensiSiswaController extends Controller
             //         $query->where('nm_status_pengguna', '=', 'AKTIF');
             //     })->orderBy('nm_pengguna', 'asc')->get();
 
-            $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+            // $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+            //     ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+            //     ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            //     ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+            //     ->where('nm_status_pengguna', '=', 'AKTIF')
+            //     ->orderBy('nm_pengguna', 'asc')
+            //     ->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');;
+
+            $pengguna = Pengguna::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                 ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
                 ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-                ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                ->where('nm_status_pengguna', '=', 'AKTIF')
-                ->orderBy('nm_pengguna', 'asc')
-                ->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('siswa.kelas.tingkat');;
+                ->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('kelas.tingkat')
+                ->orderBy('kelas.nm_kelas')
+                ->orderBy('siswa.nis_siswa')
+                ->get();
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
                 ->whereHas('status_pengguna', function ($query) {
@@ -534,12 +545,21 @@ class HistoriAbsensiSiswaController extends Controller
             //         $query->where('nm_status_pengguna', '=', 'AKTIF');
             //     })->orderBy('nm_pengguna', 'asc')->get();
 
-            $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+            // $pengguna = Pengguna::select('pengguna.id_pengguna', 'pengguna.status_join_table', 'pengguna.nm_pengguna')
+            //     ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+            //     ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            //     ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+            //     ->where('nm_status_pengguna', '=', 'AKTIF')
+            //     ->orderBy('nm_pengguna', 'asc')
+            //     ->get();
+
+            $pengguna = Pengguna::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
                 ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
                 ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-                ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                ->where('nm_status_pengguna', '=', 'AKTIF')
-                ->orderBy('nm_pengguna', 'asc')
+                ->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('kelas.tingkat')
+                ->orderBy('kelas.nm_kelas')
+                ->orderBy('siswa.nis_siswa')
                 ->get();
         } else {
             $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
