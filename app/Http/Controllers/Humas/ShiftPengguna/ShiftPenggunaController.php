@@ -72,11 +72,12 @@ class ShiftPenggunaController extends Controller
     {
 
         $shifts = ShiftMaster::all();
-        $penggunas = pengguna::whereIn('status_join_table', [1, 2])->where('username', '!=', 'admin')
-            ->with('status_pengguna', 'guru.unit_kerja')
+        $penggunas = pengguna::whereIn('status_join_table', [1, 2])
+            ->with('status_pengguna', 'guru.unit_kerja', 'staff.unit_kerja')
             ->whereHas('status_pengguna', function ($query) {
-                $query->where('nm_status_pengguna', '=', 'AKTIF');
-            })->get();
+                $query->where('aktif_status_pengguna', '=', '1');
+            })
+            ->whereHas('guru.unit_kerja')->orWhereHas('staff.unit_kerja')->where('username', '!=', 'admin')->orderBy('username', 'asc')->get();
 
         // foreach($penggunas as $pengguna){}
         $date =  Carbon::now()->format('Y-m-d');
