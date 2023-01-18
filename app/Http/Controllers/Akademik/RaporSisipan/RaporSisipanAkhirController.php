@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Akademik\RaporSisipan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use Auth;
+use DB;
+use Session;
+use Validator;
 
 class RaporSisipanAkhirController extends Controller
 {
