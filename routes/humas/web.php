@@ -190,10 +190,7 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
-                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
-
-
-                // Route::get('/addShift', [ShiftPenggunaMasterController::class, 'addShiftMaster']);
+                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);;
             });
 
             Route::prefix('shift_siswa')->group(function () {
@@ -225,9 +222,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'editHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'updateHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
-
-                //buat generate shift siswa
-                // Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
             });
 
             Route::prefix('histori-absensi-siswa-pondok')->group(function () {
