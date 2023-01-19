@@ -38,11 +38,20 @@ class HistoriAbsensiSiswaController extends BaseController
         $jumlah_alpha = 0;
         $tidak_checkout = 0;
 
+        $hariIndo = [
+            0 => 'Minggu',
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+        ];
 
         foreach ($dates as $key => $value) {
 
-            $hasil[$key]['tanggal'] = $value->format('d');
-            $hasil[$key]['hari'] = $value->format('l');
+            $hasil[$key]['tanggal'] = $value->format('d-M-Y');
+            $hasil[$key]['hari'] = $hariIndo[$value->dayOfWeek];
             $hasil[$key]['check_in'] = '-';
             $hasil[$key]['check_out'] = '-';
             $hasil[$key]['status'] = '';

@@ -112,7 +112,7 @@
                                         <tr>
                                     @endif
                                     <td align="center">{{ $loop->iteration }}</td>
-                                    <td>{{ \Carbon\Carbon::create($r['hari'])->isoFormat('dddd, D MMMM Y') }}</td>
+                                    <td>{{ $r['hari'] . ', ' . $r['tanggal'] }}</td>
                                     <td>{{ $r['check_in'] }}</td>
                                     <td>{{ $r['check_out'] }}</td>
                                     <td>{{ $r['status'] }}</td>
