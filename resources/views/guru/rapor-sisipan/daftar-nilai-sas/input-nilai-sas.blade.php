@@ -12,7 +12,7 @@
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <form id="form-validation" method="POST"
-        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sas/action-input-nilai-rapor-sisipan/save/' . $id_rapor_sisipan) }}">
+        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sas/action-input-nilai-rapor-sisipan/save/' . $thn_akademik_semester . '/' . $id_rapor_sisipan) }}">
         {{ csrf_field() }}
         <div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -60,7 +60,7 @@
                                             @foreach ($list_data as $nilai)
                                                 <td style="text-align: center;">
                                                     @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan]) &&
-                                                        $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
+                                                            $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
                                                         <input type="number" id="disable"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                             value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
