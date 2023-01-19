@@ -59,17 +59,16 @@
                                             <td>{{ $siswa->nis_siswa }} - {{ $siswa->pengguna->nm_pengguna }}</td>
                                             @foreach ($list_data as $nilai)
                                                 <td style="text-align: center;">
-                                                    @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan]) &&
-                                                            $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
+                                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan]) && $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
                                                         <input type="number" id="disable"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                             value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
                                                             style="width: 80%; text-align:  center;" disabled>
-                                                    @else
-                                                        <input type="number"
-                                                            name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
-                                                            value="0" style="width: 80%; text-align:  center;">
-                                                    @endif
+                                                    @else --}}
+                                                    <input type="number"
+                                                        name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
+                                                        value="0" style="width: 80%; text-align:  center;">
+                                                    {{-- @endif --}}
                                                 </td>
                                             @endforeach
                                             {{-- <td style="text-align: center;">
