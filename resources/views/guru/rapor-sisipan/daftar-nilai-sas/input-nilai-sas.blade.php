@@ -67,7 +67,8 @@
                                                     @else --}}
                                                     <input type="number"
                                                         name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
-                                                        value="0" style="width: 80%; text-align:  center;">
+                                                        value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
+                                                        style="width: 80%; text-align:  center;">
                                                     {{-- @endif --}}
                                                 </td>
                                             @endforeach
