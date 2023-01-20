@@ -243,9 +243,9 @@ class UsulanMataAjarController extends BaseController
             ->addColumn('jml_jadwal', function ($item) {
                 return $item->jadwal_kelas_mp->count();
             })
-            ->addColumn('jml_siswa', function ($item) {
-                return $item->pengambilan_mp->count();
-            })
+            // ->addColumn('jml_siswa', function ($item) {
+            //     return $item->pengambilan_mp->count();
+            // })
             ->addColumn('jml_pengampu', function ($item) {
                 return $item->pengampu_mp->count();
             })

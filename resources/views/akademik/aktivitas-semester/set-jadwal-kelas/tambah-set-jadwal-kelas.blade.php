@@ -125,7 +125,9 @@
                                     </td>
                                     <td
                                         style="background-color:#{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'color'] }}">
-                                        @if ($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1')
+                                        @if (
+                                            $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari . 'primary'] == '1' &&
+                                                empty($data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_presensi_mp']))
                                             <button type="button"class="btn bg-red waves-effect delete-record"
                                                 data-id="{{ $data_kelas_mp[$r->jam_ke . $hari->id_jadwal_hari]['id_kelas_mp'] }}"
                                                 style="padding: 0 4px 0 4px ">
