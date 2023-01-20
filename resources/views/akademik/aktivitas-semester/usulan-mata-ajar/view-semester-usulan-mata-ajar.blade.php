@@ -129,10 +129,14 @@
                         // '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ copy_url + '/' + data.id +'">'+
                         // '    <i class="material-icons">file_copy</i>'+
                         // '</a> '+
-                        return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                            '    <i class="material-icons">delete_forever</i>' +
-                            '</button>';
+                        if (!data.presensi) {
+                            return '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                                delete_url + '\', this)" data-id="' + data.id + '">' +
+                                '    <i class="material-icons">delete_forever</i>' +
+                                '</button>';
+                        } else {
+                            return 'Sudah Presensi';
+                        }
                     }
                 }
             ]

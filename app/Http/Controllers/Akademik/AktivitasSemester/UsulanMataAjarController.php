@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Akademik\LibAkademik;
-
+use App\Models\PresensiMp;
 use Auth;
 use DB;
 use Session;
@@ -225,7 +225,8 @@ class UsulanMataAjarController extends BaseController
             'jadwal_kelas_mp',
             'jadwal_kelas_mp.jadwal_jam_mulai',
             'jadwal_kelas_mp.jadwal_jam_selesai',
-            'pengampu_mp'
+            'pengampu_mp',
+            'presensi_mp',
         )
             // ->with(['pengambilan_mp' => function ($q) {
             //     $q->where('status_apv_pengambilan_mp', 1);
@@ -251,7 +252,8 @@ class UsulanMataAjarController extends BaseController
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_kelas_mp
+                    'id' => $item->id_kelas_mp,
+                    'presensi' => $item->presensi_mp->first(),
                 );
                 return $data;
             })
@@ -958,10 +960,10 @@ class UsulanMataAjarController extends BaseController
                     ];
                 }
             } elseif ($mode == 'delete') {
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+                if ($kelas_mp = PresensiMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
+                        'message' => 'Sudah dilakukan penilaian'
                     ];
                 } else {
                     // make object to find id
