@@ -255,7 +255,7 @@ class SetJadwalKelasGuruController extends Controller
 
                     KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
                     KelasMp::where('id_kelas_mp', $id)->delete();
-
+                    DB::commit();
                     return [
                         'status_code' => 202, // SUCCESS AND LOAD TABLE
                         'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
