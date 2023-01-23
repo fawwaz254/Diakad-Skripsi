@@ -63,7 +63,7 @@ class UsulanMataAjarController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $input->id_semester
+                'path' => 'aktivitas-semester/view-jadwal-kelas/view-semester-view-jadwal-kelas/' . $input->id_semester
             ];
         }
     }

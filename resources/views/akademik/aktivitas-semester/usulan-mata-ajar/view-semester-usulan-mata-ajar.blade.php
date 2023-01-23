@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#aktivitas-semester/usulan-mata-ajar') }}"><i
+                href="{{ url(Request::segment(1) . '#aktivitas-semester/view-jadwal-kelas') }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     {{-- <div class="block-header">
@@ -59,11 +59,11 @@
         var id_semester = {!! json_encode($id) !!};
 
         var modul_url = 'aktivitas-semester';
-        var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'usulan-mata-ajar/datatables/' +
+        var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'view-jadwal-kelas/datatables/' +
             id_semester;
-        var edit_url = role_url + '#' + modul_url + '/' + 'usulan-mata-ajar/edit';
-        var copy_url = role_url + '#' + modul_url + '/' + 'usulan-mata-ajar/copy';
-        var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-usulan-mata-ajar/delete';
+        // var edit_url = role_url + '#' + modul_url + '/' + 'usulan-mata-ajar/edit';
+        // var copy_url = role_url + '#' + modul_url + '/' + 'usulan-mata-ajar/copy';
+        var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-view-jadwal-kelas/delete';
 
         $('#primary_table thead th.search-filter').each(function() {
             var title = $(this).text();
