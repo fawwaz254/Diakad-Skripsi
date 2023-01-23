@@ -225,14 +225,14 @@ class UsulanMataAjarController extends BaseController
             'jadwal_kelas_mp',
             'jadwal_kelas_mp.jadwal_jam_mulai',
             'jadwal_kelas_mp.jadwal_jam_selesai',
-            'pengampu_mp',
+            'jadwal_kelas_mp.jadwal_hari',
+            'pengampu_mp_utama.guru.pengguna',
             'presensi_mp',
         )
             // ->with(['pengambilan_mp' => function ($q) {
             //     $q->where('status_apv_pengambilan_mp', 1);
             // }])
             ->where('id_semester', '=', $id_semester);
-
         return Datatables::of($list_data)
             ->addColumn('jml_jadwal_jam', function ($item) {
                 $jml_jadwal_jam = 0;
@@ -241,15 +241,15 @@ class UsulanMataAjarController extends BaseController
                 }
                 return $jml_jadwal_jam;
             })
-            ->addColumn('jml_jadwal', function ($item) {
-                return $item->jadwal_kelas_mp->count();
+            ->addColumn('nm_jadwal_hari', function ($item) {
+                return $item->jadwal_kelas_mp->first()->jadwal_hari->nm_jadwal_hari ?? null;
             })
             // ->addColumn('jml_siswa', function ($item) {
             //     return $item->pengambilan_mp->count();
             // })
-            ->addColumn('jml_pengampu', function ($item) {
-                return $item->pengampu_mp->count();
-            })
+            // ->addColumn('jml_pengampu', function ($item) {
+            //     return $item->pengampu_mp->count();
+            // })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_kelas_mp,

@@ -27,12 +27,12 @@
                                     <th>No</th>
                                     <th class="search-filter">Kode</th>
                                     <th class="search-filter">Nama Mata Ajar</th>
-                                    <th class="search-filter">Jenis Mapel</th>
+                                    {{-- <th class="search-filter">Jenis Mapel</th> --}}
                                     <!-- <th class="search-filter">Tingkat</th> -->
                                     <th class="search-filter">Kelas</th>
+                                    <th class="search-filter">Pengampu</th>
                                     <th>Jadwal Hari</th>
                                     <th>Jadwal Jam</th>
-                                    <th>Pengampu</th>
                                     {{-- <th>Terisi</th> --}}
                                     <th>Action</th>
                                 </tr>
@@ -93,15 +93,25 @@
                 {
                     data: 'mata_pelajaran.nm_mata_pelajaran'
                 },
-                {
-                    data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
-                },
+                // {
+                //     data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
+                // },
                 // { data: 'mata_pelajaran.tingkat_semester' },
                 {
                     data: 'kelas.nm_kelas'
                 },
                 {
-                    data: 'jml_jadwal',
+                    data: 'pengampu_mp_utama.guru.pengguna.nm_pengguna',
+                    render: function(data) {
+                        if (data) {
+                            return data;
+                        } else {
+                            return " "
+                        }
+                    }
+                },
+                {
+                    data: 'nm_jadwal_hari',
                     searchable: false,
                     orderable: false
                 },
@@ -110,11 +120,11 @@
                     searchable: false,
                     orderable: false
                 },
-                {
-                    data: 'jml_pengampu',
-                    searchable: false,
-                    orderable: false
-                },
+                // {
+                //     data: 'jml_pengampu',
+                //     searchable: false,
+                //     orderable: false
+                // },
                 // { data: 'jml_siswa', searchable: false, orderable: false },
                 {
                     data: 'action',
