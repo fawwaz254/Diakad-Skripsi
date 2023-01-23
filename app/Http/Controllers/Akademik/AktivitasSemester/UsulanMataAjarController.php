@@ -222,10 +222,10 @@ class UsulanMataAjarController extends BaseController
             'mata_pelajaran',
             'mata_pelajaran.jenis_mata_pelajaran',
             'kelas',
-            'jadwal_kelas_mp',
-            'jadwal_kelas_mp.jadwal_jam_mulai',
-            'jadwal_kelas_mp.jadwal_jam_selesai',
-            'jadwal_kelas_mp.jadwal_hari',
+            'jadwal_kelas_mp_single',
+            'jadwal_kelas_mp_single.jadwal_jam_mulai',
+            'jadwal_kelas_mp_single.jadwal_jam_selesai',
+            'jadwal_kelas_mp_single.jadwal_hari',
             'pengampu_mp_utama.guru.pengguna',
             'presensi_mp',
         )
@@ -234,22 +234,12 @@ class UsulanMataAjarController extends BaseController
             // }])
             ->where('id_semester', '=', $id_semester);
         return Datatables::of($list_data)
-            ->addColumn('jml_jadwal_jam', function ($item) {
-                $jml_jadwal_jam = 0;
-                foreach ($item->jadwal_kelas_mp as $jadwal) {
-                    $jml_jadwal_jam += $jadwal->jadwal_jam_selesai->jam_ke - $jadwal->jadwal_jam_mulai->jam_ke + 1;
-                }
-                return $jml_jadwal_jam;
+            ->addColumn('jam_ruang', function ($item) {
+                $jadwal_kelas =  $item->jadwal_kelas_mp_single;
+                $jadwal_kelas ?
+                    $jadwal =  $jadwal_kelas->jadwal_jam_mulai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_mulai->menit_mulai . '-' . $jadwal_kelas->jadwal_jam_selesai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_selesai->menit_mulai . ', ' . $jadwal_kelas->ruangan->nm_ruangan : $jadwal = null;
+                return $jadwal;
             })
-            ->addColumn('nm_jadwal_hari', function ($item) {
-                return $item->jadwal_kelas_mp->first()->jadwal_hari->nm_jadwal_hari ?? null;
-            })
-            // ->addColumn('jml_siswa', function ($item) {
-            //     return $item->pengambilan_mp->count();
-            // })
-            // ->addColumn('jml_pengampu', function ($item) {
-            //     return $item->pengampu_mp->count();
-            // })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_kelas_mp,

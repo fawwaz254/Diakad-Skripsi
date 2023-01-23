@@ -27,13 +27,10 @@
                                     <th>No</th>
                                     <th class="search-filter">Kode</th>
                                     <th class="search-filter">Nama Mata Ajar</th>
-                                    {{-- <th class="search-filter">Jenis Mapel</th> --}}
-                                    <!-- <th class="search-filter">Tingkat</th> -->
                                     <th class="search-filter">Kelas</th>
                                     <th class="search-filter">Pengampu</th>
-                                    <th>Jadwal Hari</th>
-                                    <th>Jadwal Jam</th>
-                                    {{-- <th>Terisi</th> --}}
+                                    <th class="search-filter">Hari</th>
+                                    <th>Jam, Ruang</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -59,7 +56,6 @@
 
 @if ($kelas_mp)
     <script>
-        // var modul_url = location.hash.replace('#','').split('/')[0];
         var id_semester = {!! json_encode($id) !!};
 
         var modul_url = 'aktivitas-semester';
@@ -93,10 +89,6 @@
                 {
                     data: 'mata_pelajaran.nm_mata_pelajaran'
                 },
-                // {
-                //     data: 'mata_pelajaran.jenis_mata_pelajaran.nm_jenis_mata_pelajaran'
-                // },
-                // { data: 'mata_pelajaran.tingkat_semester' },
                 {
                     data: 'kelas.nm_kelas'
                 },
@@ -106,32 +98,28 @@
                         if (data) {
                             return data;
                         } else {
-                            return " "
+                            return " ";
                         }
                     }
                 },
                 {
-                    data: 'nm_jadwal_hari',
-                    searchable: false,
-                    orderable: false
+                    data: 'jadwal_kelas_mp_single.jadwal_hari.nm_jadwal_hari',
+                    render: function(data) {
+                        if (data) {
+                            return data;
+                        } else {
+                            return " ";
+                        }
+                    }
                 },
                 {
-                    data: 'jml_jadwal_jam',
-                    searchable: false,
-                    orderable: false
+                    data: 'jam_ruang'
                 },
-                // {
-                //     data: 'jml_pengampu',
-                //     searchable: false,
-                //     orderable: false
-                // },
-                // { data: 'jml_siswa', searchable: false, orderable: false },
                 {
                     data: 'action',
                     searchable: false,
                     orderable: false,
                     render: function(data) {
-
                         //  '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                         //     edit_url + '/' + data.id + '">' +
                         //     '    <i class="material-icons">edit</i>' +

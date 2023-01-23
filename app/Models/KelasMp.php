@@ -48,6 +48,11 @@ class KelasMp extends Model
         return $this->hasMany('App\Models\JadwalKelasMp', 'id_kelas_mp');
     }
 
+    public function jadwal_kelas_mp_single()
+    {
+        return $this->hasOne('App\Models\JadwalKelasMp', 'id_kelas_mp');
+    }
+
     public function pengambilan_mp()
     {
         return $this->hasMany('App\Models\PengambilanMp', 'id_kelas_mp');
