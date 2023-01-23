@@ -69,10 +69,10 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Jurusan</th>
-                                    <th>Sudah Diplotting</th>
+                                    {{-- <th>Sudah Diplotting</th> --}}
                                     <th>Jumlah Siswa</th>
-                                    <th>Ploting Kelas Mp</th>
-                                    <th>Jumlah Kelas MP</th>
+                                    {{-- <th>Ploting Kelas Mp</th> --}}
+                                    <th>Jumlah Jadwal</th>
                                     <th>Action</th>
                                     {{-- <th>Action</th> --}}
                                 </tr>
@@ -93,9 +93,9 @@
     var modul_url = 'aktivitas-semester';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'total-jadwal-kelas/datatables/' +
         id_semester + '/' + angkatan;
-    var detail_url = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-mapel-plotting/' + id_semester +
-        '/' + angkatan;
-    var auto_ploting = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-auto-total-jadwal-kelas/' +
+    // var detail_url = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-mapel-plotting/' + id_semester +
+    //     '/' + angkatan;
+    var auto_ploting = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-detail-total-jadwal-kelas/' +
         id_semester + '/' + angkatan;
 
     var primary_table = $('#primary_table').DataTable({
@@ -115,18 +115,18 @@
                 data: 'nm_jurusan',
                 name: 'nm_jurusan'
             },
-            {
-                data: 'jml_siswa_krs',
-                name: 'jml_siswa_krs'
-            },
+            // {
+            //     data: 'jml_siswa_krs',
+            //     name: 'jml_siswa_krs'
+            // },
             {
                 data: 'jml_siswa',
                 name: 'jml_siswa'
             },
-            {
-                data: 'jml_kelas_mp_siswa',
-                name: 'jml_kelas_mp_siswa'
-            },
+            // {
+            //     data: 'jml_kelas_mp_siswa',
+            //     name: 'jml_kelas_mp_siswa'
+            // },
             {
                 data: 'jml_kelas_mp',
                 name: 'jml_kelas_mp'
@@ -137,10 +137,7 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return
-                    // '<a class="target-link btn bg-blue waves-effect" href="' + detail_url + '/' +
-                    //     data.id + '">Manual Plotting</a>' 
-                    '      <a class="target-link btn bg-blue waves-effect" href="' + auto_ploting +
+                    return '<a class="target-link btn bg-blue waves-effect" href="' + auto_ploting +
                         '/' + data.id + '">Detail Kelas</a>';
                 }
             }
