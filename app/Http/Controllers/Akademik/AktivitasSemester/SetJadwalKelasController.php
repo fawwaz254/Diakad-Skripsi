@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\Akademik\LibAkademik;
 use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Models\PresensiMp;
 use App\Models\Semester;
 
 class SetJadwalKelasController extends Controller
@@ -80,7 +81,7 @@ class SetJadwalKelasController extends Controller
             $query->where('id_kelas', '=', $id_kelas)->where('id_semester', '=', $id_semester);
         })->get();
 
-        $kelas_mp   = KelasMp::select('mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', 'jadwal_jam.jam_mulai', 'jadwal_jam.menit_mulai', 'jadwal_jam.jam_selesai', 'jadwal_jam.menit_selesai', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.path_foto_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'jadwal_kelas_mp.id_jadwal_hari', 'jadwal_kelas_mp.id_jadwal_jam', 'jadwal_kelas_mp.id_jadwal_jam_selesai', 'kelas_mp.id_mata_pelajaran', 'pengampu_mp.id_guru', 'pengampu_mp.id_pengampu_mp')
+        $kelas_mp   = KelasMp::select('mata_pelajaran.id_mata_pelajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'jenis_mata_pelajaran.nm_jenis_mata_pelajaran', 'kelas.nm_kelas', 'jadwal_hari.nm_jadwal_hari', 'jadwal_jam.nm_jadwal_jam', 'jadwal_jam.jam_mulai', 'jadwal_jam.menit_mulai', 'jadwal_jam.jam_selesai', 'jadwal_jam.menit_selesai', 'kelas_mp.id_kelas_mp', 'mata_pelajaran.kredit_semester', 'mata_pelajaran.tingkat_semester', 'ruangan.nm_ruangan', 'gedung.nm_gedung', 'ruangan.kapasitas_ruangan', 'pengguna.nm_pengguna', 'pengguna.path_foto_pengguna', 'pengguna.gelar_depan', 'pengguna.gelar_belakang', 'kelas_mp.nm_kelas_mp', 'kelas_mp.jml_pertemuan_kelas_mp', 'semester.nm_semester', 'semester.tahun_ajaran', 'semester.id_semester', 'jadwal_kelas_mp.id_jadwal_kelas_mp', 'jadwal_kelas_mp.id_jadwal_hari', 'jadwal_kelas_mp.id_jadwal_jam', 'jadwal_kelas_mp.id_jadwal_jam_selesai', 'kelas_mp.id_mata_pelajaran', 'pengampu_mp.id_guru', 'pengampu_mp.id_pengampu_mp', 'presensi_mp.id_presensi_mp')
             // ->join('kelas_mp','kelas_mp.id_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp')
             ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->join('jadwal_hari', 'jadwal_hari.id_jadwal_hari', '=', 'jadwal_kelas_mp.id_jadwal_hari')
@@ -89,6 +90,7 @@ class SetJadwalKelasController extends Controller
             ->leftJoin('ruangan', 'ruangan.id_ruangan', '=', 'jadwal_kelas_mp.id_ruangan')
             ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
             ->leftJoin('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
+            ->leftJoin('presensi_mp', 'presensi_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->join('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
             ->join('pengguna', 'guru.id_pengguna', '=', 'pengguna.id_pengguna')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
@@ -110,15 +112,11 @@ class SetJadwalKelasController extends Controller
         // dd($jadwal);
         foreach ($jadwal as $j) {
             foreach ($j as $a) {
-                // if($j['id_jadwal_jam'] == $j['id_jadwal_jam_selesai'])
-                // $data_kelas_mp[$j['id_jadwal_jam'] . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
                 $data_kelas_mp[$j['id_jadwal_jam_selesai'] . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
-                // else
                 $mulai = $jadwal_jam->firstWhere('id_jadwal_jam',  $j['id_jadwal_jam']);
                 $selesai =  $jadwal_jam->firstWhere('id_jadwal_jam',  $j['id_jadwal_jam_selesai']);
 
                 $i = $mulai->jam_ke;
-                // dd($mulai);
                 $rand = str_pad(dechex(rand(0x000000, 0xFFFFFF)), 6, 0, STR_PAD_LEFT);
                 for ($i; $i <= $selesai->jam_ke; $i++) {
                     $data_kelas_mp[$i . $j['id_jadwal_hari']] =  $kelas_mp->firstWhere('id_kelas_mp',  $j['id_kelas_mp']);
@@ -361,10 +359,10 @@ class SetJadwalKelasController extends Controller
             ];
         } elseif ($mode == 'delete') {
             // dd($id);
-            if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+            if ($kelas_mp = PresensiMp::where('id_kelas_mp', $id)->first()) {
                 return [
                     'status_code' => 300, // SUCCESS AND LOAD TABLE
-                    'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
+                    'message' => 'Tidak boleh dihapus karena Sudah dilakukan penilaian'
                 ];
             } else {
                 DB::beginTransaction();

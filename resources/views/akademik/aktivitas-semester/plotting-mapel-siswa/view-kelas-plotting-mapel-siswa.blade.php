@@ -9,7 +9,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-plotting-mapel-siswa') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-total-jadwal-kelas') }}">
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Semester
@@ -91,11 +91,11 @@
 
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'aktivitas-semester';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'plotting-mapel-siswa/datatables/' +
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'total-jadwal-kelas/datatables/' +
         id_semester + '/' + angkatan;
-    var detail_url = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-mapel-plotting/' + id_semester +
+    var detail_url = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-mapel-plotting/' + id_semester +
         '/' + angkatan;
-    var auto_ploting = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-auto-plotting-mapel-siswa/' +
+    var auto_ploting = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-auto-total-jadwal-kelas/' +
         id_semester + '/' + angkatan;
 
     var primary_table = $('#primary_table').DataTable({
@@ -137,10 +137,11 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a class="target-link btn bg-blue waves-effect" href="' + detail_url + '/' +
-                        data.id + '">Manual Plotting</a>' +
-                        '      <a class="target-link btn bg-red waves-effect" href="' + auto_ploting +
-                        '/' + data.id + '">Auto Plotting</a>';
+                    return
+                    // '<a class="target-link btn bg-blue waves-effect" href="' + detail_url + '/' +
+                    //     data.id + '">Manual Plotting</a>' 
+                    '      <a class="target-link btn bg-blue waves-effect" href="' + auto_ploting +
+                        '/' + data.id + '">Detail Kelas</a>';
                 }
             }
         ]
