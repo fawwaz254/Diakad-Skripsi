@@ -201,7 +201,7 @@ Route::middleware(['token_staff'])->group(function () {
             //MENU Plotting Mapel Siswa
             Route::get('total-jadwal-kelas', [PlottingMapelSiswaController::class, 'viewPlottingMapelSiswa']);
             Route::post('post-total-jadwal-kelas', [PlottingMapelSiswaController::class, 'actionViewPlottingMapelSiswa']);
-            Route::get('total-jadwal-kelas/view-kelas-plotting/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'viewKelasPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas/view-total-jadwal-kelas/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'viewKelasPlottingMapelSiswa']);
             Route::get('total-jadwal-kelas/datatables/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'datatablesPlottingMapelSiswa']);
             // Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewMapelPlottingMapelSiswa']);
             // Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', [PlottingMapelSiswaController::class, 'datatablesMataPelajaran']);
@@ -210,11 +210,10 @@ Route::middleware(['token_staff'])->group(function () {
             // Route::get('plotting-mapel-siswa/view-daftar-kelas-plotting/{id_semester}/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'viewDaftarKelasPlottingMapelSiswa']);
 
             // Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
-
             //automatik ploting
-            Route::get('total-jadwal-kelas/view-auto-total-jadwal-kelas/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
-            Route::get('total-jadwal-kelas/datatables-auto-total-jadwal-kelas/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
-            Route::post('total-jadwal-kelas/action-auto-total-jadwal-kelas', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas/view-detail-total-jadwal-kelas/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas/datatables-total-jadwal-kelas/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
+            // Route::post('total-jadwal-kelas/action-total-jadwal-kelas', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
 
 
             //MENU Hapus Plotting Mapel Siswa

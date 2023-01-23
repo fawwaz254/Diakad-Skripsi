@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        PLOTTING MAPEL SISWA
+                        TOTAL JADWAL KELAS
                     </h2>
                 </div>
                 <div class="body">

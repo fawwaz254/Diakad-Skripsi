@@ -12,7 +12,7 @@
             <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
-                    <h2>Usulan Mata Ajar</h2>
+                    <h2>VIEW JADWAL KELAS</h2>
                     <br>
                     <h2 style="font-size: 18px">Semester : {{ $semester->tahun_ajaran }} ({{ $semester->nm_semester }})
                     </h2>
