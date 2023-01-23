@@ -239,26 +239,36 @@ class SetJadwalKelasGuruController extends Controller
                 'message' => 'Save Successfully'
             ];
         } elseif ($mode == 'delete') {
-            // dd($id);
             if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
                 return [
                     'status_code' => 300, // SUCCESS AND LOAD TABLE
                     'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
                 ];
             } else {
-                // dd($id);
-                JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                JadwalKelasMp::where('id_kelas_mp', $id)->delete();
+                DB::beginTransaction();
+                try {
+                    JadwalKelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    JadwalKelasMp::where('id_kelas_mp', $id)->delete();
 
-                PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
-                PengampuMp::where('id_kelas_mp', $id)->delete();
+                    PengampuMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    PengampuMp::where('id_kelas_mp', $id)->delete();
 
+                    KelasMp::where('id_kelas_mp', $id)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    KelasMp::where('id_kelas_mp', $id)->delete();
 
-                return [
-                    'status_code' => 202, // SUCCESS AND LOAD TABLE
-                    'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
-                    'message' => 'Delete Jadwal Mata Ajar Successfully'
-                ];
+                    return [
+                        'status_code' => 202, // SUCCESS AND LOAD TABLE
+                        'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                        'message' => 'Delete Jadwal Mata Ajar Successfully'
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return [
+                        'status_code' => 202, // SUCCESS AND LOAD TABLE
+                        'path' => 'jadwal/set-jadwal-kelas/view-tambah-jadwal-kelas/' . $input->id_kelas . '/' . $input->id_semester,
+                        'message' => 'Delete Jadwal Mata Ajar Gagal'
+                    ];
+                }
             }
         } elseif ($mode = 'edit') {
             $jadwal_kelas_mp                        = JadwalKelasMp::find($id);
