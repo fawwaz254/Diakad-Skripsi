@@ -33,19 +33,19 @@
 
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        @if(Request::segment(1) == 'humas')
-            <button type="button" onclick="viewGuru()" class="btn btn-default">
-                Data Histori Absensi Guru dan Pegawai
-            </button>
-            <button type="button" class="btn btn-primary">
-                Data Histori Absensi Siswa
-            </button>
-            @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-            <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
-                Data Histori Absensi Siswa Pondok
-            </button>
+            @if (Request::segment(1) == 'humas')
+                <button type="button" onclick="viewGuru()" class="btn btn-default">
+                    Data Histori Absensi Guru dan Pegawai
+                </button>
+                <button type="button" class="btn btn-primary">
+                    Data Histori Absensi Siswa
+                </button>
+                @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
+                    <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
+                        Data Histori Absensi Siswa Pondok
+                    </button>
+                @endif
             @endif
-        @endif
 
             <div class="card" style="margin-top: 10px">
                 <div class="header">
@@ -69,7 +69,9 @@
                                         <option value="2">-- Madrasah Aliyah (MA) --</option>
                                     @endif
                                     @foreach ($kelas as $k)
-                                        <option value="{{ $k->id_kelas }}">{{ $k->nm_kelas }}</option>
+                                        <option value="{{ $k->id_kelas }}"
+                                            @if ($wali_kelas->id_kelas ?? null == $k->id_kelas) SELECTED @endif>{{ $k->nm_kelas }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -156,6 +158,7 @@
     function viewGuru() {
         window.location = '/humas#absensi/histori-absensi'
     }
+
     function viewSiswaPondok() {
         window.location = '/humas#absensi/histori-absensi-siswa-pondok'
     }
