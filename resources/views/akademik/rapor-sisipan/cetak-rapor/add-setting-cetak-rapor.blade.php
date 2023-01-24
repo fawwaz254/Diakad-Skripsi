@@ -14,7 +14,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor/postSetting/' . $mapel->id_mata_pelajaran) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor/postSetting/' . $mapel->id_mata_pelajaran . '/' . $thn_akademik_semester) }}">
 
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
