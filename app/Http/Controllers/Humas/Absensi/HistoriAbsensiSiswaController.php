@@ -6,6 +6,7 @@ use App\Exports\HistoriAbsensiDay;
 use App\Exports\HistoriAbsensiMount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Guru;
 use App\Models\Jalur;
 use App\Models\Jurusan;
 use App\Models\Kelas;
@@ -20,7 +21,9 @@ use App\Models\StatusPengguna;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Carbon;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Libraries\Pendidikan\LibDataAkademik;
+use App\Libraries\SumberDaya\LibGuru;
+use App\Models\WaliKelas;
 
 class HistoriAbsensiSiswaController extends Controller
 {
@@ -32,8 +35,10 @@ class HistoriAbsensiSiswaController extends Controller
         $kelas = Kelas::orderBy('tingkat', 'asc')->orderBy('nm_kelas', 'asc')->get();
         $date = Carbon::now()->format('Y-m-d');
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
-
-        return view('humas/absensi/histori-absensi-siswa/view-histori-absensi-siswa', compact('auth_data', 'kelas', 'date'));
+        $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first();
+        return view('humas/absensi/histori-absensi-siswa/view-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'wali_kelas'));
     }
 
     public function actionDetailHistoriAbsensiSiswa(Request $request)

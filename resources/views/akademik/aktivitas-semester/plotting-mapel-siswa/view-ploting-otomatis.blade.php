@@ -102,10 +102,10 @@
                                     <th>No.</th>
                                     <th>Jurusan</th>
                                     <th>Kelas</th>
-                                    {{-- <th>Sudah Diplotting</th> --}}
                                     <th>Jumlah Siswa</th>
-                                    {{-- <th>Ploting Kelas Mp</th> --}}
+                                    <th>Jumlah Siswa Sudah Presensi</th>
                                     <th>Jumlah Jadwal</th>
+                                    <th>Jumlah Sudah Presensii</th>
                                 </tr>
                             </thead>
                         </table>
@@ -153,21 +153,22 @@
                 data: 'nm_kelas',
                 name: 'nm_kelas'
             },
-            // {
-            //     data: 'jml_siswa_krs',
-            //     name: 'jml_siswa_krs'
-            // },
             {
                 data: 'jml_siswa',
                 name: 'jml_siswa'
             },
-            // {
-            //     data: 'jml_kelas_mp_siswa',
-            //     name: 'jml_kelas_mp_siswa'
-            // },
+            {
+                data: 'jml_siswa_presensi',
+                name: 'jml_siswa_presensi'
+            },
+
             {
                 data: 'jml_kelas_mp',
                 name: 'jml_kelas_mp'
+            },
+            {
+                data: 'jml_kelas_mp_presensi',
+                name: 'jml_kelas_mp_presensi'
             },
             // { data: 'action', name: 'action', searchable: false, orderable: false,
             //     render: function(data){
