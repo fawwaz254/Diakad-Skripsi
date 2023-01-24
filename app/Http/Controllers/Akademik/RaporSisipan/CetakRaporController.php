@@ -222,7 +222,7 @@ class CetakRaporController extends Controller
         }
     }
 
-    public function postSetting(Request $request, $mata_pelajaran)
+    public function postSetting(Request $request, $mata_pelajaran, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -246,7 +246,7 @@ class CetakRaporController extends Controller
 
         return [
             'status' => 202, // SUCCESS AND LOAD CONTENT
-            'path' => 'rapor-sisipan/cetak-rapor/viewSetting',
+            'path' => 'rapor-sisipan/cetak-rapor/viewSetting/' . $thn_akademik_semester,
             'message' => 'Save Successfully'
         ];
     }
