@@ -17,7 +17,7 @@
                     </div>
 
                     <div class="body">
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             <table class="table table-bordered">
                                 <tr>
                                     <h4>Pilih Pengguna :</h4>
