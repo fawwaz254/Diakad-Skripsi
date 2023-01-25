@@ -37,7 +37,7 @@ class HistoriAbsensiSiswaController extends Controller
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
-        $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->first();
+        $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru ?? null)->where('is_aktif', 1)->first();
         return view('humas/absensi/histori-absensi-siswa/view-histori-absensi-siswa', compact('auth_data', 'kelas', 'date', 'wali_kelas'));
     }
 
