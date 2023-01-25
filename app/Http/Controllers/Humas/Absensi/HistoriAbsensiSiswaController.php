@@ -24,6 +24,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\WaliKelas;
+use Yajra\Datatables\Datatables;
 
 class HistoriAbsensiSiswaController extends Controller
 {
@@ -474,6 +475,142 @@ class HistoriAbsensiSiswaController extends Controller
         $products = $hasil;
         // dd($products);
         return Excel::download(new HistoriAbsensiMount($products), 'download_mingguan.xlsx');
+    }
+
+    public function batch_edit_status(Request $request, $id_kelas = null, $date = null)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $kelas = Kelas::where('id_kelas', $id_kelas)->first();
+        return view('humas/absensi/histori-absensi-siswa/batch-edit-status', compact('auth_data',  'kelas', 'date', 'id_kelas'));
+    }
+
+    public function action_batch_edit_status(Request $request, $id_kelas = null, $date = null)
+    {
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        foreach ($input->id_pengguna as $id_pengguna) {
+            $presences = PresensiPengguna::where('id_pengguna', $id_pengguna)->where('date', $date)->first();
+            if ($presences) {
+                $presences->update(['status' => $input->status, 'notes' => $input->notes]);
+            } else {
+                PresensiPengguna::create(['id_pengguna' => $id_pengguna, 'status_join_table' => 3, 'date' => $date, 'status' => $input->status, 'notes' => $input->notes]);
+            }
+        }
+        return [
+            'status' => 203, // GAGAL
+            'message' => 'Batch Edit Status Berhasil'
+        ];
+    }
+
+
+    public function datatables_batch_edit_status(Request $request, $id_kelas = null, $date = null)
+    {
+        set_time_limit(-1);
+        $cek_libur = ManajemenHariLibur::where('date', $date)->first();
+
+        if ($id_kelas == "1") {
+            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->whereHas('siswa.kelas', function ($query) {
+                    $query->whereIn('tingkat',  [7, 8, 9]);
+                })->get()->sortBy('siswa.kelas.nm_kelas');
+        } elseif ($id_kelas == "2") {
+            $pengguna = Pengguna::with('status_pengguna', 'siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->whereHas('siswa.kelas', function ($query) {
+                    $query->whereIn('tingkat',  [10, 11, 12]);
+                })->get()->sortBy('siswa.kelas.nm_kelas');
+        } elseif ($id_kelas == "0") {
+            $pengguna = Pengguna::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                ->join('siswa', 'siswa.id_pengguna', '=', 'pengguna.id_pengguna')
+                ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                ->where('status_pengguna.nm_status_pengguna', '=', 'AKTIF')
+                ->orderBy('kelas.tingkat')
+                ->orderBy('kelas.nm_kelas')
+                ->orderBy('siswa.nis_siswa')
+                ->get();
+        } else {
+            $pengguna = Pengguna::with('status_pengguna', 'siswa', 'siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })
+                ->whereHas('siswa', function ($query) use ($id_kelas) {
+                    $query->where('id_kelas', '=', $id_kelas);
+                })->get()->sortBy('siswa.nis_siswa');
+        }
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::where('date', $date)->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
+        $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
+        foreach ($pengguna as $key => $value) {
+            $hasil[$key]['id_pengguna'] = $value->id_pengguna;
+            $hasil[$key]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key]['nis'] = $value->username;
+            $hasil[$key]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
+            $hasil[$key]['status'] = '';
+            $hasil[$key]['notes'] = '';
+
+            $hasil[$key]['id_presensi_pengguna'] = "";
+            $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
+            $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
+            $hasil[$key]['shift'] = $shiftMaster;
+
+            if ($attendance) {
+                if ($attendance->status) {
+                    $hasil[$key]['status'] = $attendance->status;
+                    if ($attendance->status == 'sakit') { } elseif ($attendance->status == 'izin') { }
+                }
+
+                if ($attendance->id_presensi_pengguna) {
+                    $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
+                }
+
+                if ($attendance->check_in && isset($shiftMaster)) {
+                    $hasil[$key]['status'] = "Masuk";
+                }
+                if (isset($shiftMaster['start_time'])) {
+                    if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
+                        $hasil[$key]['status'] = "Masuk | Telat";
+                    }
+                }
+                if ($attendance->notes) {
+                    $hasil[$key]['notes'] = $attendance->notes;
+                }
+            } else {
+                if ($shiftMaster) {
+
+                    if ($date < Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Alpha';
+                    } else if ($date == Carbon::now()->format('Y-m-d')) {
+                        $hasil[$key]['status'] = 'Belum Absent';
+                    } else {
+                        $hasil[$key]['status'] = '';
+                    }
+                    if ($date < Carbon::now()->format('Y-m-d') && $cek_libur) { }
+                }
+            }
+            if ($cek_libur) {
+                $hasil[$key]['status'] = 'Libur';
+            }
+        }
+
+        $list_data = array_filter($hasil, function ($item) {
+            return $item['status'] === 'Belum Absent' || $item['status'] === 'Alpha' || $item['status'] === 'sakit' || $item['status'] === 'izin';
+        });
+
+        $now = Carbon::now()->format('Y-m-d');
+
+        return Datatables::of($list_data)
+            ->addColumn('checkbox', function ($item) {
+                $data = array(
+                    'id_pengguna' => $item['id_pengguna']
+                );
+                return $data;
+            })
+            ->make(true);
     }
 
     public function export_excel_day(Request $request, $id_kelas = null, $date = null)

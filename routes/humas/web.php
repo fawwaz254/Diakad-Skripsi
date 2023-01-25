@@ -216,6 +216,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_mount']);
                 Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_week']);
                 Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_day']);
+
+                Route::get('batch-edit-status/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'batch_edit_status']);
+                Route::get('datatables-batch-edit-status/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'datatables_batch_edit_status']);
+                Route::post('action-batch-edit-status/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'action_batch_edit_status']);
                 //buat izin / sakit
                 Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'createHistoriAbsensi']);
                 Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'storeHistoriAbsensi']);
