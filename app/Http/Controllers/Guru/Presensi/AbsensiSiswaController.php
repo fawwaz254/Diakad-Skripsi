@@ -111,7 +111,7 @@ class AbsensiSiswaController extends BaseController
 
     public function viewKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
     {
-        # code...
+        # code... 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $data = PresensiMp::where('id_jadwal_kelas_mp', $id_jadwal_kelas_mp)
@@ -128,6 +128,7 @@ class AbsensiSiswaController extends BaseController
 
     public function datatablesKBMAbsensiSiswa(Request $request, $id_jadwal_kelas_mp, $pertemuan_ke)
     {
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
