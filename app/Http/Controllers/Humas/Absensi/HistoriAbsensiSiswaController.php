@@ -38,7 +38,7 @@ class HistoriAbsensiSiswaController extends Controller
         $guru = Guru::where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)->first();
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
 
-        $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru)->where('is_aktif', 1)->where('id_semester', $semester_aktif->id_semester)->first();
+        $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru ?? null)->where('is_aktif', 1)->where('id_semester', $semester_aktif->id_semester)->first();
         if (empty($wali_kelas)) {
             $wali_kelas = WaliKelas::where('id_guru', $guru->id_guru ?? null)->where('is_aktif', 1)->first();
         }
