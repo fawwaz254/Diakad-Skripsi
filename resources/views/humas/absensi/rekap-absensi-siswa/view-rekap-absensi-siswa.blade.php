@@ -118,30 +118,25 @@
                                 <tr>
                                     <th style="text-align: center;">Hadir</th>
                                     <th style="text-align: center;">Hadir Terlambat</th>
-                                    {{-- <th style="text-align: center;">Belum Hadir</th> --}}
                                     <th style="text-align: center;">Izin</th>
                                     <th style="text-align: center;">Sakit</th>
                                     <th style="text-align: center;">Alpha</th>
-                                    {{-- <th style="text-align: center;">Tidak Checkout</th> --}}
-                                    {{-- <th style="text-align: center;">Pulang Lebih Awal</th> --}}
-                                    {{-- <th style="text-align: center;">Tidak Checkout</th>
-                                    <th style="text-align: center;">Telat, Pulang Lebih Awal</th>
-                                    <th style="text-align: center;">Kosong</th>
-                                    <th style="text-align: center;">Libur</th>
-                                    <th style="text-align: center;">Telat, Tidak Checkout</th> --}}
-                                    {{-- <th style="text-align: center;">Pulang Lebih Awal</th> --}}
+                                    @if ($setting == '1')
+                                        <th style="text-align: center;">Tidak Checkout</th>
+                                        <th style="text-align: center;">Pulang Lebih Awal</th>
+                                    @endif
                                 </tr>
                             </thead>
                             <tr>
                                 <td style="text-align: center;">{{ $jumlah_hadir }}</td>
                                 <td style="text-align: center;">{{ $jumlah_telat }}</td>
-                                {{-- <td style="text-align: center;">{{ $belum_absent }}</td> --}}
                                 <td style="text-align: center;">{{ $jumlah_izin }}</td>
                                 <td style="text-align: center;">{{ $jumlah_sakit }}</td>
                                 <td style="text-align: center;">{{ $jumlah_alpha }}</td>
-                                {{-- <td style="text-align: center;">{{ $tidak_checkout }}</td> --}}
-                                {{-- <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td> --}}
-
+                                @if ($setting == '1')
+                                    <td style="text-align: center;">{{ $tidak_checkout }}</td>
+                                    <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
+                                @endif
                             </tr>
                         </table>
                     </div>
@@ -209,10 +204,12 @@
                                     <th style="text-align: center;vertical-align: middle;">Izin</th>
                                     <th style="text-align: center;vertical-align: middle;">Sakit</th>
                                     <th style="text-align: center;vertical-align: middle;">Alpha</th>
-                                    {{-- <th style="text-align: center;vertical-align: middle;">Tidak <br> Checkout</th> --}}
-                                    {{-- <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Tidak Checkout</th> --}}
-                                    {{-- <th style="text-align: center;vertical-align: middle;">Pulang <br> Lebih Awal</th> --}}
-                                    {{-- <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Pulang Lebih Awal</th> --}}
+                                    <th style="text-align: center;vertical-align: middle;">Tidak <br> Checkout</th>
+                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Tidak
+                                        Checkout</th>
+                                    <th style="text-align: center;vertical-align: middle;">Pulang <br> Lebih Awal</th>
+                                    <th style="text-align: center;vertical-align: middle;">Terlambat, <br> Pulang Lebih
+                                        Awal</th>
                                     {{-- <th style="text-align: center;vertical-align: middle;">Kosong</th>
                                     <th style="text-align: center;vertical-align: middle;">Libur</th> --}}
                                     <th style="text-align: center;vertical-align: middle;">Detail</th>
@@ -247,14 +244,22 @@
                                     <td
                                         @if ($r['alpha'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
                                         {{ $r['alpha'] }}</td>
-                                    {{-- <td @if ($r['tidakCheckout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['tidakCheckout'] }}</td> --}}
-                                    {{-- <td @if ($r['Telat & Tidak Checkout'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['Telat & Tidak Checkout'] }}</td> --}}
-                                    {{-- <td @if ($r['pulang'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['pulang'] }}</td> --}}
-                                    {{-- <td style="text-align: center;">{{ $r['tidakCheckout'] }}</td> --}}
-                                    {{-- <td @if ($r['telatDanPulangLebihAwal'] > 3)  style="text-align: center;background-color : #ff8080" @else  style="text-align: center;"  @endif>{{ $r['telatDanPulangLebihAwal'] }}</td> --}}
-                                    {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
+                                    @if ($setting == '1')
+                                        <td
+                                            @if ($r['tidakCheckout'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                            {{ $r['tidakCheckout'] }}</td>
+                                        <td
+                                            @if ($r['Telat & Tidak Checkout'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                            {{ $r['Telat & Tidak Checkout'] }}</td>
+                                        <td
+                                            @if ($r['pulang'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                            {{ $r['pulang'] }}</td>
+                                        <td
+                                            @if ($r['telatDanPulangLebihAwal'] > 3) style="text-align: center;background-color : #ff8080" @else  style="text-align: center;" @endif>
+                                            {{ $r['telatDanPulangLebihAwal'] }}</td>
+                                        {{-- <td style="text-align: center;">{{ $r['kosong'] }}</td>
                                             <td style="text-align: center;">{{ $r['libur'] }}</td> --}}
-
+                                    @endif
                                     <td><a class=" btn btn-success btn-circle waves-effect waves-circle waves-float"
                                             href=" {{ url(Request::segment(1) . '/' . Request::segment(2) . '/rekap-absensi/cetak/siswa/' . $r['id_pengguna'] . '/' . $start_date . '/' . $end_date) }} "
                                             target="_blank"><i class="material-icons">picture_as_pdf</i></a> <a
