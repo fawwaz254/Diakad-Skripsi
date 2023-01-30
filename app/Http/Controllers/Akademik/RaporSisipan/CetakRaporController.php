@@ -314,44 +314,44 @@ class CetakRaporController extends Controller
         // $kurikulum = Kurikulum::where('is_aktif',1)->orderBy('tahun_kurikulum', 'DESC')->with('mapel.mata_pelajaran.jenis_mata_pelajaran')->get();
         // $k = $kurikulum->firstWhere('id_jurusan', $kelas->jurusan->id_jurusan);
         //untuk sub
-        $k = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
-            ->has('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
+        $k = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp')
+            ->has('mata_pelajaran.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
-        $raporSisipanA = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
+        $raporSisipanA = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'A');
             })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
-            ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
+            ->doesntHave('mata_pelajaran.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
-        $raporSisipanB = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
+        $raporSisipanB = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'B');
             })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
-            ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
+            ->doesntHave('mata_pelajaran.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
-        $raporSisipanC = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
+        $raporSisipanC = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'C')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.1')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.2')->orWhere('kode_jenis_mata_pelajaran', '=', 'C.3');
             })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
-            ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
+            ->doesntHave('mata_pelajaran.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
-        $raporSisipanD = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
+        $raporSisipanD = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp', 'mata_pelajaran.jenis_mata_pelajaran')
             ->whereHas('mata_pelajaran.jenis_mata_pelajaran', function ($query) {
                 $query->where('kode_jenis_mata_pelajaran', '=', 'D');
             })->whereHas('semester', function ($query) use ($thn_akademik_semester) {
                 $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
             })
-            ->doesntHave('mata_pelajaran.urutan_rapor_sisipan.sub_rapor_sisipan_mp')
+            ->doesntHave('mata_pelajaran.sub_rapor_sisipan_mp')
             ->get()->sortBy('mata_pelajaran.urutan_rapor_sisipan.urutan');
 
         $sub = SubRaporSisipan::with('sub_rapor_sisipan_mp', 'jenis_mata_pelajaran')->get();
@@ -375,7 +375,7 @@ class CetakRaporController extends Controller
 
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
         if ($setting == '0') {
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'raporSisipanD', 'list_nilai', 'wali_kelas'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor', compact('auth_data', 'kelas', 'list_siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'raporSisipanD', 'list_nilai', 'wali_kelas', 'sub'));
         } elseif ($setting == '1') {
             $nilai_siswa = [];
             $nilai_komponen = [];
