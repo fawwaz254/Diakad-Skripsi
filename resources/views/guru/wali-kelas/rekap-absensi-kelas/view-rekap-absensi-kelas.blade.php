@@ -23,7 +23,7 @@
                                             @foreach ($data_kbm as $data)
                                                 <option value="{{ $data->id_jadwal_kelas_mp }}">
                                                     {{ $data->kelas_mp->mata_pelajaran->nm_mata_pelajaran }} -
-                                                    {{ $data->ruangan->nm_ruangan }}</option>
+                                                    {{ $data->ruangan->nm_ruangan ?? '' }}</option>
                                             @endforeach
                                         </optgroup>
                                     @endforeach

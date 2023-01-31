@@ -121,6 +121,10 @@ class AbsensiSiswaController extends BaseController
 
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
+        if (empty($data_kelas)) {
+            return redirect("/guru#presensi/absensi-siswa");
+        }
+
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
 
         return view('guru/presensi/absensi-siswa/view-kbm-absensi-siswa', compact('auth_data', 'semester_aktif', 'data_kelas', 'pertemuan_ke', 'presensi_mp_aktif', 'id_jadwal_kelas_mp', 'data'));

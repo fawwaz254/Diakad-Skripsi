@@ -61,4 +61,8 @@ class MataPelajaran extends Model
             'urutan' => 99,
         ]);;
     }
+    public function sub_rapor_sisipan_mp()
+    {
+        return $this->belongsTo(SubRaporSisipanMP::class, 'id_mata_pelajaran', 'id_mata_pelajaran');
+    }
 }
