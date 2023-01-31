@@ -39,8 +39,6 @@ class RekapAbsensiKelasController extends BaseController
 
         $data_kbm = LibGuru::fetchDataJadwalKBMByKelas($auth_data, $semester_aktif->id_semester, $wali_kelas->id_kelas);
 
-        // dd($data_kbm);
-
         $grup_kbm_perhari = $data_kbm->sortBy('jadwal_hari.kode_jadwal_hari')->groupBy('jadwal_hari.nm_jadwal_hari');
 
         return view('guru/wali-kelas/rekap-absensi-kelas/view-rekap-absensi-kelas', compact('auth_data', 'semester_aktif', 'grup_kbm_perhari', 'wali_kelas'));

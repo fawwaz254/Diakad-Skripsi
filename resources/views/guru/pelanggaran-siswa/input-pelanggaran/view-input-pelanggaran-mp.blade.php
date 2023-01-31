@@ -1,4 +1,9 @@
 <div class="container-fluid">
+    <div class="block-header">
+        <h2><a class="btn bg-blue waves-effect target-link"
+                href="{{ url(Request::segment(1) . '#pelanggaran-siswa/rekap-input-pelanggaran-mp') }}"><i
+                    class="material-icons">backspace</i><span>Kembali</span></a></h2>
+    </div>
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="card">
@@ -8,19 +13,23 @@
                     </h2>
                 </div>
                 <div class="body">
-                    <form id="form-validation" method="POST" action="{{url(Request::segment(1).'/'.Request::segment(2).'/post-input-pelanggaran-mp')}}">
-                            {{csrf_field()}}
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-input-pelanggaran-mp') }}">
+                        {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Kelas KBM
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_jadwal_kelas_mp" onchange="changeKelas(this)">
-                                    <option value="" disabled selected >-- Pilih Kelas KBM --</option>
-                                    @foreach($grup_kbm_perhari as $hari => $data_kbm)
-                                        <optgroup label="{{$hari}}">
-                                            @foreach($data_kbm as $data)
-                                                <option value="{{$data->id_jadwal_kelas_mp}}">{{$data->nm_mata_pelajaran}} - {{$data->nm_kelas}} - {{$data->nm_ruangan}}</option>
+                                <select class="form-control show-tick" name="id_jadwal_kelas_mp"
+                                    onchange="changeKelas(this)">
+                                    <option value="" disabled selected>-- Pilih Kelas KBM --</option>
+                                    @foreach ($grup_kbm_perhari as $hari => $data_kbm)
+                                        <optgroup label="{{ $hari }}">
+                                            @foreach ($data_kbm as $data)
+                                                <option value="{{ $data->id_jadwal_kelas_mp }}">
+                                                    {{ $data->nm_mata_pelajaran }} - {{ $data->nm_kelas }} -
+                                                    {{ $data->nm_ruangan }}</option>
                                             @endforeach
                                         </optgroup>
                                     @endforeach
@@ -33,7 +42,7 @@
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <select class="form-control show-tick" name="pertemuan_ke">
-                                    <option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>
+                                    <option value="" disabled selected>-- Pilih Pertemuan pekan ke --</option>
                                 </select>
                             </div>
                         </div>
@@ -43,7 +52,8 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-red waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
@@ -53,7 +63,7 @@
     </div>
 </div>
 @include('scriptjs')
-<script>    
+<script>
     var primary_table = null;
     $('#form-validation1').validate({
         rules: {
@@ -64,13 +74,13 @@
                 required: true
             }
         },
-        highlight: function (input) {
+        highlight: function(input) {
             $(input).parents('.form-line').addClass('error');
         },
-        unhighlight: function (input) {
+        unhighlight: function(input) {
             $(input).parents('.form-line').removeClass('error');
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             $(element).parents('.form-group').append(error);
         },
         submitHandler: function(form) {
@@ -80,20 +90,20 @@
                 type: form.method,
                 data: $(form).serialize(),
                 success: function(response) {
-                    if(response.status == 200){
+                    if (response.status == 200) {
                         vex.dialog.alert(response.message);
-                    }else if(response.status == 201){
+                    } else if (response.status == 201) {
                         vex.dialog.alert(response.message);
                         window.location.href = response.link;
-                    }else if(response.status == 202){
+                    } else if (response.status == 202) {
                         vex.dialog.alert(response.message);
                         loadURI(response.path);
-                    }else if(response.status == 203){
+                    } else if (response.status == 203) {
                         vex.dialog.alert(response.message);
                         primary_table.ajax.reload(null, false);
-                    }else if(response.status == 204){
+                    } else if (response.status == 204) {
                         loadURI(response.path);
-                    }else if(response.status == 300){
+                    } else if (response.status == 300) {
                         vex.dialog.alert(response.message);
                     }
                 },
@@ -104,18 +114,20 @@
         }
     });
 
-    function changeKelas(el){
+    function changeKelas(el) {
         $.ajax({
-            url: '{{url(Request::segment(1).'/'.Request::segment(2).'/pertemuan-byjadwalkelasmp')}}',
+            url: '{{ url(Request::segment(1) . '/' . Request::segment(2) . '/pertemuan-byjadwalkelasmp') }}',
             type: 'POST',
             data: {
                 id_jadwal_kelas_mp: $('select[name=id_jadwal_kelas_mp]').val()
             },
             success: function(result) {
                 $('select[name=pertemuan_ke]').html('');
-                $('select[name=pertemuan_ke]').append('<option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>');
-                $.each(result, function( key, item ) {
-                    $('select[name=pertemuan_ke]').append('<option value="'+item.value+'">'+item.text+'</option>');
+                $('select[name=pertemuan_ke]').append(
+                    '<option value="" disabled selected >-- Pilih Pertemuan pekan ke --</option>');
+                $.each(result, function(key, item) {
+                    $('select[name=pertemuan_ke]').append('<option value="' + item.value + '">' +
+                        item.text + '</option>');
                 });
             }
         });

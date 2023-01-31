@@ -275,7 +275,7 @@ class DetailAbsensiController extends Controller
 
             $cek_libur = ManajemenHariLibur::where('date', $value->format('Y-m-d'))->first();
             $shiftPengguna = ShiftPengguna::where('id_pengguna', $pengguna)->where('date', $value->format('Y-m-d'))->first();
-            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'])->first();
+            $shiftMaster = ShiftMaster::where('code', $shiftPengguna['id_shift_master'] ?? null)->first();
             $attendance = $presences->where('date', $value->format('Y-m-d'))->first();
 
             if ($shiftPengguna && $shiftMaster) {

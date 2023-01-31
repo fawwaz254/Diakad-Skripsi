@@ -101,10 +101,18 @@ class InputPelanggaranController extends BaseController
                 'message' => $validator->errors()->first()
             ];
         } else {
-            return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'pelanggaran-siswa/input-pelanggaran-mp/view-kbm/' . $input->id_jadwal_kelas_mp . '/' . $input->pertemuan_ke
-            ];
+            $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $input->id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $input->pertemuan_ke)->first();
+            if (empty($presensi_mp_aktif)) {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Belum Melakukan Presensi'
+                ];
+            } else {
+                return [
+                    'status' => 204, // SUCCESS AND LOAD CONTENT
+                    'path' => 'pelanggaran-siswa/input-pelanggaran-mp/view-kbm/' . $input->id_jadwal_kelas_mp . '/' . $input->pertemuan_ke
+                ];
+            }
         }
     }
 
@@ -119,7 +127,9 @@ class InputPelanggaranController extends BaseController
         $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $id_jadwal_kelas_mp);
 
         $presensi_mp_aktif = PresensiMp::where('id_jadwal_kelas_mp', '=', $id_jadwal_kelas_mp)->where('pertemuan_ke', '=', $pertemuan_ke)->first();
-
+        if (empty($presensi_mp_aktif)) {
+            return redirect("/guru#pelanggaran-siswa/input-pelanggaran-mp");
+        }
         return view('guru/pelanggaran-siswa/input-pelanggaran/view-kbm-input-pelanggaran-mp', compact('auth_data', 'semester_aktif', 'data_kelas', 'presensi_mp_aktif'));
     }
 

@@ -161,19 +161,12 @@
                 </thead>
                 <br>
                 <tbody class="body">
-                    {{-- @php
-                        $no = 0;
-                    @endphp --}}
                     @if (isset($raporSisipanA))
                         <tr>
-                            <td style="text-align: center;">A</td>
-                            <td>
-                                {{-- @php
-                                $nama = $k->mata_pelajaran->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'A');
-                                echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran;
-                            @endphp --}}
+                            {{-- <td style="text-align: center;">A</td> --}}
+                            <td colspan="2">
                                 @if (isset($raporSisipanA))
-                                    {{ $raporSisipanA[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}
+                                    {{ ' A. ' . $raporSisipanA[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran }}
                                 @endif
                             </td>
                             <td style="text-align: center;"></td>
@@ -181,13 +174,53 @@
                         </tr>
                         @php
                             $no = 1;
+                            $angka = 0;
+                            $abc = ['a', 'b', 'c', 'd'];
                         @endphp
 
+
+                        @foreach ($sub as $s)
+                            @if ($s->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A')
+                                <tr>
+                                    <td style="text-align: center;">{{ $no++ }}</td>
+                                    <td> {{ $s->nm_sub_rapor_sisipan }}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                                @foreach ($s->sub_rapor_sisipan_mp as $submp)
+                                    @foreach ($k as $m)
+                                        @if ($m->mata_pelajaran->id_mata_pelajaran == $submp->id_mata_pelajaran)
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    {{ $abc[$angka++] . '. ' . $m->mata_pelajaran->nm_mata_pelajaran }}
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}
+                                                </td>
+                                                <td style="text-align: center;">
+                                                    @php
+                                                        $nama = $list_nilai
+                                                            ->where('siswa.id_siswa', $siswa->id_siswa)
+                                                            ->where('rapor_sisipan.id_mata_pelajaran', $m->mata_pelajaran->id_mata_pelajaran)
+                                                            ->first();
+                                                        echo $nama->nilai ?? 'Belum Diset';
+                                                    @endphp
+                                                </td>
+                                            </tr>
+                                        @endif
+                                        @php
+                                        @endphp
+                                    @endforeach
+                                @endforeach
+                            @endif
+                        @endforeach
+
                         @foreach ($raporSisipanA as $m)
-                            {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'A') --}}
                             <tr>
-                                <td></td>
-                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                                <td style="text-align: center;">{{ $no++ }}</td>
+                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                                 <td style="text-align: center;">
                                     {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
                                 <td style="text-align: center;">
@@ -200,7 +233,6 @@
                                     @endphp
                                 </td>
                             </tr>
-                            {{-- @endif --}}
                         @endforeach
                         <tr>
                             <td><br></td>
@@ -212,13 +244,13 @@
 
                     @if (isset($raporSisipanB[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran))
                         <tr>
-                            <td style="text-align: center;">B</td>
-                            <td>
+                            {{-- <td style="text-align: center;">B</td> --}}
+                            <td colspan="2">
                                 {{-- @php
                             $nama = $k->mata_pelajaran->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'B');
                             echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran;
                         @endphp --}}
-                                {{ $raporSisipanB[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
+                                {{ ' B. ' . $raporSisipanB[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
                             </td>
                             <td style="text-align: center;"></td>
                             <td style="text-align: center;">
@@ -230,8 +262,8 @@
                         @foreach ($raporSisipanB as $m)
                             {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'B') --}}
                             <tr>
-                                <td></td>
-                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                                <td style="text-align: center;">{{ $no++ }}</td>
+                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                                 <td style="text-align: center;">
                                     {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
                                 <td style="text-align: center;">
@@ -256,13 +288,13 @@
 
                     @if (isset($raporSisipanC[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran))
                         <tr>
-                            <td style="text-align: center;">C</td>
-                            <td>
+                            {{-- <td style="text-align: center;">C</td> --}}
+                            <td colspan="2">
                                 {{-- @php
                                 $nama = $k->mata_pelajaran->firstWhere('mata_pelajaran.jenis_mata_pelajaran.kode_jenis_mata_pelajaran', 'C');
                                 echo $nama->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? 'MUATAN PEMINATAN KEJURUAN';
                             @endphp --}}
-                                {{ $raporSisipanC[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
+                                {{ ' C. ' . $raporSisipanC[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
                             </td>
                             <td></td>
                             <td style="text-align: center;"></td>
@@ -273,8 +305,8 @@
                         @foreach ($raporSisipanC as $m)
                             {{-- @if ($m->mata_pelajaran->jenis_mata_pelajaran->kode_jenis_mata_pelajaran == 'C') --}}
                             <tr>
-                                <td></td>
-                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                                <td style="text-align: center;">{{ $no++ }}</td>
+                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                                 <td style="text-align: center;">
                                     {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
                                 <td style="text-align: center;">
@@ -298,10 +330,10 @@
                     @endif
                     @if (isset($raporSisipanD[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran))
                         <tr>
-                            <td style="text-align: center;">D</td>
-                            <td>
+                            {{-- <td style="text-align: center;">D</td> --}}
+                            <td colspan="2">
 
-                                {{ $raporSisipanD[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
+                                {{ ' D. ' . $raporSisipanD[0]->mata_pelajaran->jenis_mata_pelajaran->nm_jenis_mata_pelajaran ?? '' }}
                             </td>
                             <td></td>
                             <td style="text-align: center;"></td>
@@ -311,8 +343,8 @@
                         @endphp
                         @foreach ($raporSisipanD as $m)
                             <tr>
-                                <td></td>
-                                <td>{{ $no++ . '.    ' . $m->mata_pelajaran->nm_mata_pelajaran }}</td>
+                                <td style="text-align: center;">{{ $no++ }}</td>
+                                <td>{{ $m->mata_pelajaran->nm_mata_pelajaran }}</td>
                                 <td style="text-align: center;">
                                     {{ $m->mata_pelajaran->nilai_kkm ?? 'Nilai KKM belum di Set' }}</td>
                                 <td style="text-align: center;">
