@@ -102,10 +102,19 @@ class AbsensiSiswaController extends BaseController
                 'message' => $validator->errors()->first()
             ];
         } else {
-            return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'presensi/absensi-siswa/view-kbm/' . $input->id_jadwal_kelas_mp . '/' . $input->pertemuan_ke
-            ];
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $data_kelas = LibGuru::fetchDataJadwalKBM($auth_data, $auth_data->pengguna->id_pengguna, $semester_aktif->id_semester, null, $input->id_jadwal_kelas_mp);
+            if (empty($data_kelas)) {
+                return [
+                    'status' => 203, // GAGAL
+                    'message' => 'Absensi Tidak DItemukan'
+                ];
+            } else {
+                return [
+                    'status' => 204, // SUCCESS AND LOAD CONTENT
+                    'path' => 'presensi/absensi-siswa/view-kbm/' . $input->id_jadwal_kelas_mp . '/' . $input->pertemuan_ke
+                ];
+            }
         }
     }
 
