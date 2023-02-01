@@ -843,7 +843,7 @@ class LibSiswa
             ->join('pengampu_mp', 'pengampu_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
             ->join('guru', 'guru.id_guru', '=', 'pengampu_mp.id_guru')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
-            ->join('semester', 'semester.id_semester', '=', 'pengambilan_mp.id_semester')
+            ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
             ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
 
             ->join('jadwal_kelas_mp', 'jadwal_kelas_mp.id_kelas_mp', '=', 'kelas_mp.id_kelas_mp')
