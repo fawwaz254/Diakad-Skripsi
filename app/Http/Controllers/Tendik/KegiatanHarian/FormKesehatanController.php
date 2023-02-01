@@ -229,8 +229,7 @@ class FormKesehatanController extends BaseController
             $start_2 = Carbon::createFromTimeString($start_monkes);
             $end_2 = Carbon::createFromTimeString('23:59');
 
-            if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) {
-            } else {
+            if ($now->between($start_1, $end_1) || $now->between($start_2, $end_2)) { } else {
                 return [
                     'status' => 300, // FAILED
                     'message' => 'Anda mengisi di luar waktu yang ditentukan.'
@@ -333,7 +332,7 @@ class FormKesehatanController extends BaseController
                 $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->first();
                 $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->delete();
 
-                $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna ?? 'Pengguna Sendiri (Season Habis)';
                 $pengisian_kegiatan_harian->save();
 
                 $pengisian_kegiatan_harian->delete();
