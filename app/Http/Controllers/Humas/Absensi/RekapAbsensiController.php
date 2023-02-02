@@ -339,7 +339,7 @@ class RekapAbsensiController extends Controller
             }
         }
         $list_unit_kerja = UnitKerja::all();
-        // $hasil;
+        $data = [];
         foreach ($hasil as $key => $a) {
             $data[$key]['nm_pengguna'] = $a['nm_pengguna'];
             $data[$key]['unit_kerja'] = $a['unit_kerja'];
