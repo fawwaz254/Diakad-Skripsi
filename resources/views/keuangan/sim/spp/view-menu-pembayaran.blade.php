@@ -215,7 +215,9 @@
                                                         href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
                                                             style="color: #4caf50;">Print
                                                             {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
-                                                    @if ($tagihan->is_request == 0)
+                                                    @if (
+                                                        $tagihan->is_request == 0 &&
+                                                            \Carbon\Carbon::now()->subDay()->format('Y-m-d H:i:s') < $tagihan->tgl_pelunasan)
                                                         <br>
                                                         <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
                                                             onclick="deleteActionKhusus(this)"
