@@ -43,7 +43,7 @@
                                 <h2>Tambah Shift Siswa</h2>
                             </div>
                             <div class="body">
-                                <div class="col-sm-6">
+                                <div class="col-sm-8">
                                     <table class="table table-bordered">
                                         <tr>
                                             <h4>
@@ -59,6 +59,7 @@
                                         <tr>
                                             <td style="text-align: center;">No</td>
                                             <td>kelas</td>
+                                            <td>NIS</td>
                                             <td>Name</td>
                                             @if ($shiftsPengguna)
                                                 <td>Shift hari ini</td>
@@ -71,6 +72,7 @@
                                             @foreach ($penggunas as $key => $pengguna)
                                                 <td style="text-align: center;">{{ $no++ }}</td>
                                                 <td>{{ $pengguna->siswa->kelas->nm_kelas }}</td>
+                                                <td>{{ $pengguna->siswa->nis_siswa }}</td>
                                                 <td><input type="checkbox"
                                                         name="pengguna[{{ $pengguna['nm_pengguna'] }}]"
                                                         value="{{ $pengguna['id_pengguna'] }}"
