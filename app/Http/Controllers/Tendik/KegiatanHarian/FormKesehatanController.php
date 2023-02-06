@@ -330,17 +330,35 @@ class FormKesehatanController extends BaseController
 
             } elseif ($mode == 'delete') {
                 $pengisian_kegiatan_harian  = PengisianKegiatanHarian::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->first();
-                $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->delete();
+                $pengisian_jawaban          = PengisianJawaban::where('id_pengisian_kegiatan_harian', $input->id_pengisian_kegiatan_harian)->first();
 
-                $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna ?? 'Pengguna Sendiri (Season Habis)';
-                $pengisian_kegiatan_harian->save();
+                if ($pengisian_kegiatan_harian && $pengisian_jawaban) {
+                    try {
+                        $pengisian_kegiatan_harian->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                        $pengisian_kegiatan_harian->save();
 
-                $pengisian_kegiatan_harian->delete();
+                        $pengisian_jawaban->deleted_by   = $input->auth_data->pengguna->id_pengguna;
+                        $pengisian_jawaban->save();
 
-                return [
-                    'status' => 203, // SUCCESS AND LOAD TABLE
-                    'message' => 'Delete Successfully'
-                ];
+                        $pengisian_kegiatan_harian->delete();
+                        $pengisian_jawaban->delete();
+
+                        return [
+                            'status' => 203, // SUCCESS AND LOAD TABLE
+                            'message' => 'Delete Successfully'
+                        ];
+                    } catch (\Throwable $th) {
+                        return [
+                            'status' => 203, // SUCCESS AND LOAD TABLE
+                            'message' => 'Delete Failed'
+                        ];
+                    }
+                } else {
+                    return [
+                        'status' => 203, // SUCCESS AND LOAD TABLE
+                        'message' => 'Data Tidak Ditemukan'
+                    ];
+                }
             }
         }
     }

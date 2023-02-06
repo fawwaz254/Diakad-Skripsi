@@ -105,7 +105,7 @@ class ShiftSiswaController extends Controller
                     $query->where('id_kelas', $id_kelas);
                 }
             })
-            ->get()->sortBy('siswa.kelas.nm_kelas');
+            ->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('username');
 
         $date =  Carbon::now()->format('Y-m-d');
         $shiftsPengguna = ShiftPengguna::where('date', $date)->get();
