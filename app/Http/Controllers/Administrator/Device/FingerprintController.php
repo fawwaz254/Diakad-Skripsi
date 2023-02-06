@@ -574,4 +574,50 @@ class FingerprintController extends BaseController
 
         return $hasil;
     }
+
+    public function clearLogData(Request $request)
+    {
+        $input = (object) $request->input();
+        $client = new \GuzzleHttp\Client();
+
+        $serial_number = '';
+        $date_filter = null;
+        if (isset($input->SN)) {
+            $serial_number = $input->SN;
+        }
+
+        if ($device = FPDevice::where('sn', $serial_number)->first()) {
+            // $device->ip_address_wan = $request->ip();
+            $device->updated_at = Carbon::now('Asia/Jakarta');
+            $device->save();
+        } else {
+            return 'FAILED';
+        }
+
+        $soap_request = "<ClearData><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg></ClearData>";
+
+        try {
+            if (!empty($device->port)) {
+                $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+            } else {
+                $fingerprint_url = $device->ip_address_wan . '/iWsService';
+            }
+            // $client->request('GET', $fingerprint_url);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return 'Failed';
+        }
+
+        try {
+            $res = $client->post($fingerprint_url, [
+                'headers' => [
+                    'Content-Type' => 'text/xml',
+                    'Content-Length' => strlen($soap_request)
+                ],
+                'body' => $soap_request
+            ]);
+            echo "Berhasil";
+        } catch (\Exception $e) {
+            echo "Koneksi Gagal";
+        }
+    }
 }

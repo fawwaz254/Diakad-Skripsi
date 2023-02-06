@@ -121,6 +121,7 @@ Route::prefix('iclock')->group(function () {
     Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
     Route::get('manual-get-data', [FingerprintController::class, 'actionGetDataFinger']);
     Route::get('manual-get-data-realtime', [FingerprintController::class, 'actionGetFinger']);
+    Route::get('clear-log-data', [FingerprintController::class, 'clearLogData']);
 });
 // END USING FOR FINGERPRINT
 
