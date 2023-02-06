@@ -108,6 +108,9 @@
                     </div>
                 </div>
             </div>
+            <a href="humas/absensi/detail-absensi/cetak/{{ $pengguna }}/{{ $start_date }}/{{ $end_date }}"
+                target="_blank" class="btn btn-block bg-red waves-effect">
+                <i class="material-icons">print</i><span> Print</span></a>
         </div>
     </div>
 

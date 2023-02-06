@@ -79,6 +79,7 @@
     var modul_url = 'siswa';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-wali-murid/datatables/' + id_kelas;
     var edit_url = role_url + '#' + modul_url + '/' + 'setting-wali-murid/edit';
+    var delete_url = role_url + '/' + modul_url + '/' + 'action-setting-wali-murid/delete';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -122,7 +123,12 @@
                     return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
                         edit_url + '/' + data.id + '">' +
                         '    <i class="material-icons">edit</i>' +
-                        '</a>';
+                        '</a>' +
+                        '<button class="btn  bg-red waves-effect btn-circle" id="btn-reset-password" style="margin-left:10px" onclick="hapusWaliMurid(\'' +
+                        delete_url + '\', this)" data-id="' +
+                        data.id + '">' +
+                        '<i class="material-icons">delete</i>' +
+                        '</button>';
                 }
             }
 
@@ -180,4 +186,47 @@
             });
         }
     });
+
+    function hapusWaliMurid(id, element) {
+
+        var url_delete = id;
+        var item = $(element);
+        var id = item.attr('data-id');
+        swal({
+                title: 'Apakah Yakin Untuk Menghapus Wali Murid?',
+                showCancelButton: true
+            },
+            function(isConfirm) {
+                if (isConfirm) {
+                    $('#btn-reset-password').attr("disabled", true);
+                    $.ajax({
+                        url: url_delete + '/' + id,
+                        type: 'POST',
+                        success: function(response) {
+                            if (response.status_code == 200) {
+                                vex.dialog.alert(response.message);
+                            } else if (response.status_code == 201) {
+                                vex.dialog.alert(response.message);
+                                window.location.href = response.link;
+                            } else if (response.status_code == 202) {
+                                vex.dialog.alert(response.message);
+                                loadURI(response.path);
+                            } else if (response.status_code == 203) {
+                                vex.dialog.alert(response.message);
+                                primary_table.ajax.reload(null, false);
+                            } else if (response.status_code == 204) {
+                                loadURI(response.path);
+                            } else if (response.status_code == 300) {
+                                vex.dialog.alert(response.message);
+                            }
+                        },
+                        complete: function() {
+                            $('#btn-reset-password').removeAttr('disabled', 'disabled');
+                        },
+                    });
+                }
+                return;
+            }
+        );
+    }
 </script>

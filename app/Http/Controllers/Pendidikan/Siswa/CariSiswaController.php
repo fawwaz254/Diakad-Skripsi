@@ -15,12 +15,13 @@ use App\Models\Kota as Kota;
 use App\Models\Provinsi as Provinsi;
 use App\Models\PengambilanMp as PengambilanMp;
 use App\Models\Admisi as Admisi;
+use App\Models\CalonSiswaOrtu;
 use App\Models\Pengguna;
 use App\Models\LogResetPassword;
+use App\Models\RolePengguna;
 use App\Models\Siswa as Siswa;
 use App\Models\Semester as Semester;
-
-
+use App\Models\WaliMurid;
 use Auth;
 use DB;
 use Session;
@@ -290,6 +291,43 @@ class CariSiswaController extends BaseController
         'status_text'   => 'Failed',
         'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
       ]);
+    }
+  }
+
+  public function hapusWaliMurid(Request $request)
+  {
+
+    $input = (object) $request->input();
+    $auth_data = $input->auth_data;
+
+    DB::beginTransaction();
+    try {
+
+      $wali_murid = WaliMurid::where('id_pengguna', $input->id_pengguna)->first();
+      $siswa =  Siswa::where('id_wali_murid', $wali_murid->id_wali_murid)->first();
+      CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->update(['nomor_telp_ortu' => null], ['nomor_hp_ortu' => null]);
+      Pengguna::where('id_pengguna', $input->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+      Pengguna::where('id_pengguna', $input->id_pengguna)->delete();
+      RolePengguna::where('id_pengguna', $input->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+      RolePengguna::where('id_pengguna', $input->id_pengguna)->delete();
+      $siswa->id_wali_murid = null;
+      $siswa->save();
+      $wali_murid->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+      $wali_murid->save();
+      $wali_murid->delete();
+      DB::commit();
+      return [
+        'status_code'   => 203,
+        'status_text'   => 'Success',
+        'message' => 'Delete Wali Murid Successfully'
+      ];
+    } catch (\Exception $e) {
+      DB::rollback();
+      return [
+        'status_code'   => 300,
+        'status_text'   => 'Failed',
+        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
+      ];
     }
   }
 }

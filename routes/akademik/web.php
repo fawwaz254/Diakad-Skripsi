@@ -23,6 +23,7 @@ use App\Http\Controllers\Akademik\Presensi\CetakPresensiUTSController;
 use App\Http\Controllers\Akademik\RaporSisipan\CetakRaporController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiController;
 use App\Http\Controllers\Akademik\RaporSisipan\KomponenNilaiRaporSisipanController;
+use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanAkhirController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporSisipanController;
 use App\Http\Controllers\Akademik\RaporSisipan\RaporTengahSemesterController;
 use App\Http\Controllers\Akademik\Ujian\TryOutController;
@@ -163,21 +164,21 @@ Route::middleware(['token_staff'])->group(function () {
 
         Route::prefix('aktivitas-semester')->group(function () {
             // MENU Usulan Mata Ajar
-            Route::get('usulan-mata-ajar', [UsulanMataAjarController::class, 'viewUsulanMataAjar']);
-            Route::post('post-usulan-mata-ajar', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
-            Route::get('usulan-mata-ajar/view-semester-usulan-mata-ajar/{id}', [UsulanMataAjarController::class, 'viewSemesterUsulanMataAjar']);
-            Route::get('usulan-mata-ajar/tambah-mata-ajar/{id}', [UsulanMataAjarController::class, 'viewTambahMataAjar']);
-            Route::get('usulan-mata-ajar/datatables/{id}', [UsulanMataAjarController::class, 'datatablesUsulanMataAjar']);
-            Route::get('usulan-mata-ajar/datatablesMapel/{id}', [UsulanMataAjarController::class, 'datatablesMataPelajaran']);
-            Route::get('usulan-mata-ajar/add/{id_semester}/{id_mata_pelajaran}', [UsulanMataAjarController::class, 'addUsulanMataAjar']);
-            Route::get('usulan-mata-ajar/edit/{id}', [UsulanMataAjarController::class, 'editUsulanMataAjar']);
-            Route::get('usulan-mata-ajar/copy/{id}', [UsulanMataAjarController::class, 'copyUsulanMataAjar']);
-            Route::get('usulan-mata-ajar/copy-semester-lain/{id_semester}', [UsulanMataAjarController::class, 'copyJadwalSemesterLain']);
+            Route::get('view-jadwal-kelas', [UsulanMataAjarController::class, 'viewUsulanMataAjar']);
+            Route::post('post-view-jadwal-kelas', [UsulanMataAjarController::class, 'actionViewUsulanMataAjar']);
+            Route::get('view-jadwal-kelas/view-semester-view-jadwal-kelas/{id}', [UsulanMataAjarController::class, 'viewSemesterUsulanMataAjar']);
+            // Route::get('view-jadwal-kelas/tambah-mata-ajar/{id}', [UsulanMataAjarController::class, 'viewTambahMataAjar']);
+            Route::get('view-jadwal-kelas/datatables/{id}', [UsulanMataAjarController::class, 'datatablesUsulanMataAjar']);
+            // Route::get('view-jadwal-kelas/datatablesMapel/{id}', [UsulanMataAjarController::class, 'datatablesMataPelajaran']);
+            // Route::get('view-jadwal-kelas/add/{id_semester}/{id_mata_pelajaran}', [UsulanMataAjarController::class, 'addUsulanMataAjar']);
+            // Route::get('view-jadwal-kelas/edit/{id}', [UsulanMataAjarController::class, 'editUsulanMataAjar']);
+            // Route::get('view-jadwal-kelas/copy/{id}', [UsulanMataAjarController::class, 'copyUsulanMataAjar']);
+            // Route::get('view-jadwal-kelas/copy-semester-lain/{id_semester}', [UsulanMataAjarController::class, 'copyJadwalSemesterLain']);
 
-            Route::post('usulan-mata-ajar/hapus-jadwal/{id}', [UsulanMataAjarController::class, 'hapusJadwal']);
+            // Route::post('view-jadwal-kelas/hapus-jadwal/{id}', [UsulanMataAjarController::class, 'hapusJadwal']);
 
-            Route::post('usulan-mata-ajar/cek-jadwal-crash/{id}', [UsulanMataAjarController::class, 'cekJadwalCrash']);
-            Route::post('action-usulan-mata-ajar/{mode}/{id}', [UsulanMataAjarController::class, 'actionUsulanMataAjar']);
+            // Route::post('view-jadwal-kelas/cek-jadwal-crash/{id}', [UsulanMataAjarController::class, 'cekJadwalCrash']);
+            Route::post('action-view-jadwal-kelas/{mode}/{id}', [UsulanMataAjarController::class, 'actionUsulanMataAjar']);
 
             //menu set jadwal kelas
             Route::get('set-jadwal-kelas', [SetJadwalKelasController::class, 'viewSetJadwalKelas']);
@@ -198,22 +199,21 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('monitoring-kelas/datatables-daftar-siswa/{id}', [MonitoringKelasController::class, 'datatablesDaftarSiswa']);
 
             //MENU Plotting Mapel Siswa
-            Route::get('plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'viewPlottingMapelSiswa']);
-            Route::post('post-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionViewPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/view-kelas-plotting/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'viewKelasPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/datatables/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'datatablesPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewMapelPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', [PlottingMapelSiswaController::class, 'datatablesMataPelajaran']);
-            Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'datatablesSiswa']);
-            Route::post('post-daftar-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionViewDaftarPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/view-daftar-kelas-plotting/{id_semester}/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'viewDaftarKelasPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas', [PlottingMapelSiswaController::class, 'viewPlottingMapelSiswa']);
+            Route::post('post-total-jadwal-kelas', [PlottingMapelSiswaController::class, 'actionViewPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas/view-total-jadwal-kelas/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'viewKelasPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas/datatables/{id_semester}/{angkatan}', [PlottingMapelSiswaController::class, 'datatablesPlottingMapelSiswa']);
+            // Route::get('plotting-mapel-siswa/view-mapel-plotting/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewMapelPlottingMapelSiswa']);
+            // Route::get('plotting-mapel-siswa/datatables-mapel/{id_semester}/{angkatan}/{tingkat}', [PlottingMapelSiswaController::class, 'datatablesMataPelajaran']);
+            // Route::get('plotting-mapel-siswa/datatables-siswa/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'datatablesSiswa']);
+            // Route::post('post-daftar-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionViewDaftarPlottingMapelSiswa']);
+            // Route::get('plotting-mapel-siswa/view-daftar-kelas-plotting/{id_semester}/{angkatan}/{id_kelas}', [PlottingMapelSiswaController::class, 'viewDaftarKelasPlottingMapelSiswa']);
 
-            Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
-
-            //test automatik ploting
-            Route::get('plotting-mapel-siswa/view-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
-            Route::get('plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
-            Route::post('plotting-mapel-siswa/action-auto-plotting-mapel-siswa', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
+            // Route::post('action-plotting-mapel-siswa/{mode}', [PlottingMapelSiswaController::class, 'actionPlottingMapelSiswa']);
+            //automatik ploting
+            Route::get('total-jadwal-kelas/view-detail-total-jadwal-kelas/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'viewAutoPlottingMapelSiswa']);
+            Route::get('total-jadwal-kelas/datatables-total-jadwal-kelas/{id_semester}/{angkatan}/{id_jurusan}', [PlottingMapelSiswaController::class, 'datatablesAutoPlottingMapelSiswa']);
+            // Route::post('total-jadwal-kelas/action-total-jadwal-kelas', [PlottingMapelSiswaController::class, 'actionAutoPlottingMapelSiswa']);
 
 
             //MENU Hapus Plotting Mapel Siswa
@@ -346,28 +346,21 @@ Route::middleware(['token_staff'])->group(function () {
         // Modul Rapor Sisipan
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
-
                 Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
                 Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
                 Route::get('/{thn_akademik_semester}', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
                 Route::get('/datatables/{thn_akademik_semester}', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
-                // Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
-                // Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
-
-                // Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
-                // Route::get('input-nilai-magang/datatables/{id}', '[InputNilaiRaporSisipanController::class, 'datatablesKomponenNilaiMagang');
-                // Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', '[InputNilaiRaporSisipanController::class, 'actionInputNilai');
-                // Route::prefix('daftar-nilai-sas')->group(function () {
-                // });
             });
 
-            // Route::prefix('nilai-rapor-tengah-semester')->group(function () {
-            //     Route::get('/', [RaporTengahSemesterController::class, 'viewRaporTengahSemester']);
-            //     Route::get('datatables', [RaporTengahSemesterController::class, 'datatablesDaftarNilaiSTS']);
-            //     Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
-            // });
+            Route::prefix('daftar-nilai-sas')->group(function () {
+                Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
+                Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
+                Route::get('/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
+                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
+            });
 
             Route::prefix('komponen-nilai')->group(function () {
                 Route::get('/', [KomponenNilaiRaporSisipanController::class, 'viewKomponenNilai']);
@@ -382,7 +375,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [CetakRaporController::class, 'viewSemesterCetakRapor']);
                 Route::post('post-cetak-rapor', [CetakRaporController::class, 'actionSemesterCetakRapor']);
 
-                Route::get('/{thn_akademik_semester}', [CetakRaporController::class, 'viewCetakRapor']);
                 Route::get('datatables/{thn_akademik_semester}', [CetakRaporController::class, 'datatablesCetakRapor']);
                 Route::get('print/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'printCetakRapor']);
                 Route::get('viewSetting/{thn_akademik_semester}', [CetakRaporController::class, 'viewSetting']);
@@ -391,9 +383,10 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('datatablesViewSetting/{thn_akademik_semester}', [CetakRaporController::class, 'datatablesViewSetting']);
                 Route::get('datatablesViewDeskripsi', [CetakRaporController::class, 'datatablesViewDeskripsi']);
                 Route::get('addSetting/{thn_akademik_semester}/{mata_pelajaran}', [CetakRaporController::class, 'addSetting']);
-                Route::post('postSetting/{mata_pelajaran}', [CetakRaporController::class, 'postSetting']);
+                Route::post('postSetting/{mata_pelajaran}/{thn_akademik_semester}', [CetakRaporController::class, 'postSetting']);
                 Route::get('editDeskripsi/{id}', [CetakRaporController::class, 'editDeskripsi']);
                 Route::post('actionDeskripsi/{mode}/{id}', [CetakRaporController::class, 'actionDeskripsi']);
+                Route::get('/{thn_akademik_semester}', [CetakRaporController::class, 'viewCetakRapor']);
             });
         });
 

@@ -45,19 +45,44 @@ class AdmisiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-          'nis_nama_siswa' =>'required'
-      ]);
+            'nis_nama_siswa' => 'required'
+        ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
-            return [
+            if (Siswa::join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                ->leftJoin('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                ->leftJoin('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
+                ->join('status_pengguna', 'pengguna.id_status_pengguna', '=', 'status_pengguna.id_status_pengguna')
+                ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                ->join('jalur_siswa', function ($join) {
+                    $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                        ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+                })
+                ->join('jalur', 'jalur_siswa.id_jalur', '=', 'jalur.id_jalur')
+                ->leftJoin('calon_siswa_ortu', 'calon_siswa_ortu.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
+                ->leftJoin('provinsi', 'calon_siswa_baru.alamat_provinsi', '=', 'provinsi.id_provinsi')
+                ->leftJoin('kota', 'calon_siswa_baru.alamat_kota', '=', 'kota.id_kota')
+                ->where(function ($query) use ($input) {
+                    $query->where('siswa.nis_siswa', 'like', '%' . $input->nis_nama_siswa . '%')
+                        ->orWhere('pengguna.nm_pengguna', 'like', '%' . $input->nis_nama_siswa . '%');
+                })
+                ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first()
+            ) {
+                return [
                     'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa
+                    'path' => 'data-kesiswaan/admisi-siswa/view-detail/' . $input->nis_nama_siswa
                 ];
+            } else {
+                return [
+                    'status' => 300, // FAILED
+                    'message' => 'Siswa Tidak ditemukan'
+                ];
+            }
         }
     }
 
@@ -75,15 +100,15 @@ class AdmisiSiswaController extends BaseController
             ->join('calon_siswa_baru', 'siswa.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
             ->join('jalur_siswa', function ($join) {
                 $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
-                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+                    ->where('jalur_siswa.is_jalur_aktif', '=', 1);
             })
             ->join('jalur', 'jalur_siswa.id_jalur', '=', 'jalur.id_jalur')
             ->leftJoin('calon_siswa_ortu', 'calon_siswa_ortu.id_c_siswa', '=', 'calon_siswa_baru.id_c_siswa')
             ->leftJoin('provinsi', 'calon_siswa_baru.alamat_provinsi', '=', 'provinsi.id_provinsi')
             ->leftJoin('kota', 'calon_siswa_baru.alamat_kota', '=', 'kota.id_kota')
             ->where(function ($query) use ($nis_nama_siswa) {
-                $query->where('siswa.nis_siswa', 'like', '%'.$nis_nama_siswa.'%')
-                    ->orWhere('pengguna.nm_pengguna', 'like', '%'.$nis_nama_siswa.'%');
+                $query->where('siswa.nis_siswa', 'like', '%' . $nis_nama_siswa . '%')
+                    ->orWhere('pengguna.nm_pengguna', 'like', '%' . $nis_nama_siswa . '%');
             })
             ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->first();
 
@@ -103,17 +128,17 @@ class AdmisiSiswaController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $validator = Validator::make($request->all(), [
-          'id_siswa'            =>'required',
-          'id_status_pengguna'  =>'required',
-          'id_semester'         =>'required'
+            'id_siswa'            => 'required',
+            'id_status_pengguna'  => 'required',
+            'id_semester'         => 'required'
 
-      ]);
+        ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             $input_status_pengguna = StatusPengguna::where('id_status_pengguna', '=', $input->id_status_pengguna)->first();
             if ($input_status_pengguna->aktif_status_pengguna == 1) {
@@ -122,7 +147,7 @@ class AdmisiSiswaController extends BaseController
                 $is_aktif_status_pengguna = 0;
             }
 
-            $admisi 						           = Admisi::where('id_siswa', '=', $input->id_siswa)->where('id_semester', '=', $input->id_semester)->first();
+            $admisi                                    = Admisi::where('id_siswa', '=', $input->id_siswa)->where('id_semester', '=', $input->id_semester)->first();
 
             if ($admisi) {
                 $statusPengguna                 = StatusPengguna::where('id_status_pengguna', '=', $admisi->id_status_pengguna)->first();
@@ -130,9 +155,9 @@ class AdmisiSiswaController extends BaseController
                 if ($statusPengguna->aktif_status_pengguna == 1) {
                     if ($statusPengguna->kode_status_pengguna == 'CALON_LULUS') {
                         return [
-                        'status' => 203, // GAGAL
-                        'message' => 'Update Admisi Gagal, Siswa Sudah Berstatus Calon Lulus Di Semester Tersebut!'
-                    ];
+                            'status' => 203, // GAGAL
+                            'message' => 'Update Admisi Gagal, Siswa Sudah Berstatus Calon Lulus Di Semester Tersebut!'
+                        ];
                     } else {
                         $admisi->id_status_pengguna     = $input->id_status_pengguna;
                         if ($is_aktif_status_pengguna == 0) {
@@ -152,10 +177,10 @@ class AdmisiSiswaController extends BaseController
                         $pengguna->save();
 
                         return [
-                      'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
-                      'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
-                      'message' => 'Update Admisi Successfully'
-                  ];
+                            'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
+                            'path' => 'data-kesiswaan/admisi-siswa/view-detail/' . $input->nis_nama_siswa,
+                            'message' => 'Update Admisi Successfully'
+                        ];
                     }
                 } else {
                     return [
@@ -181,21 +206,21 @@ class AdmisiSiswaController extends BaseController
                 /* proses selesai */
 
                 // proses cek admisi sebelumnya
-                if (! empty($id_semester_sebelumnya)) {
+                if (!empty($id_semester_sebelumnya)) {
                     $admisi = Admisi::join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
-                            ->where('admisi.id_siswa', '=', $input->id_siswa)
-                            ->where('admisi.id_semester', '=', $id_semester_sebelumnya)
-                            ->first();
+                        ->where('admisi.id_siswa', '=', $input->id_siswa)
+                        ->where('admisi.id_semester', '=', $id_semester_sebelumnya)
+                        ->first();
 
                     if ($admisi) {
                         if ($admisi->kode_status_pengguna == 'CALON_LULUS') {
                             return [
-                        'status' => 203, // GAGAL
-                        'message' => 'Update Admisi Gagal, Siswa Sudah Berstatus Calon Lulus Di Semester Sebelumnya!'
-                    ];
+                                'status' => 203, // GAGAL
+                                'message' => 'Update Admisi Gagal, Siswa Sudah Berstatus Calon Lulus Di Semester Sebelumnya!'
+                            ];
                         } else {
                             $admisi                         = new Admisi;
-                            $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                            $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                             $admisi->id_status_pengguna     = $input->id_status_pengguna;
                             if ($is_aktif_status_pengguna == 0) {
                                 $admisi->tgl_keluar           = date_format(date_create($input->tgl_keluar), "Y-m-d H:i");
@@ -219,16 +244,16 @@ class AdmisiSiswaController extends BaseController
                             $siswa->save();
 
                             return [
-                          'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
-                          'path' => 'data-kesiswaan/admisi-siswa/view-detail/'.$input->nis_nama_siswa,
-                          'message' => 'Insert Admisi Successfully'
-                      ];
+                                'status' => 202, // SUCCESS AND LOAD CONTENTid_periode_magang
+                                'path' => 'data-kesiswaan/admisi-siswa/view-detail/' . $input->nis_nama_siswa,
+                                'message' => 'Insert Admisi Successfully'
+                            ];
                         }
                     } else {
                         return [
-                        'status' => 203, // GAGAL
-                        'message' => 'Update Admisi Gagal, Siswa Belum Mempunyai Admisi Di Semester Sebelumnya!'
-                    ];
+                            'status' => 203, // GAGAL
+                            'message' => 'Update Admisi Gagal, Siswa Belum Mempunyai Admisi Di Semester Sebelumnya!'
+                        ];
                     }
                 } else {
                     return [
@@ -262,16 +287,16 @@ class AdmisiSiswaController extends BaseController
         $now = Carbon::now(env('APP_TIMEZONE', ''));
 
         $validator = Validator::make($request->all(), [
-          'id_semester'     =>'required',
-          'id_kelas'      =>'required',
-          'is_override'     =>'required'
-      ]);
+            'id_semester'     => 'required',
+            'id_kelas'      => 'required',
+            'is_override'     => 'required'
+        ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             DB::beginTransaction();
 
@@ -279,42 +304,42 @@ class AdmisiSiswaController extends BaseController
                 // ambil status_pengguna CUTI
                 // Sementara dibuat AKTIF
                 $status_pengguna_cuti = StatusPengguna::where('kode_status_pengguna', '=', 'AKTIF')
-                                      ->where('status_join_table', '=', 3)
-                                      ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                                      ->first();
+                    ->where('status_join_table', '=', 3)
+                    ->where('id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->first();
 
                 $siswa_set = Siswa::select('pengguna.id_pengguna', 'siswa.id_siswa')
-                              ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                              ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-                              ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
-                              ->where('kelas.id_kelas', '=', $input->id_kelas)
-                              ->get();
+                    ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                    ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+                    ->where('pengguna.id_sekolah', '=', $input->auth_data->pengguna->id_sekolah)
+                    ->where('kelas.id_kelas', '=', $input->id_kelas)
+                    ->get();
 
                 foreach ($siswa_set as $siswa) {
                     // action siswa aktif
                     $siswa_aktif_set = Siswa::select('pengguna.id_pengguna', 'siswa.id_siswa', 'status_pengguna.id_status_pengguna')
-                              ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-                              ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-                              ->where('siswa.id_siswa', '=', $siswa->id_siswa)
-                              ->where('status_pengguna.kode_status_pengguna', '=', 'AKTIF')
-                              ->orderBy('siswa.nis_siswa', 'ASC')
-                              ->first();
-            
-                    if (! empty($siswa_aktif_set->id_siswa)) {
+                        ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+                        ->join('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+                        ->where('siswa.id_siswa', '=', $siswa->id_siswa)
+                        ->where('status_pengguna.kode_status_pengguna', '=', 'AKTIF')
+                        ->orderBy('siswa.nis_siswa', 'ASC')
+                        ->first();
+
+                    if (!empty($siswa_aktif_set->id_siswa)) {
                         $pengambilan_mp_set = PengambilanMp::where('id_siswa', '=', $siswa_aktif_set->id_siswa)
-                                    ->where('id_semester', '=', $input->id_semester)
-                                    ->where('status_apv_pengambilan_mp', '=', 1)
-                                    ->first();
+                            ->where('id_semester', '=', $input->id_semester)
+                            ->where('status_apv_pengambilan_mp', '=', 1)
+                            ->first();
 
                         // action siswa sudah diplotting mapel dan sudah terapprove, akan diberikan status AKTIF
-                        if (! empty($pengambilan_mp_set->id_pengambilan_mp)) {
+                        if (!empty($pengambilan_mp_set->id_pengambilan_mp)) {
                             // cek admisi pada semester tsb
                             $admisi_existing = Admisi::where('id_siswa', '=', $siswa_aktif_set->id_siswa)
-                                    ->where('id_semester', '=', $input->id_semester)
-                                    ->where('id_status_pengguna', '=', $siswa_aktif_set->id_status_pengguna)
-                                    ->first();
+                                ->where('id_semester', '=', $input->id_semester)
+                                ->where('id_status_pengguna', '=', $siswa_aktif_set->id_status_pengguna)
+                                ->first();
 
-                            if (! empty($admisi_existing->id_admisi)) {
+                            if (!empty($admisi_existing->id_admisi)) {
                                 // cek apabila timpa data = Ya
                                 if ($input->is_override == 1) {
                                     $admisi_existing->updated_by           = $input->auth_data->pengguna->id_pengguna;
@@ -323,7 +348,7 @@ class AdmisiSiswaController extends BaseController
                                 }
                             } else {
                                 $admisi                         = new Admisi;
-                                $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $admisi->id_status_pengguna     = $siswa_aktif_set->id_status_pengguna;
                                 $admisi->id_semester            = $input->id_semester;
                                 $admisi->id_siswa               = $siswa_aktif_set->id_siswa;
@@ -336,11 +361,11 @@ class AdmisiSiswaController extends BaseController
                         else {
                             // cek admisi pada semester tsb
                             $admisi_existing = Admisi::where('id_siswa', '=', $siswa_aktif_set->id_siswa)
-                                    ->where('id_semester', '=', $input->id_semester)
-                                    ->where('id_status_pengguna', '=', $status_pengguna_cuti->id_status_pengguna)
-                                    ->first();
+                                ->where('id_semester', '=', $input->id_semester)
+                                ->where('id_status_pengguna', '=', $status_pengguna_cuti->id_status_pengguna)
+                                ->first();
 
-                            if (! empty($admisi_existing->id_admisi)) {
+                            if (!empty($admisi_existing->id_admisi)) {
                                 // cek apabila timpa data = Ya
                                 if ($input->is_override == 1) {
                                     $admisi_existing->updated_by           = $input->auth_data->pengguna->id_pengguna;
@@ -349,7 +374,7 @@ class AdmisiSiswaController extends BaseController
                                 }
                             } else {
                                 $admisi                         = new Admisi;
-                                $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix.strtotime($now).uniqid();
+                                $admisi->id_admisi              = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
                                 $admisi->id_status_pengguna     = $status_pengguna_cuti->id_status_pengguna;
                                 $admisi->id_semester            = $input->id_semester;
                                 $admisi->id_siswa               = $siswa_aktif_set->id_siswa;
@@ -361,13 +386,13 @@ class AdmisiSiswaController extends BaseController
                     } else {
                         // action siswa yang terdapat usulan CUTI pada semester terpilih di admisi
                         $admisi_cuti_semester = Admisi::select('admisi.id_admisi')
-                                        ->where('id_siswa', '=', $siswa->id_siswa)
-                                        ->where('id_semester', '=', $input->id_semester)
-                                        ->where('id_status_pengguna', '=', $status_pengguna_cuti->id_status_pengguna)
-                                        ->first();
-              
+                            ->where('id_siswa', '=', $siswa->id_siswa)
+                            ->where('id_semester', '=', $input->id_semester)
+                            ->where('id_status_pengguna', '=', $status_pengguna_cuti->id_status_pengguna)
+                            ->first();
+
                         // action siswa yang terdapat usulan CUTI (pada semester terpilih) di admisi, maka plotting mapelnya akan diset belum terapprove
-                        if (! empty($admisi_cuti_semester->id_admisi)) {
+                        if (!empty($admisi_cuti_semester->id_admisi)) {
                             // cek apabila timpa data = Ya
                             if ($input->is_override == 1) {
                                 $admisi_cuti_semester->updated_by           = $input->auth_data->pengguna->id_pengguna;
@@ -376,8 +401,8 @@ class AdmisiSiswaController extends BaseController
                             }
 
                             $pengambilan_mp_set = PengambilanMp::where('id_siswa', '=', $siswa->id_siswa)
-                                    ->where('id_semester', '=', $input->id_semester)
-                                    ->get();
+                                ->where('id_semester', '=', $input->id_semester)
+                                ->get();
 
                             foreach ($pengambilan_mp_set as $pengambilan_mp) {
                                 $pengambilan_mp_update                              = PengambilanMp::find($pengambilan_mp->id_pengambilan_mp);
@@ -392,18 +417,18 @@ class AdmisiSiswaController extends BaseController
 
                 DB::commit();
                 return [
-                  'status' => 200, // SUCCESS
-                  'message' => 'Generate Admisi Berhasil',
-                  'path' => 'data-kesiswaan/admisi-siswa/generate'
-          ];
+                    'status' => 200, // SUCCESS
+                    'message' => 'Generate Admisi Berhasil',
+                    'path' => 'data-kesiswaan/admisi-siswa/generate'
+                ];
             } catch (\Exception $e) {
                 DB::rollback();
                 // something went wrong
 
                 return [
-                        'status' => 300, // GAGAL
-                        'message' => 'Generate Admisi Gagal!'
-                    ];
+                    'status' => 300, // GAGAL
+                    'message' => 'Generate Admisi Gagal!'
+                ];
             }
         }
     }
@@ -428,20 +453,20 @@ class AdmisiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-          'id_semester' =>'required',
-          'id_kelas'    =>'required'
-      ]);
+            'id_semester' => 'required',
+            'id_kelas'    => 'required'
+        ]);
 
         if ($validator->fails()) {
             return [
-              'status' => 300, // FAILED
-              'message' => $validator->errors()->first()
-          ];
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
         } else {
             return [
-                    'status' => 204, // SUCCESS AND LOAD CONTENT
-                    'path' => 'data-kesiswaan/admisi-siswa/view-laporan/'.$input->id_semester.'/'.$input->id_kelas
-                ];
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'data-kesiswaan/admisi-siswa/view-laporan/' . $input->id_semester . '/' . $input->id_kelas
+            ];
         }
     }
 
@@ -464,35 +489,35 @@ class AdmisiSiswaController extends BaseController
         $auth_data = $input->auth_data;
 
         $siswa = Siswa::select('siswa.nis_siswa', 'siswa.nisn_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'status_pengguna.nm_status_pengguna', 'jalur.nm_jalur')
-          ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
-          ->join('status_pengguna as sp', 'sp.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
-          ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
-          ->join('jalur_siswa', function ($join) {
-              $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
-                                 ->where('jalur_siswa.is_jalur_aktif', '=', 1);
-          })
-          ->join('jalur', 'jalur.id_jalur', '=', 'jalur_siswa.id_jalur')
-          ->leftJoin('admisi', function ($join) use ($id_semester) {
-              $join->on('admisi.id_siswa', '=', 'siswa.id_siswa')
-                                 ->where('admisi.id_semester', '=', $id_semester)
-                                 ->whereNull('admisi.deleted_at');
-          })
-          ->leftJoin('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
-          ->where('kelas.id_kelas', '=', $id_kelas)
-          ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-          ->where('sp.aktif_status_pengguna', '=', 1)
-          ->orderBy('siswa.nis_siswa', 'ASC')
-          ->orderBy('pengguna.nm_pengguna', 'ASC')
-          ->get();
+            ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
+            ->join('status_pengguna as sp', 'sp.id_status_pengguna', '=', 'pengguna.id_status_pengguna')
+            ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->join('jalur_siswa', function ($join) {
+                $join->on('jalur_siswa.id_siswa', '=', 'siswa.id_siswa')
+                    ->where('jalur_siswa.is_jalur_aktif', '=', 1);
+            })
+            ->join('jalur', 'jalur.id_jalur', '=', 'jalur_siswa.id_jalur')
+            ->leftJoin('admisi', function ($join) use ($id_semester) {
+                $join->on('admisi.id_siswa', '=', 'siswa.id_siswa')
+                    ->where('admisi.id_semester', '=', $id_semester)
+                    ->whereNull('admisi.deleted_at');
+            })
+            ->leftJoin('status_pengguna', 'status_pengguna.id_status_pengguna', '=', 'admisi.id_status_pengguna')
+            ->where('kelas.id_kelas', '=', $id_kelas)
+            ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            ->where('sp.aktif_status_pengguna', '=', 1)
+            ->orderBy('siswa.nis_siswa', 'ASC')
+            ->orderBy('pengguna.nm_pengguna', 'ASC')
+            ->get();
 
         return Datatables::of($siswa)
-                ->addColumn('action', function ($item) {
-                    $data = array(
-                        'id' => $item->nis_siswa,
-                        'admisi' => $item->nm_status_pengguna
-                    );
-                    return $data;
-                })
-                ->make(true);
+            ->addColumn('action', function ($item) {
+                $data = array(
+                    'id' => $item->nis_siswa,
+                    'admisi' => $item->nm_status_pengguna
+                );
+                return $data;
+            })
+            ->make(true);
     }
 }

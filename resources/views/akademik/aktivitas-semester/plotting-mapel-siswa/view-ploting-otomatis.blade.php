@@ -6,12 +6,12 @@
             <div class="block-header">
                 <h2>
                     <a class="btn bg-blue waves-effect target-link"
-                        href="{{ url(Request::segment(1) . '#aktivitas-semester/plotting-mapel-siswa/view-kelas-plotting/' . $id_semester . '/' . $angkatan) }}">
+                        href="{{ url(Request::segment(1) . '#aktivitas-semester/total-jadwal-kelas/view-total-jadwal-kelas/' . $id_semester . '/' . $angkatan) }}">
                         <i class="material-icons">backspace</i><span>kembali</span>
                     </a>
                 </h2>
             </div>
-            <div class="card">
+            {{-- <div class="card">
                 <div class="header">
                     <h2>
                         Plotting Mapel Siswa
@@ -88,7 +88,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
             <br>
             <div class="card">
                 {{-- {{csrf_field()}} --}}
@@ -102,10 +102,10 @@
                                     <th>No.</th>
                                     <th>Jurusan</th>
                                     <th>Kelas</th>
-                                    <th>Sudah Diplotting</th>
                                     <th>Jumlah Siswa</th>
-                                    <th>Ploting Kelas Mp</th>
-                                    <th>Jumlah Kelas Mp</th>
+                                    <th>Jumlah Siswa Sudah Presensi</th>
+                                    <th>Jumlah Jadwal</th>
+                                    <th>Jumlah Sudah Presensii</th>
                                 </tr>
                             </thead>
                         </table>
@@ -126,7 +126,8 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'aktivitas-semester';
     var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' +
-        'plotting-mapel-siswa/datatables-auto-plotting-mapel-siswa/' + id_semester + '/' + angkatan + '/' + id_jurusan;
+        'total-jadwal-kelas/datatables-total-jadwal-kelas/' + id_semester + '/' + angkatan + '/' +
+        id_jurusan;
     // var detail_url        = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-mapel-plotting/'+ id_semester + '/' + angkatan;
     // var auto_ploting      = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-auto-plotting-mapel-siswa/'+ id_semester + '/' + angkatan;
     // alert(datatable_url);
@@ -145,28 +146,29 @@
                 orderable: false
             },
             {
-                data: 'jurusan.nm_jurusan',
-                name: 'jurusan.nm_jurusan'
+                data: 'nm_jurusan',
+                name: 'nm_jurusan'
             },
             {
                 data: 'nm_kelas',
                 name: 'nm_kelas'
             },
             {
-                data: 'jml_siswa_krs',
-                name: 'jml_siswa_krs'
-            },
-            {
                 data: 'jml_siswa',
                 name: 'jml_siswa'
             },
             {
-                data: 'jml_kelas_mp_siswa',
-                name: 'jml_kelas_mp_siswa'
+                data: 'jml_siswa_presensi',
+                name: 'jml_siswa_presensi'
             },
+
             {
                 data: 'jml_kelas_mp',
                 name: 'jml_kelas_mp'
+            },
+            {
+                data: 'jml_kelas_mp_presensi',
+                name: 'jml_kelas_mp_presensi'
             },
             // { data: 'action', name: 'action', searchable: false, orderable: false,
             //     render: function(data){

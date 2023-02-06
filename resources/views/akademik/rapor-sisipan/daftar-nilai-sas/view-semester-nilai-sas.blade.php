@@ -4,28 +4,28 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        PILIH MATA PELAJARAN {{ $wali_kelas->nm_kelas }}
+                        PILIH SEMESTER
                     </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-rekap-absensi-kelas') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/' . Request::segment(3) . '/post-nilai-sas') }}">
                         {{ csrf_field() }}
+
                         <h2 class="card-inside-title">
-                            Kelas KBM
+                            Semester
                         </h2>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <select class="form-control show-tick" name="id_jadwal_kelas_mp">
-                                    <option value="" disabled selected>-- Pilih Kelas KBM --</option>
-                                    @foreach ($grup_kbm_perhari as $hari => $data_kbm)
-                                        <optgroup label="{{ $hari }}">
-                                            @foreach ($data_kbm as $data)
-                                                <option value="{{ $data->id_jadwal_kelas_mp }}">
-                                                    {{ $data->kelas_mp->mata_pelajaran->nm_mata_pelajaran }} -
-                                                    {{ $data->ruangan->nm_ruangan ?? '' }}</option>
-                                            @endforeach
-                                        </optgroup>
+                                <select class="form-control show-tick" name="thn_akademik_semester">
+                                    @foreach ($data_semester as $data)
+                                        <option value="{{ $data->thn_akademik_semester }}"
+                                            @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester) selected @endif>
+                                            {{ $data->tahun_ajaran }}
+                                            @if ($semester_aktif->thn_akademik_semester == $data->thn_akademik_semester)
+                                                (Aktif)
+                                            @endif
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

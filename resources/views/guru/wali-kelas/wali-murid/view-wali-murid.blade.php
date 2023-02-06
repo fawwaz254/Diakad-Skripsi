@@ -62,8 +62,8 @@
                         name: 'wali_murid.nomor_hp_wali_murid'
                     },
                     {
-                        data: 'wali_murid.nm_wali_murid',
-                        name: 'wali_murid.nm_wali_murid'
+                        data: 'nm_wali_murid',
+                        name: 'nm_wali_murid'
                     },
                     {
                         data: 'pengguna.nm_pengguna',
@@ -79,10 +79,15 @@
                         searchable: false,
                         orderable: false,
                         render: function(data) {
-                            return '<button class="btn btn-block bg-blue waves-effect" id="btn-reset-password" onclick="resetPasswordSiswa(\'' +
+                            return '<button class="btn  bg-blue waves-effect" id="btn-reset-password" onclick="resetPasswordSiswa(\'' +
                                 base_url + '\', this)" data-id="' +
                                 data.id + '">' +
                                 '<i class="material-icons">update</i><span> Reset Password' +
+                                '</button>' +
+                                '<button class="btn  bg-red waves-effect" id="btn-reset-password" style="margin-left:10px" onclick="hapusWaliMurid(\'' +
+                                base_url + '\', this)" data-id="' +
+                                data.id + '">' +
+                                '<i class="material-icons">delete</i><span> Hapus Wali Murid' +
                                 '</button>';
                         }
                     }
@@ -116,6 +121,53 @@
                         $.ajax({
                             url: base_url +
                                 '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/reset-password',
+                            type: 'POST',
+                            data: {
+                                id_pengguna: id,
+                            },
+                            success: function(response) {
+                                if (response.status_code == 200) {
+                                    vex.dialog.alert(response.message);
+                                } else if (response.status_code == 201) {
+                                    vex.dialog.alert(response.message);
+                                    window.location.href = response.link;
+                                } else if (response.status_code == 202) {
+                                    vex.dialog.alert(response.message);
+                                    loadURI(response.path);
+                                } else if (response.status_code == 203) {
+                                    vex.dialog.alert(response.message);
+                                    primary_table.ajax.reload(null, false);
+                                } else if (response.status_code == 204) {
+                                    loadURI(response.path);
+                                } else if (response.status_code == 300) {
+                                    vex.dialog.alert(response.message);
+                                }
+                            },
+                            complete: function() {
+                                $('#btn-reset-password').removeAttr('disabled', 'disabled');
+                            },
+                        });
+                    }
+                    return;
+                }
+            );
+        }
+
+
+        function hapusWaliMurid(id, element) {
+
+            var item = $(element);
+            var id = item.attr('data-id');
+            swal({
+                    title: 'Apakah Yakin Untuk Menghapus Wali Murid?',
+                    showCancelButton: true
+                },
+                function(isConfirm) {
+                    if (isConfirm) {
+                        $('#btn-reset-password').attr("disabled", true);
+                        $.ajax({
+                            url: base_url +
+                                '/{{ Request::segment(1) }}/{{ Request::segment(2) }}/{{ Request::segment(3) }}/hapus-wali-murid',
                             type: 'POST',
                             data: {
                                 id_pengguna: id,

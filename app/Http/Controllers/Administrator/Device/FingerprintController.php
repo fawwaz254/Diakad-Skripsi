@@ -105,10 +105,10 @@ class FingerprintController extends BaseController
             return 'Failed';
         }
 
-        $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('fp_date', 'desc')->first();
+        $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('created_at', 'desc')->first();
 
         if ($last_data) {
-            $last_time = Carbon::parse($last_data->fp_date)->addMinutes(5)->format('Y-m-d H:i:s');
+            $last_time = Carbon::parse($last_data->created_at)->addMinutes(1)->format('Y-m-d H:i:s');
         } else {
             $last_time = $now->format('Y-m-d H:i:s');
         }
@@ -134,7 +134,7 @@ class FingerprintController extends BaseController
                     $data_fp = $this->filterData($buffer, $date_filter);
                 } else {
                     if ($last_data) {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->fp_date);
+                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->created_at);
                     } else {
                         $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
                     }

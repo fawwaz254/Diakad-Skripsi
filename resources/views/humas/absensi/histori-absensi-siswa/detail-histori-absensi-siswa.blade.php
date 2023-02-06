@@ -94,7 +94,7 @@
                 padding: 10px; ">
                     <thead>
                         <tr>
-                            <th>Hadir</th>
+                            <th>Check-in</th>
                             <th>Hadir Terlambat</th>
                             <th>Belum Hadir</th>
                             <th>Izin</th>
@@ -123,6 +123,10 @@
 <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-week/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">
     <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
+
+<a href="{{ url(Request::segment(1) . '#absensi/histori-absensi-siswa/batch-edit-status/' . $id_kelas . '/' . $date) }}"
+    class="btn bg-purple waves-effect">
+    <i class="material-icons" style="font-size: 15px;">print</i> Batch Edit Status</a>
 
 {{-- <a href="{{ url(Request::segment(1) . '/absensi/histori-absensi-siswa/export-laravel-mount/' . $id_kelas . '/' . $date) }}"
     target="_blank" class="btn bg-purple waves-effect">

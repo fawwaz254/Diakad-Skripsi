@@ -55,7 +55,7 @@ class AuthGlobalController extends BaseController
             $wali_murid = new WaliMurid;
             $wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
             $wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-            $wali_murid->nm_wali_murid = strtoupper($input->nomor_hp_ortu);
+            $wali_murid->nm_wali_murid = $input->nm_ortu;
             $wali_murid->is_aktif = 1;
             $wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
             $wali_murid->updated_at = $now;
@@ -63,7 +63,7 @@ class AuthGlobalController extends BaseController
 
             $pengguna = new Pengguna;
             $pengguna->id_pengguna = $wali_murid->id_pengguna;
-            $pengguna->nm_pengguna = strtoupper($input->nomor_hp_ortu);
+            $pengguna->nm_pengguna = $input->nm_ortu;
             $pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
             $pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
             $pengguna->username = $input->nomor_hp_ortu;
@@ -87,6 +87,7 @@ class AuthGlobalController extends BaseController
             $calon_siswa_ortu = CalonSiswaOrtu::where('id_c_siswa', $siswa1->id_c_siswa)->first();
             $calon_siswa_ortu->nomor_telp_ortu = $input->nomor_hp_ortu;
             $calon_siswa_ortu->nomor_hp_ortu = $input->nomor_hp_ortu;
+            $calon_siswa_ortu->nm_wali = $input->nm_ortu;
             $calon_siswa_ortu->save();
 
             $pengguna1 = Pengguna::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();

@@ -4,12 +4,12 @@
             <div class="card is-gap">
                 <div class="header">
                     <h2>
-                        PLOTTING MAPEL SISWA
+                        Total Jadwal Kelas
                     </h2>
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-plotting-mapel-siswa') }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/post-total-jadwal-kelas') }}">
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">
                             Semester
@@ -69,10 +69,10 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Jurusan</th>
-                                    <th>Sudah Diplotting</th>
-                                    <th>Jumlah Siswa</th>
-                                    <th>Ploting Kelas Mp</th>
-                                    <th>Jumlah Kelas MP</th>
+                                    <th>Semua Siswa</th>
+                                    <th>Siswa Sudah Presensi</th>
+                                    <th>Semua Jadwal</th>
+                                    <th>Jadwal Sudah Presensi</th>
                                     <th>Action</th>
                                     {{-- <th>Action</th> --}}
                                 </tr>
@@ -91,11 +91,11 @@
 
     // var modul_url = location.hash.replace('#','').split('/')[0];
     var modul_url = 'aktivitas-semester';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'plotting-mapel-siswa/datatables/' +
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'total-jadwal-kelas/datatables/' +
         id_semester + '/' + angkatan;
-    var detail_url = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-mapel-plotting/' + id_semester +
-        '/' + angkatan;
-    var auto_ploting = role_url + '#' + modul_url + '/' + 'plotting-mapel-siswa/view-auto-plotting-mapel-siswa/' +
+    // var detail_url = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-mapel-plotting/' + id_semester +
+    //     '/' + angkatan;
+    var auto_ploting = role_url + '#' + modul_url + '/' + 'total-jadwal-kelas/view-detail-total-jadwal-kelas/' +
         id_semester + '/' + angkatan;
 
     var primary_table = $('#primary_table').DataTable({
@@ -116,20 +116,20 @@
                 name: 'nm_jurusan'
             },
             {
-                data: 'jml_siswa_krs',
-                name: 'jml_siswa_krs'
+                data: 'jml_siswa_presensi',
+                name: 'jml_siswa_presensi'
             },
             {
                 data: 'jml_siswa',
                 name: 'jml_siswa'
             },
             {
-                data: 'jml_kelas_mp_siswa',
-                name: 'jml_kelas_mp_siswa'
-            },
-            {
                 data: 'jml_kelas_mp',
                 name: 'jml_kelas_mp'
+            },
+            {
+                data: 'jml_kelas_mp_presensi',
+                name: 'jml_kelas_mp_presensi'
             },
             {
                 data: 'action',
@@ -137,10 +137,8 @@
                 searchable: false,
                 orderable: false,
                 render: function(data) {
-                    return '<a class="target-link btn bg-blue waves-effect" href="' + detail_url + '/' +
-                        data.id + '">Manual Plotting</a>' +
-                        '      <a class="target-link btn bg-red waves-effect" href="' + auto_ploting +
-                        '/' + data.id + '">Auto Plotting</a>';
+                    return '<a class="target-link btn bg-blue waves-effect" href="' + auto_ploting +
+                        '/' + data.id + '">Detail Kelas</a>';
                 }
             }
         ]

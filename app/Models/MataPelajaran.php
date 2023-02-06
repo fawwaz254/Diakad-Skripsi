@@ -19,7 +19,7 @@ class MataPelajaran extends Model
     public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_jurusan',
         'id_jenis_mata_pelajaran',
@@ -57,7 +57,12 @@ class MataPelajaran extends Model
 
     public function urutan_rapor_sisipan()
     {
-        return $this->belongsTo('App\Models\UrutanRaporSisipan', 'id_mata_pelajaran','id_mata_pelajaran');
+        return $this->belongsTo('App\Models\UrutanRaporSisipan', 'id_mata_pelajaran', 'id_mata_pelajaran')->withDefault([
+            'urutan' => 99,
+        ]);;
     }
-
+    public function sub_rapor_sisipan_mp()
+    {
+        return $this->belongsTo(SubRaporSisipanMP::class, 'id_mata_pelajaran', 'id_mata_pelajaran');
+    }
 }

@@ -44,16 +44,23 @@ class RekapNomorHpController extends Controller
 
         $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
 
-        $list_data = Pengguna::with('siswa','siswa.wali_murid')
-        ->whereHas('siswa', function ($query) use($wali_kelas) {
-            $query->where('id_kelas', '=', $wali_kelas->id_kelas);
-        })->get();
+        $list_data = Pengguna::with('siswa', 'siswa.wali_murid')
+            ->whereHas('siswa', function ($query) use ($wali_kelas) {
+                $query->where('id_kelas', '=', $wali_kelas->id_kelas);
+            })
+            ->get();
 
         // dd($pengguna);
 
         // $list_data = Pengguna::where('')
 
         return Datatables::of($list_data)
-                ->make(true);
+            ->addColumn('nm_wali_murid', function ($item) {
+                if (isset($item->siswa->wali_murid->nm_wali_murid) && !is_numeric($item->siswa->wali_murid->nm_wali_murid)) {
+                    return $item->siswa->wali_murid->nm_wali_murid;
+                } else {
+                    return '';
+                }
+            })->make(true);
     }
 }

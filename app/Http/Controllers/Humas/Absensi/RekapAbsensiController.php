@@ -13,6 +13,7 @@ use App\Models\ManajemenHariLibur;
 use App\Models\Pengguna;
 use App\Models\PresensiPengguna;
 use App\Models\Sekolah;
+use App\Models\Setting;
 use App\Models\ShiftMaster;
 use App\Models\ShiftPengguna;
 use App\Models\UnitKerja;
@@ -84,7 +85,6 @@ class RekapAbsensiController extends Controller
         $tidak_checkout = 0;
 
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
-        // dd($list_pengguna);
 
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->whereIn('id_pengguna', $list_pengguna)->get();
@@ -252,7 +252,6 @@ class RekapAbsensiController extends Controller
         $tidak_checkout = 0;
 
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
-        // dd($list_pengguna);
 
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', '!=', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('status_join_table', [1, 2])->whereIn('id_pengguna', $list_pengguna)->get();
@@ -340,7 +339,7 @@ class RekapAbsensiController extends Controller
             }
         }
         $list_unit_kerja = UnitKerja::all();
-        // $hasil;
+        $data = [];
         foreach ($hasil as $key => $a) {
             $data[$key]['nm_pengguna'] = $a['nm_pengguna'];
             $data[$key]['unit_kerja'] = $a['unit_kerja'];
@@ -409,21 +408,34 @@ class RekapAbsensiController extends Controller
             $nm_kelas = $tingkat . ' ' . $jurusan;
         }
 
+        $setting = Setting::where('key_setting', 'is_checkout_siswa')->first()->value;
 
         $hasil = [];
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;
         $jumlah_izin = 0;
         $jumlah_telat = 0;
-        // $jumlah_pulangcepat = 0;
+        $jumlah_pulangcepat = 0;
         $jumlah_alpha = 0;
-        // $tidak_checkout = 0;
+        $tidak_checkout = 0;
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::whereBetween('date', [$start_date, $end_date])->get();
         $carbon = Carbon::now()->format('Y-m-d');
+
+        $hariIndo = [
+            0 => 'Minggu',
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+        ];
+
+
 
         foreach ($pengguna as $key1 => $value) {
             // $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
@@ -434,7 +446,13 @@ class RekapAbsensiController extends Controller
 
             foreach ($dates as $key2 => $date) {
                 $cek_libur = $libur->firstWhere('date', $date->format('Y-m-d'));
-                // $hasil[$key1][$key2]['status'] = '';
+                $hasil[$key1][$key2]['nm_pengguna'] =  $value->nm_pengguna;
+                $hasil[$key1][$key2]['nm_hari'] =  $hariIndo[$date->dayOfWeek];
+                $hasil[$key1][$key2]['check_in'] =  '';
+                $hasil[$key1][$key2]['check_out'] =  '';
+                $hasil[$key1][$key2]['status'] =  '';
+                $hasil[$key1][$key2]['date'] =  $date->format('Y-m-d');
+                $hasil[$key1][$key2]['note'] = '';
                 $shiftPengguna = $allShiftPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $attendance =  $allPresensiPengguna->where('date', $date->format('Y-m-d'))->where('id_pengguna', '=', $value->id_pengguna)->first();
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
@@ -442,7 +460,7 @@ class RekapAbsensiController extends Controller
                 if ($attendance) {
 
                     if ($attendance->status) {
-                        // $hasil[$key1][$key2]['status'] = $attendance->status;
+                        $hasil[$key1][$key2]['status'] = $attendance->status;
                         if ($attendance->status == 'sakit') {
                             $jumlah_sakit++;
                         } elseif ($attendance->status == 'izin') {
@@ -450,46 +468,56 @@ class RekapAbsensiController extends Controller
                         }
                     }
                     if ($attendance->check_in) {
-                        // $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
-                        // $hasil[$key1][$key2]['status'] = "Masuk";
+                        $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
+                        $hasil[$key1][$key2]['status'] = "Masuk";
                         $jumlah_hadir++;
                     }
 
                     if (isset($shiftMaster['start_time'])) {
                         if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                             $jumlah_telat++;
-                            // $hasil[$key1][$key2]['status'] = "Telat";
+                            $hasil[$key1][$key2]['status'] = "Telat";
                         }
                     }
 
-                    // if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
-                    //     if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
-                    //         // $jumlah_pulangcepat++;
-                    //         $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
-                    //     }
-                    // }
+                    if ($attendance->notes) {
+                        $hasil[$key1][$key2]['note'] = $attendance->notes;
+                    }
 
-                    // if (isset($shiftMaster['start_time'])) {
-                    //     if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                    //         $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
-                    //     }
-                    // // }
+                    if ($setting == '1') {
 
-                    // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                    //     $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
-                    //     // $tidak_checkout++;
-                    // }
-                    // if (isset($shiftMaster['start_time'])) {
-                    //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
 
-                    //         $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
-                    //     }
-                    // }
+                        if ($attendance->check_out) {
+                            $hasil[$key1][$key2]['check_out'] = $attendance->check_out;
+                        }
+                        if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
+                            if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                                $jumlah_pulangcepat++;
+                                $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
+                            }
+                        }
+
+                        if (isset($shiftMaster['start_time'])) {
+                            if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                                $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
+                            }
+                        }
+
+                        if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                            $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
+                            $tidak_checkout++;
+                        }
+                        if (isset($shiftMaster['start_time'])) {
+                            if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                                $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                            }
+                        }
+                    }
                 } else {
                     if ($shiftMaster) {
 
                         if ($date->format('Y-m-d') < $carbon) {
-                            // $hasil[$key1][$key2]['status'] = 'Alpha';
+                            $hasil[$key1][$key2]['status'] = 'Alpha';
                             $jumlah_alpha++;
                         } else {
                             // $hasil[$key1][$key2]['status'] = '';
@@ -508,27 +536,28 @@ class RekapAbsensiController extends Controller
         }
         // $list_kelas = Kelas::all();
         // $hasil;
-        // foreach ($hasil as $key => $a) {
-        //     $data[$key]['nm_pengguna'] = $a['nm_pengguna'];
-        //     $data[$key]['kelas'] = $a['kelas'];
-        //     $data[$key]['id_pengguna'] = $a['id_pengguna'];
-        //     $data[$key]['masuk'] = isset(array_count_values(array_column($a, 'status'))['Masuk']) ? array_count_values(array_column($a, 'status'))['Masuk'] : '0';
-        //     $data[$key]['sakit'] = isset(array_count_values(array_column($a, 'status'))['sakit']) ? array_count_values(array_column($a, 'status'))['sakit'] : '0';
-        //     $data[$key]['izin'] = isset(array_count_values(array_column($a, 'status'))['izin']) ? array_count_values(array_column($a, 'status'))['izin'] : '0';
-        //     $data[$key]['telat'] = isset(array_count_values(array_column($a, 'status'))['Telat']) ? array_count_values(array_column($a, 'status'))['Telat'] : '0';
-        //     // $data[$key]['pulang'] = isset(array_count_values(array_column($a, 'status'))['Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Pulang lebih awal'] : '0';
-        //     // $data[$key]['telatDanPulangLebihAwal'] = isset(array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal'] : '0';
-        //     // $data[$key]['tidakCheckout'] = isset(array_count_values(array_column($a, 'status'))['Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Tidak Checkout'] : '0';
-        //     // $data[$key]['Telat & Tidak Checkout'] = isset(array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout'] : '0';
-        //     // $data[$key]['kosong'] = isset(array_count_values(array_column($a, 'status'))['']) ? array_count_values(array_column($a, 'status'))[''] : '0';
-        //     $data[$key]['alpha'] = isset(array_count_values(array_column($a, 'status'))['Alpha']) ? array_count_values(array_column($a, 'status'))['Alpha'] : '0';
-        //     // $data[$key]['libur'] = isset(array_count_values(array_column($a, 'status'))['Libur']) ? array_count_values(array_column($a, 'status'))['Libur'] : '0';
-        // }
+        foreach ($hasil as $key => $a) {
+            // $data[$key]['nm_pengguna'] = $a['nm_pengguna'];
+            // $data[$key]['kelas'] = $a['kelas'];
+            // $data[$key]['id_pengguna'] = $a['id_pengguna'];
+            $data[$key]['masuk'] = isset(array_count_values(array_column($a, 'status'))['Masuk']) ? array_count_values(array_column($a, 'status'))['Masuk'] : '0';
+            $data[$key]['sakit'] = isset(array_count_values(array_column($a, 'status'))['sakit']) ? array_count_values(array_column($a, 'status'))['sakit'] : '0';
+            $data[$key]['izin'] = isset(array_count_values(array_column($a, 'status'))['izin']) ? array_count_values(array_column($a, 'status'))['izin'] : '0';
+            $data[$key]['telat'] = isset(array_count_values(array_column($a, 'status'))['Telat']) ? array_count_values(array_column($a, 'status'))['Telat'] : '0';
+            if ($setting == '1') {
+                $data[$key]['pulang'] = isset(array_count_values(array_column($a, 'status'))['Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Pulang lebih awal'] : '0';
+                $data[$key]['telatDanPulangLebihAwal'] = isset(array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal'] : '0';
+                $data[$key]['tidakCheckout'] = isset(array_count_values(array_column($a, 'status'))['Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Tidak Checkout'] : '0';
+                $data[$key]['Telat & Tidak Checkout'] = isset(array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout'] : '0';
+                $data[$key]['kosong'] = isset(array_count_values(array_column($a, 'status'))['']) ? array_count_values(array_column($a, 'status'))[''] : '0';
+            }
 
-        // $start_date = Carbon::parse($start_date)->format('Y-m-d');
-        // $end_date = Carbon::parse($end_date)->format('Y-m-d');
+            $data[$key]['alpha'] = isset(array_count_values(array_column($a, 'status'))['Alpha']) ? array_count_values(array_column($a, 'status'))['Alpha'] : '0';
+            // $data[$key]['libur'] = isset(array_count_values(array_column($a, 'status'))['Libur']) ? array_count_values(array_column($a, 'status'))['Libur'] : '0';
+        }
 
-        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date'));
+
+        return view('humas/absensi/rekap-absensi-siswa/chart-rekap-semua-siswa', compact('auth_data', 'nm_kelas', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'tidak_checkout', 'jumlah_pulangcepat', 'data', 'hasil'));
     }
 
     public function viewRekapAbsensiSiswa(Request $request, $id_kelas, $start_date, $end_date)
@@ -571,14 +600,18 @@ class RekapAbsensiController extends Controller
                 })->orderBy('nm_pengguna', 'asc')->get();
         }
 
+        $setting = Setting::where('key_setting', 'is_checkout_siswa')->first()->value;
+
         $hasil = [];
         $jumlah_hadir = 0;
         $jumlah_sakit = 0;
         $jumlah_izin = 0;
         $jumlah_telat = 0;
-        // $jumlah_pulangcepat = 0;
         $jumlah_alpha = 0;
-        // $tidak_checkout = 0;
+        $jumlah_pulangcepat = 0;
+        $tidak_checkout = 0;
+
+
         $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->where('id_shift_master', 'Siswa')->whereIn('id_pengguna', $list_pengguna)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::whereBetween('date', [$start_date, $end_date])->where('status_join_table', 3)->whereIn('id_pengguna', $list_pengguna)->get();
@@ -588,7 +621,6 @@ class RekapAbsensiController extends Controller
         foreach ($pengguna as $key1 => $value) {
             $hasil[$key1]['id_pengguna'] = $value->id_pengguna;
             $hasil[$key1]['nm_pengguna'] =  $value->nm_pengguna;
-            // $hasil[$key1]['unit_kerja'] = isset($value->guru->unit_kerja)  ?  $value->guru->unit_kerja->nm_unit_kerja : 'Pegawai';
             $hasil[$key1]['kelas'] = isset($value->siswa->kelas->nm_kelas) ? $value->siswa->kelas->nm_kelas : '-';
             $hasil[$key1]['nis'] = $value->username;
             foreach ($dates as $key2 => $date) {
@@ -599,7 +631,6 @@ class RekapAbsensiController extends Controller
                 $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
 
                 if ($attendance) {
-
                     if ($attendance->status) {
                         $hasil[$key1][$key2]['status'] = $attendance->status;
                         if ($attendance->status == 'sakit') {
@@ -609,7 +640,6 @@ class RekapAbsensiController extends Controller
                         }
                     }
                     if ($attendance->check_in) {
-                        // $hasil[$key1][$key2]['check_in'] = $attendance->check_in;
                         $hasil[$key1][$key2]['status'] = "Masuk";
                         $jumlah_hadir++;
                     }
@@ -620,30 +650,28 @@ class RekapAbsensiController extends Controller
                             $hasil[$key1][$key2]['status'] = "Telat";
                         }
                     }
-
-                    // if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
-                    //     if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
-                    //         // $jumlah_pulangcepat++;
-                    //         $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
-                    //     }
-                    // }
-
-                    // if (isset($shiftMaster['start_time'])) {
-                    //     if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
-                    //         $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
-                    //     }
-                    // // }
-
-                    // if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
-                    //     $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
-                    //     // $tidak_checkout++;
-                    // }
-                    // if (isset($shiftMaster['start_time'])) {
-                    //     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
-
-                    //         $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
-                    //     }
-                    // }
+                    if ($setting == '1') {
+                        if (isset($shiftMaster['end_time']) && isset($attendance->check_out)) {
+                            if ($attendance->check_out < $shiftMaster['end_time'] && $attendance->check_out > $attendance->check_in) {
+                                $jumlah_pulangcepat++;
+                                $hasil[$key1][$key2]['status'] = "Pulang lebih awal";
+                            }
+                        }
+                        if (isset($shiftMaster['start_time'])) {
+                            if (!$shiftMaster['start_time'] == null && !$attendance->check_out == null  && $attendance->check_in > $shiftMaster['start_time'] && $attendance->check_out < $shiftMaster['end_time']) {
+                                $hasil[$key1][$key2]['status'] = "Telat dan Pulang lebih awal";
+                            }
+                        }
+                        if ($date < Carbon::now()->format('Y-m-d') && $attendance->check_in && !$attendance->check_out) {
+                            $hasil[$key1][$key2]['status'] = 'Tidak Checkout';
+                            $tidak_checkout++;
+                        }
+                        if (isset($shiftMaster['start_time'])) {
+                            if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time'] && !$attendance->check_out && $date < Carbon::now()->format('Y-m-d')) {
+                                $hasil[$key1][$key2]['status'] = "Telat & Tidak Checkout";
+                            }
+                        }
+                    }
                 } else {
                     if ($shiftMaster) {
 
@@ -675,18 +703,20 @@ class RekapAbsensiController extends Controller
             $data[$key]['sakit'] = isset(array_count_values(array_column($a, 'status'))['sakit']) ? array_count_values(array_column($a, 'status'))['sakit'] : '0';
             $data[$key]['izin'] = isset(array_count_values(array_column($a, 'status'))['izin']) ? array_count_values(array_column($a, 'status'))['izin'] : '0';
             $data[$key]['telat'] = isset(array_count_values(array_column($a, 'status'))['Telat']) ? array_count_values(array_column($a, 'status'))['Telat'] : '0';
-            // $data[$key]['pulang'] = isset(array_count_values(array_column($a, 'status'))['Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Pulang lebih awal'] : '0';
-            // $data[$key]['telatDanPulangLebihAwal'] = isset(array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal'] : '0';
-            // $data[$key]['tidakCheckout'] = isset(array_count_values(array_column($a, 'status'))['Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Tidak Checkout'] : '0';
-            // $data[$key]['Telat & Tidak Checkout'] = isset(array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout'] : '0';
-            // $data[$key]['kosong'] = isset(array_count_values(array_column($a, 'status'))['']) ? array_count_values(array_column($a, 'status'))[''] : '0';
+            if ($setting == '1') {
+                $data[$key]['pulang'] = isset(array_count_values(array_column($a, 'status'))['Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Pulang lebih awal'] : '0';
+                $data[$key]['telatDanPulangLebihAwal'] = isset(array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal']) ? array_count_values(array_column($a, 'status'))['Telat dan Pulang lebih awal'] : '0';
+                $data[$key]['tidakCheckout'] = isset(array_count_values(array_column($a, 'status'))['Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Tidak Checkout'] : '0';
+                $data[$key]['Telat & Tidak Checkout'] = isset(array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout']) ? array_count_values(array_column($a, 'status'))['Telat & Tidak Checkout'] : '0';
+                $data[$key]['kosong'] = isset(array_count_values(array_column($a, 'status'))['']) ? array_count_values(array_column($a, 'status'))[''] : '0';
+            }
+
             $data[$key]['alpha'] = isset(array_count_values(array_column($a, 'status'))['Alpha']) ? array_count_values(array_column($a, 'status'))['Alpha'] : '0';
-            // $data[$key]['libur'] = isset(array_count_values(array_column($a, 'status'))['Libur']) ? array_count_values(array_column($a, 'status'))['Libur'] : '0';
+            $data[$key]['libur'] = isset(array_count_values(array_column($a, 'status'))['Libur']) ? array_count_values(array_column($a, 'status'))['Libur'] : '0';
         }
 
         $start_date = Carbon::parse($start_date)->format('Y-m-d');
         $end_date = Carbon::parse($end_date)->format('Y-m-d');
-
 
         $groupKelas =  Kelas::select('kelas.tingkat', 'jurusan.nm_jurusan', 'kelas.id_jurusan')
             ->join('jurusan', 'jurusan.id_jurusan', '=', 'kelas.id_jurusan')
@@ -694,7 +724,7 @@ class RekapAbsensiController extends Controller
             ->orderBy('kelas.tingkat', 'asc')
             ->get();
 
-        return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'groupKelas', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'start_date', 'end_date', 'id_kelas', 'nama_kelas'));
+        return view('humas/absensi/rekap-absensi-siswa/view-rekap-absensi-siswa', compact('auth_data', 'groupKelas', 'list_kelas', 'data', 'jumlah_hadir', 'jumlah_izin', 'jumlah_sakit', 'jumlah_telat',  'jumlah_alpha', 'tidak_checkout', 'jumlah_pulangcepat', 'start_date', 'end_date', 'id_kelas', 'nama_kelas', 'setting'));
     }
 
 
@@ -997,7 +1027,6 @@ class RekapAbsensiController extends Controller
         set_time_limit(-1);
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
 
         $pengguna = Pengguna::where('id_pengguna', $id_pengguna)->with('status_pengguna', 'siswa.kelas')->first();
 
