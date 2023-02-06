@@ -60,7 +60,7 @@
             { data: null, searchable: false, orderable: false },
             { data: 'nm_arsip_loker', name: 'arsip_loker.nm_arsip_loker' },
             { data: 'nm_arsip_pemilik', name: 'arsip_pemilik.nm_arsip_pemilik' },
-            { data: 'nm_arsip_subkategori', name: 'arsip_kategori.nm_arsip_subkategori' },
+            { data: 'nm_arsip_subkategori', name: 'arsip_subkategori.nm_arsip_subkategori' },
             { data: 'jml_file', name: 'jml_file', searchable: false, orderable: false },
             { data: 'kode_katalog', name: 'arsip_dokumen.kode_katalog' },
             { data: 'nm_arsip_dokumen', name: 'arsip_dokumen.nm_arsip_dokumen' },
