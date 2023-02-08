@@ -32,6 +32,7 @@
                                     <th>PORT</th>
                                     <th>Last Updated</th>
                                     <th>Last Data</th>
+                                    <th>Last Clear Log</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -93,6 +94,11 @@
                 data: 'last_data',
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'clear_log',
+                searchable: false,
+                orderable: false
             }, {
                 data: 'action',
                 searchable: false,
@@ -108,7 +114,7 @@
                         '</a> ' +
                         '<a class="btn btn-danger" target="_blank" href="' + base_url +
                         '/iclock/clear-log-data?SN=' + data.sn + '">' +
-                        '    <i class="material-icons">system_update_alt</i><span>Clear Log Dat</span></a>' +
+                        '    <i class="material-icons">system_update_alt</i><span>Clear Log Data</span></a>' +
                         '</a> ';
                 }
             },
