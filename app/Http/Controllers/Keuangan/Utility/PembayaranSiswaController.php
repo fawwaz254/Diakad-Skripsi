@@ -249,8 +249,8 @@ class PembayaranSiswaController extends BaseController
         $semester_mulai = Semester::where('kode_semester', $input->tahun_tagihan . '1')->first()->id_semester;
         $semester_selesai = Semester::where('kode_semester', $input->tahun_tagihan . '2')->first()->id_semester;
 
-        $bulan_tagihan = $input->bulan_tagihan;
 
+        $bulan_tagihan = $input->bulan_tagihan ?? [7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6];
         $list_data = TagihanBiaya::select(
             'tagihan_biaya.id_tagihan_biaya',
             'detail_biaya.id_detail_biaya',
