@@ -105,16 +105,16 @@
                 orderable: false,
                 render: function(data) {
                     return '<a class="btn btn-success" target="_blank" href="' + base_url +
-                        '/iclock/manual-get-data?sn=' + data.sn + '">' +
-                        '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
-                        '</a> ' +
-                        '<a class="btn btn-success" target="_blank" href="' + base_url +
                         '/iclock/manual-get-data-realtime?SN=' + data.sn + '">' +
                         '    <i class="material-icons">system_update_alt</i><span>Tarik Data</span></a>' +
                         '</a> ' +
+                        '<a class="btn btn-success" target="_blank" href="' + base_url +
+                        '/iclock/manual-get-data?sn=' + data.sn + '">' +
+                        '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
+                        '</a> ' +
                         '<a class="btn btn-danger" target="_blank" href="' + base_url +
                         '/iclock/clear-log-data?SN=' + data.sn + '">' +
-                        '    <i class="material-icons">system_update_alt</i><span>Clear Log Data</span></a>' +
+                        '    <i class="material-icons">system_update_alt</i><span>Clear Log Dat</span></a>' +
                         '</a> ';
                 }
             },
