@@ -44,6 +44,14 @@ class FingerprintController extends BaseController
             ->editColumn('updated_at', function ($item) use ($now) {
                 return Carbon::parse($item->updated_at)->diffForHumans($now);
             })
+            ->addColumn('last_data', function ($item) use ($now) {
+                $fp_attendence =  FPAttendance::where('id_fp_device', $item->id_fp_device)->orderBy('fp_date', 'desc')->first();
+                if ($fp_attendence) {
+                    return Carbon::parse($fp_attendence->updated_at)->diffForHumans($now);
+                } else {
+                    return 'kosong';
+                }
+            })
             ->make(true);
     }
 
@@ -581,7 +589,7 @@ class FingerprintController extends BaseController
         $client = new \GuzzleHttp\Client();
 
         $serial_number = '';
-        $date_filter = null;
+        // $date_filter = null;
         if (isset($input->SN)) {
             $serial_number = $input->SN;
         }
@@ -620,4 +628,50 @@ class FingerprintController extends BaseController
             echo "Koneksi Gagal";
         }
     }
+
+    // public function clearLogDataAll(Request $request)
+    // {
+    //     $input = (object) $request->input();
+    //     $client = new \GuzzleHttp\Client();
+
+    //     // $serial_number = '';
+    //     // $date_filter = null;
+    //     // if (isset($input->SN)) {
+    //     //     $serial_number = $input->SN;
+    //     // }
+
+    //     if ($device = FPDevice::all()) {
+    //         // $device->ip_address_wan = $request->ip();
+    //         $device->updated_at = Carbon::now('Asia/Jakarta');
+    //         $device->save();
+    //     } else {
+    //         return 'FAILED';
+    //     }
+
+    //     $soap_request = "<ClearData><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg></ClearData>";
+
+    //     try {
+    //         if (!empty($device->port)) {
+    //             $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+    //         } else {
+    //             $fingerprint_url = $device->ip_address_wan . '/iWsService';
+    //         }
+    //         // $client->request('GET', $fingerprint_url);
+    //     } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+    //         return 'Failed';
+    //     }
+
+    //     try {
+    //         $res = $client->post($fingerprint_url, [
+    //             'headers' => [
+    //                 'Content-Type' => 'text/xml',
+    //                 'Content-Length' => strlen($soap_request)
+    //             ],
+    //             'body' => $soap_request
+    //         ]);
+    //         echo "Berhasil";
+    //     } catch (\Exception $e) {
+    //         echo "Koneksi Gagal";
+    //     }
+    // }
 }
