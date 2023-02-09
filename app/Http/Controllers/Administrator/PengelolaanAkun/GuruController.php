@@ -19,32 +19,32 @@ use Validator;
 
 class GuruController extends BaseController
 {
-    public function viewGuru(Request $request, $id_role = null)
-    {
-        # code..
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
+    // public function viewGuru(Request $request, $id_role = null)
+    // {
+    //     # code..
+    //     $input = (object) $request->input();
+    //     $auth_data = $input->auth_data;
 
-        $data_role = Role::select(
-            DB::raw("role.id_role, nm_role, (SELECT COUNT(*) FROM role_pengguna JOIN pengguna ON pengguna.id_pengguna = role_pengguna.id_pengguna WHERE role_pengguna.id_role = role.id_role AND role_pengguna.deleted_at IS NULL AND pengguna.status_join_table = 2 AND pengguna.id_sekolah = ? ) AS total_role")
-        )
-            ->join('role_pengguna AS rp', function ($join) {
-                $join->on('rp.id_role', '=', 'role.id_role')
-                    ->whereNull('rp.deleted_at');
-            })
-            ->join('pengguna AS p', function ($q) {
-                $q->on('p.id_pengguna', '=', 'rp.id_pengguna')
-                    ->whereNull('p.deleted_at');
-            })
-            ->where('p.status_join_table', '=', "?")
-            ->where('p.id_sekolah', '=', "?")
-            ->orderBy('role.nm_role', 'asc')
-            ->distinct()
-            ->setBindings([$auth_data->pengguna->id_sekolah, 2, $auth_data->pengguna->id_sekolah])
-            ->get();
+    //     $data_role = Role::select(
+    //         DB::raw("role.id_role, nm_role, (SELECT COUNT(*) FROM role_pengguna JOIN pengguna ON pengguna.id_pengguna = role_pengguna.id_pengguna WHERE role_pengguna.id_role = role.id_role AND role_pengguna.deleted_at IS NULL AND pengguna.status_join_table = 2 AND pengguna.id_sekolah = ? ) AS total_role")
+    //     )
+    //         ->join('role_pengguna AS rp', function ($join) {
+    //             $join->on('rp.id_role', '=', 'role.id_role')
+    //                 ->whereNull('rp.deleted_at');
+    //         })
+    //         ->join('pengguna AS p', function ($q) {
+    //             $q->on('p.id_pengguna', '=', 'rp.id_pengguna')
+    //                 ->whereNull('p.deleted_at');
+    //         })
+    //         ->where('p.status_join_table', '=', "?")
+    //         ->where('p.id_sekolah', '=', "?")
+    //         ->orderBy('role.nm_role', 'asc')
+    //         ->distinct()
+    //         ->setBindings([$auth_data->pengguna->id_sekolah, 2, $auth_data->pengguna->id_sekolah])
+    //         ->get();
 
-        return view('administrator/pengelolaan-akun/guru/view-guru', compact('auth_data', 'data_role', 'id_role'));
-    }
+    //     return view('administrator/pengelolaan-akun/guru/view-guru', compact('auth_data', 'data_role', 'id_role'));
+    // }
 
     public function actionViewGuru(Request $request)
     {
