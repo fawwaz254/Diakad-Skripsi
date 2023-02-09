@@ -31,6 +31,7 @@
                                     <th>LAN</th>
                                     <th>PORT</th>
                                     <th>Last Updated</th>
+                                    <th>Last Data</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -50,57 +51,68 @@
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,
+        paging: false,
         ajax: {
             url: datatable_url,
             type: 'GET'
         },
         columns: [{
-            data: null,
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'nm_fp_device',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'sn',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'status',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'ip_address_wan',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'ip_address_lan',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'port',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'updated_at',
-            searchable: false,
-            orderable: false
-        }, {
-            data: 'action',
-            searchable: false,
-            orderable: false,
-            render: function(data) {
-                return '<a class="btn btn-success" target="_blank" href="' + base_url +
-                    '/iclock/manual-get-data?sn=' + data.sn + '">' +
-                    '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
-                    '</a> ' +
-                    '<a class="btn btn-success" target="_blank" href="' + base_url +
-                    '/iclock/manual-get-data-realtime?SN=' + data.sn + '">' +
-                    '    <i class="material-icons">system_update_alt</i><span>Tarik Data</span></a>' +
-                    '</a> ';
-            }
-        }, ]
+                data: null,
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'nm_fp_device',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'sn',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'status',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'ip_address_wan',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'ip_address_lan',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'port',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'updated_at',
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'last_data',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a class="btn btn-success" target="_blank" href="' + base_url +
+                        '/iclock/manual-get-data?sn=' + data.sn + '">' +
+                        '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
+                        '</a> ' +
+                        '<a class="btn btn-success" target="_blank" href="' + base_url +
+                        '/iclock/manual-get-data-realtime?SN=' + data.sn + '">' +
+                        '    <i class="material-icons">system_update_alt</i><span>Tarik Data</span></a>' +
+                        '</a> ' +
+                        '<a class="btn btn-danger" target="_blank" href="' + base_url +
+                        '/iclock/clear-log-data?SN=' + data.sn + '">' +
+                        '    <i class="material-icons">system_update_alt</i><span>Clear Log Dat</span></a>' +
+                        '</a> ';
+                }
+            },
+        ]
     });
 
     primary_table.on('draw', function() {
