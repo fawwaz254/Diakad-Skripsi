@@ -32,6 +32,7 @@
                                     <th>PORT</th>
                                     <th>Last Updated</th>
                                     <th>Last Data</th>
+                                    <th>Last Clear Log</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -93,18 +94,23 @@
                 data: 'last_data',
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'clear_log',
+                searchable: false,
+                orderable: false
             }, {
                 data: 'action',
                 searchable: false,
                 orderable: false,
                 render: function(data) {
                     return '<a class="btn btn-success" target="_blank" href="' + base_url +
-                        '/iclock/manual-get-data?sn=' + data.sn + '">' +
-                        '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
-                        '</a> ' +
-                        '<a class="btn btn-success" target="_blank" href="' + base_url +
                         '/iclock/manual-get-data-realtime?SN=' + data.sn + '">' +
                         '    <i class="material-icons">system_update_alt</i><span>Tarik Data</span></a>' +
+                        '</a> ' +
+                        '<a class="btn btn-success" target="_blank" href="' + base_url +
+                        '/iclock/manual-get-data?sn=' + data.sn + '">' +
+                        '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
                         '</a> ' +
                         '<a class="btn btn-danger" target="_blank" href="' + base_url +
                         '/iclock/clear-log-data?SN=' + data.sn + '">' +

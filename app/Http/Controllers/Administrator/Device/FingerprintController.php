@@ -52,6 +52,13 @@ class FingerprintController extends BaseController
                     return 'kosong';
                 }
             })
+            ->addColumn('clear_log', function ($item) use ($now) {
+                if ($item->clear_log) {
+                    return Carbon::parse($item->clear_log)->diffForHumans($now);
+                } else {
+                    return 'kosong';
+                }
+            })
             ->make(true);
     }
 
@@ -589,16 +596,11 @@ class FingerprintController extends BaseController
         $client = new \GuzzleHttp\Client();
 
         $serial_number = '';
-        // $date_filter = null;
         if (isset($input->SN)) {
             $serial_number = $input->SN;
         }
 
-        if ($device = FPDevice::where('sn', $serial_number)->first()) {
-            // $device->ip_address_wan = $request->ip();
-            $device->updated_at = Carbon::now('Asia/Jakarta');
-            $device->save();
-        } else {
+        if ($device = FPDevice::where('sn', $serial_number)->first()) { } else {
             return 'FAILED';
         }
 
@@ -623,6 +625,8 @@ class FingerprintController extends BaseController
                 ],
                 'body' => $soap_request
             ]);
+            $device->clear_log = Carbon::now('Asia/Jakarta');
+            $device->save();
             echo "Berhasil";
         } catch (\Exception $e) {
             echo "Koneksi Gagal";
