@@ -20,7 +20,7 @@
 </div> --}}
     {{-- </div> --}}
     <div class="row clearfix">
-        <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card is-gap">
                 <div class="body">
                     <center>
@@ -120,9 +120,113 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
 
-            {{-- <div class="card">
+
+        <div class="row">
+            {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="{{ route('report.pimpinan') }}">
+                        <div class="card">
+                            <div class="body bg-red" style="text-align: -webkit-center;">
+                                <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64" height="64">
+                                <h5>
+                                    Report Pimpinan
+                                </h5>
+                                <small>Data Penggunaan Diakad Untuk Setiap Role Semester
+                                    {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div> --}}
+            @foreach ($role_pengguna as $role)
+                {{-- @php
+                        dd($role);
+                    @endphp --}}
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top: 10px">
+                    <form action='' method='post'>
+                        {{-- <h5>
+                               
+                            </h5> --}}
+                        <button type='submit'
+                            style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px">
+                            Role : {{ $role->role->nm_role }}</button>
+                    </form>
+                    {{-- <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint' . $role->role->id_role) }}"
+                            style=" display: inline-block;"> --}}
+
+                    </a>
+                    <div class="card">
+                        <div class="body " style="text-align: -webkit-center;">
+                            {{-- <img class="media-object" src="{{ url('media/flaticon/clipboard.png') }}"
+                                        width="64" height="64"> --}}
+
+
+                            @foreach ($role->role->modul as $modul)
+                                <h5>
+                                    {{ $modul->nm_modul }}
+                                </h5>
+                                @foreach ($modul->menus as $menu)
+                                    <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}"
+                                        style=" display: inline-block;">
+                                        <div class="card" style="margin-top: 5px">
+                                            <div class="body bg-green" style="text-align: -webkit-center;">
+
+                                                <h5>
+                                                    {{ $menu->nm_menu }}
+                                                </h5>
+                                                {{-- <small>Informasi alat Fingerprint</small> --}}
+                                            </div>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            @endforeach
+                            {{-- <small>Informasi alat Fingerprint</small> --}}
+                        </div>
+                    </div>
+
+
+                    {{-- <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}"
+                            style=" display: inline-block;">
+                            <div class="card">
+                                <div class="body bg-green" style="text-align: -webkit-center;">
+
+                                    <h5>
+                                        {{ $role->role->nm_role }}
+                                    </h5> --}}
+                    {{-- <small>Informasi alat Fingerprint</small> --}}
+                    {{-- </div>
+                            </div>
+                        </a> --}}
+                </div>
+            @endforeach
+
+
+
+            {{-- <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="{{ route('report.walikelas') }}">
+                        <div class="card">
+                            <div class="body bg-red" style="text-align: -webkit-center;">
+                                <img class="media-object" src="{{ url('media/flaticon/man.png') }}" width="64"
+                                    height="64">
+                                <h5>
+                                    Report Wali Kelas
+                                </h5>
+                                <small>Data Menu Wali Kelas
+                                    {{ $semester_aktif->tahun_ajaran }} {{ $semester_aktif->nm_semester }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div> --}}
+        </div>
+
+
+
+
+
+
+
+
+
+        {{-- <div class="card">
                 <div class="body">
                     <div class="table-responsive">
                         @foreach ($grup_semester_kelas as $tahun_ajaran => $grup_kelas)
@@ -156,9 +260,9 @@
                 </div>
             </div> --}}
 
-            <br>
+        <br>
 
-            {{-- <div class="card">
+        {{-- <div class="card">
                 <div class="body">
                     <div class="table-responsive">
                         <h2 class="card-inside-title">Aktivitas</h2>
@@ -178,16 +282,16 @@
                 </div>
             </div> --}}
 
-            {{-- <div class="row clearfix" style="margin-top:20px">
+        {{-- <div class="row clearfix" style="margin-top:20px">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <button class="btn btn-block bg-blue waves-effect" id="btn-reset-password" onclick="resetPasswordSiswa('{{$siswa->id_pengguna}}')"><i class="material-icons">update</i><span>Reset Password Siswa</span></button>
                 </div>
             </div> --}}
 
-        </div>
     </div>
+</div>
 
-    {{-- <div class="row clearfix">
+{{-- <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
@@ -225,9 +329,9 @@
             </div>
     </div> --}}
 
-    <br>
+<br>
 
-    {{-- <div class="row clearfix">
+{{-- <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
                     {{csrf_field()}}
