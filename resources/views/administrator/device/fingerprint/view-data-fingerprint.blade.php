@@ -30,6 +30,7 @@
                                     <th>WAN</th>
                                     <th>LAN</th>
                                     <th>PORT</th>
+                                    <th>COMM KEY</th>
                                     <th>Last Updated</th>
                                     <th>Last Data</th>
                                     <th>Last Clear Log</th>
@@ -86,6 +87,10 @@
                 searchable: false,
                 orderable: false
             }, {
+                data: 'comm_key',
+                searchable: false,
+                orderable: false
+            }, {
                 data: 'updated_at',
                 searchable: false,
                 orderable: false
@@ -111,6 +116,10 @@
                         '<a class="btn btn-success" target="_blank" href="' + base_url +
                         '/iclock/manual-get-data?sn=' + data.sn + '">' +
                         '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
+                        '</a> ' +
+                        '<a class="btn btn-info" target="_blank" href="' + base_url +
+                        '/iclock/view-data-finger?SN=' + data.sn + '">' +
+                        '    <i class="material-icons">system_update_alt</i><span>Log Mesin</span></a>' +
                         '</a> ' +
                         '<a class="btn btn-danger" target="_blank" href="' + base_url +
                         '/iclock/clear-log-data?SN=' + data.sn + '">' +
