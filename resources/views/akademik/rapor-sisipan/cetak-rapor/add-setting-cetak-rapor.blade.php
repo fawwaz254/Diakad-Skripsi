@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link"
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting/' . $thn_akademik_semester) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <div class="row clearfix">
@@ -14,7 +14,7 @@
                 </div>
                 <div class="body">
                     <form id="form-validation" method="POST"
-                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor/postSetting/' . $mapel->id_mata_pelajaran) }}">
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor/postSetting/' . $mapel->id_mata_pelajaran . '/' . $thn_akademik_semester) }}">
 
                         {{ csrf_field() }}
                         <h2 class="card-inside-title">

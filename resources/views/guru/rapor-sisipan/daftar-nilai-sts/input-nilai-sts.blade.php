@@ -9,11 +9,11 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/' . $thn_akademik_semester) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <form id="form-validation" method="POST"
-        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action-input-nilai-rapor-sisipan/save/' . $id_rapor_sisipan) }}">
+        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sts/action-input-nilai-rapor-sisipan/save/' . $thn_akademik_semester . '/' . $id_rapor_sisipan) }}">
         {{ csrf_field() }}
         <div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

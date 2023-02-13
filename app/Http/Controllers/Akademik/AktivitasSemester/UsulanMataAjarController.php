@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\App;
 
 use App\Libraries\Pendidikan\LibDataAkademik;
 use App\Libraries\Akademik\LibAkademik;
-
+use App\Models\PresensiMp;
 use Auth;
 use DB;
 use Session;
@@ -63,7 +63,7 @@ class UsulanMataAjarController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'aktivitas-semester/usulan-mata-ajar/view-semester-usulan-mata-ajar/' . $input->id_semester
+                'path' => 'aktivitas-semester/view-jadwal-kelas/view-semester-view-jadwal-kelas/' . $input->id_semester
             ];
         }
     }
@@ -222,36 +222,28 @@ class UsulanMataAjarController extends BaseController
             'mata_pelajaran',
             'mata_pelajaran.jenis_mata_pelajaran',
             'kelas',
-            'jadwal_kelas_mp',
-            'jadwal_kelas_mp.jadwal_jam_mulai',
-            'jadwal_kelas_mp.jadwal_jam_selesai',
-            'pengampu_mp'
+            'jadwal_kelas_mp_single',
+            'jadwal_kelas_mp_single.jadwal_jam_mulai',
+            'jadwal_kelas_mp_single.jadwal_jam_selesai',
+            'jadwal_kelas_mp_single.jadwal_hari',
+            'pengampu_mp_utama.guru.pengguna',
+            'presensi_mp',
         )
             // ->with(['pengambilan_mp' => function ($q) {
             //     $q->where('status_apv_pengambilan_mp', 1);
             // }])
             ->where('id_semester', '=', $id_semester);
-
         return Datatables::of($list_data)
-            ->addColumn('jml_jadwal_jam', function ($item) {
-                $jml_jadwal_jam = 0;
-                foreach ($item->jadwal_kelas_mp as $jadwal) {
-                    $jml_jadwal_jam += $jadwal->jadwal_jam_selesai->jam_ke - $jadwal->jadwal_jam_mulai->jam_ke + 1;
-                }
-                return $jml_jadwal_jam;
-            })
-            ->addColumn('jml_jadwal', function ($item) {
-                return $item->jadwal_kelas_mp->count();
-            })
-            ->addColumn('jml_siswa', function ($item) {
-                return $item->pengambilan_mp->count();
-            })
-            ->addColumn('jml_pengampu', function ($item) {
-                return $item->pengampu_mp->count();
+            ->addColumn('jam_ruang', function ($item) {
+                $jadwal_kelas =  $item->jadwal_kelas_mp_single;
+                $jadwal_kelas ?
+                    $jadwal =  $jadwal_kelas->jadwal_jam_mulai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_mulai->menit_mulai . '-' . $jadwal_kelas->jadwal_jam_selesai->jam_mulai . ':' . $jadwal_kelas->jadwal_jam_selesai->menit_mulai . ', ' . $jadwal_kelas->ruangan->nm_ruangan : $jadwal = null;
+                return $jadwal;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
-                    'id' => $item->id_kelas_mp
+                    'id' => $item->id_kelas_mp,
+                    'presensi' => $item->presensi_mp->first(),
                 );
                 return $data;
             })
@@ -958,10 +950,10 @@ class UsulanMataAjarController extends BaseController
                     ];
                 }
             } elseif ($mode == 'delete') {
-                if ($kelas_mp = PengambilanMp::where('id_kelas_mp', $id)->first()) {
+                if ($kelas_mp = PresensiMp::where('id_kelas_mp', $id)->first()) {
                     return [
                         'status' => 300, // SUCCESS AND LOAD TABLE
-                        'message' => 'Terdapat siswa yang telah mengambil kelas ini, hapus ploting mapel siswa terlebih dahulu'
+                        'message' => 'Sudah dilakukan penilaian'
                     ];
                 } else {
                     // make object to find id

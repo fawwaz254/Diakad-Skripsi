@@ -18,7 +18,7 @@ use Validator;
 
 class InputNilaiRaporSisipanAkhirController extends Controller
 {
-    public function viewKomponenInputNilai(Request $request, $id_rapor_sisipan)
+    public function viewKomponenInputNilai(Request $request, $thn_akademik_semester, $id_rapor_sisipan)
     {
         set_time_limit(-1);
         $input = (object) $request->input();
@@ -26,7 +26,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
 
         $rapor_sisipan = RaporSisipan::where('id_rapor_sisipan', $id_rapor_sisipan)->with('mata_pelajaran', 'kelas')->first();
         // dd($rapor_sisipan);
-        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->get();
+        $list_data = KomponenNilaiRaporSisipan::where('status', 1)->orderBy('urutan')->get();
         // $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna')->orderBy('nis_siswa')->get();
         $list_siswa = Siswa::where('id_kelas', $rapor_sisipan->id_kelas)->with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
@@ -76,10 +76,10 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             }
         }
 
-        return view('guru/rapor-sisipan/daftar-nilai-sas/input-nilai-sas', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan'));
+        return view('guru/rapor-sisipan/daftar-nilai-sas/input-nilai-sas', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'rapor_sisipan', 'thn_akademik_semester'));
     }
 
-    public function actionInputNilai(Request $request, $mode, $id_rapor_sisipan = null)
+    public function actionInputNilai(Request $request, $mode, $thn_akademik_semester, $id_rapor_sisipan = null)
     {
         set_time_limit(-1);
         $input = (object) $request->input();
@@ -128,7 +128,7 @@ class InputNilaiRaporSisipanAkhirController extends Controller
             return [
                 'status' => 202,
                 'message' => 'Save Successfully',
-                'path' => 'rapor-sisipan/daftar-nilai-sas/nilai/' . $id_rapor_sisipan
+                'path' => 'rapor-sisipan/daftar-nilai-sas/nilai/' . $thn_akademik_semester . '/' . $id_rapor_sisipan
             ];
         }
     }

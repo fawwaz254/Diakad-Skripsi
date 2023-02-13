@@ -12,7 +12,7 @@ use Yajra\Datatables\Datatables;
 
 use App\Libraries\Pendidikan\LibSiswa;
 use App\Libraries\Pendidikan\LibKelas;
-
+use App\Models\CalonSiswaOrtu;
 use App\Models\Kelas as Kelas;
 use App\Models\Siswa as Siswa;
 use App\Models\WaliMurid as WaliMurid;
@@ -280,6 +280,36 @@ class SettingWaliMuridController extends BaseController
                     return [
                         'status' => 200, // GAGAL
                         'message' => 'Data Wali Murid Sudah Ada. Silahkan Masukkan Nomor HP Lain!'
+                    ];
+                }
+            } elseif ($mode == 'delete') {
+                DB::beginTransaction();
+                try {
+
+                    $siswa =  Siswa::where('id_siswa', $id)->first();
+                    $wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
+                    CalonSiswaOrtu::where('id_c_siswa', $siswa->id_c_siswa)->update(['nomor_telp_ortu' => null], ['nomor_hp_ortu' => null]);
+                    Pengguna::where('id_pengguna',  $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
+                    RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->update(['deleted_by' => $input->auth_data->pengguna->id_pengguna]);
+                    RolePengguna::where('id_pengguna', $wali_murid->id_pengguna)->delete();
+                    $siswa->id_wali_murid = null;
+                    $siswa->save();
+                    $wali_murid->deleted_by =  $input->auth_data->pengguna->id_pengguna;
+                    $wali_murid->save();
+                    $wali_murid->delete();
+                    DB::commit();
+                    return [
+                        'status_code'   => 203,
+                        'status_text'   => 'Success',
+                        'message' => 'Delete Wali Murid Successfully'
+                    ];
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return [
+                        'status_code'   => 300,
+                        'status_text'   => 'Failed',
+                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine()
                     ];
                 }
             }

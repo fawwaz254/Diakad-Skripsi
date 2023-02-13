@@ -9,7 +9,10 @@ use App\Models\Pengguna;
 use App\Models\ShiftMaster;
 use App\Models\ShiftPengguna;
 use Carbon\Carbon;
+use App\Exports\ShiftMount;
 use Illuminate\Http\Request;
+use Carbon\CarbonPeriod;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ShiftSiswaController extends Controller
 {
@@ -102,83 +105,78 @@ class ShiftSiswaController extends Controller
                     $query->where('id_kelas', $id_kelas);
                 }
             })
-            ->get()->sortBy('siswa.kelas.nm_kelas');
+            ->get()->sortBy('siswa.kelas.nm_kelas')->sortBy('username');
 
         $date =  Carbon::now()->format('Y-m-d');
         $shiftsPengguna = ShiftPengguna::where('date', $date)->get();
         return view('humas/absensi/shift-siswa/add-shift-siswa', compact('kelas', 'id_kelas', 'shifts', 'penggunas', 'shiftsPengguna'));
     }
 
-    // public function storeShiftSiswa(Request $request )
-    // {
-    //     set_time_limit(1800);
-    //     $v = Validator::make($request->all(), [
+    public function exportShift(Request $request, $id_kelas, $date)
+    {
+        set_time_limit(-1);
 
-    //         'pengguna' => 'required',
-    //     ]);
-
-    //     if ($v->fails()) {
-    //         // return redirect()->back()->withErrors($v->errors());
-
-    //         return [
-    //             'status' => 300, // fail
-    //             'message' => 'Harus pilih minimal 1 user'
-    //         ];
-    //         // $eror = ('Harus dicentang 1');
-    //         // $pesan = "Harus dicentang salah satu";
-    //         // return redirect("/humas#absensi/shift_pengguna/add/" . $pesan);
-    //     }
-
-    //     $input = (object) $request->input();
-
-
-    //     //validasi cekin
-
-    //     $pengguna = $input->pengguna;
-
-    //     $startDate = new Carbon('first day of' . $input->firstMount . '2022');
-    //     $endDate =  new Carbon('last day of' . $input->endMount . '2022');
-    //     // $nameDay =  ;
-
-    //     $prefix = Sekolah::first()->prefix;
-
-    //     if ($startDate > $endDate) {
-    //         return [
-    //             'status' => 300, // fail
-    //             'message' => 'Bulan awal harus lebih kecil dari bulan akhir'
-    //         ];
-    //     }
+        if ($id_kelas == '0') {
+            $pengguna = pengguna::where('status_join_table', 3)
+                ->with('siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })->get();
+        } else {
+            $pengguna = pengguna::where('status_join_table', 3)
+                ->with('siswa.kelas')
+                ->whereHas('status_pengguna', function ($query) {
+                    $query->where('nm_status_pengguna', '=', 'AKTIF');
+                })
+                ->whereHas('siswa', function ($query) use ($id_kelas) {
+                    $query->where('id_kelas', '=', $id_kelas);
+                })
+                ->get();
+        }
 
 
-    //     $dates = CarbonPeriod::create($startDate, $endDate);
-    //     foreach ($pengguna as $user) {
-    //         foreach ($dates as $value) {
-    //             $shiftPenggunaId = ShiftPengguna::where('id_pengguna', $user)
-    //                 ->where('date', $value->format('Y-m-d'))
-    //                 ->first();
-    //             //validasi apakah sudah ada apa belum datanya
-    //             if ($shiftPenggunaId) {
-    //                 $dataUpdate['id_shift_master'] = $input->dayName[$value->format('l')];
-    //                 $shiftPenggunaId->update($dataUpdate);
-    //             } else {
-    //                 $now = Carbon::now(env('APP_TIMEZONE', ''));
-    //                 $html = '';
-    //                 $list_data['id_shift_pengguna'] =   $html .= $prefix . strtotime($now) . uniqid();
-    //                 $list_data['id_pengguna'] = $user;
-    //                 $list_data['date'] =  $value->format('Y-m-d');
-    //                 $list_data['id_shift_master'] = $input->dayName[$value->format('l')];
+        $year = Carbon::parse($date)->format('Y');
+        $mount = Carbon::parse($date)->format('M');
 
-    //                 ShiftPengguna::create($list_data);
-    //             }
-    //         }
-    //     }
+        $start_date = new Carbon('first day of' . $mount . $year);
+        $end_date =  new Carbon('last day of' . $mount . $year);
 
-    //     return [
-    //         'status' => 202, // SUCCESS AND LOAD CONTENT
-    //         'link' => '/humas#absensi/shift_pengguna',
-    //         'message' => 'Tambah data Shift berhasil '
+        $dates = CarbonPeriod::create($start_date, $end_date);
+        $allShiftMater = ShiftMaster::get();
+        $list_pengguna = $pengguna->pluck('id_pengguna')->toArray();
+        $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->whereIn('id_pengguna', $list_pengguna)->get();
 
-    //     ];
-    // }
 
+        $hariIndo = [
+            0 => 'Minggu',
+            1 => 'Senin',
+            2 => 'Selasa',
+            3 => 'Rabu',
+            4 => 'Kamis',
+            5 => 'Jumat',
+            6 => 'Sabtu',
+        ];
+
+        foreach ($pengguna as $key1 => $value) {
+            $hasil[$key1]['nm_pengguna'] = $value->nm_pengguna;
+            $hasil[$key1]['kelas'] = $value->siswa->kelas->nm_kelas;
+
+            foreach ($dates as $key2 => $date) {
+                $attendance = $allShiftPengguna->where('id_pengguna', $value->id_pengguna)->where('date', $date->format('Y-m-d'))->first();
+                $hasil[$key1][$key2]['time'] = "-";
+                $hasil[$key1][$key2]['id_shift_master'] = "-";
+                $hasil[$key1][$key2]['date'] =   $hariIndo[$date->dayOfWeek] . ", " . $date->format('d-m-Y');
+                if ($attendance) {
+                    if ($attendance->id_shift_master) {
+                        $hasil[$key1][$key2]['id_shift_master'] = $attendance->id_shift_master;
+                        $shiftM = $allShiftMater->firstWhere('code', $attendance->id_shift_master);
+                        $hasil[$key1][$key2]['time'] = minimalisTime($shiftM['start_time']) . " - " . minimalisTime($shiftM['end_time']);
+                    }
+                }
+            }
+        }
+
+        $products = $hasil;
+        return Excel::download(new ShiftMount($products), 'shift_bulanan.xlsx');
+    }
 }

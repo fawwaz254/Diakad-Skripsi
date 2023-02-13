@@ -184,11 +184,13 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/view-select-kelas-shift-siswa', [ShiftSiswaController::class, 'selectKelas']);
                 Route::get('/view-kelas-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'viewShiftSiswa']);
 
+                Route::get('export-shift-pengguna/{date}', [ShiftPenggunaController::class, 'exportShift']);
+                Route::get('export-shift-siswa/{id_kelas}/{date}', [ShiftSiswaController::class, 'exportShift']);
+
                 Route::post('/add', [ShiftPenggunaController::class, 'storeShiftPengguna']);
                 Route::get('/{date}', [ShiftPenggunaController::class, 'viewShiftPengguna']);
                 Route::get('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'editShiftAbsensi']);
-                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);
-                // Route::get('/addShift', [ShiftPenggunaMasterController::class, 'addShiftMaster']);
+                Route::post('/{id_shift_pengguna}/{date}/edit', [ShiftPenggunaController::class, 'updateShiftAbsensi']);;
             });
 
             Route::prefix('shift_siswa')->group(function () {
@@ -214,15 +216,16 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('export-laravel-mount/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_mount']);
                 Route::get('export-laravel-week/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_week']);
                 Route::get('export-laravel/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'export_excel_day']);
+
+                Route::get('batch-edit-status/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'batch_edit_status']);
+                Route::get('datatables-batch-edit-status/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'datatables_batch_edit_status']);
+                Route::post('action-batch-edit-status/{kelas}/{date}', [HistoriAbsensiSiswaController::class, 'action_batch_edit_status']);
                 //buat izin / sakit
                 Route::get('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'createHistoriAbsensi']);
                 Route::post('/{id_pengguna}/{kelas}/{date}/add', [HistoriAbsensiSiswaController::class, 'storeHistoriAbsensi']);
                 Route::get('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'editHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/{kelas}/{date}/edit', [HistoriAbsensiSiswaController::class, 'updateHistoriAbsensi']);
                 Route::post('/{id_presensi_pengguna}/delete', [HistoriAbsensiSiswaController::class, 'destroyHistoriAbsensi']);
-
-                //buat generate shift siswa
-                // Route::get('/addShift/{date1}/{date2}', [HistoriAbsensiSiswaController::class, 'storeShiftPengguna']);
             });
 
             Route::prefix('histori-absensi-siswa-pondok')->group(function () {
@@ -249,8 +252,10 @@ Route::middleware(['token_staff'])->group(function () {
             Route::prefix('detail-absensi')->group(function () {
                 Route::get('/', [DetailAbsensiController::class, 'selectHistoriAbsensi']);
                 Route::post('post-get-penguna', [DetailAbsensiController::class, 'actionGetPengguna']);
+                Route::get('cetak/{id_pengguna}/{start_date}/{end_date}', [DetailAbsensiController::class, 'cetakDetailAbsensi']);
                 Route::get('{id_pengguna}/{start_date}/{end_date}', [DetailAbsensiController::class, 'viewHistoriAbsensi']);
-                ////////////siswa
+
+                //siswa
                 Route::get('/siswa', [DetailAbsensiController::class, 'selectHistoriAbsensiSiswa']);
                 Route::post('/siswa/post-get-penguna', [DetailAbsensiController::class, 'actionGetSiswa']);
                 Route::get('/siswa/{id_pengguna}/{start_date}/{end_date}', [DetailAbsensiController::class, 'viewHistoriAbsensiSiswa']);

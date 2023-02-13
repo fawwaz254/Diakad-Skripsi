@@ -7,10 +7,15 @@
                 </div>
                 <div class="body">
                     <div style="float:left;">
-                        <span style="font-size: 20px;">Cetak Rapor Seluruh Siswa Kelas <strong>{{$data_wali_kelas->nm_kelas}}</strong></span><br>
-                        Wali Kelas {{$data_wali_kelas->nm_wali_kelas}}
+                        <span style="font-size: 20px;">Cetak Rapor Seluruh Siswa Kelas
+                            <strong>{{ $data_wali_kelas->nm_kelas }} </strong>
+                            Tahun Ajaran {{ $semester_aktif->tahun_ajaran }}</span><br>
+                        Wali Kelas {{ $data_wali_kelas->nm_wali_kelas }}
+
                     </div>
-                    <a style="float:right;" class="btn btn-success btn-circle waves-effect waves-circle float-right" href="{{ url(Request::segment(1).'/'.Request::segment(2).'/cetak-rapor-siswa/print/'. $wali_kelas->id_kelas) }}" target="_blank">
+                    <a style="float:right;" class="btn btn-success btn-circle waves-effect waves-circle float-right"
+                        href="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/cetak-rapor-siswa/print/' . $semester_aktif->thn_akademik_semester . '/' . $wali_kelas->id_kelas) }}"
+                        target="_blank">
                         <i class="material-icons">picture_as_pdf</i>
                     </a>
 

@@ -48,9 +48,9 @@
                 Data Histori Absensi Siswa
             </button>
             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'manbaulhikam')
-            <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
-                Data Histori Absensi Siswa Pondok
-            </button>
+                <button type="button" onclick="viewSiswaPondok()" class="btn btn-default">
+                    Data Histori Absensi Siswa Pondok
+                </button>
             @endif
             <div class="card" style="margin-top: 10px">
                 <div class="header">
@@ -94,7 +94,8 @@
                                 <option @if ($status == 'Masuk | Tidak Checkout') selected @endif
                                     value="Masuk | Tidak Checkout">Masuk | Tidak Checkout</option>
                                 <option @if ($status == 'Masuk | Telat dan Pulang lebih awal') selected @endif
-                                    value="Masuk | Telat dan Pulang lebih awal">Masuk | Telat dan Pulang lebih awal</option>
+                                    value="Masuk | Telat dan Pulang lebih awal">Masuk | Telat dan Pulang lebih awal
+                                </option>
                                 <option @if ($status == 'Masuk | Pulang lebih awal') selected @endif
                                     value="Masuk | Pulang lebih awal">Masuk | Pulang lebih awal</option>
 
@@ -149,23 +150,25 @@
                     padding: 10px; " > --}}
 
                                 <tr>
-                                    <th style="text-align: center;">Hadir</th>
-                                    <th style="text-align: center;">Hadir Terlambat</th>
+                                    <th style="text-align: center;">Check-in</th>
+                                    <th style="text-align: center;">Alpha</th>
                                     <th style="text-align: center;">Belum Hadir</th>
+                                    <th style="text-align: center;">Hadir Terlambat</th>
+
                                     <th style="text-align: center;">Izin</th>
                                     <th style="text-align: center;">Sakit</th>
-                                    <th style="text-align: center;">Alpha</th>
+
                                     <th style="text-align: center;">Tidak Checkout</th>
                                     <th style="text-align: center;">Hadir Pulang Lebih Awal</th>
                                 </tr>
                             </thead>
                             <tr>
                                 <td style="text-align: center;">{{ $jumlah_hadir }}</td>
-                                <td style="text-align: center;">{{ $jumlah_telat }}</td>
+                                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
                                 <td style="text-align: center;">{{ $belum_absent }}</td>
+                                <td style="text-align: center;">{{ $jumlah_telat }}</td>
                                 <td style="text-align: center;">{{ $jumlah_izin }}</td>
                                 <td style="text-align: center;">{{ $jumlah_sakit }}</td>
-                                <td style="text-align: center;">{{ $jumlah_alpha }}</td>
                                 <td style="text-align: center;">{{ $tidak_checkout }}</td>
                                 <td style="text-align: center;">{{ $jumlah_pulangcepat }}</td>
 
@@ -182,7 +185,7 @@
         class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Hari ini</a>
 
-        <a href="humas/absensi/histori-absensi/export-laravel-week/{{ $date }}/{{ $unit_kerja }}"
+    <a href="humas/absensi/histori-absensi/export-laravel-week/{{ $date }}/{{ $unit_kerja }}"
         target="_blank" class="btn bg-purple waves-effect">
         <i class="material-icons" style="font-size: 15px;">print</i> Print Minggu ini</a>
 
@@ -213,16 +216,19 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $no = 1;
+                                @endphp
 
-                                @foreach ($hasil as $key => $r)
-                                    @if ($key % 2 == 1)
+                                @foreach ($hasil as $r)
+                                    @if ($no % 2 == 1)
                                         <tr style="background: #DDA0DD">
                                         @else
                                         <tr>
                                     @endif
                                     @if ($r['shift'])
                                         @if ($r['status'] == $status || $status == '0')
-                                            <td style="text-align: center;">{{ $loop->iteration }}</td>
+                                            <td style="text-align: center;">{{ $no++ }}</td>
                                             <td style="text-align: center;">{{ $r['nm_pengguna'] }}</td>
                                             <td>{{ $r['unit_kerja'] }}</td>
                                             <td>{{ $r['check_in'] }}</td>
@@ -284,7 +290,7 @@
 
     function filterAction() {
         loadURI('{{ Request::segment(2) }}/{{ Request::segment(3) }}/' + $('input[name=date]').val() + '/' + $(
-            'select[name=unit_kerja]').val() + '/' +  $('select[name=status]').val());
+            'select[name=unit_kerja]').val() + '/' + $('select[name=status]').val());
     }
 
     function addAbsensi(id_pengguna) {

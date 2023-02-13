@@ -55,12 +55,14 @@ Route::prefix('laravel-filemanager')->group(function () {
 
 Route::prefix('iclock')->group(function () {
     Route::get('getrequest', [FingerprintController::class, 'actionCheck']);
+
     Route::get('cdata', function () {
         return 'OK';
     });
     Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
-
     Route::get('manual-get-data', [FingerprintController::class, 'actionGetDataFinger']);
+    Route::get('manual-get-data-realtime', [FingerprintController::class, 'actionGetFinger']);
+    Route::get('clear-log-data', [FingerprintController::class, 'clearLogData']);
 });
 // END USING FOR FINGERPRINT
 
@@ -141,6 +143,7 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('search', [AuthGlobalController::class, 'indexSearch']);
         Route::get('profile', [AuthGlobalController::class, 'indexProfile']);
         Route::post('profile', [AuthGlobalController::class, 'actionSaveProfile']);
+        Route::get('profile2/{id_role}', [AuthGlobalController::class, 'actionSaveProfile2']);
         Route::get('password', [AuthGlobalController::class, 'indexPassword']);
         Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
         Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);

@@ -8,11 +8,11 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2><a class="btn bg-blue waves-effect target-link "
-                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas') }}"><i
+                href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sas/' . $thn_akademik_semester) }}"><i
                     class="material-icons">backspace</i><span>Kembali</span></a></h2>
     </div>
     <form id="form-validation" method="POST"
-        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sas/action-input-nilai-rapor-sisipan/save/' . $id_rapor_sisipan) }}">
+        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/daftar-nilai-sas/action-input-nilai-rapor-sisipan/save/' . $thn_akademik_semester . '/' . $id_rapor_sisipan) }}">
         {{ csrf_field() }}
         <div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -59,17 +59,17 @@
                                             <td>{{ $siswa->nis_siswa }} - {{ $siswa->pengguna->nm_pengguna }}</td>
                                             @foreach ($list_data as $nilai)
                                                 <td style="text-align: center;">
-                                                    @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan]) &&
-                                                        $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
+                                                    {{-- @if (isset($nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan]) && $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] != '0')
                                                         <input type="number" id="disable"
                                                             name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
                                                             value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
                                                             style="width: 80%; text-align:  center;" disabled>
-                                                    @else
-                                                        <input type="number"
-                                                            name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
-                                                            value="0" style="width: 80%; text-align:  center;">
-                                                    @endif
+                                                    @else --}}
+                                                    <input type="number"
+                                                        name="nilai[{{ $nilai->id_komponen_nilai }}-{{ $siswa->id_siswa }}-{{ $id_rapor_sisipan }}]"
+                                                        value="{{ $nilai_siswa[$nilai->id_komponen_nilai . $siswa->id_siswa . $id_rapor_sisipan] }}"
+                                                        style="width: 80%; text-align:  center;">
+                                                    {{-- @endif --}}
                                                 </td>
                                             @endforeach
                                             {{-- <td style="text-align: center;">

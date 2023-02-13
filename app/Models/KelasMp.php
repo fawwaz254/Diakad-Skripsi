@@ -19,7 +19,7 @@ class KelasMp extends Model
     public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_semester',
         'id_kelas',
@@ -46,6 +46,11 @@ class KelasMp extends Model
     public function jadwal_kelas_mp()
     {
         return $this->hasMany('App\Models\JadwalKelasMp', 'id_kelas_mp');
+    }
+
+    public function jadwal_kelas_mp_single()
+    {
+        return $this->hasOne('App\Models\JadwalKelasMp', 'id_kelas_mp');
     }
 
     public function pengambilan_mp()

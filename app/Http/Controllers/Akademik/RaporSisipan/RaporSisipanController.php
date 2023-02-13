@@ -27,25 +27,67 @@ use Validator;
 class RaporSisipanController extends Controller
 {
 
-    public function viewDaftarNilaiSTS(Request $request)
+    public function viewSemesterNilaiSTS(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+        return view('akademik/rapor-sisipan/daftar-nilai-sts/view-semester-nilai-sts', compact('auth_data', 'data_semester', 'semester_aktif'));
+    }
+
+    public function actionSemesterNilaiSTS(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+        $validator = Validator::make($request->all(), [
+            'thn_akademik_semester' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'rapor-sisipan/daftar-nilai-sts/' . $input->thn_akademik_semester
+            ];
+        }
+    }
+
+
+    public function viewDaftarNilaiSTS(Request $request, $thn_akademik_semester)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        return view('akademik/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data'));
+        return view('akademik/rapor-sisipan/daftar-nilai-sts/view-daftar-nilai-sts', compact('auth_data', 'thn_akademik_semester'));
     }
 
-    public function datatablesDaftarNilaiSTS(Request $request)
+    public function datatablesDaftarNilaiSTS(Request $request, $thn_akademik_semester)
     {
+
         set_time_limit(1800);
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->orderBy('created_at', 'desc');
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')
+            ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+            })
+            ->orderBy('created_at', 'desc');
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
                 $query->where('aktif_status_pengguna', '=', '1');
-            })->get();
+            })
+            ->get();
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first();
         if ($setting->value == '3') {
             $komponen = KomponenNilaiRaporSisipan::where('urutan', '1')->first()->id_komponen_nilai;
@@ -81,7 +123,7 @@ class RaporSisipanController extends Controller
                 return $data;
             })
             ->editColumn('semester', function ($item) {
-                return $item->semester->tahun_ajaran . ' ' . $item->semester->nm_semester;
+                return $item->semester->tahun_ajaran;
             })
             ->addColumn('action', function ($item) {
                 $data = array(
@@ -127,7 +169,7 @@ class RaporSisipanController extends Controller
             }
         }
 
-        //
+        $list_kd_aktif = [];
         foreach ($list_data as $key => $data) {
             $data1 = $list_nilai->where('id_komponen_nilai', $data->id_komponen_nilai)->where('nilai', '!=', 0)->first();
             if (!empty($data1)) {
@@ -241,6 +283,7 @@ class RaporSisipanController extends Controller
             }
             return view('guru/rapor-sisipan/daftar-nilai-sts/cetak-nilai-sts2', compact('auth_data', 'id_rapor_sisipan', 'list_data', 'list_siswa', 'nilai_siswa', 'nilai_komponen', 'rapor_sisipan'));
         } elseif ($setting == '3') {
+            $list_kd_aktif = [];
             foreach ($list_data as $key => $data) {
                 $data1 = $list_nilai->where('id_komponen_nilai', $data->id_komponen_nilai)->where('nilai', '!=', 0)->first();
                 if (!empty($data1)) {

@@ -44,6 +44,21 @@ class FingerprintController extends BaseController
             ->editColumn('updated_at', function ($item) use ($now) {
                 return Carbon::parse($item->updated_at)->diffForHumans($now);
             })
+            ->addColumn('last_data', function ($item) use ($now) {
+                $fp_attendence =  FPAttendance::where('id_fp_device', $item->id_fp_device)->orderBy('fp_date', 'desc')->first();
+                if ($fp_attendence) {
+                    return Carbon::parse($fp_attendence->updated_at)->diffForHumans($now);
+                } else {
+                    return 'kosong';
+                }
+            })
+            ->addColumn('clear_log', function ($item) use ($now) {
+                if ($item->clear_log) {
+                    return Carbon::parse($item->clear_log)->diffForHumans($now);
+                } else {
+                    return 'kosong';
+                }
+            })
             ->make(true);
     }
 
@@ -105,10 +120,10 @@ class FingerprintController extends BaseController
             return 'Failed';
         }
 
-        $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('fp_date', 'desc')->first();
+        $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('created_at', 'desc')->first();
 
         if ($last_data) {
-            $last_time = Carbon::parse($last_data->fp_date)->addMinutes(5)->format('Y-m-d H:i:s');
+            $last_time = Carbon::parse($last_data->created_at)->addMinutes(1)->format('Y-m-d H:i:s');
         } else {
             $last_time = $now->format('Y-m-d H:i:s');
         }
@@ -133,11 +148,11 @@ class FingerprintController extends BaseController
                 if (!empty($date_filter)) {
                     $data_fp = $this->filterData($buffer, $date_filter);
                 } else {
-                    if ($last_data) {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->fp_date);
-                    } else {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
-                    }
+                    // if ($last_data) {
+                    // $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->created_at);
+                    // } else {
+                    $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+                    // }
                 }
 
                 foreach ($data_fp as $data) {
@@ -574,4 +589,93 @@ class FingerprintController extends BaseController
 
         return $hasil;
     }
+
+    public function clearLogData(Request $request)
+    {
+        $input = (object) $request->input();
+        $client = new \GuzzleHttp\Client();
+
+        $serial_number = '';
+        if (isset($input->SN)) {
+            $serial_number = $input->SN;
+        }
+
+        if ($device = FPDevice::where('sn', $serial_number)->first()) { } else {
+            return 'FAILED';
+        }
+
+        $soap_request = "<ClearData><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg></ClearData>";
+
+        try {
+            if (!empty($device->port)) {
+                $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+            } else {
+                $fingerprint_url = $device->ip_address_wan . '/iWsService';
+            }
+            // $client->request('GET', $fingerprint_url);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return 'Failed';
+        }
+
+        try {
+            $res = $client->post($fingerprint_url, [
+                'headers' => [
+                    'Content-Type' => 'text/xml',
+                    'Content-Length' => strlen($soap_request)
+                ],
+                'body' => $soap_request
+            ]);
+            $device->clear_log = Carbon::now('Asia/Jakarta');
+            $device->save();
+            echo "Berhasil";
+        } catch (\Exception $e) {
+            echo "Koneksi Gagal";
+        }
+    }
+
+    // public function clearLogDataAll(Request $request)
+    // {
+    //     $input = (object) $request->input();
+    //     $client = new \GuzzleHttp\Client();
+
+    //     // $serial_number = '';
+    //     // $date_filter = null;
+    //     // if (isset($input->SN)) {
+    //     //     $serial_number = $input->SN;
+    //     // }
+
+    //     if ($device = FPDevice::all()) {
+    //         // $device->ip_address_wan = $request->ip();
+    //         $device->updated_at = Carbon::now('Asia/Jakarta');
+    //         $device->save();
+    //     } else {
+    //         return 'FAILED';
+    //     }
+
+    //     $soap_request = "<ClearData><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg></ClearData>";
+
+    //     try {
+    //         if (!empty($device->port)) {
+    //             $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+    //         } else {
+    //             $fingerprint_url = $device->ip_address_wan . '/iWsService';
+    //         }
+    //         // $client->request('GET', $fingerprint_url);
+    //     } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+    //         return 'Failed';
+    //     }
+
+    //     try {
+    //         $res = $client->post($fingerprint_url, [
+    //             'headers' => [
+    //                 'Content-Type' => 'text/xml',
+    //                 'Content-Length' => strlen($soap_request)
+    //             ],
+    //             'body' => $soap_request
+    //         ]);
+    //         echo "Berhasil";
+    //     } catch (\Exception $e) {
+    //         echo "Koneksi Gagal";
+    //     }
+    // }
 }

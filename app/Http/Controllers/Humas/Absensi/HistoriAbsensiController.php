@@ -295,7 +295,7 @@ class HistoriAbsensiController extends BaseController
             $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
-
+            $hasil[$key]['shift'] = $shiftMaster;
             if ($attendance) {
                 if ($attendance->id_presensi_pengguna) {
                     $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
@@ -444,10 +444,7 @@ class HistoriAbsensiController extends BaseController
             $shiftPengguna = $allShiftPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $attendance =  $allPresensiPengguna->firstWhere('id_pengguna', '=', $value->id_pengguna);
             $shiftMaster = isset($shiftPengguna->shift_master) ? $shiftPengguna->shift_master : null;
-            $hasil[$key]['shift'] = false;
-            if ($shiftPengguna && $shiftMaster) {
-                $hasil[$key]['shift'] = true;
-            }
+            $hasil[$key]['shift'] = $shiftMaster;
 
             if ($attendance) {
                 if (isset($attendance->status)) {
@@ -463,11 +460,12 @@ class HistoriAbsensiController extends BaseController
                     $hasil[$key]['id_presensi_pengguna'] = $attendance->id_presensi_pengguna;
                 }
 
-                if ($attendance->check_in) {
+                if ($attendance->check_in  && isset($shiftMaster)) {
                     $hasil[$key]['check_in'] = $attendance->check_in;
                     $hasil[$key]['status'] = "Masuk";
                     $jumlah_hadir++;
                 }
+
                 if (isset($shiftMaster['start_time'])) {
                     if (!$shiftMaster['start_time'] == null && $attendance->check_in > $shiftMaster['start_time']) {
                         $jumlah_telat++;
