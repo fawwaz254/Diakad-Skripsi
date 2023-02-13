@@ -148,11 +148,11 @@ class FingerprintController extends BaseController
                 if (!empty($date_filter)) {
                     $data_fp = $this->filterData($buffer, $date_filter);
                 } else {
-                    if ($last_data) {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->created_at);
-                    } else {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
-                    }
+                    // if ($last_data) {
+                    // $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->created_at);
+                    // } else {
+                    $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+                    // }
                 }
 
                 foreach ($data_fp as $data) {
