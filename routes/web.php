@@ -1,83 +1,24 @@
 <?php
 
-use Carbon\Carbon;
-use App\Models\Sekolah;
-use App\Http\Controllers\ReportController;
-use App\Http\Controllers\SignInController;
+use App\Http\Controllers\Administrator\Device\FingerprintController;
 use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\ForgetPasswordController;
+use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
 use App\Http\Controllers\PengisianAlumniController;
-use UniSharp\LaravelFilemanager\Controllers\LfmController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SignInController;
+use App\Models\Sekolah;
+use Carbon\Carbon;
 use UniSharp\LaravelFilemanager\Controllers\CropController;
-use UniSharp\LaravelFilemanager\Controllers\DemoController;
-use UniSharp\LaravelFilemanager\Controllers\ItemsController;
 use UniSharp\LaravelFilemanager\Controllers\DeleteController;
+use UniSharp\LaravelFilemanager\Controllers\DemoController;
+use UniSharp\LaravelFilemanager\Controllers\DownloadController;
 use UniSharp\LaravelFilemanager\Controllers\FolderController;
+use UniSharp\LaravelFilemanager\Controllers\ItemsController;
+use UniSharp\LaravelFilemanager\Controllers\LfmController;
 use UniSharp\LaravelFilemanager\Controllers\RenameController;
 use UniSharp\LaravelFilemanager\Controllers\ResizeController;
 use UniSharp\LaravelFilemanager\Controllers\UploadController;
-use UniSharp\LaravelFilemanager\Controllers\DownloadController;
-use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
-use App\Http\Controllers\Administrator\Device\FingerprintController;
-
-// Testing
-// Route::get('copy-biaya', function () {
-//     $tahun_asal = 2016;
-//     $tahun_copy = 2015;
-
-//     $spp_juli_1011 = 165000;
-//     $spp_non_juli_1011 = 170000;
-
-//     $spp_juli_12 = 185000;
-//     $spp_non_juli_12 = 200000;
-
-//     $source_biaya_sekolah = BiayaSekolah::whereHas('semester', function ($q) use ($tahun_asal) {
-//         $q->where('thn_akademik_semester', $tahun_asal);
-//     })->get();
-
-//     foreach ($source_biaya_sekolah as $biaya_sekolah) {
-//         $source_semester = Semester::find($biaya_sekolah->id_semester);
-//         $target_biaya_sekolah = $biaya_sekolah->replicate();
-
-//         $target_biaya_sekolah->id_biaya_sekolah = generate_id();
-//         $target_biaya_sekolah->id_semester = Semester::where('thn_akademik_semester', $tahun_copy)->where('nm_semester', $source_semester->nm_semester)->first()->id_semester;
-//         $target_biaya_sekolah->created_at = '2022-08-31 00:00:00';
-//         $target_biaya_sekolah->save();
-
-//         foreach (DetailBiaya::where('id_biaya_sekolah', $biaya_sekolah->id_biaya_sekolah)->get() as $detail_biaya) {
-//             $target_detail_biaya = $detail_biaya->replicate();
-
-//             $target_detail_biaya->id_detail_biaya = generate_id();
-//             $target_detail_biaya->id_biaya_sekolah = $target_biaya_sekolah->id_biaya_sekolah;
-//             if ($target_biaya_sekolah->keterangan_biaya_sekolah == 'Kelas 10&11') {
-//                 if ($target_detail_biaya->id_bulan == 7) {
-//                     $target_detail_biaya->besar_biaya = $spp_juli_1011;
-//                 } else {
-//                     $target_detail_biaya->besar_biaya = $spp_non_juli_1011;
-//                 }
-//             }
-
-//             if ($target_biaya_sekolah->keterangan_biaya_sekolah == 'Kelas 12') {
-//                 if ($target_detail_biaya->id_bulan == 7) {
-//                     $target_detail_biaya->besar_biaya = $spp_juli_12;
-//                 } else {
-//                     $target_detail_biaya->besar_biaya = $spp_non_juli_12;
-//                 }
-//             }
-
-//             $target_detail_biaya->created_at = '2022-08-31 00:00:00';
-//             $target_detail_biaya->save();
-//         }
-//     }
-
-//     return 'OK';
-// });
-
-// Route::get('import-excel-tagihan', function () {
-//     Excel::import(new UploadTagihanSiswa(true), 'FILE_TAGIHAN_SISWA.xls');
-
-//     return 'OK';
-// });
 
 // DO NOT CHANGE
 Route::get('merge/key-6c8c263f-4bf6-47ad-9ed2-eba730bde41b', [AuthGlobalController::class, 'actionMerge']);
@@ -195,7 +136,6 @@ Route::middleware(['token_staff'])->group(function () {
         Route::post('by-pass-change-password', [AuthGlobalController::class, 'actionByPassChangePassword']);
         Route::get('must-update-biodata', [AuthGlobalController::class, 'indexMustAddBiodata']);
         Route::post('must-update-biodata/{nis_siswa}', [AuthGlobalController::class, 'actionMustAddBiodata']);
-
 
         Route::get('/', [AuthGlobalController::class, 'indexDashboard']);
         Route::get('search', [AuthGlobalController::class, 'indexSearch']);
