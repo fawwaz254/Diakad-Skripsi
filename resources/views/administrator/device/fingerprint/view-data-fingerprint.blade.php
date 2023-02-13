@@ -30,6 +30,7 @@
                                     <th>WAN</th>
                                     <th>LAN</th>
                                     <th>PORT</th>
+                                    <th>COMM KEY</th>
                                     <th>Last Updated</th>
                                     <th>Last Data</th>
                                     <th>Last Clear Log</th>
@@ -83,6 +84,10 @@
                 orderable: false
             }, {
                 data: 'port',
+                searchable: false,
+                orderable: false
+            }, {
+                data: 'comm_key',
                 searchable: false,
                 orderable: false
             }, {
