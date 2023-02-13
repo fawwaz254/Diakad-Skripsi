@@ -552,6 +552,75 @@ class FingerprintController extends BaseController
         return $hasil;
     }
 
+
+    public function viewDataFinger(Request $request)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $now = Carbon::now('Asia/Jakarta');
+        $client = new \GuzzleHttp\Client();
+
+        $serial_number = '';
+        $date_filter = null;
+        if (isset($input->SN)) {
+            $serial_number = $input->SN;
+        }
+
+        if (isset($input->dd)) {
+            $date_filter = $input->dd;
+        }
+
+        if ($device = FPDevice::where('sn', $serial_number)->first()) {
+            // $device->ip_address_wan = $request->ip();
+            $device->updated_at = Carbon::now('Asia/Jakarta');
+            $device->save();
+        } else {
+            return 'FAILED';
+        }
+
+        $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
+
+        try {
+            if (!empty($device->port)) {
+                $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+            } else {
+                $fingerprint_url = $device->ip_address_wan . '/iWsService';
+            }
+            $client->request('GET', $fingerprint_url);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return 'Failed';
+        }
+
+        try {
+            $response = $client->post($fingerprint_url, [
+                'headers' => [
+                    'Content-Type' => 'text/xml',
+                    'Content-Length' => strlen($soap_request),
+                ],
+                'body' => $soap_request,
+            ]);
+
+            $buffer = $response->getBody()->getContents();
+
+            $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+            $buffer = explode("\r\n", $buffer);
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        $data = $this->filterData($buffer, $now->format('Y-m-d'));
+
+        if (count($data) == '0') {
+            echo 'Data Kosong';
+        } else {
+            echo 'Total Data = ' . count($data) . '<br/>';
+            foreach ($data as $d) {
+                echo $d['tanggal'] . ' | ' . $d['username'] . '<br/>';
+            }
+        }
+    }
+
+
     public function filterData($array, $tanggal_input, $datetime_mulai = null)
     {
         $hasil = array();
