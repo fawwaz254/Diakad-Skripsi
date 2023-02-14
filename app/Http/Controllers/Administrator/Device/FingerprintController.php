@@ -315,7 +315,7 @@ class FingerprintController extends BaseController
         $client = new \GuzzleHttp\Client();
 
         $finger_sukses = 'Finger yang berhasil diambil = </br>';
-        $devices = FPDevice::all();
+        $devices = FPDevice::orderBy('updated_at', 'DESC')->get();
         foreach ($devices as $device) {
             $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
             try {
