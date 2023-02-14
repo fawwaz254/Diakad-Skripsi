@@ -110,11 +110,11 @@
                 orderable: false,
                 render: function(data) {
                     return '<a class="btn btn-success" target="_blank" href="' + base_url +
-                        '/iclock/manual-get-data-realtime?SN=' + data.sn + '">' +
+                        '/iclock/single-get-sync-data?SN=' + data.sn + '">' +
                         '    <i class="material-icons">system_update_alt</i><span>Tarik Data</span></a>' +
                         '</a> ' +
                         '<a class="btn btn-success" target="_blank" href="' + base_url +
-                        '/iclock/manual-get-data?sn=' + data.sn + '">' +
+                        '/iclock/sync-data?sn=' + data.sn + '">' +
                         '    <i class="material-icons">system_update_alt</i><span>Sync</span></a>' +
                         '</a> ' +
                         '<a class="btn btn-info" target="_blank" href="' + base_url +
