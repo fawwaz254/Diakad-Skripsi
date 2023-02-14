@@ -324,7 +324,10 @@ class FingerprintController extends BaseController
                 } else {
                     $fingerprint_url = $device->ip_address_wan . '/iWsService';
                 }
-                $client->request('GET', $fingerprint_url);
+                $client->request('GET', $fingerprint_url, ['timeout' => 3.14]);
+                // if (!$response->getStatusCode() == 200) {
+                //     continue;
+                // }
             } catch (\GuzzleHttp\Exception\GuzzleException $e) {
                 continue;
             }
