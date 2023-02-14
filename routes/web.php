@@ -59,7 +59,7 @@ Route::prefix('iclock')->group(function () {
     Route::get('cdata', function () {
         return 'OK';
     });
-    Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
+    // Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
     Route::get('manual-get-data', [FingerprintController::class, 'actionGetDataFinger']);
     Route::get('manual-get-data-realtime', [FingerprintController::class, 'actionGetFinger']);
     Route::get('view-data-finger', [FingerprintController::class, 'viewDataFinger']);
