@@ -297,8 +297,6 @@ class FingerprintController extends BaseController
                         }
                     }
                 }
-
-
                 echo 'SUCCESS Merge Data. >>> END';
             } catch (Exception $e) {
                 return $e;
@@ -308,7 +306,80 @@ class FingerprintController extends BaseController
         }
     }
 
-    public function actionGetDataFinger(Request $request)
+
+    public function actionGetData(Request $request)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $now = Carbon::now('Asia/Jakarta');
+        $client = new \GuzzleHttp\Client();
+
+        $finger_sukses = 'Finger yang berhasil diambil = </br>';
+        $devices = FPDevice::all();
+        foreach ($devices as $device) {
+            $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
+            try {
+                if (!empty($device->port)) {
+                    $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+                } else {
+                    $fingerprint_url = $device->ip_address_wan . '/iWsService';
+                }
+                $client->request('GET', $fingerprint_url);
+            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                continue;
+            }
+
+            $serial_number = $device->sn;
+            $data_username_pengguna = array();
+            try {
+                $response = $client->post($fingerprint_url, [
+                    'headers' => [
+                        'Content-Type' => 'text/xml',
+                        'Content-Length' => strlen($soap_request),
+                    ],
+                    'body' => $soap_request,
+                ]);
+
+                $buffer = $response->getBody()->getContents();
+                $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+                $buffer = explode("\r\n", $buffer);
+                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+
+                foreach ($data_fp as $data) {
+                    $data_username_pengguna[] = $data['username'];
+                    if ($serial_number == 'BWXP222860373' || $serial_number == 'BWXP222860377' || $serial_number == 'BWXP222860378') {
+                        if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
+                            $item = new FPAttendance;
+                            $item->id_fp_device = $device->id_fp_device;
+                            $item->username = $data['username'];
+                            $item->status = $data['status'];
+                            $item->tanggal = $data['tanggal'];
+                            $item->fp_date = $data['tanggal'];
+                            $item->unit = 'Pondok';
+                            $item->save();
+                        }
+                    } else {
+                        if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->whereNull('unit')->first()) { } else {
+                            $item = new FPAttendance;
+                            $item->id_fp_device = $device->id_fp_device;
+                            $item->username = $data['username'];
+                            $item->status = $data['status'];
+                            $item->tanggal = $data['tanggal'];
+                            $item->fp_date = $data['tanggal'];
+                            $item->save();
+                        }
+                    }
+                }
+
+                $finger_sukses = $finger_sukses . $serial_number . '</br>';
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+        echo $finger_sukses;
+    }
+
+    public function actionSyncData(Request $request)
     {
         set_time_limit(-1);
         $input = (object) $request->input();

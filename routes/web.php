@@ -60,8 +60,9 @@ Route::prefix('iclock')->group(function () {
         return 'OK';
     });
     // Route::post('cdata', [FingerprintController::class, 'actionGetFinger']);
-    Route::get('manual-get-data', [FingerprintController::class, 'actionGetDataFinger']);
-    Route::get('manual-get-data-realtime', [FingerprintController::class, 'actionGetFinger']);
+    Route::get('get-data', [FingerprintController::class, 'actionGetData']); //Get Data mesin
+    Route::get('sync-data', [FingerprintController::class, 'actionSyncData']); // Sync
+    Route::get('single-get-sync-data', [FingerprintController::class, 'actionGetFinger']); //Manual get deta + Sync, 1 Finger
     Route::get('view-data-finger', [FingerprintController::class, 'viewDataFinger']);
     Route::get('clear-log-data', [FingerprintController::class, 'clearLogData']);
 });
