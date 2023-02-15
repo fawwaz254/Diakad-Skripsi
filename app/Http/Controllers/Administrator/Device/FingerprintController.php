@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator\Device;
 
+use App\Jobs\CreateFPAttendences;
 use App\Models\FPAttendance;
 use App\Models\FPDevice;
 use App\Models\Pengguna;
@@ -310,7 +311,7 @@ class FingerprintController extends BaseController
     public function actionGetData(Request $request)
     {
         set_time_limit(-1);
-        $input = (object) $request->input();
+        // $input = (object) $request->input();
         $now = Carbon::now('Asia/Jakarta');
         $client = new \GuzzleHttp\Client();
 
@@ -333,7 +334,7 @@ class FingerprintController extends BaseController
             }
 
             $serial_number = $device->sn;
-            $data_username_pengguna = array();
+            // $data_username_pengguna = array();
             try {
                 $response = $client->post($fingerprint_url, [
                     'headers' => [
@@ -347,33 +348,37 @@ class FingerprintController extends BaseController
                 $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
                 $buffer = explode("\r\n", $buffer);
                 $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
-
+                $fp_attendences = FPAttendance::whereDay('fp_date', Carbon::today())->where('id_fp_device', $device->id_fp_device)->get();
                 foreach ($data_fp as $data) {
-                    $data_username_pengguna[] = $data['username'];
+                    // $data_username_pengguna[] = $data['username'];
                     if ($serial_number == 'BWXP222860373' || $serial_number == 'BWXP222860377' || $serial_number == 'BWXP222860378') {
-                        if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
-                            $item = new FPAttendance;
-                            $item->id_fp_device = $device->id_fp_device;
-                            $item->username = $data['username'];
-                            $item->status = $data['status'];
-                            $item->tanggal = $data['tanggal'];
-                            $item->fp_date = $data['tanggal'];
-                            $item->unit = 'Pondok';
-                            $item->save();
+                        if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
+                            $list_data[] = [
+                                'id_fp_device' =>  $device->id_fp_device,
+                                'username' => $data['username'],
+                                'status' => $data['status'],
+                                'tanggal' => $data['tanggal'],
+                                'fp_date' => $data['tanggal'],
+                                'unit' => 'Pondok',
+                            ];
                         }
                     } else {
-                        if ($item = FPAttendance::where('username', $data['username'])->where('fp_date', $data['tanggal'])->whereNull('unit')->first()) { } else {
-                            $item = new FPAttendance;
-                            $item->id_fp_device = $device->id_fp_device;
-                            $item->username = $data['username'];
-                            $item->status = $data['status'];
-                            $item->tanggal = $data['tanggal'];
-                            $item->fp_date = $data['tanggal'];
-                            $item->save();
+                        if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->whereNull('unit')->first()) { } else {
+                            $list_data[] = [
+                                'id_fp_device' =>  $device->id_fp_device,
+                                'username' => $data['username'],
+                                'status' => $data['status'],
+                                'tanggal' => $data['tanggal'],
+                                'fp_date' => $data['tanggal'],
+                            ];
                         }
                     }
                 }
 
+                if (!empty($list_data)) {
+                    CreateFPAttendences::dispatch($list_data);
+                    unset($list_data);
+                }
                 $finger_sukses = $finger_sukses . $serial_number . '</br>';
             } catch (Exception $e) {
                 continue;
@@ -396,16 +401,14 @@ class FingerprintController extends BaseController
         try {
             $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
             $collection = $data_fingerprint->groupBy('username')->all();
+            $penggunas =  Pengguna::whereIn('username', collect($collection)->keys())->get();
+            $presensis = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
 
             foreach ($collection as $username => $group_of_data) {
-                if ($pengguna = Pengguna::where('username', $username)->first()) {
+                if ($pengguna = $penggunas->where('username', $username)->first()) {
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                        ->whereNull('unit')
-                        // ->where('status_join_table', $pengguna->status_join_table)
-                        ->first()
-                    ) { } else {
+                    if ($presensi = $presensis->where('id_pengguna', $pengguna->id_pengguna)->first()) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
@@ -452,15 +455,14 @@ class FingerprintController extends BaseController
             $data_fingerprint2 = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
             if (!empty($data_fingerprint2)) {
                 $collection2 = $data_fingerprint2->groupBy('username')->all();
-
+                $penggunas =  Pengguna::whereIn('username', collect($collection)->keys())->get();
+                $presensis = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
                 foreach ($collection2 as $username => $group_of_data) {
-                    if ($pengguna = Pengguna::where('username', $username)->first()) {
+                    if ($pengguna = $penggunas->where('username', $username)->first()) {
                         $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                        if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                        if ($presensi = $presensis->where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)->first()
                             // ->where('status_join_table', '4')
-                            ->where('unit', 'Pondok')
-                            ->first()
                         ) { } else {
                             $presensi = new PresensiPengguna;
                             $presensi->id_pengguna = $pengguna->id_pengguna;
