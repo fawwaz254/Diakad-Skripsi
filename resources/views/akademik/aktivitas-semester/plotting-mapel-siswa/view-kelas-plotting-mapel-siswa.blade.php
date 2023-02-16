@@ -70,9 +70,9 @@
                                     <th>No.</th>
                                     <th>Jurusan</th>
                                     <th>Semua Siswa</th>
-                                    <th>Siswa Sudah Presensi</th>
+                                    {{-- <th>Siswa Sudah Presensi</th> --}}
                                     <th>Semua Jadwal</th>
-                                    <th>Jadwal Sudah Presensi</th>
+                                    {{-- <th>Jadwal Sudah Presensi</th> --}}
                                     <th>Action</th>
                                     {{-- <th>Action</th> --}}
                                 </tr>
@@ -115,10 +115,10 @@
                 data: 'nm_jurusan',
                 name: 'nm_jurusan'
             },
-            {
-                data: 'jml_siswa_presensi',
-                name: 'jml_siswa_presensi'
-            },
+            // {
+            //     data: 'jml_siswa_presensi',
+            //     name: 'jml_siswa_presensi'
+            // },
             {
                 data: 'jml_siswa',
                 name: 'jml_siswa'
@@ -127,10 +127,10 @@
                 data: 'jml_kelas_mp',
                 name: 'jml_kelas_mp'
             },
-            {
-                data: 'jml_kelas_mp_presensi',
-                name: 'jml_kelas_mp_presensi'
-            },
+            // {
+            //     data: 'jml_kelas_mp_presensi',
+            //     name: 'jml_kelas_mp_presensi'
+            // },
             {
                 data: 'action',
                 name: 'action',

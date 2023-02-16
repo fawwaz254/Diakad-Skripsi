@@ -169,24 +169,24 @@ class PlottingMapelSiswaController extends BaseController
             AND siswa.deleted_at IS NULL 
             ) AS jml_siswa")
         )
-            ->selectRaw("(SELECT COUNT(distinct presensi_mp_siswa.id_siswa) FROM presensi_mp_siswa
-            JOIN presensi_mp ON presensi_mp.id_presensi_mp = presensi_mp_siswa.id_presensi_mp
-            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN pengampu_mp ON pengampu_mp.id_kelas_mp =  presensi_mp.id_kelas_mp
-            JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas
-            WHERE kelas.id_jurusan = jurusan.id_jurusan AND  presensi_mp_siswa.deleted_at IS NULL AND presensi_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas_mp.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_siswa_presensi", [$id])
+            // ->selectRaw("(SELECT COUNT(distinct presensi_mp_siswa.id_siswa) FROM presensi_mp_siswa
+            // JOIN presensi_mp ON presensi_mp.id_presensi_mp = presensi_mp_siswa.id_presensi_mp
+            // JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN pengampu_mp ON pengampu_mp.id_kelas_mp =  presensi_mp.id_kelas_mp
+            // JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas
+            // WHERE kelas.id_jurusan = jurusan.id_jurusan AND  presensi_mp_siswa.deleted_at IS NULL AND presensi_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas_mp.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_siswa_presensi", [$id])
             ->selectRaw("(SELECT COUNT(distinct kelas_mp.id_kelas_mp) FROM kelas_mp
             JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp
             JOIN pengampu_mp ON pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp
             JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas
             WHERE kelas.id_jurusan = jurusan.id_jurusan AND kelas_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_kelas_mp", [$id])
-            ->selectRaw("(SELECT COUNT(distinct presensi_mp.id_kelas_mp) FROM presensi_mp
-            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas
-            WHERE kelas.id_jurusan = jurusan.id_jurusan AND presensi_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND kelas_mp.id_semester = ? ) AS jml_kelas_mp_presensi", [$id])
+            // ->selectRaw("(SELECT COUNT(distinct presensi_mp.id_kelas_mp) FROM presensi_mp
+            // JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN kelas ON kelas.id_kelas = kelas_mp.id_kelas
+            // WHERE kelas.id_jurusan = jurusan.id_jurusan AND presensi_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND kelas_mp.id_semester = ? ) AS jml_kelas_mp_presensi", [$id])
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
 
         return Datatables::of($list_data)
@@ -435,21 +435,21 @@ class PlottingMapelSiswaController extends BaseController
             AND siswa.deleted_at IS NULL 
             ) AS jml_siswa")
         )
-            ->selectRaw("(SELECT COUNT(distinct presensi_mp_siswa.id_siswa) FROM presensi_mp_siswa 
-            JOIN presensi_mp ON presensi_mp.id_presensi_mp = presensi_mp_siswa.id_presensi_mp
-            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN pengampu_mp ON pengampu_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
-            WHERE kelas_mp.id_kelas = kelas.id_kelas AND presensi_mp_siswa.deleted_at IS NULL AND presensi_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND  kelas_mp.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_siswa_presensi", [$id_semester])
+            // ->selectRaw("(SELECT COUNT(distinct presensi_mp_siswa.id_siswa) FROM presensi_mp_siswa 
+            // JOIN presensi_mp ON presensi_mp.id_presensi_mp = presensi_mp_siswa.id_presensi_mp
+            // JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN pengampu_mp ON pengampu_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp
+            // WHERE kelas_mp.id_kelas = kelas.id_kelas AND presensi_mp_siswa.deleted_at IS NULL AND presensi_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND  kelas_mp.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_siswa_presensi", [$id_semester])
             ->selectRaw("(SELECT COUNT(distinct kelas_mp.id_kelas_mp) FROM kelas_mp 
             JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp  
             JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp 
             WHERE kelas_mp.id_kelas = kelas.id_kelas AND kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL AND kelas_mp.id_semester = ?) AS jml_kelas_mp", [$id_semester])
-            ->selectRaw("(SELECT COUNT(distinct presensi_mp.id_kelas_mp) FROM presensi_mp 
-            JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp 
-            JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp
-            JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp 
-            WHERE kelas_mp.id_kelas = kelas.id_kelas AND presensi_mp.deleted_at IS NULL  AND kelas_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND kelas_mp.id_semester = ? ) AS jml_kelas_mp_presensi", [$id_semester])
+            // ->selectRaw("(SELECT COUNT(distinct presensi_mp.id_kelas_mp) FROM presensi_mp 
+            // JOIN kelas_mp ON kelas_mp.id_kelas_mp = presensi_mp.id_kelas_mp 
+            // JOIN jadwal_kelas_mp ON jadwal_kelas_mp.id_kelas_mp = kelas_mp.id_kelas_mp
+            // JOIN pengampu_mp ON  pengampu_mp.id_kelas_mp = kelas_mp.id_kelas_mp 
+            // WHERE kelas_mp.id_kelas = kelas.id_kelas AND presensi_mp.deleted_at IS NULL  AND kelas_mp.deleted_at IS NULL AND jadwal_kelas_mp.deleted_at IS NULL AND pengampu_mp.deleted_at IS NULL AND kelas.deleted_at IS NULL  AND kelas_mp.id_semester = ? ) AS jml_kelas_mp_presensi", [$id_semester])
             ->join('jurusan', 'jurusan.id_jurusan', 'kelas.id_jurusan')
             ->where('kelas.id_jurusan', '=', $id_jurusan)
             ->where('jurusan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
