@@ -19,7 +19,7 @@ Route::middleware(['token_staff'])->group(function () {
 
     Route::prefix('sumber-daya')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 
@@ -42,7 +42,6 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('category/{category_file_id}', [DataFileController::class, 'viewDataFileCategory']);
                 Route::get('dropdown-category', [DataFileController::class, 'dropdownCategory']);
                 Route::get('sub-category/{sub_category_file_id}', [DataFileController::class, 'viewDataFileSubCategory']);
-
                 Route::post('action-data-file/{mode}/{id}', [DataFileController::class, 'actionDataFile']);
                 Route::get('download/{id}', [DataFileController::class, 'downloadDataFile']);
             });
@@ -53,17 +52,16 @@ Route::middleware(['token_staff'])->group(function () {
             Route::get('unit-kerja/datatables', [UnitKerjaController::class, 'datatablesUnitKerja']);
             Route::get('unit-kerja/add', [UnitKerjaController::class, 'addUnitKerja']);
             Route::get('unit-kerja/edit/{id}', [UnitKerjaController::class, 'editUnitKerja']);
-
             Route::post('action-unit-kerja/{mode}/{id}', [UnitKerjaController::class, 'actionUnitKerja']);
 
 
             //Menu Upload Foto
 
-            Route::get('update-foto', [UpdateFotoUnitKerjaController::class, 'viewUpdateFoto']);
+            Route::get('update-foto', [UpdateFotoUnitKerjaController::class, 'viewDetailUpdateFoto']);
             Route::get('update-foto/batch', [UpdateFotoUnitKerjaController::class, 'viewBatchUpdateFoto']);
             Route::post('post-view-update-foto', [UpdateFotoUnitKerjaController::class, 'actionViewUpdateFoto']);
-            Route::get('update-foto/view-detail-update-foto/{unit_kerja}/{status_join_table}', [UpdateFotoUnitKerjaController::class, 'viewDetailUpdateFoto']);
-            Route::get('update-foto/datatables/{unit_kerja}/{status_join_table}', [UpdateFotoUnitKerjaController::class, 'datatablesUpdateFoto']);
+            Route::get('update-foto/view-detail-update-foto/{status_join_table}', [UpdateFotoUnitKerjaController::class, 'viewDetailUpdateFoto']);
+            Route::get('update-foto/datatables/{status_join_table}', [UpdateFotoUnitKerjaController::class, 'datatablesUpdateFoto']);
             Route::get('update-foto/upload/{id_pengguna}', [UpdateFotoUnitKerjaController::class, 'viewUpload']);
             Route::post('action-update-foto/{mode}/{id}', [UpdateFotoUnitKerjaController::class, 'actionUpdateFoto']);
             Route::post('action-batch-upload-foto', [UpdateFotoUnitKerjaController::class, 'actionBatchUploadFoto']);
