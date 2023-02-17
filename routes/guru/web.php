@@ -78,7 +78,6 @@ use App\Models\WaliMurid;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('guru')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('mgmp')->group(function () {
 

@@ -17,7 +17,6 @@ use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpina
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');
