@@ -48,7 +48,7 @@ class FingerprintController extends BaseController
             ->addColumn('last_data', function ($item) use ($now) {
                 $fp_attendence =  FPAttendance::where('id_fp_device', $item->id_fp_device)->orderBy('fp_date', 'desc')->first();
                 if ($fp_attendence) {
-                    return Carbon::parse($fp_attendence->updated_at)->diffForHumans($now);
+                    return Carbon::parse($fp_attendence->fp_date)->diffForHumans($now);
                 } else {
                     return 'kosong';
                 }
@@ -360,6 +360,7 @@ class FingerprintController extends BaseController
                                 'tanggal' => $data['tanggal'],
                                 'fp_date' => $data['tanggal'],
                                 'unit' => 'Pondok',
+                                'created_at' => $now,
                             ];
                         }
                     } else {
@@ -370,6 +371,7 @@ class FingerprintController extends BaseController
                                 'status' => $data['status'],
                                 'tanggal' => $data['tanggal'],
                                 'fp_date' => $data['tanggal'],
+                                'created_at' => $now,
                             ];
                         }
                     }
