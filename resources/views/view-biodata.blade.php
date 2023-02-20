@@ -37,8 +37,7 @@
                                 {{ $modul->nm_modul }}
                             </h5> --}}
                             {{-- @foreach ($modul->menus as $menu) --}}
-                            <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}"
-                                style=" display: inline-block;">
+                            <a href="" style=" display: inline-block;">
                                 <div class="card" style="margin-top: 5px">
                                     <div class="body bg-green" style="text-align: -webkit-center;">
                                         <h5>
@@ -68,8 +67,7 @@
                                     {{ $modul->nm_modul }}
                                 </h5>
                                 @foreach ($modul->menus as $menu)
-                                    <a href="{{ url(Request::segment(0) . Request::segment(1) . '#device/fingerprint') }}"
-                                        style=" display: inline-block;">
+                                    <a href="" style=" display: inline-block;">
                                         <div class="card" style="margin-top: 5px">
                                             <div class="body bg-green" style="text-align: -webkit-center;">
                                                 <h5>

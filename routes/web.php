@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Administrator\Device\FingerprintController;
+use App\Http\Controllers\Administrator\WelcomeController;
 use App\Http\Controllers\AuthGlobalController;
 use App\Http\Controllers\ForgetPasswordController;
 use App\Http\Controllers\Keuangan\SIM\PembayaranOnlineController;
@@ -149,6 +150,8 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('password', [AuthGlobalController::class, 'indexPassword']);
         Route::post('password', [AuthGlobalController::class, 'actionChangePassword']);
         Route::get('signout', [AuthGlobalController::class, 'actionSignOut']);
+
+        Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
     });
 });
 
