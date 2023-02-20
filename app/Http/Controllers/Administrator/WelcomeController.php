@@ -30,7 +30,6 @@ class WelcomeController extends BaseController
         $auth_data = $input->auth_data;
         $role_pengguna = RolePengguna::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('role.modul.menus')
             ->get();
-        // dd($role_pengguna[1]);
         if ($auth_data->pengguna->status_join_table == '1') { //tendik
             $pengguna = Staff::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
             return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
