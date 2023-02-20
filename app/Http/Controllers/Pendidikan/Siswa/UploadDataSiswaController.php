@@ -42,6 +42,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Session;
 use Validator;
+use App\Imports\DataImportExcel;
 
 class UploadDataSiswaController extends BaseController
 {
@@ -151,15 +152,19 @@ class UploadDataSiswaController extends BaseController
 		if ($request->hasFile('file-excel')) {
 			// $path = $request->file('file-excel')->getRealPath();
 			// $data = Excel::load($path)->get();
-			Excel::import(new UploadToInsertUpdateSiswa($auth_data, $now), $request->file('file-excel'));
+			$uploader = new UploadToInsertUpdateSiswa($auth_data, $now);
+			$upload = Excel::import($uploader, $request->file('file-excel'));
+
+			$message = $uploader->getMessage();
+
 			return [
-				'status' 	=> 200, // FAILED
-				'message' 	=> "Upload Sukses"
-			];;
+				'status'    => $upload ? 200 : 300,
+				'message'   => $message[0]
+			];
 		} else {
 			return [
-				'status' 	=> 300, // FAILED
-				'message' 	=> "File Excel tidak ditemukan"
+				'status'    => 300, // FAILED
+				'message'   => "File Excel Tidak Ditemukan"
 			];
 		}
 	}
