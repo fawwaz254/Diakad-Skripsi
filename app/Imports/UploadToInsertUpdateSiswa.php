@@ -2,42 +2,43 @@
 
 namespace App\Imports;
 
-use App\Libraries\LibGlobal;
-use App\Models\Agama;
-use App\Models\Jalur as Jalur;
-use App\Models\JenisLayakPip;
-use App\Models\JenisPekerjaan;
-use App\Models\JenisPendidikan;
-use App\Models\JenisPenghasilan;
-use App\Models\JenisTinggal;
-use App\Models\JenisTransportasi;
-use App\Models\KebutuhanKhusus;
-use App\Models\Kelas as Kelas;
+use DB;
 use App\Models\Kota;
-use App\Models\Penerimaan as Penerimaan;
+use App\Models\Agama;
+use App\Models\Siswa;
+use App\Models\Voucher;
 use App\Models\Pengguna;
 use App\Models\Provinsi;
-use App\Models\Semester as Semester;
-use App\Models\Siswa;
-use App\Models\StatusPengguna as StatusPengguna;
-use App\Models\Voucher;
-use Barryvdh\Debugbar\Facade as Debugbar;
-use DB;
+use App\Libraries\LibGlobal;
+use App\Models\JenisTinggal;
+use App\Models\JenisLayakPip;
+use App\Models\Jalur as Jalur;
+use App\Models\JenisPekerjaan;
+use App\Models\Kelas as Kelas;
+use App\Models\JenisPendidikan;
+use App\Models\KebutuhanKhusus;
+use App\Models\JenisPenghasilan;
+use App\Models\JenisTransportasi;
 use Illuminate\Support\Collection;
+use App\Models\Semester as Semester;
+use Illuminate\Notifications\Action;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Penerimaan as Penerimaan;
+use Barryvdh\Debugbar\Facade as Debugbar;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use App\Models\StatusPengguna as StatusPengguna;
 
 class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
 {
     protected $auth_data;
     protected $now;
+    protected $message = array();
 
     public function __construct($auth_data, $now)
     {
         $this->auth_data = $auth_data;
         $this->now = $now;
-
     }
 
     /**
@@ -96,6 +97,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             $status = $data_status_pengguna->firstWhere('nm_status_pengguna', '=', $value->status_siswa);
 
             if (empty($status)) {
+                $this->message[] = 'Upload Data Siswa Gagal, status ' . $value->status_siswa . ' tidak ditemukan di dalam sistem';
                 Debugbar::error('Upload Data Siswa Gagal, status ' . $value->status_siswa . ' tidak ditemukan di dalam sistem');
             }
 
@@ -103,6 +105,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             $kelas = $data_kelas->firstWhere('nm_kelas', '=', $value->kelas);
 
             if (empty($kelas)) {
+                $this->message[] = 'Upload Data Siswa Gagal, kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem';
                 Debugbar::error('Upload Data Siswa Gagal, kelas ' . $value->kelas . ' tidak ditemukan di dalam sistem');
             }
 
@@ -110,6 +113,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             $jalur = $data_jalur->firstWhere('nm_jalur', '=', $value->jalur);
 
             if (empty($jalur)) {
+                $this->message[] = 'Upload Data Siswa Gagal, jalur ' . $value->jalur . ' tidak ditemukan di dalam sistem';
                 Debugbar::error('Upload Data Siswa Gagal, jalur ' . $value->jalur . ' tidak ditemukan di dalam sistem');
             }
 
@@ -126,6 +130,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             $semester_masuk = $data_semester_masuk->firstWhere('kode_semester', '=', $value->semester_masuk);
 
             if (empty($semester_masuk)) {
+                $this->message[] = 'Upload Data Siswa Gagal, semester masuk ' . $value->semester_masuk . ' tidak ditemukan di dalam sistem';
                 Debugbar::error('Upload Data Siswa Gagal, semester masuk ' . $value->semester_masuk . ' tidak ditemukan di dalam sistem');
             }
 
@@ -133,6 +138,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             $id_penerimaan = $data_penerimaan->firstWhere('tahun_penerimaan', '=', (int) $value->tahun_masuk);
 
             if (empty($id_penerimaan)) {
+                $this->message[] = 'Upload Data Siswa Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem';
                 Debugbar::error('Upload Data Siswa Gagal, tahun masuk ' . $value->tahun_masuk . ' tidak ditemukan di dalam sistem');
             }
 
@@ -151,6 +157,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_voucher) {
                     $kode_voucher = $find_voucher->id_voucher;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, kode voucher ' . $value->kode_voucher . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, kode voucher ' . $value->kode_voucher . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -170,6 +177,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_agama) {
                     $agama = $find_agama->id_agama;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, agama ' . $value->agama . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, agama ' . $value->agama . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -182,6 +190,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kota) {
                     $kota_lahir = $find_kota->id_kota;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, kota lahir ' . $value->kota_lahir . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, kota lahir ' . $value->kota_lahir . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -201,6 +210,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kota_ksk) {
                     $kota_ksk = $find_kota_ksk->id_kota;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, nama kota ksk ' . $value->nama_kota_ksk . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, nama kota ksk ' . $value->nama_kota_ksk . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -251,6 +261,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kebutuhan_khusus) {
                     $kebutuhan_khusus = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, Kebutuhan Khusus ' . $value->kebutuhan_khusus . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, Kebutuhan Khusus ' . $value->kebutuhan_khusus . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -312,6 +323,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_alamat_kota) {
                     $alamat_kota = $find_alamat_kota->id_kota;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, alamat kota ' . $value->alamat_kota . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, alamat kota ' . $value->alamat_kota . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -324,6 +336,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_provinsi) {
                     $alamat_provinsi = $find_provinsi->id_provinsi;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, alamat provinsi ' . $value->alamat_provinsi . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, alamat provinsi ' . $value->alamat_provinsi . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -357,6 +370,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_tinggal) {
                     $jenis_tinggal = $find_jenis_tinggal->id_jenis_tinggal;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis tinggal ' . $value->jenis_tinggal . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, jenis tinggal ' . $value->jenis_tinggal . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -404,6 +418,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_transportasi) {
                     $jenis_transportasi = $find_jenis_transportasi->id_jenis_transportasi;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis transportasi ' . $value->jenis_transportasi . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, jenis transportasi ' . $value->jenis_transportasi . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -465,6 +480,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_layak) {
                     $jenis_layak_pip = $find_jenis_layak->id_jenis_layak_pip;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis layak pip ' . $value->jenis_layak_pip . ' tidak ditemukan di dalam sistem';
                     Debugbar::error('Upload Data Siswa Gagal, jenis layak pip ' . $value->jenis_layak_pip . ' tidak ditemukan di dalam sistem');
                 }
             }
@@ -484,6 +500,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kota_sekolah_asal) {
                     $kota_asal_sekolah_sebelumnya = $find_alamat_kota->id_kota;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, kota asal sekolah sebelumnya ' . $value->kota_asal_sekolah_sebelumnya . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, kota asal sekolah sebelumnya ' . $value->kota_asal_sekolah_sebelumnya . ' tidak ditemukan di dalam sistem'
                     );
@@ -568,6 +585,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_pendidikan) {
                     $jenis_pendidikan_ayah = $find_jenis_pendidikan->id_jenis_pendidikan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis pendidikan ayah ' . $value->jenis_pendidikan_ayah . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis pendidikan ayah ' . $value->jenis_pendidikan_ayah . ' tidak ditemukan di dalam sistem'
                     );
@@ -582,6 +600,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_pekerjaan) {
                     $jenis_pekerjaan_ayah = $find_jenis_pekerjaan->id_jenis_pekerjaan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis pekerjaan ayah ' . $value->jenis_pekerjaan_ayah . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis pekerjaan ayah ' . $value->jenis_pekerjaan_ayah . ' tidak ditemukan di dalam sistem'
                     );
@@ -596,6 +615,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_penghasilan) {
                     $jenis_penghasilan_ayah = $find_jenis_penghasilan->id_jenis_penghasilan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis penghasilan ayah ' . $value->jenis_penghasilan_ayah . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis penghasilan ayah ' . $value->jenis_penghasilan_ayah . ' tidak ditemukan di dalam sistem'
                     );
@@ -610,6 +630,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kebutuhan_khusus) {
                     $kebutuhan_khusus_ayah = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, kebutuhan khusus ayah ' . $value->kebutuhan_khusus_ayah . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, kebutuhan khusus ayah ' . $value->kebutuhan_khusus_ayah . ' tidak ditemukan di dalam sistem'
                     );
@@ -645,6 +666,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_pendidikan) {
                     $jenis_pendidikan_ibu = $find_jenis_pendidikan->id_jenis_pendidikan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis pendidikan ibu ' . $value->jenis_pendidikan_ibu . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis pendidikan ibu ' . $value->jenis_pendidikan_ibu . ' tidak ditemukan di dalam sistem'
                     );
@@ -659,6 +681,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_pekerjaan) {
                     $jenis_pekerjaan_ibu = $find_jenis_pekerjaan->id_jenis_pekerjaan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis pekerjaan ibu ' . $value->jenis_pekerjaan_ibu . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis pekerjaan ibu ' . $value->jenis_pekerjaan_ibu . ' tidak ditemukan di dalam sistem'
                     );
@@ -673,6 +696,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_penghasilan) {
                     $jenis_penghasilan_ibu = $find_jenis_penghasilan->id_jenis_penghasilan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis penghasilan ibu ' . $value->jenis_penghasilan_ibu . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis penghasilan ibu ' . $value->jenis_penghasilan_ibu . ' tidak ditemukan di dalam sistem'
                     );
@@ -687,6 +711,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kebutuhan_khusus) {
                     $kebutuhan_khusus_ibu = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, kebutuhan khusus ibu ' . $value->kebutuhan_khusus_ibu . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, kebutuhan khusus ibu ' . $value->kebutuhan_khusus_ibu . ' tidak ditemukan di dalam sistem'
                     );
@@ -722,6 +747,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_pendidikan) {
                     $jenis_pendidikan_wali = $find_jenis_pendidikan->id_jenis_pendidikan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis pendidikan wali ' . $value->jenis_pendidikan_wali . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis pendidikan wali ' . $value->jenis_pendidikan_wali . ' tidak ditemukan di dalam sistem'
                     );
@@ -736,6 +762,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_pekerjaan) {
                     $jenis_pekerjaan_wali = $find_jenis_pekerjaan->id_jenis_pekerjaan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis pekerjaan wali ' . $value->jenis_pekerjaan_wali . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis pekerjaan wali ' . $value->jenis_pekerjaan_wali . ' tidak ditemukan di dalam sistem'
                     );
@@ -750,6 +777,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_jenis_penghasilan) {
                     $jenis_penghasilan_wali = $find_jenis_penghasilan->id_jenis_penghasilan;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, jenis penghasilan wali ' . $value->jenis_penghasilan_wali . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, jenis penghasilan wali ' . $value->jenis_penghasilan_wali . ' tidak ditemukan di dalam sistem'
                     );
@@ -764,6 +792,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_kebutuhan_khusus) {
                     $kebutuhan_khusus_wali = $find_kebutuhan_khusus->id_kebutuhan_khusus;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, kebutuhan khusus wali ' . $value->kebutuhan_khusus_wali . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, kebutuhan khusus wali ' . $value->kebutuhan_khusus_wali . ' tidak ditemukan di dalam sistem'
                     );
@@ -827,6 +856,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_alamat_kota) {
                     $alamat_kota_orang_tua = $find_alamat_kota->id_kota;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, alamat kota orang tua ' . $value->alamat_kota_orang_tua . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, alamat kota orang tua ' . $value->alamat_kota_orang_tua . ' tidak ditemukan di dalam sistem'
                     );
@@ -841,6 +871,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 if ($find_provinsi) {
                     $alamat_provinsi_orang_tua = $find_provinsi->id_provinsi;
                 } else {
+                    $this->message[] = 'Upload Data Siswa Gagal, alamat provinsi orang tua ' . $value->alamat_provinsi_orang_tua . ' tidak ditemukan di dalam sistem';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, alamat provinsi orang tua ' . $value->alamat_provinsi_orang_tua . ' tidak ditemukan di dalam sistem'
                     );
@@ -925,6 +956,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
             }
 
             if ($id_penerimaan == null || $semester_masuk == null || $jenis_kelamin == null || $jalur == null || $kelas == null || $status == null) {
+                $this->message[] = 'Upload Data Siswa Gagal, Data Tidak Valid pada Siswa "' . $value->nama_lengkap . '"';
                 Debugbar::error(
                     'Upload Data Siswa Gagal, Data Tidak Valid pada Siswa "' . $value->nama_lengkap . '"'
                 );
@@ -1067,12 +1099,14 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                 }
 
                 if ($jumlah_nis > 1) {
+                    $this->message[] = 'Upload Data Siswa Gagal, ditemukan NIS ' . $data_siswa_1['nis'] . ' yang sama di dalam file yang diupload';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, ditemukan NIS ' . $data_siswa_1['nis'] . ' yang sama di dalam file yang diupload'
                     );
                 }
 
                 if (!empty($data_siswa_1['nisn']) && $jumlah_nisn > 1) {
+                    $this->message[] = 'Upload Data Siswa Gagal, ditemukan NISN ' . $data_siswa_1['nisn'] . ' yang sama di dalam file yang diupload';
                     Debugbar::error(
                         'Upload Data Siswa Gagal, ditemukan NISN ' . $data_siswa_1['nisn'] . ' yang sama di dalam file yang diupload'
                     );
@@ -1291,8 +1325,7 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
                         DB::table('siswa')->insert($row_siswa);
                     }
 
-                    if ($check_nis_siswa) {
-                    } else {
+                    if ($check_nis_siswa) { } else {
                         DB::table('admisi')->insert(
                             [
                                 'id_admisi' => $data_siswa['id_admisi'],
@@ -1350,18 +1383,24 @@ class UploadToInsertUpdateSiswa implements ToCollection, WithHeadingRow
 
                 LibGlobal::insertUpdateUserInCenter($pengguna_center);
                 DB::commit();
-
+                $this->message[] = 'Save Siswa Successfully';
                 Debugbar::error('Save Siswa Successfully');
             } catch (\Exception $e) {
 
                 DB::rollback();
                 // something went wrong
                 //    Debugbar::error( (env('APP_DEBUG', 'true') == 'true') ? 'tesst' : 'Operation error');
+                $this->message[] = (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error';
                 Debugbar::error((env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error');
-
             }
         } else {
+            $this->message[] = 'File Excel Anda Kosong';
             Debugbar::error("File Excel Anda Kosong");
         }
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
     }
 }
