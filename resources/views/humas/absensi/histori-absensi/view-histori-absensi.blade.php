@@ -234,7 +234,7 @@
                                             <td>{{ $r['check_in'] }}</td>
                                             <td>{{ $r['check_out'] }}</td>
                                             <td
-                                                @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494" @else style="background: #fffdb5" @endif>
+                                                @if ($r['status'] == 'Masuk') style="background: #b5ffe0" @elseif($r['status'] == 'Alpha') style="background: #ff9494"  @elseif($r['status'] == 'Belum Absent') style="background: #ffffff" @else style="background: #fffdb5" @endif>
                                                 {{ $r['status'] }}</td>
                                             <td style="text-align: center;display:flex;justify-content:center">
                                                 @if ($r['id_presensi_pengguna'] == '')

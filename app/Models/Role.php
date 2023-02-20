@@ -16,10 +16,10 @@ class Role extends Model
 
     protected $primaryKey = 'id_role';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'nm_role',
         'deskripsi_role',
@@ -33,9 +33,8 @@ class Role extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function modul()
+    {
+        return $this->hasMany(Modul::class, 'id_role');
+    }
 }

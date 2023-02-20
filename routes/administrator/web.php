@@ -17,7 +17,6 @@ use App\Http\Controllers\Administrator\JurnalPimpinan\JenisKategoriJurnalPimpina
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('administrator')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
 
         Route::get('/report-pimpinan', [ReportController::class, 'viewAllDiakad'])->name('report.pimpinan');
         Route::get('/report-wali-kelas', [ReportController::class, 'viewReportWaliKelas'])->name('report.walikelas');
@@ -70,14 +69,14 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Tenaga Pendidik
             // url: /administrator/pengelolaan-akun/tendik
-            Route::get('tendik', [TendikController::class, 'viewTendik']);
+            Route::get('tendik', [TendikController::class, 'viewDetailTendik']);
             Route::post('post-view-tendik', [TendikController::class, 'actionViewTendik']);
             Route::get('tendik/view-detail/{id_role}', [TendikController::class, 'viewDetailTendik']);
             Route::get('tendik/datatables/{id_role}', [TendikController::class, 'datatablesTendik']);
 
             // MENU Guru
             // url: /administrator/pengelolaan-akun/guru
-            Route::get('guru', [GuruController::class, 'viewGuru']);
+            Route::get('guru', [GuruController::class, 'viewDetailGuru']);
             Route::post('post-view-guru', [GuruController::class, 'actionViewGuru']);
             Route::get('guru/view-detail/{id_role}', [GuruController::class, 'viewDetailGuru']);
             Route::get('guru/datatables/{id_role}', [GuruController::class, 'datatablesGuru']);

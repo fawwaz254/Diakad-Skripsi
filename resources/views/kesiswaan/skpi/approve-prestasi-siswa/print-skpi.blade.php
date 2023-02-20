@@ -301,7 +301,9 @@
                 <tr>
                     <td style="width: 5%;">1.A2</td>
                     @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smawh2')
-                        <td style="width: 30%;">Tanggal Lahir </td>
+                        <td style="width: 30%;">Tanggal Lahir <br>
+                            <i>Date of Birth</i>
+                        </td>
                         <td> {{ indonesiaDate($siswa->calon_siswa->tgl_lahir) }}</td>
                     @else
                         <td style="width: 30%;">Tempat, Tanggal Lahir
@@ -352,7 +354,7 @@
             </table>
 
             @php
-                $no = 0;
+                $no = 1;
             @endphp
 
             {{-- @if ($siswa->keterangan_kelas == 'Internasional') --}}
@@ -374,6 +376,15 @@
                     </td>
                     <td> {{ $auth_data->sekolah_data->nm_sekolah }}</td>
                 </tr>
+                @if (in_array($auth_data->sekolah_data->nm_singkat_sekolah, ['smkypm1taman', 'smkypm2', 'smkypm3taman']))
+                    <tr>
+                        <td style="width: 5%;">2.A{{ $no++ }}</td>
+                        <td style="width: 30%;">Jurusan
+                            <br><i>Department</i>
+                        </td>
+                        <td> {{ $siswa->nm_jurusan }}</td>
+                    </tr>
+                @endif
                 <tr>
                     <td style="width: 5%;">2.A{{ $no++ }}</td>
                     <td style="width: 30%;">Surat Izin Operasional Sekolah

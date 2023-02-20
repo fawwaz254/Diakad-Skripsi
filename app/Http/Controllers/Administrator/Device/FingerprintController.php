@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Administrator\Device;
 
+use App\Jobs\CreateFPAttendences;
 use App\Models\FPAttendance;
 use App\Models\FPDevice;
 use App\Models\Pengguna;
@@ -47,7 +48,14 @@ class FingerprintController extends BaseController
             ->addColumn('last_data', function ($item) use ($now) {
                 $fp_attendence =  FPAttendance::where('id_fp_device', $item->id_fp_device)->orderBy('fp_date', 'desc')->first();
                 if ($fp_attendence) {
-                    return Carbon::parse($fp_attendence->updated_at)->diffForHumans($now);
+                    return Carbon::parse($fp_attendence->fp_date)->diffForHumans($now);
+                } else {
+                    return 'kosong';
+                }
+            })
+            ->addColumn('clear_log', function ($item) use ($now) {
+                if ($item->clear_log) {
+                    return Carbon::parse($item->clear_log)->diffForHumans($now);
                 } else {
                     return 'kosong';
                 }
@@ -141,11 +149,11 @@ class FingerprintController extends BaseController
                 if (!empty($date_filter)) {
                     $data_fp = $this->filterData($buffer, $date_filter);
                 } else {
-                    if ($last_data) {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->created_at);
-                    } else {
-                        $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
-                    }
+                    // if ($last_data) {
+                    // $data_fp = $this->filterData($buffer, $now->format('Y-m-d'), $last_data->created_at);
+                    // } else {
+                    $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+                    // }
                 }
 
                 foreach ($data_fp as $data) {
@@ -290,8 +298,6 @@ class FingerprintController extends BaseController
                         }
                     }
                 }
-
-
                 echo 'SUCCESS Merge Data. >>> END';
             } catch (Exception $e) {
                 return $e;
@@ -301,7 +307,89 @@ class FingerprintController extends BaseController
         }
     }
 
-    public function actionGetDataFinger(Request $request)
+
+    public function actionGetData(Request $request)
+    {
+        set_time_limit(-1);
+        // $input = (object) $request->input();
+        $now = Carbon::now('Asia/Jakarta');
+        $client = new \GuzzleHttp\Client();
+
+        $finger_sukses = 'Finger yang berhasil diambil = </br>';
+        $devices = FPDevice::orderBy('updated_at', 'DESC')->get();
+        foreach ($devices as $device) {
+            $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
+            try {
+                if (!empty($device->port)) {
+                    $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+                } else {
+                    $fingerprint_url = $device->ip_address_wan . '/iWsService';
+                }
+                $client->request('GET', $fingerprint_url, ['timeout' => 3.14]);
+                // if (!$response->getStatusCode() == 200) {
+                //     continue;
+                // }
+            } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+                continue;
+            }
+
+            $serial_number = $device->sn;
+            // $data_username_pengguna = array();
+            try {
+                $response = $client->post($fingerprint_url, [
+                    'headers' => [
+                        'Content-Type' => 'text/xml',
+                        'Content-Length' => strlen($soap_request),
+                    ],
+                    'body' => $soap_request,
+                ]);
+
+                $buffer = $response->getBody()->getContents();
+                $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+                $buffer = explode("\r\n", $buffer);
+                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
+                $fp_attendences = FPAttendance::whereDay('fp_date', Carbon::today())->where('id_fp_device', $device->id_fp_device)->get();
+                foreach ($data_fp as $data) {
+                    // $data_username_pengguna[] = $data['username'];
+                    if ($serial_number == 'BWXP222860373' || $serial_number == 'BWXP222860377' || $serial_number == 'BWXP222860378') {
+                        if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->where('unit', 'Pondok')->first()) { } else {
+                            $list_data[] = [
+                                'id_fp_device' =>  $device->id_fp_device,
+                                'username' => $data['username'],
+                                'status' => $data['status'],
+                                'tanggal' => $data['tanggal'],
+                                'fp_date' => $data['tanggal'],
+                                'unit' => 'Pondok',
+                                'created_at' => $now,
+                            ];
+                        }
+                    } else {
+                        if ($fp_attendences->where('username', $data['username'])->where('fp_date', $data['tanggal'])->whereNull('unit')->first()) { } else {
+                            $list_data[] = [
+                                'id_fp_device' =>  $device->id_fp_device,
+                                'username' => $data['username'],
+                                'status' => $data['status'],
+                                'tanggal' => $data['tanggal'],
+                                'fp_date' => $data['tanggal'],
+                                'created_at' => $now,
+                            ];
+                        }
+                    }
+                }
+
+                if (!empty($list_data)) {
+                    CreateFPAttendences::dispatch($list_data);
+                    unset($list_data);
+                }
+                $finger_sukses = $finger_sukses . $serial_number . '</br>';
+            } catch (Exception $e) {
+                continue;
+            }
+        }
+        echo $finger_sukses;
+    }
+
+    public function actionSyncData(Request $request)
     {
         set_time_limit(-1);
         $input = (object) $request->input();
@@ -315,16 +403,14 @@ class FingerprintController extends BaseController
         try {
             $data_fingerprint = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
             $collection = $data_fingerprint->groupBy('username')->all();
+            $penggunas =  Pengguna::whereIn('username', collect($collection)->keys())->get();
+            $presensis = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->whereNull('unit')->get();
 
             foreach ($collection as $username => $group_of_data) {
-                if ($pengguna = Pengguna::where('username', $username)->first()) {
+                if ($pengguna = $penggunas->where('username', $username)->first()) {
                     $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                    if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
-                        ->whereNull('unit')
-                        // ->where('status_join_table', $pengguna->status_join_table)
-                        ->first()
-                    ) { } else {
+                    if ($presensi = $presensis->where('id_pengguna', $pengguna->id_pengguna)->first()) { } else {
                         $presensi = new PresensiPengguna;
                         $presensi->id_pengguna = $pengguna->id_pengguna;
                         $presensi->status_join_table = $pengguna->status_join_table;
@@ -371,15 +457,14 @@ class FingerprintController extends BaseController
             $data_fingerprint2 = FPAttendance::where('tanggal', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
             if (!empty($data_fingerprint2)) {
                 $collection2 = $data_fingerprint2->groupBy('username')->all();
-
+                $penggunas =  Pengguna::whereIn('username', collect($collection)->keys())->get();
+                $presensis = PresensiPengguna::where('date', $date_filter->format('Y-m-d'))->where('unit', 'Pondok')->get();
                 foreach ($collection2 as $username => $group_of_data) {
-                    if ($pengguna = Pengguna::where('username', $username)->first()) {
+                    if ($pengguna = $penggunas->where('username', $username)->first()) {
                         $first_time_finger = $group_of_data->sortBy('fp_date')->values()[0];
 
-                        if ($presensi = PresensiPengguna::where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)
+                        if ($presensi = $presensis->where('id_pengguna', $pengguna->id_pengguna)->where('date', $first_time_finger->tanggal)->first()
                             // ->where('status_join_table', '4')
-                            ->where('unit', 'Pondok')
-                            ->first()
                         ) { } else {
                             $presensi = new PresensiPengguna;
                             $presensi->id_pengguna = $pengguna->id_pengguna;
@@ -545,6 +630,75 @@ class FingerprintController extends BaseController
         return $hasil;
     }
 
+
+    public function viewDataFinger(Request $request)
+    {
+        set_time_limit(-1);
+        $input = (object) $request->input();
+        $now = Carbon::now('Asia/Jakarta');
+        $client = new \GuzzleHttp\Client();
+
+        $serial_number = '';
+        $date_filter = null;
+        if (isset($input->SN)) {
+            $serial_number = $input->SN;
+        }
+
+        if (isset($input->dd)) {
+            $date_filter = $input->dd;
+        }
+
+        if ($device = FPDevice::where('sn', $serial_number)->first()) {
+            // $device->ip_address_wan = $request->ip();
+            $device->updated_at = Carbon::now('Asia/Jakarta');
+            $device->save();
+        } else {
+            return 'FAILED';
+        }
+
+        $soap_request = "<GetAttLog><ArgComKey xsi:type=\"xsd:integer\">" . $device->comm_key . "</ArgComKey><Arg><PIN xsi:type=\"xsd:integer\">All</PIN></Arg></GetAttLog>";
+
+        try {
+            if (!empty($device->port)) {
+                $fingerprint_url = $device->ip_address_wan . ':' . $device->port . '/iWsService';
+            } else {
+                $fingerprint_url = $device->ip_address_wan . '/iWsService';
+            }
+            $client->request('GET', $fingerprint_url);
+        } catch (\GuzzleHttp\Exception\GuzzleException $e) {
+            return 'Failed';
+        }
+
+        try {
+            $response = $client->post($fingerprint_url, [
+                'headers' => [
+                    'Content-Type' => 'text/xml',
+                    'Content-Length' => strlen($soap_request),
+                ],
+                'body' => $soap_request,
+            ]);
+
+            $buffer = $response->getBody()->getContents();
+
+            $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
+            $buffer = explode("\r\n", $buffer);
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        $data = $this->filterData($buffer, $now->format('Y-m-d'));
+
+        if (count($data) == '0') {
+            echo 'Data Kosong';
+        } else {
+            echo 'Total Data = ' . count($data) . '<br/>';
+            foreach ($data as $d) {
+                echo $d['tanggal'] . ' | ' . $d['username'] . '<br/>';
+            }
+        }
+    }
+
+
     public function filterData($array, $tanggal_input, $datetime_mulai = null)
     {
         $hasil = array();
@@ -589,16 +743,11 @@ class FingerprintController extends BaseController
         $client = new \GuzzleHttp\Client();
 
         $serial_number = '';
-        // $date_filter = null;
         if (isset($input->SN)) {
             $serial_number = $input->SN;
         }
 
-        if ($device = FPDevice::where('sn', $serial_number)->first()) {
-            // $device->ip_address_wan = $request->ip();
-            $device->updated_at = Carbon::now('Asia/Jakarta');
-            $device->save();
-        } else {
+        if ($device = FPDevice::where('sn', $serial_number)->first()) { } else {
             return 'FAILED';
         }
 
@@ -623,6 +772,8 @@ class FingerprintController extends BaseController
                 ],
                 'body' => $soap_request
             ]);
+            $device->clear_log = Carbon::now('Asia/Jakarta');
+            $device->save();
             echo "Berhasil";
         } catch (\Exception $e) {
             echo "Koneksi Gagal";
