@@ -659,9 +659,9 @@ class LibCetakKeuangan
 
             $no++;
 
-            // if (!$skip_this_date) {
-            $data_laporan[] = $data;
-            // }
+            if (!$skip_this_date) {
+                $data_laporan[] = $data;
+            }
         }
 
         $pembayaran_non_kbm = PembayaranBiaya::query()
