@@ -645,14 +645,15 @@ class FingerprintController extends BaseController
         $now = Carbon::now('Asia/Jakarta');
         $client = new \GuzzleHttp\Client();
 
-        $serial_number = '';
-        $date_filter = null;
-        if (isset($input->SN)) {
-            $serial_number = $input->SN;
+        if (isset($input->dd)) {
+            $date_filter = Carbon::parse($input->dd);
+        } else {
+            $date_filter = Carbon::now('Asia/Jakarta');
         }
 
-        if (isset($input->dd)) {
-            $date_filter = $input->dd;
+        $serial_number = '';
+        if (isset($input->SN)) {
+            $serial_number = $input->SN;
         }
 
         if ($device = FPDevice::where('sn', $serial_number)->first()) {
@@ -693,7 +694,7 @@ class FingerprintController extends BaseController
             return $e;
         }
 
-        $data = $this->filterData($buffer, $now->format('Y-m-d'));
+        $data = $this->filterData($buffer, $date_filter->format('Y-m-d'));
 
         if (count($data) == '0') {
             echo 'Data Kosong';
