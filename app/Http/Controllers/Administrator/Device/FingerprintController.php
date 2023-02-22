@@ -311,7 +311,14 @@ class FingerprintController extends BaseController
     public function actionGetData(Request $request)
     {
         set_time_limit(-1);
-        // $input = (object) $request->input();
+        $input = (object) $request->input();
+
+        if (isset($input->dd)) {
+            $date_filter = Carbon::parse($input->dd);
+        } else {
+            $date_filter = Carbon::now('Asia/Jakarta');
+        }
+
         $now = Carbon::now('Asia/Jakarta');
         $client = new \GuzzleHttp\Client();
 
@@ -347,8 +354,8 @@ class FingerprintController extends BaseController
                 $buffer = $response->getBody()->getContents();
                 $buffer = $this->parseXMLData($buffer, "<GetAttLogResponse>", "</GetAttLogResponse>");
                 $buffer = explode("\r\n", $buffer);
-                $data_fp = $this->filterData($buffer, $now->format('Y-m-d'));
-                $fp_attendences = FPAttendance::whereDay('fp_date', Carbon::today())->where('id_fp_device', $device->id_fp_device)->get();
+                $data_fp = $this->filterData($buffer, $date_filter->format('Y-m-d'));
+                $fp_attendences = FPAttendance::whereDay('fp_date', $date_filter->format('d'))->where('id_fp_device', $device->id_fp_device)->get();
                 foreach ($data_fp as $data) {
                     // $data_username_pengguna[] = $data['username'];
                     if ($serial_number == 'BWXP222860373' || $serial_number == 'BWXP222860377' || $serial_number == 'BWXP222860378') {
