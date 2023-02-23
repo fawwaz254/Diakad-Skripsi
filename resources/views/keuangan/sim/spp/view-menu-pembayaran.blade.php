@@ -164,7 +164,7 @@
                                         @endif
                                     @endforeach
                                     @foreach ($data_ket_tagihan as $ket)
-                                        <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->title_biaya }}
+                                        <td class="tdbg-13" style="vertical-align: bottom;">{{ $ket->keterangan }}
                                         </td>
                                     @endforeach
                                 </tr>
@@ -238,7 +238,7 @@
                                         @php
                                             $tagihan = $data_tagihan_non_bulanan
                                                 ->where('id_siswa', $siswa->id_siswa)
-                                                ->where('id_bulan', $ket->id_bulan)
+                                                ->where('title_biaya', $ket->title_biaya)
                                                 ->first();
                                         @endphp
                                         @if (!empty($tagihan) > 0)
@@ -258,11 +258,11 @@
                                                 </td>
                                             @elseif($tagihan->is_tagih == 0)
                                                 <td
-                                                    class="tdbg-{{ date_format(date_create($tagihan->tgl_pelunasan), 'n') }}">
+                                                    class="tdbg-{{ date_format(date_create($tagihan->tgl_pembayaran), 'n') }}">
                                                     <a target="_blank"
                                                         href="keuangan/sim/spp/print-pembayaran/{{ $tagihan->id_tagihan_biaya }}"><b
                                                             style="color: #4caf50;">Print
-                                                            {{ date_format(date_create($tagihan->tgl_pelunasan), 'd/m') }}</b></a>
+                                                            {{ date_format(date_create($tagihan->tgl_pembayaran), 'd/m') }}</b></a>
                                                     @if ($tagihan->is_request == 0)
                                                         <br>
                                                         <a style="margin-top: 2px; color: #e91e63; cursor: pointer;"
