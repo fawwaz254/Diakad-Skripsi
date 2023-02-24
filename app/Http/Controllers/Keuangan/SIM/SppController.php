@@ -139,6 +139,16 @@ class SppController extends BaseController
         return view('keuangan/sim/spp/view-menu-upload');
     }
 
+    public function downloadContohUploadKeuangan(Request $request)
+    {
+        $file = public_path() . "/excel/ContohUploadPembayaran.xls";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohUploadPembayaran.xls', $headers);
+    }
+
     public function actionMenuUpload(Request $request)
     {
         $input = (object) $request->input();
