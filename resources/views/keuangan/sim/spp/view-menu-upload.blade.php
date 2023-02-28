@@ -38,22 +38,37 @@
                             </h2>
                             <h5>Format susunan file excel, sebagai berikut :</h5>
                             <ul>
-                                <li>
+                                {{-- <li>
                                     Download EXCEL dari menu SPP > EXCEL {{ env('APP_NAME', 'dsmart edu') }} Aplikasi
                                     Keuangan
-                                </li>
+                                </li> --}}
                                 <li>
-                                    Upload ke menu berikut excel tersebut
+                                    Download Upload Template Pembayaran SPP
                                 </li>
-                                <br>
-                                <div class="col-xs-6 col-sm-6 col-md-6">
-                                    <a href="{{ route('keuangan/download-contoh-upload-pembayaran') }}">
-                                        <button class="btn btn-block bg-green waves-effect" type="submit">
-                                            <i class="material-icons">cloud_upload</i>
-                                            <span>Download Template Upload Pembayaran</span>
-                                        </button>
-                                    </a>
-                                </div>
+
+                                {{-- <div class="col-xs-6 col-sm-6 col-md-6"> --}}
+                                <a href="{{ route('keuangan/download-contoh-upload-pembayaran') }}">
+                                    <button class="btn btn-block bg-green waves-effect" type="submit">
+                                        <i class="material-icons">cloud_upload</i>
+                                        <span>Download Template Upload Pembayaran SPP</span>
+                                    </button>
+                                </a>
+
+                                <li>
+                                    Download Upload Template Pembayaran non-SPP
+                                </li>
+                                <a href="{{ route('keuangan/download-contoh-upload-pembayaran-non-spp') }}">
+                                    <button class="btn btn-block bg-green waves-effect" type="submit">
+                                        <i class="material-icons">cloud_upload</i>
+                                        <span>Download Template Upload Pembayaran NON SPP</span>
+                                    </button>
+                                </a>
+                                <li>
+                                    Note = Untuk tanggal harus mengunakan format 2023-03-20,
+                                    <br>
+                                    (Jika tidak bisa gunakan petik di depan)
+                                </li>
+                                {{-- </div> --}}
                             </ul>
                         </div>
                     </div>

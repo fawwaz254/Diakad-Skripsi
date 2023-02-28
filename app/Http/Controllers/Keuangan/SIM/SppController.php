@@ -149,6 +149,16 @@ class SppController extends BaseController
         return response()->download($file, 'ContohUploadPembayaran.xls', $headers);
     }
 
+    public function downloadContohUploadKeuanganNonSpp(Request $request)
+    {
+        $file = public_path() . "/excel/ContohUploadPembayaranNonSpp.xls";
+        $headers = [
+            'Content-Type' => 'application/xls',
+        ];
+
+        return response()->download($file, 'ContohUploadPembayaranNonSpp.xls', $headers);
+    }
+
     public function actionMenuUpload(Request $request)
     {
         $input = (object) $request->input();
@@ -158,70 +168,136 @@ class SppController extends BaseController
 
             $data = Excel::toArray(new DataImportExcel, $request->file('file-excel'));
             $data = $data[0]; // Sheet 1
-
             if (count($data)) {
-                DB::beginTransaction();
-                try {
-                    foreach ($data as $key => $item) {
-                        $item = (object) $item;
+                if (isset($data[0]['keterangan'])) {
+                    DB::beginTransaction();
+                    try {
+                        foreach ($data as $key => $item) {
+                            $item = (object) $item;
 
-                        if (!empty($item->nis)) {
-                            $siswa = Siswa::where('nis_siswa', $item->nis)->first();
+                            if (!empty($item->nis)) {
+                                $siswa = Siswa::where('nis_siswa', $item->nis)->first();
 
-                            if (!$siswa) {
-                                return [
-                                    'status' => 300, // FAILED
-                                    'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
-                                ];
-                            } else {
-                                $semester = Semester::where('kode_semester', $item->kode_semester)->first();
+                                if (!$siswa) {
+                                    return [
+                                        'status' => 300, // FAILED
+                                        'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
+                                    ];
+                                } else {
+                                    $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
+                                    $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
+                                    $keterangan = $item->keterangan;
+                                    $tahun_ajaran = $item->tahun_ajaran;
 
-                                $tanggal_bayar = $item->tanggal;
-                                $id_bulan = $item->id_bulan;
+                                    $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
+                                        ->whereHas('detail_biaya', function ($q) use ($keterangan) {
+                                            $q->where('keterangan_biaya', $keterangan)->where('id_jenis_detail_biaya', '!=', 4);
+                                        })
+                                        ->whereHas('detail_biaya.biaya_sekolah.semester', function ($q) use ($tahun_ajaran) {
+                                            $q->where('tahun_ajaran', $tahun_ajaran);
+                                        })
+                                        ->first();
 
-                                $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
-                                    ->whereHas('detail_biaya', function ($q) use ($id_bulan) {
-                                        $q->where('id_bulan', $id_bulan)->where('id_jenis_detail_biaya', 4);
-                                    })
-                                    ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($semester) {
-                                        $q->where('id_semester', $semester->id_semester);
-                                    })->first();
+                                    if ($tagihan_siswa) {
+                                        $pembayaran_biaya = new PembayaranBiaya;
+                                        $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                        $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
+                                        $pembayaran_biaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->id_semester_bayar = $semester->id_semester;
+                                        $pembayaran_biaya->besar_pembayaran = $tagihan_siswa->besar_biaya;
+                                        $pembayaran_biaya->tgl_pembayaran = $tanggal_bayar;
+                                        $pembayaran_biaya->keterangan = "Langsung Lunas";
+                                        $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->save();
 
-                                if ($tagihan_siswa) {
-                                    $pembayaran_biaya = new PembayaranBiaya;
-                                    $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-                                    $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
-                                    $pembayaran_biaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
-                                    $pembayaran_biaya->id_semester_bayar = $semester->id_semester;
-                                    $pembayaran_biaya->besar_pembayaran = $tagihan_siswa->besar_biaya;
-                                    $pembayaran_biaya->tgl_pembayaran = $tanggal_bayar;
-                                    $pembayaran_biaya->keterangan = "Langsung Lunas";
-                                    $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
-                                    $pembayaran_biaya->save();
-
-                                    $tagihan_siswa->besar_pembayaran = $tagihan_siswa->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
-                                    $tagihan_siswa->tgl_pelunasan = $pembayaran_biaya->tgl_pembayaran;
-                                    $tagihan_siswa->is_tagih = 0;
-                                    $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
-                                    $tagihan_siswa->save();
+                                        $tagihan_siswa->besar_pembayaran = $tagihan_siswa->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
+                                        $tagihan_siswa->tgl_pelunasan = $pembayaran_biaya->tgl_pembayaran;
+                                        $tagihan_siswa->is_tagih = 0;
+                                        $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_siswa->save();
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    DB::commit();
-                    return [
-                        'status' => 202, // SUCCESS AND LOAD CONTENT
-                        'path' => 'sim/spp/upload-pembayaran',
-                        'message' => 'Upload Pembayaran Successfully',
-                    ];
-                } catch (\Exception $e) {
-                    DB::rollback();
-                    // something went wrong
-                    return [
-                        'status' => 203, // GAGAL
-                        'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
-                    ];
+                        DB::commit();
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'sim/spp/upload-pembayaran',
+                            'message' => 'Upload Pembayaran Successfully',
+                        ];
+                    } catch (\Exception $e) {
+                        DB::rollback();
+                        // something went wrong
+                        return [
+                            'status' => 203, // GAGAL
+                            'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
+                        ];
+                    }
+                } else {
+                    DB::beginTransaction();
+                    try {
+                        foreach ($data as $key => $item) {
+                            $item = (object) $item;
+
+                            if (!empty($item->nis)) {
+                                $siswa = Siswa::where('nis_siswa', $item->nis)->first();
+
+                                if (!$siswa) {
+                                    return [
+                                        'status' => 300, // FAILED
+                                        'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
+                                    ];
+                                } else {
+                                    $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
+
+                                    $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
+                                    $id_bulan = $item->id_bulan;
+
+                                    $tagihan_siswa = TagihanBiaya::where('is_tagih', 1)->where('id_siswa', $siswa->id_siswa)
+                                        ->whereHas('detail_biaya', function ($q) use ($id_bulan) {
+                                            $q->where('id_bulan', $id_bulan)->where('id_jenis_detail_biaya', 4);
+                                        })
+                                        ->whereHas('detail_biaya.biaya_sekolah', function ($q) use ($semester) {
+                                            $q->where('id_semester', $semester->id_semester);
+                                        })->first();
+
+                                    if ($tagihan_siswa) {
+                                        $pembayaran_biaya = new PembayaranBiaya;
+                                        $pembayaran_biaya->id_pembayaran_biaya = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
+                                        $pembayaran_biaya->id_tagihan_biaya = $tagihan_siswa->id_tagihan_biaya;
+                                        $pembayaran_biaya->id_staff_bayar = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->id_semester_bayar = $semester->id_semester;
+                                        $pembayaran_biaya->besar_pembayaran = $tagihan_siswa->besar_biaya;
+                                        $pembayaran_biaya->tgl_pembayaran = $tanggal_bayar;
+                                        $pembayaran_biaya->keterangan = "Langsung Lunas";
+                                        $pembayaran_biaya->created_by = $input->auth_data->pengguna->id_pengguna;
+                                        $pembayaran_biaya->save();
+
+                                        $tagihan_siswa->besar_pembayaran = $tagihan_siswa->besar_pembayaran + $pembayaran_biaya->besar_pembayaran;
+                                        $tagihan_siswa->tgl_pelunasan = $pembayaran_biaya->tgl_pembayaran;
+                                        $tagihan_siswa->is_tagih = 0;
+                                        $tagihan_siswa->updated_by = $input->auth_data->pengguna->id_pengguna;
+                                        $tagihan_siswa->save();
+                                    }
+                                }
+                            }
+                        }
+
+                        DB::commit();
+                        return [
+                            'status' => 202, // SUCCESS AND LOAD CONTENT
+                            'path' => 'sim/spp/upload-pembayaran',
+                            'message' => 'Upload Pembayaran Successfully',
+                        ];
+                    } catch (\Exception $e) {
+                        DB::rollback();
+                        // something went wrong
+                        return [
+                            'status' => 203, // GAGAL
+                            'message' => (env('APP_DEBUG', 'true') == 'true') ? $e->getMessage() : 'Operation error. Error ' . $e->getLine(),
+                        ];
+                    }
                 }
             } else {
                 return [
@@ -769,7 +845,7 @@ class SppController extends BaseController
             //untuk ambil data pts
             // $data_tagihan_non_bulanan = $all_data_tagihan->where('id_jenis_detail_biaya', '<>', 4)->values();
 
-            $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->values()->all();
+            $data_ket_tagihan = $data_tagihan_non_bulanan->unique('title_biaya')->sortByDesc('title_biaya')->values()->all();
         } else {
             $data_siswa = array();
             $data_tagihan = array();
