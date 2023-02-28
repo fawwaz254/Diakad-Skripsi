@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['token_staff'])->group(function () {
     Route::prefix('keuangan')->group(function () {
         Route::get('welcome', [WelcomeController::class, 'indexWelcome']);
-        Route::get('biodata', [ \App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
+        Route::get('biodata', [\App\Http\Controllers\Administrator\WelcomeController::class, 'viewBiodata']);
 
         Route::prefix('manajemen-file')->group(function () {
 
@@ -410,6 +410,8 @@ Route::middleware(['token_staff'])->group(function () {
 
                 Route::get('upload-pembayaran', [SppController::class, 'viewMenuUpload']);
                 Route::post('upload-pembayaran', [SppController::class, 'actionMenuUpload']);
+                Route::get('download-contoh-upload-pembayaran', [SppController::class, 'downloadContohUploadKeuangan'])->name('keuangan/download-contoh-upload-pembayaran');
+                Route::get('download-contoh-upload-pembayaran-non-sppp', [SppController::class, 'downloadContohUploadKeuanganNonSpp'])->name('keuangan/download-contoh-upload-pembayaran-non-spp');
             });
             Route::prefix('pengeluaran')->group(function () {
                 Route::get('/', [PengeluaranController::class, 'viewMenuPengeluaran']);
