@@ -21,11 +21,12 @@ use Illuminate\Support\Facades\Storage;
 use App\Libraries\Pendidikan\LibDataAkademik;
 use Illuminate\Routing\Controller as BaseController;
 use App\Libraries\BimbinganKonseling\LibDataPelanggaran;
+use App\Models\Semester;
 
 class HomeVisitController extends BaseController
 {
 
-    public function viewHomeVisit(Request $request)
+    public function viewHomeVisit(Request $request, $id_semester = null)
     {
         # code...
         $input = (object) $request->input();
@@ -37,10 +38,39 @@ class HomeVisitController extends BaseController
             ->first();
 
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        if (empty($id_semester)) {
+            $id_semester = $semester_aktif->id_semester;
+        }
 
-        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $semester_aktif->id_semester);
+        $data_semester = Semester::all();
+        $wali_kelas = LibGuru::fetchDataWaliKelasBySemester($auth_data, $guru->id_guru, $id_semester);
 
-        return view('guru/wali-kelas/home-visit/view-home-visit', compact('auth_data', 'wali_kelas'));
+        return view('guru/wali-kelas/home-visit/view-home-visit', compact('auth_data', 'wali_kelas', 'data_semester', 'id_semester', 'semester_aktif'));
+    }
+
+
+    public function actionSemesterHomeVisit(Request $request)
+    {
+        # code...
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+
+
+        $validator = Validator::make($request->all(), [
+            'id_semester' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'status' => 300, // FAILED
+                'message' => $validator->errors()->first()
+            ];
+        } else {
+            return [
+                'status' => 204, // SUCCESS AND LOAD CONTENT
+                'path' => 'wali-kelas/home-visit/' . $input->id_semester
+            ];
+        }
     }
 
     public function addHomeVisit(Request $request)
@@ -92,7 +122,7 @@ class HomeVisitController extends BaseController
         return view('guru/wali-kelas/home-visit/edit-home-visit', compact('auth_data', 'wali_kelas', 'data_siswa', 'data_home_visit'));
     }
 
-    public function datatablesHomeVisit(Request $request)
+    public function datatablesHomeVisit(Request $request, $id_semester = null)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
@@ -102,9 +132,12 @@ class HomeVisitController extends BaseController
             ->where('id_pengguna', '=', $auth_data->pengguna->id_pengguna)
             ->first();
 
-        $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        if (empty($id_semester)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $id_semester = $semester_aktif->id_semester;
+        }
 
-        $list_data = LibGuru::fetchDataHomeVisit($auth_data, $semester_aktif->id_semester, $guru->id_guru);
+        $list_data = LibGuru::fetchDataHomeVisit($auth_data, $id_semester, $guru->id_guru);
 
         return Datatables::of($list_data)
             ->addColumn('semester', function ($item) {

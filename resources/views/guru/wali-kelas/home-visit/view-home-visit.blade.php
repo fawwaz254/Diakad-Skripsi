@@ -7,6 +7,41 @@
     <div class="row clearfix">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div class="card">
+                <div class="body">
+                    <form id="form-validation" method="POST"
+                        action="{{ url(Request::segment(1) . '/' . Request::segment(2) . '/home-visit') }}">
+                        {{ csrf_field() }}
+                        <h2 class="card-inside-title">
+                            Semester
+                        </h2>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <select class="form-control show-tick" name="id_semester">
+                                    @foreach ($data_semester as $data)
+                                        <option value="{{ $data->id_semester }}"
+                                            @if ($id_semester == $data->id_semester) selected @endif>
+                                            {{ $data->tahun_ajaran . ' ' . $data->nm_semester }}
+                                            @if ($semester_aktif->id_semester == $data->id_semester)
+                                                (Aktif)
+                                            @endif
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row clearfix">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <button class="btn btn-block bg-red waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+
+
+            <div class="card">
                 {{ csrf_field() }}
                 <div class="header">
                     <h2>DATA HOME VISIT KELAS {{ $wali_kelas->nm_kelas }}</h2>
@@ -39,10 +74,13 @@
     </div>
 </div>
 </div>
+@include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
+    var id_semester = {!! json_encode($id_semester) !!}
     var modul_url = 'wali-kelas';
-    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'home-visit/datatables';
+    var datatable_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'home-visit/datatables/' +
+        id_semester;
     var edit_url = role_url + '#' + modul_url + '/' + 'home-visit/edit';
     var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-home-visit/delete';
 
