@@ -312,6 +312,8 @@ Route::middleware(['token_staff'])->group(function () {
 
             //MENU Setting Wali Murid
             Route::get('setting-wali-murid', [SettingWaliMuridController::class, 'viewSettingWaliMurid']);
+            //batch hapus data walimurid yang salah
+            Route::get('setting-wali-murid/view-eror-data', [SettingWaliMuridController::class, 'viewErorData']);
             Route::get('setting-wali-murid/add', [SettingWaliMuridController::class, 'viewSettingWaliMurid']);
             Route::post('post-view-setting-wali-murid', [SettingWaliMuridController::class, 'actionViewSettingWaliMurid']);
             Route::get('setting-wali-murid/view-kelas/{id_kelas}', [SettingWaliMuridController::class, 'viewKelasWaliMurid']);
