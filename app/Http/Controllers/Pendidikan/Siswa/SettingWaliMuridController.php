@@ -129,9 +129,10 @@ class SettingWaliMuridController extends BaseController
         //sudah punya wali murid, edit
         if (!empty($siswa->id_wali_murid)) {
             $wali_murid = WaliMurid::where('id_wali_murid', '=', $siswa->id_wali_murid)->first();
+            return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid'));
+        } else {
+            return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa'));
         }
-
-        return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid'));
     }
 
     public function datatablesWaliMurid(Request $request, $id_kelas)
