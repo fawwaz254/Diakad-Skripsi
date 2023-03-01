@@ -35,10 +35,10 @@ class WelcomeController extends BaseController
             return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
         } elseif ($auth_data->pengguna->status_join_table == '2') { //guru
             $pengguna = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
-            return view('view-biodata', compact('auth_data', 'pengguna'));
+            return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
         } elseif ($auth_data->pengguna->status_join_table == '3') { //siswa
             $pengguna = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
-            return view('view-biodata', compact('auth_data', 'pengguna'));
+            return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
         } else { }
     }
 }
