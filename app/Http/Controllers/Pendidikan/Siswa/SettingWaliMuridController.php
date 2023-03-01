@@ -151,9 +151,10 @@ class SettingWaliMuridController extends BaseController
         //sudah punya wali murid, edit
         if (!empty($siswa->id_wali_murid)) {
             $wali_murid = WaliMurid::where('id_wali_murid', '=', $siswa->id_wali_murid)->first();
+            return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid'));
+        } else {
+            return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa'));
         }
-
-        return view('pendidikan/siswa/setting-wali-murid/edit-setting-wali-murid', compact('auth_data', 'siswa', 'wali_murid'));
     }
 
     public function datatablesWaliMurid(Request $request, $id_kelas)
@@ -357,29 +358,29 @@ class SettingWaliMuridController extends BaseController
                     $item = (object) $item;
 
                     if (empty($item->nis)) {
-                        // return [
-                        //     'status' 	=> 300, // GAGAL
-                        //     'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
-                        // ];
+                        return [
+                            'status'     => 300, // GAGAL
+                            'message'    => 'Upload Setting Wali Murid Gagal, ditemukan NIS siswa yang tidak diisi dalam file yang diupload'
+                        ];
                         $data->forget($key);
                     }
 
                     if ($siswa = Siswa::where('nis_siswa', $item->nis)->where('id_kelas', $id_kelas)->first()) {
-                        // if (!empty($siswa->id_wali_murid)) {
-                        //     if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
-                        //         return [
-                        //             'status' 	=> 300, // GAGAL
-                        //             'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
-                        //         ];
-                        //     }
-                        // } else {
-                        //     if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
-                        //         return [
-                        //             'status' 	=> 300, // GAGAL
-                        //             'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
-                        //         ];
-                        //     }
-                        // }
+                        if (!empty($siswa->id_wali_murid)) {
+                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->where('id_wali_murid', '<>', $siswa->id_wali_murid)->first()) {
+                                return [
+                                    'status'     => 300, // GAGAL
+                                    'message'    => 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
+                                ];
+                            }
+                        } else {
+                            if ($wali_murid = WaliMurid::where('nomor_hp_wali_murid', $item->telp_wali_murid)->first()) {
+                                return [
+                                    'status'     => 300, // GAGAL
+                                    'message'    => 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon Wali Murid yang sama di dalam sistem'
+                                ];
+                            }
+                        }
                     } else {
                         return [
                             'status'     => 300, // GAGAL
@@ -388,28 +389,30 @@ class SettingWaliMuridController extends BaseController
                     }
                 }
 
-                // foreach ($data as $item_1) {
-                //     $jumlah_nomor_telp = 0;
-                //     foreach ($data as $item_2) {
-                //         if (!empty($item_1->telp_wali_murid) && !empty($item_2->telp_wali_murid)) {
-                //             if ($item_1->telp_wali_murid == $item_2->telp_wali_murid) {
-                //                 $jumlah_nomor_telp++;
-                //             }
-                //         }
-                //     }
+                foreach ($data as $item_1) {
+                    $jumlah_nomor_telp = 0;
+                    foreach ($data as $item_2) {
+                        if (!empty($item_1->telp_wali_murid) && !empty($item_2->telp_wali_murid)) {
+                            if ($item_1->telp_wali_murid == $item_2->telp_wali_murid) {
+                                $jumlah_nomor_telp++;
+                            }
+                        }
+                    }
 
-                //     if ($jumlah_nomor_telp > 1) {
-                //         return [
-                //             'status' 	=> 300, // GAGAL
-                //             'message'	=> 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon '.$item_1->telp_wali_murid.' yang sama di dalam file yang diupload'
-                //         ];
-                //     }
-                // }
+                    if ($jumlah_nomor_telp > 1) {
+                        return [
+                            'status'     => 300, // GAGAL
+                            'message'    => 'Upload Setting Wali Murid Gagal, ditemukan Nomor Telepon ' . $item_1->telp_wali_murid . ' yang sama di dalam file yang diupload'
+                        ];
+                    }
+                }
 
                 DB::beginTransaction();
                 try {
                     $status_pengguna    = StatusPengguna::where('status_join_table', '=', '4')->where('aktif_status_pengguna', '=', '1')->first();
                     foreach ($data as $item) {
+                        $item = (object) $item;
+
                         if (!empty($item->telp_wali_murid)) {
                             $siswa = Siswa::where('nis_siswa', $item->nis)->first();
                             if (!empty($siswa->id_wali_murid)) {
