@@ -519,10 +519,11 @@ Route::middleware(['token_staff'])->group(function () {
 
             // MENU Home Visit
             Route::get('home-visit', [HomeVisitController::class, 'viewHomeVisit']);
-            Route::get('home-visit/datatables', [HomeVisitController::class, 'datatablesHomeVisit']);
+            Route::post('home-visit', [HomeVisitController::class, 'actionSemesterHomeVisit']);
+            Route::get('home-visit/datatables/{id_semester}', [HomeVisitController::class, 'datatablesHomeVisit']);
             Route::get('home-visit/add', [HomeVisitController::class, 'addHomeVisit']);
             Route::get('home-visit/edit/{id}', [HomeVisitController::class, 'editHomeVisit']);
-
+            Route::get('home-visit/{id_semester}', [HomeVisitController::class, 'viewHomeVisit']);
             Route::post('action-home-visit/{mode}/{id}', [HomeVisitController::class, 'actionHomeVisit']);
 
             // AJAX GET SUBKATEGORI PELANGGARAN BY KATEGORI
