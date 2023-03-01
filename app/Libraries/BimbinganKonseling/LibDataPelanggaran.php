@@ -244,6 +244,7 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_staff', 'p_staff.id_pengguna', '=', 'pelanggaran_siswa.created_by')
                     ->where('pengguna.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
                     ->where('pelanggaran_siswa.is_sudah_tindakan', '=', 0)
+                    ->where('pelanggaran_siswa.deleted_at', null)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
                 if ($is_datatable == null) {
@@ -318,6 +319,7 @@ class LibDataPelanggaran
                     ->leftJoin('pengguna as p_guru_presensi', 'p_guru_presensi.id_pengguna', '=', 'presensi_mp_pelanggaran.created_by')
                     ->join('pengguna as p_tindakan', 'p_tindakan.id_pengguna', '=', 'tindakan_pelanggaran.created_by')
                     ->where('jenis_tindakan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+                    ->where('pelanggaran_siswa.deleted_at', null)
                     ->orderBy('pelanggaran_siswa.tgl_pelanggaran', 'desc');
 
                 if ($is_datatable == null) {
@@ -384,6 +386,7 @@ class LibDataPelanggaran
                 ->leftJoin('pengguna as p_staff', 'p_staff.id_pengguna', '=', 'pelanggaran_siswa.created_by')
                 ->leftJoin('pengguna as p_guru_presensi', 'p_guru_presensi.id_pengguna', '=', 'presensi_mp_pelanggaran.created_by')
                 ->where('tindakan_pelanggaran.id_tindakan_pelanggaran', '=', $id)
+
                 ->first();
         }
 
