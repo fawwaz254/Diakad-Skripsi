@@ -32,12 +32,13 @@
                 </a>
                 <div class="card">
                     <div class="body " style="text-align: -webkit-center;">
+
                         @foreach ($role_pengguna as $role)
                             {{-- <h5>
                                 {{ $modul->nm_modul }}
                             </h5> --}}
                             {{-- @foreach ($modul->menus as $menu) --}}
-                            <a href="" style=" display: inline-block;">
+                            <a href="" style=" display: inline-block;pointer-events: none;">
                                 <div class="card" style="margin-top: 5px">
                                     <div class="body bg-green" style="text-align: -webkit-center;">
                                         <h5>
@@ -67,7 +68,7 @@
                                     {{ $modul->nm_modul }}
                                 </h5>
                                 @foreach ($modul->menus as $menu)
-                                    <a href="" style=" display: inline-block;">
+                                    <a href="" style=" display: inline-block;pointer-events: none;">
                                         <div class="card" style="margin-top: 5px">
                                             <div class="body bg-green" style="text-align: -webkit-center;">
                                                 <h5>
