@@ -13,6 +13,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>NIS</th>
                                     <th>Nama Siswa</th>
                                     <th>Nomor HP Wali</th>
                                     <th>Nama Wali</th>
@@ -43,6 +44,10 @@
                 data: null,
                 searchable: false,
                 orderable: false
+            },
+            {
+                data: 'username',
+                name: 'username'
             },
             {
                 data: 'nm_pengguna',
