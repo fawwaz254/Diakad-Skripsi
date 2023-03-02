@@ -184,7 +184,7 @@ class SppController extends BaseController
                                         'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
                                     ];
                                 } else {
-                                    $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
+                                    $semester = Semester::where('kode_semester', $item->kode_semester)->first();
                                     $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
                                     $keterangan = $item->keterangan;
                                     $tahun_ajaran = $item->tahun_ajaran;
@@ -249,7 +249,8 @@ class SppController extends BaseController
                                         'message' => "Nis dengan nomor " . $item->nis . ' tidak ditemukan didalam sistem',
                                     ];
                                 } else {
-                                    $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
+                                    $semester = Semester::where('kode_semester', $item->kode_semester)->first();
+                                    // $semester = Semester::where('tahun_ajaran', $item->tahun_ajaran)->where('nm_semester', strtoupper($item->nm_semester))->first();
 
                                     $tanggal_bayar =  Carbon::parse($item->tanggal)->format('Y-m-d H:i:s');
                                     $id_bulan = $item->id_bulan;
