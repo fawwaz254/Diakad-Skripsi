@@ -148,9 +148,6 @@ class SettingWaliMuridController extends BaseController
             ->editColumn('nm_wali_murid', function ($item) {
                 return $item->gd . ' ' . $item->nm_wali_murid . ' ' . $item->gb;
             })
-            ->addColumn('nisn_siswa', function ($item) {
-                return $item->nisn_siswa;
-            })
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_siswa

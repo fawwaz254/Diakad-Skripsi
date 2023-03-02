@@ -104,15 +104,15 @@
             },
             {
                 data: 'nm_siswa',
-                name: 'nm_pengguna'
+                name: 'pengguna.nm_pengguna'
             },
             {
                 data: 'nm_wali_murid',
-                name: 'nm_wali_murid'
+                name: 'pengguna.nm_pengguna'
             },
             {
                 data: 'nomor_hp_wali_murid',
-                name: 'nomor_hp_wali_murid'
+                searchable: false,
             },
             {
                 data: 'action',
