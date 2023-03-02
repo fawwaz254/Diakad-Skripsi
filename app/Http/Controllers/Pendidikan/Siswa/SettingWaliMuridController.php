@@ -69,6 +69,7 @@ class SettingWaliMuridController extends BaseController
                 $wali->delete();
             }
         }
+        echo "Berhasil";
     }
 
     public function viewUploadSettingWaliMurid(Request $request, $id_kelas)
