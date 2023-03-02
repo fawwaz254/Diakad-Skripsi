@@ -154,8 +154,3 @@ Route::middleware(['token_staff'])->group(function () {
         Route::get('biodata', [WelcomeController::class, 'viewBiodata']);
     });
 });
-
-// Route::middleware(['token_staff'])->group(function () {
-// Route::prefix('foo')->group(function () {
-// });
-// });

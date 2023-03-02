@@ -19,7 +19,7 @@ class WaliMurid extends Model
     public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_pengguna',
         'nm_wali_murid',
@@ -35,5 +35,10 @@ class WaliMurid extends Model
     public function pengguna()
     {
         return $this->belongsTo('App\Models\Pengguna', 'id_pengguna');
+    }
+
+    public function siswa()
+    {
+        return $this->belongsTo('App\Models\Siswa', 'id_wali_murid', 'id_wali_murid');
     }
 }

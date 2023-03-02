@@ -49,6 +49,29 @@ class SettingWaliMuridController extends BaseController
         return view('pendidikan/siswa/setting-wali-murid/view-kelas-setting-wali-murid', compact('auth_data', 'data_kelas', 'id_wali_murid', 'act'));
     }
 
+    public function viewErorData(Request $request)
+    {
+        set_time_limit(-1);
+        $wali_murids = WaliMurid::with('siswa')->whereDoesntHave('siswa')->get();
+
+        foreach ($wali_murids as $wali_murid) {
+            $pengguna = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
+            if ($pengguna) {
+                $pengguna->deleted_by = "batch delete";
+                $pengguna->save();
+                $pengguna->delete();
+            }
+
+            $wali = WaliMurid::where('id_wali_murid', $wali_murid->id_wali_murid)->first();
+            if ($wali) {
+                $wali->deleted_by = "batch delete";
+                $wali->save();
+                $wali->delete();
+            }
+        }
+        echo "Berhasil";
+    }
+
     public function viewUploadSettingWaliMurid(Request $request, $id_kelas)
     {
         $input = (object) $request->input();
