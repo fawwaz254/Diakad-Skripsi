@@ -2,24 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pengguna;
+use App\Models\Role;
+use App\Models\Sekolah;
+use App\Models\Siswa;
+use App\Models\WaliMurid;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Hash;
-
-use Carbon\Carbon;
-
-use App\Models\Sekolah;
-use App\Models\WaliMurid;
-
-use App\Models\Role;
-use App\Models\Pengguna;
-use App\Models\Siswa;
-use Yajra\Datatables\Datatables;
-
-// use Illuminate\Support\Facades\Auth;
-use DB;
 use Illuminate\Support\Facades\Auth;
-use Session;
+use Illuminate\Support\Facades\Hash;
 
 class SignInController extends BaseController
 {
@@ -30,7 +22,6 @@ class SignInController extends BaseController
 
     public function indexSignin(Request $request)
     {
-        // return Auth::check();
         if (Auth::check()) {
             $pengguna = Auth::user();
             $role_aktif = $pengguna->role_pengguna->where('is_aktif', 1)->first();
@@ -57,7 +48,7 @@ class SignInController extends BaseController
         // $pengguna = Pengguna::where('username', $input->username)->first();
         // if (Auth::loginUsingId($pengguna->id_pengguna, true)) {
 
-        $global_pass = Sekolah::where('deleted_by', NULL)->first();
+        $global_pass = Sekolah::where('deleted_by', null)->first();
         if (Hash::check($input->password, $global_pass->password_global)) {
             $pengguna = Pengguna::where('username', $input->username)->first();
 
@@ -84,10 +75,9 @@ class SignInController extends BaseController
                     }
                 }
 
-                // mengambil waktu sekarang
                 $now = Carbon::now(env('APP_TIMEZONE', ''));
-                $pengguna->last_time_login  = $now;
-                $pengguna->is_online        = 1;
+                $pengguna->last_time_login = $now;
+                $pengguna->is_online = 1;
                 $pengguna->save();
 
                 if ($pengguna->must_change_password == 1) {
