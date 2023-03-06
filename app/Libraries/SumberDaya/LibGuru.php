@@ -463,7 +463,7 @@ class LibGuru
         }
         // get mode edit
         else {
-            $waliKelas = WaliKelas::where('wali_kelas.id_wali_kelas', '=', $id)->first();
+            $waliKelas = WaliKelas::where('wali_kelas.id_wali_kelas', '=', $id)->with('guru')->first();
         }
 
         return $waliKelas;
