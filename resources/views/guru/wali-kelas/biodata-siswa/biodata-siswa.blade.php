@@ -1266,7 +1266,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nomor_telp_ortu"
+                                <input type="number" class="form-control" name="nomor_telp_ortu"
                                     aria-required="true" aria-invalid="true" value="{{ $siswa->nomor_telp_ortu }}">
                             </div>
                         </div>
@@ -1280,7 +1280,7 @@
                                 </h2>
                             </div>
                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-                                <input type="text" class="form-control" name="nomor_hp_ortu" aria-required="true"
+                                <input type="number" class="form-control" name="nomor_hp_ortu" aria-required="true"
                                     aria-invalid="true" value="{{ $siswa->nomor_hp_ortu }}" required>
                             </div>
                         </div>
