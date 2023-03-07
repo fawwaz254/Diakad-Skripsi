@@ -126,23 +126,18 @@ class DataSiswaController extends BaseController
 		}
 		//jika validasi benar
 		else {
-			$siswa = Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
-			$calonSiswa = CalonSiswaBaru::where('id_c_siswa', '=', $input->id_c_siswa)->first();
+			$siswa 						= Siswa::where('nis_siswa', '=', $input->nis_siswa)->orWhere('nisn_siswa', '=', $input->nisn_siswa)->first();
+			$calonSiswa 				= CalonSiswaBaru::where('id_c_siswa', '=', $input->id_c_siswa)->first();
 			$id_c_siswa_prestasi 		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
 			$id_c_siswa_beasiswa		= $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-			$wali_murid = WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
+			$wali_murid 				= WaliMurid::where('id_wali_murid', $siswa->id_wali_murid)->first();
 
 			if ($wali_murid) {
-				// if siswa have wali murid
-				// $wali_murid = WaliMurid::where('id_pengguna', $siswa->id_wali_murid)->first();
 				$wali_murid->nm_wali_murid = strtoupper($input->nm_ayah);
 				$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
 				$wali_murid->updated_at = $now;
 				$wali_murid->updated_by = $input->auth_data->pengguna->id_pengguna;
-				// if ($siswa->id_wali_murid == null) {
-				// $siswa->id_wali_murid = $wali_murid->id_wali_murid;
 				$wali_murid->save();
-				// }
 
 				$pengguna_wali_murid = Pengguna::where('id_pengguna', $wali_murid->id_pengguna)->first();
 				$pengguna_wali_murid->nm_pengguna = strtoupper($input->nm_ayah);
@@ -150,48 +145,6 @@ class DataSiswaController extends BaseController
 				$pengguna_wali_murid->password = Hash::make($input->nomor_hp_ortu);
 				$pengguna_wali_murid->save();
 			}
-			// else {
-			// 	// if siswa doesnt have wali murid
-			// 	$now1 = Carbon::now(env('APP_TIMEZONE', ''));
-			// 	$wali_murid = new WaliMurid;
-			// 	$wali_murid->id_wali_murid = $input->auth_data->sekolah_data->prefix . strtotime($now1) . uniqid();
-			// 	$wali_murid->id_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-			// 	$wali_murid->nm_wali_murid = strtoupper($input->nm_ayah);
-			// 	$wali_murid->is_aktif = 1;
-			// 	$wali_murid->nomor_hp_wali_murid = $input->nomor_hp_ortu;
-			// 	$wali_murid->updated_at = $now;
-			// 	$wali_murid->save();
-
-			// 	// $siswa->id_wali_murid = $wali_murid->id_wali_murid;
-			// 	// $siswa->save();
-
-			// 	$pengguna = new Pengguna;
-			// 	$pengguna->id_pengguna = $wali_murid->id_pengguna;
-			// 	$pengguna->nm_pengguna = strtoupper($input->nm_ayah);
-			// 	$pengguna->id_sekolah = $input->auth_data->sekolah_data->id_sekolah;
-			// 	$pengguna->id_status_pengguna = "Fh2L415358554335b8b4b49e1659";
-			// 	$pengguna->username = $input->nomor_hp_ortu;
-			// 	$pengguna->password = Hash::make($input->nomor_hp_ortu);
-			// 	$pengguna->status_join_table = 4;
-			// 	$pengguna->save();
-			// 	$now = Carbon::now(env('APP_TIMEZONE', ''));
-
-			// 	$role_wali_murid = new RolePengguna;
-			// 	// $role_wali_murid->id_role_pengguna = $input->auth_data->sekolah_data->prefix . strtotime($now) . uniqid();
-			// 	$role_wali_murid->id_role = 4;
-			// 	$role_wali_murid->id_pengguna = $wali_murid->id_pengguna;
-			// 	$role_wali_murid->keterangan_role_pengguna = "Input Wali Murid";
-			// 	$role_wali_murid->is_aktif = 1;
-			// 	$role_wali_murid->save();
-
-			// 	$siswa1 = Siswa::where('id_pengguna', $input->auth_data->pengguna->id_pengguna)->first();
-			// 	$siswa1->id_wali_murid = $wali_murid->id_wali_murid;
-			// 	$siswa1->save();
-
-			// 	// $role = RolePengguna::where('id_pengguna', $wali_murid->id_wali_murid)->first();
-			// 	// $role->id_role = 4;
-			// 	// $role->save();
-			// }
 
 			if ($siswa != null || $calonSiswa != null) {
 				DB::beginTransaction();

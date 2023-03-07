@@ -18,7 +18,7 @@
                     <form id="form-validation" method="POST"
                         action="{{ url(Request::segment(1) . '/must-update-biodata/' . $siswa->nis_siswa) }}">
                         {{ csrf_field() }}
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}"> --}}
 
                         <div class="demo-color-box bg-success">
                             WAJIB DIISI
