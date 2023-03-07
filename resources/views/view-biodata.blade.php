@@ -24,12 +24,11 @@
 
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top: 10px">
-                <form action='' method='post'>
-                    <button type='submit'
-                        style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px">
-                        Role </button>
-                </form>
-                </a>
+                {{-- <form action='' method='post'> --}}
+                <button type='submit'
+                    style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px ;cursor: not-allowed">
+                    Role </button>
+                {{-- </form> --}}
                 <div class="card">
                     <div class="body " style="text-align: -webkit-center;">
 
@@ -55,12 +54,12 @@
 
             @foreach ($role_pengguna as $role)
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " style="margin-top: 10px">
-                    <form action='' method='post'>
-                        <button type='submit'
-                            style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px">
-                            Role : {{ $role->role->nm_role }}</button>
-                    </form>
-                    </a>
+                    {{-- <form action='' method='post'> --}}
+                    <button type='submit'
+                        style="background-color: transparent; border: none; font-weight: bold; cursor: pointer; margin-top:10px ;cursor: not-allowed;
+                            ">
+                        Role : {{ $role->role->nm_role }}</button>
+                    {{-- </form> --}}
                     <div class="card">
                         <div class="body " style="text-align: -webkit-center;">
                             @foreach ($role->role->modul as $modul)
