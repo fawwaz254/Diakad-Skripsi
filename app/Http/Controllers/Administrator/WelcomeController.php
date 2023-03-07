@@ -32,13 +32,12 @@ class WelcomeController extends BaseController
             ->get();
         if ($auth_data->pengguna->status_join_table == '1') { //tendik
             $pengguna = Staff::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
-            return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
         } elseif ($auth_data->pengguna->status_join_table == '2') { //guru
             $pengguna = Guru::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
-            return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
-        } elseif ($auth_data->pengguna->status_join_table == '3') { //siswa
+        } else { //siswa
             $pengguna = Siswa::where('id_pengguna', $auth_data->pengguna->id_pengguna)->with('pengguna')->first();
-            return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
-        } else { }
+        }
+
+        return view('view-biodata', compact('auth_data', 'pengguna', 'role_pengguna'));
     }
 }
