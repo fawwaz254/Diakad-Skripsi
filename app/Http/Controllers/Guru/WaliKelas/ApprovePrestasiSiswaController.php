@@ -110,6 +110,7 @@ class ApprovePrestasiSiswaController extends BaseController
         $auth_data = $input->auth_data;
         $list_data = PrestasiSiswa::select(
             'prestasi_siswa.nm_prestasi_siswa',
+            'prestasi_siswa.link_sertif_prestasi_siswa',
             'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa',
             'prestasi_siswa.jenis_prestasi_siswa',
             'prestasi_siswa.peringkat_prestasi_siswa',
@@ -196,7 +197,8 @@ class ApprovePrestasiSiswaController extends BaseController
             ->addColumn('action', function ($item) {
                 $data = array(
                     'id' => $item->id_prestasi_siswa,
-                    'status' => $item->status
+                    'status' => $item->status,
+                    'link_sertifikat' => $item->link_sertif_prestasi_siswa
                 );
                 return $data;
             })
@@ -281,7 +283,7 @@ class ApprovePrestasiSiswaController extends BaseController
             $from = 'prestasi';
 
             $prestasi = PrestasiSiswa::findOrFail($id);
-            $prestasi->status = 10;
+            $prestasi->status = 99;
             $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
             $prestasi->approved_at = $now;
 

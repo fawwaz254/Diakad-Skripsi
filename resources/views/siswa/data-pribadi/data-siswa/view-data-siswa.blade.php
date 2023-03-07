@@ -242,9 +242,9 @@
                                         </div>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                             <input type="text" class="form-control" name="nm_kewarganegaraan"
-                                                aria-required="true" aria-invalid="true"
+                                                {{-- aria-required="true" aria-invalid="true" --}}
                                                 value="{{ isset($siswa->nm_kewarganegaraan) ? $siswa->nm_kewarganegaraan : '' }}"
-                                                required>
+                                                >
                                         </div>
                                     </div>
                                     <br>

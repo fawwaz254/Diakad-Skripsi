@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="block-header">
         <h2>
-            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/wali-kelas/approve-prestasi-siswa/print-skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
+            <a class="btn bg-blue waves-effect" href="{{url(Request::segment(1).'/wali-kelas/approve-prestasi-siswa/print/skpi/'.Request::segment(4))}}" target="_blank"><i class="material-icons">print</i><span>Print SKPI</span></a>
         </h2>
     </div>
     <div class="row clearfix">
@@ -25,6 +25,7 @@
                                         <th>Peringkat</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                         <th>Semester</th>
                                         <th>Kelas</th>
                                         <th>Lokasi</th>
@@ -32,7 +33,7 @@
                                         <th>Tanggal</th>
                                         <th>Ekstrakurikuler</th>
                                         <th>Guru Pendamping</th>
-                                        <th>Action</th>
+                                        
                                     </tr>
                                 </thead>
                             </table>
@@ -82,6 +83,7 @@
 
     var datatable_url_prestasi   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/prestasi/datatables/'+id_siswa;
     var approve_prestasi =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/prestasi';
+    var reject_prestasi =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/prestasi';
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -110,6 +112,22 @@
                     return `<span class="badge bg-`+data.color+`">`+data.status+`</span>`
                 }
             },
+            { data: 'action', name: 'action', searchable: false, orderable: false,
+                render: function(data){
+                    if(data.status==0){
+                         return '<button class="btn btn-info" onclick="approveAction(\''+ approve_prestasi +'\', this)" data-id="'+  data.id +'">'+
+                        'Aprrove'+
+                        '</button>'
+                        +'<button class="btn btn-danger" onclick="rejectAction(\''+ reject_prestasi +'\', this)" data-id="'+  data.id +'">'+
+                        'Reject'+
+                        '</button>';;
+                        }
+                    else{
+                        return '-';
+                    }
+                   
+                }
+            },
             { data: 'semester', name: 'semester' },
             { data: 'nm_kelas', name: 'nm_kelas' },
             { data: 'lokasi_prestasi_siswa', name: 'lokasi_prestasi_siswa' },
@@ -117,19 +135,7 @@
             { data: 'tgl_prestasi_siswa', name: 'tgl_prestasi_siswa' },
             { data: 'nm_ekskul', name: 'nm_ekskul' },
             { data: 'nm_guru_pendamping', name: 'nm_guru_pendamping' },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    if(data.status==0){
-                         return '<button class="btn btn-info" onclick="approveAction(\''+ approve_prestasi +'\', this)" data-id="'+  data.id +'">'+
-                        'Aprrove'+
-                        '</button>';
-                        }
-                    else{
-                        return '-';
-                    }
-                   
-                }
-            }
+            
         ],
         columnDefs: [
             { className: 'text-center', targets: [5] },
