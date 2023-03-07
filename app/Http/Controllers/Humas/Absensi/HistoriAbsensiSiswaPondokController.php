@@ -169,7 +169,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
                     $query->where('jenis_kelamin', '=', '1');
                 })->orderBy('nm_pengguna', 'asc')->get();
         }
-
+        $hasil = [];
         $allShiftPengguna = ShiftPengguna::where('id_shift_master', 'Siswa')->where('date', $date)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::where('date', $date)->where('unit', 'Pondok')->get();
         $shiftMaster = ShiftMaster::where('code', 'Pondok')->first();
@@ -261,7 +261,6 @@ class HistoriAbsensiSiswaPondokController extends Controller
                 // $hasil[$key]['notes'] = $cek_libur->explanation;
             }
         }
-        // dd($hasil);
         return view('humas/absensi/histori-absensi-siswa-pondok/detail-histori-absensi-siswa-pondok', compact('auth_data', 'kelas', 'date', 'jumlah_hadir', 'jumlah_sakit', 'jumlah_izin', 'jumlah_telat', 'belum_absent', 'jumlah_alpha', 'pengguna', 'hasil', 'id_kelas', 'status'));
     }
 
@@ -321,7 +320,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
         $end_date =  new Carbon('last day of' . $mount . $year);
 
 
-
+        $hasil = [];
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::get();
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->get();
@@ -457,7 +456,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
         $start_date = $now->startOfWeek()->format('Y-m-d');
         $end_date = $now->endOfWeek()->format('Y-m-d');
 
-
+        $hasil = [];
         $dates = CarbonPeriod::create($start_date, $end_date);
         $libur = ManajemenHariLibur::get();
         $allShiftPengguna = ShiftPengguna::whereBetween('date', [$start_date, $end_date])->with('shift_master')->get();
@@ -583,7 +582,7 @@ class HistoriAbsensiSiswaPondokController extends Controller
         if (empty($date)) {
             $date = Carbon::now()->format('Y-m-d');
         }
-
+        $hasil = [];
         $cek_libur = ManajemenHariLibur::where('date', $date)->first();
         $allShiftPengguna = ShiftPengguna::where('date', $date)->with('shift_master')->get();
         $allPresensiPengguna = PresensiPengguna::where('date', $date)->get();
