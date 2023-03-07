@@ -62,13 +62,13 @@ class ApprovePrestasiSiswaController extends BaseController
             'kegiatan_siswa.lokasi_kegiatan_siswa',
             'kegiatan_siswa.penyelenggara_kegiatan_siswa',
             'kegiatan_siswa.nm_kegiatan_scan_sertif',
-            'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa'
+            // 'tingkat_prestasi_siswa.nm_tingkat_prestasi_siswa'
         )
-            ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
+            // ->join('tingkat_prestasi_siswa', 'tingkat_prestasi_siswa.id_tingkat_prestasi_siswa', '=', 'kegiatan_siswa.id_tingkat_prestasi_siswa')
             ->join('siswa', 'siswa.id_siswa', '=', 'kegiatan_siswa.id_siswa')
             ->join('pengguna as p1', 'p1.id_pengguna', '=', 'siswa.id_pengguna')
             ->where('p1.id_pengguna', '=', $siswa->id_pengguna)
-            ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
+            // ->where('tingkat_prestasi_siswa.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->where('p1.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
             ->get();
 
@@ -267,6 +267,41 @@ class ApprovePrestasiSiswaController extends BaseController
             'status' => 203, // SUCCESS AND LOAD TABLE
             'message' => 'Approved Succesfully',
             'from'       => $from
+        ];
+    }
+    public function actionRejectPrestasiSiswa(Request $request, $data, $id)
+    {
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $now = Carbon::now(env('APP_TIMEZONE', ''));
+
+        if ($data == 'prestasi') {
+
+            $from = 'prestasi';
+
+            $prestasi = PrestasiSiswa::findOrFail($id);
+            $prestasi->status = 10;
+            $prestasi->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $prestasi->approved_at = $now;
+
+            $prestasi->save();
+        } elseif ($data == 'kegiatan') {
+
+            $from = 'kegiatan';
+
+            $kegiatan = KegiatanSiswa::findOrFail($id);
+            $kegiatan->status = 10;
+            $kegiatan->approved_by = $input->auth_data->pengguna->id_pengguna;
+            $kegiatan->approved_at = $now;
+
+            $kegiatan->save();
+        }
+
+        return [
+            'status' => 203, // SUCCESS AND LOAD TABLE
+            'message' => 'Rejected Succesfully',
+            'from'   => $from
         ];
     }
 

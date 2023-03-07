@@ -56,7 +56,7 @@
                                         <th>Nama Kegiatan</th>
                                         <th>Lokasi</th>
                                         <th>Penyelenggara</th>
-                                        <th>Tingkat Kegiatan</th>
+                                        {{-- <th>Tingkat Kegiatan</th> --}}
                                         <th>Tanggal</th>
                                         <th>Link Sertifikat</th>
                                         <th>Status</th>
@@ -147,7 +147,7 @@
 
     var datatable_url_kegiatan   = base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/kegiatan/datatables/'+id_siswa;
     var approve_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'approve-prestasi-siswa/kegiatan';
-
+    var reject_kegiatan =  base_url + '/' + role_url + '/' + modul_url + '/' + 'reject-prestasi-siswa/kegiatan';
         var primary_table2 = $('#primary_table2').DataTable({
         processing: true,
         serverSide: true,
@@ -161,7 +161,7 @@
             { data: 'nm_kegiatan_siswa', name: 'nm_kegiatan_siswa' },
             { data: 'lokasi_kegiatan_siswa', name: 'lokasi_kegiatan_siswa' },
             { data: 'penyelenggara_kegiatan_siswa', name: 'penyelenggara_kegiatan_siswa' },
-            { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
+            // { data: 'nm_tingkat_prestasi_siswa', name: 'nm_tingkat_prestasi_siswa' },
             { data: 'tgl_kegiatan_siswa', name: 'tgl_kegiatan_siswa'},
             { data: 'action', name: 'nm_kegiatan_siswa', searchable: false, orderable: false,
                 render:function(data){
@@ -180,6 +180,9 @@
                     if(data.status==0){
                         return '<button class="btn btn-info" onclick="approveAction(\''+ approve_kegiatan +'\', this)" data-id="'+  data.id +'">'+
                     'Aprrove'+
+                    '</button>'
+                    +'<button class="btn btn-danger" onclick="rejectAction(\''+ reject_kegiatan +'\', this)" data-id="'+  data.id +'">'+
+                    'Reject'+
                     '</button>';
                     }
                     else{
@@ -223,6 +226,55 @@
                 $.ajax({
                     type: "POST",
                     url: approve_url + '/' + item.attr('data-id'),
+                    success: function (response) {
+                        if(response.status == 200){
+                            vex.dialog.alert(response.message);
+                        }else if(response.status == 201){
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        }else if(response.status == 202){
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        }else if(response.status == 203){
+                            vex.dialog.alert(response.message);
+                            if(response.from == 'prestasi'){
+                                primary_table.ajax.reload(null, false);
+                            }
+                            else{
+                                primary_table2.ajax.reload(null, false);
+                            }
+                        }else if(response.status == 300){
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
+                    }
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
+    function rejectAction(reject_url, element){
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "For Reject this",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, reject it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function (result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: reject_url + '/' + item.attr('data-id'),
                     success: function (response) {
                         if(response.status == 200){
                             vex.dialog.alert(response.message);
