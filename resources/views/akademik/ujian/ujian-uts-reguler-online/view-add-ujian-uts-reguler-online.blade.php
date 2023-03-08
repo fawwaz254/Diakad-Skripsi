@@ -24,7 +24,6 @@
                                     <th>Kode</th>
                                     <th>Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Guru</th>
                                     <th>Semester</th>
                                     <th>Action</th>
                                 </tr>
@@ -73,10 +72,6 @@
             {
                 data: 'nm_kelas',
                 name: 'nm_kelas'
-            },
-            {
-                data: 'nm_guru',
-                name: 'nm_guru'
             },
             {
                 data: 'semester',
