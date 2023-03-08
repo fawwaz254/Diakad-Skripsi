@@ -891,8 +891,8 @@ class LibSiswa
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->where('siswa.id_siswa', '=', $id_siswa)
             ->where('kegiatan.kode_kegiatan', '=', "UTS")
-            ->where('kegiatan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-            ->where('pengampu_mp.pjmp_uts', '=', 1);
+            ->where('kegiatan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+        // ->where('pengampu_mp.pjmp_uts', '=', 1);
         if (!empty($id_semester)) {
             $jadwalUTS = $jadwalUTS->where('semester.id_semester', '=', $id_semester);
         }
@@ -928,8 +928,8 @@ class LibSiswa
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'guru.id_pengguna')
             ->where('siswa.id_siswa', '=', $id_siswa)
             ->where('kegiatan.kode_kegiatan', '=', "UAS")
-            ->where('kegiatan.id_sekolah', '=', $auth_data->pengguna->id_sekolah)
-            ->where('pengampu_mp.pjmp_uas', '=', 1);
+            ->where('kegiatan.id_sekolah', '=', $auth_data->pengguna->id_sekolah);
+        // ->where('pengampu_mp.pjmp_uas', '=', 1);
         if (!empty($id_semester)) {
             $jadwalUAS = $jadwalUAS->where('semester.id_semester', '=', $id_semester);
         }
