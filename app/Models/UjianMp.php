@@ -40,4 +40,13 @@ class UjianMp extends Model
     {
         return $this->belongsTo('App\Models\KelasMp', 'id_kelas_mp');
     }
+    public function kegiatan()
+    {
+        return $this->belongsTo('App\Models\Kegiatan', 'id_kegiatan');
+    }
+
+    public function ujian_mp_ruangan()
+    {
+        return $this->belongsTo('App\Models\UjianMpRuangan', 'id_ujian_mp', 'id_ujian_mp');
+    }
 }
