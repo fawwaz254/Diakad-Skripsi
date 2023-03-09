@@ -358,8 +358,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
                 Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
                 Route::get('/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
-                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
-                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
             });
 
             Route::prefix('komponen-nilai')->group(function () {
