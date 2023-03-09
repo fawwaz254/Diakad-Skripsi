@@ -49,6 +49,7 @@
                                                 <th>Jenis Ujian</th>
                                                 <th>Kode  -  Nama Mata Ajar</th>
                                                 <th>Kelas</th>
+                                                <th>Guru</th>
                                                 <th>Semester</th>
                                                 <th>Tanggal Ujian</th>
                                                 <th>Jam Mulai</th>
@@ -85,6 +86,7 @@
                                                 <th>Jenis Ujian</th>
                                                 <th>Kode  -  Nama Mata Ajar</th>
                                                 <th>Kelas</th>
+                                                <th>Guru</th>
                                                 <th>Semester</th>
                                                 <th>Tanggal Ujian</th>
                                                 <th>Jam Mulai</th>
@@ -110,148 +112,250 @@
     // var modul_url = location.hash.replace('#','').split('/')[0];
     // var ids = {!! json_encode($id) !!};
 
-    var modul_url       = 'ujian';
-    var datatable_online_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'ujian-uas-reguler-online/datatables/1';
-    var datatable_reguler_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'ujian-uas-reguler-online/datatables/0';
+    var modul_url = 'ujian';
+    var datatable_online_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'ujian-uas-reguler-online/datatables/1';
+    var datatable_reguler_url = base_url + '/' + role_url + '/' + modul_url + '/' +
+        'ujian-uas-reguler-online/datatables/0';
 
-    var add_url        = role_url + '#' + modul_url + '/' + 'ujian-uas-reguler-online/add';
-    var assign_url        = role_url + '#' + modul_url + '/' + 'ujian-uas-reguler-online/assign';
-    var edit_url        = role_url + '#' + modul_url + '/' + 'ujian-uas-reguler-online/edit';
-    var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-ujian-uas/delete';
+    var add_url = role_url + '#' + modul_url + '/' + 'ujian-uas-reguler-online/add';
+    var assign_url = role_url + '#' + modul_url + '/' + 'ujian-uas-reguler-online/assign';
+    var edit_url = role_url + '#' + modul_url + '/' + 'ujian-uas-reguler-online/edit';
+    var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-ujian-uas/delete';
 
     var primary_table_online = $('#primary_table_online').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
         ajax: {
             url: datatable_online_url,
             type: 'GET'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nm_ujian_mp', name: 'nm_ujian_mp' },
-            { data: 'jenis_ujian', name: 'jenis_ujian' },
-            { data: 'mata_pelajaran', name: 'mata_pelajaran' },
-            { data: 'nm_kelas_mp', name: 'nm_kelas_mp' },
-            { data: 'semester', name: 'semester' },
-            { data: 'tgl_ujian_mp', name: 'tgl_ujian_mp' },
-            { data: 'jam_mulai', name: 'jam_mulai' },
-            { data: 'jam_selesai', name: 'jam_selesai' },
-            { data: 'ruangan_ujian', name: 'ruangan_ujian' },
-            { data: 'kapasitas_ujian', name: 'kapasitas_ujian' },
-            { data: 'keterangan', name: 'keterangan' },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ assign_url + '/' + data.id_ujian +'">'+
-                    '    <i class="material-icons">assignment_ind</i>'+
-                    '</a>'+'<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id_ujian +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a>'+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id_ujian +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false
+            },
+            {
+                data: 'nm_ujian_mp',
+                name: 'nm_ujian_mp'
+            },
+            {
+                data: 'jenis_ujian',
+                name: 'jenis_ujian'
+            },
+            {
+                data: 'mata_pelajaran',
+                name: 'mata_pelajaran'
+            },
+            {
+                data: 'kelas_mp.kelas.nm_kelas',
+                name: 'kelas_mp.kelas.nm_kelas'
+            },
+            {
+                data: 'nm_guru',
+                name: 'nm_guru'
+            },
+            {
+                data: 'semester',
+                name: 'semester'
+            },
+            {
+                data: 'tgl_ujian_mp',
+                name: 'tgl_ujian_mp'
+            },
+            {
+                data: 'jam_mulai',
+                name: 'jam_mulai'
+            },
+            {
+                data: 'jam_selesai',
+                name: 'jam_selesai'
+            },
+            {
+                data: 'ruangan_ujian',
+                name: 'ruangan_ujian'
+            },
+            {
+                data: 'ujian_mp_ruangan.ruangan.kapasitas_ujian',
+                name: 'ujian_mp_ruangan.ruangan.kapasitas_ujian'
+            },
+            {
+                data: 'keterangan',
+                name: 'keterangan'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        assign_url + '/' + data.id_ujian + '">' +
+                        '    <i class="material-icons">assignment_ind</i>' +
+                        '</a>' +
+                        '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id_ujian + '">' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a>' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTableAffected(\'' +
+                        delete_url + '\', this, primary_table_online)" data-id="' + data.id_ujian +
+                        '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
                 }
             }
         ]
     });
 
-    primary_table_online.on( 'draw', function () {
-        primary_table_online.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table_online.on('draw', function() {
+        primary_table_online.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 
     var primary_table_reguler = $('#primary_table_reguler').DataTable({
         processing: true,
         serverSide: true,
+        responsive: true,
         ajax: {
             url: datatable_reguler_url,
             type: 'GET'
         },
-        columns: [
-            { data: null, searchable: false, orderable: false },
-            { data: 'nm_ujian_mp', name: 'nm_ujian_mp' },
-            { data: 'jenis_ujian', name: 'jenis_ujian' },
-            { data: 'mata_pelajaran', name: 'mata_pelajaran' },
-            { data: 'nm_kelas_mp', name: 'nm_kelas_mp' },
-            { data: 'semester', name: 'semester' },
-            { data: 'tgl_ujian_mp', name: 'tgl_ujian_mp' },
-            { data: 'jam_mulai', name: 'jam_mulai' },
-            { data: 'jam_selesai', name: 'jam_selesai' },
-            { data: 'ruangan_ujian', name: 'ruangan_ujian' },
-            { data: 'kapasitas_ujian', name: 'kapasitas_ujian' },
-            { data: 'keterangan', name: 'keterangan' },
-            { data: 'action', name: 'action', searchable: false, orderable: false,
-                render: function(data){
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ assign_url + '/' + data.id_ujian +'">'+
-                    '    <i class="material-icons">assignment_ind</i>'+
-                    '</a>'+
-                    '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="'+ edit_url + '/' + data.id_ujian +'">'+
-                    '    <i class="material-icons">edit</i>'+
-                    '</a>'+
-                    '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\''+ delete_url +'\', this)" data-id="'+  data.id_ujian +'">'+
-                    '    <i class="material-icons">delete_forever</i>'+
-                    '</button>';
+        columns: [{
+                data: null,
+                searchable: false,
+                orderable: false,
+            },
+            {
+                data: 'nm_ujian_mp',
+                name: 'nm_ujian_mp'
+            },
+            {
+                data: 'jenis_ujian',
+                name: 'jenis_ujian'
+            },
+            {
+                data: 'mata_pelajaran',
+                name: 'mata_pelajaran'
+            },
+            {
+                data: 'kelas_mp.kelas.nm_kelas',
+                name: 'kelas_mp.kelas.nm_kelas'
+            },
+            {
+                data: 'nm_guru',
+                name: 'nm_guru'
+            },
+            {
+                data: 'semester',
+                name: 'semester'
+            },
+            {
+                data: 'tgl_ujian_mp',
+                name: 'tgl_ujian_mp'
+            },
+            {
+                data: 'jam_mulai',
+                name: 'jam_mulai'
+            },
+            {
+                data: 'jam_selesai',
+                name: 'jam_selesai'
+            },
+            {
+                data: 'ruangan_ujian',
+                name: 'ruangan_ujian'
+            },
+            {
+                data: 'ujian_mp_ruangan.ruangan.kapasitas_ujian',
+                name: 'ujian_mp_ruangan.ruangan.kapasitas_ujian'
+            },
+            {
+                data: 'keterangan',
+                name: 'keterangan'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                render: function(data) {
+                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        assign_url + '/' + data.id_ujian + '">' +
+                        '    <i class="material-icons">assignment_ind</i>' +
+                        '</a>' +
+                        '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                        edit_url + '/' + data.id_ujian + '">' +
+                        '    <i class="material-icons">edit</i>' +
+                        '</a>' +
+                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteActionTableAffected(\'' +
+                        delete_url + '\', this, primary_table_reguler)" data-id="' + data.id_ujian +
+                        '">' +
+                        '    <i class="material-icons">delete_forever</i>' +
+                        '</button>';
                 }
             },
         ]
     });
 
-    primary_table_reguler.on( 'draw', function () {
-        primary_table_reguler.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+    primary_table_reguler.on('draw', function() {
+        primary_table_reguler.column(0, {
+            search: 'applied',
+            order: 'applied'
+        }).nodes().each(function(cell, i) {
             var start = this.page.info().page * this.page.info().length;
             cell.innerHTML = start + i + 1;
-        } );
-    } ).draw();
+        });
+    }).draw();
 </script>
-<script>    
-    
-    $('#form-validation1').validate({
-        rules: {
-            'checkbox': {
-                required: true
-            },
-            'gender': {
-                required: true
-            }
-        },
-        highlight: function (input) {
-            $(input).parents('.form-line').addClass('error');
-        },
-        unhighlight: function (input) {
-            $(input).parents('.form-line').removeClass('error');
-        },
-        errorPlacement: function (error, element) {
-            $(element).parents('.form-group').append(error);
-        },
-        submitHandler: function(form) {
-            $('button').attr('disabled', 'disabled');
-            $.ajax({
-                url: form.action,
-                type: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    if(response.status == 200){
-                        vex.dialog.alert(response.message);
-                    }else if(response.status == 201){
-                        vex.dialog.alert(response.message);
-                        window.location.href = response.link;
-                    }else if(response.status == 202){
-                        vex.dialog.alert(response.message);
-                        loadURI(response.path);
-                    }else if(response.status == 203){
-                        vex.dialog.alert(response.message);
-                        primary_table.ajax.reload(null, false);
-                    }else if(response.status == 204){
-                        loadURI(response.path);
-                    }else if(response.status == 300){
-                        vex.dialog.alert(response.message);
+<script>
+    function deleteActionTableAffected(delete_url, element, table_affected) {
+        var item = $(element);
+        $('button').attr('disabled', 'disabled');
+
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to delete this!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        }, function(result) {
+            if (result) {
+                $.ajax({
+                    type: "POST",
+                    url: delete_url + '/' + item.attr('data-id'),
+                    success: function(response) {
+                        if (response.status == 200) {
+                            vex.dialog.alert(response.message);
+                        } else if (response.status == 201) {
+                            vex.dialog.alert(response.message);
+                            window.location.href = response.link;
+                        } else if (response.status == 202) {
+                            vex.dialog.alert(response.message);
+                            loadURI(response.path);
+                        } else if (response.status == 203) {
+                            vex.dialog.alert(response.message);
+                            table_affected.ajax.reload(null, false);
+                        } else if (response.status == 300) {
+                            vex.dialog.alert(response.message);
+                        }
+                    },
+                    complete: function() {
+                        $('button').removeAttr('disabled', 'disabled');
                     }
-                },
-                complete: function() {
-                    $('button').removeAttr('disabled', 'disabled');
-                }
-            });
-        }
-    });
+                });
+            } else {
+                $('button').removeAttr('disabled', 'disabled');
+            }
+        });
+    }
 </script>
