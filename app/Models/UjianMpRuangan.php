@@ -16,10 +16,10 @@ class UjianMpRuangan extends Model
 
     protected $primaryKey = 'id_ujian_mp_ruangan';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_ujian_mp',
         'id_ruangan',
@@ -31,8 +31,8 @@ class UjianMpRuangan extends Model
     protected $guarded = [];
 
 
-
-
-
-
+    public function ruangan()
+    {
+        return $this->belongsTo('App\Models\Ruangan', 'id_ruangan');
+    }
 }

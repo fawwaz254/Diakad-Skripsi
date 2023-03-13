@@ -16,10 +16,10 @@ class Ruangan extends Model
 
     protected $primaryKey = 'id_ruangan';
 
-	public $timestamps = true;
+    public $timestamps = true;
 
     public $incrementing = false;
-    
+
     protected $fillable = [
         'id_jenis_ruangan',
         'id_pemilik_sarpras',
@@ -41,9 +41,8 @@ class Ruangan extends Model
 
     protected $guarded = [];
 
-
-
-
-
-
+    public function gedung()
+    {
+        return $this->belongsTo('App\Models\Gedung', 'id_gedung');
+    }
 }

@@ -67,7 +67,7 @@ class DataKegiatanSiswaController extends BaseController{
             'penyelenggara_kegiatan_siswa' => 'required',
             // 'id_tingkat_prestasi_siswa' => 'required',
             'tgl_kegiatan_siswa' => 'required',
-            'link_sertifikat' => 'required'
+            'link_sertifikat' => 'required|url'
         ]);
 
         if($validator->fails() && $mode != 'delete') {

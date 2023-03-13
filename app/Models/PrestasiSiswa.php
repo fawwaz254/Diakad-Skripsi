@@ -33,6 +33,7 @@ class PrestasiSiswa extends Model
         'penyelenggara_prestasi_siswa',
         'peringkat_prestasi_siswa',
         'tgl_prestasi_siswa',
+        'link_sertif_prestasi_siswa',
         'created_by',
         'updated_by',
         'deleted_by'

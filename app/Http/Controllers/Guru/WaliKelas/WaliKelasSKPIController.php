@@ -156,7 +156,7 @@ class WaliKelasSKPIController extends Controller
             'penyelenggara_kegiatan_siswa' => 'required',
             // 'id_tingkat_prestasi_siswa' => 'required',
             'tgl_kegiatan_siswa' => 'required',
-            'link_sertifikat' => 'required'
+            'link_sertifikat' => 'required|url'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
@@ -389,7 +389,7 @@ class WaliKelasSKPIController extends Controller
             'jenis_lomba_siswa' => 'required',
             'id_tingkat_prestasi_siswa' => 'required',
             'tgl_prestasi_siswa' => 'required',
-            'link_sertifikat' => 'required'
+            'link_sertifikat' => 'required|url'
         ]);
 
         if ($validator->fails() && $mode != 'delete') {
