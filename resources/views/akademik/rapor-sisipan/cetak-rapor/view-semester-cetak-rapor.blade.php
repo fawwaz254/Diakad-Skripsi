@@ -4,7 +4,7 @@
             <div class="card">
                 <div class="header">
                     <h2>
-                        PILIH SEMESTER
+                        PILIH SEMESTER CETAK RAPOR
                     </h2>
                 </div>
                 <div class="body">

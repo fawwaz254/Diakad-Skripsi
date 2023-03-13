@@ -24,13 +24,14 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kelas</th>
-                                    <th>Jurusan</th>
-                                    <th>Wali Kelas</th>
+                                    <th>NIS</th>
+                                    <th>Nama</th>
+                                    <th>Action</th>
                                     <th>Semester</th>
                                     <th>Jumlah Mapel yang sudah terisi</th>
                                     {{-- <th>Semester</th> --}}
-                                    <th>Action</th>
+                                    <th>UTS</th>
+                                    <th>UAS</th>
                                 </tr>
                             </thead>
                         </table>
@@ -51,6 +52,9 @@
     // var delete_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/action-daftar-nilai-sts/delete';
     // var print_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'daftar-nilai-sts/print';
     var pdf_url = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print/' + thn_akademik_semester;
+    var uas_url = role_url + '#' + modul_url + '/' + 'cetak-rapor/view-siswa-uas/' +
+        thn_akademik_semester;
+    // var pdf_url2 = base_url + '/' + role_url + '/' + modul_url + '/' + 'cetak-rapor/print2/' + thn_akademik_semester;
 
     var primary_table = $('#primary_table').DataTable({
         processing: true,
@@ -118,6 +122,26 @@
                     } else {
                         return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
                             '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ';
+                    }
+
+                }
+            },
+            {
+                data: 'action',
+                name: 'action',
+                searchable: false,
+                orderable: false,
+                className: 'align-center',
+                render: function(data) {
+                    if (data.jumlah != '0') {
+                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            uas_url + '/' + data.id_kelas + '" >' +
+                            '    <i class="material-icons">group</i>' +
+                            '</a> ';
+                    } else {
+                        return '<a class=" btn bg-grey btn-circle waves-effect waves-circle waves-float" href=""  style=" pointer-events: none;">' +
+                            '    <i class="material-icons">group</i>' +
                             '</a> ';
                     }
 
