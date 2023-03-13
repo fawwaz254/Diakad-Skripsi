@@ -358,8 +358,8 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
                 Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
                 Route::get('/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
-                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
-                // Route::get('pdf/{id}', [RaporTengahSemesterController::class, 'pdfDaftarNilaiSTS']);
+                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
             });
 
             Route::prefix('komponen-nilai')->group(function () {
@@ -386,6 +386,12 @@ Route::middleware(['token_staff'])->group(function () {
                 Route::post('postSetting/{mata_pelajaran}/{thn_akademik_semester}', [CetakRaporController::class, 'postSetting']);
                 Route::get('editDeskripsi/{id}', [CetakRaporController::class, 'editDeskripsi']);
                 Route::post('actionDeskripsi/{mode}/{id}', [CetakRaporController::class, 'actionDeskripsi']);
+
+                //cetak rapor semester akhir
+                Route::get('view-siswa-uas/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'viewSiswaUas']);
+                Route::get('datatables/view-siswa-uas/{thn_akademik_semester}/{id_kelas}', [CetakRaporController::class, 'datatablesSiswaUas']);
+                Route::get('printAkhir/{thn_akademik_semester}/{id_siswa}', [CetakRaporController::class, 'printCetakRaporAkhir']);
+
                 Route::get('/{thn_akademik_semester}', [CetakRaporController::class, 'viewCetakRapor']);
             });
         });
