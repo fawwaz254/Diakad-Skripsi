@@ -116,10 +116,11 @@ class FingerprintController extends BaseController
             } else {
                 $fingerprint_url = $device->ip_address_wan . '/iWsService';
             }
-            $client->request('GET', $fingerprint_url);
+            $client->request('GET', $fingerprint_url, ['timeout' => 3.14]);
         } catch (\GuzzleHttp\Exception\GuzzleException $e) {
             return 'Failed';
         }
+
 
         $last_data = FPAttendance::where('id_fp_device', $device->id_fp_device)->orderBy('created_at', 'desc')->first();
 
