@@ -32,6 +32,18 @@
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>Semester</label>
+                                <select class="form-control show-tick" name="id_semester" required="">
+                                    @foreach($data_semester as $data)
+                                    <option value="{{$data->id_semester}}" @if($id_ekskul == $data->id_ekskul) selected @endif>
+                                        {{$data->tahun_ajaran}}
+                                        {{$data->nm_semester}} 
+                                        @if($data->is_aktif_semester == 1)
+                                            (Aktif)
+                                        @endif
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="row clearfix">
@@ -43,7 +55,7 @@
                 </div>
             </div>
 
-                @if($id_ekskul != null)
+                @if($id_ekskul != null && $id_semester !=null)
             <div class="card">
                 <div class="body">
                     <div class="block-header">
@@ -79,13 +91,16 @@
 @include('scriptjs')
 <script>
     // var modul_url = location.hash.replace('#','').split('/')[0];
+    // var id_semester = {!! json_encode($id_semester) !!};
     var id_ekskul = {!! json_encode($id_ekskul) !!};
+    var id_semester={!! json_encode($id_semester) !!};
 
     var modul_url       = 'ekstrakurikuler';
-    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-peserta-ekskul/datatables/'+id_ekskul;
+    var datatable_url   = base_url + '/' + role_url + '/' + modul_url + '/' + 'setting-peserta-ekskul/datatables/'+ id_ekskul +'/'+ id_semester;
     var edit_url        = role_url + '#' + modul_url + '/' + 'setting-peserta-ekskul/edit';
     var delete_url      = base_url + '/' + role_url + '/' + modul_url + '/' + 'action-setting-peserta-ekskul/delete';
-
+    
+    
     var primary_table = $('#primary_table').DataTable({
         processing: true,
         serverSide: true,

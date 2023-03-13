@@ -55,7 +55,7 @@ class UjianUTSController extends BaseController
     # code..
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
-    $kegiatan     = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'UTS')->first();
+    $kegiatan = Kegiatan::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->where('kode_kegiatan', '=', 'UTS')->first();
     $kelas_mp = KelasMp::join('kelas', 'kelas_mp.id_kelas', '=', 'kelas.id_kelas')->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
       ->where('id_kelas_mp', '=', $id)->first();
     $ruangan  = Ruangan::join('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')->where('gedung.id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
@@ -145,8 +145,9 @@ class UjianUTSController extends BaseController
         } elseif ($item->is_online == 0) {
           return $item->nm_kegiatan . " Reguler";
         }
-      })->addColumn('nm_guru', function ($item) {
-        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna . ' (' . $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
+      })
+      ->addColumn('nm_guru', function ($item) {
+        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna. '('. $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
       })
       ->addColumn('semester', function ($item) {
         return $item->kelas_mp->semester->nm_semester . ' (' . $item->kelas_mp->semester->tahun_ajaran . ')';
@@ -269,7 +270,7 @@ class UjianUTSController extends BaseController
 
         return [
           'status' => 202, // SUCCESS AND LOAD CONTENT
-          'path' => 'ujian/ujian-uts-reguler-online/add/' . $input->is_online,
+          'path' => 'ujian/ujian-uts-reguler-online/',
           'message' => 'Save Ujian UTS Successfully'
         ];
       } elseif ($mode == 'edit') {
@@ -298,13 +299,6 @@ class UjianUTSController extends BaseController
           'message' => 'Save Ujian UTS Successfully'
         ];
       } elseif ($mode == 'delete') {
-        $peserta = UjianMpPresensi::where('id_ujian_mp', '=', $id)->first();
-        if ($peserta) {
-          return [
-            'status' => 300, // SUCCESS AND LOAD TABLE
-            'message' => 'Failed To Delete Ujian'
-          ];
-        } else {
           $ujian                        = UjianMp::find($id);
           $ujian->deleted_by            = $input->auth_data->pengguna->id_pengguna;
           $ujian->save();
@@ -319,7 +313,6 @@ class UjianUTSController extends BaseController
             'status' => 203, // SUCCESS AND LOAD TABLE
             'message' => 'Delete Ujian Berhasil'
           ];
-        }
       } elseif ($mode == 'assign') {
         DB::beginTransaction();
         try {

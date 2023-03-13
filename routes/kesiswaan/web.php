@@ -175,8 +175,8 @@ Route::middleware(['token_staff'])->group(function () {
             //MENU Setting Peserta Ekskul
             Route::get('setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'viewSettingPesertaEkskul']);
             Route::post('post-view-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionViewSettingPesertaEkskul']);
-            Route::get('setting-peserta-ekskul/view-ekskul/{id}', [SettingPesertaEkskulController::class, 'viewEkskulSettingPesertaEkskul']);
-            Route::get('setting-peserta-ekskul/datatables/{id_ekskul}', [SettingPesertaEkskulController::class, 'datatablesSettingPesertaEkskul']);
+            Route::get('setting-peserta-ekskul/view-ekskul/{id_semester}/{id_eskul}', [SettingPesertaEkskulController::class, 'viewEkskulSettingPesertaEkskul']);
+            Route::get('setting-peserta-ekskul/datatables/{id_ekskul}/{id_semester}', [SettingPesertaEkskulController::class, 'datatablesSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/datatables-siswa/{id_kelas}', [SettingPesertaEkskulController::class, 'datatablesSiswaSettingPesertaEkskul']);
             Route::get('setting-peserta-ekskul/add/{id_ekskul}', [SettingPesertaEkskulController::class, 'addSettingPesertaEkskul']);
             Route::post('post-add-setting-peserta-ekskul', [SettingPesertaEkskulController::class, 'actionAddSettingPesertaEkskul']);
