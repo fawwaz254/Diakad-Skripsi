@@ -19,6 +19,7 @@ use App\Libraries\Pendidikan\LibKelas;
 use App\Libraries\SumberDaya\LibGuru;
 use App\Models\Kurikulum;
 use App\Models\RaporSisipanDeskripsi;
+use App\Models\Sekolah;
 use App\Models\Semester;
 use App\Models\Setting;
 use App\Models\Siswa;
@@ -485,9 +486,7 @@ class CetakRaporController extends Controller
         $auth_data = $input->auth_data;
         $siswa = Siswa::where('id_siswa', $id_siswa)->with('pengguna')->first();
         $kelas = Kelas::where('id_kelas', $siswa->id_kelas)->with('jurusan')->first();
-        // $list_siswa = Siswa::where('id_kelas', $id_kelas)->get();
-        // $kurikulum = Kurikulum::where('is_aktif',1)->orderBy('tahun_kurikulum', 'DESC')->with('mapel.mata_pelajaran.jenis_mata_pelajaran')->get();
-        // $k = $kurikulum->firstWhere('id_jurusan', $kelas->jurusan->id_jurusan);
+        $sekolah = Sekolah::first();
         //untuk sub
         $k = RaporSisipan::where('id_kelas', $siswa->id_kelas)->with('mata_pelajaran.sub_rapor_sisipan_mp')
             ->has('mata_pelajaran.sub_rapor_sisipan_mp')
@@ -533,26 +532,15 @@ class CetakRaporController extends Controller
 
 
         $wali_kelas = WaliKelas::with('guru.pengguna')->where('is_aktif', 1)->where('id_kelas', $siswa->id_kelas)->first();
+        $semester = Semester::where('thn_akademik_semester', $thn_akademik_semester)->first();
 
-        // $rapor_sisipan = RaporSisipan::where('id_kelas', $id_kelas)->with('mata_pelajaran', 'kelas', 'semester','pengguna')->get();
 
         $list_komponen = KomponenNilaiRaporSisipan::where('status', 1)->where('type', '!=', 'uas')->get();
-        // $list_siswa = Siswa::where('id_kelas', $id_kelas)->with('pengguna.status_pengguna')->whereHas('pengguna.status_pengguna', function ($query) {
-        //     $query->where('aktif_status_pengguna', '=', '1');
-        // })->orderBy('nis_siswa')->get();
-
-        $list_nilai = NilaiRaporSisipan::where('id_siswa', $id_siswa)->with('siswa', 'komponen_nilai', 'rapor_sisipan.semester', 'rapor_sisipan.mata_pelajaran')
-            // ->whereHas('siswa', function ($query) use ($id_kelas) {
-            //     $query->where('id_kelas', '=', $id_kelas);
-            // })
-            // ->whereHas('komponen_nilai', function ($query) {
-            //     $query->where('status', 1)->where('type', '!=', 'uas');
-            // })
-            ->get();
+        $list_nilai = NilaiRaporSisipan::where('id_siswa', $id_siswa)->with('siswa', 'komponen_nilai', 'rapor_sisipan.semester', 'rapor_sisipan.mata_pelajaran')->get();
 
         $setting = Setting::where('key_setting', 'mode_rapor_sisipan')->first()->value;
         if ($setting == '0') {
-            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-akhir', compact('auth_data', 'kelas', 'siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'raporSisipanD', 'list_nilai', 'wali_kelas', 'sub'));
+            return view('akademik/rapor-sisipan/cetak-rapor/print-cetak-rapor-akhir', compact('auth_data', 'kelas', 'siswa', 'k', 'raporSisipanA', 'raporSisipanB', 'raporSisipanC', 'raporSisipanD', 'list_nilai', 'wali_kelas', 'sub', 'sekolah', 'thn_akademik_semester', 'semester'));
         } elseif ($setting == '1') {
             echo "Maintane";
             //     $nilai_siswa = [];
