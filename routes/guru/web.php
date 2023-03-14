@@ -632,23 +632,23 @@ Route::middleware(['token_staff'])->group(function () {
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
 
-                Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
-                Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
-                Route::get('add/{thn_akademik_semester}', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
-                Route::get('/{thn_akademik_semester}', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
-                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
+                // Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
+                // Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
+                Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
+                Route::get('add', [RaporSisipanController::class, 'addDaftarNilaiSTS']);
+                Route::get('datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
 
                 Route::post('action-daftar-nilai-sts/{mode}/{id}', [RaporSisipanController::class, 'actionDaftarNilaiSTS']);
                 Route::get('excel/{id}', [RaporSisipanController::class, 'excelDaftarNilaiSTS']);
-                Route::get('importExcel/{thn_akademik_semester}', [RaporSisipanController::class, 'imporExcelSTS']);
+                Route::get('importExcel', [RaporSisipanController::class, 'imporExcelSTS']);
                 Route::post('importExcel', [RaporSisipanController::class, 'uploadRaporSisipanSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
-                Route::get('nilai/{thn_akademik_semester}/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
+                Route::get('nilai/{id}', [InputNilaiRaporSisipanController::class, 'viewKomponenInputNilai']);
                 Route::post('jurusan', [RaporSisipanController::class, 'getDataFromJurusan']);
 
                 // Route::get('input-nilai-magang/datatables/{id}', 'Guru\RaporSisipan\InputNilaiRaporSisipanController@datatablesKomponenNilaiMagang');
-                Route::post('action-input-nilai-rapor-sisipan/{mode}/{thn_akademik_semester}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
+                Route::post('action-input-nilai-rapor-sisipan/{mode}/{id_rapor_sisipan}', [InputNilaiRaporSisipanController::class, 'actionInputNilai']);
             });
             Route::prefix('daftar-nilai-sas')->group(function () {
                 Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
