@@ -393,11 +393,18 @@ class RaporSisipanController extends Controller
     public function uploadRaporSisipanSTS(Request $request)
     {
         if ($request->hasFile('file-excel')) {
-            Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
+            try {
+                Excel::import(new UploadRaporSisipanSTS, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
             return [
                 'status'     => 200, // FAILED
                 'message'     => "Upload Sukses"
-            ];;
+            ];
         } else {
             return [
                 'status'     => 300, // FAILED
