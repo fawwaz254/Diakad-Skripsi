@@ -27,10 +27,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Mata Pelajaran</th>
+                                    <th>Jurusan</th>
                                     <th>Kode Mata Pelajaran</th>
                                     <th>Urutan</th>
-                                    {{-- <th>Jumlah Mapel yang sudah terisi</th> --}}
-                                    {{-- <th>Semester</th> --}}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -70,6 +69,11 @@
             {
                 data: 'nm_mata_pelajaran',
                 name: 'nm_mata_pelajaran',
+                className: 'align-center'
+            },
+            {
+                data: 'jurusan.nm_jurusan',
+                name: 'jurusan.nm_jurusan',
                 className: 'align-center'
             },
             {

@@ -131,15 +131,6 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        // $rapor_sisipan = RaporSisipan::get()->unique('id_mata_pelajaran');
-        // dd($rapor_sisipan);
-
-        // foreach($rapor_sisipan as $r){
-        //     $m =  $mapel->firstWhere('id_mata_pelajaran', $r->id_mata_pelajaran);
-        // dd($m->nm_mata_pelajaran);
-        // }
-        // dd($mapel);
-
         return view('akademik/rapor-sisipan/cetak-rapor/view-setting-cetak-rapor', compact('auth_data', 'thn_akademik_semester'));
     }
 
@@ -257,7 +248,7 @@ class CetakRaporController extends Controller
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
 
-        $mapel = MataPelajaran::with('urutan_rapor_sisipan')->get()->sortBy('urutan_rapor_sisipan.urutan');
+        $mapel = MataPelajaran::with('urutan_rapor_sisipan', 'jurusan')->get()->sortBy('urutan_rapor_sisipan.urutan');
 
         return Datatables::of($mapel)
             ->addColumn('urutan', function ($item) {

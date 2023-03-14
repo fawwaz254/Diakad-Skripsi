@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <div class="block-header">
-        <h2><a class="btn bg-blue waves-effect target-link"
+        <h2><a class="btn btn-warning waves-effect target-link"
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewSetting/' . $thn_akademik_semester) }}"><i
-                    class="material-icons">add</i><span>Setting Urutan</span></a>
+                    class="material-icons">settings</i><span>Setting Urutan</span></a>
             @if ($auth_data->sekolah_data->nm_singkat_sekolah == 'smpypm2')
                 <a class="btn bg-blue waves-effect target-link"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/cetak-rapor/viewDeskripsi') }}"><i
