@@ -10,7 +10,7 @@ use Yajra\Datatables\Datatables;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-
+use App\Models\PresensiEkskul;
 use App\Models\Ekskul as Ekskul;
 use App\Models\PelatihEkskulSet as PelatihEkskulSet;
 use App\Models\PesertaEkskulSet as PesertaEkskulSet;
@@ -35,14 +35,18 @@ use Validator;
 
 class SettingPesertaEkskulController extends BaseController
 {
-    public function viewSettingPesertaEkskul(Request $request, $id_ekskul = null)
+    public function viewSettingPesertaEkskul(Request $request, $id_semester = null, $id_ekskul = null)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $selected_semester = null;
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
+        $selected_semester = null;
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data);
 
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'selected_semester', 'data_semester','id_semester'));
     }
 
     public function actionViewSettingPesertaEkskul(Request $request)
@@ -52,7 +56,8 @@ class SettingPesertaEkskulController extends BaseController
         $auth_data = $input->auth_data;
 
         $validator = Validator::make($request->all(), [
-            'id_ekskul' => 'required'
+            'id_ekskul' => 'required',
+            'id_semester' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -63,19 +68,21 @@ class SettingPesertaEkskulController extends BaseController
         } else {
             return [
                 'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-ekskul/' . $input->id_ekskul
+                'path' => 'ekstrakurikuler/setting-peserta-ekskul/view-ekskul/' . $input->id_semester .'/' . $input->id_ekskul
             ];
         }
     }
 
-    public function viewEkskulSettingPesertaEkskul(Request $request, $id_ekskul)
+    public function viewEkskulSettingPesertaEkskul(Request $request,$id_semester, $id_ekskul)
     {
         # code...
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $ekskul = Ekskul::where('id_sekolah', '=', $auth_data->pengguna->id_sekolah)->get();
+        $data_semester = LibDataAkademik::fetchDataNamaSemester($auth_data); 
+        $selected_semester = LibDataAkademik::fetchDataNamaSemester($auth_data, $id_semester);
         $ekskul_pilih = Ekskul::where('id_ekskul', '=', $id_ekskul)->first();
-        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih'));
+        return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/view-setting-peserta-ekskul', compact('auth_data', 'ekskul', 'id_ekskul', 'ekskul_pilih','data_semester','selected_semester','id_semester'));
     }
 
     public function addSettingPesertaEkskul(Request $request, $id_ekskul, $id_kelas = null)
@@ -164,8 +171,9 @@ class SettingPesertaEkskulController extends BaseController
         return view('kesiswaan/ekstrakurikuler/setting-peserta-ekskul/set-setting-peserta-ekskul', compact('auth_data', 'id_ekskul', 'ekskul', 'semester', 'data_semester', 'jumlah_pengambilan'));
     }
 
-    public function datatablesSettingPesertaEkskul(Request $request, $id_ekskul)
+    public function datatablesSettingPesertaEkskul(Request $request, $id_ekskul,$id_semester)
     {
+        
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $list_data = PesertaEkskulSet::select('peserta_ekskul_set.is_aktif', 'ekskul.id_ekskul', 'siswa.nis_siswa', 'pengguna.nm_pengguna', 'kelas.nm_kelas', 'peserta_ekskul_set.id_peserta_ekskul_set')
@@ -173,7 +181,11 @@ class SettingPesertaEkskulController extends BaseController
             ->join('siswa', 'siswa.id_siswa', '=', 'peserta_ekskul_set.id_siswa')
             ->join('pengguna', 'pengguna.id_pengguna', '=', 'siswa.id_pengguna')
             ->join('kelas', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+            ->join('pengambilan_ekskul','pengambilan_ekskul.id_siswa', '=','peserta_ekskul_set.id_siswa')
+            // ->where('pengambilan_ekskul.id_siswa','=', 'peserta_ekskul_set.id_siswa')
+            ->where('pengambilan_ekskul.id_ekskul','=', $id_ekskul)
             ->where('peserta_ekskul_set.id_ekskul', '=', $id_ekskul)
+            ->where('pengambilan_ekskul.id_semester','=', $id_semester)
             ->get();
 
         return Datatables::of($list_data)

@@ -65,6 +65,7 @@ class InputDataSekolahController extends BaseController
 				$sekolah 								= Sekolah::where('id_sekolah', '=', $id)->first();
 				$sekolah->nm_sekolah 					= $input->nm_sekolah;
 				$sekolah->npsn_sekolah				= $input->npsn_sekolah;
+				$sekolah->nss_sekolah					= $input->nss_sekolah;
 				$sekolah->id_bentuk_pendidikan		= $input->id_bentuk_pendidikan;
 				$sekolah->nomor_sk_pendirian_sekolah	= $input->nomor_sk_pendirian_sekolah;
 				$sekolah->tgl_sk_pendirian_sekolah	= date_format(date_create($input->tgl_sk_pendirian_sekolah), "Y-m-d");
