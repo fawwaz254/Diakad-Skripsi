@@ -273,12 +273,21 @@ class RaporSisipanController extends Controller
     public function datatablesDaftarNilaiSTS(Request $request, $thn_akademik_semester)
     {
         set_time_limit(9800);
+
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)
-            ->whereHas('semester', function ($query) use ($thn_akademik_semester) {
-                $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
-            })->orderBy('created_at', 'desc');
+        $status = $input->status;
+
+        $input = (object) $request->input();
+        $auth_data = $input->auth_data;
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+            $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
+        })->orderBy('created_at', 'desc');
+
+        if ($status == '0') {
+            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+        }
+
         // $jurusan = Jurusan::all();
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
@@ -320,9 +329,10 @@ class RaporSisipanController extends Controller
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran;
             })
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item) use ($status) {
                 $data = array(
-                    'id'     => $item->id_rapor_sisipan
+                    'id'     => $item->id_rapor_sisipan,
+                    'status' => $status,
                 );
                 return $data;
             })

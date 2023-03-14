@@ -12,7 +12,11 @@
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/importExcel/' . $semester_aktif->thn_akademik_semester) }}"><i
                         class="material-icons">cloud_upload</i><span> Import Excel</span></a>
             @endif
+            <div style="display: inline;margin-right:10px"></div>
+            <input type="checkbox" id="data_semua_pengguna" class="checkbox">
+            <label for="data_semua_pengguna">Data Semua Pengguna</label>
         </h2>
+        <input type="hidden" id="status" value="0">
     </div>
 
     <div class="row clearfix">
@@ -37,6 +41,7 @@
                                     <th>Input Nilai</th>
                                     <th>Template Excel</th>
                                     <th>Action</th>
+                                    <th>Pembuat</th>
                                 </tr>
                             </thead>
                         </table>
@@ -64,7 +69,10 @@
         responsive: true,
         ajax: {
             url: datatable_url,
-            type: 'GET'
+            type: 'GET',
+            data: function(d) {
+                d.status = $('#status').val()
+            }
         },
         columns: [{
                 data: null,
@@ -105,10 +113,15 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
-                        nilai_url + '/' + data.id + '">' +
-                        '    <i class="material-icons">visibility</i>' +
-                        '</a> ';
+                    if (data.status == '0') {
+                        return '<a class="target-link btn btn-info btn-circle waves-effect waves-circle waves-float" href="' +
+                            nilai_url + '/' + data.id + '">' +
+                            '    <i class="material-icons">visibility</i>' +
+                            '</a> ';
+                    } else {
+                        return '';
+                    }
+
                 }
             },
             {
@@ -118,10 +131,14 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        excel_url + '/' + data.id + '" target="_blank">' +
-                        '    <i class="material-icons">backup</i>' +
-                        '</a> ';
+                    if (data.status == '0') {
+                        return '<a class="btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            excel_url + '/' + data.id + '" target="_blank">' +
+                            '    <i class="material-icons">backup</i>' +
+                            '</a> ';
+                    } else {
+                        return '';
+                    }
                 }
             },
             {
@@ -131,20 +148,32 @@
                 orderable: false,
                 className: 'align-center',
                 render: function(data) {
-                    return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        print_url + '/' + data.id + '"  target="_blank">' +
-                        '    <i class="material-icons">print</i>' +
-                        '</a> ' +
-                        '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
-                        pdf_url + '/' + data.id + '"  target="_blank">' +
-                        '    <i class="material-icons">picture_as_pdf</i>' +
-                        '</a> ' +
-                        '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
-                        delete_url + '\', this)" data-id="' + data.id + '">' +
-                        '    <i class="material-icons">delete_forever</i>' +
-                        '</button>';
+                    if (data.status == '0') {
+                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            print_url + '/' + data.id + '"  target="_blank">' +
+                            '    <i class="material-icons">print</i>' +
+                            '</a> ' +
+                            '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            pdf_url + '/' + data.id + '"  target="_blank">' +
+                            '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ' +
+                            '<button class="btn btn-danger btn-circle waves-effect waves-circle waves-float" onclick="deleteAction(\'' +
+                            delete_url + '\', this)" data-id="' + data.id + '">' +
+                            '    <i class="material-icons">delete_forever</i>' +
+                            '</button>';
+                    } else {
+                        return '<a class=" btn btn-success btn-circle waves-effect waves-circle waves-float" href="' +
+                            pdf_url + '/' + data.id + '"  target="_blank">' +
+                            '    <i class="material-icons">picture_as_pdf</i>' +
+                            '</a> ';
+                    }
                 }
-            }
+            },
+            {
+                data: 'pengguna.nm_pengguna',
+                name: 'pengguna.nm_pengguna',
+                className: 'align-center'
+            },
         ]
     });
 
@@ -157,4 +186,17 @@
             cell.innerHTML = start + i + 1;
         });
     }).draw();
+
+
+    $('.checkbox').on('change', function() { // on change of state
+        if (this.checked) // if changed state is "CHECKED"
+        {
+            $('#status').val(1);
+            primary_table.draw();
+
+        } else {
+            $('#status').val(0);
+            primary_table.draw();
+        }
+    });
 </script>
