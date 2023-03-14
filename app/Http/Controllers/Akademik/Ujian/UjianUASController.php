@@ -100,35 +100,43 @@ class UjianUASController extends BaseController
 
     return view('akademik/ujian/ujian-uas-reguler-online/view-peserta-kelas', compact('auth_data', 'id', 'kelas', 'peserta'));
   }
-
   public function datatablesUjianUas(Request $request, $online)
   {
     $input = (object) $request->input();
     $auth_data = $input->auth_data;
 
     //kode kegiatan diganti sesuai jenis ujiannya
-    $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
-      ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
-      ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
-      ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
-      ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
-      ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
-      ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
-      ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
-      ->where('ujian_mp.is_online', '=', $online)
-      ->where('semester.is_aktif_semester', '=', 1)
-      ->where('kegiatan.kode_kegiatan', '=', 'UAS')
-      ->orderBy('ujian_mp.created_at', 'desc')
-      ->get();
+    // $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan',)
+    //   ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
+    //   ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
+    //   ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
+    //   ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+    //   ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
+    //   ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
+    //   ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+    //   ->where('ujian_mp.is_online', '=', $online)
+    //   ->where('semester.is_aktif_semester', '=', 1)
+    //   ->where('kegiatan.kode_kegiatan', '=', 'UTS')
+    //   ->orderBy('ujian_mp.created_at', 'desc')
+    //   ->get();
+
+
+    $list_data = UjianMp::where('is_online', $online)->with('kegiatan', 'ujian_mp_ruangan.ruangan.gedung', 'kelas_mp.semester', 'kelas_mp.mata_pelajaran', 'kelas_mp.kelas', 'kelas_mp.pengampu_mp_utama.guru.pengguna')
+      ->whereHas('kelas_mp.semester', function ($query) {
+        $query->where('is_aktif_semester', '=', '1');
+      })
+      ->whereHas('kegiatan', function ($query) {
+        $query->where('kode_kegiatan', '=', 'UAS');
+      })->get();
 
     return Datatables::of($list_data)
       ->addColumn('ruangan_ujian', function ($item) {
-        if ($item->nm_gedung == null) {
-          return $item->nm_ruangan;
-        } elseif ($item->nm_ruangan == null && $item->nm_gedung == null) {
+        if ($item->ujian_mp_ruangan->ruangan->gedung->nm_gedung == null) {
+          return $item->ujian_mp_ruangan->ruangan->nm_ruangan;
+        } elseif ($item->ujian_mp_ruangan->ruangan->nm_ruangan == null && $item->ujian_mp_ruangan->ruangan->gedung->nm_gedung == null) {
           return "-";
         } else {
-          return $item->nm_ruangan . " (" . $item->nm_gedung . ")";
+          return $item->ujian_mp_ruangan->ruangan->nm_ruangan . " (" . $item->ujian_mp_ruangan->ruangan->gedung->nm_gedung ?? '-'  . ")";
         }
       })
       ->addColumn('jenis_ujian', function ($item) {
@@ -138,11 +146,14 @@ class UjianUASController extends BaseController
           return $item->nm_kegiatan . " Reguler";
         }
       })
+      ->addColumn('nm_guru', function ($item) {
+        return $item->kelas_mp->pengampu_mp_utama->guru->pengguna->nm_pengguna. '('. $item->kelas_mp->pengampu_mp_utama->guru->nip_guru . ')';
+      })
       ->addColumn('semester', function ($item) {
-        return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+        return $item->kelas_mp->semester->nm_semester . ' (' . $item->kelas_mp->semester->tahun_ajaran . ')';
       })
       ->addColumn('mata_pelajaran', function ($item) {
-        return $item->nm_mata_pelajaran . ' (' . $item->kd_mata_pelajaran . ')';
+        return $item->kelas_mp->mata_pelajaran->nm_mata_pelajaran . ' (' . $item->kelas_mp->mata_pelajaran->kd_mata_pelajaran . ')';
       })
       ->addColumn('action', function ($item) {
         $data = array(
@@ -153,6 +164,58 @@ class UjianUASController extends BaseController
       })
       ->make(true);
   }
+  // public function datatablesUjianUas(Request $request, $online)
+  // {
+  //   $input = (object) $request->input();
+  //   $auth_data = $input->auth_data;
+
+  //   //kode kegiatan diganti sesuai jenis ujiannya
+  //   $list_data = UjianMp::select('ujian_mp.nm_ujian_mp', 'kegiatan.nm_kegiatan', 'ujian_mp.is_online', 'ujian_mp.tgl_ujian_mp', 'ujian_mp.jam_mulai', 'ujian_mp.jam_selesai', 'ujian_mp.keterangan', 'ruangan.nm_ruangan', 'ruangan.kapasitas_ujian', 'gedung.kode_gedung', 'ujian_mp.id_ujian_mp', 'ujian_mp.id_kelas_mp', 'kelas_mp.nm_kelas_mp', 'kelas_mp.id_semester', 'semester.nm_semester', 'semester.tahun_ajaran', 'mata_pelajaran.nm_mata_pelajaran', 'mata_pelajaran.kd_mata_pelajaran', 'kegiatan.id_kegiatan')
+  //     ->join('kegiatan', 'kegiatan.id_kegiatan', '=', 'ujian_mp.id_kegiatan')
+  //     ->leftJoin('ujian_mp_ruangan', 'ujian_mp_ruangan.id_ujian_mp', '=', 'ujian_mp.id_ujian_mp')
+  //     ->leftJoin('ruangan', 'ujian_mp_ruangan.id_ruangan', '=', 'ruangan.id_ruangan')
+  //     ->leftJoin('gedung', 'gedung.id_gedung', '=', 'ruangan.id_gedung')
+  //     ->join('kelas_mp', 'kelas_mp.id_kelas_mp', '=', 'ujian_mp.id_kelas_mp')
+  //     ->join('semester', 'semester.id_semester', '=', 'kelas_mp.id_semester')
+  //     ->join('mata_pelajaran', 'mata_pelajaran.id_mata_pelajaran', '=', 'kelas_mp.id_mata_pelajaran')
+  //     ->where('ujian_mp.is_online', '=', $online)
+  //     ->where('semester.is_aktif_semester', '=', 1)
+  //     ->where('kegiatan.kode_kegiatan', '=', 'UAS')
+  //     ->orderBy('ujian_mp.created_at', 'desc')
+  //     ->get();
+
+  //   return Datatables::of($list_data)
+  //     ->addColumn('ruangan_ujian', function ($item) {
+  //       if ($item->nm_gedung == null) {
+  //         return $item->nm_ruangan;
+  //       } elseif ($item->nm_ruangan == null && $item->nm_gedung == null) {
+  //         return "-";
+  //       } else {
+  //         return $item->nm_ruangan . " (" . $item->nm_gedung . ")";
+  //       }
+  //     })
+  //     ->addColumn('jenis_ujian', function ($item) {
+  //       if ($item->is_online == 1) {
+  //         return $item->nm_kegiatan . " Online";
+  //       } elseif ($item->is_online == 0) {
+  //         return $item->nm_kegiatan . " Reguler";
+  //       }
+  //     })
+  //     ->addColumn('semester', function ($item) {
+  //       return $item->nm_semester . ' (' . $item->tahun_ajaran . ')';
+  //     })
+  //     ->addColumn('mata_pelajaran', function ($item) {
+  //       return $item->nm_mata_pelajaran . ' (' . $item->kd_mata_pelajaran . ')';
+  //     })
+  //     ->addColumn('action', function ($item) {
+  //       $data = array(
+  //         'id' => $item->id_kelas_mp,
+  //         'id_ujian' => $item->id_ujian_mp
+  //       );
+  //       return $data;
+  //     })
+  //     ->make(true);
+  // }
 
   public function datatablesDaftarMataPelajaran(Request $request, $online)
   {
@@ -260,7 +323,7 @@ class UjianUASController extends BaseController
 
         return [
           'status' => 202, // SUCCESS AND LOAD CONTENT
-          'path' => 'ujian/ujian-uas-reguler-online/add/' . $input->is_online,
+          'path' => 'ujian/ujian-uas-reguler-online/',
           'message' => 'Save Ujian UAS Successfully'
         ];
       } elseif ($mode == 'edit') {

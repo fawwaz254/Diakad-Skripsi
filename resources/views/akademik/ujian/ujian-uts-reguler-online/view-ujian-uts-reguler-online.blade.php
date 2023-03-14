@@ -251,7 +251,7 @@
         columns: [{
                 data: null,
                 searchable: false,
-                orderable: false
+                orderable: false,
             },
             {
                 data: 'nm_ujian_mp',
