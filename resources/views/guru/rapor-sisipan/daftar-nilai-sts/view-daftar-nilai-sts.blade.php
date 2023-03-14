@@ -5,7 +5,7 @@
                 href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts') }}"><i
                     class="material-icons">keyboard_backspace</i><span>Kembali</span></a>
             @if ($semester_aktif->thn_akademik_semester == $thn_akademik_semester)
-                <a class="btn bg-blue waves-effect target-link" style="margin-left: 10px"
+                <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
                     href="{{ url(Request::segment(1) . '#rapor-sisipan/daftar-nilai-sts/add/' . $semester_aktif->thn_akademik_semester) }}"><i
                         class="material-icons">add</i><span>Tambah Nilai</span></a>
                 <a class="btn bg-green waves-effect target-link" style="margin-left: 10px"
@@ -81,8 +81,8 @@
                 className: 'align-center'
             },
             {
-                data: 'mata_pelajaran',
-                name: 'mata_pelajaran',
+                data: 'mata_pelajaran.nm_mata_pelajaran',
+                name: 'mata_pelajaran.nm_mata_pelajaran',
                 className: 'align-center'
             },
             {
@@ -104,6 +104,8 @@
             {
                 data: 'semester',
                 name: 'semester',
+                searchable: false,
+                orderable: false,
                 className: 'align-center'
             },
             {
