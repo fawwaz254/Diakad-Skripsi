@@ -346,19 +346,19 @@ Route::middleware(['token_staff'])->group(function () {
         // Modul Rapor Sisipan
         Route::prefix('rapor-sisipan')->group(function () {
             Route::prefix('daftar-nilai-sts')->group(function () {
-                Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
-                Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
-                Route::get('/{thn_akademik_semester}', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
-                Route::get('/datatables/{thn_akademik_semester}', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
+                // Route::get('/', [RaporSisipanController::class, 'viewSemesterNilaiSTS']);
+                // Route::post('post-nilai-sts', [RaporSisipanController::class, 'actionSemesterNilaiSTS']);
+                Route::get('/', [RaporSisipanController::class, 'viewDaftarNilaiSTS']);
+                Route::get('/datatables', [RaporSisipanController::class, 'datatablesDaftarNilaiSTS']);
                 Route::get('print/{id}', [RaporSisipanController::class, 'printDaftarNilaiSTS']);
                 Route::get('pdf/{id}', [RaporSisipanController::class, 'pdfDaftarNilaiSTS']);
             });
 
             Route::prefix('daftar-nilai-sas')->group(function () {
-                Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
-                Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
-                Route::get('/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
-                Route::get('datatables/{thn_akademik_semester}', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
+                // Route::get('/', [RaporSisipanAkhirController::class, 'viewSemesterNilaiSAS']);
+                // Route::post('post-nilai-sas', [RaporSisipanAkhirController::class, 'actionSemesterNilaiSAS']);
+                Route::get('/', [RaporSisipanAkhirController::class, 'viewDaftarNilaiSAS']);
+                Route::get('datatables', [RaporSisipanAkhirController::class, 'datatablesDaftarNilaiSAS']);
                 Route::get('pdf/{id}', [RaporSisipanAkhirController::class, 'pdfDaftarNilaiSAS']);
             });
 
