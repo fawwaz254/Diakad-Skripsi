@@ -27,57 +27,75 @@ use Validator;
 
 class RaporSisipanAkhirController extends Controller
 {
-    public function viewSemesterNilaiSAS(Request $request)
+    // public function viewSemesterNilaiSAS(Request $request)
+    // {
+    //     $input = (object) $request->input();
+    //     $auth_data = $input->auth_data;
+
+    //     $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
+    //     $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+
+    //     return view('guru/rapor-sisipan/daftar-nilai-sas/view-semester-nilai-sas', compact('auth_data', 'data_semester', 'semester_aktif'));
+    // }
+
+    // public function actionSemesterNilaiSAS(Request $request)
+    // {
+    //     # code...
+    //     $input = (object) $request->input();
+    //     // $auth_data = $input->auth_data;
+
+    //     $validator = Validator::make($request->all(), [
+    //         'thn_akademik_semester' => 'required'
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return [
+    //             'status' => 300, // FAILED
+    //             'message' => $validator->errors()->first()
+    //         ];
+    //     } else {
+    //         return [
+    //             'status' => 204, // SUCCESS AND LOAD CONTENT
+    //             'path' => 'rapor-sisipan/daftar-nilai-sas/' . $input->thn_akademik_semester
+    //         ];
+    //     }
+    // }
+
+
+    public function viewDaftarNilaiSAS(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-
-        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
         $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+        $data_semester = LibDataAkademik::fetchDataSemester($auth_data);
 
-        return view('guru/rapor-sisipan/daftar-nilai-sas/view-semester-nilai-sas', compact('auth_data', 'data_semester', 'semester_aktif'));
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data', 'semester_aktif', 'data_semester'));
     }
 
-    public function actionSemesterNilaiSAS(Request $request)
+    public function datatablesDaftarNilaiSAS(Request $request)
     {
-        # code...
+
         $input = (object) $request->input();
-        // $auth_data = $input->auth_data;
+        $auth_data = $input->auth_data;
+        $status = $input->status;
 
-        $validator = Validator::make($request->all(), [
-            'thn_akademik_semester' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return [
-                'status' => 300, // FAILED
-                'message' => $validator->errors()->first()
-            ];
+        if (empty($input->tahun_ajaran)) {
+            $semester_aktif = LibDataAkademik::fetchDataSemesterAktif($auth_data);
+            $thn_akademik_semester = $semester_aktif->thn_akademik_semester;
         } else {
-            return [
-                'status' => 204, // SUCCESS AND LOAD CONTENT
-                'path' => 'rapor-sisipan/daftar-nilai-sas/' . $input->thn_akademik_semester
-            ];
+            $thn_akademik_semester = $input->tahun_ajaran;
         }
-    }
-
-
-    public function viewDaftarNilaiSAS(Request $request, $thn_akademik_semester)
-    {
-        $input = (object) $request->input();
-        $auth_data = $input->auth_data;
-
-        return view('guru/rapor-sisipan/daftar-nilai-sas/view-daftar-nilai-sas', compact('auth_data', 'thn_akademik_semester'));
-    }
-
-    public function datatablesDaftarNilaiSAS(Request $request, $thn_akademik_semester)
-    {
 
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->where('id_pengguna', $auth_data->pengguna->id_pengguna)->whereHas('semester', function ($query) use ($thn_akademik_semester) {
+        $list_data = RaporSisipan::with('pengguna', 'mata_pelajaran', 'kelas', 'semester')->whereHas('semester', function ($query) use ($thn_akademik_semester) {
             $query->where('thn_akademik_semester', '=', $thn_akademik_semester);
         })->orderBy('created_at', 'desc');
+
+        if ($status == '0') {
+            $list_data = $list_data->where('id_pengguna', $auth_data->pengguna->id_pengguna);
+        }
+
         $siswa = Siswa::with('pengguna.status_pengguna')
             ->whereHas('pengguna.status_pengguna', function ($query) {
                 $query->where('aktif_status_pengguna', '=', '1');
@@ -90,14 +108,15 @@ class RaporSisipanAkhirController extends Controller
             $komponen1 = KomponenNilaiRaporSisipan::where('type', 'uts')->first()->id_komponen_nilai;
             $komponen2 = KomponenNilaiRaporSisipan::where('type', 'uas')->first()->id_komponen_nilai;
         }
+
+        $nilaiRaporSisipans = NilaiRaporSisipan::whereIn('id_komponen_nilai', [$komponen1, $komponen2])->with('siswa');
+
+
         return Datatables::of($list_data)
-            ->addColumn('mata_pelajaran', function ($item) {
-                return $item->mata_pelajaran->nm_mata_pelajaran;
-            })
-            ->addColumn('jumlah', function ($item) use ($komponen1, $komponen2, $siswa, $setting) {
+            ->addColumn('jumlah', function ($item) use ($komponen1, $komponen2, $siswa, $setting, $nilaiRaporSisipans) {
                 $allSiswa =  $siswa->where('id_kelas', $item->kelas->id_kelas)->count();
                 if ($setting->value == '3') {
-                    $nilaiRaporSisipan =  NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen1)->whereHas('siswa', function ($query) use ($item) {
+                    $nilaiRaporSisipan =    $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->where('id_komponen_nilai', $komponen1)->whereHas('siswa', function ($query) use ($item) {
                         $query->where('id_kelas', '=', $item->kelas->id_kelas);
                     })->get();
 
@@ -109,7 +128,7 @@ class RaporSisipanAkhirController extends Controller
                         'setting'           => $setting->value,
                     );
                 } else {
-                    $nilaiRaporSisipan =  NilaiRaporSisipan::where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereIn('id_komponen_nilai', [$komponen1, $komponen2])->whereHas('siswa', function ($query) use ($item) {
+                    $nilaiRaporSisipan =  $nilaiRaporSisipans->where('id_rapor_sisipan', $item->id_rapor_sisipan)->where('nilai', '!=', '0')->whereHas('siswa', function ($query) use ($item) {
                         $query->where('id_kelas', '=', $item->kelas->id_kelas);
                     })->get();
 
@@ -123,16 +142,15 @@ class RaporSisipanAkhirController extends Controller
                         'setting'           => $setting->value,
                     );
                 }
-
-
                 return $data;
             })
             ->editColumn('semester', function ($item) {
                 return $item->semester->tahun_ajaran;
             })
-            ->addColumn('action', function ($item) {
+            ->addColumn('action', function ($item) use ($status) {
                 $data = array(
-                    'id'     => $item->id_rapor_sisipan
+                    'id'     => $item->id_rapor_sisipan,
+                    'status' => $status,
                 );
                 return $data;
             })
@@ -140,21 +158,28 @@ class RaporSisipanAkhirController extends Controller
     }
 
 
-    public function imporExcelSTS(Request $request, $thn_akademik_semester)
+    public function imporExcelSTS(Request $request)
     {
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
-        return view('guru/rapor-sisipan/daftar-nilai-sas/view-upload-nilai-sas', compact('auth_data', 'thn_akademik_semester'));
+        return view('guru/rapor-sisipan/daftar-nilai-sas/view-upload-nilai-sas', compact('auth_data'));
     }
 
     public function uploadRaporSisipanSAS(Request $request)
     {
         if ($request->hasFile('file-excel')) {
-            Excel::import(new UploadRaporSisipanSAS, $request->file('file-excel'));
+            try {
+                Excel::import(new UploadRaporSisipanSAS, $request->file('file-excel'));
+            } catch (\Exception $e) {
+                return [
+                    'status'     => 200, // FAILED
+                    'message'     => "Gagal, Cek kembali apakah ada data nilai yang melebihi batas"
+                ];
+            }
             return [
                 'status'     => 200, // FAILED
                 'message'     => "Upload Sukses"
-            ];;
+            ];
         } else {
             return [
                 'status'     => 300, // FAILED

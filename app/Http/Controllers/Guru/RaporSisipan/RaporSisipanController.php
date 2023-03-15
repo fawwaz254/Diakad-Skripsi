@@ -234,7 +234,6 @@ class RaporSisipanController extends Controller
     public function datatablesDaftarNilaiSTS(Request $request)
     {
         set_time_limit(9800);
-
         $input = (object) $request->input();
         $auth_data = $input->auth_data;
         $status = $input->status;
