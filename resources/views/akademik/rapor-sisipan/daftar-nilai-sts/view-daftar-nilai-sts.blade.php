@@ -64,7 +64,7 @@
             },
             {
                 data: 'mata_pelajaran',
-                name: 'mata_pelajaran',
+                name: 'mata_pelajaran.nm_mata_pelajaran',
                 className: 'align-center'
             },
             {
@@ -85,7 +85,7 @@
             },
             {
                 data: 'semester',
-                name: 'semester',
+                name: 'semester.tahun_ajaran',
                 className: 'align-center'
             },
             {
