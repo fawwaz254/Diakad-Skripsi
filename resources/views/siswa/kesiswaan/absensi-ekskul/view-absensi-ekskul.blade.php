@@ -32,15 +32,19 @@
                                         <label>Ekskul</label>
                                         <select class="form-control show-tick" name="id_ekskul" required="">
                                             <option value="">-- Pilih Ekskul --</option>
-                                            @foreach($data_ekskul as $data)
-                                                <option value="{{$data->ekskul->id_ekskul}}">{{$data->ekskul->nm_ekskul}}</option>
+                                            @foreach ($data_ekskul as $data)
+                                                @if (isset($data->ekskul->id_ekskul))
+                                                    <option value="{{ $data->ekskul->id_ekskul }}">
+                                                        {{ $data->ekskul->nm_ekskul }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <button class="btn btn-block bg-btn-submit waves-effect" type="submit"><i class="material-icons">save</i><span>Save</span></button>
+                                <button class="btn btn-block bg-btn-submit waves-effect" type="submit"><i
+                                        class="material-icons">save</i><span>Save</span></button>
                             </div>
                         </div>
                     </form>
@@ -64,20 +68,20 @@
                 required: true
             }
         },
-        highlight: function (input) {
+        highlight: function(input) {
             $(input).parents('.form-group').addClass('error');
         },
-        unhighlight: function (input) {
+        unhighlight: function(input) {
             $(input).parents('.form-group').removeClass('error');
         },
-        errorPlacement: function (error, element) {
+        errorPlacement: function(error, element) {
             $(element).parents('.form-group').append(error);
         },
         submitHandler: function(form) {
             $('button').attr('disabled', 'disabled');
             let params = $(form).serializeArray();
             let load_url = modul_url + '/' + menu_url + '/detail';
-            $.each(params, function(i, field){
+            $.each(params, function(i, field) {
                 load_url += '/' + field.value;
             });
             loadURI(load_url);
